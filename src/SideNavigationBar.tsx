@@ -13,7 +13,7 @@ import { select, RootState } from "util/useRedux";
 import { getBottomTabBarOptions } from "shared/util/getStyles";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { ms, ScaledSheet } from "react-native-size-matters";
-import { View, Text, TextStyle } from "react-native";
+import { View, Text, TextStyle, Dimensions } from "react-native";
 
 const Drawer = createDrawerNavigator<SideTabsParamList>();
 
@@ -53,7 +53,8 @@ export const SideNavigationBar: FC<MainScreenProps> = () => {
       drawerContentOptions={getBottomTabBarOptions(colors)}
       drawerStyle={{
         backgroundColor: colors.primaryBarColor,
-        width: 90
+        width: 90,
+        height: Dimensions.get("window").height
       }}
     >
       <Drawer.Screen
