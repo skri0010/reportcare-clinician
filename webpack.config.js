@@ -165,7 +165,6 @@ module.exports = {
       // See: https://github.com/necolas/react-native-web/issues/349
       __DEV__: !production
     }),
-
     new HtmlWebpackPlugin({
       template: path.join(__dirname, "public/index.html"),
       manifest: "./public/manifest",
@@ -179,5 +178,12 @@ module.exports = {
         ]
       : []),
     ...(production && analyzeBundle ? [new BundleAnalyzerPlugin()] : [])
-  ]
+  ],
+  devServer: {
+    port: 8080,
+    watchOptions: {
+      poll: true
+    }
+  },
+  target: "web" // Enable live reload
 };
