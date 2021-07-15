@@ -131,6 +131,7 @@ module.exports = {
     filename: "bundle.web.js",
     path: path.resolve(appDirectory, "dist")
   },
+  target: "web",
   resolve: {
     alias: {
       "react-native$": "react-native-web",

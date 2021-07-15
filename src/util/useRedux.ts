@@ -1,4 +1,3 @@
-// export { store } from "ic-redux/store";
 export { store } from "ic-redux/store";
 
 export type { RootState } from "ic-redux/store";
