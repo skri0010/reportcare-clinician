@@ -71,6 +71,7 @@ module.exports = {
     "@typescript-eslint/no-use-before-define": ["error", { variables: false }],
     "no-shadow": "off",
     "@typescript-eslint/no-shadow": ["error"],
+    "@typescript-eslint/no-non-null-assertion": "off",
     "object-shorthand": ["error", "never"],
     "@typescript-eslint/no-inferrable-types": "off",
     "@typescript-eslint/no-non-null-assertions": "off",
@@ -122,7 +123,7 @@ module.exports = {
   settings: {
     "import/resolver": {
       node: {
-        moduleDirectory: ["src", "src/shared", "node_modules"],
+        moduleDirectory: ["src", "node_modules"],
         extensions: [
           ".js",
           ".jsx",

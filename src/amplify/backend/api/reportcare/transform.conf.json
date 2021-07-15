@@ -1,0 +1,36 @@
+{
+  "Version": 5,
+  "ElasticsearchWarning": true,
+  "ResolverConfig": {
+    "project": {
+      "ConflictHandler": "AUTOMERGE",
+      "ConflictDetection": "VERSION"
+    },
+    "models": {
+      "PatientInfo": {
+        "ConflictHandler": "AUTOMERGE",
+        "ConflictDetection": "VERSION"
+      },
+      "MedicationInfo": {
+        "ConflictHandler": "AUTOMERGE",
+        "ConflictDetection": "VERSION"
+      },
+      "ActivityInfo": {
+        "ConflictHandler": "AUTOMERGE",
+        "ConflictDetection": "VERSION"
+      },
+      "MedCompliant": {
+        "ConflictHandler": "AUTOMERGE",
+        "ConflictDetection": "VERSION"
+      },
+      "ReportSymptom": {
+        "ConflictHandler": "AUTOMERGE",
+        "ConflictDetection": "VERSION"
+      },
+      "ReportVitals": {
+        "ConflictHandler": "AUTOMERGE",
+        "ConflictDetection": "VERSION"
+      }
+    }
+  }
+}

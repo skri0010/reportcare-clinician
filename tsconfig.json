@@ -43,17 +43,7 @@
 
     // === IMPORTANT: To resolve modules for compile, update babel.config.js ===
     "baseUrl": "./src" /* Base directory to resolve non-absolute module names. */,
-    "paths": {
-      "aws/*": ["./shared/aws/*"],
-      "shared/*": ["./shared/*"],
-      "actions/*": ["./shared/ic-redux/actions/*"],
-      "components/*": ["./shared/components/*"],
-      "ic-redux/*": ["./shared/ic-redux/*"],
-      "models/*": ["./shared/models/*"],
-      "reducers/*": ["./shared/ic-redux/reducers/*"],
-      "store/*": ["./shared/ic-redux/store/*"],
-      "util/*": ["./shared/util/*"]
-    } /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */,
+    // "paths": {} /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */,
     // "rootDirs": [],                        /* List of root folders whose combined content represents the structure of the project at runtime. */
     // "typeRoots": [],                       /* List of folders to include type definitions from. */
     // "types": [],                           /* Type declaration files to be included in compilation. */
@@ -75,7 +65,6 @@
   },
   "exclude": [
     "./dist",
-    "./src/shared",
     "node_modules",
     "babel.config.js",
     "metro.config.js",
