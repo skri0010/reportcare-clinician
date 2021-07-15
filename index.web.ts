@@ -9,6 +9,8 @@ import "util/language/i18n"; // DO NOT REMOVE: This is necessary for translation
 import FA from "react-native-vector-icons/Fonts/FontAwesome.ttf";
 // @ts-ignore
 import MCI from "react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf";
+// @ts-ignore
+import MI from "react-native-vector-icons/Fonts/MaterialIcons.ttf";
 
 const iconFontStyles = `
   @font-face {
@@ -18,6 +20,10 @@ const iconFontStyles = `
   @font-face {
     src: url(${MCI});
     font-family: MaterialCommunityIcons;
+  }
+  @font-face {
+    src: url(${MI});
+    font-family: MaterialIcons;
   }
 `;
 

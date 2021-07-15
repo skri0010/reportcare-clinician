@@ -2,8 +2,8 @@ import React, { FC } from "react";
 import { View, TouchableOpacity } from "react-native";
 import { RootState, select } from "util/useRedux";
 import { RiskLevel, getRiskLevelColor } from "models/RiskLevel";
-import { Avatar } from "react-native-elements";
-import { ScaledSheet } from "react-native-size-matters";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import { ms, ScaledSheet } from "react-native-size-matters";
 
 interface PatientImageContainerProps {
   // JH-TODO: Image link in prop
@@ -32,15 +32,9 @@ export const PatientImageContainer: FC<PatientImageContainerProps> = ({
           }
         ]}
       >
-        <Avatar
-          rounded
-          icon={{
-            name: "user",
-            type: "font-awesome",
-            color: "black"
-          }}
-          containerStyle={styles.avatar}
-        />
+        <View style={styles.avatar}>
+          <Icon name="person" color="black" size={ms(20)} />
+        </View>
       </View>
     );
   };
@@ -65,6 +59,8 @@ const styles = ScaledSheet.create({
     backgroundColor: "#e0e0e0",
     width: "50@ms",
     height: "50@ms",
-    borderRadius: "50@ms"
+    borderRadius: "50@ms",
+    justifyContent: "space-evenly",
+    alignItems: "center"
   }
 });

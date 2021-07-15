@@ -16,6 +16,9 @@ export const PatientsTab: FC = () => {
           onUserInput={() => {
             null;
           }}
+          onSearchClick={() => {
+            null;
+          }}
           placeholder="Search patients"
         />
       </View>

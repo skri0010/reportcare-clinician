@@ -1,49 +1,50 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useState, FC } from "react";
+import React, { useState, useEffect, FC } from "react";
 import { RootState } from "ic-redux/store";
-import { StyleProp, ViewStyle } from "react-native";
-import { SearchBar } from "react-native-elements";
+import {
+  StyleProp,
+  View,
+  ViewStyle,
+  TextInput,
+  TouchableOpacity
+} from "react-native";
 import { select } from "util/useRedux";
+import { ScaledSheet, ms } from "react-native-size-matters";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 // Interface for Search bar component props
 interface SearchBarComponentProps {
   onUserInput: (newValue: string) => void;
+  onSearchClick: () => void;
   placeholder?: string;
   containerStyle?: {
     backgroundColor?: string;
-    borderBottomColor?: string;
-    borderTopColor?: string;
-  };
-  inputContainerStyle?: {
-    backgroundColor?: string;
     borderColor?: string;
-    borderWidth?: number;
-    // Known issue with bottom border, https://github.com/react-native-elements/react-native-elements/issues/2495
-    borderBottomWidth?: number;
+    color?: string;
   };
 }
 
 // Search bar component
 export const SearchBarComponent: FC<SearchBarComponentProps> = ({
   onUserInput,
+  onSearchClick,
   placeholder,
-  containerStyle,
-  inputContainerStyle
+  containerStyle
 }) => {
-  const { colors } = select((state: RootState) => ({
-    colors: state.settings.colors
+  const { colors, fonts } = select((state: RootState) => ({
+    colors: state.settings.colors,
+    fonts: state.settings.fonts
   }));
 
   const searchBarContainerStyle: StyleProp<ViewStyle> = {
-    backgroundColor: colors.primaryBarColor,
-    borderBottomColor: colors.primaryBarColor,
-    borderTopColor: colors.primaryBarColor,
-    ...containerStyle
+    backgroundColor: colors.primaryContrastTextColor,
+    borderColor: colors.primaryTextColor
   };
 
-  const searchBarInputContainerStyle: StyleProp<ViewStyle> = {
-    backgroundColor: colors.primaryBackgroundColor,
-    ...inputContainerStyle
+  const searchBarTextStyle: StyleProp<ViewStyle> = {
+    backgroundColor: colors.primaryContrastTextColor,
+    color: colors.primaryTextColor,
+    ...containerStyle
   };
 
   const [input, setInput] = useState<string>("");
@@ -55,13 +56,49 @@ export const SearchBarComponent: FC<SearchBarComponentProps> = ({
   };
 
   // JH-TODO: Replace placeholder with i18n
-  return null;
-  // <SearchBar
-  //   platform="default"
-  //   placeholder={placeholder || "Search"}
-  //   onChangeText={onChangeText}
-  //   value={input}
-  //   containerStyle={searchBarContainerStyle}
-  //   inputContainerStyle={searchBarInputContainerStyle}
-  // />
+  return (
+    <View>
+      <View style={[styles.container, searchBarContainerStyle]}>
+        <TextInput
+          autoCorrect={false}
+          onChangeText={onChangeText}
+          placeholder={placeholder || "Search"}
+          value={input}
+          style={[
+            styles.textField,
+            searchBarTextStyle,
+            { fontSize: fonts.h2Size, paddingHorizontal: "5@ms" }
+          ]}
+        />
+        <TouchableOpacity onPress={onSearchClick} style={styles.button}>
+          <Icon
+            name="magnify"
+            style={[searchBarTextStyle, { fontSize: fonts.h2Size }]}
+          />
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
 };
+
+const styles = ScaledSheet.create({
+  container: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    height: "100%",
+    margin: "5@ms",
+    borderWidth: "1@ms",
+    borderRadius: "3@ms"
+  },
+  textField: {
+    height: "100%",
+    width: "100%",
+    paddingLeft: "5@ms",
+    outlineWidth: "0@ms"
+  },
+  button: {
+    margin: "5@ms"
+  }
+});

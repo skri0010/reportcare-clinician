@@ -1,7 +1,8 @@
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
-import { Icon, Badge } from "react-native-elements";
-import { RootState, select } from "util/useRedux";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import { RootState } from "ic-redux/store";
+import { select } from "util/useRedux";
 import { getRiskLevelColor, RiskLevel } from "../../models/RiskLevel";
 import { ScaledSheet, ms } from "react-native-size-matters";
 
@@ -16,8 +17,9 @@ export const AlertButton: React.FC<AlertButtonProps> = ({
   alertCount = 0,
   onPress
 }) => {
-  const { colors } = select((state: RootState) => ({
-    colors: state.settings.colors
+  const { colors, fonts } = select((state: RootState) => ({
+    colors: state.settings.colors,
+    fonts: state.settings.fonts
   }));
 
   const hasNotifications = alertCount > 0;
@@ -42,11 +44,13 @@ export const AlertButton: React.FC<AlertButtonProps> = ({
       >
         {/* Floating notification count */}
         {hasNotifications ? (
-          <Badge
-            value={alertCount}
-            containerStyle={styles.badgeContainerStyle}
-            badgeStyle={styles.badgeStyle}
-          />
+          <View style={styles.badgeContainerStyle}>
+            <Text
+              style={[styles.badgeTextStyle, { fontSize: fonts.notifSize }]}
+            >
+              {alertCount}
+            </Text>
+          </View>
         ) : null}
 
         {/* Button icon */}
@@ -73,17 +77,20 @@ const styles = ScaledSheet.create({
     borderRadius: "10@ms",
     padding: "4@ms"
   },
-  badgeStyle: {
-    width: "24@ms",
-    height: "24@ms",
-    borderRadius: "12@ms"
-  },
   badgeTextStyle: {
-    fontSize: "15@ms"
+    color: "white",
+    textAlign: "center"
   },
   badgeContainerStyle: {
     position: "absolute",
     top: "-5@ms",
-    right: "-10@ms"
+    right: "-10@ms",
+    backgroundColor: "#0d8ca8",
+    borderColor: "white",
+    borderWidth: "1@ms",
+    width: "20@ms",
+    height: "20@ms",
+    borderRadius: "12@ms",
+    justifyContent: "space-evenly"
   }
 });

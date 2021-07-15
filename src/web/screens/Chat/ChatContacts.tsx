@@ -9,6 +9,9 @@ export const ChatContacts: FC = () => {
         onUserInput={() => {
           null;
         }}
+        onSearchClick={() => {
+          null;
+        }}
       />
       <Text> Create new chat </Text>
     </View>
