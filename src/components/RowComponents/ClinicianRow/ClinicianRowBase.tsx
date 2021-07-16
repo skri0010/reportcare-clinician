@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
-import { ms, ScaledSheet } from "react-native-size-matters";
+import { ScaledSheet } from "react-native-size-matters";
 import { RootState, select } from "util/useRedux";
 
 import { PeopleAvatar } from "../PeopleAvatar";

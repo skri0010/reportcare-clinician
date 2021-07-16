@@ -2,8 +2,7 @@ import React, { FC } from "react";
 import { View, TouchableOpacity } from "react-native";
 import { RootState, select } from "util/useRedux";
 import { RiskLevel, getRiskLevelColor } from "models/RiskLevel";
-import Icon from "react-native-vector-icons/MaterialIcons";
-import { ms, ScaledSheet } from "react-native-size-matters";
+import { ScaledSheet } from "react-native-size-matters";
 import { PeopleAvatar } from "../PeopleAvatar";
 
 interface PatientImageContainerProps {
