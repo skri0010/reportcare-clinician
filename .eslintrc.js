@@ -103,6 +103,11 @@ module.exports = {
             name: "aws-amplify",
             message:
               "Import only from libraries you are using (eg @aws-amplify/core)"
+          },
+          {
+            name: "@react-native-picker/picker",
+            message:
+              "Please import the component directly (eg @react-native-picker/picker/js/Picker.web)"
           }
         ]
       }

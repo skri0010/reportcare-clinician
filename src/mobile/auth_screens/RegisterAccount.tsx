@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import { Auth } from "@aws-amplify/auth";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ms, ScaledSheet } from "react-native-size-matters";
+// eslint-disable-next-line no-restricted-imports
 import { Picker } from "@react-native-picker/picker";
 import { Role, Hospital } from "models/ClinicianEnums";
 import { RootState, select } from "util/useRedux";
