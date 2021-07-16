@@ -109,7 +109,6 @@ const svgLoaderConfiguration = {
 const srcFolderAliasPaths = {};
 const srcFolderAliasKeys = [
   "agents_implementation",
-  "amplify",
   "aws",
   "components",
   "ic-redux",
@@ -131,7 +130,7 @@ module.exports = {
     filename: "bundle.web.js",
     path: path.resolve(appDirectory, "dist")
   },
-  target: "web",
+  target: "web", // Enable live reload
   resolve: {
     alias: {
       "react-native$": "react-native-web",
@@ -197,6 +196,5 @@ module.exports = {
     watchOptions: {
       poll: true
     }
-  },
-  target: "web" // Enable live reload
+  }
 };

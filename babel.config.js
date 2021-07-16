@@ -21,7 +21,6 @@ module.exports = {
         ],
         alias: {
           agents_implementation: "./src/agents_implementation",
-          amplify: "./src/amplify",
           aws: "./src/aws",
           components: "./src/components",
           "ic-redux": "./src/ic-redux",
