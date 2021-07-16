@@ -1,0 +1,9 @@
+# Ditribution file
+dist
+
+# Installed packages
+node_modules
+
+# Amplify folders
+src/aws
+src/amplify

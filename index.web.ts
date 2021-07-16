@@ -1,6 +1,5 @@
 import { AppRegistry } from "react-native";
-import App from "./src/App.web";
-import { name as appName } from "./app.json";
+import App from "./src/web/App.web";
 import "util/language/i18n"; // DO NOT REMOVE: This is necessary for translation
 
 // This block of code generates required CSS to use fonts (icons) from react-native-vector-icons
@@ -28,6 +27,7 @@ const textNode = document.createTextNode(iconFontStyles);
 style.appendChild(textNode);
 document.head.appendChild(style);
 
+const appName = "ClinicianWeb";
 // Register the app
 AppRegistry.registerComponent(appName, () => App);
 
