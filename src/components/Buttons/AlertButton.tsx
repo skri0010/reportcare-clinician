@@ -46,7 +46,13 @@ export const AlertButton: React.FC<AlertButtonProps> = ({
         {hasNotifications ? (
           <View style={styles.badgeContainerStyle}>
             <Text
-              style={[styles.badgeTextStyle, { fontSize: fonts.notifSize }]}
+              style={[
+                styles.badgeTextStyle,
+                {
+                  fontSize: fonts.notifSize,
+                  color: colors.primaryContrastTextColor
+                }
+              ]}
             >
               {alertCount}
             </Text>
@@ -78,7 +84,6 @@ const styles = ScaledSheet.create({
     padding: "4@ms"
   },
   badgeTextStyle: {
-    color: "white",
     textAlign: "center"
   },
   badgeContainerStyle: {

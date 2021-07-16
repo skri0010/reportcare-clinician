@@ -35,7 +35,7 @@ export const lightColorScheme: ColorScheme = {
   notificationColor: "#57c081",
 
   // Buttons
-  primaryButtonColor: "57c081",
+  primaryButtonColor: "#57c081",
 
   // Others
   riskLevelBackgroundColors: riskLevelBackgroundColors,

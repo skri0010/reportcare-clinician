@@ -3,6 +3,8 @@ import { View, TouchableOpacity } from "react-native";
 import { ClinicianRowGeneralDetails } from "models/PersonRowDetails";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { ClinicianRowBase } from "./ClinicianRowBase";
+import { RootState } from "ic-redux/store";
+import { select } from "util/useRedux";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 export interface ClinicanShareRowProps {
@@ -16,17 +18,23 @@ export const ClinicianShareRow: FC<ClinicanShareRowProps> = ({
   checked,
   onRowPress
 }) => {
+  const { colors } = select((state: RootState) => ({
+    colors: state.settings.colors
+  }));
+
   const Checkbox: FC = () => {
     const [check, setChecked] = useState(checked);
 
     return (
       <TouchableOpacity
-        style={styles.checkBox}
+        style={[styles.checkBox, { borderColor: colors.primaryBorderColor }]}
         onPress={() => {
           setChecked(!check);
         }}
       >
-        {check ? <Icon name="check" color="green" size={ms(15)} /> : null}
+        {check ? (
+          <Icon name="check" color={colors.primaryButtonColor} size={ms(15)} />
+        ) : null}
       </TouchableOpacity>
     );
   };
