@@ -94,14 +94,11 @@ const styles = ScaledSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    // height: "100%",
     margin: "5@ms",
     borderWidth: "1@ms",
     borderRadius: "3@ms"
   },
   textField: {
-    // height: "100%",
-    // width: "100%",
     paddingLeft: "5@ms",
     flexGrow: 2
   },
