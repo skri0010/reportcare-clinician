@@ -4,6 +4,7 @@ import { RootState, select } from "util/useRedux";
 import { RiskLevel, getRiskLevelColor } from "models/RiskLevel";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { ms, ScaledSheet } from "react-native-size-matters";
+import { PeopleAvatar } from "../PeopleAvatar";
 
 interface PatientImageContainerProps {
   // JH-TODO: Image link in prop
@@ -32,9 +33,7 @@ export const PatientImageContainer: FC<PatientImageContainerProps> = ({
           }
         ]}
       >
-        <View style={styles.avatar}>
-          <Icon name="person" color="black" size={ms(20)} />
-        </View>
+        <PeopleAvatar iconType="person" />
       </View>
     );
   };
@@ -54,13 +53,5 @@ const styles = ScaledSheet.create({
     alignItems: "center",
     paddingVertical: "10@ms",
     width: "70@ms"
-  },
-  avatar: {
-    backgroundColor: "#e0e0e0",
-    width: "50@ms",
-    height: "50@ms",
-    borderRadius: "50@ms",
-    justifyContent: "space-evenly",
-    alignItems: "center"
   }
 });

@@ -6,7 +6,8 @@ import {
   View,
   ViewStyle,
   TextInput,
-  TouchableOpacity
+  TouchableOpacity,
+  Platform
 } from "react-native";
 import { select } from "util/useRedux";
 import { ScaledSheet, ms } from "react-native-size-matters";
@@ -67,7 +68,13 @@ export const SearchBarComponent: FC<SearchBarComponentProps> = ({
           style={[
             styles.textField,
             searchBarTextStyle,
-            { fontSize: fonts.h2Size, paddingHorizontal: "5@ms" }
+            { fontSize: fonts.h2Size, paddingHorizontal: ms(5) },
+            Platform.select({
+              android: {},
+              default: {
+                outlineStyle: "none"
+              }
+            } as any)
           ]}
         />
         <TouchableOpacity onPress={onSearchClick} style={styles.button}>
@@ -87,16 +94,16 @@ const styles = ScaledSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    height: "100%",
+    // height: "100%",
     margin: "5@ms",
     borderWidth: "1@ms",
     borderRadius: "3@ms"
   },
   textField: {
-    height: "100%",
-    width: "100%",
+    // height: "100%",
+    // width: "100%",
     paddingLeft: "5@ms",
-    outlineWidth: "0@ms"
+    flexGrow: 2
   },
   button: {
     margin: "5@ms"

@@ -44,9 +44,23 @@ export const AlertButton: React.FC<AlertButtonProps> = ({
       >
         {/* Floating notification count */}
         {hasNotifications ? (
-          <View style={styles.badgeContainerStyle}>
+          <View
+            style={[
+              styles.badgeContainerStyle,
+              {
+                backgroundColor: colors.primaryBarColor,
+                borderColor: colors.primaryContrastTextColor
+              }
+            ]}
+          >
             <Text
-              style={[styles.badgeTextStyle, { fontSize: fonts.notifSize }]}
+              style={[
+                styles.badgeTextStyle,
+                {
+                  fontSize: fonts.notifSize,
+                  color: colors.primaryContrastTextColor
+                }
+              ]}
             >
               {alertCount}
             </Text>
@@ -78,15 +92,12 @@ const styles = ScaledSheet.create({
     padding: "4@ms"
   },
   badgeTextStyle: {
-    color: "white",
     textAlign: "center"
   },
   badgeContainerStyle: {
     position: "absolute",
     top: "-5@ms",
     right: "-10@ms",
-    backgroundColor: "#0d8ca8",
-    borderColor: "white",
     borderWidth: "1@ms",
     width: "20@ms",
     height: "20@ms",

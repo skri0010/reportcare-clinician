@@ -2,7 +2,8 @@ import React, { FC } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { RootState, select } from "util/useRedux";
-import Icon from "react-native-vector-icons/FontAwesome";
+
+import { PeopleAvatar } from "../PeopleAvatar";
 
 interface SubtitleItemProps {
   value: string;
@@ -46,9 +47,7 @@ export const ClinicianRowBase: React.FC<ClinicianRowBaseProps> = ({
         ]}
       >
         {/* Image (left container) */}
-        <View style={styles.avatar}>
-          <Icon name="user-md" color="black" size={ms(20)} />
-        </View>
+        <PeopleAvatar iconType="user-md" />
         {/* Content (middle container) */}
         <TouchableOpacity style={styles.container} onPress={onRowPress}>
           {/* Title */}
