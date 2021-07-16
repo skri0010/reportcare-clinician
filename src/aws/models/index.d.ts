@@ -1,8 +1,8 @@
-import {
-  ModelInit,
-  MutableModel,
-  PersistentModelConstructor
-} from "@aws-amplify/datastore";
+import { ModelInit, MutableModel, PersistentModelConstructor } from "@aws-amplify/datastore";
+
+
+
+
 
 export declare class PatientInfo {
   readonly id: string;
@@ -17,15 +17,8 @@ export declare class PatientInfo {
   readonly targetWeight: string;
   readonly targetActivity: string;
   readonly patientID: string;
-  readonly createdAt?: string;
-  readonly updatedAt?: string;
   constructor(init: ModelInit<PatientInfo>);
-  static copyOf(
-    source: PatientInfo,
-    mutator: (
-      draft: MutableModel<PatientInfo>
-    ) => MutableModel<PatientInfo> | void
-  ): PatientInfo;
+  static copyOf(source: PatientInfo, mutator: (draft: MutableModel<PatientInfo>) => MutableModel<PatientInfo> | void): PatientInfo;
 }
 
 export declare class MedicationInfo {
@@ -33,15 +26,8 @@ export declare class MedicationInfo {
   readonly medname: string;
   readonly dosage: string;
   readonly patientID: string;
-  readonly createdAt?: string;
-  readonly updatedAt?: string;
   constructor(init: ModelInit<MedicationInfo>);
-  static copyOf(
-    source: MedicationInfo,
-    mutator: (
-      draft: MutableModel<MedicationInfo>
-    ) => MutableModel<MedicationInfo> | void
-  ): MedicationInfo;
+  static copyOf(source: MedicationInfo, mutator: (draft: MutableModel<MedicationInfo>) => MutableModel<MedicationInfo> | void): MedicationInfo;
 }
 
 export declare class ActivityInfo {
@@ -52,15 +38,8 @@ export declare class ActivityInfo {
   readonly Days: string[];
   readonly time: string;
   readonly patientID: string;
-  readonly createdAt?: string;
-  readonly updatedAt?: string;
   constructor(init: ModelInit<ActivityInfo>);
-  static copyOf(
-    source: ActivityInfo,
-    mutator: (
-      draft: MutableModel<ActivityInfo>
-    ) => MutableModel<ActivityInfo> | void
-  ): ActivityInfo;
+  static copyOf(source: ActivityInfo, mutator: (draft: MutableModel<ActivityInfo>) => MutableModel<ActivityInfo> | void): ActivityInfo;
 }
 
 export declare class MedCompliant {
@@ -69,15 +48,8 @@ export declare class MedCompliant {
   readonly Verification: boolean;
   readonly Date: string;
   readonly patientID: string;
-  readonly createdAt?: string;
-  readonly updatedAt?: string;
   constructor(init: ModelInit<MedCompliant>);
-  static copyOf(
-    source: MedCompliant,
-    mutator: (
-      draft: MutableModel<MedCompliant>
-    ) => MutableModel<MedCompliant> | void
-  ): MedCompliant;
+  static copyOf(source: MedCompliant, mutator: (draft: MutableModel<MedCompliant>) => MutableModel<MedCompliant> | void): MedCompliant;
 }
 
 export declare class ReportSymptom {
@@ -87,15 +59,8 @@ export declare class ReportSymptom {
   readonly Severity: string;
   readonly DateTime: string;
   readonly patientID: string;
-  readonly createdAt?: string;
-  readonly updatedAt?: string;
   constructor(init: ModelInit<ReportSymptom>);
-  static copyOf(
-    source: ReportSymptom,
-    mutator: (
-      draft: MutableModel<ReportSymptom>
-    ) => MutableModel<ReportSymptom> | void
-  ): ReportSymptom;
+  static copyOf(source: ReportSymptom, mutator: (draft: MutableModel<ReportSymptom>) => MutableModel<ReportSymptom> | void): ReportSymptom;
 }
 
 export declare class ReportVitals {
@@ -110,15 +75,8 @@ export declare class ReportVitals {
   readonly OxySat: string;
   readonly DateTime: string;
   readonly patientID: string;
-  readonly createdAt?: string;
-  readonly updatedAt?: string;
   constructor(init: ModelInit<ReportVitals>);
-  static copyOf(
-    source: ReportVitals,
-    mutator: (
-      draft: MutableModel<ReportVitals>
-    ) => MutableModel<ReportVitals> | void
-  ): ReportVitals;
+  static copyOf(source: ReportVitals, mutator: (draft: MutableModel<ReportVitals>) => MutableModel<ReportVitals> | void): ReportVitals;
 }
 
 export declare class ClinicianInfo {
@@ -126,16 +84,11 @@ export declare class ClinicianInfo {
   readonly name: string;
   readonly hospitalName: string;
   readonly clinicianID: string;
+  readonly role: string;
   readonly facts: string;
   readonly APS: string;
   readonly DTA: string;
-  readonly createdAt?: string;
-  readonly updatedAt?: string;
+  readonly UXSA: string;
   constructor(init: ModelInit<ClinicianInfo>);
-  static copyOf(
-    source: ClinicianInfo,
-    mutator: (
-      draft: MutableModel<ClinicianInfo>
-    ) => MutableModel<ClinicianInfo> | void
-  ): ClinicianInfo;
+  static copyOf(source: ClinicianInfo, mutator: (draft: MutableModel<ClinicianInfo>) => MutableModel<ClinicianInfo> | void): ClinicianInfo;
 }

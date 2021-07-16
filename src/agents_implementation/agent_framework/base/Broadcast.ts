@@ -1,6 +1,6 @@
+import agentAPI from "../AgentAPI";
 import Message from "../communication/Message";
 import messageChannel from "../communication/MessageChannel";
-import agentManager from "../management/AgentManagement";
 import Activity from "./Activity";
 import Agent from "./Agent";
 import Belief from "./Belief";
@@ -32,7 +32,7 @@ class Broadcast extends Activity {
   async doActivity(agent: Agent): Promise<void> {
     super.doActivity(agent);
     const sender = agent.getID();
-    const receivers = agentManager.getAgents();
+    const receivers = agentAPI.getAgents();
     for (let i = 0; i < receivers.length; i += 1) {
       if (sender !== receivers[i].getID()) {
         messageChannel.addMessage(

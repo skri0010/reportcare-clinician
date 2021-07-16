@@ -1,12 +1,13 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Alert } from "react-native";
 import Actionframe from "../../../../agent_framework/base/Actionframe";
 import Activity from "../../../../agent_framework/base/Activity";
 import Agent from "../../../../agent_framework/base/Agent";
 import Belief from "../../../../agent_framework/base/Belief";
 import Precondition from "../../../../agent_framework/base/Precondition";
 import ProcedureConst from "../../../../agent_framework/const/ProcedureConst";
-import agentManager from "../../../../agent_framework/management/AgentManagement";
+import { DataStore } from "@aws-amplify/datastore";
+import { ClinicianInfo } from "../../../../../aws/models";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import agentAPI from "../../../../agent_framework/AgentAPI";
 
 /**
  * Class to represent an activity for associating Clinician app id to baseline data.
@@ -25,28 +26,22 @@ class StoreBaseline extends Activity {
     await super.doActivity(agent);
     try {
       const baseline = JSON.stringify({
-        baseline: agentManager.getFacts().Clinician?.baseline
+        baseline: agentAPI.getFacts().Clinician?.baseline
       });
 
-      let clinicianExists = false;
-      const storedClinician = await AsyncStorage.getItem(this.id);
-      if (
-        storedClinician &&
-        Object.entries(JSON.parse(storedClinician)).length > 0
-      ) {
-        clinicianExists = true;
-      }
-
-      if (clinicianExists) {
-        await AsyncStorage.mergeItem("Clinician", baseline, () => {
-          Alert.alert(
-            "Data is successfully updated ...",
-            "Baseline data is successfully stored ...",
-            [
-              // eslint-disable-next-line no-console
-              { text: "OK", onPress: () => console.log("OK Pressed") }
-            ]
+      let clinician: ClinicianInfo | undefined;
+      const userId = await AsyncStorage.getItem("UserId");
+      if (userId) {
+        clinician = await DataStore.query(ClinicianInfo, userId);
+        if (clinician) {
+          await DataStore.save(
+            ClinicianInfo.copyOf(clinician, (updated) => {
+              updated.hospitalName = baseline;
+            })
           );
+
+          // eslint-disable-next-line no-console
+          console.log("Data has been saved");
 
           // Update Beliefs
           agent.addBelief(
@@ -56,35 +51,12 @@ class StoreBaseline extends Activity {
           agent.addBelief(new Belief("Clinician", "configured", true));
 
           // Update Facts
-          agentManager.addFact(
-            new Belief("Procedure", "ADC", ProcedureConst.INACTIVE)
+          agentAPI.addFact(
+            new Belief("Procedure", "ADC", ProcedureConst.INACTIVE),
+            true,
+            true
           );
-          agentManager.addFact(new Belief("App", "isConfigured", true));
-        });
-      } else {
-        await AsyncStorage.setItem("Clinician", baseline, () => {
-          Alert.alert(
-            "Data is successfully updated ...",
-            "Baseline data is successfully stored ...",
-            [
-              // eslint-disable-next-line no-console
-              { text: "OK", onPress: () => console.log("OK Pressed") }
-            ]
-          );
-
-          // Update Beliefs
-          agent.addBelief(
-            new Belief(agent.getID(), "lastActivity", this.getID())
-          );
-          agent.addBelief(new Belief("Clinician", "baselineUpdated", false));
-          agent.addBelief(new Belief("Clinician", "configured", true));
-
-          // Update Facts
-          agentManager.addFact(
-            new Belief("Procedure", "ADC", ProcedureConst.INACTIVE)
-          );
-          agentManager.addFact(new Belief("App", "isConfigured", true));
-        });
+        }
       }
     } catch (error) {
       // eslint-disable-next-line no-console

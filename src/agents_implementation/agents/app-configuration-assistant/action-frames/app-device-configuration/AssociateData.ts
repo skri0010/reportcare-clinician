@@ -5,7 +5,7 @@ import Agent from "../../../../agent_framework/base/Agent";
 import Belief from "../../../../agent_framework/base/Belief";
 import Precondition from "../../../../agent_framework/base/Precondition";
 import ProcedureConst from "../../../../agent_framework/const/ProcedureConst";
-import agentManager from "../../../../agent_framework/management/AgentManagement";
+import agentAPI from "../../../../agent_framework/AgentAPI";
 
 /**
  * Class to represent an activity for associating clinician app id to baseline data.
@@ -29,7 +29,7 @@ class AssociateData extends Activity {
 
       // Associating Data
       const baselineFields = ["name", "doctorId", "hospitalName"];
-      const clinicianFacts = agentManager.getFacts().Clinician;
+      const clinicianFacts = agentAPI.getFacts().Clinician;
       const baseline: Fact = {};
       baselineFields.forEach((field) => {
         baseline[field] = clinicianFacts[field];
@@ -40,11 +40,7 @@ class AssociateData extends Activity {
       agent.addBelief(new Belief(agent.getID(), "lastActivity", this.getID()));
 
       // Update Facts
-      agentManager.addFact(new Belief("Clinician", "hasBaseline", true), false);
-      agentManager.addFact(
-        new Belief("Clinician", "baseline", baseline),
-        false
-      );
+      agentAPI.addFact(new Belief("Clinician", "baseline", baseline), false);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
