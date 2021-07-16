@@ -6,6 +6,8 @@ export const normalDesktopFontScheme: FontScheme = {
   h2Size: ms(18),
   h3Size: ms(16),
   h4Size: ms(14),
+  h5Size: ms(12),
+  h6Size: ms(10),
   h7Size: ms(8),
   notifSize: ms(10)
 };

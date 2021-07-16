@@ -40,7 +40,7 @@ export const PatientChatRow: FC<PatientChatRowProps> = ({
             { color: colors.primaryTextColor }
           ]}
         />
-        {count.toString()}
+        {/* {count.toString()} */}
       </View>
     );
   };
@@ -94,7 +94,9 @@ const styles = ScaledSheet.create({
   notification: {
     width: "18@ms",
     height: "18@ms",
-    borderRadius: "15@ms"
+    borderRadius: "15@ms",
+    justifyContent: "space-evenly",
+    alignItems: "center"
   },
   notificationTextStyle: {
     textAlign: "center"

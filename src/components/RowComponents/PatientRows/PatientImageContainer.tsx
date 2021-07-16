@@ -51,6 +51,6 @@ const styles = ScaledSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingVertical: "7@ms",
-    width: "90@ms0.05"
+    width: "80@ms0.1"
   }
 });

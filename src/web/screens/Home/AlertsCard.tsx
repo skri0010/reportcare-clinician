@@ -4,7 +4,7 @@ import { RiskLevel } from "models/RiskLevel";
 import { View, TextStyle } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { LongAlertButton } from "components/Buttons/LongAlertButton";
-import { H4, H7 } from "components/Text";
+import { H4, H7, H6 } from "components/Text";
 
 export const AlertsCard: FC = () => {
   const { colors } = select((state: RootState) => ({
@@ -18,7 +18,7 @@ export const AlertsCard: FC = () => {
     <View style={styles.card}>
       <View style={styles.titleContainer}>
         <H4 text="Alerts" style={[styles.title, titleColor]} />
-        <H7 text="   (2 remaining)" style={[styles.title, detailsColors]} />
+        <H6 text="   (2 remaining)" style={[styles.title, detailsColors]} />
       </View>
       <LongAlertButton riskLevel={RiskLevel.HIGH} alertCount={3} />
       <LongAlertButton riskLevel={RiskLevel.MEDIUM} alertCount={3} />

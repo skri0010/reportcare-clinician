@@ -1,11 +1,11 @@
 import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
 import { View, FlatList, TextStyle, TouchableOpacity } from "react-native";
-import { ScaledSheet } from "react-native-size-matters";
+import { ms, ScaledSheet } from "react-native-size-matters";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { mockPatients } from "mock/mockPatients";
 import { PatientRequestRow } from "components/RowComponents/PatientRows/PatientRequestRow";
-import { H4, H7 } from "components/Text";
+import { H5, H4, H7, H6 } from "components/Text";
 
 // const Tab = createMaterialTopTabNavigator();
 
@@ -22,22 +22,25 @@ export const RequestsByMariaCard: FC = () => {
       {/* Requests by MARIA */}
       <View style={styles.titleContainer}>
         <H4 text="Requests by Maria" style={[styles.title, titleColor]} />
-        <H7 text="   (2 remaining)" style={[styles.details, detailsColors]} />
+        <H6 text="   (2 remaining)" style={[styles.details, detailsColors]} />
       </View>
       {/* Patient Requests List */}
-      <FlatList
-        ItemSeparatorComponent={() => <ItemSeparator />}
-        ListHeaderComponent={() => <ItemSeparator />}
-        ListFooterComponent={() => <ItemSeparator />}
-        data={mockPatients}
-        renderItem={({ item }) => (
-          <PatientRequestRow
-            generalDetails={item.generalDetails}
-            request={item.request}
-          />
-        )}
-        keyExtractor={(item) => item.itemId}
-      />
+      <View style={[{ height: ms(155) }]}>
+        <FlatList
+          ItemSeparatorComponent={() => <ItemSeparator />}
+          ListHeaderComponent={() => <ItemSeparator />}
+          ListFooterComponent={() => <ItemSeparator />}
+          data={mockPatients}
+          renderItem={({ item }) => (
+            <PatientRequestRow
+              generalDetails={item.generalDetails}
+              request={item.request}
+            />
+          )}
+          keyExtractor={(item) => item.itemId}
+        />
+      </View>
+
       <View style={styles.buttonContainer}>
         {/* Might have to change to use absolute positioning later on */}
         <TouchableOpacity
@@ -47,7 +50,7 @@ export const RequestsByMariaCard: FC = () => {
             styles.button
           ]}
         >
-          <H4
+          <H6
             text="SHOW MORE"
             style={[
               { color: colors.primaryContrastTextColor },
@@ -79,13 +82,15 @@ const styles = ScaledSheet.create({
     textAlign: "center"
   },
   button: {
-    height: "30@ms",
+    height: "25@ms",
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     borderRadius: "6@ms",
-    width: "60%"
+    width: "50%",
+    position: "absolute",
+    top: "-30@ms"
   },
   buttonContainer: {
     flexDirection: "row",

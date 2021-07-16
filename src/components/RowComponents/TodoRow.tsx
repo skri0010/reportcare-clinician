@@ -4,7 +4,7 @@ import { RiskLevel, getRiskLevelColor } from "models/RiskLevel";
 import { ITodoDetails } from "models/TodoDetails";
 import { View, Button, TouchableHighlight } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
-import { H4 } from "components/Text/index";
+import { H4, H5, H6 } from "components/Text/index";
 
 // Interface that determines what props the search bar accepts
 interface TodoRowProps {
@@ -42,9 +42,9 @@ export const TodoRow: FC<TodoRowProps> = ({
           ]}
         >
           <View style={styles.texts}>
-            <H4 text={todoDetails.title} style={styles.title} />
-            <H4 text={todoDetails.name} style={styles.name} />
-            <H4 text={todoDetails.description} style={null} />
+            <H5 text={todoDetails.title} style={styles.title} />
+            <H6 text={todoDetails.name} style={styles.name} />
+            <H6 text={todoDetails.description} style={null} />
           </View>
         </View>
 
@@ -85,7 +85,7 @@ const styles = ScaledSheet.create({
     flexDirection: "row"
   },
   contentContainer: {
-    paddingVertical: "10@ms",
+    paddingVertical: "3@ms",
     borderBottomWidth: 1,
     flex: 1
   },
@@ -94,12 +94,12 @@ const styles = ScaledSheet.create({
   },
   title: {
     fontWeight: "bold",
-    fontSize: "18@ms",
+    // fontSize: "18@ms",
     paddingBottom: "10@ms"
   },
   name: {
-    fontSize: "16@ms",
-    paddingBottom: "20@ms"
+    // fontSize: "16@ms",
+    paddingBottom: "15@ms"
   },
   description: {
     fontSize: "16@ms"

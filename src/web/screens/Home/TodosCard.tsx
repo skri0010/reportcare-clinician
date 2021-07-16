@@ -5,7 +5,7 @@ import { ScaledSheet } from "react-native-size-matters";
 import { TodoRow } from "components/RowComponents/TodoRow";
 import { mockPatientRowDetails } from "mock/mockTodoDetails";
 import { RiskLevel } from "models/RiskLevel";
-import { H3 } from "components/Text/index";
+import { H3, H4 } from "components/Text/index";
 
 export const TodosCard: FC = () => {
   const { colors } = select((state: RootState) => ({
@@ -16,7 +16,9 @@ export const TodosCard: FC = () => {
 
   return (
     <View style={styles.card}>
-      <H3 text="Todos" style={[styles.title, titleColor]} />
+      <View style={styles.titleContainer}>
+        <H4 text="Todos" style={[styles.title, titleColor]} />
+      </View>
       <TodoRow todoDetails={mockPatientRowDetails} riskLevel={RiskLevel.HIGH} />
     </View>
   );
@@ -32,6 +34,11 @@ const styles = ScaledSheet.create({
   },
   title: {
     fontWeight: "bold",
-    paddingBottom: "8@ms"
+    paddingBottom: "5@ms"
+  },
+  titleContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "baseline"
   }
 });
