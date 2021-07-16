@@ -2,8 +2,9 @@ import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
 import { RiskLevel, getRiskLevelColor } from "models/RiskLevel";
 import { ITodoDetails } from "models/TodoDetails";
-import { Text, View, Button, TouchableHighlight } from "react-native";
+import { View, Button, TouchableHighlight } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
+import { H4 } from "components/Text/index";
 
 // Interface that determines what props the search bar accepts
 interface TodoRowProps {
@@ -35,14 +36,15 @@ export const TodoRow: FC<TodoRowProps> = ({
               backgroundColor: getRiskLevelColor(
                 colors.riskLevelBackgroundColors,
                 riskLevel
-              )
+              ),
+              borderBottomColor: colors.primaryBorderColor
             }
           ]}
         >
           <View style={styles.texts}>
-            <Text style={styles.title}> {todoDetails.title} </Text>
-            <Text style={styles.name}> {todoDetails.name} </Text>
-            <Text style={styles.description}> {todoDetails.description} </Text>
+            <H4 text={todoDetails.title} style={styles.title} />
+            <H4 text={todoDetails.name} style={styles.name} />
+            <H4 text={todoDetails.description} style={null} />
           </View>
         </View>
 
@@ -66,7 +68,11 @@ export const TodoRow: FC<TodoRowProps> = ({
           <Button
             title={todoDetails.doneStatus === false ? "DONE" : "UNDO"}
             onPress={onButtonPress}
-            color={todoDetails.doneStatus === false ? "#37BE7D" : "#D11C1C"}
+            color={
+              todoDetails.doneStatus === false
+                ? colors.primaryButtonColor
+                : colors.primaryWarningButtonColor
+            }
           />
         </View>
       </View>
@@ -81,7 +87,6 @@ const styles = ScaledSheet.create({
   contentContainer: {
     paddingVertical: "10@ms",
     borderBottomWidth: 1,
-    borderBottomColor: "#D2D2D2",
     flex: 1
   },
   texts: {

@@ -1,9 +1,10 @@
 import React, { FC } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import { PatientImageContainer } from "./PatientImageContainer";
 import { ScaledSheet } from "react-native-size-matters";
 import { RootState, select } from "util/useRedux";
 import { RiskLevel } from "models/RiskLevel";
+import { H3, H7 } from "components/Text/index";
 
 interface SubtitleItemProps {
   label?: string;
@@ -37,12 +38,10 @@ export const PatientRowBase: React.FC<PatientRowBaseProps> = ({
 
   const SubtitleItem: FC<SubtitleItemProps> = ({ label, value }) => {
     return (
-      <Text
-        numberOfLines={1}
-        style={[styles.subtitleTextStyle, { color: colors.secondaryTextColor }]}
-      >
-        {label ? `${label}: ${value}` : value}
-      </Text>
+      <H7
+        text={label ? `${label}: ${value}` : value}
+        style={[{ color: colors.secondaryTextColor }]}
+      />
     );
   };
 
@@ -59,12 +58,10 @@ export const PatientRowBase: React.FC<PatientRowBaseProps> = ({
         {/* Content (middle container) */}
         <View style={styles.container}>
           {/* Title */}
-          {/* TODO-JH: Use custom text component */}
-          <Text
+          <H3
+            text={title}
             style={[styles.titleTextStyle, { color: colors.primaryTextColor }]}
-          >
-            {title}
-          </Text>
+          />
           <View style={styles.subtitleContainer}>
             {/* Subtitles */}
             {subtitleOne ? (
@@ -91,14 +88,13 @@ export const PatientRowBase: React.FC<PatientRowBaseProps> = ({
                 ]}
               >
                 {/* JH-TODO i18n for button label */}
-                <Text
+                <H7
+                  text={bottomButtonLabel || ""}
                   style={[
                     styles.bottomButtonTextStyle,
                     { color: colors.primaryContrastTextColor }
                   ]}
-                >
-                  {bottomButtonLabel}
-                </Text>
+                />
               </TouchableOpacity>
             </View>
           ) : null}
@@ -116,17 +112,13 @@ const styles = ScaledSheet.create({
   },
   container: {
     paddingTop: "5@ms",
-    paddingLeft: "15@ms",
+    paddingLeft: "7@ms",
     flexDirection: "column",
     flex: 1
   },
   titleTextStyle: {
     fontWeight: "bold",
-    fontSize: "20@ms",
     paddingBottom: "10@ms"
-  },
-  subtitleTextStyle: {
-    fontSize: "12@ms"
   },
   subtitleContainer: {
     paddingBottom: "10@ms"
@@ -139,7 +131,6 @@ const styles = ScaledSheet.create({
     borderRadius: "10@ms"
   },
   bottomButtonTextStyle: {
-    fontSize: "12@ms",
     alignSelf: "center",
     paddingVertical: "3@ms",
     paddingHorizontal: "10@ms"

@@ -1,8 +1,9 @@
 import React from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import { PatientRowBase } from "./PatientRowBase";
 import { PersonRowGeneralDetails } from "models/PersonRowDetails";
 import { ScaledSheet } from "react-native-size-matters";
+import { H7 } from "components/Text/index";
 
 export interface PatientRequestRowProps {
   generalDetails: PersonRowGeneralDetails;
@@ -29,7 +30,7 @@ export const PatientRequestRow: React.FC<PatientRequestRowProps> = ({
       >
         {/* Time container */}
         <View style={styles.sideContainer}>
-          <Text>{time || "?"}</Text>
+          <H7 text={time || "?"} style={null} />
         </View>
       </PatientRowBase>
     </TouchableOpacity>

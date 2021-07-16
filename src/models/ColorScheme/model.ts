@@ -11,6 +11,7 @@ export interface ColorScheme {
   // Background
   primaryBackgroundColor: string;
   secondaryBackgroundColor: string;
+  primaryWebBackgroundColor: string;
 
   // Borders
   primaryBorderColor: string;
@@ -32,6 +33,7 @@ export interface ColorScheme {
 
   // Buttons
   primaryButtonColor: string;
+  primaryWarningButtonColor: string;
 
   // Avatar background
   primaryAvatarBackgroundColor: string;

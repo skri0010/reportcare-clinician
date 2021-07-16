@@ -1,8 +1,8 @@
 import React, { FC } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { RootState, select } from "util/useRedux";
-
+import { H3, H7 } from "components/Text/index";
 import { PeopleAvatar } from "../PeopleAvatar";
 
 interface SubtitleItemProps {
@@ -30,12 +30,10 @@ export const ClinicianRowBase: React.FC<ClinicianRowBaseProps> = ({
 
   const SubtitleItem: FC<SubtitleItemProps> = ({ value }) => {
     return (
-      <Text
-        numberOfLines={1}
+      <H7
+        text={value ? `${value}` : ""}
         style={[styles.subtitleTextStyle, { color: colors.secondaryTextColor }]}
-      >
-        {value ? `${value}` : ""}
-      </Text>
+      />
     );
   };
   return (
@@ -52,11 +50,10 @@ export const ClinicianRowBase: React.FC<ClinicianRowBaseProps> = ({
         <TouchableOpacity style={styles.container} onPress={onRowPress}>
           {/* Title */}
           {/* TODO-JH: Use custom text component */}
-          <Text
+          <H3
+            text={title}
             style={[styles.titleTextStyle, { color: colors.primaryTextColor }]}
-          >
-            {title}
-          </Text>
+          />
           <View style={styles.subtitleContainer}>
             {/* Subtitles */}
             {subtitleOne ? <SubtitleItem value={subtitleOne.value} /> : null}

@@ -1,9 +1,10 @@
 import React, { FC } from "react";
-import { Text, View, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import { PatientRowBase } from "./PatientRowBase";
 import { PersonRowGeneralDetails } from "models/PersonRowDetails";
 import { ScaledSheet } from "react-native-size-matters";
 import { RootState, select } from "util/useRedux";
+import { H7 } from "components/Text/index";
 
 export interface PatientChatRowProps {
   generalDetails: PersonRowGeneralDetails;
@@ -32,14 +33,14 @@ export const PatientChatRow: FC<PatientChatRowProps> = ({
           { backgroundColor: colors.notificationColor }
         ]}
       >
-        <Text
+        <H7
+          text={count.toString()}
           style={[
             styles.notificationTextStyle,
             { color: colors.primaryTextColor }
           ]}
-        >
-          {count.toString()}
-        </Text>
+        />
+        {count.toString()}
       </View>
     );
   };
@@ -60,7 +61,7 @@ export const PatientChatRow: FC<PatientChatRowProps> = ({
         <View style={styles.sideContainer}>
           {/* Time container */}
           <View style={styles.timeContainer}>
-            <Text style={styles.timeTextStyle}>{time || "?"}</Text>
+            <H7 text={time || "?"} style={null} />
           </View>
           {/* Notification (with count) container */}
           {unreadMessageCount ? (

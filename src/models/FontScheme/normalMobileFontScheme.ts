@@ -6,5 +6,6 @@ export const normalMobileFontScheme: FontScheme = {
   h2Size: ms(18),
   h3Size: ms(16),
   h4Size: ms(14),
+  h7Size: ms(8),
   notifSize: ms(10)
 };

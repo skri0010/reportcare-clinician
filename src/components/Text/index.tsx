@@ -91,3 +91,17 @@ export const H4: FC<TextProps> = ({ text, style, translate }) => {
 
   return <BaseText style={combinedStyle} text={text} translate={translate} />;
 };
+
+export const H7: FC<TextProps> = ({ text, style, translate }) => {
+  const { fonts } = select((state: RootState) => ({
+    fonts: state.settings.fonts
+  }));
+
+  const defaultStyle = {
+    fontSize: fonts.h4Size
+  } as RNTextStyle;
+
+  const combinedStyle = [defaultStyle, style];
+
+  return <BaseText style={combinedStyle} text={text} translate={translate} />;
+};

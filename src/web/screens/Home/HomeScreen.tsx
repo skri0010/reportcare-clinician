@@ -1,46 +1,41 @@
 import React, { FC } from "react";
-import { View, FlatList } from "react-native";
+import { View } from "react-native";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
-import { AlertButton } from "components/Buttons/AlertButton";
-import { RiskLevel } from "models/RiskLevel";
-import { MainTitle } from "components/Text";
-import { PatientRequestRow } from "components/RowComponents/PatientRows/PatientRequestRow";
-import { ItemSeparator } from "components/RowComponents/ItemSeparator";
-import { mockPatients } from "mock/mockPatients";
 import { ScreenName, WithSideTabsProps } from "web/screens";
+import { WelcomeCard } from "./WelcomeCard";
+import { ScaledSheet } from "react-native-size-matters";
+import { RequestsByMariaCard } from "./RequestsByMariaCard";
+import { AlertsCard } from "./AlertsCard";
+import { TodosCard } from "./TodosCard";
 
 export const HomeScreen: FC<WithSideTabsProps[ScreenName.HOME]> = () => {
+  // JH-TODO Replace titles with i18n
   return (
     <ScreenWrapper>
-      {/* Alerts */}
-      <MainTitle title="Alerts" details="(2 remaining)" />
-
-      {/* Alert Button Row */}
-      <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
-        {/* JH-TODO: Remove hardcoding of alertCount */}
-        <AlertButton riskLevel={RiskLevel.HIGH} alertCount={1} />
-        <AlertButton riskLevel={RiskLevel.MEDIUM} alertCount={1} />
-        <AlertButton riskLevel={RiskLevel.LOW} />
-        <AlertButton riskLevel={RiskLevel.UNASSIGNED} />
+      <WelcomeCard name="Nailah" />
+      <View style={styles.bottomContainer}>
+        <View style={styles.item}>
+          <RequestsByMariaCard />
+        </View>
+        <View style={styles.item}>
+          <AlertsCard />
+        </View>
+        <View style={styles.item}>
+          <TodosCard />
+        </View>
       </View>
-
-      {/* Requests by MARIA */}
-      <MainTitle title="Requests by MARIA" details="(2 remaining)" />
-
-      {/* Patient Requests List */}
-      <FlatList
-        ItemSeparatorComponent={() => <ItemSeparator />}
-        ListHeaderComponent={() => <ItemSeparator />}
-        ListFooterComponent={() => <ItemSeparator />}
-        data={mockPatients}
-        renderItem={({ item }) => (
-          <PatientRequestRow
-            generalDetails={item.generalDetails}
-            request={item.request}
-          />
-        )}
-        keyExtractor={(item) => item.itemId}
-      />
     </ScreenWrapper>
   );
 };
+
+const styles = ScaledSheet.create({
+  bottomContainer: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start"
+  },
+  item: {
+    flexBasis: "33.33%"
+  }
+});
