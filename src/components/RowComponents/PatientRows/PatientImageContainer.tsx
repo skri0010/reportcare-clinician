@@ -32,13 +32,7 @@ export const PatientImageContainer: FC<PatientImageContainerProps> = ({
           }
         ]}
       >
-<<<<<<< HEAD
         <PeopleAvatar iconType="person" />
-=======
-        <View style={styles.avatar}>
-          <Icon name="person" color={colors.primaryTextColor} size={ms(20)} />
-        </View>
->>>>>>> 0b7e94e4df91b03d30dc2b73e2ebdc468b6d94f5
       </View>
     );
   };

@@ -36,12 +36,9 @@ export const lightColorScheme: ColorScheme = {
 
   // Buttons
   primaryButtonColor: "#57c081",
-<<<<<<< HEAD
 
   // Avatar background
   primaryAvatarBackgroundColor: "#e0e0e0",
-=======
->>>>>>> 0b7e94e4df91b03d30dc2b73e2ebdc468b6d94f5
 
   // Others
   riskLevelBackgroundColors: riskLevelBackgroundColors,
