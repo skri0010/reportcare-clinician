@@ -8,7 +8,11 @@ export const ScreenWrapper: FC = ({ children }) => {
   }));
 
   return (
-    <View style={{ backgroundColor: colors.primaryBackgroundColor, flex: 1 }}>
+    <View
+      style={{
+        backgroundColor: colors.primaryBackgroundColor
+      }}
+    >
       {children}
     </View>
   );

@@ -1,12 +1,14 @@
 {
-  "providers": ["awscloudformation"],
+  "providers": [
+    "awscloudformation"
+  ],
   "projectName": "ReportCare",
   "version": "3.1",
   "frontend": "javascript",
   "javascript": {
     "framework": "react-native",
     "config": {
-      "SourceDir": "aws",
+      "SourceDir": "src/aws",
       "DistributionDir": "/",
       "BuildCommand": "npm.cmd run-script build",
       "StartCommand": "npm.cmd run-script start"

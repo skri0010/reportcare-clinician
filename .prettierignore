@@ -4,6 +4,6 @@ dist
 # Installed packages
 node_modules
 
-# Amplify folders
+# AWS folders
+amplify
 src/aws
-src/amplify

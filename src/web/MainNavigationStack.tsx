@@ -1,4 +1,5 @@
 import React, { FC } from "react";
+import { View, Dimensions } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { SideNavigationBar } from "./SideNavigationBar";
@@ -17,18 +18,20 @@ export const MainNavigationStack: FC = () => {
   };
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        {/* Main Tabs */}
-        <Stack.Screen
-          name={ScreenName.MAIN}
-          component={SideNavigationBar}
-          options={{
-            headerTitle: () => null,
-            headerStyle: screenHeaderStyle
-          }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <View style={{ height: Dimensions.get("window").height }}>
+      <NavigationContainer>
+        <Stack.Navigator>
+          {/* Main Tabs */}
+          <Stack.Screen
+            name={ScreenName.MAIN}
+            component={SideNavigationBar}
+            options={{
+              headerTitle: () => null,
+              headerStyle: screenHeaderStyle
+            }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </View>
   );
 };

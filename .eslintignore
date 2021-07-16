@@ -5,6 +5,5 @@ dist
 node_modules
 
 # Amplify folders
+amplify
 src/aws
-src/amplify
-aws\models

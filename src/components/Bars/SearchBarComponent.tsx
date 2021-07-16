@@ -71,6 +71,7 @@ export const SearchBarComponent: FC<SearchBarComponentProps> = ({
             { fontSize: fonts.h2Size, paddingHorizontal: ms(5) },
             Platform.select({
               android: {},
+              ios: {},
               default: {
                 outlineStyle: "none"
               }
