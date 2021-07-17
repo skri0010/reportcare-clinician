@@ -9,6 +9,8 @@ import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { validateCode, validateUsername } from "util/validation";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import i18n from "util/language/i18n";
+import { useToast } from "react-native-toast-notifications";
+import { LoadingIndicator } from "components/LoadingIndicator";
 
 export const ConfirmRegistration: FC<
   AuthScreensProps[AuthScreenName.CONFIRM_REGISTER]
@@ -22,6 +24,9 @@ export const ConfirmRegistration: FC<
   const [username, setUsername] = useState("");
   const [code, setCode] = useState("");
   const [inputValid, setInputValid] = useState(false);
+  const [confirming, setConfirming] = useState(false);
+
+  const toast = useToast();
 
   /**
    * Confirms sign up
@@ -29,6 +34,7 @@ export const ConfirmRegistration: FC<
    * Navigates to Sign In page after succesfully submitted
    */
   const confirm = async (): Promise<void> => {
+    setConfirming(true);
     await Auth.confirmSignUp(username, code)
       .then(async () => {
         const { name, hospitalName, role } = route.params;
@@ -36,11 +42,15 @@ export const ConfirmRegistration: FC<
           await AsyncStorage.setItem("Unconfigured", JSON.stringify(true));
           await AsyncStorage.setItem("Details", JSON.stringify(route.params));
         }
+        setConfirming(false);
+        toast.show(i18n.t("RegistrationSuccessful"), { type: "success" });
         navigation.navigate(AuthScreenName.SIGN_IN);
       })
       .catch((error: { code: string; message: string; name: string }) => {
         // eslint-disable-next-line no-console
         console.log(error.message);
+        setConfirming(false);
+        toast.show(i18n.t("ConfirmRegistrationFailed"), { type: "danger" });
       });
   };
 
@@ -59,7 +69,10 @@ export const ConfirmRegistration: FC<
 
   return (
     <ScreenWrapper>
-      <SafeAreaView style={styles.safeAreaContainer}>
+      <SafeAreaView
+        style={styles.safeAreaContainer}
+        pointerEvents={confirming ? "none" : "auto"}
+      >
         {/* Username */}
         <Text style={inputLabelStyle}>{i18n.t("Username")}</Text>
         <TextInput
@@ -120,6 +133,7 @@ export const ConfirmRegistration: FC<
           </Text>
         </TouchableOpacity>
       </SafeAreaView>
+      {confirming && <LoadingIndicator />}
     </ScreenWrapper>
   );
 };

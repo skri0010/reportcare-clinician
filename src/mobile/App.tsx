@@ -4,9 +4,13 @@ import { store } from "util/useRedux";
 import { MainNavigationStack } from "./MainNavigationStack";
 import { AuthNavigationStack } from "./AuthNavigationStack";
 import awsconfig from "aws/aws-exports";
-import { Amplify, Hub } from "@aws-amplify/core";
+import { Amplify } from "@aws-amplify/core";
 import { Auth } from "@aws-amplify/auth";
-import { LogBox } from "react-native";
+import { LogBox, Dimensions } from "react-native";
+import { ToastProvider } from "react-native-toast-notifications";
+import { ms } from "react-native-size-matters";
+import Icon from "react-native-vector-icons/FontAwesome";
+import { AuthState } from "./auth_screens";
 // import Test from "shared/Test";
 
 Amplify.configure(awsconfig);
@@ -26,40 +30,56 @@ const App: FC = () => {
   const checkAuthState = async () => {
     try {
       await Auth.currentAuthenticatedUser();
-      setAuthState("signedIn");
+      setAuthState(AuthState.SIGNED_IN);
     } catch (err) {
-      setAuthState("signedOut");
+      setAuthState(AuthState.SIGNED_OUT);
     }
-  };
-
-  // Listens to Auth events
-  const setAuthListener = async () => {
-    Hub.listen("auth", async (data) => {
-      switch (data.payload.event) {
-        case "signIn":
-          setAuthState("signedIn");
-          break;
-        case "signOut":
-          setAuthState("signedOut");
-          break;
-        default:
-          break;
-      }
-    });
   };
 
   useEffect(() => {
     checkAuthState();
-    setAuthListener();
   }, []);
 
   return (
     <Provider store={store}>
-      {authState === "signedIn" && (
-        <MainNavigationStack />
-        // <Test />
-      )}
-      {authState === "signedOut" && <AuthNavigationStack />}
+      <ToastProvider
+        placement="top"
+        offset={ms(15)}
+        duration={4000}
+        successColor="#229c00"
+        successIcon={
+          <Icon
+            name="check-square"
+            color="white"
+            size={ms(20)}
+            style={{ marginLeft: ms(5), marginRight: ms(10) }}
+          />
+        }
+        dangerIcon={
+          <Icon
+            name="times-circle"
+            color="white"
+            size={ms(20)}
+            style={{ marginLeft: ms(5), marginRight: ms(10) }}
+          />
+        }
+        dangerColor="#b30c00"
+        textStyle={{ fontSize: ms(16), color: "white" }}
+        style={{
+          paddingVertical: ms(10),
+          paddingRight: ms(30),
+          borderRadius: ms(5),
+          maxWidth: (Dimensions.get("window").width * 4) / 5
+        }}
+      >
+        {authState === AuthState.SIGNED_IN && (
+          <MainNavigationStack setAuthState={setAuthState} />
+          // <Test />
+        )}
+        {authState === AuthState.SIGNED_OUT && (
+          <AuthNavigationStack setAuthState={setAuthState} />
+        )}
+      </ToastProvider>
     </Provider>
   );
 };

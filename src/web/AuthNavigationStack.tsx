@@ -9,9 +9,15 @@ import { ForgotPassword } from "./auth_screens/ForgotPassword";
 import { ConfirmRegistration } from "./auth_screens/ConfirmRegistration";
 import i18n from "util/language/i18n";
 
+interface AuthNavigationStackProps {
+  setAuthState: (state: string) => void;
+}
+
 const Stack = createStackNavigator<AuthStackParamList>();
 
-export const AuthNavigationStack: FC = () => {
+export const AuthNavigationStack: FC<AuthNavigationStackProps> = ({
+  setAuthState
+}) => {
   const { colors, fonts } = select((state: RootState) => ({
     colors: state.settings.colors,
     fonts: state.settings.fonts
@@ -30,9 +36,16 @@ export const AuthNavigationStack: FC = () => {
       <Stack.Navigator>
         <Stack.Screen
           name={AuthScreenName.SIGN_IN}
-          component={SignIn}
           options={{ headerShown: false }}
-        />
+        >
+          {(screenProps) => (
+            <SignIn
+              navigation={screenProps.navigation}
+              route={screenProps.route}
+              setAuthState={setAuthState}
+            />
+          )}
+        </Stack.Screen>
         <Stack.Screen
           name={AuthScreenName.REGISTER}
           component={RegisterAccount}

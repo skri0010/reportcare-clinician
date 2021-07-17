@@ -13,6 +13,7 @@ export type AuthScreensProps = {
 type SignInScreenProps = {
   navigation: StackNavigationProp<AuthStackParamList, AuthScreenName.SIGN_IN>;
   route: RouteProp<AuthStackParamList, AuthScreenName.SIGN_IN>;
+  setAuthState: (state: string) => void;
 };
 
 // Register

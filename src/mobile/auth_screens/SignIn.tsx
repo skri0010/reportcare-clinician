@@ -7,15 +7,22 @@ import { RootState, select } from "util/useRedux";
 import { DataStore } from "@aws-amplify/datastore";
 import { ClinicianInfo } from "aws/models";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AuthScreenName, AuthScreensProps } from "mobile/auth_screens";
+import {
+  AuthScreenName,
+  AuthScreensProps,
+  AuthState
+} from "mobile/auth_screens";
 import { ScreenWrapper } from "mobile/screens/ScreenWrapper";
 import { validatePassword, validateUsername } from "util/validation";
 import agentAPI from "agents_implementation/agent_framework/AgentAPI";
 import i18n from "util/language/i18n";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { useToast } from "react-native-toast-notifications";
+import { LoadingIndicator } from "components/LoadingIndicator";
 
 export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
-  navigation
+  navigation,
+  setAuthState
 }) => {
   const { colors, fonts } = select((state: RootState) => ({
     colors: state.settings.colors,
@@ -26,6 +33,9 @@ export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [inputValid, setInputValid] = useState(false);
+  const [signingIn, setSigningIn] = useState(false);
+
+  const toast = useToast();
 
   /**
    * Signs in
@@ -33,6 +43,7 @@ export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
    * Otherwise retrieves the entry and initiates the agents.
    */
   const signIn = async (): Promise<void> => {
+    setSigningIn(true);
     await Auth.signIn({
       username: username,
       password: password
@@ -62,47 +73,42 @@ export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
                 DTA: "",
                 UXSA: ""
               })
-            )
-              .then(async (response) => {
-                // Locally stores entry Id and clinician Id
-                await AsyncStorage.multiSet([
-                  ["UserId", response.id],
-                  ["ClinicianId", username]
-                ]);
-                await AsyncStorage.multiRemove(["Unconfigured", "Details"]);
-              })
-              .catch((error) => {
-                // eslint-disable-next-line no-console
-                console.log(error);
-              });
+            ).then(async (response) => {
+              // Locally stores entry Id and clinician Id
+              await AsyncStorage.multiSet([
+                ["UserId", response.id],
+                ["ClinicianId", username]
+              ]);
+              await AsyncStorage.multiRemove(["Unconfigured", "Details"]);
+            });
           }
         } else {
           // User already has an entry in DynamoDB table
           await DataStore.query(ClinicianInfo, (c) =>
             c.clinicianID("eq", username)
-          )
-            .then(async (results) => {
-              if (results.length > 0) {
-                const clinician = results.pop();
-                if (clinician) {
-                  await AsyncStorage.multiSet([
-                    ["UserId", clinician.id],
-                    ["ClinicianId", clinician.clinicianID]
-                  ]);
-                }
+          ).then(async (results) => {
+            if (results.length > 0) {
+              const clinician = results.pop();
+              if (clinician) {
+                await AsyncStorage.multiSet([
+                  ["UserId", clinician.id],
+                  ["ClinicianId", clinician.clinicianID]
+                ]);
               }
-            })
-            .catch((error) => {
-              // eslint-disable-next-line no-console
-              console.log(error);
-            });
+            }
+          });
         }
         // Triggers initialization of agents
         agentAPI.startAgents();
+        setSigningIn(false);
+        toast.show(i18n.t("SignInSuccessful"), { type: "success" });
+        setAuthState(AuthState.SIGNED_IN);
       })
       .catch((error: { code: string; message: string; name: string }) => {
         // eslint-disable-next-line no-console
         console.log(error.message);
+        setSigningIn(false);
+        toast.show(i18n.t("SignInFailed"), { type: "danger" });
       });
   };
 
@@ -125,7 +131,10 @@ export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
 
   return (
     <ScreenWrapper>
-      <SafeAreaView style={styles.safeAreaContainer}>
+      <SafeAreaView
+        style={styles.safeAreaContainer}
+        pointerEvents={signingIn ? "none" : "auto"}
+      >
         {/* App Logo and Name */}
         <View style={styles.logoContainer}>
           <Image
@@ -259,6 +268,7 @@ export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
           </View>
         </KeyboardAwareScrollView>
       </SafeAreaView>
+      {signingIn && <LoadingIndicator />}
     </ScreenWrapper>
   );
 };

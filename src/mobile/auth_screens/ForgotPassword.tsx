@@ -12,6 +12,8 @@ import {
   validateUsername
 } from "util/validation";
 import i18n from "util/language/i18n";
+import { useToast } from "react-native-toast-notifications";
+import { LoadingIndicator } from "components/LoadingIndicator";
 
 export const ForgotPassword: FC<AuthScreensProps[AuthScreenName.FORGOT_PW]> = ({
   navigation
@@ -27,25 +29,42 @@ export const ForgotPassword: FC<AuthScreensProps[AuthScreenName.FORGOT_PW]> = ({
   const [newPassword, setNewPassword] = useState("");
   const [inputValid, setInputValid] = useState(false);
   const [codeSent, setCodeSent] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const toast = useToast();
 
   // Triggers verification code to be sent
   const requestCode = async (): Promise<void> => {
+    setLoading(true);
     await Auth.forgotPassword(username)
-      .then(() => setCodeSent(true))
+      .then(() => {
+        setCodeSent(true);
+        setLoading(false);
+        toast.show(i18n.t("CodeSent"), { type: "success" });
+      })
       .catch((error: { code: string; message: string; name: string }) => {
         // eslint-disable-next-line no-console
         console.log(error.message);
+        setLoading(false);
+        toast.show(i18n.t("CodeSendFailed"), { type: "danger" });
       });
   };
 
   // Submits verification code and new password
   // Navigates to Sign In page after successfully submitted
   const submitNewPassword = async (): Promise<void> => {
+    setLoading(true);
     await Auth.forgotPasswordSubmit(username, code, newPassword)
-      .then(() => navigation.navigate(AuthScreenName.SIGN_IN))
+      .then(() => {
+        setLoading(false);
+        toast.show(i18n.t("ResetPasswordSuccessful"), { type: "success" });
+        navigation.navigate(AuthScreenName.SIGN_IN);
+      })
       .catch((error: { code: string; message: string; name: string }) => {
         // eslint-disable-next-line no-console
         console.log(error.message);
+        setLoading(false);
+        toast.show(i18n.t("ResetPasswordFailed"), { type: "danger" });
       });
   };
 
@@ -68,7 +87,10 @@ export const ForgotPassword: FC<AuthScreensProps[AuthScreenName.FORGOT_PW]> = ({
 
   return (
     <ScreenWrapper>
-      <SafeAreaView style={styles.safeAreaContainer}>
+      <SafeAreaView
+        style={styles.safeAreaContainer}
+        pointerEvents={loading ? "none" : "auto"}
+      >
         {/* Before verification code is sent */}
         {!codeSent && (
           <View>
@@ -171,6 +193,7 @@ export const ForgotPassword: FC<AuthScreensProps[AuthScreenName.FORGOT_PW]> = ({
           </Text>
         </TouchableOpacity>
       </SafeAreaView>
+      {loading && <LoadingIndicator />}
     </ScreenWrapper>
   );
 };

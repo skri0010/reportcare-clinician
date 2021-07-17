@@ -14,14 +14,17 @@ import { RootState, select } from "util/useRedux";
 import { DataStore } from "@aws-amplify/datastore";
 import { ClinicianInfo } from "aws/models";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AuthScreenName, AuthScreensProps } from "web/auth_screens";
+import { AuthScreenName, AuthScreensProps, AuthState } from "web/auth_screens";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { validatePassword, validateUsername } from "util/validation";
 import agentAPI from "agents_implementation/agent_framework/AgentAPI";
 import i18n from "util/language/i18n";
+import { useToast } from "react-native-toast-notifications";
+import { LoadingIndicator } from "components/LoadingIndicator";
 
 export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
-  navigation
+  navigation,
+  setAuthState
 }) => {
   const { colors, fonts } = select((state: RootState) => ({
     colors: state.settings.colors,
@@ -32,6 +35,9 @@ export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [inputValid, setInputValid] = useState(false);
+  const [signingIn, setSigningIn] = useState(false);
+
+  const toast = useToast();
 
   /**
    * Signs in
@@ -39,6 +45,7 @@ export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
    * Otherwise retrieves the entry and initiates the agents.
    */
   const signIn = async (): Promise<void> => {
+    setSigningIn(true);
     await Auth.signIn({
       username: username,
       password: password
@@ -68,47 +75,42 @@ export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
                 DTA: "",
                 UXSA: ""
               })
-            )
-              .then(async (response) => {
-                // Locally stores entry Id and clinician Id
-                await AsyncStorage.multiSet([
-                  ["UserId", response.id],
-                  ["ClinicianId", username]
-                ]);
-                await AsyncStorage.multiRemove(["Unconfigured", "Details"]);
-              })
-              .catch((error) => {
-                // eslint-disable-next-line no-console
-                console.log(error);
-              });
+            ).then(async (response) => {
+              // Locally stores entry Id and clinician Id
+              await AsyncStorage.multiSet([
+                ["UserId", response.id],
+                ["ClinicianId", username]
+              ]);
+              await AsyncStorage.multiRemove(["Unconfigured", "Details"]);
+            });
           }
         } else {
           // User already has an entry in DynamoDB table
           await DataStore.query(ClinicianInfo, (c) =>
             c.clinicianID("eq", username)
-          )
-            .then(async (results) => {
-              if (results.length > 0) {
-                const clinician = results.pop();
-                if (clinician) {
-                  await AsyncStorage.multiSet([
-                    ["UserId", clinician.id],
-                    ["ClinicianId", clinician.clinicianID]
-                  ]);
-                }
+          ).then(async (results) => {
+            if (results.length > 0) {
+              const clinician = results.pop();
+              if (clinician) {
+                await AsyncStorage.multiSet([
+                  ["UserId", clinician.id],
+                  ["ClinicianId", clinician.clinicianID]
+                ]);
               }
-            })
-            .catch((error) => {
-              // eslint-disable-next-line no-console
-              console.log(error);
-            });
+            }
+          });
         }
         // Triggers initialization of agents
         agentAPI.startAgents();
+        setSigningIn(false);
+        toast.show(i18n.t("SignInSuccessful"), { type: "success" });
+        setAuthState(AuthState.SIGNED_IN);
       })
       .catch((error: { code: string; message: string; name: string }) => {
         // eslint-disable-next-line no-console
         console.log(error.message);
+        setSigningIn(false);
+        toast.show(i18n.t("SignInFailed"), { type: "danger" });
       });
   };
 
@@ -131,131 +133,137 @@ export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
 
   return (
     <ScreenWrapper>
-      <SafeAreaView style={styles.safeAreaContainer}>
+      <SafeAreaView
+        style={styles.safeAreaContainer}
+        pointerEvents={signingIn ? "none" : "auto"}
+      >
         {/* App Logo and Name */}
-        <View style={styles.logoContainer}>
-          <Image
-            style={styles.logo}
-            source={require("assets/heart-icon.png")}
-          />
-          <Text style={[styles.title, { fontSize: fonts.appNameSize }]}>
-            ReportCare
-          </Text>
-        </View>
-
-        {/* Sign In Content */}
-        <View style={styles.contentContainer}>
-          <View style={styles.titleContainer}>
-            <Text style={[styles.title, { fontSize: fonts.h1Size }]}>
-              {i18n.t("SignIn")}
+        <View>
+          <View style={styles.logoContainer}>
+            <Image
+              style={styles.logo}
+              source={require("assets/heart-icon.png")}
+            />
+            <Text style={[styles.title, { fontSize: fonts.appNameSize }]}>
+              ReportCare
             </Text>
           </View>
 
-          {/* Username */}
-          <Text style={[inputLabelStyle, { marginTop: ms(-5) }]}>
-            {i18n.t("Username")}
-          </Text>
-          <TextInput
-            style={[
-              inputStyle,
-              {
-                borderColor:
-                  username !== "" && !validateUsername(username)
-                    ? colors.errorColor
-                    : colors.primaryBorderColor
-              }
-            ]}
-            value={username}
-            onChangeText={(text) => setUsername(text)}
-            placeholder={i18n.t("UsernamePlaceholder")}
-            autoCapitalize="none"
-          />
-          {username !== "" && !validateUsername(username) && (
-            <Text style={errorTextStyle}>{i18n.t("UsernameError")}</Text>
-          )}
+          {/* Sign In Content */}
+          <View style={styles.contentContainer}>
+            <View style={styles.titleContainer}>
+              <Text style={[styles.title, { fontSize: fonts.h1Size }]}>
+                {i18n.t("SignIn")}
+              </Text>
+            </View>
 
-          {/* Password */}
-          <Text style={inputLabelStyle}>{i18n.t("Password")}</Text>
-          <TextInput
-            style={[
-              inputStyle,
-              {
-                borderColor:
-                  password !== "" && !validatePassword(password)
-                    ? colors.errorColor
-                    : colors.primaryBorderColor
-              }
-            ]}
-            value={password}
-            onChangeText={(text) => setPassword(text)}
-            placeholder={i18n.t("PasswordPlaceholder")}
-            autoCapitalize="none"
-            autoCorrect={false}
-            secureTextEntry
-            textContentType="password"
-          />
-          {password !== "" && !validatePassword(password) && (
-            <Text style={errorTextStyle}>{i18n.t("PasswordError")}</Text>
-          )}
-
-          {/* Forgot Password */}
-          <TouchableOpacity
-            onPress={() => navigation.navigate(AuthScreenName.FORGOT_PW)}
-          >
-            <Text style={footerButtonTextStyle}>
-              {i18n.t("ForgotPassword")}
+            {/* Username */}
+            <Text style={[inputLabelStyle, { marginTop: ms(-5) }]}>
+              {i18n.t("Username")}
             </Text>
-          </TouchableOpacity>
-        </View>
+            <TextInput
+              style={[
+                inputStyle,
+                {
+                  borderColor:
+                    username !== "" && !validateUsername(username)
+                      ? colors.errorColor
+                      : colors.primaryBorderColor
+                }
+              ]}
+              value={username}
+              onChangeText={(text) => setUsername(text)}
+              placeholder={i18n.t("UsernamePlaceholder")}
+              autoCapitalize="none"
+            />
+            {username !== "" && !validateUsername(username) && (
+              <Text style={errorTextStyle}>{i18n.t("UsernameError")}</Text>
+            )}
 
-        {/* Sign In Button */}
-        <TouchableOpacity
-          onPress={inputValid ? signIn : () => null}
-          style={[
-            {
-              backgroundColor: inputValid
-                ? colors.primaryButtonColor
-                : colors.separatorColor
-            },
-            styles.button
-          ]}
-        >
-          <Text
+            {/* Password */}
+            <Text style={inputLabelStyle}>{i18n.t("Password")}</Text>
+            <TextInput
+              style={[
+                inputStyle,
+                {
+                  borderColor:
+                    password !== "" && !validatePassword(password)
+                      ? colors.errorColor
+                      : colors.primaryBorderColor
+                }
+              ]}
+              value={password}
+              onChangeText={(text) => setPassword(text)}
+              placeholder={i18n.t("PasswordPlaceholder")}
+              autoCapitalize="none"
+              autoCorrect={false}
+              secureTextEntry
+              textContentType="password"
+            />
+            {password !== "" && !validatePassword(password) && (
+              <Text style={errorTextStyle}>{i18n.t("PasswordError")}</Text>
+            )}
+
+            {/* Forgot Password */}
+            <TouchableOpacity
+              onPress={() => navigation.navigate(AuthScreenName.FORGOT_PW)}
+            >
+              <Text style={footerButtonTextStyle}>
+                {i18n.t("ForgotPassword")}
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Sign In Button */}
+          <TouchableOpacity
+            onPress={inputValid ? signIn : () => null}
             style={[
               {
-                fontSize: fonts.h3Size,
-                opacity: inputValid ? 1 : 0.3,
-                color: colors.primaryContrastTextColor
+                backgroundColor: inputValid
+                  ? colors.primaryButtonColor
+                  : colors.separatorColor
               },
-              styles.buttonText
+              styles.button
             ]}
-          >
-            {i18n.t("SignIn")}
-          </Text>
-        </TouchableOpacity>
-
-        {/* Prompt to Register */}
-        <View style={styles.footerContainer}>
-          <Text style={[styles.footerButtonText, { fontSize: fonts.h4Size }]}>
-            {i18n.t("PromptRegister")}
-          </Text>
-          <TouchableOpacity
-            onPress={() => navigation.navigate(AuthScreenName.REGISTER)}
           >
             <Text
               style={[
-                footerButtonTextStyle,
                 {
-                  fontWeight: "bold",
-                  textDecorationLine: "underline"
-                }
+                  fontSize: fonts.h3Size,
+                  opacity: inputValid ? 1 : 0.3,
+                  color: colors.primaryContrastTextColor
+                },
+                styles.buttonText
               ]}
             >
-              {i18n.t("RedirectToRegister")}
+              {i18n.t("SignIn")}
             </Text>
           </TouchableOpacity>
+
+          {/* Prompt to Register */}
+          <View style={styles.footerContainer}>
+            <Text style={[styles.footerButtonText, { fontSize: fonts.h4Size }]}>
+              {i18n.t("PromptRegister")}
+            </Text>
+            <TouchableOpacity
+              onPress={() => navigation.navigate(AuthScreenName.REGISTER)}
+            >
+              <Text
+                style={[
+                  footerButtonTextStyle,
+                  {
+                    fontWeight: "bold",
+                    textDecorationLine: "underline"
+                  }
+                ]}
+              >
+                {i18n.t("RedirectToRegister")}
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </SafeAreaView>
+      {signingIn && <LoadingIndicator />}
     </ScreenWrapper>
   );
 };

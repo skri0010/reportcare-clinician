@@ -15,6 +15,8 @@ import {
   validateUsername
 } from "util/validation";
 import i18n from "util/language/i18n";
+import { useToast } from "react-native-toast-notifications";
+import { LoadingIndicator } from "components/LoadingIndicator";
 
 export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
   navigation
@@ -34,25 +36,33 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [registering, setRegistering] = useState(false);
+
+  const toast = useToast();
 
   // Signs up
   // Sends remaining details (name, hospitalName and role) to the following ConfirmRegistration page.
   const register = async (): Promise<void> => {
+    setRegistering(true);
     await Auth.signUp({
       username: username,
       password: password,
       attributes: { email: email }
     })
-      .then(() =>
+      .then(() => {
+        setRegistering(false);
+        toast.show(i18n.t("CodeSent"), { type: "success" });
         navigation.navigate(AuthScreenName.CONFIRM_REGISTER, {
           name: name,
           hospitalName: hospital,
           role: role
-        })
-      )
+        });
+      })
       .catch((error: { code: string; message: string; name: string }) => {
         // eslint-disable-next-line no-console
         console.log(error.message);
+        setRegistering(false);
+        toast.show(i18n.t("RegistrationFailed"), { type: "danger" });
       });
   };
 
@@ -113,7 +123,7 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
 
   return (
     <ScreenWrapper>
-      <SafeAreaView>
+      <SafeAreaView pointerEvents={registering ? "none" : "auto"}>
         <View style={styles.contentContainer}>
           {/* Left Column */}
           <View style={styles.columnContainer}>
@@ -283,6 +293,7 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
           </Text>
         </TouchableOpacity>
       </SafeAreaView>
+      {registering && <LoadingIndicator />}
     </ScreenWrapper>
   );
 };

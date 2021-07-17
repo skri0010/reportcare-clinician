@@ -16,6 +16,8 @@ import {
 } from "util/validation";
 import i18n from "util/language/i18n";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { useToast } from "react-native-toast-notifications";
+import { LoadingIndicator } from "components/LoadingIndicator";
 
 export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
   navigation
@@ -35,25 +37,33 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [registering, setRegistering] = useState(false);
+
+  const toast = useToast();
 
   // Signs up
   // Sends remaining details (name, hospitalName and role) to the following ConfirmRegistration page.
   const register = async (): Promise<void> => {
+    setRegistering(true);
     await Auth.signUp({
       username: username,
       password: password,
       attributes: { email: email }
     })
-      .then(() =>
+      .then(() => {
+        setRegistering(false);
+        toast.show(i18n.t("CodeSent"), { type: "success" });
         navigation.navigate(AuthScreenName.CONFIRM_REGISTER, {
           name: name,
           hospitalName: hospital,
           role: role
-        })
-      )
+        });
+      })
       .catch((error: { code: string; message: string; name: string }) => {
         // eslint-disable-next-line no-console
         console.log(error.message);
+        setRegistering(false);
+        toast.show(i18n.t("RegistrationFailed"), { type: "danger" });
       });
   };
 
@@ -129,7 +139,10 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
 
   return (
     <ScreenWrapper>
-      <SafeAreaView style={styles.safeAreaContainer}>
+      <SafeAreaView
+        style={styles.safeAreaContainer}
+        pointerEvents={registering ? "none" : "auto"}
+      >
         <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
           {/* Name */}
           <Text style={[inputLabelStyle, { marginTop: ms(-5) }]}>
@@ -289,6 +302,7 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
           </TouchableOpacity>
         </KeyboardAwareScrollView>
       </SafeAreaView>
+      {registering && <LoadingIndicator />}
     </ScreenWrapper>
   );
 };

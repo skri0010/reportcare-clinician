@@ -5,6 +5,11 @@ export enum AuthScreenName {
   FORGOT_PW = "ForgotPassword"
 }
 
+export enum AuthState {
+  SIGNED_IN = "SignedIn",
+  SIGNED_OUT = "SignedOut"
+}
+
 export type AuthStackParamList = {
   [AuthScreenName.SIGN_IN]: undefined;
   [AuthScreenName.REGISTER]: undefined;
