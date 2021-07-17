@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { View, Dimensions } from "react-native";
+import { View, useWindowDimensions } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { SideNavigationBar } from "./SideNavigationBar";
@@ -18,7 +18,7 @@ export const MainNavigationStack: FC = () => {
   };
 
   return (
-    <View style={{ height: Dimensions.get("window").height }}>
+    <View style={{ height: useWindowDimensions().height }}>
       <NavigationContainer>
         <Stack.Navigator>
           {/* Main Tabs */}

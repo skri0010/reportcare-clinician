@@ -5,7 +5,7 @@ import {
   FlatList,
   TextStyle,
   TouchableOpacity,
-  Dimensions
+  useWindowDimensions
 } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
@@ -30,7 +30,12 @@ export const RequestsByMariaCard: FC = () => {
         <H6 text="   (2 remaining)" style={[styles.details, detailsColors]} />
       </View>
       {/* Patient Requests List */}
-      <View style={styles.content}>
+      <View
+        style={[
+          styles.content,
+          { maxHeight: useWindowDimensions().height * 0.38 }
+        ]}
+      >
         <View style={[styles.patients]}>
           <FlatList
             initialNumToRender={3}
@@ -91,9 +96,8 @@ const styles = ScaledSheet.create({
   content: {
     display: "flex",
     flexDirection: "column",
-    justifyContent: "flex-start",
+    justifyContent: "flex-start"
     // TO-DO jy: explore options to resolve flatlist height issue
-    maxHeight: Dimensions.get("window").height * 0.41
   },
   patients: {
     maxHeight: "100%",

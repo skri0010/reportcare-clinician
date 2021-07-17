@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
-import { View, TextStyle } from "react-native";
+import { View, TextStyle, useWindowDimensions } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { H1, H2, H4 } from "components/Text/index";
 
@@ -18,7 +18,7 @@ export const WelcomeCard: FC<WelcomeCardProps> = ({ name }) => {
   } as TextStyle;
 
   return (
-    <View>
+    <View style={{ maxHeight: useWindowDimensions().height * 0.3 }}>
       <H1 text="Dashboard" style={[styles.username, styles.dashboard]} />
       <View style={styles.card}>
         <H2

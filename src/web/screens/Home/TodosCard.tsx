@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
-import { View, TextStyle, FlatList, Dimensions } from "react-native";
+import { View, TextStyle, FlatList, useWindowDimensions } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { TodoRow } from "components/RowComponents/TodoRow";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
@@ -20,7 +20,12 @@ export const TodosCard: FC = () => {
       <View style={styles.titleContainer}>
         <H4 text="Todos" style={[styles.title, titleColor]} />
       </View>
-      <View style={styles.content}>
+      <View
+        style={[
+          styles.content,
+          { maxHeight: useWindowDimensions().height * 0.38 }
+        ]}
+      >
         <FlatList
           initialNumToRender={3}
           maxToRenderPerBatch={3}
@@ -53,7 +58,6 @@ const styles = ScaledSheet.create({
   },
   content: {
     // TO-DO jy: explore options to resolve flatlist height issue
-    maxHeight: Dimensions.get("window").height * 0.41
   },
   titleContainer: {
     display: "flex",
