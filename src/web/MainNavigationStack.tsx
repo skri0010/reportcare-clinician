@@ -45,27 +45,27 @@ export const MainNavigationStack: FC<MainNavigationStackProps> = ({
   return (
     <View style={{ height: Dimensions.get("window").height }}>
       <NavigationContainer>
-      <Stack.Navigator>
-        {/* Main Tabs */}
-        <Stack.Screen
-          name={ScreenName.MAIN}
-          component={SideNavigationBar}
-          options={{
-            headerTitle: () => null,
-            headerStyle: screenHeaderStyle,
-            headerRight: () => (
-              <Icon
-                name="logout"
-                color={colors.primaryContrastTextColor}
-                size={ms(20)}
-                style={{ paddingEnd: ms(10) }}
-                onPress={signOut}
-              />
-            )
-          }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+        <Stack.Navigator>
+          {/* Main Tabs */}
+          <Stack.Screen
+            name={ScreenName.MAIN}
+            component={SideNavigationBar}
+            options={{
+              headerTitle: () => null,
+              headerStyle: screenHeaderStyle,
+              headerRight: () => (
+                <Icon
+                  name="logout"
+                  color={colors.primaryContrastTextColor}
+                  size={ms(20)}
+                  style={{ paddingEnd: ms(10) }}
+                  onPress={signOut}
+                />
+              )
+            }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
     </View>
   );
 };
