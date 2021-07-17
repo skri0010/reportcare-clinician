@@ -18,7 +18,14 @@ type PatientInfo
 
 type MedicationInfo
   @model
-  @auth(rules: [{ allow: owner }, { allow: groups, groups: ["Admin"] }])
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groups: ["Clinicians"], operations: [read] }
+      { allow: groups, groupsField: "patientID", operations: [read, update] }
+    ]
+  )
   @key(name: "byPatient", fields: ["patientID"]) {
   id: ID!
   medname: String!
@@ -92,4 +99,14 @@ type ClinicianInfo
   APS: String!
   DTA: String!
   UXSA: String!
+}
+
+type ClinicianPatientMap
+  @model
+  @auth(rules: [{ allow: owner }, { allow: groups, groups: ["Admin"] }])
+  @key(fields: ["clinicianID", "patientID"]) {
+  id: ID!
+  clinicianID: String!
+  patientID: String!
+  createdAt: String!
 }
