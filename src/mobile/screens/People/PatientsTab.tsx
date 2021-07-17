@@ -78,12 +78,15 @@ export const PatientsTab: FC = () => {
     <ScreenWrapper>
       <SafeAreaView style={{ flex: 1 }}>
         <View style={[styles.searchBarWrapper]}>
-          <SearchBarComponent
-            onUserInput={() => {
-              null;
-            }}
-            placeholder="Search patients"
-          />
+        <SearchBarComponent
+          onUserInput={() => {
+            null;
+          }}
+          onSearchClick={() => {
+            null;
+          }}
+          placeholder="Search patients"
+        />
         </View>
         <FlatList
           ItemSeparatorComponent={() => <ItemSeparator />}

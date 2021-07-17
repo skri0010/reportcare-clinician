@@ -20,7 +20,6 @@ const Drawer = createDrawerNavigator<SideTabsParamList>();
 interface TabIconProps {
   name: string;
   color: string;
-  size: number;
   subtitle: string;
 }
 
@@ -33,14 +32,17 @@ export const SideNavigationBar: FC<MainScreenProps> = () => {
     color: colors.primaryContrastTextColor
   } as TextStyle;
 
-  const TabIcon: FC<TabIconProps> = ({ name, color, size, subtitle }) => {
+  const iconSize = ms(15);
+  const drawerSize = ms(48);
+
+  const TabIcon: FC<TabIconProps> = ({ name, color, subtitle }) => {
     return (
       <View>
         <Icon
           style={styles.icon}
           name={name}
           color={color}
-          size={ms(size, 0.25)}
+          size={ms(iconSize)}
         />
         <Text style={[styles.text, menuTitleColor]}> {subtitle} </Text>
       </View>
@@ -53,30 +55,26 @@ export const SideNavigationBar: FC<MainScreenProps> = () => {
       drawerContentOptions={getBottomTabBarOptions(colors)}
       drawerStyle={{
         backgroundColor: colors.primaryBarColor,
-        width: 90
+        width: drawerSize
       }}
     >
       <Drawer.Screen
         name={ScreenName.HOME}
         component={HomeScreen}
         options={{
-          drawerIcon: ({ color, size }) => (
-            <TabIcon name="home" color={color} size={size} subtitle="Home" />
+          drawerIcon: ({ color }) => (
+            <TabIcon name="home" color={color} subtitle="Home" />
           ),
-          drawerLabel: () => null
+          drawerLabel: () => null,
+          headerTitleAlign: "center"
         }}
       />
       <Drawer.Screen
         name={ScreenName.PATIENT}
         component={PatientsTab}
         options={{
-          drawerIcon: ({ color, size }) => (
-            <TabIcon
-              name="account-circle"
-              color={color}
-              size={size}
-              subtitle="Patients"
-            />
+          drawerIcon: ({ color }) => (
+            <TabIcon name="account-circle" color={color} subtitle="Patients" />
           ),
           drawerLabel: () => null
         }}
@@ -85,13 +83,8 @@ export const SideNavigationBar: FC<MainScreenProps> = () => {
         name={ScreenName.CLINICIAN}
         component={CliniciansTab}
         options={{
-          drawerIcon: ({ color, size }) => (
-            <TabIcon
-              name="stethoscope"
-              color={color}
-              size={size}
-              subtitle="Clinicians"
-            />
+          drawerIcon: ({ color }) => (
+            <TabIcon name="stethoscope" color={color} subtitle="Clinicians" />
           ),
           drawerLabel: () => null
         }}
@@ -100,8 +93,8 @@ export const SideNavigationBar: FC<MainScreenProps> = () => {
         name={ScreenName.CHAT}
         component={ChatScreen}
         options={{
-          drawerIcon: ({ color, size }) => (
-            <TabIcon name="chat" color={color} size={size} subtitle="Chat" />
+          drawerIcon: ({ color }) => (
+            <TabIcon name="chat" color={color} subtitle="Chat" />
           ),
           drawerLabel: () => null
         }}
@@ -110,13 +103,8 @@ export const SideNavigationBar: FC<MainScreenProps> = () => {
         name={ScreenName.TODO}
         component={TodoScreen}
         options={{
-          drawerIcon: ({ color, size }) => (
-            <TabIcon
-              name="note-text"
-              color={color}
-              size={size}
-              subtitle="Todo"
-            />
+          drawerIcon: ({ color }) => (
+            <TabIcon name="note-text" color={color} subtitle="Todo" />
           ),
           drawerLabel: () => null
         }}
@@ -125,13 +113,8 @@ export const SideNavigationBar: FC<MainScreenProps> = () => {
         name={ScreenName.MARIA}
         component={MariaScreen}
         options={{
-          drawerIcon: ({ color, size }) => (
-            <TabIcon
-              name="face-agent"
-              color={color}
-              size={size}
-              subtitle="MARIA"
-            />
+          drawerIcon: ({ color }) => (
+            <TabIcon name="face-agent" color={color} subtitle="MARIA" />
           ),
           drawerLabel: () => null
         }}
@@ -140,8 +123,8 @@ export const SideNavigationBar: FC<MainScreenProps> = () => {
         name={ScreenName.SETTING}
         component={SettingScreen}
         options={{
-          drawerIcon: ({ color, size }) => (
-            <TabIcon name="cog" color={color} size={size} subtitle="Settings" />
+          drawerIcon: ({ color }) => (
+            <TabIcon name="cog" color={color} subtitle="Settings" />
           ),
           drawerLabel: () => null
         }}
@@ -150,13 +133,8 @@ export const SideNavigationBar: FC<MainScreenProps> = () => {
         name={ScreenName.HELP}
         component={HelpScreen}
         options={{
-          drawerIcon: ({ color, size }) => (
-            <TabIcon
-              name="help-circle-outline"
-              color={color}
-              size={size}
-              subtitle="Help"
-            />
+          drawerIcon: ({ color }) => (
+            <TabIcon name="help-circle-outline" color={color} subtitle="Help" />
           ),
           drawerLabel: () => null
         }}
@@ -167,7 +145,7 @@ export const SideNavigationBar: FC<MainScreenProps> = () => {
 
 const styles = ScaledSheet.create({
   icon: {
-    paddingLeft: "7@ms"
+    alignSelf: "center"
   },
   text: {
     textAlign: "center",

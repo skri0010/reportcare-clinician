@@ -12,6 +12,9 @@ export const CliniciansTab: FC = () => {
           onUserInput={() => {
             null;
           }}
+          onSearchClick={() => {
+            null;
+          }}
           placeholder="Search clinicians"
         />
         <Text> Clinicians </Text>

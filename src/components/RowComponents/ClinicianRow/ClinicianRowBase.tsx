@@ -2,7 +2,8 @@ import React, { FC } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { RootState, select } from "util/useRedux";
-import { Avatar } from "react-native-elements";
+
+import { PeopleAvatar } from "../PeopleAvatar";
 
 interface SubtitleItemProps {
   value: string;
@@ -46,15 +47,7 @@ export const ClinicianRowBase: React.FC<ClinicianRowBaseProps> = ({
         ]}
       >
         {/* Image (left container) */}
-        <Avatar
-          rounded
-          icon={{
-            name: "user-md",
-            type: "font-awesome",
-            color: "black"
-          }}
-          containerStyle={styles.avatar}
-        />
+        <PeopleAvatar iconType="user-md" />
         {/* Content (middle container) */}
         <TouchableOpacity style={styles.container} onPress={onRowPress}>
           {/* Title */}
@@ -82,7 +75,9 @@ const styles = ScaledSheet.create({
   avatar: {
     backgroundColor: "#FFFFFF",
     width: "45@ms",
-    height: "45@ms"
+    height: "45@ms",
+    justifyContent: "space-evenly",
+    alignItems: "center"
   },
   rowStyle: {
     flexDirection: "row"

@@ -112,7 +112,6 @@ const svgLoaderConfiguration = {
 const srcFolderAliasPaths = {};
 const srcFolderAliasKeys = [
   "agents_implementation",
-  "amplify",
   "aws",
   "components",
   "ic-redux",
@@ -134,7 +133,7 @@ module.exports = {
     filename: "bundle.web.js",
     path: path.resolve(appDirectory, "dist")
   },
-  target: "web",
+  target: "web", // Enable live reload
   resolve: {
     alias: {
       "react-native$": "react-native-web",
@@ -187,7 +186,6 @@ module.exports = {
       // See: https://github.com/necolas/react-native-web/issues/349
       __DEV__: !production
     }),
-
     new HtmlWebpackPlugin({
       template: path.join(appDirectory, "public/index.html"),
       manifest: "./public/manifest",
@@ -203,5 +201,11 @@ module.exports = {
       : []),
     // Analyze bundle in production
     ...(production && analyzeBundle ? [new BundleAnalyzerPlugin()] : [])
-  ]
+  ],
+  devServer: {
+    port: 8080,
+    watchOptions: {
+      poll: true
+    }
+  }
 };

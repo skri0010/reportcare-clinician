@@ -1,4 +1,5 @@
 import React, { FC } from "react";
+import { View, Dimensions } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { SideNavigationBar } from "./SideNavigationBar";
@@ -42,7 +43,8 @@ export const MainNavigationStack: FC<MainNavigationStackProps> = ({
   };
 
   return (
-    <NavigationContainer>
+    <View style={{ height: Dimensions.get("window").height }}>
+      <NavigationContainer>
       <Stack.Navigator>
         {/* Main Tabs */}
         <Stack.Screen
@@ -64,5 +66,6 @@ export const MainNavigationStack: FC<MainNavigationStackProps> = ({
         />
       </Stack.Navigator>
     </NavigationContainer>
+    </View>
   );
 };

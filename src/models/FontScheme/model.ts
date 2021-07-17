@@ -4,4 +4,5 @@ export interface FontScheme {
   h2Size: number;
   h3Size: number;
   h4Size: number;
+  notifSize: number;
 }

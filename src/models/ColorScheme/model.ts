@@ -33,6 +33,9 @@ export interface ColorScheme {
   // Buttons
   primaryButtonColor: string;
 
+  // Avatar background
+  primaryAvatarBackgroundColor: string;
+
   // Others
   riskLevelBackgroundColors: IRiskLevelMap;
   riskLevelBorderColors: IRiskLevelMap;

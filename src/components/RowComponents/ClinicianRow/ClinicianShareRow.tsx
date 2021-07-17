@@ -1,9 +1,11 @@
-import React, { FC } from "react";
-import { View } from "react-native";
+import React, { FC, useState } from "react";
+import { View, TouchableOpacity } from "react-native";
 import { ClinicianRowGeneralDetails } from "models/PersonRowDetails";
-import { ScaledSheet } from "react-native-size-matters";
+import { ms, ScaledSheet } from "react-native-size-matters";
 import { ClinicianRowBase } from "./ClinicianRowBase";
-import { CheckBox } from "react-native-elements";
+import { RootState } from "ic-redux/store";
+import { select } from "util/useRedux";
+import Icon from "react-native-vector-icons/MaterialIcons";
 
 export interface ClinicanShareRowProps {
   generalDetails: ClinicianRowGeneralDetails;
@@ -16,6 +18,26 @@ export const ClinicianShareRow: FC<ClinicanShareRowProps> = ({
   checked,
   onRowPress
 }) => {
+  const { colors } = select((state: RootState) => ({
+    colors: state.settings.colors
+  }));
+
+  const Checkbox: FC = () => {
+    const [check, setChecked] = useState(checked);
+
+    return (
+      <TouchableOpacity
+        style={[styles.checkBox, { borderColor: colors.primaryBorderColor }]}
+        onPress={() => {
+          setChecked(!check);
+        }}
+      >
+        {check ? (
+          <Icon name="check" color={colors.primaryButtonColor} size={ms(15)} />
+        ) : null}
+      </TouchableOpacity>
+    );
+  };
   return (
     <View>
       {/* TODO-JH: i18n translation */}
@@ -27,7 +49,7 @@ export const ClinicianShareRow: FC<ClinicanShareRowProps> = ({
         onRowPress={onRowPress}
       >
         <View style={styles.container}>
-          <CheckBox center checkedColor="green" checked={checked} />
+          <Checkbox />
         </View>
       </ClinicianRowBase>
     </View>
@@ -39,6 +61,14 @@ const styles = ScaledSheet.create({
     width: "50@ms",
     display: "flex",
     flexDirection: "row",
+    justifyContent: "space-evenly",
+    alignItems: "center"
+  },
+  checkBox: {
+    width: "15@ms",
+    height: "15@ms",
+    borderWidth: "1.5@ms",
+    borderRadius: "2@ms",
     justifyContent: "space-evenly",
     alignItems: "center"
   }
