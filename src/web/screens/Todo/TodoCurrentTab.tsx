@@ -17,7 +17,7 @@ export const TodoCurrentTab: FC = () => {
         <MainTitle title="Current Todo" />
 
         <TodoRow
-          todoDetails={mockPatientRowDetails}
+          todoDetails={mockPatientRowDetails[0]}
           riskLevel={RiskLevel.HIGH}
         />
       </View>

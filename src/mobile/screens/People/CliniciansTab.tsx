@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { ScreenWrapper } from "mobile/screens/ScreenWrapper";
 import { mockClinician } from "mock/mockClinicians";

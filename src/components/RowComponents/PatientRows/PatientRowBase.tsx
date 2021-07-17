@@ -4,7 +4,7 @@ import { PatientImageContainer } from "./PatientImageContainer";
 import { ScaledSheet } from "react-native-size-matters";
 import { RootState, select } from "util/useRedux";
 import { RiskLevel } from "models/RiskLevel";
-import { H3, H4, H5, H6, H7 } from "components/Text/index";
+import { H5, H6, H7 } from "components/Text/index";
 
 interface SubtitleItemProps {
   label?: string;

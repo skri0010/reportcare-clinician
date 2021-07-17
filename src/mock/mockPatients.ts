@@ -28,7 +28,6 @@ const mockLowRiskPatient = {
   name: "Danial Williams",
   riskLevel: RiskLevel.LOW
 };
-
 export const mockPatients: IMockPatientDetails[] = [
   {
     generalDetails: mockHighRiskPatient,
@@ -56,5 +55,14 @@ export const mockPatients: IMockPatientDetails[] = [
     unreadMessageCount: 1,
     request: "Verify titration values",
     itemId: "3"
+  },
+  {
+    generalDetails: mockLowRiskPatient,
+    patientClass: "NHYA I",
+    age: 35,
+    message: "Should I avoid running?",
+    unreadMessageCount: 1,
+    request: "Verify titration values",
+    itemId: "4"
   }
 ];

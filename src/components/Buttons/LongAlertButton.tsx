@@ -4,7 +4,7 @@ import { RootState, select } from "util/useRedux";
 import { getRiskLevelColor, RiskLevel } from "../../models/RiskLevel";
 import { ScaledSheet, ms } from "react-native-size-matters";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import { H4, H5, H6 } from "components/Text/index";
+import { H5, H6 } from "components/Text/index";
 
 interface LongAlertButtonProps {
   riskLevel: RiskLevel;

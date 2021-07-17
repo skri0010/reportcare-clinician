@@ -4,7 +4,7 @@ import { RiskLevel } from "models/RiskLevel";
 import { View, TextStyle } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { LongAlertButton } from "components/Buttons/LongAlertButton";
-import { H4, H7, H6 } from "components/Text";
+import { H4, H6 } from "components/Text";
 
 export const AlertsCard: FC = () => {
   const { colors } = select((state: RootState) => ({
@@ -34,7 +34,7 @@ const styles = ScaledSheet.create({
     padding: "10@ms",
     margin: "20@ms",
     borderRadius: "5@ms",
-    height: "78%"
+    height: "100%"
   },
   titleContainer: {
     display: "flex",

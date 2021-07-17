@@ -4,7 +4,7 @@ import { RiskLevel, getRiskLevelColor } from "models/RiskLevel";
 import { ITodoDetails } from "models/TodoDetails";
 import { View, Button, TouchableHighlight } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
-import { H4, H5, H6 } from "components/Text/index";
+import { H5, H6 } from "components/Text/index";
 
 // Interface that determines what props the search bar accepts
 interface TodoRowProps {

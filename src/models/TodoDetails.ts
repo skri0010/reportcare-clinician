@@ -3,4 +3,5 @@ export interface ITodoDetails {
   name: string;
   description: string;
   doneStatus: boolean;
+  id: string;
 }

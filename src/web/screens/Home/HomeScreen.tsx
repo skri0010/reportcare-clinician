@@ -36,6 +36,7 @@ const styles = ScaledSheet.create({
     alignItems: "flex-start"
   },
   item: {
-    flexBasis: "33.33%"
+    flexBasis: "33.33%",
+    height: "100%"
   }
 });

@@ -1,11 +1,12 @@
 import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
-import { View, TextStyle } from "react-native";
+import { View, TextStyle, FlatList, Dimensions } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { TodoRow } from "components/RowComponents/TodoRow";
+import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { mockPatientRowDetails } from "mock/mockTodoDetails";
 import { RiskLevel } from "models/RiskLevel";
-import { H3, H4 } from "components/Text/index";
+import { H4 } from "components/Text/index";
 
 export const TodosCard: FC = () => {
   const { colors } = select((state: RootState) => ({
@@ -19,7 +20,21 @@ export const TodosCard: FC = () => {
       <View style={styles.titleContainer}>
         <H4 text="Todos" style={[styles.title, titleColor]} />
       </View>
-      <TodoRow todoDetails={mockPatientRowDetails} riskLevel={RiskLevel.HIGH} />
+      <View style={styles.content}>
+        <FlatList
+          initialNumToRender={3}
+          maxToRenderPerBatch={3}
+          windowSize={3}
+          ItemSeparatorComponent={() => <ItemSeparator />}
+          ListHeaderComponent={() => <ItemSeparator />}
+          ListFooterComponent={() => <ItemSeparator />}
+          data={mockPatientRowDetails}
+          renderItem={({ item }) => (
+            <TodoRow todoDetails={item} riskLevel={RiskLevel.HIGH} />
+          )}
+          keyExtractor={(item) => item.id}
+        />
+      </View>
     </View>
   );
 };
@@ -30,11 +45,15 @@ const styles = ScaledSheet.create({
     padding: "10@ms",
     margin: "20@ms",
     borderRadius: "5@ms",
-    height: "78%"
+    height: "100%"
   },
   title: {
     fontWeight: "bold",
     paddingBottom: "5@ms"
+  },
+  content: {
+    // TO-DO jy: explore options to resolve flatlist height issue
+    maxHeight: Dimensions.get("window").height * 0.41
   },
   titleContainer: {
     display: "flex",
