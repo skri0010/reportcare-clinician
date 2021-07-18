@@ -68,7 +68,7 @@ export const SearchBarComponent: FC<SearchBarComponentProps> = ({
           style={[
             styles.textField,
             searchBarTextStyle,
-            { fontSize: fonts.h2Size, paddingHorizontal: ms(5) },
+            { fontSize: fonts.h4Size, paddingHorizontal: ms(5) },
             Platform.select({
               android: {},
               ios: {},
@@ -81,7 +81,7 @@ export const SearchBarComponent: FC<SearchBarComponentProps> = ({
         <TouchableOpacity onPress={onSearchClick} style={styles.button}>
           <Icon
             name="magnify"
-            style={[searchBarTextStyle, { fontSize: fonts.h2Size }]}
+            style={[searchBarTextStyle, { fontSize: fonts.h3Size }]}
           />
         </TouchableOpacity>
       </View>
