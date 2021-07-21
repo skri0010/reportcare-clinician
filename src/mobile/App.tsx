@@ -11,6 +11,8 @@ import { ToastProvider } from "react-native-toast-notifications";
 import { ms } from "react-native-size-matters";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { AuthState } from "./auth_screens";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import agentAPI from "agents_implementation/agent_framework/AgentAPI";
 // import Test from "shared/Test";
 
 Amplify.configure(awsconfig);
@@ -30,7 +32,17 @@ const App: FC = () => {
   const checkAuthState = async () => {
     try {
       await Auth.currentAuthenticatedUser();
-      setAuthState(AuthState.SIGNED_IN);
+      // In case local storage has been cleared
+      const [[, userId], [, clinicianId]] = await AsyncStorage.multiGet([
+        "UserId",
+        "ClinicianId"
+      ]);
+      if (userId && clinicianId) {
+        agentAPI.startAgents();
+        setAuthState(AuthState.SIGNED_IN);
+      } else {
+        setAuthState(AuthState.SIGNED_OUT);
+      }
     } catch (err) {
       setAuthState(AuthState.SIGNED_OUT);
     }

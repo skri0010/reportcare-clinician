@@ -5,10 +5,10 @@ import Belief from "../../../../agent_framework/base/Belief";
 import Precondition from "../../../../agent_framework/base/Precondition";
 import ProcedureConst from "../../../../agent_framework/const/ProcedureConst";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { DataStore } from "@aws-amplify/datastore";
-import { ClinicianInfo } from "../../../../../aws/models";
 import { Role } from "../../../../../models/ClinicianEnums";
 import agentAPI from "../../../../agent_framework/AgentAPI";
+import API from "@aws-amplify/api-graphql";
+import { getClinicianInfo } from "aws/graphql/queries";
 
 /**
  * Class to represent an activity for retrieving role of user for retrieving patients.
@@ -25,19 +25,17 @@ class RetrieveRole extends Activity {
    */
   async doActivity(agent: Agent): Promise<void> {
     await super.doActivity(agent);
-    try {
-      const role = await this.queryRole();
 
-      // Update Beliefs
-      agent.addBelief(new Belief("Clinician", "retrieveRole", false));
-      agent.addBelief(new Belief(agent.getID(), "lastActivity", this.getID()));
+    // Update Beliefs
+    agent.addBelief(new Belief("Clinician", "retrieveRole", false));
 
-      // Update Facts
-      agentAPI.addFact(new Belief("Clinician", "role", role), false);
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.log(error);
-    }
+    const role = await this.queryRole();
+
+    // Update lastActivity last since RequestRetrieveAll will be triggered by this
+    agent.addBelief(new Belief(agent.getID(), "lastActivity", this.getID()));
+
+    // Update Facts
+    agentAPI.addFact(new Belief("Clinician", "role", role), false);
   }
 
   /**
@@ -49,11 +47,17 @@ class RetrieveRole extends Activity {
     try {
       const userId = await AsyncStorage.getItem("UserId");
       if (userId) {
-        const clinician = await DataStore.query(ClinicianInfo, userId);
-        if (clinician && clinician.role) {
-          const roles: string[] = Object.values(Role);
-          if (roles.includes(clinician.role)) {
-            return clinician.role;
+        const query: any = await API.graphql({
+          query: getClinicianInfo,
+          variables: { id: userId }
+        });
+        if (query.data) {
+          const clinician = query.data.getClinicianInfo;
+          if (clinician && clinician.role) {
+            const roles: string[] = Object.values(Role);
+            if (roles.includes(clinician.role)) {
+              return clinician.role;
+            }
           }
         }
       }

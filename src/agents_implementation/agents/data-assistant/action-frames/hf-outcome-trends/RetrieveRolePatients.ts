@@ -3,14 +3,15 @@ import Activity from "../../../../agent_framework/base/Activity";
 import Agent from "../../../../agent_framework/base/Agent";
 import Belief from "../../../../agent_framework/base/Belief";
 import Precondition from "../../../../agent_framework/base/Precondition";
-import { DataStore } from "@aws-amplify/datastore";
 import ProcedureConst from "../../../../agent_framework/const/ProcedureConst";
 import { Patient } from "../../../../agent_framework/model";
 import { Role } from "models/ClinicianEnums";
-import { ClinicianInfo, PatientInfo } from "aws/models";
+import { PatientInfo } from "aws/models";
 import { RiskLevel } from "models/RiskLevel";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import agentAPI from "../../../../agent_framework/AgentAPI";
+import API from "@aws-amplify/api-graphql";
+import { getClinicianInfo, listPatientInfos } from "aws/graphql/queries";
 
 /**
  * Class to represent an activity for retrieving all patients according to role.
@@ -28,31 +29,36 @@ class RetrieveRolePatients extends Activity {
   async doActivity(agent: Agent): Promise<void> {
     await super.doActivity(agent);
 
-    const results = await this.queryPatients();
-    if (results.length > 0) {
-      const patients: Patient[] = results.map((patient) => {
-        return {
-          details: {
-            id: patient.patientID,
-            name: patient.name,
-            // LS-TODO: Get risk level of patient according to guideline
-            riskLevel: RiskLevel.UNASSIGNED
-          },
-          userId: patient.id,
-          class: patient.NHYAclass,
-          age: 0
-        };
-      });
+    // Update Beliefs
+    agent.addBelief(new Belief("Patient", "retrieveAll", false));
+    agent.addBelief(new Belief(agent.getID(), "lastActivity", this.getID()));
 
-      agent.addBelief(new Belief("Patient", "all", patients));
-    } else {
-      agent.addBelief(new Belief("Patient", "all", null));
+    try {
+      const results = await this.queryPatients();
+      if (results.length > 0) {
+        const patients: Patient[] = results.map((patient) => {
+          return {
+            details: {
+              id: patient.patientID,
+              name: patient.name,
+              // LS-TODO: Get risk level of patient according to guideline
+              riskLevel: RiskLevel.UNASSIGNED
+            },
+            userId: patient.id,
+            class: patient.NHYAclass,
+            age: 0
+          };
+        });
+
+        agentAPI.addFact(new Belief("Patient", "all", patients), false);
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.log(error);
     }
 
-    // Update Beliefs
-    agent.addBelief(new Belief(agent.getID(), "lastActivity", this.getID()));
-    agent.addBelief(new Belief("Patient", "retrieveAll", false));
-
+    // Update Facts
+    agentAPI.addFact(new Belief("Clinician", "role", null), false);
     agentAPI.addFact(
       new Belief("Procedure", "HF-OTP-I", ProcedureConst.INACTIVE)
     );
@@ -70,20 +76,38 @@ class RetrieveRolePatients extends Activity {
     if (role && role === Role.NURSE) {
       const userId = await AsyncStorage.getItem("UserId");
       if (userId) {
-        const clinician = await DataStore.query(ClinicianInfo, userId);
-        if (clinician && clinician.hospitalName) {
-          return DataStore.query(PatientInfo, (c) =>
-            c.hospitalName("eq", clinician.hospitalName)
-          );
+        const clinicianQuery: any = await API.graphql({
+          query: getClinicianInfo,
+          variables: { id: userId }
+        });
+        if (clinicianQuery.data) {
+          const clinician = clinicianQuery.data.getClinicianInfo;
+          if (clinician && clinician.hospitalName) {
+            const patientQuery: any = await API.graphql({
+              query: listPatientInfos,
+              variables: {
+                filter: { hospitalName: { eq: clinician.hospitalName } }
+              }
+            });
+            if (patientQuery.data) {
+              return patientQuery.data.listPatientInfos.items;
+            }
+          }
         }
       }
 
       // LS-TODO: Currently query all patients
     } else if (
       role &&
-      (role === Role.EP || role === Role.HF_SPECIALIST || role === Role.MO)
+      (role === Role.EP ||
+        role === Role.HF_SPECIALIST ||
+        role === Role.MO ||
+        role === Role.PHARMACIST)
     ) {
-      return DataStore.query(PatientInfo);
+      const patientQuery: any = await API.graphql({ query: listPatientInfos });
+      if (patientQuery.data) {
+        return patientQuery.data.listPatientInfos.items;
+      }
     }
     return [];
   }

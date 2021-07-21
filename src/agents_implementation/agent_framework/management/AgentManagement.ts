@@ -1,10 +1,11 @@
 import { DeviceEventEmitter } from "react-native";
 import Agent from "../base/Agent";
 import Belief from "../base/Belief";
-import { DataStore } from "@aws-amplify/datastore";
-import { ClinicianInfo } from "../../../aws/models";
 import { Fact } from "../model";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import API from "@aws-amplify/api-graphql";
+import { updateClinicianInfo } from "aws/graphql/mutations";
+import { getClinicianInfo } from "aws/graphql/queries";
 
 /**
  * Base class for management of active agents.
@@ -31,7 +32,11 @@ abstract class AgentManagement {
     try {
       const userId = await AsyncStorage.getItem("UserId");
       if (userId) {
-        const clinician = await DataStore.query(ClinicianInfo, userId);
+        const result: any = await API.graphql({
+          query: getClinicianInfo,
+          variables: { id: userId }
+        });
+        const clinician = result.data.getClinicianInfo;
         if (clinician) {
           const dbFacts = clinician.facts;
           if (dbFacts && Object.entries(JSON.parse(dbFacts)).length > 0) {
@@ -101,13 +106,18 @@ abstract class AgentManagement {
     updateDb: boolean = false
   ): Promise<void> {
     try {
-      if (!(fact.getKey() in this.facts)) {
-        this.facts[fact.getKey()] = {};
-      }
-      this.facts[fact.getKey()][fact.getAttribute()] = fact.getValue();
+      // Clears intermediate attributes and values of actions
+      if (fact.getValue() === null && fact.getKey() in this.facts) {
+        delete this.facts[fact.getKey()][fact.getAttribute()];
+      } else {
+        if (!(fact.getKey() in this.facts)) {
+          this.facts[fact.getKey()] = {};
+        }
+        this.facts[fact.getKey()][fact.getAttribute()] = fact.getValue();
 
-      if (broadcast) {
-        DeviceEventEmitter.emit("env", fact);
+        if (broadcast) {
+          DeviceEventEmitter.emit("env", fact);
+        }
       }
 
       if (updateDb) {
@@ -117,6 +127,23 @@ abstract class AgentManagement {
       // eslint-disable-next-line no-console
       console.log(err);
     }
+  }
+
+  /**
+   * Merge incoming facts into current facts.
+   * This happen when an existing user signs in.
+   * @param {Belief} facts
+   */
+  mergeFacts(facts: Belief): void {
+    Object.entries(facts).forEach(([key, innerObj]) => {
+      if (!(key in this.facts)) {
+        this.facts[key] = innerObj;
+      } else {
+        Object.entries(innerObj).forEach(([attribute, value]) => {
+          this.facts[key][attribute] = value;
+        });
+      }
+    });
   }
 
   /**
@@ -134,32 +161,51 @@ abstract class AgentManagement {
   async updateDbStates(): Promise<void> {
     const userId = await AsyncStorage.getItem("UserId");
     if (userId) {
-      const clinician = await DataStore.query(ClinicianInfo, userId);
-      if (clinician) {
-        await DataStore.save(
-          ClinicianInfo.copyOf(clinician, (updated) => {
-            updated.facts = JSON.stringify(this.facts);
-            this.agents.forEach((agent) => {
-              switch (agent.getID()) {
-                case "APS": {
-                  updated.APS = JSON.stringify(agent.getBeliefs());
-                  break;
-                }
-                case "DTA": {
-                  updated.DTA = JSON.stringify(agent.getBeliefs());
-                  break;
-                }
-                case "UXSA": {
-                  updated.UXSA = JSON.stringify(agent.getBeliefs());
-                  break;
-                }
-                default: {
-                  break;
-                }
-              }
-            });
-          })
-        );
+      const clinicianQuery: any = await API.graphql({
+        query: getClinicianInfo,
+        variables: { id: userId }
+      });
+      if (clinicianQuery.data) {
+        const clinician = clinicianQuery.data.getClinicianInfo;
+        const updated: {
+          id: string;
+          facts: string;
+          APS: string;
+          DTA: string;
+          UXSA: string;
+          _version: number;
+        } = {
+          id: userId,
+          facts: clinician.facts,
+          APS: clinician.APS,
+          DTA: clinician.DTA,
+          UXSA: clinician.UXSA,
+          _version: clinician._version
+        };
+        updated.facts = JSON.stringify(this.facts);
+        this.agents.forEach((agent) => {
+          switch (agent.getID()) {
+            case "APS": {
+              updated.APS = JSON.stringify(agent.getBeliefs());
+              break;
+            }
+            case "DTA": {
+              updated.DTA = JSON.stringify(agent.getBeliefs());
+              break;
+            }
+            case "UXSA": {
+              updated.UXSA = JSON.stringify(agent.getBeliefs());
+              break;
+            }
+            default: {
+              break;
+            }
+          }
+        });
+        await API.graphql({
+          query: updateClinicianInfo,
+          variables: { input: updated }
+        });
       }
     }
   }

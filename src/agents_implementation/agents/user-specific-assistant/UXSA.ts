@@ -8,7 +8,6 @@ const agentId = "UXSA";
 
 // Initial Beliefs of Agent
 
-// App Device Configuration
 const belief1 = new Belief(agentId, "lastActivity", null);
 
 // User Specific Assistant Agent

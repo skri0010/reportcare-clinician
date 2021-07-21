@@ -39,7 +39,6 @@ export const ConfirmRegistration: FC<
       .then(async () => {
         const { name, hospitalName, role } = route.params;
         if (name && hospitalName && role) {
-          await AsyncStorage.setItem("Unconfigured", JSON.stringify(true));
           await AsyncStorage.setItem("Details", JSON.stringify(route.params));
         }
         setConfirming(false);

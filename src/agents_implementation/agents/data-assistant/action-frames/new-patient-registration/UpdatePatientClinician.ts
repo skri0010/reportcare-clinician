@@ -3,12 +3,15 @@ import Activity from "../../../../agent_framework/base/Activity";
 import Agent from "../../../../agent_framework/base/Agent";
 import Belief from "../../../../agent_framework/base/Belief";
 import Precondition from "../../../../agent_framework/base/Precondition";
-import { DataStore } from "@aws-amplify/datastore";
-import { PatientInfo } from "../../../../../aws/models";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Alert } from "react-native";
 import ProcedureConst from "../../../../agent_framework/const/ProcedureConst";
 import agentAPI from "../../../../agent_framework/AgentAPI";
+import API from "@aws-amplify/api-graphql";
+import { listPatientInfos } from "aws/graphql/queries";
+import {
+  updatePatientInfo,
+  createClinicianPatientMap
+} from "aws/graphql/mutations";
 
 /**
  * Class to represent an activity for updating patient's clinician.
@@ -26,58 +29,58 @@ class UpdatePatientClinican extends Activity {
    */
   async doActivity(agent: Agent): Promise<void> {
     await super.doActivity(agent);
+
+    // Update Beliefs
+    agent.addBelief(new Belief(agent.getID(), "clinicianUpdated", false));
+    agent.addBelief(new Belief(agent.getID(), "lastActivity", this.getID()));
+
     try {
-      const patientId = agent.getBeliefs().Patient?.updateClinician;
+      const patientId = agentAPI.getFacts().Patient?.updateClinician;
       const clinicianId = await AsyncStorage.getItem("ClinicianId");
-      let patientUpdated: boolean = false;
 
       if (patientId && clinicianId) {
-        let patient: PatientInfo | undefined;
-        const patientQuery = await DataStore.query(PatientInfo, (c) =>
-          c.patientID("eq", patientId)
-        );
-        if (patientQuery.length > 0) {
-          patient = patientQuery.pop();
-        }
-        if (patient) {
-          await DataStore.save(
-            PatientInfo.copyOf(patient, (updated) => {
+        const query: any = await API.graphql({
+          query: listPatientInfos,
+          variables: { filter: { patientID: { eq: patientId } } }
+        });
+        if (query.data) {
+          const results = query.data.listClinicianInfos.items;
+          if (results.length > 0) {
+            const patient = results.pop();
+            if (patient) {
               // LS-TODO: Whether to update cardiologist using clinician's username
-              // or have another clinicianID attribute
-              updated.cardiologist = clinicianId;
-            })
-          ).then(() => {
-            patientUpdated = true;
-            Alert.alert(
-              "Update successful",
-              "Patient's clinician has been updated",
-              [{ text: "OK" }]
-            );
-            // eslint-disable-next-line no-console
-            console.log("Update successful");
-          });
+              await API.graphql({
+                query: updatePatientInfo,
+                variables: {
+                  input: {
+                    id: patient.id,
+                    cardiologist: clinicianId,
+                    _version: patient._version
+                  }
+                }
+              });
+              await API.graphql({
+                query: createClinicianPatientMap,
+                variables: {
+                  input: { clinicianID: clinicianId, patientID: patientId }
+                }
+              });
+              agentAPI.addFact(
+                new Belief("Patient", "updateSuccessful", true),
+                false
+              );
+            }
+          }
         }
       }
-      if (!patientUpdated) {
-        Alert.alert("Update failed", "Patient's ID might be invalid", [
-          { text: "OK" }
-        ]);
-        // eslint-disable-next-line no-console
-        console.log("Update failed");
-      }
-      // Update Beliefs
-      agent.addBelief(new Belief("Patient", "updateClinician", null));
-      agent.addBelief(new Belief(agent.getID(), "clinicianUpdated", false));
-      agent.addBelief(new Belief(agent.getID(), "lastActivity", this.getID()));
-      agentAPI.addFact(
-        new Belief("Procedure", "SRD", ProcedureConst.INACTIVE),
-        true,
-        true
-      );
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
     }
+
+    // Update Facts
+    agentAPI.addFact(new Belief("Patient", "updateClinician", null), false);
+    agentAPI.addFact(new Belief("Procedure", "SRD", ProcedureConst.INACTIVE));
   }
 }
 

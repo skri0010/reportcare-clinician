@@ -4,7 +4,6 @@ import Agent from "../../../../agent_framework/base/Agent";
 import Belief from "../../../../agent_framework/base/Belief";
 import Precondition from "../../../../agent_framework/base/Precondition";
 import ProcedureConst from "../../../../agent_framework/const/ProcedureConst";
-import { PatientDetails } from "../../../../agent_framework/model";
 import agentAPI from "../../../../agent_framework/AgentAPI";
 
 /**
@@ -22,36 +21,33 @@ class VisualizeParameters extends Activity {
    */
   async doActivity(agent: Agent): Promise<void> {
     await super.doActivity(agent);
-    try {
-      const patientDetails: PatientDetails | undefined =
-        agentAPI.getFacts().Patient?.details;
 
-      // Update Beliefs
-      agent.addBelief(new Belief("Patient", "detailsRetrieved", false));
-      agent.addBelief(new Belief(agent.getID(), "lastActivity", this.getID()));
+    // Update Beliefs
+    agent.addBelief(new Belief("Patient", "detailsRetrieved", false));
+    agent.addBelief(new Belief(agent.getID(), "lastActivity", this.getID()));
+
+    try {
+      const patientDetails = agentAPI.getFacts().Patient?.details;
 
       if (patientDetails) {
         // LS-TODO: Perform filtering on data according to roles
 
         // Update Facts
-        // LS-TODO: Update facts with details filtered according to roles
         agentAPI.addFact(
           new Belief("Patient", "details", patientDetails),
           false
         );
-      } else {
-        agentAPI.addFact(new Belief("Patient", "details", null), false);
       }
-
-      agentAPI.addFact(
-        new Belief("Procedure", "HF-OTP-II", ProcedureConst.INACTIVE)
-      );
-      // NOTE: Call to update local facts and beliefs in cloud storage will be
-      // called from the ParameterGraphs component.
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
     }
+
+    agentAPI.addFact(
+      new Belief("Procedure", "HF-OTP-II", ProcedureConst.INACTIVE)
+    );
+    // NOTE: Call to update local facts and beliefs in cloud storage will be
+    // called from the ParameterGraphs component.
   }
 }
 

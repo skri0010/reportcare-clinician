@@ -1,3 +1,8 @@
+"""
+Official docs for authentication: https://docs.amplify.aws/cli/graphql-transformer/auth
+Official docs for keys: https://docs.amplify.aws/cli/graphql-transformer/key#key
+Refer to `reportcare-clinician/docs/access-control.md` for more information on @auth with ownerField and groupsField
+"""
 type PatientInfo
   @model
   @auth(rules: [{ allow: owner }, { allow: groups, groups: ["Admin"] }])
@@ -18,7 +23,14 @@ type PatientInfo
 
 type MedicationInfo
   @model
-  @auth(rules: [{ allow: owner }, { allow: groups, groups: ["Admin"] }])
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groups: ["Clinicians"], operations: [read] }
+      { allow: groups, groupsField: "patientID", operations: [read, update] }
+    ]
+  )
   @key(name: "byPatient", fields: ["patientID"]) {
   id: ID!
   medname: String!
@@ -81,7 +93,23 @@ type ReportVitals
 
 type ClinicianInfo
   @model
-  @auth(rules: [{ allow: owner }])
+  @auth(
+    rules: [
+      { allow: owner, operations: [read, update] }
+      { allow: groups, groups: ["Admin"] }
+      {
+        allow: groups
+        groups: [
+          "EPs"
+          "Nurses"
+          "HFSpecialists"
+          "MedicalOfficers"
+          "Pharmacists"
+        ]
+        operations: [create]
+      }
+    ]
+  )
   @key(name: "byClinician", fields: ["clinicianID"]) {
   id: ID!
   name: String!
@@ -92,4 +120,49 @@ type ClinicianInfo
   APS: String!
   DTA: String!
   UXSA: String!
+  owner: String!
+}
+
+"""
+== Authentication ==
+1. Owner: read
+2. Patient in record: read
+3. Clinician: read (records with own patients, different clinician)
+4. Clinician: create
+
+== Partition key and sort key ==
+Primary index: clinicianID, patientID
+Secondary index: patientID, clinicianID
+"""
+type ClinicianPatientMap
+  @model
+  @auth(
+    rules: [
+      { allow: owner, operations: [read] }
+      { allow: owner, ownerField: "patientID", operations: [read] }
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groupsField: "patientID", operations: [read] }
+      {
+        allow: groups
+        groups: [
+          "EPs"
+          "Nurses"
+          "HFSpecialists"
+          "MedicalOfficers"
+          "Pharmacists"
+        ]
+        operations: [create]
+      }
+    ]
+  )
+  @key(fields: ["clinicianID", "patientID"])
+  @key(
+    name: "byPatient"
+    fields: ["patientID", "clinicianID"]
+    queryField: "cliniciansByPatient"
+  ) {
+  id: ID!
+  clinicianID: String!
+  patientID: String!
+  owner: String!
 }

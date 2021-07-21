@@ -10,10 +10,10 @@ import ObjNode from "./Engine/Rete/ObjNode";
 import AlphaNode from "./Engine/Rete/AlphaNode";
 import Node from "./Engine/Rete/Node";
 import BetaNode from "./Engine/Rete/BetaNode";
-import { DataStore } from "@aws-amplify/datastore";
-import { ClinicianInfo } from "../../../aws/models";
 import { Fact } from "../model";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import API from "@aws-amplify/api-graphql";
+import { getClinicianInfo } from "aws/graphql/queries";
 
 /**
  * Class representing the Agent
@@ -137,7 +137,7 @@ class Agent {
     }, 500);
 
     // Set Beliefs
-    await this.setBeliefs(beliefs);
+    this.setBeliefs(beliefs);
 
     await this.inference();
   }
@@ -148,23 +148,48 @@ class Agent {
    */
   async setBeliefs(beliefs: Belief[]): Promise<void> {
     try {
+      let beliefsSet = false;
       const userId = await AsyncStorage.getItem("UserId");
       if (userId) {
-        const clinician = await DataStore.query(ClinicianInfo, userId);
+        const result: any = await API.graphql({
+          query: getClinicianInfo,
+          variables: { id: userId }
+        });
+        const clinician = result.data.getClinicianInfo;
         if (clinician && this.id in clinician) {
           const beliefJSON = clinician[this.id as keyof typeof clinician];
           if (beliefJSON && Object.entries(JSON.parse(beliefJSON)).length > 0) {
             this.beliefs = JSON.parse(beliefJSON);
-          } else {
-            for (let i = 0; i < beliefs.length; i += 1) {
-              this.addBelief(beliefs[i]);
-            }
+            beliefsSet = true;
           }
+        }
+      }
+
+      if (!beliefsSet) {
+        for (let i = 0; i < beliefs.length; i += 1) {
+          this.addBelief(beliefs[i]);
         }
       }
     } catch (e) {
       console.log(this.id + e);
     }
+  }
+
+  /**
+   * Merge incoming beliefs into current beliefs.
+   * This happen when an existing user signs in.
+   * @param {Belief} beliefs
+   */
+  mergeBeliefs(beliefs: Belief): void {
+    Object.entries(beliefs).forEach(([key, innerObj]) => {
+      if (!(key in this.beliefs)) {
+        this.beliefs[key] = innerObj;
+      } else {
+        Object.entries(innerObj).forEach(([attribute, value]) => {
+          this.beliefs[key][attribute] = value;
+        });
+      }
+    });
   }
 
   /**

@@ -5,7 +5,7 @@ import { BottomNavigationBar } from "./BottomNavigationBar";
 import { ScreenName, RootStackParamList } from "mobile/screens";
 import { RootState, select } from "util/useRedux";
 import { Auth } from "@aws-amplify/auth";
-import { DataStore } from "@aws-amplify/datastore";
+// import { DataStore } from "@aws-amplify/datastore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { ms } from "react-native-size-matters";
@@ -36,7 +36,7 @@ export const MainNavigationStack: FC<MainNavigationStackProps> = ({
 
   const signOut = async (): Promise<void> => {
     await Auth.signOut().then(async () => {
-      await DataStore.stop();
+      // await DataStore.clear();
       await AsyncStorage.multiRemove(["UserId", "ClinicianId"]);
       toast.show(i18n.t("SignOutSuccessful"), { type: "success" });
       setAuthState(AuthState.SIGNED_OUT);

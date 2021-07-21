@@ -11,8 +11,6 @@ import { Auth } from "@aws-amplify/auth";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { RootState, select } from "util/useRedux";
-import { DataStore } from "@aws-amplify/datastore";
-import { ClinicianInfo } from "aws/models";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthScreenName, AuthScreensProps, AuthState } from "web/auth_screens";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
@@ -21,6 +19,9 @@ import agentAPI from "agents_implementation/agent_framework/AgentAPI";
 import i18n from "util/language/i18n";
 import { useToast } from "react-native-toast-notifications";
 import { LoadingIndicator } from "components/LoadingIndicator";
+import agentAPS from "agents_implementation/agents/app-configuration-assistant/APS";
+import Belief from "agents_implementation/agent_framework/base/Belief";
+import ProcedureConst from "agents_implementation/agent_framework/const/ProcedureConst";
 
 export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
   navigation,
@@ -51,60 +52,41 @@ export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
       password: password
     })
       .then(async () => {
-        const unconfigured = await AsyncStorage.getItem("Unconfigured");
+        await AsyncStorage.setItem("Username", username);
 
-        // User signs in for the first time after signing up
-        if (unconfigured && JSON.parse(unconfigured) === true) {
-          const details = await AsyncStorage.getItem("Details");
-          if (details) {
-            const detailsObj: {
-              name: string;
-              hospitalName: string;
-              role: string;
-            } = JSON.parse(details);
-
-            // Creates new entry in DynamoDB table
-            await DataStore.save(
-              new ClinicianInfo({
-                name: detailsObj.name,
-                hospitalName: detailsObj.hospitalName,
-                clinicianID: username,
-                role: detailsObj.role,
-                facts: "",
-                APS: "",
-                DTA: "",
-                UXSA: ""
-              })
-            ).then(async (response) => {
-              // Locally stores entry Id and clinician Id
-              await AsyncStorage.multiSet([
-                ["UserId", response.id],
-                ["ClinicianId", username]
-              ]);
-              await AsyncStorage.multiRemove(["Unconfigured", "Details"]);
-            });
-          }
-        } else {
-          // User already has an entry in DynamoDB table
-          await DataStore.query(ClinicianInfo, (c) =>
-            c.clinicianID("eq", username)
-          ).then(async (results) => {
-            if (results.length > 0) {
-              const clinician = results.pop();
-              if (clinician) {
-                await AsyncStorage.multiSet([
-                  ["UserId", clinician.id],
-                  ["ClinicianId", clinician.clinicianID]
-                ]);
-              }
-            }
-          });
-        }
         // Triggers initialization of agents
         agentAPI.startAgents();
-        setSigningIn(false);
-        toast.show(i18n.t("SignInSuccessful"), { type: "success" });
-        setAuthState(AuthState.SIGNED_IN);
+
+        // Triggers APS to retrieve existing entry or create new entry
+        setTimeout(() => {
+          agentAPS.addBelief(new Belief("App", "configured", true));
+          agentAPS.addBelief(new Belief("Clinician", "hasEntry", false));
+          agentAPI.addFact(
+            new Belief("Procedure", "ADC", ProcedureConst.ACTIVE)
+          );
+        }, 1000);
+
+        setTimeout(() => {
+          // Checks facts every 1s to determine if the chain of actions has been completed.
+          const checkProcedure = setInterval(async () => {
+            const facts = agentAPI.getFacts();
+            if (facts.Procedure.ADC === ProcedureConst.INACTIVE) {
+              setSigningIn(false);
+              clearInterval(checkProcedure);
+
+              // Ensures that entry has been successfully retrieved or created
+              const [[, userId], [, clinicianId]] = await AsyncStorage.multiGet(
+                ["UserId", "ClinicianId"]
+              );
+              if (userId && clinicianId) {
+                toast.show(i18n.t("SignInSuccessful"), { type: "success" });
+                setAuthState(AuthState.SIGNED_IN);
+              } else {
+                toast.show(i18n.t("ConfigurationFailed"), { type: "danger" });
+              }
+            }
+          }, 500);
+        }, 1000);
       })
       .catch((error: { code: string; message: string; name: string }) => {
         // eslint-disable-next-line no-console

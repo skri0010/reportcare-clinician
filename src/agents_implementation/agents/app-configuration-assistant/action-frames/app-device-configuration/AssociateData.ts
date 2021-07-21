@@ -1,4 +1,3 @@
-import { Fact } from "../../../../agent_framework/model";
 import Actionframe from "../../../../agent_framework/base/Actionframe";
 import Activity from "../../../../agent_framework/base/Activity";
 import Agent from "../../../../agent_framework/base/Agent";
@@ -6,10 +5,11 @@ import Belief from "../../../../agent_framework/base/Belief";
 import Precondition from "../../../../agent_framework/base/Precondition";
 import ProcedureConst from "../../../../agent_framework/const/ProcedureConst";
 import agentAPI from "../../../../agent_framework/AgentAPI";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 /**
- * Class to represent an activity for associating clinician app id to baseline data.
- * This comes from Day-1 Scenario or Procedure ADC (App Device Configuration).
+ * Class to represent the activity for associating clinician id with entry data.
+ * This happens in Procedure App Device Configuration (ADC).
  */
 class AssociateData extends Activity {
   /**
@@ -24,33 +24,45 @@ class AssociateData extends Activity {
    * @param {Agent} agent - agent executing the activity
    */
   async doActivity(agent: Agent): Promise<void> {
+    super.doActivity(agent);
+
+    // Update Beliefs
+    agent.addBelief(new Belief("Clinician", "hasEntry", true));
+
     try {
-      super.doActivity(agent);
+      const [[, username], [, details]] = await AsyncStorage.multiGet([
+        "Username",
+        "Details"
+      ]);
+      if (username) {
+        await AsyncStorage.removeItem("Username");
+        agentAPI.addFact(new Belief("Clinician", "username", username), false);
+      }
 
-      // Associating Data
-      const baselineFields = ["name", "doctorId", "hospitalName"];
-      const clinicianFacts = agentAPI.getFacts().Clinician;
-      const baseline: Fact = {};
-      baselineFields.forEach((field) => {
-        baseline[field] = clinicianFacts[field];
-      });
-
-      // Update Beliefs
-      agent.addBelief(new Belief("Clinician", "hasBaseline", true));
-      agent.addBelief(new Belief(agent.getID(), "lastActivity", this.getID()));
-
-      // Update Facts
-      agentAPI.addFact(new Belief("Clinician", "baseline", baseline), false);
+      if (details) {
+        // New user
+        agentAPI.addFact(
+          new Belief("Clinician", "entryData", JSON.parse(details)),
+          false
+        );
+        agentAPI.addFact(new Belief("Clinician", "configured", false));
+      } else {
+        // Existing user
+        agentAPI.addFact(new Belief("Clinician", "configured", true));
+      }
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
     }
+
+    // Update lastActivity last since RequestEntryData will be triggered by this
+    agent.addBelief(new Belief(agent.getID(), "lastActivity", this.getID()));
   }
 }
 
-// rules or preconditions for activating the AssociateData class
-const rule1 = new Precondition("App", "isConfigured", true);
-const rule2 = new Precondition("Clinician", "hasBaseline", false);
+// Rules or preconditions for activating the AssociateData class
+const rule1 = new Precondition("App", "configured", true);
+const rule2 = new Precondition("Clinician", "hasEntry", false);
 const rule3 = new Precondition("Procedure", "ADC", ProcedureConst.ACTIVE);
 
 // Actionframe of the AssociateData class

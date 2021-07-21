@@ -3,15 +3,15 @@ import Activity from "../../../../agent_framework/base/Activity";
 import Agent from "../../../../agent_framework/base/Agent";
 import Belief from "../../../../agent_framework/base/Belief";
 import Precondition from "../../../../agent_framework/base/Precondition";
-import { DataStore } from "@aws-amplify/datastore";
-import {
-  ActivityInfo,
-  ReportSymptom,
-  ReportVitals
-} from "../../../../../aws/models";
 import ProcedureConst from "../../../../agent_framework/const/ProcedureConst";
 import { PatientDetails } from "../../../../agent_framework/model";
 import agentAPI from "../../../../agent_framework/AgentAPI";
+import API from "@aws-amplify/api-graphql";
+import {
+  listActivityInfos,
+  listReportSymptoms,
+  listReportVitalss
+} from "aws/graphql/queries";
 
 /**
  * Class to represent an activity for retrieving details of a specific patient.
@@ -28,34 +28,48 @@ class RetrievePatientDetails extends Activity {
    */
   async doActivity(agent: Agent): Promise<void> {
     await super.doActivity(agent);
+
+    // Update Beliefs
+    agent.addBelief(new Belief("Patient", "retrieveDetails", false));
+
     try {
-      const patientId = agent.getBeliefs().Patient?.viewDetails;
+      const patientId = agentAPI.getFacts().Patient?.viewDetails;
 
       if (patientId) {
-        const activityInfoQuery = await DataStore.query(ActivityInfo, (c) =>
-          c.patientID("eq", patientId)
-        );
-        const symptomsReportsQuery = await DataStore.query(ReportSymptom, (c) =>
-          c.patientID("eq", patientId)
-        );
-        const vitalsReportsQuery = await DataStore.query(ReportVitals, (c) =>
-          c.patientID("eq", patientId)
-        );
+        const activityInfoQuery: any = await API.graphql({
+          query: listActivityInfos,
+          variables: { filter: { patientID: { eq: patientId } } }
+        });
+        const symptomsReportsQuery: any = await API.graphql({
+          query: listReportSymptoms,
+          variables: { filter: { patientID: { eq: patientId } } }
+        });
+        const vitalsReportsQuery: any = await API.graphql({
+          query: listReportVitalss,
+          variables: { filter: { patientID: { eq: patientId } } }
+        });
 
         const patientDetails: PatientDetails = {
-          activityInfo: activityInfoQuery,
-          symptomsReports: symptomsReportsQuery,
-          vitalsReports: vitalsReportsQuery
+          activityInfo: [],
+          symptomsReports: [],
+          vitalsReports: []
         };
 
-        // Update Beliefs
-        agent.addBelief(new Belief("Patient", "retrieveDetails", false));
-        agent.addBelief(new Belief("Patient", "viewDetails", null));
-        agent.addBelief(
-          new Belief(agent.getID(), "lastActivity", this.getID())
-        );
+        if (activityInfoQuery.data) {
+          patientDetails.activityInfo =
+            activityInfoQuery.data.listActivityInfos.items;
+        }
+        if (symptomsReportsQuery.data) {
+          patientDetails.symptomsReports =
+            symptomsReportsQuery.data.listReportSymptoms.items;
+        }
+        if (vitalsReportsQuery.data) {
+          patientDetails.vitalsReports =
+            vitalsReportsQuery.data.listReportVitalss.items;
+        }
 
         // Update Facts
+        agentAPI.addFact(new Belief("Patient", "viewDetails", null), false);
         agentAPI.addFact(
           new Belief("Patient", "details", patientDetails),
           false
@@ -65,6 +79,9 @@ class RetrievePatientDetails extends Activity {
       // eslint-disable-next-line no-console
       console.log(error);
     }
+
+    // Update lastActivity last since RequestDetailsDisplay will be triggered by this
+    agent.addBelief(new Belief(agent.getID(), "lastActivity", this.getID()));
   }
 }
 

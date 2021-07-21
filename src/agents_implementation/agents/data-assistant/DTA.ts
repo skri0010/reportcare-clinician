@@ -1,6 +1,7 @@
 import Agent from "../../agent_framework/base/Agent";
 import Belief from "../../agent_framework/base/Belief";
-import af_StoreBaseline from "./action-frames/app-device-configuration/StoreBaseline";
+import af_StoreEntryData from "./action-frames/app-device-configuration/StoreEntryData";
+import af_RetrieveEntryData from "./action-frames/app-device-configuration/RetrieveEntryData";
 import af_UpdatePatientClinican from "./action-frames/new-patient-registration/UpdatePatientClinician";
 import af_RetrievePatientDetails from "./action-frames/hf-outcome-trends/RetrievePatientDetails";
 import af_RequestDetailsDisplay from "./action-frames/hf-outcome-trends/RequestDetailsDisplay";
@@ -18,7 +19,8 @@ const belief2 = new Belief("Clinician", "baselineUpdated", false);
 const agentDTA = new Agent(
   agentId,
   [
-    af_StoreBaseline,
+    af_StoreEntryData,
+    af_RetrieveEntryData,
     af_UpdatePatientClinican,
     af_RetrievePatientDetails,
     af_RequestDetailsDisplay,

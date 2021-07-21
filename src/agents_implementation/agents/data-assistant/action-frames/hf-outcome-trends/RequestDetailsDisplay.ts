@@ -7,7 +7,7 @@ import Performative from "../../../../agent_framework/const/Performative";
 import ProcedureConst from "../../../../agent_framework/const/ProcedureConst";
 
 /**
- * The class represents the activity for requesting display of retrieved patient's details.
+ * Class to represent the activity for requesting display of retrieved patient's details.
  * This happens in Procedure HF Outcome Trends (HF-OTP-II).
  */
 class RequestDetailsDisplay extends Communicate {

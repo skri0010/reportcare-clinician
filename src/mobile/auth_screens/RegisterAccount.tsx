@@ -48,7 +48,7 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
     await Auth.signUp({
       username: username,
       password: password,
-      attributes: { email: email }
+      attributes: { email: email, "custom:hospital_role": role }
     })
       .then(() => {
         setRegistering(false);

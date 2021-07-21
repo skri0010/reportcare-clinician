@@ -57,6 +57,15 @@ class AgentAPI {
   }
 
   /**
+   * Merge incoming facts into current facts.
+   * This happen when an existing user signs in.
+   * @param {Belief} facts
+   */
+  mergeFacts(facts: Belief): void {
+    this.system.mergeFacts(facts);
+  }
+
+  /**
    * Get all the facts available
    */
   getFacts(): Fact {

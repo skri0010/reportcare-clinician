@@ -7,18 +7,18 @@ import Performative from "../../../../agent_framework/const/Performative";
 import ProcedureConst from "../../../../agent_framework/const/ProcedureConst";
 
 /**
- * The class represents the activity for requesting storage for baseline.
- * This comes from Day-1 Scenario or Procedure ADC (App Device Configuration).
+ * Class to represent the activity for requesting clinician's entry data.
+ * This happens in Procedure App Device Configuration (ADC).
  */
-class RequestStore extends Communicate {
+class RequestEntryData extends Communicate {
   /**
-   * Constructor for the RequestStore class
+   * Constructor for the RequestEntryData class
    */
   constructor() {
     super(
-      "RequestStore",
+      "RequestEntryData",
       Performative.REQUEST,
-      new Belief("Clinician", "baselineUpdated", true),
+      new Belief("Clinician", "retrieveEntry", true),
       ["DTA"]
     );
   }
@@ -40,15 +40,15 @@ class RequestStore extends Communicate {
   }
 }
 
-// rules or preconditions for activating the RequestStore class
+// Rules or preconditions for activating the RequestEntryData class
 const rule1 = new Precondition("APS", "lastActivity", "AssociateData");
 const rule2 = new Precondition("Procedure", "ADC", ProcedureConst.ACTIVE);
 
-// Actionframe of the RequestStore class
-const af_RequestStore = new Actionframe(
-  "AF_RequestStore",
+// Actionframe of the RequestEntryData class
+const af_RequestEntryData = new Actionframe(
+  "AF_RequestEntryData",
   [rule1, rule2],
-  new RequestStore()
+  new RequestEntryData()
 );
 
-export default af_RequestStore;
+export default af_RequestEntryData;

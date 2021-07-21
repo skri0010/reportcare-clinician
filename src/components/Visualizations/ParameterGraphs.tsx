@@ -1,9 +1,17 @@
 import React, { FC, useState, useEffect } from "react";
-import { Text, View, Dimensions, ViewStyle, ScrollView } from "react-native";
+import {
+  Text,
+  View,
+  Dimensions,
+  ViewStyle,
+  ScrollView,
+  Platform
+} from "react-native";
 import { RootState, select } from "util/useRedux";
 import { LineChart } from "react-native-chart-kit";
 import { ReportVitals } from "../../aws/models";
 import { ms, ScaledSheet } from "react-native-size-matters";
+import { mockVitals } from "mock/mockVitals";
 
 enum days {
   "Sun" = 0,
@@ -42,7 +50,10 @@ export const ParameterGraphs: FC<ParameterGraphsProps> = ({ data }) => {
   const [vitalsData, setVitalsData] = useState<ReportVitals[]>(data);
 
   useEffect(() => {
-    setVitalsData(data);
+    // To be removed: for testing purpose only
+    setVitalsData(mockVitals);
+
+    // setVitalsData(data);
   }, [data]);
 
   // Calculates average diastolic BP, systolic BP, weight and oxygen saturation each day.
@@ -91,12 +102,18 @@ export const ParameterGraphs: FC<ParameterGraphsProps> = ({ data }) => {
   const chartConfig = {
     backgroundGradientFrom: colors.primaryBackgroundColor,
     backgroundGradientTo: colors.primaryBackgroundColor,
-    color: (opacity = 1) => `rgba(255, 0, 0, ${opacity})`,
+    color: (opacity = 1) => `rgba(255, 0, 100, ${opacity})`,
     labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-    strokeWidth: 4,
+    strokeWidth: ms(4),
     propsForLabels: {
       fontSize: fonts.h4Size,
       fontWeight: "bold"
+    },
+    propsForDots: {
+      r: "6"
+    },
+    propsForBackgroundLines: {
+      strokeWidth: ms(2)
     }
   };
 
@@ -107,106 +124,121 @@ export const ParameterGraphs: FC<ParameterGraphsProps> = ({ data }) => {
     styles.divider,
     { borderBottomColor: colors.secondaryBackgroundColor }
   ];
-  const chartStyle = {
-    alignItems: "center",
-    padding: ms(15),
-    borderRadius: ms(10)
+
+  const webChartStyle = {
+    paddingTop: ms(30),
+    paddingRight: ms(50),
+    alignSelf: "center"
   } as Partial<ViewStyle>;
-  const graphHeight = (Dimensions.get("window").height * 1) / 3;
-  const graphWidth = (Dimensions.get("window").width * 6) / 7;
+
+  const mobileChartStyle = {
+    paddingTop: ms(20),
+    paddingBottom: ms(10),
+    alignSelf: "center"
+  } as Partial<ViewStyle>;
+
+  const chartStyle = Platform.OS === "web" ? webChartStyle : mobileChartStyle;
+
+  const width =
+    Platform.OS === "web"
+      ? Dimensions.get("window").width / 2
+      : (Dimensions.get("window").width * 6) / 7;
+
+  const height =
+    Platform.OS === "web"
+      ? (Dimensions.get("window").height * 3) / 5
+      : Dimensions.get("window").height / 3;
 
   if (Object.keys(averageStats).length > 0) {
     return (
-      <ScrollView>
-        <View style={styles.container}>
-          {/* Diastolic Blood Pressure graph */}
-          <View style={styles.titleContainer}>
-            <Text style={titleStyle}>Diastolic Blood Pressure </Text>
-            <Text style={unitStyle}>(mmHg)</Text>
-          </View>
-          <LineChart
-            data={{
-              labels: Object.keys(averageStats),
-              datasets: [
-                {
-                  data: Object.keys(averageStats).map((key) => {
-                    return averageStats[key].averageDiastolic;
-                  })
-                }
-              ]
-            }}
-            width={graphWidth}
-            height={graphHeight}
-            chartConfig={chartConfig}
-            style={chartStyle}
-          />
-          <View style={dividerStyle} />
-          {/* Systolic Blood Pressure graph */}
-          <View style={styles.titleContainer}>
-            <Text style={titleStyle}>Systolic Blood Pressure </Text>
-            <Text style={unitStyle}>(mmHg)</Text>
-          </View>
-          <LineChart
-            data={{
-              labels: Object.keys(averageStats),
-              datasets: [
-                {
-                  data: Object.keys(averageStats).map((key) => {
-                    return averageStats[key].averageSystolic;
-                  })
-                }
-              ]
-            }}
-            width={graphWidth}
-            height={graphHeight}
-            chartConfig={chartConfig}
-            style={chartStyle}
-          />
-          <View style={dividerStyle} />
-          {/* Oxygen Saturation graph */}
-          <View style={styles.titleContainer}>
-            <Text style={titleStyle}>Oxygen Saturation </Text>
-            <Text style={unitStyle}>(%)</Text>
-          </View>
-          <LineChart
-            data={{
-              labels: Object.keys(averageStats),
-              datasets: [
-                {
-                  data: Object.keys(averageStats).map((key) => {
-                    return averageStats[key].averageOxySat;
-                  })
-                }
-              ]
-            }}
-            width={graphWidth}
-            height={graphHeight}
-            chartConfig={chartConfig}
-            style={chartStyle}
-          />
-          <View style={dividerStyle} />
-          {/* Weight graph */}
-          <View style={styles.titleContainer}>
-            <Text style={titleStyle}>Weight </Text>
-            <Text style={unitStyle}>(kg)</Text>
-          </View>
-          <LineChart
-            data={{
-              labels: Object.keys(averageStats),
-              datasets: [
-                {
-                  data: Object.keys(averageStats).map((key) => {
-                    return averageStats[key].averageWeight;
-                  })
-                }
-              ]
-            }}
-            width={graphWidth}
-            height={graphHeight}
-            chartConfig={chartConfig}
-            style={chartStyle}
-          />
+      <ScrollView style={styles.container}>
+        {/* Diastolic Blood Pressure graph */}
+        <View style={styles.titleContainer}>
+          <Text style={titleStyle}>Diastolic Blood Pressure </Text>
+          <Text style={unitStyle}>(mmHg)</Text>
         </View>
+        <LineChart
+          data={{
+            labels: Object.keys(averageStats),
+            datasets: [
+              {
+                data: Object.keys(averageStats).map((key) => {
+                  return averageStats[key].averageDiastolic;
+                })
+              }
+            ]
+          }}
+          width={width}
+          height={height}
+          chartConfig={chartConfig}
+          style={chartStyle}
+        />
+        <View style={dividerStyle} />
+        {/* Systolic Blood Pressure graph */}
+        <View style={styles.titleContainer}>
+          <Text style={titleStyle}>Systolic Blood Pressure </Text>
+          <Text style={unitStyle}>(mmHg)</Text>
+        </View>
+        <LineChart
+          data={{
+            labels: Object.keys(averageStats),
+            datasets: [
+              {
+                data: Object.keys(averageStats).map((key) => {
+                  return averageStats[key].averageSystolic;
+                })
+              }
+            ]
+          }}
+          width={width}
+          height={height}
+          chartConfig={chartConfig}
+          style={chartStyle}
+        />
+        <View style={dividerStyle} />
+        {/* Oxygen Saturation graph */}
+        <View style={styles.titleContainer}>
+          <Text style={titleStyle}>Oxygen Saturation </Text>
+          <Text style={unitStyle}>(%)</Text>
+        </View>
+        <LineChart
+          data={{
+            labels: Object.keys(averageStats),
+            datasets: [
+              {
+                data: Object.keys(averageStats).map((key) => {
+                  return averageStats[key].averageOxySat;
+                })
+              }
+            ]
+          }}
+          width={width}
+          height={height}
+          chartConfig={chartConfig}
+          style={chartStyle}
+        />
+        <View style={dividerStyle} />
+        {/* Weight graph */}
+        <View style={styles.titleContainer}>
+          <Text style={titleStyle}>Weight </Text>
+          <Text style={unitStyle}>(kg)</Text>
+        </View>
+        <LineChart
+          data={{
+            labels: Object.keys(averageStats),
+            datasets: [
+              {
+                data: Object.keys(averageStats).map((key) => {
+                  return averageStats[key].averageWeight;
+                })
+              }
+            ]
+          }}
+          width={width}
+          height={height}
+          chartConfig={chartConfig}
+          style={chartStyle}
+        />
       </ScrollView>
     );
   }

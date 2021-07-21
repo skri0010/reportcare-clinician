@@ -1,5 +1,5 @@
 import React, { FC, useState, useEffect } from "react";
-import { View, FlatList, SafeAreaView } from "react-native";
+import { View, FlatList } from "react-native";
 import { ScreenWrapper } from "mobile/screens/ScreenWrapper";
 import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { ScaledSheet } from "react-native-size-matters";
@@ -36,12 +36,12 @@ export const PatientsTab: FC = () => {
       const checkProcedure = setInterval(() => {
         const facts = agentAPI.getFacts();
         if (facts.Procedure["HF-OTP-I"] === ProcedureConst.INACTIVE) {
-          const data: Patient[] = agentDTA.getBeliefs().Patient.all;
+          const data: Patient[] = agentAPI.getFacts().Patient?.all;
           if (data) {
             setPatients(data);
           }
           clearInterval(checkProcedure);
-          agentAPI.addFact(new Belief("Patient", "all", null), true, true);
+          agentAPI.addFact(new Belief("Patient", "all", null), false, true);
         }
       }, 1000);
     }, 500);
@@ -50,7 +50,7 @@ export const PatientsTab: FC = () => {
   // Triggers series of actions to retrieve details specific to a patient.
   const getData = (patientId: string) => {
     agentDTA.addBelief(new Belief("Patient", "retrieveDetails", true));
-    agentDTA.addBelief(new Belief("Patient", "viewDetails", patientId));
+    agentAPI.addFact(new Belief("Patient", "viewDetails", patientId), false);
     agentAPI.addFact(
       new Belief("Procedure", "HF-OTP-II", ProcedureConst.ACTIVE)
     );
@@ -61,13 +61,13 @@ export const PatientsTab: FC = () => {
       const checkProcedure = setInterval(() => {
         const facts = agentAPI.getFacts();
         if (facts.Procedure["HF-OTP-II"] === ProcedureConst.INACTIVE) {
-          const data: ReportVitals[] = facts.Patient.details.vitalsReports;
+          const data: ReportVitals[] = facts.Patient?.details.vitalsReports;
           if (data) {
             setVitalsData(data);
             setReady(true);
           }
           clearInterval(checkProcedure);
-          agentAPI.addFact(new Belief("Patient", "details", null), true, true);
+          agentAPI.addFact(new Belief("Patient", "details", null), false, true);
         }
       }, 1000);
     }, 500);
@@ -76,36 +76,34 @@ export const PatientsTab: FC = () => {
   // JH-TODO: Replace placeholder with i18n
   return (
     <ScreenWrapper>
-      <SafeAreaView style={{ flex: 1 }}>
-        <View style={[styles.searchBarWrapper]}>
-          <SearchBarComponent
-            onUserInput={() => {
-              null;
-            }}
-            onSearchClick={() => {
-              null;
-            }}
-            placeholder="Search patients"
-          />
-        </View>
-        <FlatList
-          ItemSeparatorComponent={() => <ItemSeparator />}
-          ListHeaderComponent={() => <ItemSeparator />}
-          ListFooterComponent={() => <ItemSeparator />}
-          data={patients}
-          renderItem={({ item }) => (
-            <PatientDetailsRow
-              generalDetails={item.details}
-              patientClass={item.class}
-              age={item.age}
-              onRowPress={() => getData(item.details.id)}
-            />
-          )}
-          keyExtractor={(item) => item.userId}
+      <View style={[styles.searchBarWrapper]}>
+        <SearchBarComponent
+          onUserInput={() => {
+            null;
+          }}
+          onSearchClick={() => {
+            null;
+          }}
+          placeholder="Search patients"
         />
-        {/* TODO: Move graphs to PatientsDetails screen */}
-        {graphIsReady && <ParameterGraphs data={vitalsData} />}
-      </SafeAreaView>
+      </View>
+      <FlatList
+        ItemSeparatorComponent={() => <ItemSeparator />}
+        ListHeaderComponent={() => <ItemSeparator />}
+        ListFooterComponent={() => <ItemSeparator />}
+        data={patients}
+        renderItem={({ item }) => (
+          <PatientDetailsRow
+            generalDetails={item.details}
+            patientClass={item.class}
+            age={item.age}
+            onRowPress={() => getData(item.details.id)}
+          />
+        )}
+        keyExtractor={(item) => item.userId}
+      />
+      {/* TODO: Move graphs to PatientsDetails screen */}
+      {graphIsReady && <ParameterGraphs data={vitalsData} />}
     </ScreenWrapper>
   );
 };
