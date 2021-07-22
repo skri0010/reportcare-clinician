@@ -6,7 +6,6 @@ import { SideNavigationBar } from "./SideNavigationBar";
 import { ScreenName, RootStackParamList } from "./screens";
 import { RootState, select } from "util/useRedux";
 import { Auth } from "@aws-amplify/auth";
-// import { DataStore } from "@aws-amplify/datastore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { ms } from "react-native-size-matters";
@@ -35,8 +34,10 @@ export const MainNavigationStack: FC<MainNavigationStackProps> = ({
 
   const signOut = async (): Promise<void> => {
     await Auth.signOut().then(async () => {
-      // await DataStore.clear();
-      await AsyncStorage.multiRemove(["UserId", "ClinicianId"]);
+      const keys = await AsyncStorage.getAllKeys();
+      if (keys && keys.length > 0) {
+        await AsyncStorage.multiRemove(keys);
+      }
       toast.show(i18n.t("SignOutSuccessful"), { type: "success" });
       setAuthState(AuthState.SIGNED_OUT);
     });

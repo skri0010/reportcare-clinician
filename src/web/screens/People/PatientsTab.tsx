@@ -1,5 +1,5 @@
 import React, { FC, useState, useEffect } from "react";
-import { View, FlatList } from "react-native";
+import { View, FlatList, Button } from "react-native";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { ScaledSheet } from "react-native-size-matters";
@@ -13,6 +13,8 @@ import Belief from "agents_implementation/agent_framework/base/Belief";
 import ProcedureConst from "agents_implementation/agent_framework/const/ProcedureConst";
 import agentAPI from "agents_implementation/agent_framework/AgentAPI";
 import agentUXSA from "agents_implementation/agents/user-specific-assistant/UXSA";
+import { mockPatients } from "mock/mockPatients";
+import { mockVitals } from "mock/mockVitals";
 
 export const PatientsTab: FC = () => {
   const [patients, setPatients] = useState<Patient[]>([]);
@@ -40,6 +42,18 @@ export const PatientsTab: FC = () => {
           if (data) {
             setPatients(data);
           }
+
+          // To be removed: for testing purposes only
+          const mockData: Patient[] = mockPatients.map((patient) => {
+            return {
+              details: patient.generalDetails,
+              userId: patient.itemId,
+              class: patient.patientClass,
+              age: patient.age
+            };
+          });
+          setPatients(mockData);
+
           clearInterval(checkProcedure);
           agentAPI.addFact(new Belief("Patient", "all", null), false, true);
         }
@@ -66,6 +80,10 @@ export const PatientsTab: FC = () => {
             setVitalsData(data);
             setReady(true);
           }
+
+          // To be removed: for testing purposes only
+          setVitalsData(mockVitals);
+
           clearInterval(checkProcedure);
           agentAPI.addFact(new Belief("Patient", "details", null), false, true);
         }
@@ -102,6 +120,17 @@ export const PatientsTab: FC = () => {
         )}
         keyExtractor={(item) => item.userId}
       />
+
+      {/* To be removed: for testing purposes only */}
+      {graphIsReady && (
+        <Button
+          title="Hide Graphs"
+          onPress={() => {
+            setReady(false);
+          }}
+        />
+      )}
+
       {/* TODO: Move graphs to PatientsDetails section */}
       {graphIsReady && <ParameterGraphs data={vitalsData} />}
     </ScreenWrapper>
