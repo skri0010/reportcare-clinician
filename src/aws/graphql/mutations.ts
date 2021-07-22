@@ -416,18 +416,28 @@ export const createClinicianInfo = /* GraphQL */ `
       id
       name
       hospitalName
-      clinicianID
       role
-      facts
-      APS
-      DTA
-      UXSA
+      clinicianID
+      protectedInfo {
+        id
+        facts
+        APS
+        DTA
+        UXSA
+        clinicianID
+        owner
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      owner
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -440,18 +450,28 @@ export const updateClinicianInfo = /* GraphQL */ `
       id
       name
       hospitalName
-      clinicianID
       role
-      facts
-      APS
-      DTA
-      UXSA
+      clinicianID
+      protectedInfo {
+        id
+        facts
+        APS
+        DTA
+        UXSA
+        clinicianID
+        owner
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      owner
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -464,18 +484,130 @@ export const deleteClinicianInfo = /* GraphQL */ `
       id
       name
       hospitalName
-      clinicianID
       role
-      facts
-      APS
-      DTA
-      UXSA
+      clinicianID
+      protectedInfo {
+        id
+        facts
+        APS
+        DTA
+        UXSA
+        clinicianID
+        owner
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      owner
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
+    }
+  }
+`;
+export const createClinicianProtectedInfo = /* GraphQL */ `
+  mutation CreateClinicianProtectedInfo(
+    $input: CreateClinicianProtectedInfoInput!
+    $condition: ModelClinicianProtectedInfoConditionInput
+  ) {
+    createClinicianProtectedInfo(input: $input, condition: $condition) {
+      id
+      facts
+      APS
+      DTA
+      UXSA
+      clinicianID
+      clinicianInfo {
+        id
+        name
+        hospitalName
+        role
+        clinicianID
+        owner
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
       owner
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateClinicianProtectedInfo = /* GraphQL */ `
+  mutation UpdateClinicianProtectedInfo(
+    $input: UpdateClinicianProtectedInfoInput!
+    $condition: ModelClinicianProtectedInfoConditionInput
+  ) {
+    updateClinicianProtectedInfo(input: $input, condition: $condition) {
+      id
+      facts
+      APS
+      DTA
+      UXSA
+      clinicianID
+      clinicianInfo {
+        id
+        name
+        hospitalName
+        role
+        clinicianID
+        owner
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      owner
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteClinicianProtectedInfo = /* GraphQL */ `
+  mutation DeleteClinicianProtectedInfo(
+    $input: DeleteClinicianProtectedInfoInput!
+    $condition: ModelClinicianProtectedInfoConditionInput
+  ) {
+    deleteClinicianProtectedInfo(input: $input, condition: $condition) {
+      id
+      facts
+      APS
+      DTA
+      UXSA
+      clinicianID
+      clinicianInfo {
+        id
+        name
+        hospitalName
+        role
+        clinicianID
+        owner
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      owner
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -488,12 +620,25 @@ export const createClinicianPatientMap = /* GraphQL */ `
       id
       clinicianID
       patientID
-      createdAt
+      clinicianInfo {
+        id
+        name
+        hospitalName
+        role
+        clinicianID
+        owner
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      owner
       _version
       _deleted
       _lastChangedAt
+      createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -506,12 +651,25 @@ export const updateClinicianPatientMap = /* GraphQL */ `
       id
       clinicianID
       patientID
-      createdAt
+      clinicianInfo {
+        id
+        name
+        hospitalName
+        role
+        clinicianID
+        owner
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      owner
       _version
       _deleted
       _lastChangedAt
+      createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -524,12 +682,25 @@ export const deleteClinicianPatientMap = /* GraphQL */ `
       id
       clinicianID
       patientID
-      createdAt
+      clinicianInfo {
+        id
+        name
+        hospitalName
+        role
+        clinicianID
+        owner
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      owner
       _version
       _deleted
       _lastChangedAt
+      createdAt
       updatedAt
-      owner
     }
   }
 `;

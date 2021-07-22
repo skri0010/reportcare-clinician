@@ -133,6 +133,16 @@ export const schema = {
                                     "delete",
                                     "read"
                                 ]
+                            },
+                            {
+                                "groupClaim": "cognito:groups",
+                                "provider": "userPools",
+                                "allow": "groups",
+                                "groupsField": "patientID",
+                                "operations": [
+                                    "read"
+                                ],
+                                "groupField": "groups"
                             }
                         ]
                     }
@@ -221,21 +231,9 @@ export const schema = {
                                 "groupClaim": "cognito:groups",
                                 "provider": "userPools",
                                 "allow": "groups",
-                                "groups": [
-                                    "Clinicians"
-                                ],
-                                "operations": [
-                                    "read"
-                                ]
-                            },
-                            {
-                                "groupClaim": "cognito:groups",
-                                "provider": "userPools",
-                                "allow": "groups",
                                 "groupsField": "patientID",
                                 "operations": [
-                                    "read",
-                                    "update"
+                                    "read"
                                 ],
                                 "groupField": "groups"
                             }
@@ -343,6 +341,16 @@ export const schema = {
                                     "delete",
                                     "read"
                                 ]
+                            },
+                            {
+                                "groupClaim": "cognito:groups",
+                                "provider": "userPools",
+                                "allow": "groups",
+                                "groupsField": "patientID",
+                                "operations": [
+                                    "read"
+                                ],
+                                "groupField": "groups"
                             }
                         ]
                     }
@@ -433,6 +441,16 @@ export const schema = {
                                     "delete",
                                     "read"
                                 ]
+                            },
+                            {
+                                "groupClaim": "cognito:groups",
+                                "provider": "userPools",
+                                "allow": "groups",
+                                "groupsField": "patientID",
+                                "operations": [
+                                    "read"
+                                ],
+                                "groupField": "groups"
                             }
                         ]
                     }
@@ -530,6 +548,16 @@ export const schema = {
                                     "delete",
                                     "read"
                                 ]
+                            },
+                            {
+                                "groupClaim": "cognito:groups",
+                                "provider": "userPools",
+                                "allow": "groups",
+                                "groupsField": "patientID",
+                                "operations": [
+                                    "read"
+                                ],
+                                "groupField": "groups"
                             }
                         ]
                     }
@@ -662,6 +690,16 @@ export const schema = {
                                     "delete",
                                     "read"
                                 ]
+                            },
+                            {
+                                "groupClaim": "cognito:groups",
+                                "provider": "userPools",
+                                "allow": "groups",
+                                "groupsField": "patientID",
+                                "operations": [
+                                    "read"
+                                ],
+                                "groupField": "groups"
                             }
                         ]
                     }
@@ -692,6 +730,13 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
+                "role": {
+                    "name": "role",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
                 "clinicianID": {
                     "name": "clinicianID",
                     "isArray": false,
@@ -699,10 +744,110 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "role": {
-                    "name": "role",
+                "protectedInfo": {
+                    "name": "protectedInfo",
+                    "isArray": false,
+                    "type": {
+                        "model": "ClinicianProtectedInfo"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "association": {
+                        "connectionType": "HAS_ONE",
+                        "associatedWith": "clinicianInfo",
+                        "targetName": "clinicianID"
+                    }
+                },
+                "owner": {
+                    "name": "owner",
                     "isArray": false,
                     "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                }
+            },
+            "syncable": true,
+            "pluralName": "ClinicianInfos",
+            "attributes": [
+                {
+                    "type": "model",
+                    "properties": {}
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "fields": [
+                            "clinicianID"
+                        ]
+                    }
+                },
+                {
+                    "type": "auth",
+                    "properties": {
+                        "rules": [
+                            {
+                                "provider": "userPools",
+                                "ownerField": "owner",
+                                "allow": "owner",
+                                "operations": [
+                                    "read",
+                                    "update"
+                                ],
+                                "identityClaim": "cognito:username"
+                            },
+                            {
+                                "groupClaim": "cognito:groups",
+                                "provider": "userPools",
+                                "allow": "groups",
+                                "groups": [
+                                    "Admin"
+                                ],
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
+                            },
+                            {
+                                "groupClaim": "cognito:groups",
+                                "provider": "userPools",
+                                "allow": "groups",
+                                "groups": [
+                                    "Patients"
+                                ],
+                                "operations": [
+                                    "read"
+                                ]
+                            },
+                            {
+                                "groupClaim": "cognito:groups",
+                                "provider": "userPools",
+                                "allow": "groups",
+                                "groups": [
+                                    "EPs",
+                                    "Nurses",
+                                    "HFSpecialists",
+                                    "MedicalOfficers",
+                                    "Pharmacists"
+                                ],
+                                "operations": [
+                                    "create",
+                                    "read"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        "ClinicianProtectedInfo": {
+            "name": "ClinicianProtectedInfo",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
                     "isRequired": true,
                     "attributes": []
                 },
@@ -733,10 +878,30 @@ export const schema = {
                     "type": "String",
                     "isRequired": true,
                     "attributes": []
+                },
+                "clinicianInfo": {
+                    "name": "clinicianInfo",
+                    "isArray": false,
+                    "type": {
+                        "model": "ClinicianInfo"
+                    },
+                    "isRequired": true,
+                    "attributes": [],
+                    "association": {
+                        "connectionType": "BELONGS_TO",
+                        "targetName": "clinicianID"
+                    }
+                },
+                "owner": {
+                    "name": "owner",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
                 }
             },
             "syncable": true,
-            "pluralName": "ClinicianInfos",
+            "pluralName": "ClinicianProtectedInfos",
             "attributes": [
                 {
                     "type": "model",
@@ -745,7 +910,6 @@ export const schema = {
                 {
                     "type": "key",
                     "properties": {
-                        "name": "byClinician",
                         "fields": [
                             "clinicianID"
                         ]
@@ -759,12 +923,39 @@ export const schema = {
                                 "provider": "userPools",
                                 "ownerField": "owner",
                                 "allow": "owner",
-                                "identityClaim": "cognito:username",
+                                "operations": [
+                                    "read",
+                                    "update"
+                                ],
+                                "identityClaim": "cognito:username"
+                            },
+                            {
+                                "groupClaim": "cognito:groups",
+                                "provider": "userPools",
+                                "allow": "groups",
+                                "groups": [
+                                    "Admin"
+                                ],
                                 "operations": [
                                     "create",
                                     "update",
                                     "delete",
                                     "read"
+                                ]
+                            },
+                            {
+                                "groupClaim": "cognito:groups",
+                                "provider": "userPools",
+                                "allow": "groups",
+                                "groups": [
+                                    "EPs",
+                                    "Nurses",
+                                    "HFSpecialists",
+                                    "MedicalOfficers",
+                                    "Pharmacists"
+                                ],
+                                "operations": [
+                                    "create"
                                 ]
                             }
                         ]
@@ -782,13 +973,6 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "clinicianID": {
-                    "name": "clinicianID",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": true,
-                    "attributes": []
-                },
                 "patientID": {
                     "name": "patientID",
                     "isArray": false,
@@ -796,8 +980,21 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "createdAt": {
-                    "name": "createdAt",
+                "clinicianInfo": {
+                    "name": "clinicianInfo",
+                    "isArray": false,
+                    "type": {
+                        "model": "ClinicianInfo"
+                    },
+                    "isRequired": true,
+                    "attributes": [],
+                    "association": {
+                        "connectionType": "BELONGS_TO",
+                        "targetName": "clinicianID"
+                    }
+                },
+                "owner": {
+                    "name": "owner",
                     "isArray": false,
                     "type": "String",
                     "isRequired": true,
@@ -821,6 +1018,17 @@ export const schema = {
                     }
                 },
                 {
+                    "type": "key",
+                    "properties": {
+                        "name": "clinicianIDsByPatientID",
+                        "fields": [
+                            "patientID",
+                            "clinicianID"
+                        ],
+                        "queryField": "clinicianIDsByPatientID"
+                    }
+                },
+                {
                     "type": "auth",
                     "properties": {
                         "rules": [
@@ -828,13 +1036,19 @@ export const schema = {
                                 "provider": "userPools",
                                 "ownerField": "owner",
                                 "allow": "owner",
-                                "identityClaim": "cognito:username",
                                 "operations": [
-                                    "create",
-                                    "update",
-                                    "delete",
                                     "read"
-                                ]
+                                ],
+                                "identityClaim": "cognito:username"
+                            },
+                            {
+                                "provider": "userPools",
+                                "ownerField": "patientID",
+                                "allow": "owner",
+                                "operations": [
+                                    "read"
+                                ],
+                                "identityClaim": "cognito:username"
                             },
                             {
                                 "groupClaim": "cognito:groups",
@@ -849,6 +1063,31 @@ export const schema = {
                                     "delete",
                                     "read"
                                 ]
+                            },
+                            {
+                                "groupClaim": "cognito:groups",
+                                "provider": "userPools",
+                                "allow": "groups",
+                                "groupsField": "patientID",
+                                "operations": [
+                                    "read"
+                                ],
+                                "groupField": "groups"
+                            },
+                            {
+                                "groupClaim": "cognito:groups",
+                                "provider": "userPools",
+                                "allow": "groups",
+                                "groups": [
+                                    "EPs",
+                                    "Nurses",
+                                    "HFSpecialists",
+                                    "MedicalOfficers",
+                                    "Pharmacists"
+                                ],
+                                "operations": [
+                                    "create"
+                                ]
                             }
                         ]
                     }
@@ -858,5 +1097,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "3025c8e33881c5b1d46cbd84fea7514b"
+    "version": "c4eb15056240832e81f4e1cf5f5620d4"
 };

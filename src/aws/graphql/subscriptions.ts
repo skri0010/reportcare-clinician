@@ -354,110 +354,272 @@ export const onDeleteReportVitals = /* GraphQL */ `
   }
 `;
 export const onCreateClinicianInfo = /* GraphQL */ `
-  subscription OnCreateClinicianInfo($owner: String!) {
+  subscription OnCreateClinicianInfo($owner: String) {
     onCreateClinicianInfo(owner: $owner) {
       id
       name
       hospitalName
-      clinicianID
       role
-      facts
-      APS
-      DTA
-      UXSA
+      clinicianID
+      protectedInfo {
+        id
+        facts
+        APS
+        DTA
+        UXSA
+        clinicianID
+        owner
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      owner
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
-      owner
     }
   }
 `;
 export const onUpdateClinicianInfo = /* GraphQL */ `
-  subscription OnUpdateClinicianInfo($owner: String!) {
+  subscription OnUpdateClinicianInfo($owner: String) {
     onUpdateClinicianInfo(owner: $owner) {
       id
       name
       hospitalName
-      clinicianID
       role
-      facts
-      APS
-      DTA
-      UXSA
+      clinicianID
+      protectedInfo {
+        id
+        facts
+        APS
+        DTA
+        UXSA
+        clinicianID
+        owner
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      owner
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
-      owner
     }
   }
 `;
 export const onDeleteClinicianInfo = /* GraphQL */ `
-  subscription OnDeleteClinicianInfo($owner: String!) {
+  subscription OnDeleteClinicianInfo($owner: String) {
     onDeleteClinicianInfo(owner: $owner) {
       id
       name
       hospitalName
-      clinicianID
       role
+      clinicianID
+      protectedInfo {
+        id
+        facts
+        APS
+        DTA
+        UXSA
+        clinicianID
+        owner
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      owner
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateClinicianProtectedInfo = /* GraphQL */ `
+  subscription OnCreateClinicianProtectedInfo($owner: String) {
+    onCreateClinicianProtectedInfo(owner: $owner) {
+      id
       facts
       APS
       DTA
       UXSA
+      clinicianID
+      clinicianInfo {
+        id
+        name
+        hospitalName
+        role
+        clinicianID
+        owner
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      owner
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
+    }
+  }
+`;
+export const onUpdateClinicianProtectedInfo = /* GraphQL */ `
+  subscription OnUpdateClinicianProtectedInfo($owner: String) {
+    onUpdateClinicianProtectedInfo(owner: $owner) {
+      id
+      facts
+      APS
+      DTA
+      UXSA
+      clinicianID
+      clinicianInfo {
+        id
+        name
+        hospitalName
+        role
+        clinicianID
+        owner
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
       owner
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteClinicianProtectedInfo = /* GraphQL */ `
+  subscription OnDeleteClinicianProtectedInfo($owner: String) {
+    onDeleteClinicianProtectedInfo(owner: $owner) {
+      id
+      facts
+      APS
+      DTA
+      UXSA
+      clinicianID
+      clinicianInfo {
+        id
+        name
+        hospitalName
+        role
+        clinicianID
+        owner
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      owner
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
     }
   }
 `;
 export const onCreateClinicianPatientMap = /* GraphQL */ `
-  subscription OnCreateClinicianPatientMap($owner: String) {
-    onCreateClinicianPatientMap(owner: $owner) {
+  subscription OnCreateClinicianPatientMap($owner: String, $patientID: String) {
+    onCreateClinicianPatientMap(owner: $owner, patientID: $patientID) {
       id
       clinicianID
       patientID
-      createdAt
+      clinicianInfo {
+        id
+        name
+        hospitalName
+        role
+        clinicianID
+        owner
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      owner
       _version
       _deleted
       _lastChangedAt
+      createdAt
       updatedAt
-      owner
     }
   }
 `;
 export const onUpdateClinicianPatientMap = /* GraphQL */ `
-  subscription OnUpdateClinicianPatientMap($owner: String) {
-    onUpdateClinicianPatientMap(owner: $owner) {
+  subscription OnUpdateClinicianPatientMap($owner: String, $patientID: String) {
+    onUpdateClinicianPatientMap(owner: $owner, patientID: $patientID) {
       id
       clinicianID
       patientID
-      createdAt
+      clinicianInfo {
+        id
+        name
+        hospitalName
+        role
+        clinicianID
+        owner
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      owner
       _version
       _deleted
       _lastChangedAt
+      createdAt
       updatedAt
-      owner
     }
   }
 `;
 export const onDeleteClinicianPatientMap = /* GraphQL */ `
-  subscription OnDeleteClinicianPatientMap($owner: String) {
-    onDeleteClinicianPatientMap(owner: $owner) {
+  subscription OnDeleteClinicianPatientMap($owner: String, $patientID: String) {
+    onDeleteClinicianPatientMap(owner: $owner, patientID: $patientID) {
       id
       clinicianID
       patientID
-      createdAt
+      clinicianInfo {
+        id
+        name
+        hospitalName
+        role
+        clinicianID
+        owner
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      owner
       _version
       _deleted
       _lastChangedAt
+      createdAt
       updatedAt
-      owner
     }
   }
 `;

@@ -10,3 +10,5 @@ src/aws
 
 # Sandbox
 sandbox
+
+src\aws\models

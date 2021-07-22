@@ -29,7 +29,6 @@ export type ModelPatientInfoConditionInput = {
   hospitalLocation?: ModelStringInput | null,
   targetWeight?: ModelStringInput | null,
   targetActivity?: ModelStringInput | null,
-  patientID?: ModelStringInput | null,
   and?: Array< ModelPatientInfoConditionInput | null > | null,
   or?: Array< ModelPatientInfoConditionInput | null > | null,
   not?: ModelPatientInfoConditionInput | null,
@@ -178,7 +177,6 @@ export type ModelActivityInfoConditionInput = {
   Frequency?: ModelIntInput | null,
   Days?: ModelStringInput | null,
   time?: ModelStringInput | null,
-  patientID?: ModelStringInput | null,
   and?: Array< ModelActivityInfoConditionInput | null > | null,
   or?: Array< ModelActivityInfoConditionInput | null > | null,
   not?: ModelActivityInfoConditionInput | null,
@@ -242,7 +240,6 @@ export type ModelMedCompliantConditionInput = {
   MedId?: ModelStringInput | null,
   Verification?: ModelBooleanInput | null,
   Date?: ModelStringInput | null,
-  patientID?: ModelStringInput | null,
   and?: Array< ModelMedCompliantConditionInput | null > | null,
   or?: Array< ModelMedCompliantConditionInput | null > | null,
   not?: ModelMedCompliantConditionInput | null,
@@ -299,7 +296,6 @@ export type ModelReportSymptomConditionInput = {
   Name?: ModelStringInput | null,
   Severity?: ModelStringInput | null,
   DateTime?: ModelStringInput | null,
-  patientID?: ModelStringInput | null,
   and?: Array< ModelReportSymptomConditionInput | null > | null,
   or?: Array< ModelReportSymptomConditionInput | null > | null,
   not?: ModelReportSymptomConditionInput | null,
@@ -361,7 +357,6 @@ export type ModelReportVitalsConditionInput = {
   NoSteps?: ModelStringInput | null,
   OxySat?: ModelStringInput | null,
   DateTime?: ModelStringInput | null,
-  patientID?: ModelStringInput | null,
   and?: Array< ModelReportVitalsConditionInput | null > | null,
   or?: Array< ModelReportVitalsConditionInput | null > | null,
   not?: ModelReportVitalsConditionInput | null,
@@ -412,24 +407,16 @@ export type CreateClinicianInfoInput = {
   id?: string | null,
   name: string,
   hospitalName: string,
-  clinicianID: string,
   role: string,
-  facts: string,
-  APS: string,
-  DTA: string,
-  UXSA: string,
+  clinicianID: string,
+  owner: string,
   _version?: number | null,
 };
 
 export type ModelClinicianInfoConditionInput = {
   name?: ModelStringInput | null,
   hospitalName?: ModelStringInput | null,
-  clinicianID?: ModelStringInput | null,
   role?: ModelStringInput | null,
-  facts?: ModelStringInput | null,
-  APS?: ModelStringInput | null,
-  DTA?: ModelStringInput | null,
-  UXSA?: ModelStringInput | null,
   and?: Array< ModelClinicianInfoConditionInput | null > | null,
   or?: Array< ModelClinicianInfoConditionInput | null > | null,
   not?: ModelClinicianInfoConditionInput | null,
@@ -440,35 +427,83 @@ export type ClinicianInfo = {
   id: string,
   name: string,
   hospitalName: string,
-  clinicianID: string,
   role: string,
-  facts: string,
-  APS: string,
-  DTA: string,
-  UXSA: string,
+  clinicianID: string,
+  protectedInfo?: ClinicianProtectedInfo | null,
+  owner: string,
   _version: number,
   _deleted?: boolean | null,
   _lastChangedAt: number,
   createdAt: string,
   updatedAt: string,
-  owner?: string | null,
+};
+
+export type ClinicianProtectedInfo = {
+  __typename: "ClinicianProtectedInfo",
+  id: string,
+  facts: string,
+  APS: string,
+  DTA: string,
+  UXSA: string,
+  clinicianID: string,
+  clinicianInfo: ClinicianInfo,
+  owner: string,
+  _version: number,
+  _deleted?: boolean | null,
+  _lastChangedAt: number,
+  createdAt: string,
+  updatedAt: string,
 };
 
 export type UpdateClinicianInfoInput = {
-  id: string,
+  id?: string | null,
   name?: string | null,
   hospitalName?: string | null,
-  clinicianID?: string | null,
   role?: string | null,
-  facts?: string | null,
-  APS?: string | null,
-  DTA?: string | null,
-  UXSA?: string | null,
+  clinicianID: string,
+  owner?: string | null,
   _version?: number | null,
 };
 
 export type DeleteClinicianInfoInput = {
-  id: string,
+  clinicianID: string,
+  _version?: number | null,
+};
+
+export type CreateClinicianProtectedInfoInput = {
+  id?: string | null,
+  facts: string,
+  APS: string,
+  DTA: string,
+  UXSA: string,
+  clinicianID: string,
+  owner: string,
+  _version?: number | null,
+};
+
+export type ModelClinicianProtectedInfoConditionInput = {
+  facts?: ModelStringInput | null,
+  APS?: ModelStringInput | null,
+  DTA?: ModelStringInput | null,
+  UXSA?: ModelStringInput | null,
+  and?: Array< ModelClinicianProtectedInfoConditionInput | null > | null,
+  or?: Array< ModelClinicianProtectedInfoConditionInput | null > | null,
+  not?: ModelClinicianProtectedInfoConditionInput | null,
+};
+
+export type UpdateClinicianProtectedInfoInput = {
+  id?: string | null,
+  facts?: string | null,
+  APS?: string | null,
+  DTA?: string | null,
+  UXSA?: string | null,
+  clinicianID: string,
+  owner?: string | null,
+  _version?: number | null,
+};
+
+export type DeleteClinicianProtectedInfoInput = {
+  clinicianID: string,
   _version?: number | null,
 };
 
@@ -476,12 +511,11 @@ export type CreateClinicianPatientMapInput = {
   id?: string | null,
   clinicianID: string,
   patientID: string,
-  createdAt?: string | null,
+  owner: string,
   _version?: number | null,
 };
 
 export type ModelClinicianPatientMapConditionInput = {
-  createdAt?: ModelStringInput | null,
   and?: Array< ModelClinicianPatientMapConditionInput | null > | null,
   or?: Array< ModelClinicianPatientMapConditionInput | null > | null,
   not?: ModelClinicianPatientMapConditionInput | null,
@@ -492,19 +526,20 @@ export type ClinicianPatientMap = {
   id: string,
   clinicianID: string,
   patientID: string,
-  createdAt: string,
+  clinicianInfo: ClinicianInfo,
+  owner: string,
   _version: number,
   _deleted?: boolean | null,
   _lastChangedAt: number,
+  createdAt: string,
   updatedAt: string,
-  owner?: string | null,
 };
 
 export type UpdateClinicianPatientMapInput = {
   id?: string | null,
   clinicianID: string,
   patientID: string,
-  createdAt?: string | null,
+  owner?: string | null,
   _version?: number | null,
 };
 
@@ -657,12 +692,9 @@ export type ModelClinicianInfoFilterInput = {
   id?: ModelIDInput | null,
   name?: ModelStringInput | null,
   hospitalName?: ModelStringInput | null,
-  clinicianID?: ModelStringInput | null,
   role?: ModelStringInput | null,
-  facts?: ModelStringInput | null,
-  APS?: ModelStringInput | null,
-  DTA?: ModelStringInput | null,
-  UXSA?: ModelStringInput | null,
+  clinicianID?: ModelStringInput | null,
+  owner?: ModelStringInput | null,
   and?: Array< ModelClinicianInfoFilterInput | null > | null,
   or?: Array< ModelClinicianInfoFilterInput | null > | null,
   not?: ModelClinicianInfoFilterInput | null,
@@ -675,11 +707,37 @@ export type ModelClinicianInfoConnection = {
   startedAt?: number | null,
 };
 
+export enum ModelSortDirection {
+  ASC = "ASC",
+  DESC = "DESC",
+}
+
+
+export type ModelClinicianProtectedInfoFilterInput = {
+  id?: ModelIDInput | null,
+  facts?: ModelStringInput | null,
+  APS?: ModelStringInput | null,
+  DTA?: ModelStringInput | null,
+  UXSA?: ModelStringInput | null,
+  clinicianID?: ModelStringInput | null,
+  owner?: ModelStringInput | null,
+  and?: Array< ModelClinicianProtectedInfoFilterInput | null > | null,
+  or?: Array< ModelClinicianProtectedInfoFilterInput | null > | null,
+  not?: ModelClinicianProtectedInfoFilterInput | null,
+};
+
+export type ModelClinicianProtectedInfoConnection = {
+  __typename: "ModelClinicianProtectedInfoConnection",
+  items?:  Array<ClinicianProtectedInfo | null > | null,
+  nextToken?: string | null,
+  startedAt?: number | null,
+};
+
 export type ModelClinicianPatientMapFilterInput = {
   id?: ModelIDInput | null,
   clinicianID?: ModelStringInput | null,
   patientID?: ModelStringInput | null,
-  createdAt?: ModelStringInput | null,
+  owner?: ModelStringInput | null,
   and?: Array< ModelClinicianPatientMapFilterInput | null > | null,
   or?: Array< ModelClinicianPatientMapFilterInput | null > | null,
   not?: ModelClinicianPatientMapFilterInput | null,
@@ -701,12 +759,6 @@ export type ModelStringKeyConditionInput = {
   between?: Array< string | null > | null,
   beginsWith?: string | null,
 };
-
-export enum ModelSortDirection {
-  ASC = "ASC",
-  DESC = "DESC",
-}
-
 
 export type CreatePatientInfoMutationVariables = {
   input: CreatePatientInfoInput,
@@ -1160,18 +1212,29 @@ export type CreateClinicianInfoMutation = {
     id: string,
     name: string,
     hospitalName: string,
-    clinicianID: string,
     role: string,
-    facts: string,
-    APS: string,
-    DTA: string,
-    UXSA: string,
+    clinicianID: string,
+    protectedInfo?:  {
+      __typename: "ClinicianProtectedInfo",
+      id: string,
+      facts: string,
+      APS: string,
+      DTA: string,
+      UXSA: string,
+      clinicianID: string,
+      owner: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    owner: string,
     _version: number,
     _deleted?: boolean | null,
     _lastChangedAt: number,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -1186,18 +1249,29 @@ export type UpdateClinicianInfoMutation = {
     id: string,
     name: string,
     hospitalName: string,
-    clinicianID: string,
     role: string,
-    facts: string,
-    APS: string,
-    DTA: string,
-    UXSA: string,
+    clinicianID: string,
+    protectedInfo?:  {
+      __typename: "ClinicianProtectedInfo",
+      id: string,
+      facts: string,
+      APS: string,
+      DTA: string,
+      UXSA: string,
+      clinicianID: string,
+      owner: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    owner: string,
     _version: number,
     _deleted?: boolean | null,
     _lastChangedAt: number,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -1212,18 +1286,140 @@ export type DeleteClinicianInfoMutation = {
     id: string,
     name: string,
     hospitalName: string,
-    clinicianID: string,
     role: string,
-    facts: string,
-    APS: string,
-    DTA: string,
-    UXSA: string,
+    clinicianID: string,
+    protectedInfo?:  {
+      __typename: "ClinicianProtectedInfo",
+      id: string,
+      facts: string,
+      APS: string,
+      DTA: string,
+      UXSA: string,
+      clinicianID: string,
+      owner: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    owner: string,
     _version: number,
     _deleted?: boolean | null,
     _lastChangedAt: number,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
+  } | null,
+};
+
+export type CreateClinicianProtectedInfoMutationVariables = {
+  input: CreateClinicianProtectedInfoInput,
+  condition?: ModelClinicianProtectedInfoConditionInput | null,
+};
+
+export type CreateClinicianProtectedInfoMutation = {
+  createClinicianProtectedInfo?:  {
+    __typename: "ClinicianProtectedInfo",
+    id: string,
+    facts: string,
+    APS: string,
+    DTA: string,
+    UXSA: string,
+    clinicianID: string,
+    clinicianInfo:  {
+      __typename: "ClinicianInfo",
+      id: string,
+      name: string,
+      hospitalName: string,
+      role: string,
+      clinicianID: string,
+      owner: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+    },
+    owner: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateClinicianProtectedInfoMutationVariables = {
+  input: UpdateClinicianProtectedInfoInput,
+  condition?: ModelClinicianProtectedInfoConditionInput | null,
+};
+
+export type UpdateClinicianProtectedInfoMutation = {
+  updateClinicianProtectedInfo?:  {
+    __typename: "ClinicianProtectedInfo",
+    id: string,
+    facts: string,
+    APS: string,
+    DTA: string,
+    UXSA: string,
+    clinicianID: string,
+    clinicianInfo:  {
+      __typename: "ClinicianInfo",
+      id: string,
+      name: string,
+      hospitalName: string,
+      role: string,
+      clinicianID: string,
+      owner: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+    },
+    owner: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteClinicianProtectedInfoMutationVariables = {
+  input: DeleteClinicianProtectedInfoInput,
+  condition?: ModelClinicianProtectedInfoConditionInput | null,
+};
+
+export type DeleteClinicianProtectedInfoMutation = {
+  deleteClinicianProtectedInfo?:  {
+    __typename: "ClinicianProtectedInfo",
+    id: string,
+    facts: string,
+    APS: string,
+    DTA: string,
+    UXSA: string,
+    clinicianID: string,
+    clinicianInfo:  {
+      __typename: "ClinicianInfo",
+      id: string,
+      name: string,
+      hospitalName: string,
+      role: string,
+      clinicianID: string,
+      owner: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+    },
+    owner: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
   } | null,
 };
 
@@ -1238,12 +1434,26 @@ export type CreateClinicianPatientMapMutation = {
     id: string,
     clinicianID: string,
     patientID: string,
-    createdAt: string,
+    clinicianInfo:  {
+      __typename: "ClinicianInfo",
+      id: string,
+      name: string,
+      hospitalName: string,
+      role: string,
+      clinicianID: string,
+      owner: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+    },
+    owner: string,
     _version: number,
     _deleted?: boolean | null,
     _lastChangedAt: number,
+    createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -1258,12 +1468,26 @@ export type UpdateClinicianPatientMapMutation = {
     id: string,
     clinicianID: string,
     patientID: string,
-    createdAt: string,
+    clinicianInfo:  {
+      __typename: "ClinicianInfo",
+      id: string,
+      name: string,
+      hospitalName: string,
+      role: string,
+      clinicianID: string,
+      owner: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+    },
+    owner: string,
     _version: number,
     _deleted?: boolean | null,
     _lastChangedAt: number,
+    createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -1278,12 +1502,26 @@ export type DeleteClinicianPatientMapMutation = {
     id: string,
     clinicianID: string,
     patientID: string,
-    createdAt: string,
+    clinicianInfo:  {
+      __typename: "ClinicianInfo",
+      id: string,
+      name: string,
+      hospitalName: string,
+      role: string,
+      clinicianID: string,
+      owner: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+    },
+    owner: string,
     _version: number,
     _deleted?: boolean | null,
     _lastChangedAt: number,
+    createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -1815,18 +2053,14 @@ export type SyncClinicianInfosQuery = {
       id: string,
       name: string,
       hospitalName: string,
-      clinicianID: string,
       role: string,
-      facts: string,
-      APS: string,
-      DTA: string,
-      UXSA: string,
+      clinicianID: string,
+      owner: string,
       _version: number,
       _deleted?: boolean | null,
       _lastChangedAt: number,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null > | null,
     nextToken?: string | null,
     startedAt?: number | null,
@@ -1834,7 +2068,7 @@ export type SyncClinicianInfosQuery = {
 };
 
 export type GetClinicianInfoQueryVariables = {
-  id: string,
+  clinicianID: string,
 };
 
 export type GetClinicianInfoQuery = {
@@ -1843,25 +2077,38 @@ export type GetClinicianInfoQuery = {
     id: string,
     name: string,
     hospitalName: string,
-    clinicianID: string,
     role: string,
-    facts: string,
-    APS: string,
-    DTA: string,
-    UXSA: string,
+    clinicianID: string,
+    protectedInfo?:  {
+      __typename: "ClinicianProtectedInfo",
+      id: string,
+      facts: string,
+      APS: string,
+      DTA: string,
+      UXSA: string,
+      clinicianID: string,
+      owner: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    owner: string,
     _version: number,
     _deleted?: boolean | null,
     _lastChangedAt: number,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
 export type ListClinicianInfosQueryVariables = {
+  clinicianID?: string | null,
   filter?: ModelClinicianInfoFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
 };
 
 export type ListClinicianInfosQuery = {
@@ -1872,18 +2119,111 @@ export type ListClinicianInfosQuery = {
       id: string,
       name: string,
       hospitalName: string,
-      clinicianID: string,
       role: string,
-      facts: string,
-      APS: string,
-      DTA: string,
-      UXSA: string,
+      clinicianID: string,
+      owner: string,
       _version: number,
       _deleted?: boolean | null,
       _lastChangedAt: number,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
+    } | null > | null,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
+export type SyncClinicianProtectedInfosQueryVariables = {
+  filter?: ModelClinicianProtectedInfoFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  lastSync?: number | null,
+};
+
+export type SyncClinicianProtectedInfosQuery = {
+  syncClinicianProtectedInfos?:  {
+    __typename: "ModelClinicianProtectedInfoConnection",
+    items?:  Array< {
+      __typename: "ClinicianProtectedInfo",
+      id: string,
+      facts: string,
+      APS: string,
+      DTA: string,
+      UXSA: string,
+      clinicianID: string,
+      owner: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
+export type GetClinicianProtectedInfoQueryVariables = {
+  clinicianID: string,
+};
+
+export type GetClinicianProtectedInfoQuery = {
+  getClinicianProtectedInfo?:  {
+    __typename: "ClinicianProtectedInfo",
+    id: string,
+    facts: string,
+    APS: string,
+    DTA: string,
+    UXSA: string,
+    clinicianID: string,
+    clinicianInfo:  {
+      __typename: "ClinicianInfo",
+      id: string,
+      name: string,
+      hospitalName: string,
+      role: string,
+      clinicianID: string,
+      owner: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+    },
+    owner: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListClinicianProtectedInfosQueryVariables = {
+  clinicianID?: string | null,
+  filter?: ModelClinicianProtectedInfoFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListClinicianProtectedInfosQuery = {
+  listClinicianProtectedInfos?:  {
+    __typename: "ModelClinicianProtectedInfoConnection",
+    items?:  Array< {
+      __typename: "ClinicianProtectedInfo",
+      id: string,
+      facts: string,
+      APS: string,
+      DTA: string,
+      UXSA: string,
+      clinicianID: string,
+      owner: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
     } | null > | null,
     nextToken?: string | null,
     startedAt?: number | null,
@@ -1905,12 +2245,12 @@ export type SyncClinicianPatientMapsQuery = {
       id: string,
       clinicianID: string,
       patientID: string,
-      createdAt: string,
+      owner: string,
       _version: number,
       _deleted?: boolean | null,
       _lastChangedAt: number,
+      createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null > | null,
     nextToken?: string | null,
     startedAt?: number | null,
@@ -1928,12 +2268,26 @@ export type GetClinicianPatientMapQuery = {
     id: string,
     clinicianID: string,
     patientID: string,
-    createdAt: string,
+    clinicianInfo:  {
+      __typename: "ClinicianInfo",
+      id: string,
+      name: string,
+      hospitalName: string,
+      role: string,
+      clinicianID: string,
+      owner: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+    },
+    owner: string,
     _version: number,
     _deleted?: boolean | null,
     _lastChangedAt: number,
+    createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -1954,12 +2308,41 @@ export type ListClinicianPatientMapsQuery = {
       id: string,
       clinicianID: string,
       patientID: string,
-      createdAt: string,
+      owner: string,
       _version: number,
       _deleted?: boolean | null,
       _lastChangedAt: number,
+      createdAt: string,
       updatedAt: string,
-      owner?: string | null,
+    } | null > | null,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
+export type ClinicianIDsByPatientIDQueryVariables = {
+  patientID?: string | null,
+  clinicianID?: ModelStringKeyConditionInput | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelClinicianPatientMapFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ClinicianIDsByPatientIDQuery = {
+  clinicianIDsByPatientID?:  {
+    __typename: "ModelClinicianPatientMapConnection",
+    items?:  Array< {
+      __typename: "ClinicianPatientMap",
+      id: string,
+      clinicianID: string,
+      patientID: string,
+      owner: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
     } | null > | null,
     nextToken?: string | null,
     startedAt?: number | null,
@@ -2390,7 +2773,7 @@ export type OnDeleteReportVitalsSubscription = {
 };
 
 export type OnCreateClinicianInfoSubscriptionVariables = {
-  owner: string,
+  owner?: string | null,
 };
 
 export type OnCreateClinicianInfoSubscription = {
@@ -2399,23 +2782,34 @@ export type OnCreateClinicianInfoSubscription = {
     id: string,
     name: string,
     hospitalName: string,
-    clinicianID: string,
     role: string,
-    facts: string,
-    APS: string,
-    DTA: string,
-    UXSA: string,
+    clinicianID: string,
+    protectedInfo?:  {
+      __typename: "ClinicianProtectedInfo",
+      id: string,
+      facts: string,
+      APS: string,
+      DTA: string,
+      UXSA: string,
+      clinicianID: string,
+      owner: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    owner: string,
     _version: number,
     _deleted?: boolean | null,
     _lastChangedAt: number,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
 export type OnUpdateClinicianInfoSubscriptionVariables = {
-  owner: string,
+  owner?: string | null,
 };
 
 export type OnUpdateClinicianInfoSubscription = {
@@ -2424,23 +2818,34 @@ export type OnUpdateClinicianInfoSubscription = {
     id: string,
     name: string,
     hospitalName: string,
-    clinicianID: string,
     role: string,
-    facts: string,
-    APS: string,
-    DTA: string,
-    UXSA: string,
+    clinicianID: string,
+    protectedInfo?:  {
+      __typename: "ClinicianProtectedInfo",
+      id: string,
+      facts: string,
+      APS: string,
+      DTA: string,
+      UXSA: string,
+      clinicianID: string,
+      owner: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    owner: string,
     _version: number,
     _deleted?: boolean | null,
     _lastChangedAt: number,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
 export type OnDeleteClinicianInfoSubscriptionVariables = {
-  owner: string,
+  owner?: string | null,
 };
 
 export type OnDeleteClinicianInfoSubscription = {
@@ -2449,23 +2854,143 @@ export type OnDeleteClinicianInfoSubscription = {
     id: string,
     name: string,
     hospitalName: string,
-    clinicianID: string,
     role: string,
-    facts: string,
-    APS: string,
-    DTA: string,
-    UXSA: string,
+    clinicianID: string,
+    protectedInfo?:  {
+      __typename: "ClinicianProtectedInfo",
+      id: string,
+      facts: string,
+      APS: string,
+      DTA: string,
+      UXSA: string,
+      clinicianID: string,
+      owner: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    owner: string,
     _version: number,
     _deleted?: boolean | null,
     _lastChangedAt: number,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
+  } | null,
+};
+
+export type OnCreateClinicianProtectedInfoSubscriptionVariables = {
+  owner?: string | null,
+};
+
+export type OnCreateClinicianProtectedInfoSubscription = {
+  onCreateClinicianProtectedInfo?:  {
+    __typename: "ClinicianProtectedInfo",
+    id: string,
+    facts: string,
+    APS: string,
+    DTA: string,
+    UXSA: string,
+    clinicianID: string,
+    clinicianInfo:  {
+      __typename: "ClinicianInfo",
+      id: string,
+      name: string,
+      hospitalName: string,
+      role: string,
+      clinicianID: string,
+      owner: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+    },
+    owner: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateClinicianProtectedInfoSubscriptionVariables = {
+  owner?: string | null,
+};
+
+export type OnUpdateClinicianProtectedInfoSubscription = {
+  onUpdateClinicianProtectedInfo?:  {
+    __typename: "ClinicianProtectedInfo",
+    id: string,
+    facts: string,
+    APS: string,
+    DTA: string,
+    UXSA: string,
+    clinicianID: string,
+    clinicianInfo:  {
+      __typename: "ClinicianInfo",
+      id: string,
+      name: string,
+      hospitalName: string,
+      role: string,
+      clinicianID: string,
+      owner: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+    },
+    owner: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteClinicianProtectedInfoSubscriptionVariables = {
+  owner?: string | null,
+};
+
+export type OnDeleteClinicianProtectedInfoSubscription = {
+  onDeleteClinicianProtectedInfo?:  {
+    __typename: "ClinicianProtectedInfo",
+    id: string,
+    facts: string,
+    APS: string,
+    DTA: string,
+    UXSA: string,
+    clinicianID: string,
+    clinicianInfo:  {
+      __typename: "ClinicianInfo",
+      id: string,
+      name: string,
+      hospitalName: string,
+      role: string,
+      clinicianID: string,
+      owner: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+    },
+    owner: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
   } | null,
 };
 
 export type OnCreateClinicianPatientMapSubscriptionVariables = {
   owner?: string | null,
+  patientID?: string | null,
 };
 
 export type OnCreateClinicianPatientMapSubscription = {
@@ -2474,17 +2999,32 @@ export type OnCreateClinicianPatientMapSubscription = {
     id: string,
     clinicianID: string,
     patientID: string,
-    createdAt: string,
+    clinicianInfo:  {
+      __typename: "ClinicianInfo",
+      id: string,
+      name: string,
+      hospitalName: string,
+      role: string,
+      clinicianID: string,
+      owner: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+    },
+    owner: string,
     _version: number,
     _deleted?: boolean | null,
     _lastChangedAt: number,
+    createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
 export type OnUpdateClinicianPatientMapSubscriptionVariables = {
   owner?: string | null,
+  patientID?: string | null,
 };
 
 export type OnUpdateClinicianPatientMapSubscription = {
@@ -2493,17 +3033,32 @@ export type OnUpdateClinicianPatientMapSubscription = {
     id: string,
     clinicianID: string,
     patientID: string,
-    createdAt: string,
+    clinicianInfo:  {
+      __typename: "ClinicianInfo",
+      id: string,
+      name: string,
+      hospitalName: string,
+      role: string,
+      clinicianID: string,
+      owner: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+    },
+    owner: string,
     _version: number,
     _deleted?: boolean | null,
     _lastChangedAt: number,
+    createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
 export type OnDeleteClinicianPatientMapSubscriptionVariables = {
   owner?: string | null,
+  patientID?: string | null,
 };
 
 export type OnDeleteClinicianPatientMapSubscription = {
@@ -2512,11 +3067,25 @@ export type OnDeleteClinicianPatientMapSubscription = {
     id: string,
     clinicianID: string,
     patientID: string,
-    createdAt: string,
+    clinicianInfo:  {
+      __typename: "ClinicianInfo",
+      id: string,
+      name: string,
+      hospitalName: string,
+      role: string,
+      clinicianID: string,
+      owner: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+    },
+    owner: string,
     _version: number,
     _deleted?: boolean | null,
     _lastChangedAt: number,
+    createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };

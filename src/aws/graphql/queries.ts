@@ -502,18 +502,14 @@ export const syncClinicianInfos = /* GraphQL */ `
         id
         name
         hospitalName
-        clinicianID
         role
-        facts
-        APS
-        DTA
-        UXSA
+        clinicianID
+        owner
         _version
         _deleted
         _lastChangedAt
         createdAt
         updatedAt
-        owner
       }
       nextToken
       startedAt
@@ -521,49 +517,160 @@ export const syncClinicianInfos = /* GraphQL */ `
   }
 `;
 export const getClinicianInfo = /* GraphQL */ `
-  query GetClinicianInfo($id: ID!) {
-    getClinicianInfo(id: $id) {
+  query GetClinicianInfo($clinicianID: String!) {
+    getClinicianInfo(clinicianID: $clinicianID) {
       id
       name
       hospitalName
-      clinicianID
       role
-      facts
-      APS
-      DTA
-      UXSA
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const listClinicianInfos = /* GraphQL */ `
-  query ListClinicianInfos(
-    $filter: ModelClinicianInfoFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listClinicianInfos(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
+      clinicianID
+      protectedInfo {
         id
-        name
-        hospitalName
-        clinicianID
-        role
         facts
         APS
         DTA
         UXSA
+        clinicianID
+        owner
         _version
         _deleted
         _lastChangedAt
         createdAt
         updatedAt
+      }
+      owner
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listClinicianInfos = /* GraphQL */ `
+  query ListClinicianInfos(
+    $clinicianID: String
+    $filter: ModelClinicianInfoFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listClinicianInfos(
+      clinicianID: $clinicianID
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        name
+        hospitalName
+        role
+        clinicianID
         owner
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const syncClinicianProtectedInfos = /* GraphQL */ `
+  query SyncClinicianProtectedInfos(
+    $filter: ModelClinicianProtectedInfoFilterInput
+    $limit: Int
+    $nextToken: String
+    $lastSync: AWSTimestamp
+  ) {
+    syncClinicianProtectedInfos(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      lastSync: $lastSync
+    ) {
+      items {
+        id
+        facts
+        APS
+        DTA
+        UXSA
+        clinicianID
+        owner
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const getClinicianProtectedInfo = /* GraphQL */ `
+  query GetClinicianProtectedInfo($clinicianID: String!) {
+    getClinicianProtectedInfo(clinicianID: $clinicianID) {
+      id
+      facts
+      APS
+      DTA
+      UXSA
+      clinicianID
+      clinicianInfo {
+        id
+        name
+        hospitalName
+        role
+        clinicianID
+        owner
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      owner
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listClinicianProtectedInfos = /* GraphQL */ `
+  query ListClinicianProtectedInfos(
+    $clinicianID: String
+    $filter: ModelClinicianProtectedInfoFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listClinicianProtectedInfos(
+      clinicianID: $clinicianID
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        facts
+        APS
+        DTA
+        UXSA
+        clinicianID
+        owner
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
       }
       nextToken
       startedAt
@@ -587,12 +694,12 @@ export const syncClinicianPatientMaps = /* GraphQL */ `
         id
         clinicianID
         patientID
-        createdAt
+        owner
         _version
         _deleted
         _lastChangedAt
+        createdAt
         updatedAt
-        owner
       }
       nextToken
       startedAt
@@ -605,12 +712,25 @@ export const getClinicianPatientMap = /* GraphQL */ `
       id
       clinicianID
       patientID
-      createdAt
+      clinicianInfo {
+        id
+        name
+        hospitalName
+        role
+        clinicianID
+        owner
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      owner
       _version
       _deleted
       _lastChangedAt
+      createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -635,12 +755,45 @@ export const listClinicianPatientMaps = /* GraphQL */ `
         id
         clinicianID
         patientID
-        createdAt
+        owner
         _version
         _deleted
         _lastChangedAt
+        createdAt
         updatedAt
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const clinicianIDsByPatientID = /* GraphQL */ `
+  query ClinicianIDsByPatientID(
+    $patientID: String
+    $clinicianID: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelClinicianPatientMapFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    clinicianIDsByPatientID(
+      patientID: $patientID
+      clinicianID: $clinicianID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        clinicianID
+        patientID
         owner
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
       }
       nextToken
       startedAt
