@@ -44,6 +44,7 @@ module.exports = {
     "import/no-cycle": 0,
     "no-underscore-dangle": 0,
     "no-return-assign": 0,
+    "no-throw-literal": 0,
     "import/prefer-default-export": 0,
     "jsx-quotes": ["error", "prefer-double"],
     "no-console": "error",

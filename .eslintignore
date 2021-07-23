@@ -7,3 +7,8 @@ node_modules
 # Amplify folders
 amplify
 src/aws
+
+# Sandbox
+sandbox
+
+src\aws\models

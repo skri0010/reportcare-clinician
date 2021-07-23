@@ -1,11 +1,20 @@
 """
 Official docs for authentication: https://docs.amplify.aws/cli/graphql-transformer/auth
 Official docs for keys: https://docs.amplify.aws/cli/graphql-transformer/key#key
-Refer to `reportcare-clinician/docs/access-control.md` for more information on @auth with ownerField and groupsField
+
+{ allow: groups, groupsField: "patientID", operations: [read] }
+- Clinicians can read records containing their patients
+- Refer to `reportcare-clinician/docs/access-control.md` for more information on @auth with ownerField and groupsField
 """
 type PatientInfo
   @model
-  @auth(rules: [{ allow: owner }, { allow: groups, groups: ["Admin"] }])
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groupsField: "patientID", operations: [read] }
+    ]
+  )
   @key(name: "byPatient", fields: ["patientID"]) {
   id: ID!
   name: String!
@@ -27,8 +36,7 @@ type MedicationInfo
     rules: [
       { allow: owner }
       { allow: groups, groups: ["Admin"] }
-      { allow: groups, groups: ["Clinicians"], operations: [read] }
-      { allow: groups, groupsField: "patientID", operations: [read, update] }
+      { allow: groups, groupsField: "patientID", operations: [read] }
     ]
   )
   @key(name: "byPatient", fields: ["patientID"]) {
@@ -40,7 +48,13 @@ type MedicationInfo
 
 type ActivityInfo
   @model
-  @auth(rules: [{ allow: owner }, { allow: groups, groups: ["Admin"] }])
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groupsField: "patientID", operations: [read] }
+    ]
+  )
   @key(name: "byPatient", fields: ["patientID"]) {
   id: ID!
   Actname: String!
@@ -53,7 +67,13 @@ type ActivityInfo
 
 type MedCompliant
   @model
-  @auth(rules: [{ allow: owner }, { allow: groups, groups: ["Admin"] }])
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groupsField: "patientID", operations: [read] }
+    ]
+  )
   @key(name: "byPatient", fields: ["patientID"]) {
   id: ID!
   MedId: String!
@@ -64,7 +84,13 @@ type MedCompliant
 
 type ReportSymptom
   @model
-  @auth(rules: [{ allow: owner }, { allow: groups, groups: ["Admin"] }])
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groupsField: "patientID", operations: [read] }
+    ]
+  )
   @key(name: "byPatient", fields: ["patientID"]) {
   id: ID!
   ActId: String!
@@ -76,7 +102,13 @@ type ReportSymptom
 
 type ReportVitals
   @model
-  @auth(rules: [{ allow: owner }, { allow: groups, groups: ["Admin"] }])
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groupsField: "patientID", operations: [read] }
+    ]
+  )
   @key(name: "byPatient", fields: ["patientID"]) {
   id: ID!
   SymptomId: String!
@@ -91,7 +123,56 @@ type ReportVitals
   patientID: String!
 }
 
+"""
+== Authorization ==
+1. Clinicians can create and read records
+2. Owners can read and update own records
+3. Patients can read records
+
+Notes:
+1. Contains basic information
+2. Sensitive information should be stored in ClinicianProtectedInfo
+3. One-to-one connection with ClinicianProtectedInfo
+"""
 type ClinicianInfo
+  @model
+  @auth(
+    rules: [
+      { allow: owner, operations: [read, update] }
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groups: ["Patients"], operations: [read] }
+      {
+        allow: groups
+        groups: [
+          "EPs"
+          "Nurses"
+          "HFSpecialists"
+          "MedicalOfficers"
+          "Pharmacists"
+        ]
+        operations: [create, read]
+      }
+    ]
+  )
+  @key(fields: ["clinicianID"]) {
+  id: ID!
+  name: String!
+  hospitalName: String!
+  role: String!
+  clinicianID: String!
+  protectedInfo: ClinicianProtectedInfo @connection(fields: ["clinicianID"])
+  owner: String!
+}
+
+"""
+== Authorization ==
+1. Clinicians can create records
+2. Owners can read and update own records
+3. Patients have NO CRUD authorization
+
+Contains sensitive information such as agent state
+"""
+type ClinicianProtectedInfo
   @model
   @auth(
     rules: [
@@ -110,25 +191,24 @@ type ClinicianInfo
       }
     ]
   )
-  @key(name: "byClinician", fields: ["clinicianID"]) {
+  @key(fields: ["clinicianID"]) {
   id: ID!
-  name: String!
-  hospitalName: String!
-  clinicianID: String!
-  role: String!
   facts: String!
   APS: String!
   DTA: String!
   UXSA: String!
+  clinicianID: String!
+  clinicianInfo: ClinicianInfo! @connection(fields: ["clinicianID"])
   owner: String!
 }
 
 """
-== Authentication ==
-1. Owner: read
-2. Patient in record: read
-3. Clinician: read (records with own patients, different clinician)
-4. Clinician: create
+== Authorization ==
+1. Clinicians can create records
+2. Clinicians can read records containing their patients
+3. Patients can read their OWN records
+4. Owners can read their own records
+5. NO ONE is allowed to update records
 
 == Partition key and sort key ==
 Primary index: clinicianID, patientID
@@ -157,12 +237,13 @@ type ClinicianPatientMap
   )
   @key(fields: ["clinicianID", "patientID"])
   @key(
-    name: "byPatient"
+    name: "clinicianIDsByPatientID"
     fields: ["patientID", "clinicianID"]
-    queryField: "cliniciansByPatient"
+    queryField: "clinicianIDsByPatientID"
   ) {
   id: ID!
   clinicianID: String!
   patientID: String!
+  clinicianInfo: ClinicianInfo! @connection(fields: ["clinicianID"])
   owner: String!
 }

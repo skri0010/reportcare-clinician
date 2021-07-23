@@ -2,7 +2,7 @@ projects:
   reportcare:
     schemaPath: amplify/backend/api/reportcare/build/schema.graphql
     includes:
-      - src/aws/graphql/
+      - src/aws/graphql/**/*.ts
     excludes:
       - ./amplify/**
     extensions:

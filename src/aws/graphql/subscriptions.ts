@@ -359,12 +359,22 @@ export const onCreateClinicianInfo = /* GraphQL */ `
       id
       name
       hospitalName
-      clinicianID
       role
-      facts
-      APS
-      DTA
-      UXSA
+      clinicianID
+      protectedInfo {
+        id
+        facts
+        APS
+        DTA
+        UXSA
+        clinicianID
+        owner
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
       owner
       _version
       _deleted
@@ -380,12 +390,22 @@ export const onUpdateClinicianInfo = /* GraphQL */ `
       id
       name
       hospitalName
-      clinicianID
       role
-      facts
-      APS
-      DTA
-      UXSA
+      clinicianID
+      protectedInfo {
+        id
+        facts
+        APS
+        DTA
+        UXSA
+        clinicianID
+        owner
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
       owner
       _version
       _deleted
@@ -401,12 +421,115 @@ export const onDeleteClinicianInfo = /* GraphQL */ `
       id
       name
       hospitalName
-      clinicianID
       role
+      clinicianID
+      protectedInfo {
+        id
+        facts
+        APS
+        DTA
+        UXSA
+        clinicianID
+        owner
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      owner
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateClinicianProtectedInfo = /* GraphQL */ `
+  subscription OnCreateClinicianProtectedInfo($owner: String) {
+    onCreateClinicianProtectedInfo(owner: $owner) {
+      id
       facts
       APS
       DTA
       UXSA
+      clinicianID
+      clinicianInfo {
+        id
+        name
+        hospitalName
+        role
+        clinicianID
+        owner
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      owner
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateClinicianProtectedInfo = /* GraphQL */ `
+  subscription OnUpdateClinicianProtectedInfo($owner: String) {
+    onUpdateClinicianProtectedInfo(owner: $owner) {
+      id
+      facts
+      APS
+      DTA
+      UXSA
+      clinicianID
+      clinicianInfo {
+        id
+        name
+        hospitalName
+        role
+        clinicianID
+        owner
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      owner
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteClinicianProtectedInfo = /* GraphQL */ `
+  subscription OnDeleteClinicianProtectedInfo($owner: String) {
+    onDeleteClinicianProtectedInfo(owner: $owner) {
+      id
+      facts
+      APS
+      DTA
+      UXSA
+      clinicianID
+      clinicianInfo {
+        id
+        name
+        hospitalName
+        role
+        clinicianID
+        owner
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
       owner
       _version
       _deleted
@@ -422,6 +545,19 @@ export const onCreateClinicianPatientMap = /* GraphQL */ `
       id
       clinicianID
       patientID
+      clinicianInfo {
+        id
+        name
+        hospitalName
+        role
+        clinicianID
+        owner
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
       owner
       _version
       _deleted
@@ -437,6 +573,19 @@ export const onUpdateClinicianPatientMap = /* GraphQL */ `
       id
       clinicianID
       patientID
+      clinicianInfo {
+        id
+        name
+        hospitalName
+        role
+        clinicianID
+        owner
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
       owner
       _version
       _deleted
@@ -452,6 +601,19 @@ export const onDeleteClinicianPatientMap = /* GraphQL */ `
       id
       clinicianID
       patientID
+      clinicianInfo {
+        id
+        name
+        hospitalName
+        role
+        clinicianID
+        owner
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
       owner
       _version
       _deleted
