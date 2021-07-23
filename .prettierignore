@@ -13,4 +13,6 @@ amplify/backend/tags
 amplify/backend/api/reportcare/*
 amplify/backend/auth
 !**/schema.graphql
-src/aws
+src/aws/*
+!src/aws/index.ts
+!src/aws/typedAPI

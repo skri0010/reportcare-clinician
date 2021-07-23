@@ -6,9 +6,7 @@ import Precondition from "../../../../agent_framework/base/Precondition";
 import ProcedureConst from "../../../../agent_framework/const/ProcedureConst";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import agentAPI from "../../../../agent_framework/AgentAPI";
-import API from "@aws-amplify/api-graphql";
-import { createClinicianInfo } from "aws/graphql/mutations";
-
+import { createClinicianInfo, createClinicianProtectedInfo } from "aws";
 /**
  * Class to represent the activity for storing clinician's entry data.
  * This happens in Procedure App Device Configuration (ADC).
@@ -33,24 +31,28 @@ class StoreEntryData extends Activity {
       const data = agentAPI.getFacts().Clinician.entryData;
       const clinicianUsername = agentAPI.getFacts().Clinician.username;
       if (data && clinicianUsername) {
-        const query: any = await API.graphql({
-          query: createClinicianInfo,
-          variables: {
-            input: {
-              owner: clinicianUsername,
-              name: data.name,
-              hospitalName: data.hospitalName,
-              clinicianID: clinicianUsername,
-              role: data.role,
-              facts: "",
-              APS: "",
-              DTA: "",
-              UXSA: ""
-            }
-          }
+        // Create new ClinicianInfo
+        const response = await createClinicianInfo({
+          owner: clinicianUsername,
+          name: data.name,
+          hospitalName: data.hospitalName,
+          clinicianID: clinicianUsername,
+          role: data.role
         });
-        if (query.data) {
-          const entry = query.data.createClinicianInfo;
+
+        const newClinicianInfo = response.data.createClinicianInfo;
+        if (newClinicianInfo) {
+          // Create new ClinicianProtectedInfo data
+          await createClinicianProtectedInfo({
+            owner: clinicianUsername,
+            clinicianID: clinicianUsername,
+            facts: "",
+            APS: "",
+            DTA: "",
+            UXSA: ""
+          });
+
+          const entry = newClinicianInfo;
           await AsyncStorage.multiSet([
             ["UserId", entry.id],
             ["ClinicianId", entry.clinicianID]

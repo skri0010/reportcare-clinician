@@ -6,12 +6,11 @@ import Precondition from "../../../../agent_framework/base/Precondition";
 import ProcedureConst from "../../../../agent_framework/const/ProcedureConst";
 import { Patient } from "../../../../agent_framework/model";
 import { Role } from "models/ClinicianEnums";
-import { PatientInfo } from "aws/models";
+import { PatientInfo } from "aws/API";
 import { RiskLevel } from "models/RiskLevel";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import agentAPI from "../../../../agent_framework/AgentAPI";
-import API from "@aws-amplify/api-graphql";
-import { getClinicianInfo, listPatientInfos } from "aws/graphql/queries";
+import { getClinicianInfo, listPatientInfos } from "aws";
 
 /**
  * Class to represent an activity for retrieving all patients according to role.
@@ -74,20 +73,16 @@ class RetrieveRolePatients extends Activity {
 
     // Nurse: query patients from the same hospital (hospitalName).
     if (role && role === Role.NURSE) {
-      const userId = await AsyncStorage.getItem("UserId");
-      if (userId) {
-        const clinicianQuery: any = await API.graphql({
-          query: getClinicianInfo,
-          variables: { id: userId }
+      const clinicianID = await AsyncStorage.getItem("ClinicianId");
+      if (clinicianID) {
+        const clinicianQuery = await getClinicianInfo({
+          clinicianID: clinicianID
         });
         if (clinicianQuery.data) {
           const clinician = clinicianQuery.data.getClinicianInfo;
           if (clinician && clinician.hospitalName) {
-            const patientQuery: any = await API.graphql({
-              query: listPatientInfos,
-              variables: {
-                filter: { hospitalName: { eq: clinician.hospitalName } }
-              }
+            const patientQuery: any = await listPatientInfos({
+              filter: { hospitalName: { eq: clinician.hospitalName } }
             });
             if (patientQuery.data) {
               return patientQuery.data.listPatientInfos.items;
@@ -104,9 +99,10 @@ class RetrieveRolePatients extends Activity {
         role === Role.MO ||
         role === Role.PHARMACIST)
     ) {
-      const patientQuery: any = await API.graphql({ query: listPatientInfos });
-      if (patientQuery.data) {
-        return patientQuery.data.listPatientInfos.items;
+      const patientQuery = await listPatientInfos({});
+      const items = patientQuery.data.listPatientInfos?.items;
+      if (items) {
+        return items as PatientInfo[];
       }
     }
     return [];

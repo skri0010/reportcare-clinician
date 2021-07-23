@@ -3,9 +3,8 @@ import Agent from "../base/Agent";
 import Belief from "../base/Belief";
 import { Fact } from "../model";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import API from "@aws-amplify/api-graphql";
-import { updateClinicianInfo } from "aws/graphql/mutations";
-import { getClinicianInfo } from "aws/graphql/queries";
+import { getClinicianProtectedInfo, updateClinicianProtectedInfo } from "aws";
+import { ClinicianProtectedInfo } from "aws/API";
 
 /**
  * Base class for management of active agents.
@@ -30,15 +29,14 @@ abstract class AgentManagement {
   async factFromDB(): Promise<void> {
     // const dbFacts = await AsyncStorage.getItem("Facts");
     try {
-      const userId = await AsyncStorage.getItem("UserId");
-      if (userId) {
-        const result: any = await API.graphql({
-          query: getClinicianInfo,
-          variables: { id: userId }
+      const clinicianID = await AsyncStorage.getItem("clinicianID");
+      if (clinicianID) {
+        const result = await getClinicianProtectedInfo({
+          clinicianID: clinicianID
         });
-        const clinician = result.data.getClinicianInfo;
-        if (clinician) {
-          const dbFacts = clinician.facts;
+        const protectedInfo = result.data.getClinicianProtectedInfo;
+        if (protectedInfo) {
+          const dbFacts = protectedInfo.facts;
           if (dbFacts && Object.entries(JSON.parse(dbFacts)).length > 0) {
             this.facts = JSON.parse(dbFacts);
           } else {
@@ -159,42 +157,31 @@ abstract class AgentManagement {
    * Usually called at the end of a series of agents' actions.
    */
   async updateDbStates(): Promise<void> {
-    const userId = await AsyncStorage.getItem("UserId");
-    if (userId) {
-      const clinicianQuery: any = await API.graphql({
-        query: getClinicianInfo,
-        variables: { id: userId }
+    const clinicianID = await AsyncStorage.getItem("clinicianID");
+    if (clinicianID) {
+      const clinicianProtectedInfo = await getClinicianProtectedInfo({
+        clinicianID: clinicianID
       });
-      if (clinicianQuery.data) {
-        const clinician = clinicianQuery.data.getClinicianInfo;
-        const updated: {
-          id: string;
-          facts: string;
-          APS: string;
-          DTA: string;
-          UXSA: string;
-          _version: number;
-        } = {
-          id: userId,
-          facts: clinician.facts,
-          APS: clinician.APS,
-          DTA: clinician.DTA,
-          UXSA: clinician.UXSA,
-          _version: clinician._version
-        };
-        updated.facts = JSON.stringify(this.facts);
+      const protectedInfo =
+        clinicianProtectedInfo.data.getClinicianProtectedInfo;
+      if (protectedInfo) {
+        // Make a copy
+        const updatedProtectedInfo = JSON.parse(
+          JSON.stringify(protectedInfo)
+        ) as ClinicianProtectedInfo;
+        updatedProtectedInfo.facts = JSON.stringify(this.facts);
         this.agents.forEach((agent) => {
           switch (agent.getID()) {
             case "APS": {
-              updated.APS = JSON.stringify(agent.getBeliefs());
+              updatedProtectedInfo.APS = JSON.stringify(agent.getBeliefs());
               break;
             }
             case "DTA": {
-              updated.DTA = JSON.stringify(agent.getBeliefs());
+              updatedProtectedInfo.DTA = JSON.stringify(agent.getBeliefs());
               break;
             }
             case "UXSA": {
-              updated.UXSA = JSON.stringify(agent.getBeliefs());
+              updatedProtectedInfo.UXSA = JSON.stringify(agent.getBeliefs());
               break;
             }
             default: {
@@ -202,10 +189,7 @@ abstract class AgentManagement {
             }
           }
         });
-        await API.graphql({
-          query: updateClinicianInfo,
-          variables: { input: updated }
-        });
+        await updateClinicianProtectedInfo(updatedProtectedInfo);
       }
     }
   }

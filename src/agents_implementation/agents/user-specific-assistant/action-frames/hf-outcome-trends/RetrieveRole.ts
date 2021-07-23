@@ -7,8 +7,7 @@ import ProcedureConst from "../../../../agent_framework/const/ProcedureConst";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Role } from "../../../../../models/ClinicianEnums";
 import agentAPI from "../../../../agent_framework/AgentAPI";
-import API from "@aws-amplify/api-graphql";
-import { getClinicianInfo } from "aws/graphql/queries";
+import { getClinicianInfo } from "aws";
 
 /**
  * Class to represent an activity for retrieving role of user for retrieving patients.
@@ -45,12 +44,9 @@ class RetrieveRole extends Activity {
   // eslint-disable-next-line class-methods-use-this
   async queryRole(): Promise<string | null> {
     try {
-      const userId = await AsyncStorage.getItem("UserId");
-      if (userId) {
-        const query: any = await API.graphql({
-          query: getClinicianInfo,
-          variables: { id: userId }
-        });
+      const clinicianID = await AsyncStorage.getItem("ClinicianId");
+      if (clinicianID) {
+        const query = await getClinicianInfo({ clinicianID: clinicianID });
         if (query.data) {
           const clinician = query.data.getClinicianInfo;
           if (clinician && clinician.role) {

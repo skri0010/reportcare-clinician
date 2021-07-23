@@ -6,8 +6,7 @@ import Precondition from "../../../../agent_framework/base/Precondition";
 import ProcedureConst from "../../../../agent_framework/const/ProcedureConst";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import agentAPI from "../../../../agent_framework/AgentAPI";
-import API from "@aws-amplify/api-graphql";
-import { listClinicianInfos } from "aws/graphql/queries";
+import { listClinicianInfos } from "aws";
 
 /**
  * Class to represent the activity for retrieving clinician's entry data.
@@ -36,9 +35,8 @@ class RetrieveEntryData extends Activity {
         agentAPI.addFact(new Belief("Clinician", "username", null), false);
 
         // Retrieve user's entry in DynamoDB table
-        const query: any = await API.graphql({
-          query: listClinicianInfos,
-          variables: { filter: { clinicianID: { eq: clinicianUsername } } }
+        const query: any = await listClinicianInfos({
+          filter: { clinicianID: { eq: clinicianUsername } }
         });
         if (query.data) {
           const results = query.data.listClinicianInfos.items;

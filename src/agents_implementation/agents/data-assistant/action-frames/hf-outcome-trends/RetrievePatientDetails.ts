@@ -6,12 +6,8 @@ import Precondition from "../../../../agent_framework/base/Precondition";
 import ProcedureConst from "../../../../agent_framework/const/ProcedureConst";
 import { PatientDetails } from "../../../../agent_framework/model";
 import agentAPI from "../../../../agent_framework/AgentAPI";
-import API from "@aws-amplify/api-graphql";
-import {
-  listActivityInfos,
-  listReportSymptoms,
-  listReportVitalss
-} from "aws/graphql/queries";
+import { listActivityInfos, listReportSymptoms, listReportVitals } from "aws";
+import { ActivityInfo, ReportSymptom, ReportVitals } from "aws/API";
 
 /**
  * Class to represent an activity for retrieving details of a specific patient.
@@ -36,17 +32,14 @@ class RetrievePatientDetails extends Activity {
       const patientId = agentAPI.getFacts().Patient?.viewDetails;
 
       if (patientId) {
-        const activityInfoQuery: any = await API.graphql({
-          query: listActivityInfos,
-          variables: { filter: { patientID: { eq: patientId } } }
+        const activityInfoQuery = await listActivityInfos({
+          filter: { patientID: { eq: patientId } }
         });
-        const symptomsReportsQuery: any = await API.graphql({
-          query: listReportSymptoms,
-          variables: { filter: { patientID: { eq: patientId } } }
+        const symptomsReportsQuery = await listReportSymptoms({
+          filter: { patientID: { eq: patientId } }
         });
-        const vitalsReportsQuery: any = await API.graphql({
-          query: listReportVitalss,
-          variables: { filter: { patientID: { eq: patientId } } }
+        const vitalsReportsQuery = await listReportVitals({
+          filter: { patientID: { eq: patientId } }
         });
 
         const patientDetails: PatientDetails = {
@@ -55,17 +48,17 @@ class RetrievePatientDetails extends Activity {
           vitalsReports: []
         };
 
-        if (activityInfoQuery.data) {
-          patientDetails.activityInfo =
-            activityInfoQuery.data.listActivityInfos.items;
+        if (activityInfoQuery.data.listActivityInfos?.items) {
+          patientDetails.activityInfo = activityInfoQuery.data.listActivityInfos
+            .items as ActivityInfo[];
         }
-        if (symptomsReportsQuery.data) {
-          patientDetails.symptomsReports =
-            symptomsReportsQuery.data.listReportSymptoms.items;
+        if (symptomsReportsQuery.data.listReportSymptoms?.items) {
+          patientDetails.symptomsReports = symptomsReportsQuery.data
+            .listReportSymptoms.items as ReportSymptom[];
         }
-        if (vitalsReportsQuery.data) {
-          patientDetails.vitalsReports =
-            vitalsReportsQuery.data.listReportVitalss.items;
+        if (vitalsReportsQuery.data.listReportVitalss?.items) {
+          patientDetails.vitalsReports = vitalsReportsQuery.data
+            .listReportVitalss.items as ReportVitals[];
         }
 
         // Update Facts

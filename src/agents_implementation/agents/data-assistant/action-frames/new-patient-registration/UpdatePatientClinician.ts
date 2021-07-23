@@ -6,12 +6,11 @@ import Precondition from "../../../../agent_framework/base/Precondition";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ProcedureConst from "../../../../agent_framework/const/ProcedureConst";
 import agentAPI from "../../../../agent_framework/AgentAPI";
-import API from "@aws-amplify/api-graphql";
-import { listPatientInfos } from "aws/graphql/queries";
 import {
+  listPatientInfos,
   updatePatientInfo,
   createClinicianPatientMap
-} from "aws/graphql/mutations";
+} from "aws";
 
 /**
  * Class to represent an activity for updating patient's clinician.
@@ -39,32 +38,29 @@ class UpdatePatientClinican extends Activity {
       const clinicianId = await AsyncStorage.getItem("ClinicianId");
 
       if (patientId && clinicianId) {
-        const query: any = await API.graphql({
-          query: listPatientInfos,
-          variables: { filter: { patientID: { eq: patientId } } }
+        const query = await listPatientInfos({
+          filter: { patientID: { eq: patientId } }
         });
+
         if (query.data) {
-          const results = query.data.listClinicianInfos.items;
-          if (results.length > 0) {
+          const results = query.data.listPatientInfos?.items;
+          if (results && results.length > 0) {
             const patient = results.pop();
             if (patient) {
               // LS-TODO: Whether to update cardiologist using clinician's username
-              await API.graphql({
-                query: updatePatientInfo,
-                variables: {
-                  input: {
-                    id: patient.id,
-                    cardiologist: clinicianId,
-                    _version: patient._version
-                  }
-                }
+              // JH-TODO: Note, we must check the version from the DB. If this version is not
+              //          the latest, then it auto merge might ignore it!
+              await updatePatientInfo({
+                id: patient.id,
+                cardiologist: clinicianId,
+                _version: patient._version
               });
-              await API.graphql({
-                query: createClinicianPatientMap,
-                variables: {
-                  input: { clinicianID: clinicianId, patientID: patientId }
-                }
+              await createClinicianPatientMap({
+                clinicianID: clinicianId,
+                patientID: patient.id,
+                owner: clinicianId
               });
+
               agentAPI.addFact(
                 new Belief("Patient", "updateSuccessful", true),
                 false

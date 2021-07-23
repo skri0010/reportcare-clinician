@@ -12,8 +12,7 @@ import Node from "./Engine/Rete/Node";
 import BetaNode from "./Engine/Rete/BetaNode";
 import { Fact } from "../model";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import API from "@aws-amplify/api-graphql";
-import { getClinicianInfo } from "aws/graphql/queries";
+import { getClinicianInfo } from "aws";
 
 /**
  * Class representing the Agent
@@ -149,11 +148,10 @@ class Agent {
   async setBeliefs(beliefs: Belief[]): Promise<void> {
     try {
       let beliefsSet = false;
-      const userId = await AsyncStorage.getItem("UserId");
-      if (userId) {
-        const result: any = await API.graphql({
-          query: getClinicianInfo,
-          variables: { id: userId }
+      const clinicianID = await AsyncStorage.getItem("ClinicianId");
+      if (clinicianID) {
+        const result: any = await getClinicianInfo({
+          clinicianID: clinicianID
         });
         const clinician = result.data.getClinicianInfo;
         if (clinician && this.id in clinician) {

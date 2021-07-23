@@ -1,5 +1,5 @@
 import { PersonRowGeneralDetails } from "models/PersonRowDetails";
-import { ActivityInfo, ReportSymptom, ReportVitals } from "../../aws/models";
+import { ActivityInfo, ReportSymptom, ReportVitals } from "aws/API";
 
 export interface Fact {
   [k: string]: { [k: string]: any };
