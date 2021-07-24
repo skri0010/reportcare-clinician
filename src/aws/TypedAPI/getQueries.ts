@@ -1,4 +1,4 @@
-import API, { graphqlOperation } from "@aws-amplify/api-graphql";
+import API from "@aws-amplify/api-graphql";
 import * as queries from "aws/graphql/queries";
 import { BaseResponse } from "aws";
 import {
@@ -15,11 +15,10 @@ interface GetClinicianInfoResponse extends BaseResponse {
 export const getClinicianInfo = async (
   variables: GetClinicianInfoQueryVariables
 ): Promise<GetClinicianInfoResponse> => {
-  return (await API.graphql(
-    graphqlOperation(queries.getClinicianInfo, {
-      variables: variables
-    })
-  )) as GetClinicianInfoResponse;
+  return (await API.graphql({
+    query: queries.getClinicianInfo,
+    variables: variables
+  })) as GetClinicianInfoResponse;
 };
 
 interface GetClinicianProtectedInfoResponse extends BaseResponse {
@@ -29,9 +28,8 @@ interface GetClinicianProtectedInfoResponse extends BaseResponse {
 export const getClinicianProtectedInfo = async (
   variables: GetClinicianProtectedInfoQueryVariables
 ): Promise<GetClinicianProtectedInfoResponse> => {
-  return (await API.graphql(
-    graphqlOperation(queries.getClinicianProtectedInfo, {
-      variables: variables
-    })
-  )) as GetClinicianProtectedInfoResponse;
+  return (await API.graphql({
+    query: queries.getClinicianProtectedInfo,
+    variables: variables
+  })) as GetClinicianProtectedInfoResponse;
 };

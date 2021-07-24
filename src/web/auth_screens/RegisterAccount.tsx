@@ -17,6 +17,8 @@ import {
 import i18n from "util/language/i18n";
 import { useToast } from "react-native-toast-notifications";
 import { LoadingIndicator } from "components/LoadingIndicator";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AsyncStorageKeys } from "agents_implementation/agent_framework/const/AsyncStorageKeys";
 
 export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
   navigation
@@ -49,33 +51,47 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
       password: password,
       attributes: { email: email, "custom:hospital_role": role }
     })
-      .then(() => {
+      .then(async () => {
         setRegistering(false);
-        toast.show(i18n.t("CodeSent"), { type: "success" });
+        toast.show(i18n.t("Auth_Registration.CodeSent"), { type: "success" });
+        await AsyncStorage.setItem(
+          AsyncStorageKeys.SignUpDetails,
+          JSON.stringify({
+            name: name,
+            hospitalName: hospital,
+            role: role
+          })
+        );
         navigation.navigate(AuthScreenName.CONFIRM_REGISTER, {
-          name: name,
-          hospitalName: hospital,
-          role: role
+          username: username
         });
       })
       .catch((error: { code: string; message: string; name: string }) => {
         // eslint-disable-next-line no-console
         console.log(error.message);
         setRegistering(false);
-        toast.show(i18n.t("RegistrationFailed"), { type: "danger" });
+        toast.show(i18n.t("Auth_Registration.RegistrationFailed"), {
+          type: "danger"
+        });
       });
   };
 
   // Sets up picker items for Role
   const roles: string[] = Object.values(Role);
   const rolePickerItems: JSX.Element[] = roles.map((item) => {
-    return <Picker.Item key={item} value={item} label={i18n.t(item)} />;
+    return (
+      <Picker.Item
+        key={item}
+        value={item}
+        label={i18n.t(`Auth_Registration.${item}`)}
+      />
+    );
   });
   rolePickerItems.unshift(
     <Picker.Item
       key="default"
       value={undefined}
-      label={i18n.t("RolePlaceholder")}
+      label={i18n.t("Auth_Registration.RolePlaceholder")}
     />
   );
 
@@ -88,7 +104,7 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
     <Picker.Item
       key="default"
       value={undefined}
-      label={i18n.t("HospitalPlaceholder")}
+      label={i18n.t("Auth_Registration.HospitalPlaceholder")}
     />
   );
 
@@ -129,17 +145,19 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
           <View style={styles.columnContainer}>
             {/* Name */}
             <Text style={[inputLabelStyle, { marginTop: ms(-5) }]}>
-              {i18n.t("Name")}
+              {i18n.t("Auth_Registration.Name")}
             </Text>
             <TextInput
               style={inputStyle}
               value={name}
               onChangeText={(text) => setName(text.toUpperCase())}
-              placeholder={i18n.t("NamePlaceholder")}
+              placeholder={i18n.t("Auth_Registration.NamePlaceholder")}
             />
 
             {/* Email */}
-            <Text style={inputLabelStyle}>{i18n.t("Email")}</Text>
+            <Text style={inputLabelStyle}>
+              {i18n.t("Auth_Registration.Email")}
+            </Text>
             <TextInput
               style={[
                 inputStyle,
@@ -152,17 +170,21 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
               ]}
               value={email}
               onChangeText={(text) => setEmail(text)}
-              placeholder={i18n.t("EmailPlaceholder")}
+              placeholder={i18n.t("Auth_Registration.EmailPlaceholder")}
               autoCapitalize="none"
               keyboardType="email-address"
               textContentType="emailAddress"
             />
             {email !== "" && !validateEmail(email) && (
-              <Text style={errorTextStyle}>{i18n.t("EmailError")}</Text>
+              <Text style={errorTextStyle}>
+                {i18n.t("Auth_Registration.EmailError")}
+              </Text>
             )}
 
             {/* Role */}
-            <Text style={inputLabelStyle}>{i18n.t("Role")}</Text>
+            <Text style={inputLabelStyle}>
+              {i18n.t("Auth_Registration.Role")}
+            </Text>
             <View style={styles.pickerContainer}>
               <Picker
                 style={pickerStyle}
@@ -176,7 +198,9 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
             </View>
 
             {/* Hospital */}
-            <Text style={inputLabelStyle}>{i18n.t("Hospital")}</Text>
+            <Text style={inputLabelStyle}>
+              {i18n.t("Auth_Registration.Hospital")}
+            </Text>
             <View style={styles.pickerContainer}>
               <Picker
                 style={pickerStyle}
@@ -194,7 +218,7 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
           <View style={styles.columnContainer}>
             {/* Username */}
             <Text style={[inputLabelStyle, { marginTop: ms(-5) }]}>
-              {i18n.t("Username")}
+              {i18n.t("Auth_SignIn.Username")}
             </Text>
             <TextInput
               style={[
@@ -208,15 +232,19 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
               ]}
               value={username}
               onChangeText={(text) => setUsername(text)}
-              placeholder={i18n.t("UsernamePlaceholder")}
+              placeholder={i18n.t("Auth_SignIn.UsernamePlaceholder")}
               autoCapitalize="none"
             />
             {username !== "" && !validateUsername(username) && (
-              <Text style={errorTextStyle}>{i18n.t("UsernameError")}</Text>
+              <Text style={errorTextStyle}>
+                {i18n.t("Auth_SignIn.UsernameError")}
+              </Text>
             )}
 
             {/* Password */}
-            <Text style={inputLabelStyle}>{i18n.t("Password")}</Text>
+            <Text style={inputLabelStyle}>
+              {i18n.t("Auth_SignIn.Password")}
+            </Text>
             <TextInput
               style={[
                 inputStyle,
@@ -229,18 +257,22 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
               ]}
               value={password}
               onChangeText={(text) => setPassword(text)}
-              placeholder={i18n.t("PasswordPlaceholder")}
+              placeholder={i18n.t("Auth_SignIn.PasswordPlaceholder")}
               autoCapitalize="none"
               autoCorrect={false}
               secureTextEntry
               textContentType="password"
             />
             {password !== "" && !validatePassword(password) && (
-              <Text style={errorTextStyle}>{i18n.t("PasswordError")}</Text>
+              <Text style={errorTextStyle}>
+                {i18n.t("Auth_SignIn.PasswordError")}
+              </Text>
             )}
 
             {/* Confirm Password */}
-            <Text style={inputLabelStyle}>{i18n.t("ConfirmPassword")}</Text>
+            <Text style={inputLabelStyle}>
+              {i18n.t("Auth_Registration.ConfirmPassword")}
+            </Text>
             <TextInput
               style={[
                 inputStyle,
@@ -253,7 +285,9 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
               ]}
               value={confirmPassword}
               onChangeText={(text) => setConfirmPassword(text)}
-              placeholder={i18n.t("ConfirmPasswordPlaceholder")}
+              placeholder={i18n.t(
+                "Auth_Registration.ConfirmPasswordPlaceholder"
+              )}
               autoCapitalize="none"
               autoCorrect={false}
               secureTextEntry
@@ -261,7 +295,7 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
             />
             {confirmPassword !== "" && !passwordValid && (
               <Text style={errorTextStyle}>
-                {i18n.t("ConfirmPasswordError")}
+                {i18n.t("Auth_Registration.ConfirmPasswordError")}
               </Text>
             )}
           </View>
@@ -289,7 +323,7 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
               styles.buttonText
             ]}
           >
-            {i18n.t("Register")}
+            {i18n.t("Auth_Registration.Register")}
           </Text>
         </TouchableOpacity>
       </SafeAreaView>

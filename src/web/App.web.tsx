@@ -13,7 +13,7 @@ import { Dimensions } from "react-native";
 import { AuthState } from "web/auth_screens";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import agentAPI from "agents_implementation/agent_framework/AgentAPI";
-// import Test from "shared/Test";
+import { AsyncStorageKeys } from "agents_implementation/agent_framework/const/AsyncStorageKeys";
 
 Amplify.configure(awsconfig);
 Auth.configure(awsconfig);
@@ -26,11 +26,10 @@ const App: FC = () => {
     try {
       await Auth.currentAuthenticatedUser();
       // In case local storage has been cleared
-      const [[, userId], [, clinicianId]] = await AsyncStorage.multiGet([
-        "UserId",
-        "ClinicianId"
-      ]);
-      if (userId && clinicianId) {
+      const clinicianId = await AsyncStorage.getItem(
+        AsyncStorageKeys.ClinicianID
+      );
+      if (clinicianId) {
         agentAPI.startAgents();
         setAuthState(AuthState.SIGNED_IN);
       } else {

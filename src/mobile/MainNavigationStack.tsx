@@ -39,7 +39,7 @@ export const MainNavigationStack: FC<MainNavigationStackProps> = ({
       if (keys && keys.length > 0) {
         await AsyncStorage.multiRemove(keys);
       }
-      toast.show(i18n.t("SignOutSuccessful"), { type: "success" });
+      toast.show(i18n.t("Auth_SignOut.SignOutSuccessful"), { type: "success" });
       setAuthState(AuthState.SIGNED_OUT);
     });
   };

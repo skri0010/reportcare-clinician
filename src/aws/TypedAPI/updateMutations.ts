@@ -1,4 +1,4 @@
-import API, { graphqlOperation } from "@aws-amplify/api-graphql";
+import API from "@aws-amplify/api-graphql";
 import * as mutations from "aws/graphql/mutations";
 import { BaseResponse } from "aws";
 import {
@@ -17,11 +17,10 @@ interface UpdateClinicianInfoResponse extends BaseResponse {
 export const updateClinicianInfo = async (
   input: UpdateClinicianInfoInput
 ): Promise<UpdateClinicianInfoResponse> => {
-  return (await API.graphql(
-    graphqlOperation(mutations.updateClinicianInfo, {
-      input: input
-    })
-  )) as UpdateClinicianInfoResponse;
+  return (await API.graphql({
+    query: mutations.updateClinicianInfo,
+    variables: { input: input }
+  })) as UpdateClinicianInfoResponse;
 };
 
 // JH-TODO: Not sure if this is the correct return type
@@ -32,11 +31,10 @@ interface UpdateClinicianProtectedInfoResponse extends BaseResponse {
 export const updateClinicianProtectedInfo = async (
   input: UpdateClinicianProtectedInfoInput
 ): Promise<UpdateClinicianProtectedInfoResponse> => {
-  return (await API.graphql(
-    graphqlOperation(mutations.updateClinicianProtectedInfo, {
-      input: input
-    })
-  )) as UpdateClinicianProtectedInfoResponse;
+  return (await API.graphql({
+    query: mutations.updateClinicianProtectedInfo,
+    variables: { input: input }
+  })) as UpdateClinicianProtectedInfoResponse;
 };
 
 // JH-TODO: Not sure if this is the correct return type
@@ -47,9 +45,8 @@ interface UpdatePatientInfoResponse extends BaseResponse {
 export const updatePatientInfo = async (
   input: UpdatePatientInfoInput
 ): Promise<UpdatePatientInfoResponse> => {
-  return (await API.graphql(
-    graphqlOperation(mutations.updatePatientInfo, {
-      input: input
-    })
-  )) as UpdatePatientInfoResponse;
+  return (await API.graphql({
+    query: mutations.updatePatientInfo,
+    variables: { input: input }
+  })) as UpdatePatientInfoResponse;
 };

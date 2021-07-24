@@ -7,10 +7,10 @@ import { RootState, select } from "util/useRedux";
 import { AuthScreenName, AuthScreensProps } from "web/auth_screens";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { validateCode, validateUsername } from "util/validation";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import i18n from "util/language/i18n";
 import { useToast } from "react-native-toast-notifications";
 import { LoadingIndicator } from "components/LoadingIndicator";
+import { AsyncStorageKeys } from "agents_implementation/agent_framework/const/AsyncStorageKeys";
 
 export const ConfirmRegistration: FC<
   AuthScreensProps[AuthScreenName.CONFIRM_REGISTER]
@@ -37,21 +37,30 @@ export const ConfirmRegistration: FC<
     setConfirming(true);
     await Auth.confirmSignUp(username, code)
       .then(async () => {
-        const { name, hospitalName, role } = route.params;
-        if (name && hospitalName && role) {
-          await AsyncStorage.setItem("Details", JSON.stringify(route.params));
-        }
         setConfirming(false);
-        toast.show(i18n.t("RegistrationSuccessful"), { type: "success" });
+        toast.show(i18n.t("Auth_ConfirmRegistration.RegistrationSuccessful"), {
+          type: "success"
+        });
         navigation.navigate(AuthScreenName.SIGN_IN);
       })
       .catch((error: { code: string; message: string; name: string }) => {
         // eslint-disable-next-line no-console
         console.log(error.message);
         setConfirming(false);
-        toast.show(i18n.t("ConfirmRegistrationFailed"), { type: "danger" });
+        toast.show(
+          i18n.t("Auth_ConfirmRegistration.ConfirmRegistrationFailed"),
+          { type: "danger" }
+        );
       });
   };
+
+  // Initializes received username
+  useEffect(() => {
+    const usernameParam = route.params.username;
+    if (usernameParam) {
+      setUsername(usernameParam);
+    }
+  }, [route.params.username]);
 
   // Validates inputs
   useEffect(() => {
@@ -73,37 +82,26 @@ export const ConfirmRegistration: FC<
         pointerEvents={confirming ? "none" : "auto"}
       >
         {/* Username */}
-        <Text style={inputLabelStyle}>{i18n.t("Username")}</Text>
-        <TextInput
-          style={[
-            inputStyle,
-            {
-              borderColor:
-                username !== "" && !validateUsername(username)
-                  ? colors.errorColor
-                  : colors.primaryBorderColor
-            }
-          ]}
-          value={username}
-          onChangeText={(text) => setUsername(text)}
-          placeholder={i18n.t("UsernamePlaceholder")}
-          autoCapitalize="none"
-        />
-        {username !== "" && !validateUsername(username) && (
-          <Text style={errorTextStyle}>{i18n.t("UsernameError")}</Text>
-        )}
+        <Text style={inputLabelStyle}>{i18n.t("Auth_SignIn.Username")}</Text>
+        <TextInput editable={false} style={inputStyle} value={username} />
 
         {/* Verification Code */}
-        <Text style={inputLabelStyle}>{i18n.t("VerificationCode")}</Text>
+        <Text style={inputLabelStyle}>
+          {i18n.t("Auth_ConfirmRegistration.VerificationCode")}
+        </Text>
         <TextInput
           style={inputStyle}
           value={code}
           onChangeText={(text) => setCode(text)}
-          placeholder={i18n.t("VerificationCodePlaceholder")}
+          placeholder={i18n.t(
+            "Auth_ConfirmRegistration.VerificationCodePlaceholder"
+          )}
           autoCapitalize="none"
         />
         {code !== "" && !validateCode(code) && (
-          <Text style={errorTextStyle}>{i18n.t("VerificationCodeError")}</Text>
+          <Text style={errorTextStyle}>
+            {i18n.t("Auth_ConfirmRegistration.VerificationCodeError")}
+          </Text>
         )}
 
         {/* Confirm Button */}
@@ -128,7 +126,7 @@ export const ConfirmRegistration: FC<
               styles.buttonText
             ]}
           >
-            {i18n.t("Confirm")}
+            {i18n.t("Auth_ConfirmRegistration.Confirm")}
           </Text>
         </TouchableOpacity>
       </SafeAreaView>

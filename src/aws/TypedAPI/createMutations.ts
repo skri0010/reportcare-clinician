@@ -1,4 +1,4 @@
-import API, { graphqlOperation } from "@aws-amplify/api-graphql";
+import API from "@aws-amplify/api-graphql";
 import * as mutations from "aws/graphql/mutations";
 import { BaseResponse } from "aws";
 import {
@@ -17,11 +17,10 @@ interface CreateClinicianInfoResponse extends BaseResponse {
 export const createClinicianInfo = async (
   input: CreateClinicianInfoInput
 ): Promise<CreateClinicianInfoResponse> => {
-  return (await API.graphql(
-    graphqlOperation(mutations.createClinicianInfo, {
-      input: input
-    })
-  )) as CreateClinicianInfoResponse;
+  return (await API.graphql({
+    query: mutations.createClinicianInfo,
+    variables: { input: input }
+  })) as CreateClinicianInfoResponse;
 };
 
 interface CreateClinicianProtectedInfoResponse extends BaseResponse {
@@ -31,11 +30,10 @@ interface CreateClinicianProtectedInfoResponse extends BaseResponse {
 export const createClinicianProtectedInfo = async (
   input: CreateClinicianProtectedInfoInput
 ): Promise<CreateClinicianProtectedInfoResponse> => {
-  return (await API.graphql(
-    graphqlOperation(mutations.createClinicianProtectedInfo, {
-      input: input
-    })
-  )) as CreateClinicianProtectedInfoResponse;
+  return (await API.graphql({
+    query: mutations.createClinicianProtectedInfo,
+    variables: { input: input }
+  })) as CreateClinicianProtectedInfoResponse;
 };
 
 interface CreateClinicianPatientMapResponse extends BaseResponse {
@@ -45,9 +43,8 @@ interface CreateClinicianPatientMapResponse extends BaseResponse {
 export const createClinicianPatientMap = async (
   input: CreateClinicianPatientMapInput
 ): Promise<CreateClinicianPatientMapResponse> => {
-  return (await API.graphql(
-    graphqlOperation(mutations.createClinicianPatientMap, {
-      input: input
-    })
-  )) as CreateClinicianPatientMapResponse;
+  return (await API.graphql({
+    query: mutations.createClinicianPatientMap,
+    variables: { input: input }
+  })) as CreateClinicianPatientMapResponse;
 };

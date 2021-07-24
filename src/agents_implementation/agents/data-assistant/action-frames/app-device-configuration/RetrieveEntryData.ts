@@ -6,7 +6,8 @@ import Precondition from "../../../../agent_framework/base/Precondition";
 import ProcedureConst from "../../../../agent_framework/const/ProcedureConst";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import agentAPI from "../../../../agent_framework/AgentAPI";
-import { listClinicianInfos } from "aws";
+import { getClinicianInfo } from "aws";
+import { AsyncStorageKeys } from "agents_implementation/agent_framework/const/AsyncStorageKeys";
 
 /**
  * Class to represent the activity for retrieving clinician's entry data.
@@ -35,67 +36,63 @@ class RetrieveEntryData extends Activity {
         agentAPI.addFact(new Belief("Clinician", "username", null), false);
 
         // Retrieve user's entry in DynamoDB table
-        const query: any = await listClinicianInfos({
-          filter: { clinicianID: { eq: clinicianUsername } }
+        const query: any = await getClinicianInfo({
+          clinicianID: clinicianUsername
         });
         if (query.data) {
-          const results = query.data.listClinicianInfos.items;
-          if (results.length > 0) {
-            const clinician = results.pop();
-            if (clinician) {
-              // Merges retrieved facts into current facts
-              if (
-                clinician.facts &&
-                Object.entries(JSON.parse(clinician.facts)).length > 0
-              ) {
-                agentAPI.mergeFacts(JSON.parse(clinician.facts));
-              }
-
-              // Merges retrieved beliefs of each agent into current beliefs
-              agentAPI.getAgents().forEach((existingAgent) => {
-                switch (existingAgent.getID()) {
-                  case "APS": {
-                    if (
-                      clinician.APS &&
-                      Object.entries(JSON.parse(clinician.APS)).length > 0
-                    ) {
-                      existingAgent.mergeBeliefs(JSON.parse(clinician.APS));
-                    }
-                    break;
-                  }
-                  case "DTA": {
-                    if (
-                      clinician.DTA &&
-                      Object.entries(JSON.parse(clinician.DTA)).length > 0
-                    ) {
-                      existingAgent.mergeBeliefs(JSON.parse(clinician.DTA));
-                    }
-                    break;
-                  }
-                  case "UXSA": {
-                    if (
-                      clinician.UXSA &&
-                      Object.entries(JSON.parse(clinician.UXSA)).length > 0
-                    ) {
-                      existingAgent.mergeBeliefs(JSON.parse(clinician.UXSA));
-                    }
-                    break;
-                  }
-                  default: {
-                    break;
-                  }
-                }
-              });
-
-              // Stores entry Id and clinician Id locally
-              await AsyncStorage.multiSet([
-                ["UserId", clinician.id],
-                ["ClinicianId", clinician.clinicianID]
-              ]);
+          const clinician = query.data.getClinicianInfo;
+          if (clinician) {
+            // Merges retrieved facts into current facts
+            if (
+              clinician.facts &&
+              Object.entries(JSON.parse(clinician.facts)).length > 0
+            ) {
+              agentAPI.mergeFacts(JSON.parse(clinician.facts));
             }
+
+            // Merges retrieved beliefs of each agent into current beliefs
+            agentAPI.getAgents().forEach((existingAgent) => {
+              switch (existingAgent.getID()) {
+                case "APS": {
+                  if (
+                    clinician.APS &&
+                    Object.entries(JSON.parse(clinician.APS)).length > 0
+                  ) {
+                    existingAgent.mergeBeliefs(JSON.parse(clinician.APS));
+                  }
+                  break;
+                }
+                case "DTA": {
+                  if (
+                    clinician.DTA &&
+                    Object.entries(JSON.parse(clinician.DTA)).length > 0
+                  ) {
+                    existingAgent.mergeBeliefs(JSON.parse(clinician.DTA));
+                  }
+                  break;
+                }
+                case "UXSA": {
+                  if (
+                    clinician.UXSA &&
+                    Object.entries(JSON.parse(clinician.UXSA)).length > 0
+                  ) {
+                    existingAgent.mergeBeliefs(JSON.parse(clinician.UXSA));
+                  }
+                  break;
+                }
+                default: {
+                  break;
+                }
+              }
+            });
+
+            // Stores clinicianID and clinician locally
+            await AsyncStorage.multiSet([
+              [AsyncStorageKeys.ClinicianID, clinician.clinicianID],
+              [AsyncStorageKeys.Clinician, JSON.stringify(clinician)]
+            ]);
           }
         }
-        // });
       }
     } catch (error) {
       // eslint-disable-next-line no-console

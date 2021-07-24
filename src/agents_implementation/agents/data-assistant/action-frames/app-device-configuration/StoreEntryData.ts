@@ -7,6 +7,7 @@ import ProcedureConst from "../../../../agent_framework/const/ProcedureConst";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import agentAPI from "../../../../agent_framework/AgentAPI";
 import { createClinicianInfo, createClinicianProtectedInfo } from "aws";
+import { AsyncStorageKeys } from "agents_implementation/agent_framework/const/AsyncStorageKeys";
 /**
  * Class to represent the activity for storing clinician's entry data.
  * This happens in Procedure App Device Configuration (ADC).
@@ -43,21 +44,28 @@ class StoreEntryData extends Activity {
         const newClinicianInfo = response.data.createClinicianInfo;
         if (newClinicianInfo) {
           // Create new ClinicianProtectedInfo data
-          await createClinicianProtectedInfo({
-            owner: clinicianUsername,
-            clinicianID: clinicianUsername,
-            facts: "",
-            APS: "",
-            DTA: "",
-            UXSA: ""
-          });
+          const createProtectedInfoResponse =
+            await createClinicianProtectedInfo({
+              owner: clinicianUsername,
+              clinicianID: clinicianUsername,
+              facts: "",
+              APS: "",
+              DTA: "",
+              UXSA: ""
+            });
 
-          const entry = newClinicianInfo;
+          const newProtectedInfo =
+            createProtectedInfoResponse.data.createClinicianProtectedInfo;
+          if (newProtectedInfo) {
+            newClinicianInfo.protectedInfo = newProtectedInfo;
+          }
+
+          // Stores clinicianID and clinician locally
           await AsyncStorage.multiSet([
-            ["UserId", entry.id],
-            ["ClinicianId", entry.clinicianID]
+            [AsyncStorageKeys.ClinicianID, newClinicianInfo.clinicianID],
+            [AsyncStorageKeys.Clinician, JSON.stringify(newClinicianInfo)]
           ]);
-          await AsyncStorage.removeItem("Details");
+          await AsyncStorage.removeItem(AsyncStorageKeys.SignUpDetails);
         }
       }
     } catch (error) {

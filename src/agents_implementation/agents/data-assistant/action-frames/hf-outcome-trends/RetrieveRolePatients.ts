@@ -11,6 +11,7 @@ import { RiskLevel } from "models/RiskLevel";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import agentAPI from "../../../../agent_framework/AgentAPI";
 import { getClinicianInfo, listPatientInfos } from "aws";
+import { AsyncStorageKeys } from "agents_implementation/agent_framework/const/AsyncStorageKeys";
 
 /**
  * Class to represent an activity for retrieving all patients according to role.
@@ -73,7 +74,9 @@ class RetrieveRolePatients extends Activity {
 
     // Nurse: query patients from the same hospital (hospitalName).
     if (role && role === Role.NURSE) {
-      const clinicianID = await AsyncStorage.getItem("ClinicianId");
+      const clinicianID = await AsyncStorage.getItem(
+        AsyncStorageKeys.ClinicianID
+      );
       if (clinicianID) {
         const clinicianQuery = await getClinicianInfo({
           clinicianID: clinicianID

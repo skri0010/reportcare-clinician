@@ -4,7 +4,8 @@ import Belief from "../base/Belief";
 import { Fact } from "../model";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getClinicianProtectedInfo, updateClinicianProtectedInfo } from "aws";
-import { ClinicianProtectedInfo } from "aws/API";
+import { UpdateClinicianProtectedInfoInput } from "aws/API";
+import { AsyncStorageKeys } from "../const/AsyncStorageKeys";
 
 /**
  * Base class for management of active agents.
@@ -24,12 +25,13 @@ abstract class AgentManagement {
   }
 
   /**
-   * Retrieve saved state of facts from the database(AsyncStorage)
+   * Retrieve saved state of facts from the database
    */
   async factFromDB(): Promise<void> {
-    // const dbFacts = await AsyncStorage.getItem("Facts");
     try {
-      const clinicianID = await AsyncStorage.getItem("clinicianID");
+      const clinicianID = await AsyncStorage.getItem(
+        AsyncStorageKeys.ClinicianID
+      );
       if (clinicianID) {
         const result = await getClinicianProtectedInfo({
           clinicianID: clinicianID
@@ -157,7 +159,9 @@ abstract class AgentManagement {
    * Usually called at the end of a series of agents' actions.
    */
   async updateDbStates(): Promise<void> {
-    const clinicianID = await AsyncStorage.getItem("clinicianID");
+    const clinicianID = await AsyncStorage.getItem(
+      AsyncStorageKeys.ClinicianID
+    );
     if (clinicianID) {
       const clinicianProtectedInfo = await getClinicianProtectedInfo({
         clinicianID: clinicianID
@@ -165,10 +169,15 @@ abstract class AgentManagement {
       const protectedInfo =
         clinicianProtectedInfo.data.getClinicianProtectedInfo;
       if (protectedInfo) {
-        // Make a copy
-        const updatedProtectedInfo = JSON.parse(
-          JSON.stringify(protectedInfo)
-        ) as ClinicianProtectedInfo;
+        const updatedProtectedInfo: UpdateClinicianProtectedInfoInput = {
+          clinicianID: clinicianID,
+          facts: protectedInfo.facts,
+          APS: protectedInfo.APS,
+          DTA: protectedInfo.DTA,
+          UXSA: protectedInfo.UXSA,
+          owner: clinicianID,
+          _version: protectedInfo._version
+        };
         updatedProtectedInfo.facts = JSON.stringify(this.facts);
         this.agents.forEach((agent) => {
           switch (agent.getID()) {
@@ -197,7 +206,6 @@ abstract class AgentManagement {
   /**
    * Triggers the initialization of agents.
    */
-  // eslint-disable-next-line class-methods-use-this
   abstract startAgents(): void;
 }
 

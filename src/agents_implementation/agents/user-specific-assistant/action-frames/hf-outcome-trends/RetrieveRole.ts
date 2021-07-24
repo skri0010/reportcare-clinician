@@ -8,6 +8,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Role } from "../../../../../models/ClinicianEnums";
 import agentAPI from "../../../../agent_framework/AgentAPI";
 import { getClinicianInfo } from "aws";
+import { AsyncStorageKeys } from "agents_implementation/agent_framework/const/AsyncStorageKeys";
 
 /**
  * Class to represent an activity for retrieving role of user for retrieving patients.
@@ -44,7 +45,9 @@ class RetrieveRole extends Activity {
   // eslint-disable-next-line class-methods-use-this
   async queryRole(): Promise<string | null> {
     try {
-      const clinicianID = await AsyncStorage.getItem("ClinicianId");
+      const clinicianID = await AsyncStorage.getItem(
+        AsyncStorageKeys.ClinicianID
+      );
       if (clinicianID) {
         const query = await getClinicianInfo({ clinicianID: clinicianID });
         if (query.data) {

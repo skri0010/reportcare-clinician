@@ -46,13 +46,15 @@ export const ForgotPassword: FC<AuthScreensProps[AuthScreenName.FORGOT_PW]> = ({
       .then(() => {
         setCodeSent(true);
         setLoading(false);
-        toast.show(i18n.t("CodeSent"), { type: "success" });
+        toast.show(i18n.t("Auth_Registration.CodeSent"), { type: "success" });
       })
       .catch((error: { code: string; message: string; name: string }) => {
         // eslint-disable-next-line no-console
         console.log(error.message);
         setLoading(false);
-        toast.show(i18n.t("CodeSendFailed"), { type: "danger" });
+        toast.show(i18n.t("Auth_ForgotPassword.CodeSendFailed"), {
+          type: "danger"
+        });
       });
   };
 
@@ -63,14 +65,18 @@ export const ForgotPassword: FC<AuthScreensProps[AuthScreenName.FORGOT_PW]> = ({
     await Auth.forgotPasswordSubmit(username, code, newPassword)
       .then(() => {
         setLoading(false);
-        toast.show(i18n.t("ResetPasswordSuccessful"), { type: "success" });
+        toast.show(i18n.t("Auth_ForgotPassword.ResetPasswordSuccessful"), {
+          type: "success"
+        });
         navigation.navigate(AuthScreenName.SIGN_IN);
       })
       .catch((error: { code: string; message: string; name: string }) => {
         // eslint-disable-next-line no-console
         console.log(error.message);
         setLoading(false);
-        toast.show(i18n.t("ResetPasswordFailed"), { type: "danger" });
+        toast.show(i18n.t("Auth_ForgotPassword.ResetPasswordFailed"), {
+          type: "danger"
+        });
       });
   };
 
@@ -101,7 +107,9 @@ export const ForgotPassword: FC<AuthScreensProps[AuthScreenName.FORGOT_PW]> = ({
         {!codeSent && (
           <View>
             {/* Username */}
-            <Text style={inputLabelStyle}>{i18n.t("Username")}</Text>
+            <Text style={inputLabelStyle}>
+              {i18n.t("Auth_SignIn.Username")}
+            </Text>
             <TextInput
               style={[
                 inputStyle,
@@ -114,11 +122,13 @@ export const ForgotPassword: FC<AuthScreensProps[AuthScreenName.FORGOT_PW]> = ({
               ]}
               value={username}
               onChangeText={(text) => setUsername(text)}
-              placeholder={i18n.t("UsernamePlaceholder")}
+              placeholder={i18n.t("Auth_SignIn.UsernamePlaceholder")}
               autoCapitalize="none"
             />
             {username !== "" && !validateUsername(username) && (
-              <Text style={errorTextStyle}>{i18n.t("UsernameError")}</Text>
+              <Text style={errorTextStyle}>
+                {i18n.t("Auth_SignIn.UsernameError")}
+              </Text>
             )}
           </View>
         )}
@@ -127,22 +137,28 @@ export const ForgotPassword: FC<AuthScreensProps[AuthScreenName.FORGOT_PW]> = ({
         {codeSent && (
           <View>
             {/* Verification Code */}
-            <Text style={inputLabelStyle}>{i18n.t("VerificationCode")}</Text>
+            <Text style={inputLabelStyle}>
+              {i18n.t("Auth_ConfirmRegistration.VerificationCode")}
+            </Text>
             <TextInput
               style={inputStyle}
               value={code}
               onChangeText={(text) => setCode(text)}
-              placeholder={i18n.t("VerificationCodePlaceholder")}
+              placeholder={i18n.t(
+                "Auth_ConfirmRegistration.VerificationCodePlaceholder"
+              )}
               autoCapitalize="none"
             />
             {code !== "" && !validateCode(code) && (
               <Text style={errorTextStyle}>
-                {i18n.t("VerificationCodeError")}
+                {i18n.t("Auth_ConfirmRegistration.VerificationCodeError")}
               </Text>
             )}
 
             {/* New Password */}
-            <Text style={inputLabelStyle}>{i18n.t("NewPassword")}</Text>
+            <Text style={inputLabelStyle}>
+              {i18n.t("Auth_ForgotPassword.NewPassword")}
+            </Text>
             <TextInput
               style={[
                 inputStyle,
@@ -155,14 +171,16 @@ export const ForgotPassword: FC<AuthScreensProps[AuthScreenName.FORGOT_PW]> = ({
               ]}
               value={newPassword}
               onChangeText={(text) => setNewPassword(text)}
-              placeholder={i18n.t("NewPasswordPlaceholder")}
+              placeholder={i18n.t("Auth_ForgotPassword.NewPasswordPlaceholder")}
               autoCapitalize="none"
               autoCorrect={false}
               secureTextEntry
               textContentType="password"
             />
             {newPassword !== "" && !validatePassword(newPassword) && (
-              <Text style={errorTextStyle}>{i18n.t("PasswordError")}</Text>
+              <Text style={errorTextStyle}>
+                {i18n.t("Auth_SignIn.PasswordError")}
+              </Text>
             )}
           </View>
         )}
@@ -195,7 +213,9 @@ export const ForgotPassword: FC<AuthScreensProps[AuthScreenName.FORGOT_PW]> = ({
               styles.buttonText
             ]}
           >
-            {codeSent ? i18n.t("Submit") : i18n.t("SendCode")}
+            {codeSent
+              ? i18n.t("Auth_ForgotPassword.Submit")
+              : i18n.t("Auth_ForgotPassword.SendCode")}
           </Text>
         </TouchableOpacity>
       </SafeAreaView>

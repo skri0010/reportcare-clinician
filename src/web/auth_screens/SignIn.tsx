@@ -22,6 +22,7 @@ import { LoadingIndicator } from "components/LoadingIndicator";
 import agentAPS from "agents_implementation/agents/app-configuration-assistant/APS";
 import Belief from "agents_implementation/agent_framework/base/Belief";
 import ProcedureConst from "agents_implementation/agent_framework/const/ProcedureConst";
+import { AsyncStorageKeys } from "agents_implementation/agent_framework/const/AsyncStorageKeys";
 
 export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
   navigation,
@@ -52,7 +53,7 @@ export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
       password: password
     })
       .then(async () => {
-        await AsyncStorage.setItem("Username", username);
+        await AsyncStorage.setItem(AsyncStorageKeys.ClinicianID, username);
 
         // Triggers initialization of agents
         agentAPI.startAgents();
@@ -75,24 +76,43 @@ export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
               clearInterval(checkProcedure);
 
               // Ensures that entry has been successfully retrieved or created
-              const [[, userId], [, clinicianId]] = await AsyncStorage.multiGet(
-                ["UserId", "ClinicianId"]
-              );
-              if (userId && clinicianId) {
-                toast.show(i18n.t("SignInSuccessful"), { type: "success" });
+              const [[, clinicianId], [, clinician]] =
+                await AsyncStorage.multiGet([
+                  AsyncStorageKeys.ClinicianID,
+                  AsyncStorageKeys.Clinician
+                ]);
+              if (clinicianId && clinician) {
+                toast.show(i18n.t("Auth_SignIn.SignInSuccessful"), {
+                  type: "success"
+                });
                 setAuthState(AuthState.SIGNED_IN);
               } else {
-                toast.show(i18n.t("ConfigurationFailed"), { type: "danger" });
+                toast.show(i18n.t("Auth_SignIn.ConfigurationFailed"), {
+                  type: "danger"
+                });
               }
             }
           }, 500);
         }, 1000);
       })
-      .catch((error: { code: string; message: string; name: string }) => {
+      .catch(async (error: { code: string; message: string; name: string }) => {
         // eslint-disable-next-line no-console
         console.log(error.message);
-        setSigningIn(false);
-        toast.show(i18n.t("SignInFailed"), { type: "danger" });
+
+        // If user is not confirmed
+        if (error.name === "UserNotConfirmedException") {
+          await Auth.resendSignUp(username);
+          setSigningIn(false);
+          toast.show(i18n.t("Auth_SignIn.ResendConfirmCode"), {
+            type: "warning"
+          });
+          navigation.navigate(AuthScreenName.CONFIRM_REGISTER, {
+            username: username
+          });
+        } else {
+          setSigningIn(false);
+          toast.show(i18n.t("Auth_SignIn.SignInFailed"), { type: "danger" });
+        }
       });
   };
 
@@ -135,13 +155,13 @@ export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
           <View style={styles.contentContainer}>
             <View style={styles.titleContainer}>
               <Text style={[styles.title, { fontSize: fonts.h1Size }]}>
-                {i18n.t("SignIn")}
+                {i18n.t("Auth_SignIn.SignIn")}
               </Text>
             </View>
 
             {/* Username */}
             <Text style={[inputLabelStyle, { marginTop: ms(-5) }]}>
-              {i18n.t("Username")}
+              {i18n.t("Auth_SignIn.Username")}
             </Text>
             <TextInput
               style={[
@@ -155,15 +175,19 @@ export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
               ]}
               value={username}
               onChangeText={(text) => setUsername(text)}
-              placeholder={i18n.t("UsernamePlaceholder")}
+              placeholder={i18n.t("Auth_SignIn.UsernamePlaceholder")}
               autoCapitalize="none"
             />
             {username !== "" && !validateUsername(username) && (
-              <Text style={errorTextStyle}>{i18n.t("UsernameError")}</Text>
+              <Text style={errorTextStyle}>
+                {i18n.t("Auth_SignIn.UsernameError")}
+              </Text>
             )}
 
             {/* Password */}
-            <Text style={inputLabelStyle}>{i18n.t("Password")}</Text>
+            <Text style={inputLabelStyle}>
+              {i18n.t("Auth_SignIn.Password")}
+            </Text>
             <TextInput
               style={[
                 inputStyle,
@@ -176,14 +200,16 @@ export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
               ]}
               value={password}
               onChangeText={(text) => setPassword(text)}
-              placeholder={i18n.t("PasswordPlaceholder")}
+              placeholder={i18n.t("Auth_SignIn.PasswordPlaceholder")}
               autoCapitalize="none"
               autoCorrect={false}
               secureTextEntry
               textContentType="password"
             />
             {password !== "" && !validatePassword(password) && (
-              <Text style={errorTextStyle}>{i18n.t("PasswordError")}</Text>
+              <Text style={errorTextStyle}>
+                {i18n.t("Auth_SignIn.PasswordError")}
+              </Text>
             )}
 
             {/* Forgot Password */}
@@ -191,7 +217,7 @@ export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
               onPress={() => navigation.navigate(AuthScreenName.FORGOT_PW)}
             >
               <Text style={footerButtonTextStyle}>
-                {i18n.t("ForgotPassword")}
+                {i18n.t("Auth_SignIn.ForgotPassword")}
               </Text>
             </TouchableOpacity>
           </View>
@@ -218,14 +244,14 @@ export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
                 styles.buttonText
               ]}
             >
-              {i18n.t("SignIn")}
+              {i18n.t("Auth_SignIn.SignIn")}
             </Text>
           </TouchableOpacity>
 
           {/* Prompt to Register */}
           <View style={styles.footerContainer}>
             <Text style={[styles.footerButtonText, { fontSize: fonts.h4Size }]}>
-              {i18n.t("PromptRegister")}
+              {i18n.t("Auth_SignIn.PromptRegister")}
             </Text>
             <TouchableOpacity
               onPress={() => navigation.navigate(AuthScreenName.REGISTER)}
@@ -239,7 +265,7 @@ export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
                   }
                 ]}
               >
-                {i18n.t("RedirectToRegister")}
+                {i18n.t("Auth_SignIn.RedirectToRegister")}
               </Text>
             </TouchableOpacity>
           </View>

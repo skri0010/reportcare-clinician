@@ -1,4 +1,4 @@
-import API, { graphqlOperation } from "@aws-amplify/api-graphql";
+import API from "@aws-amplify/api-graphql";
 import * as queries from "aws/graphql/queries";
 import { BaseResponse } from "aws";
 import {
@@ -21,11 +21,10 @@ interface ListClinicianInfosResponse extends BaseResponse {
 export const listClinicianInfos = async (
   variables: ListClinicianInfosQueryVariables
 ): Promise<ListClinicianInfosResponse> => {
-  return (await API.graphql(
-    graphqlOperation(queries.listClinicianInfos, {
-      variables: variables
-    })
-  )) as ListClinicianInfosResponse;
+  return (await API.graphql({
+    query: queries.listClinicianInfos,
+    variables: variables
+  })) as ListClinicianInfosResponse;
 };
 
 interface ListPatientInfosResponse extends BaseResponse {
@@ -35,11 +34,10 @@ interface ListPatientInfosResponse extends BaseResponse {
 export const listPatientInfos = async (
   variables: ListPatientInfosQueryVariables
 ): Promise<ListPatientInfosResponse> => {
-  return (await API.graphql(
-    graphqlOperation(queries.listPatientInfos, {
-      variables: variables
-    })
-  )) as ListPatientInfosResponse;
+  return (await API.graphql({
+    query: queries.listPatientInfos,
+    variables: variables
+  })) as ListPatientInfosResponse;
 };
 
 interface ListActivityInfosResponse extends BaseResponse {
@@ -49,11 +47,10 @@ interface ListActivityInfosResponse extends BaseResponse {
 export const listActivityInfos = async (
   variables: ListActivityInfosQueryVariables
 ): Promise<ListActivityInfosResponse> => {
-  return (await API.graphql(
-    graphqlOperation(queries.listActivityInfos, {
-      variables: variables
-    })
-  )) as ListActivityInfosResponse;
+  return (await API.graphql({
+    query: queries.listActivityInfos,
+    variables: variables
+  })) as ListActivityInfosResponse;
 };
 
 interface ListReportSymptomsResponse extends BaseResponse {
@@ -63,11 +60,10 @@ interface ListReportSymptomsResponse extends BaseResponse {
 export const listReportSymptoms = async (
   variables: ListReportSymptomsQueryVariables
 ): Promise<ListReportSymptomsResponse> => {
-  return (await API.graphql(
-    graphqlOperation(queries.listReportSymptoms, {
-      variables: variables
-    })
-  )) as ListReportSymptomsResponse;
+  return (await API.graphql({
+    query: queries.listReportSymptoms,
+    variables: variables
+  })) as ListReportSymptomsResponse;
 };
 
 interface ListReportVitalsQueryResponse extends BaseResponse {
@@ -77,9 +73,8 @@ interface ListReportVitalsQueryResponse extends BaseResponse {
 export const listReportVitals = async (
   variables: ListReportVitalssQueryVariables
 ): Promise<ListReportVitalsQueryResponse> => {
-  return (await API.graphql(
-    graphqlOperation(queries.listReportVitalss, {
-      variables: variables
-    })
-  )) as ListReportVitalsQueryResponse;
+  return (await API.graphql({
+    query: queries.listReportVitalss,
+    variables: variables
+  })) as ListReportVitalsQueryResponse;
 };

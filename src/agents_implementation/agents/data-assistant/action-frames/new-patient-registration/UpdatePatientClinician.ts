@@ -11,6 +11,7 @@ import {
   updatePatientInfo,
   createClinicianPatientMap
 } from "aws";
+import { AsyncStorageKeys } from "agents_implementation/agent_framework/const/AsyncStorageKeys";
 
 /**
  * Class to represent an activity for updating patient's clinician.
@@ -35,7 +36,9 @@ class UpdatePatientClinican extends Activity {
 
     try {
       const patientId = agentAPI.getFacts().Patient?.updateClinician;
-      const clinicianId = await AsyncStorage.getItem("ClinicianId");
+      const clinicianId = await AsyncStorage.getItem(
+        AsyncStorageKeys.ClinicianID
+      );
 
       if (patientId && clinicianId) {
         const query = await listPatientInfos({

@@ -6,6 +6,7 @@ import Precondition from "../../../../agent_framework/base/Precondition";
 import ProcedureConst from "../../../../agent_framework/const/ProcedureConst";
 import agentAPI from "../../../../agent_framework/AgentAPI";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AsyncStorageKeys } from "agents_implementation/agent_framework/const/AsyncStorageKeys";
 
 /**
  * Class to represent the activity for associating clinician id with entry data.
@@ -30,13 +31,16 @@ class AssociateData extends Activity {
     agent.addBelief(new Belief("Clinician", "hasEntry", true));
 
     try {
-      const [[, username], [, details]] = await AsyncStorage.multiGet([
-        "Username",
-        "Details"
+      const [[, clinicianID], [, details]] = await AsyncStorage.multiGet([
+        AsyncStorageKeys.ClinicianID,
+        AsyncStorageKeys.SignUpDetails
       ]);
-      if (username) {
-        await AsyncStorage.removeItem("Username");
-        agentAPI.addFact(new Belief("Clinician", "username", username), false);
+      if (clinicianID) {
+        await AsyncStorage.removeItem(AsyncStorageKeys.ClinicianID);
+        agentAPI.addFact(
+          new Belief("Clinician", "username", clinicianID),
+          false
+        );
       }
 
       if (details) {

@@ -53,7 +53,7 @@ export const AuthNavigationStack: FC<AuthNavigationStackProps> = ({
           component={RegisterAccount}
           options={{
             headerStyle: screenHeaderStyle,
-            headerTitle: i18n.t("RegisterAccount"),
+            headerTitle: i18n.t("Auth_Registration.RegisterAccount"),
             headerTintColor: colors.primaryContrastTextColor,
             headerTitleAlign: "center",
             headerTitleStyle: headerTitleStyle
@@ -64,7 +64,7 @@ export const AuthNavigationStack: FC<AuthNavigationStackProps> = ({
           component={ConfirmRegistration}
           options={{
             headerStyle: screenHeaderStyle,
-            headerTitle: i18n.t("ConfirmRegistration"),
+            headerTitle: i18n.t("Auth_ConfirmRegistration.ConfirmRegistration"),
             headerTintColor: colors.primaryContrastTextColor,
             headerTitleAlign: "center",
             headerTitleStyle: headerTitleStyle
@@ -75,7 +75,7 @@ export const AuthNavigationStack: FC<AuthNavigationStackProps> = ({
           component={ForgotPassword}
           options={{
             headerStyle: screenHeaderStyle,
-            headerTitle: i18n.t("ResetPassword"),
+            headerTitle: i18n.t("Auth_ForgotPassword.ResetPassword"),
             headerTintColor: colors.primaryContrastTextColor,
             headerTitleAlign: "center",
             headerTitleStyle: headerTitleStyle

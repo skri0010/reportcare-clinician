@@ -13,11 +13,7 @@ export enum AuthState {
 export type AuthStackParamList = {
   [AuthScreenName.SIGN_IN]: undefined;
   [AuthScreenName.REGISTER]: undefined;
-  [AuthScreenName.CONFIRM_REGISTER]: {
-    name: string;
-    hospitalName: string;
-    role: string;
-  };
+  [AuthScreenName.CONFIRM_REGISTER]: { username: string };
   [AuthScreenName.FORGOT_PW]: undefined;
 };
 

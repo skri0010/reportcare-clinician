@@ -13,6 +13,7 @@ import BetaNode from "./Engine/Rete/BetaNode";
 import { Fact } from "../model";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getClinicianInfo } from "aws";
+import { AsyncStorageKeys } from "../const/AsyncStorageKeys";
 
 /**
  * Class representing the Agent
@@ -148,7 +149,9 @@ class Agent {
   async setBeliefs(beliefs: Belief[]): Promise<void> {
     try {
       let beliefsSet = false;
-      const clinicianID = await AsyncStorage.getItem("ClinicianId");
+      const clinicianID = await AsyncStorage.getItem(
+        AsyncStorageKeys.ClinicianID
+      );
       if (clinicianID) {
         const result: any = await getClinicianInfo({
           clinicianID: clinicianID
