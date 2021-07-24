@@ -31,7 +31,7 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
 
   // Local states
   const [inputValid, setInputValid] = useState(false);
-  const [passwordValid, setPasswordValid] = useState(true);
+  const [passwordMatch, setPasswordMatch] = useState(true);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("");
@@ -130,13 +130,13 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
         hospital !== "" &&
         hospital !== undefined &&
         validatePassword(password) &&
-        passwordValid
+        passwordMatch
     );
-  }, [name, email, username, role, hospital, password, passwordValid]);
+  }, [name, email, username, role, hospital, password, passwordMatch]);
 
   // Compares confirmed password with initial password
   useEffect(() => {
-    setPasswordValid(password === confirmPassword);
+    setPasswordMatch(password === confirmPassword);
   }, [password, confirmPassword]);
 
   // Local styles
@@ -282,7 +282,7 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
               inputStyle,
               {
                 borderColor:
-                  confirmPassword !== "" && !passwordValid
+                  confirmPassword !== "" && !passwordMatch
                     ? colors.errorColor
                     : colors.primaryBorderColor
               }
@@ -295,7 +295,7 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
             secureTextEntry
             textContentType="password"
           />
-          {confirmPassword !== "" && !passwordValid && (
+          {confirmPassword !== "" && !passwordMatch && (
             <Text style={errorTextStyle}>
               {i18n.t("Auth_Registration.ConfirmPasswordError")}
             </Text>

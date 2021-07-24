@@ -11,7 +11,6 @@ import { RootState, select } from "util/useRedux";
 import { LineChart } from "react-native-chart-kit";
 import { ReportVitals } from "../../aws/models";
 import { ms, ScaledSheet } from "react-native-size-matters";
-import { mockVitals } from "mock/mockVitals";
 
 enum days {
   "Sun" = 0,
@@ -50,10 +49,7 @@ export const ParameterGraphs: FC<ParameterGraphsProps> = ({ data }) => {
   const [vitalsData, setVitalsData] = useState<ReportVitals[]>(data);
 
   useEffect(() => {
-    // To be removed: for testing purpose only
-    setVitalsData(mockVitals);
-
-    // setVitalsData(data);
+    setVitalsData(data);
   }, [data]);
 
   // Calculates average diastolic BP, systolic BP, weight and oxygen saturation each day.
