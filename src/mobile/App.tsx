@@ -13,7 +13,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { AuthState } from "./auth_screens";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import agentAPI from "agents_implementation/agent_framework/AgentAPI";
-import { AsyncStorageKeys } from "agents_implementation/agent_framework/const/AsyncStorageKeys";
+import { AsyncStorageKeys } from "agents_implementation/agent_framework/AgentEnums";
 
 Amplify.configure(awsconfig);
 Auth.configure(awsconfig);
@@ -34,7 +34,7 @@ const App: FC = () => {
       await Auth.currentAuthenticatedUser();
       // In case local storage has been cleared
       const clinicianId = await AsyncStorage.getItem(
-        AsyncStorageKeys.ClinicianID
+        AsyncStorageKeys.CLINICIAN_ID
       );
       if (clinicianId) {
         agentAPI.startAgents();
@@ -66,6 +66,7 @@ const App: FC = () => {
             style={{ marginLeft: ms(5), marginRight: ms(10) }}
           />
         }
+        dangerColor="#b30c00"
         dangerIcon={
           <Icon
             name="times-circle"
@@ -74,7 +75,15 @@ const App: FC = () => {
             style={{ marginLeft: ms(5), marginRight: ms(10) }}
           />
         }
-        dangerColor="#b30c00"
+        warningColor="#bd8e00"
+        warningIcon={
+          <Icon
+            name="exclamation-triangle"
+            color="white"
+            size={ms(20)}
+            style={{ marginLeft: ms(5), marginRight: ms(10) }}
+          />
+        }
         textStyle={{ fontSize: ms(16), color: "white" }}
         style={{
           paddingVertical: ms(10),

@@ -4,8 +4,17 @@ import Belief from "../base/Belief";
 import { Fact } from "../model";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getClinicianProtectedInfo, updateClinicianProtectedInfo } from "aws";
-import { UpdateClinicianProtectedInfoInput } from "aws/API";
-import { AsyncStorageKeys } from "../const/AsyncStorageKeys";
+import {
+  UpdateClinicianProtectedInfoInput,
+  ClinicianProtectedInfo,
+  ClinicianInfo
+} from "aws/API";
+import {
+  AgentIDs,
+  AppAttributes,
+  AsyncStorageKeys,
+  BeliefKeys
+} from "../AgentEnums";
 
 /**
  * Base class for management of active agents.
@@ -28,27 +37,51 @@ abstract class AgentManagement {
    * Retrieve saved state of facts from the database
    */
   async factFromDB(): Promise<void> {
+    let factsSet = false;
+    let protectedInfo: ClinicianProtectedInfo | null | undefined;
+
     try {
-      const clinicianID = await AsyncStorage.getItem(
-        AsyncStorageKeys.ClinicianID
+      // Retrieves local clinician
+      const localClinicianStr = await AsyncStorage.getItem(
+        AsyncStorageKeys.CLINICIAN
       );
-      if (clinicianID) {
-        const result = await getClinicianProtectedInfo({
-          clinicianID: clinicianID
-        });
-        const protectedInfo = result.data.getClinicianProtectedInfo;
-        if (protectedInfo) {
-          const dbFacts = protectedInfo.facts;
-          if (dbFacts && Object.entries(JSON.parse(dbFacts)).length > 0) {
-            this.facts = JSON.parse(dbFacts);
-          } else {
-            this.facts = {};
+      if (localClinicianStr) {
+        const localClinician: ClinicianInfo = JSON.parse(localClinicianStr);
+
+        // Device is online
+        if (this.facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
+          const result = await getClinicianProtectedInfo({
+            clinicianID: localClinician.clinicianID
+          });
+          if (result.data) {
+            protectedInfo = result.data.getClinicianProtectedInfo;
+
+            // Updates local storage
+            await AsyncStorage.mergeItem(
+              AsyncStorageKeys.CLINICIAN,
+              JSON.stringify(protectedInfo)
+            );
           }
+        } else {
+          // Device is offline
+          protectedInfo = localClinician.protectedInfo;
         }
       }
-    } catch (e) {
+
+      if (protectedInfo) {
+        const dbFacts = protectedInfo.facts;
+        if (dbFacts && Object.entries(JSON.parse(dbFacts)).length > 0) {
+          this.facts = JSON.parse(dbFacts);
+          factsSet = true;
+        }
+      }
+
+      if (!factsSet) {
+        this.facts = {};
+      }
+    } catch (error) {
       // eslint-disable-next-line no-console
-      console.log(e);
+      console.log(error);
     }
   }
 
@@ -159,38 +192,59 @@ abstract class AgentManagement {
    * Usually called at the end of a series of agents' actions.
    */
   async updateDbStates(): Promise<void> {
-    const clinicianID = await AsyncStorage.getItem(
-      AsyncStorageKeys.ClinicianID
+    const isOnline: boolean | null =
+      this.facts[BeliefKeys.APP]?.[AppAttributes.ONLINE];
+    let protectedInfo: ClinicianProtectedInfo | null | undefined;
+
+    const localClinicianStr = await AsyncStorage.getItem(
+      AsyncStorageKeys.CLINICIAN
     );
-    if (clinicianID) {
-      const clinicianProtectedInfo = await getClinicianProtectedInfo({
-        clinicianID: clinicianID
-      });
-      const protectedInfo =
-        clinicianProtectedInfo.data.getClinicianProtectedInfo;
+    if (localClinicianStr) {
+      const localClinician = JSON.parse(localClinicianStr);
+
+      // Device is online
+      if (isOnline) {
+        const clinicianProtectedInfo = await getClinicianProtectedInfo({
+          clinicianID: localClinician.clinicianID
+        });
+        protectedInfo = clinicianProtectedInfo.data.getClinicianProtectedInfo;
+      } else {
+        // Device is offline
+        protectedInfo = localClinician.protectedInfo;
+      }
+
       if (protectedInfo) {
         const updatedProtectedInfo: UpdateClinicianProtectedInfoInput = {
-          clinicianID: clinicianID,
+          clinicianID: localClinician.clinicianID,
           facts: protectedInfo.facts,
           APS: protectedInfo.APS,
           DTA: protectedInfo.DTA,
           UXSA: protectedInfo.UXSA,
-          owner: clinicianID,
+          owner: localClinician.clinicianID,
           _version: protectedInfo._version
         };
+
+        // Updates facts and beliefs of each agent
         updatedProtectedInfo.facts = JSON.stringify(this.facts);
+
         this.agents.forEach((agent) => {
           switch (agent.getID()) {
-            case "APS": {
-              updatedProtectedInfo.APS = JSON.stringify(agent.getBeliefs());
+            case AgentIDs.APS: {
+              const updatedBeliefs = JSON.stringify(agent.getBeliefs());
+              updatedProtectedInfo[AgentIDs.APS] = updatedBeliefs;
+              localClinician.protectedInfo[AgentIDs.APS] = updatedBeliefs;
               break;
             }
-            case "DTA": {
-              updatedProtectedInfo.DTA = JSON.stringify(agent.getBeliefs());
+            case AgentIDs.DTA: {
+              const updatedBeliefs = JSON.stringify(agent.getBeliefs());
+              updatedProtectedInfo[AgentIDs.DTA] = updatedBeliefs;
+              localClinician.protectedInfo[AgentIDs.DTA] = updatedBeliefs;
               break;
             }
-            case "UXSA": {
-              updatedProtectedInfo.UXSA = JSON.stringify(agent.getBeliefs());
+            case AgentIDs.UXSA: {
+              const updatedBeliefs = JSON.stringify(agent.getBeliefs());
+              updatedProtectedInfo[AgentIDs.UXSA] = updatedBeliefs;
+              localClinician.protectedInfo[AgentIDs.UXSA] = updatedBeliefs;
               break;
             }
             default: {
@@ -198,7 +252,27 @@ abstract class AgentManagement {
             }
           }
         });
-        await updateClinicianProtectedInfo(updatedProtectedInfo);
+
+        if (isOnline) {
+          await updateClinicianProtectedInfo(updatedProtectedInfo);
+        } else {
+          const agentNWA = this.getAgent(AgentIDs.NWA);
+          if (agentNWA) {
+            agentNWA.addBelief(
+              new Belief(
+                BeliefKeys.APP,
+                AppAttributes.PENDING_PROTECTED_INFO_SYNC,
+                true
+              )
+            );
+          }
+        }
+
+        // Updates local storage
+        await AsyncStorage.mergeItem(
+          AsyncStorageKeys.CLINICIAN,
+          JSON.stringify(localClinician)
+        );
       }
     }
   }

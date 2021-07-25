@@ -4,14 +4,20 @@ import Agent from "../../../../agent_framework/base/Agent";
 import Belief from "../../../../agent_framework/base/Belief";
 import Precondition from "../../../../agent_framework/base/Precondition";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import ProcedureConst from "../../../../agent_framework/const/ProcedureConst";
+import {
+  ProcedureConst,
+  AsyncStorageKeys,
+  CommonAttributes,
+  BeliefKeys,
+  PatientAttributes,
+  ProcedureAttributes
+} from "../../../../agent_framework/AgentEnums";
 import agentAPI from "../../../../agent_framework/AgentAPI";
 import {
   listPatientInfos,
   updatePatientInfo,
   createClinicianPatientMap
 } from "aws";
-import { AsyncStorageKeys } from "agents_implementation/agent_framework/const/AsyncStorageKeys";
 
 /**
  * Class to represent an activity for updating patient's clinician.
@@ -31,17 +37,28 @@ class UpdatePatientClinican extends Activity {
     await super.doActivity(agent);
 
     // Update Beliefs
-    agent.addBelief(new Belief(agent.getID(), "clinicianUpdated", false));
-    agent.addBelief(new Belief(agent.getID(), "lastActivity", this.getID()));
+    agent.addBelief(
+      new Belief(BeliefKeys.PATIENT, PatientAttributes.CLINICIAN_UPDATED, false)
+    );
+    agent.addBelief(
+      new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
+    );
 
     try {
-      const patientId = agentAPI.getFacts().Patient?.updateClinician;
+      // Gets patientId to be updated
+      const patientId =
+        agentAPI.getFacts()[BeliefKeys.PATIENT]?.[
+          PatientAttributes.UPDATE_CLINICIAN
+        ];
+
+      // Gets locally stored clinicianId
       const clinicianId = await AsyncStorage.getItem(
-        AsyncStorageKeys.ClinicianID
+        AsyncStorageKeys.CLINICIAN_ID
       );
 
       if (patientId && clinicianId) {
-        const query = await listPatientInfos({
+        // Queries patient using patientId
+        const query: any = await listPatientInfos({
           filter: { patientID: { eq: patientId } }
         });
 
@@ -50,14 +67,25 @@ class UpdatePatientClinican extends Activity {
           if (results && results.length > 0) {
             const patient = results.pop();
             if (patient) {
+              // Updates patient's cardiologist
               // LS-TODO: Whether to update cardiologist using clinician's username
               // JH-TODO: Note, we must check the version from the DB. If this version is not
               //          the latest, then it auto merge might ignore it!
-              await updatePatientInfo({
+              const updatePatient = await updatePatientInfo({
                 id: patient.id,
                 cardiologist: clinicianId,
                 _version: patient._version
               });
+
+              // Saves patient locally with patientId as key
+              if (updatePatient.data) {
+                await AsyncStorage.setItem(
+                  patientId,
+                  JSON.stringify(updatePatient.data.updatePatientInfo)
+                );
+              }
+
+              // Inserts into ClinicianPatientMap
               await createClinicianPatientMap({
                 clinicianID: clinicianId,
                 patientID: patient.id,
@@ -65,7 +93,11 @@ class UpdatePatientClinican extends Activity {
               });
 
               agentAPI.addFact(
-                new Belief("Patient", "updateSuccessful", true),
+                new Belief(
+                  BeliefKeys.PATIENT,
+                  PatientAttributes.UPDATE_SUCCESSFUL,
+                  true
+                ),
                 false
               );
             }
@@ -78,14 +110,33 @@ class UpdatePatientClinican extends Activity {
     }
 
     // Update Facts
-    agentAPI.addFact(new Belief("Patient", "updateClinician", null), false);
-    agentAPI.addFact(new Belief("Procedure", "SRD", ProcedureConst.INACTIVE));
+    // Removes patientId to be updated from facts
+    agentAPI.addFact(
+      new Belief(BeliefKeys.PATIENT, PatientAttributes.UPDATE_CLINICIAN, null),
+      false
+    );
+    // Stops the procedure
+    agentAPI.addFact(
+      new Belief(
+        BeliefKeys.PROCEDURE,
+        ProcedureAttributes.SRD,
+        ProcedureConst.INACTIVE
+      )
+    );
   }
 }
 
 // Preconditions for activating the UpdatePatientClinican class
-const rule1 = new Precondition("Procedure", "SRD", ProcedureConst.ACTIVE);
-const rule2 = new Precondition("Patient", "clinicianUpdated", true);
+const rule1 = new Precondition(
+  BeliefKeys.PROCEDURE,
+  ProcedureAttributes.SRD,
+  ProcedureConst.ACTIVE
+);
+const rule2 = new Precondition(
+  BeliefKeys.PATIENT,
+  PatientAttributes.CLINICIAN_UPDATED,
+  true
+);
 
 // Action Frame for UpdatePatientClinican class
 const af_UpdatePatientClinican = new Actionframe(

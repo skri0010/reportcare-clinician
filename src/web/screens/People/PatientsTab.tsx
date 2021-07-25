@@ -10,7 +10,13 @@ import { ReportVitals } from "aws/models";
 import { Patient } from "agents_implementation/agent_framework/model";
 import agentDTA from "agents_implementation/agents/data-assistant/DTA";
 import Belief from "agents_implementation/agent_framework/base/Belief";
-import ProcedureConst from "agents_implementation/agent_framework/const/ProcedureConst";
+import {
+  BeliefKeys,
+  ClinicianAttributes,
+  PatientAttributes,
+  ProcedureAttributes,
+  ProcedureConst
+} from "agents_implementation/agent_framework/AgentEnums";
 import agentAPI from "agents_implementation/agent_framework/AgentAPI";
 import agentUXSA from "agents_implementation/agents/user-specific-assistant/UXSA";
 import { mockPatients } from "mock/mockPatients";
@@ -27,9 +33,15 @@ export const PatientsTab: FC = () => {
 
   // Triggers series of actions to get patients according to role.
   const getPatients = () => {
-    agentUXSA.addBelief(new Belief("Clinician", "retrieveRole", true));
+    agentUXSA.addBelief(
+      new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.RETRIEVE_ROLE, true)
+    );
     agentAPI.addFact(
-      new Belief("Procedure", "HF-OTP-I", ProcedureConst.ACTIVE)
+      new Belief(
+        BeliefKeys.PROCEDURE,
+        ProcedureAttributes.HF_OTP_I,
+        ProcedureConst.ACTIVE
+      )
     );
 
     // Waits for 0.5s before checking procedure state.
@@ -37,8 +49,12 @@ export const PatientsTab: FC = () => {
       // Checks facts every 1s to determine if the chain of actions has been completed.
       const checkProcedure = setInterval(() => {
         const facts = agentAPI.getFacts();
-        if (facts.Procedure["HF-OTP-I"] === ProcedureConst.INACTIVE) {
-          const data: Patient[] = agentAPI.getFacts().Patient?.all;
+        if (
+          facts[BeliefKeys.PROCEDURE][ProcedureAttributes.HF_OTP_I] ===
+          ProcedureConst.INACTIVE
+        ) {
+          const data: Patient[] =
+            agentAPI.getFacts()[BeliefKeys.PATIENT]?.[PatientAttributes.ALL];
           if (data) {
             setPatients(data);
           }
@@ -55,7 +71,11 @@ export const PatientsTab: FC = () => {
           setPatients(mockData);
 
           clearInterval(checkProcedure);
-          agentAPI.addFact(new Belief("Patient", "all", null), false, true);
+          agentAPI.addFact(
+            new Belief(BeliefKeys.PATIENT, PatientAttributes.ALL, null),
+            false,
+            true
+          );
         }
       }, 1000);
     }, 500);
@@ -63,10 +83,19 @@ export const PatientsTab: FC = () => {
 
   // Triggers series of actions to retrieve details specific to a patient.
   const getData = (patientId: string) => {
-    agentDTA.addBelief(new Belief("Patient", "retrieveDetails", true));
-    agentAPI.addFact(new Belief("Patient", "viewDetails", patientId), false);
+    agentDTA.addBelief(
+      new Belief(BeliefKeys.PATIENT, PatientAttributes.RETRIEVE_DETAILS, true)
+    );
     agentAPI.addFact(
-      new Belief("Procedure", "HF-OTP-II", ProcedureConst.ACTIVE)
+      new Belief(BeliefKeys.PATIENT, PatientAttributes.VIEW_DETAILS, patientId),
+      false
+    );
+    agentAPI.addFact(
+      new Belief(
+        BeliefKeys.PROCEDURE,
+        ProcedureAttributes.HF_OTP_II,
+        ProcedureConst.ACTIVE
+      )
     );
 
     // Waits for 0.5s before checking procedure state.
@@ -74,8 +103,13 @@ export const PatientsTab: FC = () => {
       // Checks facts every 1s to determine if the chain of actions has been completed.
       const checkProcedure = setInterval(() => {
         const facts = agentAPI.getFacts();
-        if (facts.Procedure["HF-OTP-II"] === ProcedureConst.INACTIVE) {
-          const data: ReportVitals[] = facts.Patient?.details.vitalsReports;
+        if (
+          facts[BeliefKeys.PROCEDURE][ProcedureAttributes.HF_OTP_II] ===
+          ProcedureConst.INACTIVE
+        ) {
+          const data: ReportVitals[] =
+            facts[BeliefKeys.PATIENT]?.[PatientAttributes.DETAILS]
+              ?.vitalsReports;
           if (data) {
             setVitalsData(data);
             setReady(true);
@@ -85,7 +119,11 @@ export const PatientsTab: FC = () => {
           setVitalsData(mockVitals);
 
           clearInterval(checkProcedure);
-          agentAPI.addFact(new Belief("Patient", "details", null), false, true);
+          agentAPI.addFact(
+            new Belief(BeliefKeys.PATIENT, PatientAttributes.DETAILS, null),
+            false,
+            true
+          );
         }
       }, 1000);
     }, 500);

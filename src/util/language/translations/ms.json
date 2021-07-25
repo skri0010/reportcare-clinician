@@ -63,5 +63,10 @@
   },
   "Auth_SignOut": {
     "SignOutSuccessful": "Log keluar berjaya"
+  },
+  "Internet_Connection": {
+    "OnlineToSignIn": "Anda mestilah mempunyai sambungan internet untuk log masuk",
+    "OnlineNotice": "Sambungan internet dikesan",
+    "OfflineNotice": "Tiada sambungan internet.\nSebahagian maklumat mungkin tidak tersedia."
   }
 }

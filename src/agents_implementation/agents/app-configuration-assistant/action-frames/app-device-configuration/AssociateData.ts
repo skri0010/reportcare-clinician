@@ -3,10 +3,17 @@ import Activity from "../../../../agent_framework/base/Activity";
 import Agent from "../../../../agent_framework/base/Agent";
 import Belief from "../../../../agent_framework/base/Belief";
 import Precondition from "../../../../agent_framework/base/Precondition";
-import ProcedureConst from "../../../../agent_framework/const/ProcedureConst";
+import {
+  ProcedureConst,
+  AsyncStorageKeys,
+  BeliefKeys,
+  ClinicianAttributes,
+  CommonAttributes,
+  AppAttributes,
+  ProcedureAttributes
+} from "../../../../agent_framework/AgentEnums";
 import agentAPI from "../../../../agent_framework/AgentAPI";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AsyncStorageKeys } from "agents_implementation/agent_framework/const/AsyncStorageKeys";
 
 /**
  * Class to represent the activity for associating clinician id with entry data.
@@ -28,31 +35,52 @@ class AssociateData extends Activity {
     super.doActivity(agent);
 
     // Update Beliefs
-    agent.addBelief(new Belief("Clinician", "hasEntry", true));
+    agent.addBelief(
+      new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.HAS_ENTRY, true)
+    );
 
     try {
-      const [[, clinicianID], [, details]] = await AsyncStorage.multiGet([
-        AsyncStorageKeys.ClinicianID,
-        AsyncStorageKeys.SignUpDetails
+      const [[, username], [, details]] = await AsyncStorage.multiGet([
+        AsyncStorageKeys.USERNAME,
+        AsyncStorageKeys.SIGN_UP_DETAILS
       ]);
-      if (clinicianID) {
-        await AsyncStorage.removeItem(AsyncStorageKeys.ClinicianID);
+      if (username) {
+        // Adds username as facts to be used by DTA later on
+        await AsyncStorage.removeItem(AsyncStorageKeys.USERNAME);
         agentAPI.addFact(
-          new Belief("Clinician", "username", clinicianID),
+          new Belief(
+            BeliefKeys.CLINICIAN,
+            ClinicianAttributes.USERNAME,
+            username
+          ),
           false
         );
       }
 
       if (details) {
-        // New user
+        // New user: broadcasts sign up details to be saved by DTA later on
         agentAPI.addFact(
-          new Belief("Clinician", "entryData", JSON.parse(details)),
+          new Belief(
+            BeliefKeys.CLINICIAN,
+            ClinicianAttributes.ENTRY_DATA,
+            JSON.parse(details)
+          ),
           false
         );
-        agentAPI.addFact(new Belief("Clinician", "configured", false));
+        // Precondition for StoreEntryData action frame of DTA
+        agentAPI.addFact(
+          new Belief(
+            BeliefKeys.CLINICIAN,
+            ClinicianAttributes.CONFIGURED,
+            false
+          )
+        );
       } else {
         // Existing user
-        agentAPI.addFact(new Belief("Clinician", "configured", true));
+        // Precondition for RetrieveEntryData action frame of DTA
+        agentAPI.addFact(
+          new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.CONFIGURED, true)
+        );
       }
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -60,14 +88,24 @@ class AssociateData extends Activity {
     }
 
     // Update lastActivity last since RequestEntryData will be triggered by this
-    agent.addBelief(new Belief(agent.getID(), "lastActivity", this.getID()));
+    agent.addBelief(
+      new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
+    );
   }
 }
 
 // Rules or preconditions for activating the AssociateData class
-const rule1 = new Precondition("App", "configured", true);
-const rule2 = new Precondition("Clinician", "hasEntry", false);
-const rule3 = new Precondition("Procedure", "ADC", ProcedureConst.ACTIVE);
+const rule1 = new Precondition(BeliefKeys.APP, AppAttributes.CONFIGURED, true);
+const rule2 = new Precondition(
+  BeliefKeys.CLINICIAN,
+  ClinicianAttributes.HAS_ENTRY,
+  false
+);
+const rule3 = new Precondition(
+  BeliefKeys.PROCEDURE,
+  ProcedureAttributes.ADC,
+  ProcedureConst.ACTIVE
+);
 
 // Actionframe of the AssociateData class
 const af_AssociateData = new Actionframe(

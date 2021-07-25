@@ -3,8 +3,15 @@ import Agent from "../../../../agent_framework/base/Agent";
 import Belief from "../../../../agent_framework/base/Belief";
 import Communicate from "../../../../agent_framework/base/Communicate";
 import Precondition from "../../../../agent_framework/base/Precondition";
-import Performative from "../../../../agent_framework/const/Performative";
-import ProcedureConst from "../../../../agent_framework/const/ProcedureConst";
+import {
+  AgentIDs,
+  BeliefKeys,
+  CommonAttributes,
+  PatientAttributes,
+  Performative,
+  ProcedureAttributes,
+  ProcedureConst
+} from "../../../../agent_framework/AgentEnums";
 
 /**
  * The class represents the activity for requesting retrieval of all patients specific to a role.
@@ -18,8 +25,9 @@ class RequestRetrieveAll extends Communicate {
     super(
       "RequestRetrieveAll",
       Performative.REQUEST,
-      new Belief("Patient", "retrieveAll", true),
-      ["DTA"]
+      // Triggers RetrieveRolePatients action frame of DTA
+      new Belief(BeliefKeys.PATIENT, PatientAttributes.RETRIEVE_ALL, true),
+      [AgentIDs.DTA]
     );
   }
 
@@ -32,7 +40,9 @@ class RequestRetrieveAll extends Communicate {
       super.doActivity(agent);
 
       // Update Beliefs
-      agent.addBelief(new Belief(agent.getID(), "lastActivity", this.getID()));
+      agent.addBelief(
+        new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
+      );
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
@@ -41,8 +51,16 @@ class RequestRetrieveAll extends Communicate {
 }
 
 // Rules or preconditions for activating the RequestRetrieveAll class
-const rule1 = new Precondition("Procedure", "HF-OTP-I", ProcedureConst.ACTIVE);
-const rule2 = new Precondition("UXSA", "lastActivity", "RetrieveRole");
+const rule1 = new Precondition(
+  BeliefKeys.PROCEDURE,
+  ProcedureAttributes.HF_OTP_I,
+  ProcedureConst.ACTIVE
+);
+const rule2 = new Precondition(
+  AgentIDs.UXSA,
+  CommonAttributes.LAST_ACTIVITY,
+  "RetrieveRole"
+);
 
 // Actionframe of the RequestRetrieveAll class
 const af_RequestRetrieveAll = new Actionframe(

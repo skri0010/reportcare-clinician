@@ -3,11 +3,18 @@ import Activity from "../../../../agent_framework/base/Activity";
 import Agent from "../../../../agent_framework/base/Agent";
 import Belief from "../../../../agent_framework/base/Belief";
 import Precondition from "../../../../agent_framework/base/Precondition";
-import ProcedureConst from "../../../../agent_framework/const/ProcedureConst";
+import {
+  ProcedureConst,
+  AsyncStorageKeys,
+  CommonAttributes,
+  BeliefKeys,
+  ClinicianAttributes,
+  ProcedureAttributes,
+  AgentIDs
+} from "../../../../agent_framework/AgentEnums";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import agentAPI from "../../../../agent_framework/AgentAPI";
 import { getClinicianInfo } from "aws";
-import { AsyncStorageKeys } from "agents_implementation/agent_framework/const/AsyncStorageKeys";
 
 /**
  * Class to represent the activity for retrieving clinician's entry data.
@@ -26,14 +33,29 @@ class RetrieveEntryData extends Activity {
     await super.doActivity(agent);
 
     // Update Beliefs
-    agent.addBelief(new Belief(agent.getID(), "lastActivity", this.getID()));
-    agent.addBelief(new Belief("Clinician", "retrieveEntry", false));
+    agent.addBelief(
+      new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
+    );
+    agent.addBelief(
+      new Belief(
+        BeliefKeys.CLINICIAN,
+        ClinicianAttributes.RETRIEVE_ENTRY,
+        false
+      )
+    );
 
     try {
-      const clinicianUsername = agentAPI.getFacts().Clinician?.username;
+      const clinicianUsername =
+        agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[
+          ClinicianAttributes.USERNAME
+        ];
 
       if (clinicianUsername) {
-        agentAPI.addFact(new Belief("Clinician", "username", null), false);
+        // Removes username from facts
+        agentAPI.addFact(
+          new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.USERNAME, null),
+          false
+        );
 
         // Retrieve user's entry in DynamoDB table
         const query: any = await getClinicianInfo({
@@ -44,39 +66,49 @@ class RetrieveEntryData extends Activity {
           if (clinician) {
             // Merges retrieved facts into current facts
             if (
-              clinician.facts &&
-              Object.entries(JSON.parse(clinician.facts)).length > 0
+              clinician.protectedInfo?.facts &&
+              Object.entries(JSON.parse(clinician.protectedInfo?.facts))
+                .length > 0
             ) {
-              agentAPI.mergeFacts(JSON.parse(clinician.facts));
+              agentAPI.mergeFacts(JSON.parse(clinician.protectedInfo?.facts));
             }
 
             // Merges retrieved beliefs of each agent into current beliefs
             agentAPI.getAgents().forEach((existingAgent) => {
               switch (existingAgent.getID()) {
-                case "APS": {
+                case AgentIDs.APS: {
                   if (
-                    clinician.APS &&
-                    Object.entries(JSON.parse(clinician.APS)).length > 0
+                    clinician.protectedInfo?.APS &&
+                    Object.entries(JSON.parse(clinician.protectedInfo?.APS))
+                      .length > 0
                   ) {
-                    existingAgent.mergeBeliefs(JSON.parse(clinician.APS));
+                    existingAgent.mergeBeliefs(
+                      JSON.parse(clinician.protectedInfo?.APS)
+                    );
                   }
                   break;
                 }
-                case "DTA": {
+                case AgentIDs.DTA: {
                   if (
-                    clinician.DTA &&
-                    Object.entries(JSON.parse(clinician.DTA)).length > 0
+                    clinician.protectedInfo?.DTA &&
+                    Object.entries(JSON.parse(clinician.protectedInfo?.DTA))
+                      .length > 0
                   ) {
-                    existingAgent.mergeBeliefs(JSON.parse(clinician.DTA));
+                    existingAgent.mergeBeliefs(
+                      JSON.parse(clinician.protectedInfo?.DTA)
+                    );
                   }
                   break;
                 }
-                case "UXSA": {
+                case AgentIDs.UXSA: {
                   if (
-                    clinician.UXSA &&
-                    Object.entries(JSON.parse(clinician.UXSA)).length > 0
+                    clinician.protectedInfo?.UXSA &&
+                    Object.entries(JSON.parse(clinician.protectedInfo?.UXSA))
+                      .length > 0
                   ) {
-                    existingAgent.mergeBeliefs(JSON.parse(clinician.UXSA));
+                    existingAgent.mergeBeliefs(
+                      JSON.parse(clinician.protectedInfo?.UXSA)
+                    );
                   }
                   break;
                 }
@@ -88,8 +120,8 @@ class RetrieveEntryData extends Activity {
 
             // Stores clinicianID and clinician locally
             await AsyncStorage.multiSet([
-              [AsyncStorageKeys.ClinicianID, clinician.clinicianID],
-              [AsyncStorageKeys.Clinician, JSON.stringify(clinician)]
+              [AsyncStorageKeys.CLINICIAN_ID, clinician.clinicianID],
+              [AsyncStorageKeys.CLINICIAN, JSON.stringify(clinician)]
             ]);
           }
         }
@@ -100,8 +132,13 @@ class RetrieveEntryData extends Activity {
     }
 
     // Update Facts
+    // Stops the procedure
     agentAPI.addFact(
-      new Belief("Procedure", "ADC", ProcedureConst.INACTIVE),
+      new Belief(
+        BeliefKeys.PROCEDURE,
+        ProcedureAttributes.ADC,
+        ProcedureConst.INACTIVE
+      ),
       true,
       true
     );
@@ -109,9 +146,21 @@ class RetrieveEntryData extends Activity {
 }
 
 // Rules or preconditions for activating the RetrieveEntryData class
-const rule1 = new Precondition("Clinician", "retrieveEntry", true);
-const rule2 = new Precondition("Clinician", "configured", true);
-const rule3 = new Precondition("Procedure", "ADC", ProcedureConst.ACTIVE);
+const rule1 = new Precondition(
+  BeliefKeys.CLINICIAN,
+  ClinicianAttributes.RETRIEVE_ENTRY,
+  true
+);
+const rule2 = new Precondition(
+  BeliefKeys.CLINICIAN,
+  ClinicianAttributes.CONFIGURED,
+  true
+);
+const rule3 = new Precondition(
+  BeliefKeys.PROCEDURE,
+  ProcedureAttributes.ADC,
+  ProcedureConst.ACTIVE
+);
 
 // Action Frame for RetrieveEntryData class
 const af_RetrieveEntryData = new Actionframe(

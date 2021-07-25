@@ -3,8 +3,15 @@ import Agent from "../../../../agent_framework/base/Agent";
 import Belief from "../../../../agent_framework/base/Belief";
 import Communicate from "../../../../agent_framework/base/Communicate";
 import Precondition from "../../../../agent_framework/base/Precondition";
-import Performative from "../../../../agent_framework/const/Performative";
-import ProcedureConst from "../../../../agent_framework/const/ProcedureConst";
+import {
+  AgentIDs,
+  BeliefKeys,
+  CommonAttributes,
+  PatientAttributes,
+  Performative,
+  ProcedureAttributes,
+  ProcedureConst
+} from "../../../../agent_framework/AgentEnums";
 
 /**
  * Class to represent the activity for requesting display of retrieved patient's details.
@@ -18,8 +25,9 @@ class RequestDetailsDisplay extends Communicate {
     super(
       "RequestDetailsDisplay",
       Performative.REQUEST,
-      new Belief("Patient", "detailsRetrieved", true),
-      ["UXSA"]
+      // Triggesr VisualizeParameters action frame of UXSA
+      new Belief(BeliefKeys.PATIENT, PatientAttributes.DETAILS_RETRIEVED, true),
+      [AgentIDs.UXSA]
     );
   }
 
@@ -32,7 +40,9 @@ class RequestDetailsDisplay extends Communicate {
       super.doActivity(agent);
 
       // Update Beliefs
-      agent.addBelief(new Belief(agent.getID(), "lastActivity", this.getID()));
+      agent.addBelief(
+        new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
+      );
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
@@ -41,8 +51,16 @@ class RequestDetailsDisplay extends Communicate {
 }
 
 // Rules or preconditions for activating the RequestDetailsDisplay class
-const rule1 = new Precondition("Procedure", "HF-OTP-II", ProcedureConst.ACTIVE);
-const rule2 = new Precondition("DTA", "lastActivity", "RetrievePatientDetails");
+const rule1 = new Precondition(
+  BeliefKeys.PROCEDURE,
+  ProcedureAttributes.HF_OTP_II,
+  ProcedureConst.ACTIVE
+);
+const rule2 = new Precondition(
+  AgentIDs.DTA,
+  CommonAttributes.LAST_ACTIVITY,
+  "RetrievePatientDetails"
+);
 
 // Actionframe of the RequestDetailsDisplay class
 const af_RequestDetailsDisplay = new Actionframe(

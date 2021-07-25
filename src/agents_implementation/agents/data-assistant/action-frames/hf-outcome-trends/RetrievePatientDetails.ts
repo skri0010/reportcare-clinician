@@ -3,11 +3,19 @@ import Activity from "../../../../agent_framework/base/Activity";
 import Agent from "../../../../agent_framework/base/Agent";
 import Belief from "../../../../agent_framework/base/Belief";
 import Precondition from "../../../../agent_framework/base/Precondition";
-import ProcedureConst from "../../../../agent_framework/const/ProcedureConst";
+import {
+  AppAttributes,
+  BeliefKeys,
+  CommonAttributes,
+  PatientAttributes,
+  ProcedureAttributes,
+  ProcedureConst
+} from "../../../../agent_framework/AgentEnums";
 import { PatientDetails } from "../../../../agent_framework/model";
 import agentAPI from "../../../../agent_framework/AgentAPI";
 import { listActivityInfos, listReportSymptoms, listReportVitals } from "aws";
 import { ActivityInfo, ReportSymptom, ReportVitals } from "aws/API";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 /**
  * Class to represent an activity for retrieving details of a specific patient.
@@ -26,27 +34,38 @@ class RetrievePatientDetails extends Activity {
     await super.doActivity(agent);
 
     // Update Beliefs
-    agent.addBelief(new Belief("Patient", "retrieveDetails", false));
+    agent.addBelief(
+      new Belief(BeliefKeys.PATIENT, PatientAttributes.RETRIEVE_DETAILS, false)
+    );
 
     try {
-      const patientId = agentAPI.getFacts().Patient?.viewDetails;
+      // Gets patientId from facts
+      const patientId =
+        agentAPI.getFacts()[BeliefKeys.PATIENT]?.[
+          PatientAttributes.VIEW_DETAILS
+        ];
+      const isOnline =
+        agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE];
 
-      if (patientId) {
+      const patientDetails: PatientDetails = {
+        activityInfo: [],
+        symptomsReports: [],
+        vitalsReports: []
+      };
+
+      if (patientId && isOnline) {
+        // Device is online
         const activityInfoQuery = await listActivityInfos({
           filter: { patientID: { eq: patientId } }
         });
+
         const symptomsReportsQuery = await listReportSymptoms({
           filter: { patientID: { eq: patientId } }
         });
+
         const vitalsReportsQuery = await listReportVitals({
           filter: { patientID: { eq: patientId } }
         });
-
-        const patientDetails: PatientDetails = {
-          activityInfo: [],
-          symptomsReports: [],
-          vitalsReports: []
-        };
 
         if (activityInfoQuery.data.listActivityInfos?.items) {
           patientDetails.activityInfo = activityInfoQuery.data.listActivityInfos
@@ -56,31 +75,72 @@ class RetrievePatientDetails extends Activity {
           patientDetails.symptomsReports = symptomsReportsQuery.data
             .listReportSymptoms.items as ReportSymptom[];
         }
+
         if (vitalsReportsQuery.data.listReportVitalss?.items) {
           patientDetails.vitalsReports = vitalsReportsQuery.data
             .listReportVitalss.items as ReportVitals[];
         }
 
-        // Update Facts
-        agentAPI.addFact(new Belief("Patient", "viewDetails", null), false);
+        // Saves retrieved details locally with patientId as key
+        await AsyncStorage.setItem(patientId, JSON.stringify(patientDetails));
+
         agentAPI.addFact(
-          new Belief("Patient", "details", patientDetails),
+          new Belief(
+            BeliefKeys.PATIENT,
+            PatientAttributes.DETAILS,
+            patientDetails
+          ),
           false
         );
+      } else if (patientId && !isOnline) {
+        // Device is offline: retrieves a locally stored patient if any
+        const localPatientStr = await AsyncStorage.getItem(patientId);
+        if (localPatientStr) {
+          const patient: PatientDetails = JSON.parse(localPatientStr);
+          patientDetails.activityInfo = patient.activityInfo;
+          patientDetails.symptomsReports = patient.symptomsReports;
+          patientDetails.vitalsReports = patient.vitalsReports;
+
+          agentAPI.addFact(
+            new Belief(
+              BeliefKeys.PATIENT,
+              PatientAttributes.DETAILS,
+              patientDetails
+            ),
+            false
+          );
+        }
       }
+
+      // Update Facts
+      // Removes current attribute from facts
+      agentAPI.addFact(
+        new Belief(BeliefKeys.PATIENT, PatientAttributes.VIEW_DETAILS, null),
+        false
+      );
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
     }
 
     // Update lastActivity last since RequestDetailsDisplay will be triggered by this
-    agent.addBelief(new Belief(agent.getID(), "lastActivity", this.getID()));
+    agent.addBelief(
+      new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
+    );
   }
 }
 
 // Preconditions for activating the RetrievePatientDetails class
-const rule1 = new Precondition("Procedure", "HF-OTP-II", ProcedureConst.ACTIVE);
-const rule2 = new Precondition("Patient", "retrieveDetails", true);
+const rule1 = new Precondition(
+  BeliefKeys.PROCEDURE,
+  ProcedureAttributes.HF_OTP_II,
+  ProcedureConst.ACTIVE
+);
+const rule2 = new Precondition(
+  BeliefKeys.PATIENT,
+  PatientAttributes.RETRIEVE_DETAILS,
+  true
+);
 
 // Action Frame for RetrievePatientDetails class
 const af_RetrievePatientDetails = new Actionframe(

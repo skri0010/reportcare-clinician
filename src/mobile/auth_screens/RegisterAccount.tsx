@@ -19,7 +19,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { useToast } from "react-native-toast-notifications";
 import { LoadingIndicator } from "components/LoadingIndicator";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AsyncStorageKeys } from "agents_implementation/agent_framework/const/AsyncStorageKeys";
+import { AsyncStorageKeys } from "agents_implementation/agent_framework/AgentEnums";
 
 export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
   navigation
@@ -56,7 +56,7 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
         setRegistering(false);
         toast.show(i18n.t("Auth_Registration.CodeSent"), { type: "success" });
         await AsyncStorage.setItem(
-          AsyncStorageKeys.SignUpDetails,
+          AsyncStorageKeys.SIGN_UP_DETAILS,
           JSON.stringify({
             name: name,
             hospitalName: hospital,
@@ -122,15 +122,13 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
   // Validates inputs
   useEffect(() => {
     setInputValid(
-      name !== "" &&
+      (name &&
         validateEmail(email) &&
         validateUsername(username) &&
-        role !== "" &&
-        role !== undefined &&
-        hospital !== "" &&
-        hospital !== undefined &&
+        role &&
+        hospital &&
         validatePassword(password) &&
-        passwordMatch
+        passwordMatch) as boolean
     );
   }, [name, email, username, role, hospital, password, passwordMatch]);
 

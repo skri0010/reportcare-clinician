@@ -12,8 +12,14 @@ import Node from "./Engine/Rete/Node";
 import BetaNode from "./Engine/Rete/BetaNode";
 import { Fact } from "../model";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getClinicianInfo } from "aws";
-import { AsyncStorageKeys } from "../const/AsyncStorageKeys";
+import { getClinicianProtectedInfo } from "aws";
+import {
+  AppAttributes,
+  AsyncStorageKeys,
+  BeliefKeys,
+  CommonAttributes
+} from "../AgentEnums";
+import { ClinicianInfo } from "aws/API";
 
 /**
  * Class representing the Agent
@@ -147,22 +153,42 @@ class Agent {
    * @param {Belief[]} beliefs - Initial beliefs of the agent
    */
   async setBeliefs(beliefs: Belief[]): Promise<void> {
+    let beliefsSet = false;
+    let clinicianStates;
+
     try {
-      let beliefsSet = false;
-      const clinicianID = await AsyncStorage.getItem(
-        AsyncStorageKeys.ClinicianID
+      // Retrieves local clinician
+      const localClinicianStr = await AsyncStorage.getItem(
+        AsyncStorageKeys.CLINICIAN
       );
-      if (clinicianID) {
-        const result: any = await getClinicianInfo({
-          clinicianID: clinicianID
-        });
-        const clinician = result.data.getClinicianInfo;
-        if (clinician && this.id in clinician) {
-          const beliefJSON = clinician[this.id as keyof typeof clinician];
-          if (beliefJSON && Object.entries(JSON.parse(beliefJSON)).length > 0) {
-            this.beliefs = JSON.parse(beliefJSON);
-            beliefsSet = true;
+      if (localClinicianStr) {
+        const localClinician: ClinicianInfo = JSON.parse(localClinicianStr);
+
+        // Device is online
+        if (agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
+          const result: any = await getClinicianProtectedInfo({
+            clinicianID: localClinician.clinicianID
+          });
+          if (result.data) {
+            clinicianStates = result.data.getClinicianProtectedInfo;
+            // Updates local storage
+            await AsyncStorage.mergeItem(
+              AsyncStorageKeys.CLINICIAN,
+              JSON.stringify(clinicianStates)
+            );
           }
+        } else {
+          clinicianStates = localClinician.protectedInfo;
+        }
+      }
+
+      // Initializes agent's beliefs using the retrieved states
+      if (clinicianStates && this.id in clinicianStates) {
+        const beliefJSON =
+          clinicianStates[this.id as keyof typeof clinicianStates];
+        if (beliefJSON && Object.entries(JSON.parse(beliefJSON)).length > 0) {
+          this.beliefs = JSON.parse(beliefJSON);
+          beliefsSet = true;
         }
       }
 
@@ -171,8 +197,9 @@ class Agent {
           this.addBelief(beliefs[i]);
         }
       }
-    } catch (e) {
-      console.log(this.id + e);
+    } catch (error) {
+      console.log("Here");
+      console.log(error);
     }
   }
 
@@ -183,11 +210,18 @@ class Agent {
    */
   mergeBeliefs(beliefs: Belief): void {
     Object.entries(beliefs).forEach(([key, innerObj]) => {
+      // Non existing keys
       if (!(key in this.beliefs)) {
         this.beliefs[key] = innerObj;
       } else {
+        // Replace current LastActivity if it is null
         Object.entries(innerObj).forEach(([attribute, value]) => {
-          this.beliefs[key][attribute] = value;
+          if (
+            attribute === CommonAttributes.LAST_ACTIVITY &&
+            !this.beliefs[key][attribute]
+          ) {
+            this.beliefs[key][attribute] = value;
+          }
         });
       }
     });

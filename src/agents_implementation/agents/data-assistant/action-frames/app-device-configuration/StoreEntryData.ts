@@ -3,11 +3,18 @@ import Activity from "../../../../agent_framework/base/Activity";
 import Agent from "../../../../agent_framework/base/Agent";
 import Belief from "../../../../agent_framework/base/Belief";
 import Precondition from "../../../../agent_framework/base/Precondition";
-import ProcedureConst from "../../../../agent_framework/const/ProcedureConst";
+import {
+  ProcedureConst,
+  AsyncStorageKeys,
+  CommonAttributes,
+  BeliefKeys,
+  ClinicianAttributes,
+  ProcedureAttributes
+} from "../../../../agent_framework/AgentEnums";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import agentAPI from "../../../../agent_framework/AgentAPI";
 import { createClinicianInfo, createClinicianProtectedInfo } from "aws";
-import { AsyncStorageKeys } from "agents_implementation/agent_framework/const/AsyncStorageKeys";
+
 /**
  * Class to represent the activity for storing clinician's entry data.
  * This happens in Procedure App Device Configuration (ADC).
@@ -25,12 +32,28 @@ class StoreEntryData extends Activity {
     await super.doActivity(agent);
 
     // Update Beliefs
-    agent.addBelief(new Belief(agent.getID(), "lastActivity", this.getID()));
-    agent.addBelief(new Belief("Clinician", "retrieveEntry", false));
+    agent.addBelief(
+      new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
+    );
+    agent.addBelief(
+      new Belief(
+        BeliefKeys.CLINICIAN,
+        ClinicianAttributes.RETRIEVE_ENTRY,
+        false
+      )
+    );
 
     try {
-      const data = agentAPI.getFacts().Clinician.entryData;
-      const clinicianUsername = agentAPI.getFacts().Clinician.username;
+      // Gets sign up details and username from facts
+      const data =
+        agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[
+          ClinicianAttributes.ENTRY_DATA
+        ];
+      const clinicianUsername =
+        agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[
+          ClinicianAttributes.USERNAME
+        ];
+
       if (data && clinicianUsername) {
         // Create new ClinicianInfo
         const response = await createClinicianInfo({
@@ -62,10 +85,12 @@ class StoreEntryData extends Activity {
 
           // Stores clinicianID and clinician locally
           await AsyncStorage.multiSet([
-            [AsyncStorageKeys.ClinicianID, newClinicianInfo.clinicianID],
-            [AsyncStorageKeys.Clinician, JSON.stringify(newClinicianInfo)]
+            [AsyncStorageKeys.CLINICIAN_ID, newClinicianInfo.clinicianID],
+            [AsyncStorageKeys.CLINICIAN, JSON.stringify(newClinicianInfo)]
           ]);
-          await AsyncStorage.removeItem(AsyncStorageKeys.SignUpDetails);
+
+          // Removes sign up details from local storage
+          await AsyncStorage.removeItem(AsyncStorageKeys.SIGN_UP_DETAILS);
         }
       }
     } catch (error) {
@@ -74,11 +99,26 @@ class StoreEntryData extends Activity {
     }
 
     // Update Facts
-    agentAPI.addFact(new Belief("Clinician", "configured", true));
-    agentAPI.addFact(new Belief("Clinician", "entryData", null), false);
-    agentAPI.addFact(new Belief("Clinician", "username", null), false);
     agentAPI.addFact(
-      new Belief("Procedure", "ADC", ProcedureConst.INACTIVE),
+      new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.CONFIGURED, true)
+    );
+    // Removes sign up details from facts
+    agentAPI.addFact(
+      new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.ENTRY_DATA, null),
+      false
+    );
+    // Removes username from facts
+    agentAPI.addFact(
+      new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.USERNAME, null),
+      false
+    );
+    // Stops the procedure
+    agentAPI.addFact(
+      new Belief(
+        BeliefKeys.PROCEDURE,
+        ProcedureAttributes.ADC,
+        ProcedureConst.INACTIVE
+      ),
       true,
       true
     );
@@ -86,9 +126,21 @@ class StoreEntryData extends Activity {
 }
 
 // Rules or preconditions for activating the StoreEntryData class
-const rule1 = new Precondition("Clinician", "retrieveEntry", true);
-const rule2 = new Precondition("Clinician", "configured", false);
-const rule3 = new Precondition("Procedure", "ADC", ProcedureConst.ACTIVE);
+const rule1 = new Precondition(
+  BeliefKeys.CLINICIAN,
+  ClinicianAttributes.RETRIEVE_ENTRY,
+  true
+);
+const rule2 = new Precondition(
+  BeliefKeys.CLINICIAN,
+  ClinicianAttributes.CONFIGURED,
+  false
+);
+const rule3 = new Precondition(
+  BeliefKeys.PROCEDURE,
+  ProcedureAttributes.ADC,
+  ProcedureConst.ACTIVE
+);
 
 // Action Frame for StoreEntryData class
 const af_StoreEntryData = new Actionframe(

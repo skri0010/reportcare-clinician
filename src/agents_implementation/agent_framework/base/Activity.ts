@@ -1,4 +1,4 @@
-import ActivityStatus from "../const/ActivityStatus";
+import { ActivityStatus } from "../AgentEnums";
 import Agent from "./Agent";
 
 /**

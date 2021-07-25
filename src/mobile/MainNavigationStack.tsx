@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { BottomNavigationBar } from "./BottomNavigationBar";
@@ -11,6 +11,13 @@ import { ms } from "react-native-size-matters";
 import { useToast } from "react-native-toast-notifications";
 import i18n from "util/language/i18n";
 import { AuthState } from "./auth_screens";
+import {
+  AppAttributes,
+  BeliefKeys
+} from "agents_implementation/agent_framework/AgentEnums";
+import Belief from "agents_implementation/agent_framework/base/Belief";
+import agentAPI from "agents_implementation/agent_framework/AgentAPI";
+import { useNetInfo } from "@react-native-community/netinfo";
 
 interface MainNavigationStackProps {
   setAuthState: (state: string) => void;
@@ -26,6 +33,11 @@ export const MainNavigationStack: FC<MainNavigationStackProps> = ({
   }));
 
   const toast = useToast();
+  const netInfo = useNetInfo();
+
+  // States related to internet connection
+  const [successToastShown, setSuccessToast] = useState(false);
+  const [warningToastShown, setWarningToast] = useState(false);
 
   const screenHeaderStyle = {
     backgroundColor: colors.primaryBarColor,
@@ -43,6 +55,40 @@ export const MainNavigationStack: FC<MainNavigationStackProps> = ({
       setAuthState(AuthState.SIGNED_OUT);
     });
   };
+
+  useEffect(() => {
+    if (netInfo.isConnected && netInfo.isInternetReachable) {
+      agentAPI.addFact(new Belief(BeliefKeys.APP, AppAttributes.ONLINE, true));
+      if (warningToastShown && !successToastShown) {
+        toast.show(i18n.t("Internet_Connection.OnlineNotice"), {
+          type: "success"
+        });
+        setSuccessToast(true);
+        setWarningToast(false);
+      }
+    } else if (
+      netInfo.isConnected === false ||
+      netInfo.isInternetReachable === false
+    ) {
+      agentAPI.addFact(
+        new Belief(BeliefKeys.APP, AppAttributes.ONLINE, null),
+        false
+      );
+      if (!warningToastShown) {
+        toast.show(i18n.t("Internet_Connection.OfflineNotice"), {
+          type: "warning"
+        });
+        setWarningToast(true);
+        setSuccessToast(false);
+      }
+    }
+  }, [
+    netInfo.isConnected,
+    netInfo.isInternetReachable,
+    toast,
+    successToastShown,
+    warningToastShown
+  ]);
 
   return (
     <NavigationContainer>

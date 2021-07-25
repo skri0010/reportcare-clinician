@@ -1,4 +1,4 @@
-import AframeStatus from "../const/AframeStatus";
+import { AframeStatus } from "../AgentEnums";
 import Activity from "./Activity";
 import Precondition from "./Precondition";
 

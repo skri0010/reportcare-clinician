@@ -6,18 +6,19 @@ import af_UpdatePatientClinican from "./action-frames/new-patient-registration/U
 import af_RetrievePatientDetails from "./action-frames/hf-outcome-trends/RetrievePatientDetails";
 import af_RequestDetailsDisplay from "./action-frames/hf-outcome-trends/RequestDetailsDisplay";
 import af_RetrieveRolePatients from "./action-frames/hf-outcome-trends/RetrieveRolePatients";
-
-const agentId = "DTA";
+import {
+  AgentIDs,
+  CommonAttributes
+} from "agents_implementation/agent_framework/AgentEnums";
 
 // Initial Beliefs of Agent
 
 // App Device Configuration
-const belief1 = new Belief(agentId, "lastActivity", null);
-const belief2 = new Belief("Clinician", "baselineUpdated", false);
+const belief1 = new Belief(AgentIDs.DTA, CommonAttributes.LAST_ACTIVITY, null);
 
 // Data Assistant Agent
 const agentDTA = new Agent(
-  agentId,
+  AgentIDs.DTA,
   [
     af_StoreEntryData,
     af_RetrieveEntryData,
@@ -26,7 +27,7 @@ const agentDTA = new Agent(
     af_RequestDetailsDisplay,
     af_RetrieveRolePatients
   ], // action frame
-  [belief1, belief2] // beliefs
+  [belief1] // beliefs
 );
 
 export default agentDTA;

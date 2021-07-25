@@ -21,8 +21,15 @@ import { useToast } from "react-native-toast-notifications";
 import { LoadingIndicator } from "components/LoadingIndicator";
 import agentAPS from "agents_implementation/agents/app-configuration-assistant/APS";
 import Belief from "agents_implementation/agent_framework/base/Belief";
-import ProcedureConst from "agents_implementation/agent_framework/const/ProcedureConst";
-import { AsyncStorageKeys } from "agents_implementation/agent_framework/const/AsyncStorageKeys";
+import {
+  ProcedureConst,
+  AsyncStorageKeys,
+  BeliefKeys,
+  AppAttributes,
+  ClinicianAttributes,
+  ProcedureAttributes
+} from "agents_implementation/agent_framework/AgentEnums";
+import { useNetInfo } from "@react-native-community/netinfo";
 
 export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
   navigation,
@@ -39,7 +46,13 @@ export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
   const [inputValid, setInputValid] = useState(false);
   const [signingIn, setSigningIn] = useState(false);
 
+  // States related to internet connection
+  const [connecting, setConnecting] = useState(false);
+  const [successToastShown, setSuccessToast] = useState(false);
+  const [warningToastShown, setWarningToast] = useState(false);
+
   const toast = useToast();
+  const netInfo = useNetInfo();
 
   /**
    * Signs in
@@ -53,17 +66,29 @@ export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
       password: password
     })
       .then(async () => {
-        await AsyncStorage.setItem(AsyncStorageKeys.ClinicianID, username);
+        await AsyncStorage.setItem(AsyncStorageKeys.USERNAME, username);
 
         // Triggers initialization of agents
         agentAPI.startAgents();
 
         // Triggers APS to retrieve existing entry or create new entry
         setTimeout(() => {
-          agentAPS.addBelief(new Belief("App", "configured", true));
-          agentAPS.addBelief(new Belief("Clinician", "hasEntry", false));
+          agentAPS.addBelief(
+            new Belief(BeliefKeys.APP, AppAttributes.CONFIGURED, true)
+          );
+          agentAPS.addBelief(
+            new Belief(
+              BeliefKeys.CLINICIAN,
+              ClinicianAttributes.HAS_ENTRY,
+              false
+            )
+          );
           agentAPI.addFact(
-            new Belief("Procedure", "ADC", ProcedureConst.ACTIVE)
+            new Belief(
+              BeliefKeys.PROCEDURE,
+              ProcedureAttributes.ADC,
+              ProcedureConst.ACTIVE
+            )
           );
         }, 1000);
 
@@ -71,15 +96,18 @@ export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
           // Checks facts every 1s to determine if the chain of actions has been completed.
           const checkProcedure = setInterval(async () => {
             const facts = agentAPI.getFacts();
-            if (facts.Procedure.ADC === ProcedureConst.INACTIVE) {
+            if (
+              facts[BeliefKeys.PROCEDURE][ProcedureAttributes.ADC] ===
+              ProcedureConst.INACTIVE
+            ) {
               setSigningIn(false);
               clearInterval(checkProcedure);
 
               // Ensures that entry has been successfully retrieved or created
               const [[, clinicianId], [, clinician]] =
                 await AsyncStorage.multiGet([
-                  AsyncStorageKeys.ClinicianID,
-                  AsyncStorageKeys.Clinician
+                  AsyncStorageKeys.CLINICIAN_ID,
+                  AsyncStorageKeys.CLINICIAN
                 ]);
               if (clinicianId && clinician) {
                 toast.show(i18n.t("Auth_SignIn.SignInSuccessful"), {
@@ -120,6 +148,39 @@ export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
   useEffect(() => {
     setInputValid(validateUsername(username) && validatePassword(password));
   }, [username, password]);
+
+  // Checks for internet connection
+  useEffect(() => {
+    if (
+      netInfo.isConnected === false ||
+      netInfo.isInternetReachable === false
+    ) {
+      if (!warningToastShown) {
+        toast.show(i18n.t("Internet_Connection.OnlineToSignIn"), {
+          type: "danger"
+        });
+        setWarningToast(true);
+        setSuccessToast(false);
+      }
+      setConnecting(true);
+    } else if (netInfo.isConnected && netInfo.isInternetReachable) {
+      agentAPI.addFact(new Belief(BeliefKeys.APP, AppAttributes.ONLINE, true));
+      if (warningToastShown && !successToastShown) {
+        toast.show(i18n.t("Internet_Connection.OnlineNotice"), {
+          type: "success"
+        });
+        setSuccessToast(true);
+        setWarningToast(false);
+      }
+      setConnecting(false);
+    }
+  }, [
+    netInfo.isConnected,
+    netInfo.isInternetReachable,
+    successToastShown,
+    toast,
+    warningToastShown
+  ]);
 
   // Local styles
   const inputLabelStyle = [styles.inputLabel, { fontSize: fonts.h3Size }];
@@ -271,7 +332,7 @@ export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
           </View>
         </View>
       </SafeAreaView>
-      {signingIn && <LoadingIndicator />}
+      {(signingIn || connecting) && <LoadingIndicator />}
     </ScreenWrapper>
   );
 };
