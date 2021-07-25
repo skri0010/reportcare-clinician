@@ -111,15 +111,13 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
   // Validates inputs
   useEffect(() => {
     setInputValid(
-      name !== "" &&
+      (name &&
         validateEmail(email) &&
         validateUsername(username) &&
-        role !== "" &&
-        role !== undefined &&
-        hospital !== "" &&
-        hospital !== undefined &&
+        role &&
+        hospital &&
         validatePassword(password) &&
-        passwordMatch
+        passwordMatch) as boolean
     );
   }, [name, email, username, role, hospital, password, passwordMatch]);
 
