@@ -1,5 +1,67 @@
 {
   "welcome": "Welcome",
 
-  "Alerts": "Alerts"
+  "Alerts": "Alerts",
+
+  "Auth_SignIn": {
+    "SignIn": "Sign In",
+    "Username": "Username",
+    "UsernamePlaceholder": "Enter username",
+    "UsernameError": "Username must be 3 to 16 characters long",
+    "Password": "Password",
+    "PasswordPlaceholder": "Enter password",
+    "PasswordError": "Password must be at least 8 characters long with at least 1 uppercase letter and number",
+    "ForgotPassword": "Forgot password?",
+    "PromptRegister": "Don't have an account? Register ",
+    "RedirectToRegister": "here",
+    "SignInSuccessful": "Sign in successful",
+    "ConfigurationFailed": "Failed to configure the app",
+    "SignInFailed": "Failed to sign in.\nPlease ensure that the username and password are correct.",
+    "ResendConfirmCode": "User has not been confirmed.\nA 6-digit verification code has been sent to your email."
+  },
+  "Auth_Registration": {
+    "RegisterAccount": "Register Account",
+    "Name": "Name",
+    "NamePlaceholder": "Enter name",
+    "Email": "Email",
+    "EmailPlaceholder": "Enter email",
+    "EmailError": "Invalid email address",
+    "Role": "Role",
+    "RolePlaceholder": "-- Select a role --",
+    "EP": "Electrophysiologist",
+    "MedicalOfficer": "Medical Officer",
+    "HFSpecialist": "Heart Failure Specialist",
+    "Nurse": "Nurse",
+    "Pharmacist": "Pharmacist",
+    "Hospital": "Hospital",
+    "HospitalPlaceholder": "-- Select a hospital --",
+    "ConfirmPassword": "Confirm Password",
+    "ConfirmPasswordPlaceholder": "Confirm password",
+    "ConfirmPasswordError": "Passwords did not match",
+    "Register": "Register",
+    "CodeSent": "A 6-digit verification code has been sent to your email",
+    "RegistrationFailed": "Failed to register.\nA user with the same username may already exist."
+  },
+  "Auth_ConfirmRegistration": {
+    "ConfirmRegistration": "Confirm Registration",
+    "VerificationCode": "Verification Code",
+    "VerificationCodePlaceholder": "Enter verification code",
+    "VerificationCodeError": "Verification code must have 6 digits",
+    "Confirm": "Confirm",
+    "RegistrationSuccessful": "Registration successful",
+    "ConfirmRegistrationFailed": "Failed to confirm registration.\nPlease ensure that the username and verification code are correct."
+  },
+  "Auth_ForgotPassword": {
+    "ResetPassword": "Reset Password",
+    "NewPassword": "New Password",
+    "NewPasswordPlaceholder": "Enter new password",
+    "Submit": "Submit",
+    "SendCode": "Send Code",
+    "CodeSendFailed": "Failed to send verification code.\nPlease ensure that the username is correct.",
+    "ResetPasswordSuccessful": "Password reset successful",
+    "ResetPasswordFailed": "Failed to reset password.\nPlease ensure that the verification code is correct."
+  },
+  "Auth_SignOut": {
+    "SignOutSuccessful": "Sign out successful"
+  }
 }

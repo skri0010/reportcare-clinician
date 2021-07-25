@@ -83,12 +83,31 @@ export declare class ClinicianInfo {
   readonly id: string;
   readonly name: string;
   readonly hospitalName: string;
-  readonly clinicianID: string;
   readonly role: string;
+  readonly clinicianID: string;
+  readonly protectedInfo?: ClinicianProtectedInfo;
+  readonly owner: string;
+  constructor(init: ModelInit<ClinicianInfo>);
+  static copyOf(source: ClinicianInfo, mutator: (draft: MutableModel<ClinicianInfo>) => MutableModel<ClinicianInfo> | void): ClinicianInfo;
+}
+
+export declare class ClinicianProtectedInfo {
+  readonly id: string;
   readonly facts: string;
   readonly APS: string;
   readonly DTA: string;
   readonly UXSA: string;
-  constructor(init: ModelInit<ClinicianInfo>);
-  static copyOf(source: ClinicianInfo, mutator: (draft: MutableModel<ClinicianInfo>) => MutableModel<ClinicianInfo> | void): ClinicianInfo;
+  readonly clinicianInfo: ClinicianInfo;
+  readonly owner: string;
+  constructor(init: ModelInit<ClinicianProtectedInfo>);
+  static copyOf(source: ClinicianProtectedInfo, mutator: (draft: MutableModel<ClinicianProtectedInfo>) => MutableModel<ClinicianProtectedInfo> | void): ClinicianProtectedInfo;
+}
+
+export declare class ClinicianPatientMap {
+  readonly id: string;
+  readonly patientID: string;
+  readonly clinicianInfo: ClinicianInfo;
+  readonly owner: string;
+  constructor(init: ModelInit<ClinicianPatientMap>);
+  static copyOf(source: ClinicianPatientMap, mutator: (draft: MutableModel<ClinicianPatientMap>) => MutableModel<ClinicianPatientMap> | void): ClinicianPatientMap;
 }

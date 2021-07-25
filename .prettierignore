@@ -5,5 +5,14 @@ dist
 node_modules
 
 # AWS folders
-amplify
-src/aws
+amplify/.config/*
+amplify/cli.json
+amplify/team-provider-info.json
+amplify/backend/backend-config.json
+amplify/backend/tags
+amplify/backend/api/reportcare/*
+amplify/backend/auth
+!**/schema.graphql
+src/aws/*
+!src/aws/index.ts
+!src/aws/typedAPI
