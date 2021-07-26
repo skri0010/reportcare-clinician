@@ -1,17 +1,12 @@
 import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
-import {
-  View,
-  FlatList,
-  TextStyle,
-  TouchableOpacity,
-  useWindowDimensions
-} from "react-native";
+import { View, FlatList, TextStyle, TouchableOpacity } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { mockPatients } from "mock/mockPatients";
 import { PatientRequestRow } from "components/RowComponents/PatientRows/PatientRequestRow";
 import { H4, H6 } from "components/Text";
+import { CardWrapper } from "./CardWrapper";
 // const Tab = createMaterialTopTabNavigator();
 
 export const RequestsByMariaCard: FC = () => {
@@ -23,19 +18,14 @@ export const RequestsByMariaCard: FC = () => {
   const detailsColors = { color: colors.secondaryTextColor } as TextStyle;
 
   return (
-    <View style={styles.card}>
+    <CardWrapper>
       {/* Requests by MARIA */}
       <View style={styles.titleContainer}>
         <H4 text="Requests by Maria" style={[styles.title, titleColor]} />
-        <H6 text="   (2 remaining)" style={[styles.details, detailsColors]} />
+        <H6 text="(2 remaining)" style={[styles.details, detailsColors]} />
       </View>
       {/* Patient Requests List */}
-      <View
-        style={[
-          styles.content,
-          { maxHeight: useWindowDimensions().height * 0.38 }
-        ]}
-      >
+      <View style={[styles.content]}>
         <View style={[styles.patients]}>
           <FlatList
             initialNumToRender={3}
@@ -74,18 +64,11 @@ export const RequestsByMariaCard: FC = () => {
           </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </CardWrapper>
   );
 };
 
 const styles = ScaledSheet.create({
-  card: {
-    backgroundColor: "white",
-    padding: "10@ms",
-    margin: "20@ms",
-    borderRadius: "5@ms",
-    height: "100%"
-  },
   title: {
     fontWeight: "bold",
     paddingBottom: "8@ms"
@@ -94,9 +77,7 @@ const styles = ScaledSheet.create({
     fontWeight: "bold"
   },
   content: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "flex-start"
+    flexDirection: "column"
     // TO-DO jy: explore options to resolve flatlist height issue
   },
   patients: {
@@ -112,13 +93,11 @@ const styles = ScaledSheet.create({
     padding: "5@ms"
   },
   buttonContainer: {
-    display: "flex",
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center"
   },
   titleContainer: {
-    display: "flex",
     flexDirection: "row",
     alignItems: "baseline"
   }

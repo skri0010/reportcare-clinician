@@ -7,6 +7,7 @@ import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { mockPatientRowDetails } from "mock/mockTodoDetails";
 import { RiskLevel } from "models/RiskLevel";
 import { H4 } from "components/Text/index";
+import { CardWrapper } from "./CardWrapper";
 
 export const TodosCard: FC = () => {
   const { colors } = select((state: RootState) => ({
@@ -16,7 +17,7 @@ export const TodosCard: FC = () => {
   const titleColor = { color: colors.primaryTextColor } as TextStyle;
 
   return (
-    <View style={styles.card}>
+    <CardWrapper>
       <View style={styles.titleContainer}>
         <H4 text="Todos" style={[styles.title, titleColor]} />
       </View>
@@ -40,18 +41,11 @@ export const TodosCard: FC = () => {
           keyExtractor={(item) => item.id}
         />
       </View>
-    </View>
+    </CardWrapper>
   );
 };
 
 const styles = ScaledSheet.create({
-  card: {
-    backgroundColor: "white",
-    padding: "10@ms",
-    margin: "20@ms",
-    borderRadius: "5@ms",
-    height: "100%"
-  },
   title: {
     fontWeight: "bold",
     paddingBottom: "5@ms"

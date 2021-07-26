@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { View } from "react-native";
+import { View, Text } from "react-native";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { ScreenName, WithSideTabsProps } from "web/screens";
 import { WelcomeCard } from "./WelcomeCard";
@@ -14,15 +14,9 @@ export const HomeScreen: FC<WithSideTabsProps[ScreenName.HOME]> = () => {
     <ScreenWrapper>
       <WelcomeCard name="Nailah" />
       <View style={styles.bottomContainer}>
-        <View style={styles.item}>
-          <RequestsByMariaCard />
-        </View>
-        <View style={styles.item}>
-          <AlertsCard />
-        </View>
-        <View style={styles.item}>
-          <TodosCard />
-        </View>
+        <RequestsByMariaCard />
+        <AlertsCard />
+        <TodosCard />
       </View>
     </ScreenWrapper>
   );
@@ -30,13 +24,7 @@ export const HomeScreen: FC<WithSideTabsProps[ScreenName.HOME]> = () => {
 
 const styles = ScaledSheet.create({
   bottomContainer: {
-    display: "flex",
     flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "flex-start"
-  },
-  item: {
-    flexBasis: "33.33%",
-    height: "95%"
+    justifyContent: "space-between"
   }
 });
