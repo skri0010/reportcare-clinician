@@ -2,6 +2,7 @@ import { FontScheme } from "./model";
 import { ms } from "react-native-size-matters";
 
 export const normalDesktopFontScheme: FontScheme = {
+  appNameSize: ms(25),
   h1Size: ms(18),
   h2Size: ms(16),
   h3Size: ms(14),

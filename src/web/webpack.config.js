@@ -47,7 +47,10 @@ const compileNodeModules = [
   "react-native-size-matters",
   "react-native-tab-view",
   "react-native-ratings",
-  "react-native-vector-icons"
+  "react-native-vector-icons",
+  "react-native-chart-kit",
+  "@react-native-picker/picker",
+  "react-native-web"
 ].map((moduleName) => path.resolve(appDirectory, `node_modules/${moduleName}`));
 
 // Loader for react-native packages to be compiled
@@ -134,6 +137,14 @@ module.exports = {
   resolve: {
     alias: {
       "react-native$": "react-native-web",
+      "react-native-svg": "react-native-svg-web",
+      [path.resolve(
+        appDirectory,
+        "src/agents_implementation/agent_framework/management/MobileAgentManagement"
+      )]: path.resolve(
+        appDirectory,
+        "src/agents_implementation/agent_framework/management/WebAgentManagement"
+      ),
       ...srcFolderAliasPaths
     },
     fallback: {

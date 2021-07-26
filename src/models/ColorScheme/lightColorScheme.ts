@@ -44,5 +44,11 @@ export const lightColorScheme: ColorScheme = {
 
   // Others
   riskLevelBackgroundColors: riskLevelBackgroundColors,
-  riskLevelBorderColors: riskLevelBorderColors
+  riskLevelBorderColors: riskLevelBorderColors,
+
+  // Errors
+  errorColor: "#ff1e00",
+
+  // Overlay
+  overlayColor: "#f5fcff88"
 };

@@ -7,18 +7,18 @@ import Performative from "../../../../agent_framework/const/Performative";
 import ProcedureConst from "../../../../agent_framework/const/ProcedureConst";
 
 /**
- * The class represents the activity for requesting storage for baseline.
- * This comes from Day-1 Scenario or Procedure ADC (App Device Configuration).
+ * The class represents the activity for requesting retrieval of all patients specific to a role.
+ * This happens in Procedure HF Outcome Trends (HF-OTP-I).
  */
-class RequestStore extends Communicate {
+class RequestRetrieveAll extends Communicate {
   /**
-   * Constructor for the RequestStore class
+   * Constructor for the RequestRetrieveAll class
    */
   constructor() {
     super(
-      "RequestStore",
+      "RequestRetrieveAll",
       Performative.REQUEST,
-      new Belief("Clinician", "baselineUpdated", true),
+      new Belief("Patient", "retrieveAll", true),
       ["DTA"]
     );
   }
@@ -40,15 +40,15 @@ class RequestStore extends Communicate {
   }
 }
 
-// rules or preconditions for activating the RequestStore class
-const rule1 = new Precondition("APS", "lastActivity", "AssociateData");
-const rule2 = new Precondition("Procedure", "ADC", ProcedureConst.ACTIVE);
+// Rules or preconditions for activating the RequestRetrieveAll class
+const rule1 = new Precondition("Procedure", "HF-OTP-I", ProcedureConst.ACTIVE);
+const rule2 = new Precondition("UXSA", "lastActivity", "RetrieveRole");
 
-// Actionframe of the RequestStore class
-const af_RequestStore = new Actionframe(
-  "AF_RequestStore",
+// Actionframe of the RequestRetrieveAll class
+const af_RequestRetrieveAll = new Actionframe(
+  "AF_RequestRetrieveAll",
   [rule1, rule2],
-  new RequestStore()
+  new RequestRetrieveAll()
 );
 
-export default af_RequestStore;
+export default af_RequestRetrieveAll;

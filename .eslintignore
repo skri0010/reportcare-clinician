@@ -4,6 +4,12 @@ dist
 # Installed packages
 node_modules
 
+# Sandbox
+sandbox
+
 # Amplify folders
 amplify
-src/aws
+src/aws/models
+src/aws/graphql
+src/aws/API.ts
+src\aws\models
