@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { View } from "react-native";
+import { ScrollView } from "react-native";
 import { RootState, select } from "util/useRedux";
 import { ms } from "react-native-size-matters";
 
@@ -9,7 +9,7 @@ export const ScreenWrapper: FC = ({ children }) => {
   }));
 
   return (
-    <View
+    <ScrollView
       style={{
         backgroundColor: colors.primaryWebBackgroundColor,
         paddingVertical: ms(20),
@@ -17,6 +17,6 @@ export const ScreenWrapper: FC = ({ children }) => {
       }}
     >
       {children}
-    </View>
+    </ScrollView>
   );
 };

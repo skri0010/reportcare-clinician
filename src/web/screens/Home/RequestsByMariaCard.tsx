@@ -1,104 +1,98 @@
 import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
-import { View, FlatList, TextStyle, TouchableOpacity } from "react-native";
+import { View, FlatList, TextStyle } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { mockPatients } from "mock/mockPatients";
 import { PatientRequestRow } from "components/RowComponents/PatientRows/PatientRequestRow";
 import { H4, H6 } from "components/Text";
 import { CardWrapper } from "./CardWrapper";
-// const Tab = createMaterialTopTabNavigator();
+import { FloatingShowMoreButton } from "components/Buttons/FloatingShowMoreButton";
 
-export const RequestsByMariaCard: FC = () => {
+interface RequestsByMariaCardProps {
+  maxHeight: number;
+}
+
+export const RequestsByMariaCard: FC<RequestsByMariaCardProps> = ({
+  maxHeight
+}) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
   }));
 
   const titleColor = { color: colors.primaryTextColor } as TextStyle;
   const detailsColors = { color: colors.secondaryTextColor } as TextStyle;
+  // JH-TODO: Replace with actual models
+  const maxPatientsShown = Math.min(mockPatients.length, 10); // At 10 items, `Show More` button is displayed
+  const lastPatientIndex = maxPatientsShown - 1;
 
   return (
-    <CardWrapper>
+    <CardWrapper maxHeight={maxHeight}>
       {/* Requests by MARIA */}
       <View style={styles.titleContainer}>
         <H4 text="Requests by Maria" style={[styles.title, titleColor]} />
         <H6 text="(2 remaining)" style={[styles.details, detailsColors]} />
       </View>
       {/* Patient Requests List */}
-      <View style={[styles.content]}>
-        <View style={[styles.patients]}>
-          <FlatList
-            initialNumToRender={3}
-            maxToRenderPerBatch={3}
-            windowSize={3}
-            ItemSeparatorComponent={() => <ItemSeparator />}
-            ListHeaderComponent={() => <ItemSeparator />}
-            ListFooterComponent={() => <ItemSeparator />}
-            data={mockPatients}
-            renderItem={({ item }) => (
+      <View style={styles.patientRequestsContainer}>
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          ItemSeparatorComponent={() => <ItemSeparator />}
+          data={mockPatients.slice(0, maxPatientsShown)}
+          renderItem={({ item, index }) => {
+            return index === lastPatientIndex ? (
+              <>
+                <PatientRequestRow
+                  generalDetails={item.generalDetails}
+                  request={item.request}
+                  disabled
+                  reduceOpacity
+                />
+                {/* Disable last row, display "Show More button" */}
+                <FloatingShowMoreButton />
+              </>
+            ) : (
               <PatientRequestRow
                 generalDetails={item.generalDetails}
                 request={item.request}
               />
-            )}
-            keyExtractor={(item) => item.itemId}
-          />
-        </View>
-
-        <View style={styles.buttonContainer}>
-          {/* Might have to change to use absolute positioning later on */}
-          <TouchableOpacity
-            onPress={() => null}
-            style={[
-              { backgroundColor: colors.primaryButtonColor },
-              styles.button
-            ]}
-          >
-            <H6
-              text="SHOW MORE"
-              style={[
-                { color: colors.primaryContrastTextColor },
-                styles.buttonText
-              ]}
-            />
-          </TouchableOpacity>
-        </View>
+            );
+          }}
+          keyExtractor={(item) => item.itemId}
+        />
       </View>
     </CardWrapper>
   );
 };
 
 const styles = ScaledSheet.create({
+  titleContainer: {
+    flexDirection: "row",
+    alignItems: "baseline"
+  },
   title: {
     fontWeight: "bold",
     paddingBottom: "8@ms"
   },
+  patientRequestsContainer: {
+    flex: 1
+  },
   details: {
     fontWeight: "bold"
   },
-  content: {
-    flexDirection: "column"
-    // TO-DO jy: explore options to resolve flatlist height issue
-  },
-  patients: {
-    maxHeight: "100%",
-    marginBottom: "10@ms"
-  },
-  buttonText: {
-    textAlign: "center"
-  },
   button: {
-    borderRadius: "6@ms",
+    borderRadius: "5@ms",
     width: "50%",
     padding: "5@ms"
   },
   buttonContainer: {
-    flexDirection: "row",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    position: "absolute",
+    bottom: "10@ms",
+    width: "100%"
   },
-  titleContainer: {
-    flexDirection: "row",
-    alignItems: "baseline"
+  buttonText: {
+    textAlign: "center"
   }
 });

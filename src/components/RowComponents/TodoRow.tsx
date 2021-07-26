@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
 import { RiskLevel, getRiskLevelColor } from "models/RiskLevel";
 import { ITodoDetails } from "models/TodoDetails";
-import { View, Button, TouchableHighlight } from "react-native";
+import { View, Button, TouchableOpacity } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { H5, H6 } from "components/Text/index";
 
@@ -10,6 +10,8 @@ import { H5, H6 } from "components/Text/index";
 interface TodoRowProps {
   todoDetails: ITodoDetails;
   riskLevel: RiskLevel;
+  disabled?: boolean;
+  reduceOpacity?: boolean;
   onButtonPress?: () => void;
   onCardPress?: () => void;
 }
@@ -18,6 +20,8 @@ interface TodoRowProps {
 export const TodoRow: FC<TodoRowProps> = ({
   todoDetails,
   riskLevel,
+  disabled = false,
+  reduceOpacity = false,
   onButtonPress = () => null,
   onCardPress
 }) => {
@@ -26,7 +30,11 @@ export const TodoRow: FC<TodoRowProps> = ({
   }));
 
   return (
-    <TouchableHighlight onPress={onCardPress}>
+    <TouchableOpacity
+      onPress={onCardPress}
+      disabled={disabled || !onCardPress}
+      style={{ opacity: reduceOpacity ? 0.2 : 1 }}
+    >
       <View style={styles.mainContainer}>
         {/* Content */}
         <View
@@ -36,8 +44,7 @@ export const TodoRow: FC<TodoRowProps> = ({
               backgroundColor: getRiskLevelColor(
                 colors.riskLevelBackgroundColors,
                 riskLevel
-              ),
-              borderBottomColor: colors.primaryBorderColor
+              )
             }
           ]}
         >
@@ -76,7 +83,7 @@ export const TodoRow: FC<TodoRowProps> = ({
           />
         </View>
       </View>
-    </TouchableHighlight>
+    </TouchableOpacity>
   );
 };
 
@@ -86,7 +93,6 @@ const styles = ScaledSheet.create({
   },
   contentContainer: {
     paddingVertical: "3@ms",
-    borderBottomWidth: 1,
     flex: 1
   },
   texts: {
@@ -94,11 +100,9 @@ const styles = ScaledSheet.create({
   },
   title: {
     fontWeight: "bold",
-    // fontSize: "18@ms",
     paddingBottom: "10@ms"
   },
   name: {
-    // fontSize: "16@ms",
     paddingBottom: "15@ms"
   },
   description: {

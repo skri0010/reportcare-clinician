@@ -7,7 +7,11 @@ import { LongAlertButton } from "components/Buttons/LongAlertButton";
 import { H4, H6 } from "components/Text";
 import { CardWrapper } from "./CardWrapper";
 
-export const AlertsCard: FC = () => {
+interface AlertsCardProps {
+  maxHeight: number;
+}
+
+export const AlertsCard: FC<AlertsCardProps> = ({ maxHeight }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
   }));
@@ -16,7 +20,7 @@ export const AlertsCard: FC = () => {
   const detailsColors = { color: colors.secondaryTextColor } as TextStyle;
 
   return (
-    <CardWrapper>
+    <CardWrapper maxHeight={maxHeight}>
       <View style={styles.titleContainer}>
         <H4 text="Alerts" style={[styles.title, titleColor]} />
         <H6 text="   (2 remaining)" style={[styles.title, detailsColors]} />

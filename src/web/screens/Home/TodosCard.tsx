@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
-import { View, TextStyle, FlatList, useWindowDimensions } from "react-native";
+import { View, TextStyle, FlatList } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { TodoRow } from "components/RowComponents/TodoRow";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
@@ -8,36 +8,48 @@ import { mockPatientRowDetails } from "mock/mockTodoDetails";
 import { RiskLevel } from "models/RiskLevel";
 import { H4 } from "components/Text/index";
 import { CardWrapper } from "./CardWrapper";
+import { FloatingShowMoreButton } from "components/Buttons/FloatingShowMoreButton";
 
-export const TodosCard: FC = () => {
+interface TodosCardProps {
+  maxHeight: number;
+}
+
+export const TodosCard: FC<TodosCardProps> = ({ maxHeight }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
   }));
 
   const titleColor = { color: colors.primaryTextColor } as TextStyle;
+  // JH-TODO: Replace with actual models
+  const maxPatientsShown = Math.min(mockPatientRowDetails.length, 10); // At 10 items, `Show More` button is displayed
+  const lastPatientIndex = maxPatientsShown - 1;
 
   return (
-    <CardWrapper>
+    <CardWrapper maxHeight={maxHeight}>
       <View style={styles.titleContainer}>
         <H4 text="Todos" style={[styles.title, titleColor]} />
       </View>
-      <View
-        style={[
-          styles.content,
-          { maxHeight: useWindowDimensions().height * 0.38 }
-        ]}
-      >
+      <View style={styles.listContainer}>
         <FlatList
-          initialNumToRender={3}
-          maxToRenderPerBatch={3}
-          windowSize={3}
+          showsVerticalScrollIndicator={false}
           ItemSeparatorComponent={() => <ItemSeparator />}
-          ListHeaderComponent={() => <ItemSeparator />}
-          ListFooterComponent={() => <ItemSeparator />}
           data={mockPatientRowDetails}
-          renderItem={({ item }) => (
-            <TodoRow todoDetails={item} riskLevel={RiskLevel.HIGH} />
-          )}
+          renderItem={({ item, index }) => {
+            return index === lastPatientIndex ? (
+              <>
+                <TodoRow
+                  todoDetails={item}
+                  riskLevel={RiskLevel.HIGH}
+                  disabled
+                  reduceOpacity
+                />
+                {/* Disable last row, display "Show More button" */}
+                <FloatingShowMoreButton />
+              </>
+            ) : (
+              <TodoRow todoDetails={item} riskLevel={RiskLevel.HIGH} />
+            );
+          }}
           keyExtractor={(item) => item.id}
         />
       </View>
@@ -50,7 +62,8 @@ const styles = ScaledSheet.create({
     fontWeight: "bold",
     paddingBottom: "5@ms"
   },
-  content: {
+  listContainer: {
+    flex: 1
     // TO-DO jy: explore options to resolve flatlist height issue
   },
   titleContainer: {

@@ -9,6 +9,8 @@ export interface PatientRequestRowProps {
   generalDetails: PersonRowGeneralDetails;
   request?: string;
   time?: string;
+  disabled?: boolean;
+  reduceOpacity?: boolean;
   onRowPress?: () => void;
 }
 
@@ -16,10 +18,16 @@ export const PatientRequestRow: React.FC<PatientRequestRowProps> = ({
   generalDetails,
   request,
   time,
+  disabled = false,
+  reduceOpacity = false,
   onRowPress
 }) => {
   return (
-    <TouchableOpacity onPress={onRowPress}>
+    <TouchableOpacity
+      onPress={onRowPress}
+      disabled={disabled}
+      style={{ opacity: reduceOpacity ? 0.2 : 1 }}
+    >
       <PatientRowBase
         title={generalDetails.name}
         subtitleOne={{

@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
-import { View, TextStyle, useWindowDimensions } from "react-native";
+import { View, TextStyle } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { H1, H2, H4 } from "components/Text/index";
 import { CardWrapper } from "./CardWrapper";
@@ -20,18 +20,16 @@ export const WelcomeCard: FC<WelcomeCardProps> = ({ name }) => {
 
   return (
     <CardWrapper firstItem>
-      <View style={{ maxHeight: useWindowDimensions().height * 0.3 }}>
-        <H1 text="Dashboard" style={[styles.username, styles.dashboard]} />
-        <View style={styles.card}>
-          <H2
-            text={`Welcome Dr. ${name}`}
-            style={[styles.username, cardTextColor]}
-          />
-          <H4
-            text={`Check on your patients health, ${"\n"}monitor their vitals and chat with ${"\n"}them.`}
-            style={[styles.message, cardTextColor]}
-          />
-        </View>
+      <H1 text="Dashboard" style={[styles.username, styles.dashboard]} />
+      <View style={styles.card}>
+        <H2
+          text={`Welcome Dr. ${name}`}
+          style={[styles.username, cardTextColor]}
+        />
+        <H4
+          text={`Check on your patients health, ${"\n"}monitor their vitals and chat with ${"\n"}them.`}
+          style={[styles.message, cardTextColor]}
+        />
       </View>
     </CardWrapper>
   );

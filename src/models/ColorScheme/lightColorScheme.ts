@@ -23,7 +23,7 @@ export const lightColorScheme: ColorScheme = {
   selectedBorderColor: "#000000",
 
   // Separators
-  separatorColor: "#bababa",
+  separatorColor: "#e6e6e6",
 
   // Bars
   primaryBarColor: "#0d8ca8",
