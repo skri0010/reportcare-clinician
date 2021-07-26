@@ -1,41 +1,42 @@
 import React, { FC } from "react";
 import { View, FlatList } from "react-native";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
-import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { ScaledSheet } from "react-native-size-matters";
 import { PatientDetailsRow } from "components/RowComponents/PatientRows/PatientDetailsRow";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { mockPatients } from "mock/mockPatients";
+import { RowSelectionWrapper } from "../RowSelectionTab";
+import { createStackNavigator } from "@react-navigation/stack";
+
+const Stack = createStackNavigator();
 
 export const PatientsTab: FC = () => {
   // JH-TODO: Replace placeholder with i18n
   return (
     <ScreenWrapper>
-      <View style={[styles.searchBarWrapper]}>
-        <SearchBarComponent
-          onUserInput={() => {
-            null;
-          }}
-          onSearchClick={() => {
-            null;
-          }}
-          placeholder="Search patients"
-        />
+      <View style={{ flexDirection: "row", height: "100%" }}>
+        <View style={{ flex: 1, height: "100%" }}>
+          <RowSelectionWrapper title="Patient" riskFilterTag>
+            <FlatList
+              style={{ flex: 1 }}
+              ItemSeparatorComponent={() => <ItemSeparator />}
+              ListHeaderComponent={() => <ItemSeparator />}
+              ListFooterComponent={() => <ItemSeparator />}
+              data={mockPatients}
+              renderItem={({ item }) => (
+                <PatientDetailsRow
+                  generalDetails={item.generalDetails}
+                  patientClass={item.patientClass}
+                  age={item.age}
+                />
+              )}
+              keyExtractor={(item) => item.itemId}
+            />
+          </RowSelectionWrapper>
+        </View>
+
+        <View style={{ flex: 2, backgroundColor: "#E2E2E2" }} />
       </View>
-      <FlatList
-        ItemSeparatorComponent={() => <ItemSeparator />}
-        ListHeaderComponent={() => <ItemSeparator />}
-        ListFooterComponent={() => <ItemSeparator />}
-        data={mockPatients}
-        renderItem={({ item }) => (
-          <PatientDetailsRow
-            generalDetails={item.generalDetails}
-            patientClass={item.patientClass}
-            age={item.age}
-          />
-        )}
-        keyExtractor={(item) => item.itemId}
-      />
     </ScreenWrapper>
   );
 };
