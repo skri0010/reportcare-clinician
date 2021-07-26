@@ -38,10 +38,11 @@ export const WelcomeCard: FC<WelcomeCardProps> = ({ name }) => {
 const styles = ScaledSheet.create({
   card: {
     backgroundColor: "white",
-    padding: "10@ms",
+    padding: "6@ms",
     margin: "20@ms",
     borderRadius: "5@ms",
-    marginBottom: "-5@ms"
+    marginBottom: "-5@ms",
+    marginTop: "15@ms"
   },
   username: {
     fontWeight: "bold"
@@ -51,6 +52,6 @@ const styles = ScaledSheet.create({
   },
   dashboard: {
     margin: "10@ms",
-    marginBottom: "-9@ms"
+    marginBottom: "-10@ms"
   }
 });
