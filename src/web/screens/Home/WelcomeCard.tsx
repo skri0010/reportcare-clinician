@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
-import { View, TextStyle } from "react-native";
+import { View, TextStyle, Image } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { H1, H2, H4 } from "components/Text/index";
 import { CardWrapper } from "./CardWrapper";
@@ -21,15 +21,23 @@ export const WelcomeCard: FC<WelcomeCardProps> = ({ name }) => {
   return (
     <CardWrapper firstItem>
       <H1 text="Dashboard" style={[styles.username, styles.dashboard]} />
-      <View style={styles.card}>
-        <H2
-          text={`Welcome Dr. ${name}`}
-          style={[styles.username, cardTextColor]}
-        />
-        <H4
-          text={`Check on your patients health, ${"\n"}monitor their vitals and chat with ${"\n"}them.`}
-          style={[styles.message, cardTextColor]}
-        />
+      <View style={[styles.card, { backgroundColor: colors.primaryContrastTextColor }]}>
+        <View>
+          <H2
+            text={`Welcome Dr. ${name}`}
+            style={[styles.username, cardTextColor]}
+          />
+          <H4
+            text={`Check on your patients health, ${"\n"}monitor their vitals and chat with ${"\n"}them.`}
+            style={[styles.message, cardTextColor]}
+          />
+        </View>
+        <View>
+          <Image
+            style={styles.logo}
+            source={require("assets/heart-icon.png")}
+          />
+        </View>
       </View>
     </CardWrapper>
   );
@@ -37,12 +45,14 @@ export const WelcomeCard: FC<WelcomeCardProps> = ({ name }) => {
 
 const styles = ScaledSheet.create({
   card: {
-    backgroundColor: "white",
     padding: "6@ms",
     margin: "20@ms",
     borderRadius: "5@ms",
     marginBottom: "-5@ms",
-    marginTop: "15@ms"
+    marginTop: "15@ms",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between"
   },
   username: {
     fontWeight: "bold"
@@ -53,5 +63,9 @@ const styles = ScaledSheet.create({
   dashboard: {
     margin: "10@ms",
     marginBottom: "-10@ms"
+  },
+  logo: {
+    width: "60@ms",
+    height: "60@ms"
   }
 });
