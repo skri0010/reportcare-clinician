@@ -17,7 +17,6 @@ export const TodoCurrentTab: FC = () => {
       {/* <MainTitle title="Current Todo" /> */}
       <FlatList
         showsVerticalScrollIndicator={false}
-        style={{ flex: 1 }}
         ItemSeparatorComponent={() => <ItemSeparator />}
         ListHeaderComponent={() => <ItemSeparator />}
         ListFooterComponent={() => <ItemSeparator />}

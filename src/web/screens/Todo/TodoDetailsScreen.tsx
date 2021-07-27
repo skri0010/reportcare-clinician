@@ -1,7 +1,9 @@
 import React, { FC } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
-import { ScaledSheet } from "react-native-size-matters";
+import { View, TouchableOpacity } from "react-native";
+import { ms, ScaledSheet } from "react-native-size-matters";
 import { TodoScreenProps } from "../TodoScreenProps";
+import { H2, H3, H4, H5 } from "components/Text";
+import { RootState, select } from "util/useRedux";
 
 interface todoSectionProps {
   mainItem: string;
@@ -24,9 +26,12 @@ interface TodoDetailsProps {
 
 export const TodoSection: FC<todoSectionProps> = ({ mainItem, content }) => {
   return (
-    <View style={styles.todoTitle}>
-      <Text style={styles.todoTitleText}>{mainItem}</Text>
-      <Text style={styles.todoContentText}>{content}</Text>
+    <View>
+      <H3
+        text={mainItem}
+        style={{ fontWeight: "bold", marginBottom: ms(10) }}
+      />
+      <H4 text={content} style={{ marginBottom: ms(25) }} />
     </View>
   );
 };
@@ -36,9 +41,9 @@ export const EditHistorySection: FC<editHistorySectionProps> = ({
   timeDate
 }) => {
   return (
-    <View style={{ flexDirection: "row" }}>
-      <Text style={styles.editHistoryText}>{editType}</Text>
-      <Text>{timeDate}</Text>
+    <View style={{ display: "flex", flexDirection: "row" }}>
+      <H5 text={editType} style={{ fontWeight: "bold" }} />
+      <H5 text={timeDate} style={{ marginBottom: ms(10) }} />
     </View>
   );
 };
@@ -54,97 +59,82 @@ export const TodoDetailsScreen: FC<TodoScreenProps> = ({
   route,
   navigation
 }) => {
+  const { colors } = select((state: RootState) => ({
+    colors: state.settings.colors
+  }));
   const todoParam = route.params;
   return (
-    <View>
+    <View style={styles.container}>
       {/* Title */}
       <TodoSection mainItem="Title" content={todoParam.mainTitleContent} />
       {/* Patient */}
       <View style={styles.todoPatient}>
         <TodoSection mainItem="Patient" content={todoParam.patientContent} />
         {/* View patient details button */}
-        <View style={styles.viewTodoPatient}>
-          <TouchableOpacity
-            style={styles.viewButton}
-            onPress={() => {
-              null;
-            }}
-          >
-            <Text>View</Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity
+          style={[
+            styles.viewButton,
+            {
+              backgroundColor: colors.primaryContrastTextColor,
+              borderColor: colors.primaryTextColor
+            }
+          ]}
+          onPress={() => {
+            null;
+          }}
+        >
+          <H5 text="View" style={{ color: colors.primaryTextColor }} />
+        </TouchableOpacity>
       </View>
       {/* Notes */}
-      <TodoSection mainItem="Notes" content={todoParam.notesContent} />
+      <View style={{ marginTop: ms(10) }}>
+        <TodoSection mainItem="Notes" content={todoParam.notesContent} />
+      </View>
       {/* Edit history */}
-      <View style={styles.editHistory}>
-        <EditHistorySection
-          editType="Created on: "
-          timeDate={todoParam.createdTimeDate}
-        />
-        <EditHistorySection
-          editType="Modified on: "
-          timeDate={todoParam.modifiedTimeDate}
-        />
-        <View style={styles.editButtonContainer}>
-          <TouchableOpacity
-            style={styles.editButton}
-            onPress={() => {
-              navigation.navigate("EditTodo", todoParam);
-            }}
-          >
-            <Text style={styles.editButtonText}>Edit</Text>
-          </TouchableOpacity>
-        </View>
+      <EditHistorySection
+        editType="Created on: "
+        timeDate={todoParam.createdTimeDate}
+      />
+      <EditHistorySection
+        editType="Modified on: "
+        timeDate={todoParam.modifiedTimeDate}
+      />
+      <View style={styles.editButtonContainer}>
+        <TouchableOpacity
+          style={[
+            styles.editButton,
+            { backgroundColor: colors.primaryTodoCompleteButtonColor }
+          ]}
+          onPress={() => {
+            navigation.navigate("EditTodo", todoParam);
+          }}
+        >
+          <H2 text="Edit" style={{ color: colors.primaryContrastTextColor }} />
+        </TouchableOpacity>
       </View>
     </View>
   );
 };
 
 const styles = ScaledSheet.create({
-  todoTitle: {
-    flexDirection: "column",
-    paddingLeft: "40@ms",
-    paddingTop: "30@ms",
-    width: "85%"
-  },
-  todoTitleText: {
-    paddingBottom: "10@ms",
-    fontWeight: "bold",
-    fontSize: "14@ms"
-  },
-  todoContentText: {
-    fontSize: "10@ms",
-    flexWrap: "wrap",
-    flex: 1,
-    marginRight: "40@ms"
+  container: {
+    margin: "30@ms",
+    marginLeft: "40@ms"
   },
   todoPatient: {
-    flexDirection: "row"
-  },
-  viewTodoPatient: {
-    alignItems: "center",
-    paddingTop: "40@ms"
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center"
   },
   viewButton: {
-    width: "50@ms",
+    width: "70@ms",
     height: "20@ms",
-    borderColor: "black",
     borderWidth: "1@ms",
     borderRadius: "5@ms",
     justifyContent: "center",
     textAlign: "center",
-    backgroundColor: "white"
-  },
-  editHistory: {
-    paddingLeft: "40@ms",
-    flexDirection: "column",
-    position: "relative",
-    top: "60@ms"
-  },
-  editHistoryText: {
-    fontWeight: "bold",
-    fontSize: "10@ms"
+    marginRight: "10@ms"
   },
   editButtonContainer: {
     marginTop: "10@ms",
@@ -154,12 +144,7 @@ const styles = ScaledSheet.create({
     textAlign: "center",
     justifyContent: "space-evenly",
     borderRadius: "5@ms",
-    backgroundColor: "#A484FF",
     width: "80@ms",
     height: "30@ms"
-  },
-  editButtonText: {
-    color: "white",
-    fontSize: "16@ms"
   }
 });

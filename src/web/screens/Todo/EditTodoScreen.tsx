@@ -1,19 +1,19 @@
 import React, { FC, useState } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  ScrollView
-} from "react-native";
-import { ScaledSheet } from "react-native-size-matters";
+import { View, TouchableOpacity, TextInput, ScrollView } from "react-native";
+import { ms, ScaledSheet } from "react-native-size-matters";
 import { EditTodoScreenProps } from "../TodoScreenProps";
 import { TodoSection, EditHistorySection } from "./TodoDetailsScreen";
+import { H3 } from "components/Text";
+import { RootState, select } from "util/useRedux";
 
 export const EditTodoScreen: FC<EditTodoScreenProps> = ({
   route,
   navigation
 }) => {
+  const { colors } = select((state: RootState) => ({
+    colors: state.settings.colors
+  }));
+
   const editTodoParam = route.params;
   const [titleInput, setTitleInput] = useState<string>(
     editTodoParam.mainTitleContent
@@ -34,26 +34,37 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
   console.log(editTodoParam);
   return (
     <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
-      <View style={styles.todoTitle}>
-        <Text style={styles.todoTitleText}>Title</Text>
+      <View style={styles.container}>
+        <H3 text="Title" style={{ fontWeight: "bold", marginBottom: ms(10) }} />
         <TextInput
           value={titleInput}
-          style={styles.titleInput}
+          style={[
+            styles.titleInput,
+            {
+              backgroundColor: colors.primaryContrastTextColor,
+              borderColor: colors.primaryTextColor
+            }
+          ]}
           onChangeText={onChangeTitle}
         />
-      </View>
-      <TodoSection mainItem="Patient" content={editTodoParam.patientContent} />
-      <View style={styles.todoTitle}>
-        <Text style={styles.todoTitleText}>Notes</Text>
+        <TodoSection
+          mainItem="Patient"
+          content={editTodoParam.patientContent}
+        />
+        <H3 text="Notes" style={{ fontWeight: "bold", marginBottom: ms(10) }} />
         <TextInput
           multiline
           value={noteInput}
-          style={styles.noteInput}
+          style={[
+            styles.noteInput,
+            {
+              backgroundColor: colors.primaryContrastTextColor,
+              borderColor: colors.primaryTextColor
+            }
+          ]}
           onChangeText={onChangeNotes}
         />
-      </View>
 
-      <View style={styles.editHistory}>
         <EditHistorySection
           editType="Created on: "
           timeDate={editTodoParam.createdTimeDate}
@@ -64,15 +75,27 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
         />
         <View style={styles.buttonContainer}>
           <TouchableOpacity
-            style={styles.cancelButton}
+            style={[
+              styles.cancelButton,
+              { backgroundColor: colors.primaryTodoCompleteButtonColor }
+            ]}
             onPress={() => {
               navigation.navigate("ViewTodo", editTodoParam);
             }}
           >
-            <Text style={styles.cancelButtonText}>Cancel</Text>
+            <H3
+              text="Cancel"
+              style={{ color: colors.primaryContrastTextColor }}
+            />
           </TouchableOpacity>
           <TouchableOpacity
-            style={styles.saveButton}
+            style={[
+              styles.saveButton,
+              {
+                backgroundColor: colors.primaryContrastTextColor,
+                borderColor: colors.primaryTextColor
+              }
+            ]}
             onPress={() => {
               const newDate = new Date().toLocaleString();
               const newTodo = {
@@ -85,7 +108,7 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
               navigation.navigate("ViewTodo", newTodo);
             }}
           >
-            <Text style={styles.saveButtonText}>Save</Text>
+            <H3 text="Save" style={{ color: colors.primaryTextColor }} />
           </TouchableOpacity>
         </View>
       </View>
@@ -94,70 +117,27 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
 };
 
 const styles = ScaledSheet.create({
-  todoTitle: {
+  container: {
     flexDirection: "column",
-    paddingLeft: "40@ms",
-    paddingTop: "30@ms",
-    width: "85%"
+    margin: "30@ms",
+    marginTop: "20@ms"
   },
   titleInput: {
-    backgroundColor: "white",
     height: "30@ms",
-    width: "100%",
-    borderColor: "black",
     borderWidth: "1@ms",
     borderRadius: "2@ms",
+    marginBottom: "20@ms",
     paddingLeft: "10@ms"
   },
   noteInput: {
-    backgroundColor: "white",
     height: "100@ms",
-    width: "100%",
-    borderColor: "black",
     borderWidth: "1@ms",
     borderRadius: "2@ms",
-    paddingLeft: "10@ms"
-  },
-  todoTitleText: {
-    paddingBottom: "10@ms",
-    fontWeight: "bold",
-    fontSize: "14@ms"
-  },
-  todoContentText: {
-    fontSize: "10@ms",
-    flexWrap: "wrap",
-    flex: 1,
-    marginRight: "40@ms"
-  },
-  todoPatient: {
-    flexDirection: "row"
-  },
-  viewTodoPatient: {
-    alignItems: "center",
-    paddingTop: "40@ms"
-  },
-  viewButton: {
-    width: "50@ms",
-    height: "20@ms",
-    borderColor: "black",
-    borderWidth: "1@ms",
-    borderRadius: "5@ms",
-    justifyContent: "center",
-    textAlign: "center",
-    backgroundColor: "white"
-  },
-  editHistory: {
-    paddingLeft: "40@ms",
-    flexDirection: "column",
-    position: "relative",
-    top: "60@ms"
-  },
-  editHistoryText: {
-    fontWeight: "bold",
-    fontSize: "10@ms"
+    paddingLeft: "10@ms",
+    marginBottom: "20@ms",
+    paddingTop: "5@ms"
   },
   buttonContainer: {
-    marginTop: "10@ms",
     marginBottom: "10@ms",
     alignItem: "center",
     justifyContent: "center",
@@ -167,7 +147,6 @@ const styles = ScaledSheet.create({
     textAlign: "center",
     justifyContent: "space-evenly",
     borderRadius: "5@ms",
-    backgroundColor: "#A484FF",
     width: "80@ms",
     height: "30@ms",
     margin: "10@ms"
@@ -176,19 +155,9 @@ const styles = ScaledSheet.create({
     textAlign: "center",
     justifyContent: "space-evenly",
     borderRadius: "5@ms",
-    backgroundColor: "#FFFFFF",
     width: "80@ms",
     height: "30@ms",
-    borderColor: "black",
     borderWidth: "1@ms",
     margin: "10@ms"
-  },
-  cancelButtonText: {
-    color: "white",
-    fontSize: "16@ms"
-  },
-  saveButtonText: {
-    color: "grey",
-    fontSize: "16@ms"
   }
 });

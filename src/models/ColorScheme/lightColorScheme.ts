@@ -39,6 +39,7 @@ export const lightColorScheme: ColorScheme = {
   // Buttons
   primaryButtonColor: "#57c081",
   primaryWarningButtonColor: "#D11C1C",
+  primaryTodoCompleteButtonColor: "#A484FF",
 
   // Avatar background
   primaryAvatarBackgroundColor: "#e0e0e0",
