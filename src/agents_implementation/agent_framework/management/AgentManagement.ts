@@ -1,13 +1,16 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { DeviceEventEmitter } from "react-native";
 import Agent from "../base/Agent";
 import Belief from "../base/Belief";
 import { Fact } from "../model";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getClinicianProtectedInfo, updateClinicianProtectedInfo } from "aws";
+import { UpdateClinicianProtectedInfoInput } from "aws/API";
+import { AsyncStorageKeys } from "../const/AsyncStorageKeys";
 
 /**
- * Class for managment of active agents
+ * Base class for management of active agents.
  */
-class AgentManagement {
+abstract class AgentManagement {
   private agents: Agent[];
 
   private facts: Fact;
@@ -22,14 +25,30 @@ class AgentManagement {
   }
 
   /**
-   * Retrieve saved state of facts from the database(AsyncStorage)
+   * Retrieve saved state of facts from the database
    */
   async factFromDB(): Promise<void> {
-    const dbFacts = await AsyncStorage.getItem("Facts");
-    if (dbFacts && Object.entries(JSON.parse(dbFacts)).length > 0) {
-      this.facts = JSON.parse(dbFacts);
-    } else {
-      this.facts = {};
+    try {
+      const clinicianID = await AsyncStorage.getItem(
+        AsyncStorageKeys.ClinicianID
+      );
+      if (clinicianID) {
+        const result = await getClinicianProtectedInfo({
+          clinicianID: clinicianID
+        });
+        const protectedInfo = result.data.getClinicianProtectedInfo;
+        if (protectedInfo) {
+          const dbFacts = protectedInfo.facts;
+          if (dbFacts && Object.entries(JSON.parse(dbFacts)).length > 0) {
+            this.facts = JSON.parse(dbFacts);
+          } else {
+            this.facts = {};
+          }
+        }
+      }
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.log(e);
     }
   }
 
@@ -37,7 +56,7 @@ class AgentManagement {
    * Register the agent in the system
    * @param {Agent} agent - agent to be registered
    */
-  registerAgent(agent: Agent) {
+  registerAgent(agent: Agent): void {
     this.agents.push(agent);
   }
 
@@ -59,7 +78,7 @@ class AgentManagement {
    * Unregister specified agent from the system
    * @param {string} agentID - identifier of the agent
    */
-  unregisterAgent(agentID: string) {
+  unregisterAgent(agentID: string): void {
     for (let i = 0; i < this.agents.length; i += 1) {
       if (this.agents[i].getID() === agentID) {
         this.agents.splice(i, 1);
@@ -78,31 +97,53 @@ class AgentManagement {
   /**
    * Add fact to system
    * @param {Belief} fact - fact(belief) to be inserted
+   * @param {Boolean} broadcast - whether fact is to be broadcasted
+   * @param {Boolean} updateDb - whether the local beliefs and facts should be written to database
    */
-  async addFact(fact: Belief, broadcast = true) {
+  async addFact(
+    fact: Belief,
+    broadcast: boolean = true,
+    updateDb: boolean = false
+  ): Promise<void> {
     try {
-      if (!(fact.getKey() in this.facts)) {
-        this.facts[fact.getKey()] = {};
-      }
-      this.facts[fact.getKey()][fact.getAttribute()] = fact.getValue();
-
-      const existingFacts = await AsyncStorage.getItem("Facts");
-      if (
-        existingFacts &&
-        Object.entries(JSON.parse(existingFacts)).length > 0
-      ) {
-        await AsyncStorage.mergeItem("Facts", JSON.stringify(this.facts));
+      // Clears intermediate attributes and values of actions
+      if (fact.getValue() === null && fact.getKey() in this.facts) {
+        delete this.facts[fact.getKey()][fact.getAttribute()];
       } else {
-        await AsyncStorage.setItem("Facts", JSON.stringify(this.facts));
+        if (!(fact.getKey() in this.facts)) {
+          this.facts[fact.getKey()] = {};
+        }
+        this.facts[fact.getKey()][fact.getAttribute()] = fact.getValue();
+
+        if (broadcast) {
+          DeviceEventEmitter.emit("env", fact);
+        }
       }
 
-      if (broadcast) {
-        DeviceEventEmitter.emit("env", fact);
+      if (updateDb) {
+        await this.updateDbStates();
       }
     } catch (err) {
       // eslint-disable-next-line no-console
       console.log(err);
     }
+  }
+
+  /**
+   * Merge incoming facts into current facts.
+   * This happen when an existing user signs in.
+   * @param {Belief} facts
+   */
+  mergeFacts(facts: Belief): void {
+    Object.entries(facts).forEach(([key, innerObj]) => {
+      if (!(key in this.facts)) {
+        this.facts[key] = innerObj;
+      } else {
+        Object.entries(innerObj).forEach(([attribute, value]) => {
+          this.facts[key][attribute] = value;
+        });
+      }
+    });
   }
 
   /**
@@ -112,8 +153,60 @@ class AgentManagement {
   getFacts(): Fact {
     return this.facts;
   }
+
+  /**
+   * Writes all local beliefs and facts to the database.
+   * Usually called at the end of a series of agents' actions.
+   */
+  async updateDbStates(): Promise<void> {
+    const clinicianID = await AsyncStorage.getItem(
+      AsyncStorageKeys.ClinicianID
+    );
+    if (clinicianID) {
+      const clinicianProtectedInfo = await getClinicianProtectedInfo({
+        clinicianID: clinicianID
+      });
+      const protectedInfo =
+        clinicianProtectedInfo.data.getClinicianProtectedInfo;
+      if (protectedInfo) {
+        const updatedProtectedInfo: UpdateClinicianProtectedInfoInput = {
+          clinicianID: clinicianID,
+          facts: protectedInfo.facts,
+          APS: protectedInfo.APS,
+          DTA: protectedInfo.DTA,
+          UXSA: protectedInfo.UXSA,
+          owner: clinicianID,
+          _version: protectedInfo._version
+        };
+        updatedProtectedInfo.facts = JSON.stringify(this.facts);
+        this.agents.forEach((agent) => {
+          switch (agent.getID()) {
+            case "APS": {
+              updatedProtectedInfo.APS = JSON.stringify(agent.getBeliefs());
+              break;
+            }
+            case "DTA": {
+              updatedProtectedInfo.DTA = JSON.stringify(agent.getBeliefs());
+              break;
+            }
+            case "UXSA": {
+              updatedProtectedInfo.UXSA = JSON.stringify(agent.getBeliefs());
+              break;
+            }
+            default: {
+              break;
+            }
+          }
+        });
+        await updateClinicianProtectedInfo(updatedProtectedInfo);
+      }
+    }
+  }
+
+  /**
+   * Triggers the initialization of agents.
+   */
+  abstract startAgents(): void;
 }
 
-const agentManager = new AgentManagement();
-
-export default agentManager;
+export default AgentManagement;

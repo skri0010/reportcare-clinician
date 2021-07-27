@@ -1,8 +1,5 @@
-/* eslint-disable import/no-duplicates */
-import agentManager from "../management/AgentManagement";
 import Message from "./Message";
 import { DeviceEventEmitter } from "react-native";
-import AgentManagement from "../management/AgentManagement";
 
 /**
  * Class representing the message channel
@@ -10,14 +7,11 @@ import AgentManagement from "../management/AgentManagement";
 class MessageChannel {
   private messageQueue: Message[];
 
-  private system: typeof AgentManagement;
-
   /**
    * Constructor for the Message Channle or Message transport system
    */
   constructor() {
     this.messageQueue = [];
-    this.system = agentManager;
   }
 
   /**

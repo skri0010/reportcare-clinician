@@ -1,5 +1,67 @@
 {
   "welcome": "Selamat Datang",
 
-  "Alerts": "Amaran"
+  "Alerts": "Amaran",
+
+  "Auth_SignIn": {
+    "SignIn": "Log Masuk",
+    "Username": "Nama Pengguna",
+    "UsernamePlaceholder": "Masukkan nama pengguna",
+    "UsernameError": "Panjang nama pengguna mestilah 3 hingga 16 aksara",
+    "Password": "Kata Laluan",
+    "PasswordPlaceholder": "Masukkan kata laluan",
+    "PasswordError": "Kata laluan mestilah tidak kurang daripada 8 aksara dengan sekurang-kurangnya 1 huruf besar dan nombor",
+    "ForgotPassword": "Lupa kata laluan?",
+    "PromptRegister": "Tidak mempunyai akaun? Daftar di ",
+    "RedirectToRegister": "sini",
+    "SignInSuccessful": "Log masuk berjaya",
+    "ConfigurationFailed": "Gagal untuk mengkonfigurasi aplikasi",
+    "SignInFailed": "Gagal untuk log masuk.\nSila pastikan nama pengguna dan kata laluan adalah betul.",
+    "ResendConfirmCode": "Pengguna belum disahkan.\nKod pengesahan 6 digit telah dihantar ke emel anda."
+  },
+  "Auth_Registration": {
+    "RegisterAccount": "Daftar Akaun",
+    "Name": "Nama",
+    "NamePlaceholder": "Masukkan nama",
+    "Email": "Emel",
+    "EmailPlaceholder": "Masukkan emel",
+    "EmailError": "Emel tidak sah",
+    "Role": "Peranan",
+    "RolePlaceholder": "-- Pilih peranan --",
+    "EP": "Ahli Elektrofisiologi",
+    "MedicalOfficer": "Pegawai Perubatan",
+    "HFSpecialist": "Pakar Kegagalan Jantung",
+    "Nurse": "Jururawat",
+    "Pharmacist": "Ahli Farmasi",
+    "Hospital": "Hospital",
+    "HospitalPlaceholder": "-- Pilih hospital --",
+    "ConfirmPassword": "Sahkan Kata Laluan",
+    "ConfirmPasswordPlaceholder": "Sahkan kata laluan",
+    "ConfirmPasswordError": "Kata laluan tidak sepadan",
+    "Register": "Daftar",
+    "CodeSent": "Kod pengesahan 6 angka telah dihantar ke emel anda",
+    "RegistrationFailed": "Gagal untuk mendaftar.\nPengguna dengan nama pengguna yang sama mungkin telah wujud."
+  },
+  "Auth_ConfirmRegistration": {
+    "ConfirmRegistration": "Sahkan Pendaftaran",
+    "VerificationCode": "Kod Pengesahan",
+    "VerificationCodePlaceholder": "Masukkan kod pengesahan",
+    "VerificationCodeError": "Kod pengesahan mestilah mempunyai 6 angka",
+    "Confirm": "Sahkan",
+    "RegistrationSuccessful": "Pendaftaran berjaya",
+    "ConfirmRegistrationFailed": "Gagal mengesahkan pendaftaran.\nSila pastikan nama pengguna dan kod pengesahan adalah betul."
+  },
+  "Auth_ForgotPassword": {
+    "ResetPassword": "Tetapkan Semula Kata Laluan",
+    "NewPassword": "Kata Laluan Baru",
+    "NewPasswordPlaceholder": "Masukkan kata laluan baru",
+    "Submit": "Serahkan",
+    "SendCode": "Hantar kod",
+    "CodeSendFailed": "Gagal menghantar kod pengesahan.\nSila pastikan nama pengguna adalah betul.",
+    "ResetPasswordSuccessful": "Tetapan semula kata laluan berjaya",
+    "ResetPasswordFailed": "Gagal menetapkan semula kata laluan.\nSila pastikan kod pengesahan adalah betul."
+  },
+  "Auth_SignOut": {
+    "SignOutSuccessful": "Log keluar berjaya"
+  }
 }

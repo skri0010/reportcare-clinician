@@ -39,4 +39,11 @@ export interface ColorScheme {
   // Others
   riskLevelBackgroundColors: IRiskLevelMap;
   riskLevelBorderColors: IRiskLevelMap;
+  riskLevelSelectedBackgroundColors: IRiskLevelMap;
+
+  // Errors
+  errorColor: string;
+
+  // Overlay
+  overlayColor: string;
 }
