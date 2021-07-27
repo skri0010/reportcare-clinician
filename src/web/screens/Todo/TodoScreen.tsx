@@ -5,15 +5,17 @@ import { TodoCompletedTab } from "./TodoCompletedTab";
 import { getTopTabBarOptions } from "util/getStyles";
 import { RootState, select } from "util/useRedux";
 import { ScreenName, WithSideTabsProps } from "web/screens";
-import { View, Text, Dimensions } from "react-native";
+import { View, Dimensions } from "react-native";
 import { RowSelectionWrapper } from "../RowSelectionTab";
-import { moderateScale } from "react-native-size-matters";
+import { ms } from "react-native-size-matters";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { TodoDetailsScreen } from "./TodoDetailsScreen";
 import { EditTodoScreen } from "./EditTodoScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { AddTodoScreen } from "./AddTodoScreen";
+import { NoSelectionScreen } from "../Shared/NoSelectionScreen";
+import { ITodoDetails } from "models/TodoDetails";
 
 const Tab = createMaterialTopTabNavigator();
 const Stack = createStackNavigator();
@@ -32,7 +34,21 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = () => {
   }));
 
   const [addButton, setAddButton] = useState(true);
+  const [todoSelected, setTodoSelected] = useState<ITodoDetails | null>(null);
   const [addButtonPressed, setAddButtonPressed] = useState(false);
+
+  function onRowClick(item: ITodoDetails | null) {
+    setTodoSelected(item);
+    // if (todoSelected === null ){
+    //   setTodoSelected(item);
+    // }
+    // else{
+    //   setTodoSelected(null);
+    // }
+    // // eslint-disable-next-line no-console
+    // console.log(todoSelected);
+  }
+
   return (
     // JH-TODO: Replace names with i18n
     <ScreenWrapper>
@@ -49,13 +65,14 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = () => {
             <Tab.Navigator tabBarOptions={getTopTabBarOptions(colors)}>
               <Tab.Screen
                 name="Current"
-                component={TodoCurrentTab}
                 listeners={{
                   tabPress: () => {
                     setAddButton(checkNeedAddButton("Todo"));
                   }
                 }}
-              />
+              >
+                {() => <TodoCurrentTab setTodoSelected={onRowClick} />}
+              </Tab.Screen>
               <Tab.Screen
                 name="Completed"
                 component={TodoCompletedTab}
@@ -71,50 +88,57 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = () => {
         <View
           style={{
             flex: 2,
-            backgroundColor: "#E2E2E2"
+            backgroundColor: colors.primaryWebBackgroundColor
           }}
         >
-          <NavigationContainer independent>
-            <Stack.Navigator initialRouteName="ViewTodo">
-              <Stack.Screen
-                name="ViewTodo"
-                component={TodoDetailsScreen}
-                initialParams={{
-                  mainTitleContent: "Schedule Appointment",
-                  patientContent: "Linda Mario",
-                  notesContent: "Change diet",
-                  createdTimeDate: "20:30 12-03-2021",
-                  modifiedTimeDate: "Never"
-                }}
-                options={{
-                  title: "View Todo",
-                  headerStyle: {
-                    height: moderateScale(45)
-                  },
-                  headerTitleStyle: {
-                    fontWeight: "bold",
-                    fontSize: moderateScale(20),
-                    paddingLeft: moderateScale(15)
-                  }
-                }}
-              />
-              <Stack.Screen name="AddTodo" component={AddTodoScreen} />
-              <Stack.Screen
-                name="EditTodo"
-                component={EditTodoScreen}
-                options={{
-                  title: "Edit Todo",
-                  headerStyle: {
-                    height: moderateScale(45)
-                  },
-                  headerTitleStyle: {
-                    fontWeight: "bold",
-                    fontSize: moderateScale(20)
-                  }
-                }}
-              />
-            </Stack.Navigator>
-          </NavigationContainer>
+          {todoSelected ? (
+            <NavigationContainer independent>
+              <Stack.Navigator initialRouteName="NoSelection">
+                <Stack.Screen
+                  name="ViewTodo"
+                  component={TodoDetailsScreen}
+                  initialParams={{
+                    mainTitleContent: todoSelected.title,
+                    patientContent: todoSelected.name,
+                    notesContent: todoSelected.description,
+                    createdTimeDate: "20:30 12-03-2021",
+                    modifiedTimeDate: "never"
+                  }}
+                  options={{
+                    title: "View Todo",
+                    headerStyle: {
+                      height: ms(45)
+                    },
+                    headerTitleStyle: {
+                      fontWeight: "bold",
+                      fontSize: ms(20),
+                      paddingLeft: ms(15)
+                    }
+                  }}
+                />
+                <Stack.Screen name="AddTodo" component={AddTodoScreen} />
+                <Stack.Screen
+                  name="EditTodo"
+                  component={EditTodoScreen}
+                  options={{
+                    title: "Edit Todo",
+                    headerStyle: {
+                      height: ms(45)
+                    },
+                    headerTitleStyle: {
+                      fontWeight: "bold",
+                      fontSize: ms(20)
+                    }
+                  }}
+                />
+              </Stack.Navigator>
+            </NavigationContainer>
+          ) : (
+            <NoSelectionScreen
+              screenName={ScreenName.TODO}
+              subtitle="Select a Todo item to view its details"
+            />
+          )}
         </View>
       </View>
     </ScreenWrapper>

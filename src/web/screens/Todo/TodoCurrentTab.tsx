@@ -1,16 +1,28 @@
 import React, { FC } from "react";
-import { View, FlatList, Dimensions } from "react-native";
-import { ScreenWrapper } from "web/screens/ScreenWrapper";
-import { MainTitle } from "components/Text";
+import { View, FlatList } from "react-native";
+// import { ScreenWrapper } from "web/screens/ScreenWrapper";
+// import { MainTitle } from "components/Text";
 import { TodoRow } from "components/RowComponents/TodoRow";
 import { mockPatientRowDetails } from "mock/mockTodoDetails";
 import { RiskLevel } from "models/RiskLevel";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
+// import { TodoScreenProps } from "../TodoScreenProps";
+import { ITodoDetails } from "models/TodoDetails";
 
-export const TodoCurrentTab: FC = () => {
+interface TodoCurrentTabProps {
+  setTodoSelected: (item: ITodoDetails | null) => void;
+}
+
+export const TodoCurrentTab: FC<TodoCurrentTabProps> = ({
+  setTodoSelected
+}) => {
   // JH-TODO Replace titles with i18n
   // JH-TODO Flatlist
   // JH-TODO Remove mock data
+
+  function onCardPress(item: ITodoDetails | null) {
+    setTodoSelected(item);
+  }
 
   return (
     <View style={{ flex: 1 }}>
@@ -22,7 +34,11 @@ export const TodoCurrentTab: FC = () => {
         ListFooterComponent={() => <ItemSeparator />}
         data={mockPatientRowDetails}
         renderItem={({ item }) => (
-          <TodoRow todoDetails={item} riskLevel={RiskLevel.HIGH} />
+          <TodoRow
+            todoDetails={item}
+            riskLevel={RiskLevel.HIGH}
+            onCardPress={() => onCardPress(item)}
+          />
         )}
         keyExtractor={(item) => item.id}
       />

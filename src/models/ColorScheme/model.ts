@@ -39,6 +39,9 @@ export interface ColorScheme {
   // Avatar background
   primaryAvatarBackgroundColor: string;
 
+  // Icons
+  primaryIconColor: string;
+
   // Others
   riskLevelBackgroundColors: IRiskLevelMap;
   riskLevelBorderColors: IRiskLevelMap;

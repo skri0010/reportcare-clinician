@@ -44,6 +44,9 @@ export const lightColorScheme: ColorScheme = {
   // Avatar background
   primaryAvatarBackgroundColor: "#e0e0e0",
 
+  // Icons
+  primaryIconColor: "#ABA9A9",
+
   // Others
   riskLevelBackgroundColors: riskLevelBackgroundColors,
   riskLevelBorderColors: riskLevelBorderColors,
