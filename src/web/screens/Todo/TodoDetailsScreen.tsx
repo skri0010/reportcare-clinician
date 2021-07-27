@@ -2,6 +2,7 @@ import React, { FC } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { TodoScreenProps } from "../TodoScreenProps";
+import { ScreenWrapper } from "web/screens/ScreenWrapper";
 
 interface todoSectionProps {
   mainItem: string;
@@ -56,7 +57,7 @@ export const TodoDetailsScreen: FC<TodoScreenProps> = ({
 }) => {
   const todoParam = route.params;
   return (
-    <View>
+    <ScreenWrapper>
       {/* Title */}
       <TodoSection mainItem="Title" content={todoParam.mainTitleContent} />
       {/* Patient */}
@@ -97,7 +98,7 @@ export const TodoDetailsScreen: FC<TodoScreenProps> = ({
           </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </ScreenWrapper>
   );
 };
 

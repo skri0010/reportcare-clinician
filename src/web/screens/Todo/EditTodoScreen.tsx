@@ -1,14 +1,9 @@
 import React, { FC, useState } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  ScrollView
-} from "react-native";
+import { View, Text, TouchableOpacity, TextInput } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { EditTodoScreenProps } from "../TodoScreenProps";
 import { TodoSection, EditHistorySection } from "./TodoDetailsScreen";
+import { ScreenWrapper } from "web/screens/ScreenWrapper";
 
 export const EditTodoScreen: FC<EditTodoScreenProps> = ({
   route,
@@ -33,7 +28,7 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
   // eslint-disable-next-line no-console
   console.log(editTodoParam);
   return (
-    <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+    <ScreenWrapper>
       <View style={styles.todoTitle}>
         <Text style={styles.todoTitleText}>Title</Text>
         <TextInput
@@ -89,7 +84,7 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
           </TouchableOpacity>
         </View>
       </View>
-    </ScrollView>
+    </ScreenWrapper>
   );
 };
 
