@@ -1,5 +1,4 @@
 import React, { FC } from "react";
-import { RootState, select } from "util/useRedux";
 import { RiskLevel } from "models/RiskLevel";
 import { RiskFilterTag } from "./RiskFilterTag";
 import { View } from "react-native";

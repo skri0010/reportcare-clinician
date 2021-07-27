@@ -1,9 +1,4 @@
 import React, { FC } from "react";
-import {
-  NavigationContainer,
-  getFocusedRouteNameFromRoute,
-  Route
-} from "@react-navigation/native";
 import { RootState, select } from "util/useRedux";
 import { View } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
@@ -37,6 +32,7 @@ export const RowSelectionWrapper: FC<RowSelectionWrapperProps> = ({
 
   return (
     <View style={styles.container}>
+      {/* Header */}
       <RowSelectionHeader
         title={title}
         addButton={addButton}
@@ -48,6 +44,8 @@ export const RowSelectionWrapper: FC<RowSelectionWrapperProps> = ({
               }
         }
       />
+
+      {/* Search bar */}
       {!isTodo ? (
         <View>
           <SearchBarComponent
@@ -62,6 +60,8 @@ export const RowSelectionWrapper: FC<RowSelectionWrapperProps> = ({
           />
         </View>
       ) : null}
+
+      {/* Risk filter tab */}
       {riskFilterTag ? (
         <View>
           <RiskFilterTab
@@ -71,7 +71,8 @@ export const RowSelectionWrapper: FC<RowSelectionWrapperProps> = ({
           />
         </View>
       ) : null}
-      {/* <View style={{ flex: 1 }}>{listComponent}</View> */}
+
+      {/* Other components to be placed in the left side tab eg list of patients */}
       <View style={{ flex: 1 }}>{children}</View>
     </View>
   );

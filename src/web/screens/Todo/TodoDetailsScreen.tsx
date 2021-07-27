@@ -1,6 +1,7 @@
 import React, { FC } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
+import { TodoScreenProps } from "../TodoScreenProps";
 
 interface todoSectionProps {
   mainItem: string;
@@ -21,7 +22,7 @@ interface TodoDetailsProps {
   onEditPress?: () => void;
 }
 
-const TodoSection: FC<todoSectionProps> = ({ mainItem, content }) => {
+export const TodoSection: FC<todoSectionProps> = ({ mainItem, content }) => {
   return (
     <View style={styles.todoTitle}>
       <Text style={styles.todoTitleText}>{mainItem}</Text>
@@ -30,7 +31,7 @@ const TodoSection: FC<todoSectionProps> = ({ mainItem, content }) => {
   );
 };
 
-const EditHistorySection: FC<editHistorySectionProps> = ({
+export const EditHistorySection: FC<editHistorySectionProps> = ({
   editType,
   timeDate
 }) => {
@@ -42,43 +43,56 @@ const EditHistorySection: FC<editHistorySectionProps> = ({
   );
 };
 
-export const TodoDetailsScreen: FC<TodoDetailsProps> = ({
-  mainTitleContent,
-  patientContent,
-  notesContent,
-  createdTimeDate,
-  modifiedTimeDate,
-  onViewPress,
-  onEditPress
+export const TodoDetailsScreen: FC<TodoScreenProps> = ({
+  //   mainTitleContent,
+  //   patientContent,
+  //   notesContent,
+  //   createdTimeDate,
+  //   modifiedTimeDate,
+  //   onViewPress,
+  //   onEditPress
+  route,
+  navigation
 }) => {
+  const todoParam = route.params;
   return (
     <View>
       {/* Title */}
-      <TodoSection mainItem="Title" content={mainTitleContent} />
+      <TodoSection mainItem="Title" content={todoParam.mainTitleContent} />
       {/* Patient */}
       <View style={styles.todoPatient}>
-        <TodoSection mainItem="Patient" content={patientContent} />
+        <TodoSection mainItem="Patient" content={todoParam.patientContent} />
         {/* View patient details button */}
         <View style={styles.viewTodoPatient}>
-          <TouchableOpacity style={styles.viewButton} onPress={onViewPress}>
+          <TouchableOpacity
+            style={styles.viewButton}
+            onPress={() => {
+              null;
+            }}
+          >
             <Text>View</Text>
           </TouchableOpacity>
         </View>
       </View>
       {/* Notes */}
-      <TodoSection mainItem="Notes" content={notesContent} />
+      <TodoSection mainItem="Notes" content={todoParam.notesContent} />
       {/* Edit history */}
       <View style={styles.editHistory}>
         <EditHistorySection
           editType="Created on: "
-          timeDate={createdTimeDate}
+          timeDate={todoParam.createdTimeDate}
         />
         <EditHistorySection
           editType="Modified on: "
-          timeDate={modifiedTimeDate}
+          timeDate={todoParam.modifiedTimeDate}
         />
         <View style={styles.editButtonContainer}>
-          <TouchableOpacity style={styles.editButton} onPress={onEditPress}>
+          <TouchableOpacity
+            style={styles.editButton}
+            onPress={() => {
+              navigation.navigate("EditTodo", todoParam);
+            }}
+          >
             <Text style={styles.editButtonText}>Edit</Text>
           </TouchableOpacity>
         </View>

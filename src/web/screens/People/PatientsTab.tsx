@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { View, FlatList } from "react-native";
+import { View, FlatList, Dimensions } from "react-native";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { ScaledSheet } from "react-native-size-matters";
 import { PatientDetailsRow } from "components/RowComponents/PatientRows/PatientDetailsRow";
@@ -15,9 +15,10 @@ export const PatientsTab: FC = () => {
   return (
     <ScreenWrapper>
       <View style={{ flexDirection: "row", height: "100%" }}>
-        <View style={{ flex: 1, height: "100%" }}>
+        <View style={{ flex: 1, height: Dimensions.get("window").height }}>
           <RowSelectionWrapper title="Patient" riskFilterTag>
             <FlatList
+              showsVerticalScrollIndicator={false}
               style={{ flex: 1 }}
               ItemSeparatorComponent={() => <ItemSeparator />}
               ListHeaderComponent={() => <ItemSeparator />}

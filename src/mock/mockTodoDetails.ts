@@ -28,5 +28,12 @@ export const mockPatientRowDetails: ITodoDetails[] = [
     description: "Check symptoms",
     doneStatus: false,
     id: "4"
+  },
+  {
+    title: "Contact",
+    name: "Mario Luigi",
+    description: "Check symptoms",
+    doneStatus: false,
+    id: "5"
   }
 ];

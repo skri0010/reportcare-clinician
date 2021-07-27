@@ -64,5 +64,23 @@ export const mockPatients: IMockPatientDetails[] = [
     unreadMessageCount: 1,
     request: "Verify titration values",
     itemId: "4"
+  },
+  {
+    generalDetails: mockLowRiskPatient,
+    patientClass: "NHYA I",
+    age: 35,
+    message: "Should I avoid running?",
+    unreadMessageCount: 1,
+    request: "Verify titration values",
+    itemId: "5"
+  },
+  {
+    generalDetails: mockLowRiskPatient,
+    patientClass: "NHYA I",
+    age: 35,
+    message: "Should I avoid running?",
+    unreadMessageCount: 1,
+    request: "Verify titration values",
+    itemId: "6"
   }
 ];
