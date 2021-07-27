@@ -26,7 +26,7 @@ export type EditTodoScreenProps = {
   navigation: EditTodoScreenNavigationProp;
 };
 
-// Add Todo scree
+// Add Todo screen
 type AddTodoScreenNavigationProp = StackNavigationProp<
   TodoStackParamList,
   "AddTodo"

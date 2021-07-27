@@ -1,10 +1,11 @@
-import React, { FC, useState } from "react";
+import React, { FC, useState, useContext } from "react";
 import { View, TouchableOpacity, TextInput, ScrollView } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { EditTodoScreenProps } from "../TodoScreenProps";
 import { TodoSection, EditHistorySection } from "./TodoDetailsScreen";
 import { H3 } from "components/Text";
 import { RootState, select } from "util/useRedux";
+import { TodoContext } from "./TodoScreen";
 
 export const EditTodoScreen: FC<EditTodoScreenProps> = ({
   route,
@@ -15,12 +16,12 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
   }));
 
   const editTodoParam = route.params;
+  const context = useContext(TodoContext);
+
   const [titleInput, setTitleInput] = useState<string>(
-    editTodoParam.mainTitleContent
+    context.mainTitleContent
   );
-  const [noteInput, setNoteInput] = useState<string>(
-    editTodoParam.notesContent
-  );
+  const [noteInput, setNoteInput] = useState<string>(context.notesContent);
 
   const onChangeTitle = (newTitle: string) => {
     setTitleInput(newTitle);
@@ -30,8 +31,6 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
     setNoteInput(newNote);
   };
 
-  // eslint-disable-next-line no-console
-  console.log(editTodoParam);
   return (
     <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
       <View style={styles.container}>
@@ -47,10 +46,7 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
           ]}
           onChangeText={onChangeTitle}
         />
-        <TodoSection
-          mainItem="Patient"
-          content={editTodoParam.patientContent}
-        />
+        <TodoSection mainItem="Patient" content={context.patientContent} />
         <H3 text="Notes" style={{ fontWeight: "bold", marginBottom: ms(10) }} />
         <TextInput
           multiline
@@ -67,11 +63,11 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
 
         <EditHistorySection
           editType="Created on: "
-          timeDate={editTodoParam.createdTimeDate}
+          timeDate={context.createdTimeDate}
         />
         <EditHistorySection
           editType="Modified on: "
-          timeDate={editTodoParam.modifiedTimeDate}
+          timeDate={context.modifiedTimeDate}
         />
         <View style={styles.buttonContainer}>
           <TouchableOpacity
@@ -81,6 +77,11 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
             ]}
             onPress={() => {
               navigation.navigate("ViewTodo", editTodoParam);
+              // editTodoParam is undefined (no params anymore??)
+              // eslint-disable-next-line no-console
+              console.log(editTodoParam);
+              // eslint-disable-next-line no-console
+              console.log(navigation);
             }}
           >
             <H3
@@ -100,9 +101,9 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
               const newDate = new Date().toLocaleString();
               const newTodo = {
                 mainTitleContent: titleInput,
-                patientContent: editTodoParam.patientContent,
+                patientContent: context.patientContent,
                 notesContent: noteInput,
-                createdTimeDate: editTodoParam.createdTimeDate,
+                createdTimeDate: context.createdTimeDate,
                 modifiedTimeDate: newDate
               };
               navigation.navigate("ViewTodo", newTodo);

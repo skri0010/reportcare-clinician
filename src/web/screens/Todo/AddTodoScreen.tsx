@@ -6,14 +6,17 @@ import {
   TextInput,
   ScrollView
 } from "react-native";
-import { ScaledSheet } from "react-native-size-matters";
+import { ScaledSheet, ms } from "react-native-size-matters";
 import { AddTodoScreenProps } from "../TodoScreenProps";
 import { TodoSection, EditHistorySection } from "./TodoDetailsScreen";
+import { H3 } from "components/Text";
+import { RootState, select } from "util/useRedux";
 
-export const AddTodoScreen: FC<AddTodoScreenProps> = ({
-  route,
-  navigation
-}) => {
+export const AddTodoScreen: FC<AddTodoScreenProps> = ({ navigation }) => {
+  const { colors } = select((state: RootState) => ({
+    colors: state.settings.colors
+  }));
+
   const [titleInput, setTitleInput] = useState<string>("");
   const [patientInput, setPatientInput] = useState<string>("");
   const [noteInput, setNoteInput] = useState<string>("");
@@ -27,86 +30,114 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({
   const onChangeNotes = (newNote: string) => {
     setNoteInput(newNote);
   };
+
   return (
-    <View>
-      <View style={styles.todoTitle}>
-        <Text style={styles.todoTitleText}>Title</Text>
-        <TextInput
-          value={titleInput}
-          style={styles.titleInput}
-          onChangeText={onChangeTitle}
-          placeholder="What's this todo about?"
-        />
+    <View style={styles.container}>
+      <H3 text="Title" style={{ fontWeight: "bold", marginBottom: ms(10) }} />
+      <TextInput
+        value={titleInput}
+        placeholder="What's this todo about?"
+        style={[
+          styles.titleInput,
+          {
+            backgroundColor: colors.primaryContrastTextColor,
+            borderColor: colors.primaryTextColor
+          }
+        ]}
+        onChangeText={onChangeTitle}
+      />
+      <H3 text="Patient" style={{ fontWeight: "bold", marginBottom: ms(10) }} />
+      <TextInput
+        value={patientInput}
+        placeholder="What's the patient's name?"
+        style={[
+          styles.titleInput,
+          {
+            backgroundColor: colors.primaryContrastTextColor,
+            borderColor: colors.primaryTextColor
+          }
+        ]}
+        onChangeText={onChangePatient}
+      />
+      <H3 text="Notes" style={{ fontWeight: "bold", marginBottom: ms(10) }} />
+      <TextInput
+        multiline
+        value={noteInput}
+        placeholder="Anything notable?"
+        style={[
+          styles.noteInput,
+          {
+            backgroundColor: colors.primaryContrastTextColor,
+            borderColor: colors.primaryTextColor
+          }
+        ]}
+        onChangeText={onChangeNotes}
+      />
+
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={[
+            styles.cancelButton,
+            { backgroundColor: colors.primaryTodoCompleteButtonColor }
+          ]}
+          onPress={() => {
+            null;
+          }}
+        >
+          <H3
+            text="Cancel"
+            style={{ color: colors.primaryContrastTextColor }}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.saveButton,
+            {
+              backgroundColor: colors.primaryContrastTextColor,
+              borderColor: colors.primaryTextColor
+            }
+          ]}
+          onPress={() => {
+            const created = new Date().toLocaleString();
+            const newTodo = {
+              mainTitleContent: titleInput,
+              patientContent: patientInput,
+              notesContent: noteInput,
+              createdTimeDate: created,
+              modifiedTimeDate: "Never"
+            };
+            navigation.navigate("ViewTodo", newTodo);
+          }}
+        >
+          <H3 text="Save" style={{ color: colors.primaryTextColor }} />
+        </TouchableOpacity>
       </View>
     </View>
   );
 };
 
 const styles = ScaledSheet.create({
-  todoTitle: {
+  container: {
     flexDirection: "column",
-    paddingLeft: "40@ms",
-    paddingTop: "30@ms",
-    width: "85%"
+    margin: "30@ms",
+    marginTop: "20@ms"
   },
   titleInput: {
-    backgroundColor: "white",
     height: "30@ms",
-    width: "100%",
-    borderColor: "black",
     borderWidth: "1@ms",
     borderRadius: "2@ms",
+    marginBottom: "20@ms",
     paddingLeft: "10@ms"
   },
   noteInput: {
-    backgroundColor: "white",
     height: "100@ms",
-    width: "100%",
-    borderColor: "black",
     borderWidth: "1@ms",
     borderRadius: "2@ms",
-    paddingLeft: "10@ms"
-  },
-  todoTitleText: {
-    paddingBottom: "10@ms",
-    fontWeight: "bold",
-    fontSize: "14@ms"
-  },
-  todoContentText: {
-    fontSize: "10@ms",
-    flexWrap: "wrap",
-    flex: 1,
-    marginRight: "40@ms"
-  },
-  todoPatient: {
-    flexDirection: "row"
-  },
-  viewTodoPatient: {
-    alignItems: "center",
-    paddingTop: "40@ms"
-  },
-  viewButton: {
-    width: "50@ms",
-    height: "20@ms",
-    borderColor: "black",
-    borderWidth: "1@ms",
-    borderRadius: "5@ms",
-    justifyContent: "center",
-    textAlign: "center",
-    backgroundColor: "white"
-  },
-  editHistory: {
-    paddingLeft: "40@ms",
-    flexDirection: "column",
-    position: "relative",
-    top: "60@ms"
-  },
-  editHistoryText: {
-    fontWeight: "bold",
-    fontSize: "10@ms"
+    paddingLeft: "10@ms",
+    marginBottom: "20@ms",
+    paddingTop: "5@ms"
   },
   buttonContainer: {
-    marginTop: "10@ms",
     marginBottom: "10@ms",
     alignItem: "center",
     justifyContent: "center",
@@ -116,7 +147,6 @@ const styles = ScaledSheet.create({
     textAlign: "center",
     justifyContent: "space-evenly",
     borderRadius: "5@ms",
-    backgroundColor: "#A484FF",
     width: "80@ms",
     height: "30@ms",
     margin: "10@ms"
@@ -125,19 +155,9 @@ const styles = ScaledSheet.create({
     textAlign: "center",
     justifyContent: "space-evenly",
     borderRadius: "5@ms",
-    backgroundColor: "#FFFFFF",
     width: "80@ms",
     height: "30@ms",
-    borderColor: "black",
     borderWidth: "1@ms",
     margin: "10@ms"
-  },
-  cancelButtonText: {
-    color: "white",
-    fontSize: "16@ms"
-  },
-  saveButtonText: {
-    color: "grey",
-    fontSize: "16@ms"
   }
 });

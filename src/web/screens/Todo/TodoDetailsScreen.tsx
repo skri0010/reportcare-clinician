@@ -1,9 +1,10 @@
-import React, { FC } from "react";
+import React, { FC, useContext } from "react";
 import { View, TouchableOpacity } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { TodoScreenProps } from "../TodoScreenProps";
 import { H2, H3, H4, H5 } from "components/Text";
 import { RootState, select } from "util/useRedux";
+import { TodoContext } from "./TodoScreen";
 
 interface todoSectionProps {
   mainItem: string;
@@ -49,13 +50,6 @@ export const EditHistorySection: FC<editHistorySectionProps> = ({
 };
 
 export const TodoDetailsScreen: FC<TodoScreenProps> = ({
-  //   mainTitleContent,
-  //   patientContent,
-  //   notesContent,
-  //   createdTimeDate,
-  //   modifiedTimeDate,
-  //   onViewPress,
-  //   onEditPress
   route,
   navigation
 }) => {
@@ -63,13 +57,15 @@ export const TodoDetailsScreen: FC<TodoScreenProps> = ({
     colors: state.settings.colors
   }));
   const todoParam = route.params;
+  const context = useContext(TodoContext);
+
   return (
     <View style={styles.container}>
       {/* Title */}
-      <TodoSection mainItem="Title" content={todoParam.mainTitleContent} />
+      <TodoSection mainItem="Title" content={context.mainTitleContent} />
       {/* Patient */}
       <View style={styles.todoPatient}>
-        <TodoSection mainItem="Patient" content={todoParam.patientContent} />
+        <TodoSection mainItem="Patient" content={context.patientContent} />
         {/* View patient details button */}
         <TouchableOpacity
           style={[
@@ -88,16 +84,16 @@ export const TodoDetailsScreen: FC<TodoScreenProps> = ({
       </View>
       {/* Notes */}
       <View style={{ marginTop: ms(10) }}>
-        <TodoSection mainItem="Notes" content={todoParam.notesContent} />
+        <TodoSection mainItem="Notes" content={context.notesContent} />
       </View>
       {/* Edit history */}
       <EditHistorySection
         editType="Created on: "
-        timeDate={todoParam.createdTimeDate}
+        timeDate={context.createdTimeDate}
       />
       <EditHistorySection
         editType="Modified on: "
-        timeDate={todoParam.modifiedTimeDate}
+        timeDate={context.modifiedTimeDate}
       />
       <View style={styles.editButtonContainer}>
         <TouchableOpacity
