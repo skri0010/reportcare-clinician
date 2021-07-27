@@ -367,6 +367,8 @@ export const onCreateClinicianInfo = /* GraphQL */ `
         APS
         DTA
         UXSA
+        NWA
+        ALA
         clinicianID
         owner
         _version
@@ -398,6 +400,8 @@ export const onUpdateClinicianInfo = /* GraphQL */ `
         APS
         DTA
         UXSA
+        NWA
+        ALA
         clinicianID
         owner
         _version
@@ -429,6 +433,8 @@ export const onDeleteClinicianInfo = /* GraphQL */ `
         APS
         DTA
         UXSA
+        NWA
+        ALA
         clinicianID
         owner
         _version
@@ -454,6 +460,8 @@ export const onCreateClinicianProtectedInfo = /* GraphQL */ `
       APS
       DTA
       UXSA
+      NWA
+      ALA
       clinicianID
       clinicianInfo {
         id
@@ -485,6 +493,8 @@ export const onUpdateClinicianProtectedInfo = /* GraphQL */ `
       APS
       DTA
       UXSA
+      NWA
+      ALA
       clinicianID
       clinicianInfo {
         id
@@ -516,6 +526,8 @@ export const onDeleteClinicianProtectedInfo = /* GraphQL */ `
       APS
       DTA
       UXSA
+      NWA
+      ALA
       clinicianID
       clinicianInfo {
         id

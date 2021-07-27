@@ -97,6 +97,8 @@ export declare class ClinicianProtectedInfo {
   readonly APS: string;
   readonly DTA: string;
   readonly UXSA: string;
+  readonly NWA: string;
+  readonly ALA: string;
   readonly clinicianInfo: ClinicianInfo;
   readonly owner: string;
   constructor(init: ModelInit<ClinicianProtectedInfo>);

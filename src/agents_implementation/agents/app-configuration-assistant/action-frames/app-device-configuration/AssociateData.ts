@@ -10,7 +10,8 @@ import {
   ClinicianAttributes,
   CommonAttributes,
   AppAttributes,
-  ProcedureAttributes
+  ProcedureAttributes,
+  ActionFrameIDs
 } from "../../../../agent_framework/AgentEnums";
 import agentAPI from "../../../../agent_framework/AgentAPI";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -24,7 +25,7 @@ class AssociateData extends Activity {
    * Constructor for the AssociateData class
    */
   constructor() {
-    super("AssociateData");
+    super(ActionFrameIDs.APS.ASSOCIATE_DATA);
   }
 
   /**
@@ -109,7 +110,7 @@ const rule3 = new Precondition(
 
 // Actionframe of the AssociateData class
 const af_AssociateData = new Actionframe(
-  "AF_AssociateData",
+  `AF_${ActionFrameIDs.APS.ASSOCIATE_DATA}`,
   [rule1, rule2, rule3],
   new AssociateData()
 );

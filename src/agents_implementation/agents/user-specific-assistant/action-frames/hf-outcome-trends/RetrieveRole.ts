@@ -10,7 +10,8 @@ import {
   ClinicianAttributes,
   CommonAttributes,
   ProcedureAttributes,
-  AppAttributes
+  AppAttributes,
+  ActionFrameIDs
 } from "../../../../agent_framework/AgentEnums";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Role } from "../../../../../models/ClinicianEnums";
@@ -24,7 +25,7 @@ import { ClinicianInfo } from "aws/API";
  */
 class RetrieveRole extends Activity {
   constructor() {
-    super("RetrieveRole");
+    super(ActionFrameIDs.UXSA.RETRIEVE_ROLE);
   }
 
   /**
@@ -63,15 +64,16 @@ class RetrieveRole extends Activity {
 
     try {
       // Retrieves local clinician
-      const clincianStr = await AsyncStorage.getItem(
+      const clinicianStr = await AsyncStorage.getItem(
         AsyncStorageKeys.CLINICIAN
       );
+
       // Checks internet connection state
       const isOnline =
         agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE];
 
-      if (clincianStr) {
-        const localClinician: ClinicianInfo = JSON.parse(clincianStr);
+      if (clinicianStr) {
+        const localClinician: ClinicianInfo = JSON.parse(clinicianStr);
         if (localClinician && isOnline) {
           // Device is online
           const query = await getClinicianInfo({
@@ -92,7 +94,7 @@ class RetrieveRole extends Activity {
           }
         } else if (localClinician && !isOnline) {
           // Device is offline
-          if (roles.includes(localClinician.role)) {
+          if (localClinician.role && roles.includes(localClinician.role)) {
             return localClinician.role;
           }
         }
@@ -120,7 +122,7 @@ const rule2 = new Precondition(
 
 // Action Frame for RetrieveRole class
 const af_RetrieveRole = new Actionframe(
-  "AF_RetrieveRole",
+  `AF_${ActionFrameIDs.UXSA.RETRIEVE_ROLE}`,
   [rule1, rule2],
   new RetrieveRole()
 );

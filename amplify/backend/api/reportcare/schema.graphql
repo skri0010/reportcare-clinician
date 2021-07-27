@@ -197,6 +197,8 @@ type ClinicianProtectedInfo
   APS: String!
   DTA: String!
   UXSA: String!
+  NWA: String!
+  ALA: String!
   clinicianID: String!
   clinicianInfo: ClinicianInfo! @connection(fields: ["clinicianID"])
   owner: String!

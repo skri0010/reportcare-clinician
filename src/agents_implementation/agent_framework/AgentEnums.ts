@@ -34,12 +34,38 @@ export enum ProcedureConst {
   INACTIVE = "inactive"
 }
 
+// IDs of agents
 export enum AgentIDs {
   APS = "APS",
   DTA = "DTA",
   UXSA = "UXSA",
-  NWA = "NWA"
+  NWA = "NWA",
+  ALA = "ALA"
 }
+
+export const ActionFrameIDs = {
+  APS: {
+    ASSOCIATE_DATA: "AssociateData",
+    REQUEST_ENTRY_DATA: "RequestEntryData"
+  },
+  DTA: {
+    RETRIEVE_ENTRY_DATA: "RetrieveEntryData",
+    STORE_ENTRY_DATA: "StoreEntryData",
+    RETRIEVE_ROLE_PATIENTS: "RetrieveRolePatients",
+    RETRIEVE_PATIENT_DETAILS: "RetrievePatientDetails",
+    REQUEST_DETAILS_DISPLAY: "RequestDetailsDisplay",
+    APPROVE_PATIENT_REQUEST: "ApprovePatientRequest"
+  },
+  UXSA: {
+    RETRIEVE_ROLE: "RetrieveRole",
+    REQUEST_RETRIEVE_ALL: "RequestRetrieveAll",
+    VISUALIZE_PARAMETERS: "VisualizeParameters"
+  },
+  NWA: {
+    SYNC_PROTECTED_INFO: "SyncProtectedInfo",
+    SYNC_PATIENT_REQUEST: "SyncPatientRequest"
+  }
+};
 
 // Keys for agents' belief / precondition / fact
 export enum BeliefKeys {
@@ -49,6 +75,7 @@ export enum BeliefKeys {
   PATIENT = "Patient"
 }
 
+// Attributes commonly shared by agents
 export enum CommonAttributes {
   LAST_ACTIVITY = "LastActivity"
 }

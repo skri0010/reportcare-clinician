@@ -4,6 +4,7 @@ import Belief from "../../../../agent_framework/base/Belief";
 import Communicate from "../../../../agent_framework/base/Communicate";
 import Precondition from "../../../../agent_framework/base/Precondition";
 import {
+  ActionFrameIDs,
   AgentIDs,
   BeliefKeys,
   CommonAttributes,
@@ -23,7 +24,7 @@ class RequestRetrieveAll extends Communicate {
    */
   constructor() {
     super(
-      "RequestRetrieveAll",
+      ActionFrameIDs.UXSA.REQUEST_RETRIEVE_ALL,
       Performative.REQUEST,
       // Triggers RetrieveRolePatients action frame of DTA
       new Belief(BeliefKeys.PATIENT, PatientAttributes.RETRIEVE_ALL, true),
@@ -59,12 +60,12 @@ const rule1 = new Precondition(
 const rule2 = new Precondition(
   AgentIDs.UXSA,
   CommonAttributes.LAST_ACTIVITY,
-  "RetrieveRole"
+  ActionFrameIDs.UXSA.RETRIEVE_ROLE
 );
 
 // Actionframe of the RequestRetrieveAll class
 const af_RequestRetrieveAll = new Actionframe(
-  "AF_RequestRetrieveAll",
+  `AF_${ActionFrameIDs.UXSA.REQUEST_RETRIEVE_ALL}`,
   [rule1, rule2],
   new RequestRetrieveAll()
 );

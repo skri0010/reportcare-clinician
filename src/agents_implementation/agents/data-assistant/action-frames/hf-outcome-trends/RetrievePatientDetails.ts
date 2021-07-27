@@ -4,6 +4,7 @@ import Agent from "../../../../agent_framework/base/Agent";
 import Belief from "../../../../agent_framework/base/Belief";
 import Precondition from "../../../../agent_framework/base/Precondition";
 import {
+  ActionFrameIDs,
   AppAttributes,
   BeliefKeys,
   CommonAttributes,
@@ -23,7 +24,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
  */
 class RetrievePatientDetails extends Activity {
   constructor() {
-    super("RetrievePatientDetails");
+    super(ActionFrameIDs.DTA.RETRIEVE_PATIENT_DETAILS);
   }
 
   /**
@@ -144,7 +145,7 @@ const rule2 = new Precondition(
 
 // Action Frame for RetrievePatientDetails class
 const af_RetrievePatientDetails = new Actionframe(
-  "AF_RetrievePatientDetails",
+  `AF_${ActionFrameIDs.DTA.RETRIEVE_PATIENT_DETAILS}`,
   [rule1, rule2],
   new RetrievePatientDetails()
 );

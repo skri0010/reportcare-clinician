@@ -59,6 +59,7 @@ const App: FC = () => {
             style={{ marginLeft: ms(5), marginRight: ms(10) }}
           />
         }
+        dangerColor="#b30c00"
         dangerIcon={
           <Icon
             name="times-circle"
@@ -67,7 +68,15 @@ const App: FC = () => {
             style={{ marginLeft: ms(5), marginRight: ms(10) }}
           />
         }
-        dangerColor="#b30c00"
+        warningColor="#bd8e00"
+        warningIcon={
+          <Icon
+            name="exclamation-triangle"
+            color="white"
+            size={ms(20)}
+            style={{ marginLeft: ms(5), marginRight: ms(10) }}
+          />
+        }
         textStyle={{ fontSize: ms(12), color: "white" }}
         style={{
           paddingVertical: ms(10),

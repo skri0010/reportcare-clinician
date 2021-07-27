@@ -56,9 +56,14 @@ export const MainNavigationStack: FC<MainNavigationStackProps> = ({
     });
   };
 
+  // Detects changes in internet connection
   useEffect(() => {
+    // Internet connection detected
     if (netInfo.isConnected && netInfo.isInternetReachable) {
+      // Broadcast the fact to trigger data syncing
       agentAPI.addFact(new Belief(BeliefKeys.APP, AppAttributes.ONLINE, true));
+
+      // Was previously offline
       if (warningToastShown && !successToastShown) {
         toast.show(i18n.t("Internet_Connection.OnlineNotice"), {
           type: "success"
@@ -66,10 +71,13 @@ export const MainNavigationStack: FC<MainNavigationStackProps> = ({
         setSuccessToast(true);
         setWarningToast(false);
       }
-    } else if (
+    }
+    // No internet connection
+    else if (
       netInfo.isConnected === false ||
       netInfo.isInternetReachable === false
     ) {
+      // Removes online broadcast from facts
       agentAPI.addFact(
         new Belief(BeliefKeys.APP, AppAttributes.ONLINE, null),
         false

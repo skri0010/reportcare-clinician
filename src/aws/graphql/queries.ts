@@ -530,6 +530,8 @@ export const getClinicianInfo = /* GraphQL */ `
         APS
         DTA
         UXSA
+        NWA
+        ALA
         clinicianID
         owner
         _version
@@ -599,6 +601,8 @@ export const syncClinicianProtectedInfos = /* GraphQL */ `
         APS
         DTA
         UXSA
+        NWA
+        ALA
         clinicianID
         owner
         _version
@@ -620,6 +624,8 @@ export const getClinicianProtectedInfo = /* GraphQL */ `
       APS
       DTA
       UXSA
+      NWA
+      ALA
       clinicianID
       clinicianInfo {
         id
@@ -664,6 +670,8 @@ export const listClinicianProtectedInfos = /* GraphQL */ `
         APS
         DTA
         UXSA
+        NWA
+        ALA
         clinicianID
         owner
         _version

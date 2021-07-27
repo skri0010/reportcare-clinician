@@ -1,7 +1,8 @@
-import { ReportVitals } from "aws/models";
+import { ReportVitals } from "aws/API";
 
 export const mockVitals: ReportVitals[] = [
   {
+    __typename: "ReportVitals",
     BPDi: "44",
     BPSys: "11",
     DateTime: "2021-04-13T09:24:55.351Z",
@@ -15,6 +16,7 @@ export const mockVitals: ReportVitals[] = [
     patientID: ""
   },
   {
+    __typename: "ReportVitals",
     BPDi: "50",
     BPSys: "200",
     DateTime: "2021-04-13T09:20:47.251Z",
@@ -28,6 +30,7 @@ export const mockVitals: ReportVitals[] = [
     patientID: ""
   },
   {
+    __typename: "ReportVitals",
     BPDi: "50",
     BPSys: "200",
     DateTime: "2021-04-13T09:20:47.251Z",
@@ -41,6 +44,7 @@ export const mockVitals: ReportVitals[] = [
     patientID: ""
   },
   {
+    __typename: "ReportVitals",
     BPDi: "50",
     BPSys: "200",
     DateTime: "2021-04-14T09:20:47.251Z",
@@ -54,6 +58,7 @@ export const mockVitals: ReportVitals[] = [
     patientID: ""
   },
   {
+    __typename: "ReportVitals",
     BPDi: "60",
     BPSys: "200",
     DateTime: "2021-04-15T09:20:47.251Z",

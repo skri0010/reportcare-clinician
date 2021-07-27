@@ -4,6 +4,7 @@ import Belief from "../../../../agent_framework/base/Belief";
 import Communicate from "../../../../agent_framework/base/Communicate";
 import Precondition from "../../../../agent_framework/base/Precondition";
 import {
+  ActionFrameIDs,
   AgentIDs,
   BeliefKeys,
   ClinicianAttributes,
@@ -23,7 +24,7 @@ class RequestEntryData extends Communicate {
    */
   constructor() {
     super(
-      "RequestEntryData",
+      ActionFrameIDs.APS.REQUEST_ENTRY_DATA,
       Performative.REQUEST,
       // Triggers RetrieveEntryData or StoreEntryData action frame of DTA
       new Belief(
@@ -58,7 +59,7 @@ class RequestEntryData extends Communicate {
 const rule1 = new Precondition(
   AgentIDs.APS,
   CommonAttributes.LAST_ACTIVITY,
-  "AssociateData"
+  ActionFrameIDs.APS.ASSOCIATE_DATA
 );
 const rule2 = new Precondition(
   BeliefKeys.PROCEDURE,
@@ -68,7 +69,7 @@ const rule2 = new Precondition(
 
 // Actionframe of the RequestEntryData class
 const af_RequestEntryData = new Actionframe(
-  "AF_RequestEntryData",
+  `AF_${ActionFrameIDs.APS.REQUEST_ENTRY_DATA}`,
   [rule1, rule2],
   new RequestEntryData()
 );

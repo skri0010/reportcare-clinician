@@ -9,11 +9,17 @@ import {
   CommonAttributes,
   BeliefKeys,
   ClinicianAttributes,
-  ProcedureAttributes
+  ProcedureAttributes,
+  ActionFrameIDs
 } from "../../../../agent_framework/AgentEnums";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import agentAPI from "../../../../agent_framework/AgentAPI";
 import { createClinicianInfo, createClinicianProtectedInfo } from "aws";
+import { store } from "util/useRedux";
+import {
+  setProcedureOngoing,
+  setProcedureSuccessful
+} from "ic-redux/actions/agents/actionCreator";
 
 /**
  * Class to represent the activity for storing clinician's entry data.
@@ -21,7 +27,7 @@ import { createClinicianInfo, createClinicianProtectedInfo } from "aws";
  */
 class StoreEntryData extends Activity {
   constructor() {
-    super("StoreEntryData");
+    super(ActionFrameIDs.DTA.STORE_ENTRY_DATA);
   }
 
   /**
@@ -74,7 +80,9 @@ class StoreEntryData extends Activity {
               facts: "",
               APS: "",
               DTA: "",
-              UXSA: ""
+              UXSA: "",
+              NWA: "",
+              ALA: ""
             });
 
           const newProtectedInfo =
@@ -85,12 +93,15 @@ class StoreEntryData extends Activity {
 
           // Stores clinicianID and clinician locally
           await AsyncStorage.multiSet([
-            [AsyncStorageKeys.CLINICIAN_ID, newClinicianInfo.clinicianID],
+            [AsyncStorageKeys.CLINICIAN_ID, newClinicianInfo.clinicianID!],
             [AsyncStorageKeys.CLINICIAN, JSON.stringify(newClinicianInfo)]
           ]);
 
           // Removes sign up details from local storage
           await AsyncStorage.removeItem(AsyncStorageKeys.SIGN_UP_DETAILS);
+
+          // Dispatch to front end that sign in was successful
+          store.dispatch(setProcedureSuccessful(true));
         }
       }
     } catch (error) {
@@ -122,6 +133,9 @@ class StoreEntryData extends Activity {
       true,
       true
     );
+
+    // Dispatch to front end that procedure has been completed
+    store.dispatch(setProcedureOngoing(false));
   }
 }
 
@@ -144,7 +158,7 @@ const rule3 = new Precondition(
 
 // Action Frame for StoreEntryData class
 const af_StoreEntryData = new Actionframe(
-  "AF_StoreEntryData",
+  `AF_${ActionFrameIDs.DTA.STORE_ENTRY_DATA}`,
   [rule1, rule2, rule3],
   new StoreEntryData()
 );

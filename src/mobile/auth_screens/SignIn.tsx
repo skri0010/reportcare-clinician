@@ -3,7 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
 import { Auth } from "@aws-amplify/auth";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ms, ScaledSheet } from "react-native-size-matters";
-import { RootState, select } from "util/useRedux";
+import { RootState, select, useDispatch } from "util/useRedux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   AuthScreenName,
@@ -28,21 +28,26 @@ import {
   ProcedureAttributes
 } from "agents_implementation/agent_framework/AgentEnums";
 import { useNetInfo } from "@react-native-community/netinfo";
+import { setProcedureOngoing } from "ic-redux/actions/agents/actionCreator";
 
 export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
   navigation,
   setAuthState
 }) => {
-  const { colors, fonts } = select((state: RootState) => ({
-    colors: state.settings.colors,
-    fonts: state.settings.fonts
-  }));
+  const { colors, fonts, procedureOngoing, procedureSuccessful } = select(
+    (state: RootState) => ({
+      colors: state.settings.colors,
+      fonts: state.settings.fonts,
+      procedureOngoing: state.agents.procedureOngoing,
+      procedureSuccessful: state.agents.procedureSuccessful
+    })
+  );
 
   // Local states
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [inputValid, setInputValid] = useState(false);
-  const [signingIn, setSigningIn] = useState(false);
+  const [signingIn, setSigningIn] = useState(false); // used locally to indicate ongoing sign in attempt
 
   // States related to internet connection
   const [connecting, setConnecting] = useState(false);
@@ -51,6 +56,7 @@ export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
 
   const toast = useToast();
   const netInfo = useNetInfo();
+  const dispatch = useDispatch();
 
   /**
    * Signs in
@@ -58,7 +64,10 @@ export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
    * Otherwise retrieves the entry and initiates the agents.
    */
   const signIn = async (): Promise<void> => {
+    // Start of sign in attempt
+    dispatch(setProcedureOngoing(true));
     setSigningIn(true);
+
     await Auth.signIn({
       username: username,
       password: password
@@ -89,37 +98,6 @@ export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
             )
           );
         }, 1000);
-
-        setTimeout(() => {
-          // Checks facts every 1s to determine if the chain of actions has been completed.
-          const checkProcedure = setInterval(async () => {
-            const facts = agentAPI.getFacts();
-            if (
-              facts[BeliefKeys.PROCEDURE][ProcedureAttributes.ADC] ===
-              ProcedureConst.INACTIVE
-            ) {
-              setSigningIn(false);
-              clearInterval(checkProcedure);
-
-              // Ensures that entry has been successfully retrieved or created
-              const [[, clinicianId], [, clinician]] =
-                await AsyncStorage.multiGet([
-                  AsyncStorageKeys.CLINICIAN_ID,
-                  AsyncStorageKeys.CLINICIAN
-                ]);
-              if (clinicianId && clinician) {
-                toast.show(i18n.t("Auth_SignIn.SignInSuccessful"), {
-                  type: "success"
-                });
-                setAuthState(AuthState.SIGNED_IN);
-              } else {
-                toast.show(i18n.t("Auth_SignIn.ConfigurationFailed"), {
-                  type: "danger"
-                });
-              }
-            }
-          }, 500);
-        }, 1000);
       })
       .catch(async (error: { code: string; message: string; name: string }) => {
         // eslint-disable-next-line no-console
@@ -128,7 +106,11 @@ export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
         // If user is not confirmed
         if (error.name === "UserNotConfirmedException") {
           await Auth.resendSignUp(username);
+
+          // End of sign in attempt
           setSigningIn(false);
+          dispatch(setProcedureOngoing(false));
+
           toast.show(i18n.t("Auth_SignIn.ResendConfirmCode"), {
             type: "warning"
           });
@@ -136,7 +118,10 @@ export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
             username: username
           });
         } else {
+          // End of sign in attempt
           setSigningIn(false);
+          dispatch(setProcedureOngoing(false));
+
           toast.show(i18n.t("Auth_SignIn.SignInFailed"), { type: "danger" });
         }
       });
@@ -147,12 +132,33 @@ export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
     setInputValid(validateUsername(username) && validatePassword(password));
   }, [username, password]);
 
+  // Detects completion of sign in procedure
+  useEffect(() => {
+    // Procedure has completed and sign in successful
+    if (signingIn && !procedureOngoing && procedureSuccessful) {
+      setSigningIn(false);
+      toast.show(i18n.t("Auth_SignIn.SignInSuccessful"), {
+        type: "success"
+      });
+      setAuthState(AuthState.SIGNED_IN);
+    }
+
+    // Procedure has completed and sign in unsuccessful
+    else if (signingIn && !procedureOngoing && !procedureSuccessful) {
+      setSigningIn(false);
+      toast.show(i18n.t("Auth_SignIn.ConfigurationFailed"), {
+        type: "danger"
+      });
+    }
+  }, [signingIn, procedureOngoing, setAuthState, procedureSuccessful, toast]);
+
   // Checks for internet connection
   useEffect(() => {
     if (
       netInfo.isConnected === false ||
       netInfo.isInternetReachable === false
     ) {
+      // No internet connection
       if (!warningToastShown) {
         toast.show(i18n.t("Internet_Connection.OnlineToSignIn"), {
           type: "danger"
@@ -161,8 +167,12 @@ export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
         setSuccessToast(false);
       }
       setConnecting(true);
-    } else if (netInfo.isConnected && netInfo.isInternetReachable) {
+    }
+    // Connected to the internet
+    else if (netInfo.isConnected && netInfo.isInternetReachable) {
       agentAPI.addFact(new Belief(BeliefKeys.APP, AppAttributes.ONLINE, true));
+
+      // Previously was not connected
       if (warningToastShown && !successToastShown) {
         toast.show(i18n.t("Internet_Connection.OnlineNotice"), {
           type: "success"

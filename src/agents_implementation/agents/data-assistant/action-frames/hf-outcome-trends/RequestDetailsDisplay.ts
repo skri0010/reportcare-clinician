@@ -4,6 +4,7 @@ import Belief from "../../../../agent_framework/base/Belief";
 import Communicate from "../../../../agent_framework/base/Communicate";
 import Precondition from "../../../../agent_framework/base/Precondition";
 import {
+  ActionFrameIDs,
   AgentIDs,
   BeliefKeys,
   CommonAttributes,
@@ -23,9 +24,9 @@ class RequestDetailsDisplay extends Communicate {
    */
   constructor() {
     super(
-      "RequestDetailsDisplay",
+      ActionFrameIDs.DTA.REQUEST_DETAILS_DISPLAY,
       Performative.REQUEST,
-      // Triggesr VisualizeParameters action frame of UXSA
+      // Triggers VisualizeParameters action frame of UXSA
       new Belief(BeliefKeys.PATIENT, PatientAttributes.DETAILS_RETRIEVED, true),
       [AgentIDs.UXSA]
     );
@@ -59,12 +60,12 @@ const rule1 = new Precondition(
 const rule2 = new Precondition(
   AgentIDs.DTA,
   CommonAttributes.LAST_ACTIVITY,
-  "RetrievePatientDetails"
+  ActionFrameIDs.DTA.RETRIEVE_PATIENT_DETAILS
 );
 
 // Actionframe of the RequestDetailsDisplay class
 const af_RequestDetailsDisplay = new Actionframe(
-  "AF_RequestDetailsDisplay",
+  `AF_${ActionFrameIDs.DTA.REQUEST_DETAILS_DISPLAY}`,
   [rule1, rule2],
   new RequestDetailsDisplay()
 );

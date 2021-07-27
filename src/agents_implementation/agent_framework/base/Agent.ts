@@ -198,7 +198,6 @@ class Agent {
         }
       }
     } catch (error) {
-      console.log("Here");
       console.log(error);
     }
   }

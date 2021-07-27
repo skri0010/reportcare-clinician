@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { View, FlatList, Button } from "react-native";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { SearchBarComponent } from "components/Bars/SearchBarComponent";
@@ -6,8 +6,6 @@ import { ScaledSheet } from "react-native-size-matters";
 import { PatientDetailsRow } from "components/RowComponents/PatientRows/PatientDetailsRow";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { ParameterGraphs } from "components/Visualizations/ParameterGraphs";
-import { ReportVitals } from "aws/models";
-import { Patient } from "agents_implementation/agent_framework/model";
 import agentDTA from "agents_implementation/agents/data-assistant/DTA";
 import Belief from "agents_implementation/agent_framework/base/Belief";
 import {
@@ -19,20 +17,32 @@ import {
 } from "agents_implementation/agent_framework/AgentEnums";
 import agentAPI from "agents_implementation/agent_framework/AgentAPI";
 import agentUXSA from "agents_implementation/agents/user-specific-assistant/UXSA";
-import { mockPatients } from "mock/mockPatients";
-import { mockVitals } from "mock/mockVitals";
+import { RootState } from "ic-redux/store";
+import { select, useDispatch } from "util/useRedux";
+import { setProcedureOngoing } from "ic-redux/actions/agents/actionCreator";
+import { LoadingIndicator } from "components/LoadingIndicator";
+import { useNetInfo } from "@react-native-community/netinfo";
 
 export const PatientsTab: FC = () => {
-  const [patients, setPatients] = useState<Patient[]>([]);
-  const [graphIsReady, setReady] = useState<boolean>(false);
-  const [vitalsData, setVitalsData] = useState<ReportVitals[]>([]);
+  const { patients, patientDetails, procedureOngoing } = select(
+    (state: RootState) => ({
+      patients: state.agents.patients,
+      procedureOngoing: state.agents.procedureOngoing,
+      patientDetails: state.agents.patientDetails
+    })
+  );
 
-  useEffect(() => {
-    getPatients();
-  }, []);
+  const [retrieving, setRetrieving] = useState(false); // used locally to indicate ongoing retrieval of details
+  const [showGraph, setShowGraph] = useState(false); // used locally for graph display
+
+  const dispatch = useDispatch();
+  const netInfo = useNetInfo();
 
   // Triggers series of actions to get patients according to role.
   const getPatients = () => {
+    // Start of retrieval
+    dispatch(setProcedureOngoing(true));
+
     agentUXSA.addBelief(
       new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.RETRIEVE_ROLE, true)
     );
@@ -43,46 +53,14 @@ export const PatientsTab: FC = () => {
         ProcedureConst.ACTIVE
       )
     );
-
-    // Waits for 0.5s before checking procedure state.
-    setTimeout(() => {
-      // Checks facts every 1s to determine if the chain of actions has been completed.
-      const checkProcedure = setInterval(() => {
-        const facts = agentAPI.getFacts();
-        if (
-          facts[BeliefKeys.PROCEDURE][ProcedureAttributes.HF_OTP_I] ===
-          ProcedureConst.INACTIVE
-        ) {
-          const data: Patient[] =
-            agentAPI.getFacts()[BeliefKeys.PATIENT]?.[PatientAttributes.ALL];
-          if (data) {
-            setPatients(data);
-          }
-
-          // To be removed: for testing purposes only
-          const mockData: Patient[] = mockPatients.map((patient) => {
-            return {
-              details: patient.generalDetails,
-              userId: patient.itemId,
-              class: patient.patientClass,
-              age: patient.age
-            };
-          });
-          setPatients(mockData);
-
-          clearInterval(checkProcedure);
-          agentAPI.addFact(
-            new Belief(BeliefKeys.PATIENT, PatientAttributes.ALL, null),
-            false,
-            true
-          );
-        }
-      }, 1000);
-    }, 500);
   };
 
   // Triggers series of actions to retrieve details specific to a patient.
   const getData = (patientId: string) => {
+    // Start of retrieval
+    dispatch(setProcedureOngoing(true));
+    setRetrieving(true);
+
     agentDTA.addBelief(
       new Belief(BeliefKeys.PATIENT, PatientAttributes.RETRIEVE_DETAILS, true)
     );
@@ -97,37 +75,32 @@ export const PatientsTab: FC = () => {
         ProcedureConst.ACTIVE
       )
     );
-
-    // Waits for 0.5s before checking procedure state.
-    setTimeout(() => {
-      // Checks facts every 1s to determine if the chain of actions has been completed.
-      const checkProcedure = setInterval(() => {
-        const facts = agentAPI.getFacts();
-        if (
-          facts[BeliefKeys.PROCEDURE][ProcedureAttributes.HF_OTP_II] ===
-          ProcedureConst.INACTIVE
-        ) {
-          const data: ReportVitals[] =
-            facts[BeliefKeys.PATIENT]?.[PatientAttributes.DETAILS]
-              ?.vitalsReports;
-          if (data) {
-            setVitalsData(data);
-            setReady(true);
-          }
-
-          // To be removed: for testing purposes only
-          setVitalsData(mockVitals);
-
-          clearInterval(checkProcedure);
-          agentAPI.addFact(
-            new Belief(BeliefKeys.PATIENT, PatientAttributes.DETAILS, null),
-            false,
-            true
-          );
-        }
-      }, 1000);
-    }, 500);
   };
+
+  // Retrieves patients after rendering
+  useEffect(() => {
+    getPatients();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Retrieves patients when internet connection is detected
+  // In the case where there was no internet connection previously
+  useEffect(() => {
+    if (netInfo.isConnected && netInfo.isInternetReachable) {
+      getPatients();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [netInfo]);
+
+  // Detects completion of retrieval procedure
+  useEffect(() => {
+    if (retrieving && !procedureOngoing) {
+      setRetrieving(false);
+      if (!showGraph) {
+        setShowGraph(true);
+      }
+    }
+  }, [procedureOngoing, retrieving, showGraph]);
 
   // JH-TODO: Replace placeholder with i18n
   return (
@@ -160,17 +133,19 @@ export const PatientsTab: FC = () => {
       />
 
       {/* To be removed: for testing purposes only */}
-      {graphIsReady && (
+      {showGraph && (
         <Button
           title="Hide Graphs"
           onPress={() => {
-            setReady(false);
+            setShowGraph(false);
           }}
         />
       )}
 
       {/* TODO: Move graphs to PatientsDetails section */}
-      {graphIsReady && <ParameterGraphs data={vitalsData} />}
+      {showGraph && <ParameterGraphs data={patientDetails.vitalsReports} />}
+
+      {(retrieving || procedureOngoing) && <LoadingIndicator />}
     </ScreenWrapper>
   );
 };

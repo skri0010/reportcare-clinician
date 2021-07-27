@@ -879,6 +879,20 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
+                "NWA": {
+                    "name": "NWA",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "ALA": {
+                    "name": "ALA",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
                 "clinicianInfo": {
                     "name": "clinicianInfo",
                     "isArray": false,
@@ -1097,5 +1111,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "c4eb15056240832e81f4e1cf5f5620d4"
+    "version": "653f652024b45a5dca522e462cd66efe"
 };

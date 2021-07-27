@@ -5,6 +5,7 @@ import Belief from "../../../agent_framework/base/Belief";
 import Precondition from "../../../agent_framework/base/Precondition";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
+  ActionFrameIDs,
   AppAttributes,
   AsyncStorageKeys,
   BeliefKeys,
@@ -12,6 +13,7 @@ import {
 } from "agents_implementation/agent_framework/AgentEnums";
 import { updateClinicianProtectedInfo } from "aws/TypedAPI/updateMutations";
 import { ClinicianInfo, UpdateClinicianProtectedInfoInput } from "aws/API";
+import { getClinicianProtectedInfo } from "aws/TypedAPI/getQueries";
 
 /**
  * Class to represent the activity for syncing local updates in ClinicianProtectedInfo.
@@ -21,7 +23,7 @@ class SyncProtectedInfo extends Activity {
    * Constructor for the SyncProtectedInfo class
    */
   constructor() {
-    super("SyncProtectedInfo");
+    super(ActionFrameIDs.NWA.SYNC_PROTECTED_INFO);
   }
 
   /**
@@ -35,6 +37,15 @@ class SyncProtectedInfo extends Activity {
       new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
     );
 
+    // Prevents the activity from being executed multiple times while data is being synced
+    agent.addBelief(
+      new Belief(
+        BeliefKeys.APP,
+        AppAttributes.PENDING_PROTECTED_INFO_SYNC,
+        false
+      )
+    );
+
     try {
       // Retrieves local clinician
       const clinicianStr = await AsyncStorage.getItem(
@@ -42,26 +53,30 @@ class SyncProtectedInfo extends Activity {
       );
       if (clinicianStr) {
         const clinician: ClinicianInfo = JSON.parse(clinicianStr);
-        if (clinician.protectedInfo) {
-          const updatedProtectedInfo: UpdateClinicianProtectedInfoInput = {
-            clinicianID: clinician.clinicianID,
-            facts: clinician.protectedInfo.facts,
-            APS: clinician.protectedInfo.APS,
-            DTA: clinician.protectedInfo.DTA,
-            UXSA: clinician.protectedInfo.UXSA,
-            owner: clinician.clinicianID,
-            _version: clinician.protectedInfo._version
-          };
-          await updateClinicianProtectedInfo(updatedProtectedInfo);
-        }
 
-        agent.addBelief(
-          new Belief(
-            BeliefKeys.APP,
-            AppAttributes.PENDING_PROTECTED_INFO_SYNC,
-            false
-          )
-        );
+        if (clinician.protectedInfo) {
+          // Query protectedInfo to get the latest version
+          const result = await getClinicianProtectedInfo({
+            clinicianID: clinician.clinicianID
+          });
+          if (result.data) {
+            const latestProtectedInfo = result.data.getClinicianProtectedInfo;
+
+            // Updated protected info should have the latest version
+            const updatedProtectedInfo: UpdateClinicianProtectedInfoInput = {
+              id: clinician.protectedInfo.id!,
+              clinicianID: clinician.clinicianID,
+              facts: clinician.protectedInfo.facts,
+              APS: clinician.protectedInfo.APS,
+              DTA: clinician.protectedInfo.DTA,
+              UXSA: clinician.protectedInfo.UXSA,
+              NWA: clinician.protectedInfo.NWA,
+              owner: clinician.clinicianID,
+              _version: latestProtectedInfo?._version
+            };
+            await updateClinicianProtectedInfo(updatedProtectedInfo);
+          }
+        }
       }
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -80,7 +95,7 @@ const rule2 = new Precondition(
 
 // Actionframe of the SyncProtectedInfo class
 const af_SyncProtectedInfo = new Actionframe(
-  "AF_SyncProtectedInfo",
+  `AF_${ActionFrameIDs.NWA.SYNC_PROTECTED_INFO}`,
   [rule1, rule2],
   new SyncProtectedInfo()
 );

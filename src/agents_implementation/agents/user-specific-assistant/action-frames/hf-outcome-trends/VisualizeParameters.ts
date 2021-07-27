@@ -4,6 +4,7 @@ import Agent from "../../../../agent_framework/base/Agent";
 import Belief from "../../../../agent_framework/base/Belief";
 import Precondition from "../../../../agent_framework/base/Precondition";
 import {
+  ActionFrameIDs,
   BeliefKeys,
   CommonAttributes,
   PatientAttributes,
@@ -12,6 +13,12 @@ import {
 } from "../../../../agent_framework/AgentEnums";
 import agentAPI from "../../../../agent_framework/AgentAPI";
 import { PatientDetails } from "agents_implementation/agent_framework/model";
+import { store } from "util/useRedux";
+import {
+  setProcedureOngoing,
+  setPatientDetails
+} from "ic-redux/actions/agents/actionCreator";
+import { mockVitals } from "mock/mockVitals";
 
 /**
  * Class to represent an activity for visualizing parameters of a specific patient.
@@ -19,7 +26,7 @@ import { PatientDetails } from "agents_implementation/agent_framework/model";
  */
 class VisualizeParameters extends Activity {
   constructor() {
-    super("VisualizeParameters");
+    super(ActionFrameIDs.UXSA.VISUALIZE_PARAMETERS);
   }
 
   /**
@@ -43,17 +50,24 @@ class VisualizeParameters extends Activity {
 
       if (patientDetails) {
         // LS-TODO: Perform filtering on data according to roles
+        // Dispatch patient details to front end
+        store.dispatch(setPatientDetails(patientDetails));
 
-        // Update Facts
-        // Adds patientDetails to facts to be used in front end
+        // Removes patientDetails from facts
         agentAPI.addFact(
-          new Belief(
-            BeliefKeys.PATIENT,
-            PatientAttributes.DETAILS,
-            patientDetails
-          ),
+          new Belief(BeliefKeys.PATIENT, PatientAttributes.DETAILS, null),
           false
         );
+      }
+
+      // LS-TODO: To be removed - for testing purposes only
+      else {
+        const mockDetails: PatientDetails = {
+          activityInfo: [],
+          symptomsReports: [],
+          vitalsReports: mockVitals
+        };
+        store.dispatch(setPatientDetails(mockDetails));
       }
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -66,10 +80,13 @@ class VisualizeParameters extends Activity {
         BeliefKeys.PROCEDURE,
         ProcedureAttributes.HF_OTP_II,
         ProcedureConst.INACTIVE
-      )
+      ),
+      true,
+      true
     );
-    // NOTE: Call to update local facts and beliefs in cloud storage will be
-    // called from the ParameterGraphs component.
+
+    // Dispatch to front end that procedure has been completed
+    store.dispatch(setProcedureOngoing(false));
   }
 }
 
@@ -87,7 +104,7 @@ const rule2 = new Precondition(
 
 // Action Frame for VisualizeParameters class
 const af_VisualizeParameters = new Actionframe(
-  "AF_VisualizeParameters",
+  `AF_${ActionFrameIDs.UXSA.VISUALIZE_PARAMETERS}`,
   [rule1, rule2],
   new VisualizeParameters()
 );

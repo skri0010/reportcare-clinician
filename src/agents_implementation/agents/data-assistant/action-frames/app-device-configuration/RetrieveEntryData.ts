@@ -10,11 +10,17 @@ import {
   BeliefKeys,
   ClinicianAttributes,
   ProcedureAttributes,
-  AgentIDs
+  AgentIDs,
+  ActionFrameIDs
 } from "../../../../agent_framework/AgentEnums";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import agentAPI from "../../../../agent_framework/AgentAPI";
 import { getClinicianInfo } from "aws";
+import { store } from "util/useRedux";
+import {
+  setProcedureOngoing,
+  setProcedureSuccessful
+} from "ic-redux/actions/agents/actionCreator";
 
 /**
  * Class to represent the activity for retrieving clinician's entry data.
@@ -22,7 +28,7 @@ import { getClinicianInfo } from "aws";
  */
 class RetrieveEntryData extends Activity {
   constructor() {
-    super("RetrieveEntryData");
+    super(ActionFrameIDs.DTA.RETRIEVE_ENTRY_DATA);
   }
 
   /**
@@ -61,6 +67,7 @@ class RetrieveEntryData extends Activity {
         const query: any = await getClinicianInfo({
           clinicianID: clinicianUsername
         });
+
         if (query.data) {
           const clinician = query.data.getClinicianInfo;
           if (clinician) {
@@ -112,6 +119,18 @@ class RetrieveEntryData extends Activity {
                   }
                   break;
                 }
+                case AgentIDs.NWA: {
+                  if (
+                    clinician.protectedInfo?.NWA &&
+                    Object.entries(JSON.parse(clinician.protectedInfo?.NWA))
+                      .length > 0
+                  ) {
+                    existingAgent.mergeBeliefs(
+                      JSON.parse(clinician.protectedInfo?.NWA)
+                    );
+                  }
+                  break;
+                }
                 default: {
                   break;
                 }
@@ -123,6 +142,9 @@ class RetrieveEntryData extends Activity {
               [AsyncStorageKeys.CLINICIAN_ID, clinician.clinicianID],
               [AsyncStorageKeys.CLINICIAN, JSON.stringify(clinician)]
             ]);
+
+            // Dispatch to front end that sign in was successful
+            store.dispatch(setProcedureSuccessful(true));
           }
         }
       }
@@ -142,6 +164,9 @@ class RetrieveEntryData extends Activity {
       true,
       true
     );
+
+    // Dispatch to front end that procedure has been completed
+    store.dispatch(setProcedureOngoing(false));
   }
 }
 
@@ -164,7 +189,7 @@ const rule3 = new Precondition(
 
 // Action Frame for RetrieveEntryData class
 const af_RetrieveEntryData = new Actionframe(
-  "AF_RetrieveEntryData",
+  `AF_${ActionFrameIDs.DTA.RETRIEVE_ENTRY_DATA}`,
   [rule1, rule2, rule3],
   new RetrieveEntryData()
 );

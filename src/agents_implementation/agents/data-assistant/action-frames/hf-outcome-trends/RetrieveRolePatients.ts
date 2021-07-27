@@ -11,7 +11,8 @@ import {
   CommonAttributes,
   ClinicianAttributes,
   ProcedureAttributes,
-  AppAttributes
+  AppAttributes,
+  ActionFrameIDs
 } from "agents_implementation/agent_framework/AgentEnums";
 import { Patient } from "../../../../agent_framework/model";
 import { Role } from "models/ClinicianEnums";
@@ -20,6 +21,12 @@ import { RiskLevel } from "models/RiskLevel";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import agentAPI from "../../../../agent_framework/AgentAPI";
 import { getClinicianInfo, listPatientInfos } from "aws";
+import { store } from "util/useRedux";
+import {
+  setPatients,
+  setProcedureOngoing
+} from "ic-redux/actions/agents/actionCreator";
+import { mockPatients } from "mock/mockPatients";
 
 /**
  * Class to represent an activity for retrieving all patients according to role.
@@ -27,7 +34,7 @@ import { getClinicianInfo, listPatientInfos } from "aws";
  */
 class RetrieveRolePatients extends Activity {
   constructor() {
-    super("RetrieveRolePatients");
+    super(ActionFrameIDs.DTA.RETRIEVE_ROLE_PATIENTS);
   }
 
   /**
@@ -36,6 +43,19 @@ class RetrieveRolePatients extends Activity {
    */
   async doActivity(agent: Agent): Promise<void> {
     await super.doActivity(agent);
+
+    /**
+     * Stops the procedure
+     * Note: Stopping procedure early otherwise UXSA's RetrieveRole and RequestRetrieveAll
+     * action frames will be executed multiple times in web version
+     */
+    agentAPI.addFact(
+      new Belief(
+        BeliefKeys.PROCEDURE,
+        ProcedureAttributes.HF_OTP_I,
+        ProcedureConst.INACTIVE
+      )
+    );
 
     // Update Beliefs
     agent.addBelief(
@@ -51,22 +71,32 @@ class RetrieveRolePatients extends Activity {
         const patients: Patient[] = results.map((patient) => {
           return {
             details: {
-              id: patient.patientID,
-              name: patient.name,
+              id: patient.patientID!,
+              name: patient.name!,
               // LS-TODO: Get risk level of patient according to guideline
               riskLevel: RiskLevel.UNASSIGNED
             },
-            userId: patient.id,
-            class: patient.NHYAclass,
+            userId: patient.id!,
+            class: patient.NHYAclass!,
             age: 0
           };
         });
 
-        // Adds patients to facts to be used by front end
-        agentAPI.addFact(
-          new Belief(BeliefKeys.PATIENT, PatientAttributes.ALL, patients),
-          false
-        );
+        // Dispatch patients to front end
+        store.dispatch(setPatients(patients));
+      }
+
+      // LS-TODO: To be removed - for testing purposes only
+      else {
+        const mockData: Patient[] = mockPatients.map((patient) => {
+          return {
+            details: patient.generalDetails,
+            userId: patient.itemId,
+            class: patient.patientClass,
+            age: patient.age
+          };
+        });
+        store.dispatch(setPatients(mockData));
       }
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -77,16 +107,12 @@ class RetrieveRolePatients extends Activity {
     // Removes role from facts
     agentAPI.addFact(
       new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.ROLE, null),
-      false
+      false,
+      true
     );
-    // Stops the procedure
-    agentAPI.addFact(
-      new Belief(
-        BeliefKeys.PROCEDURE,
-        ProcedureAttributes.HF_OTP_I,
-        ProcedureConst.INACTIVE
-      )
-    );
+
+    // Dispatch to front end that procedure has been completed
+    store.dispatch(setProcedureOngoing(false));
   }
 
   /**
@@ -180,7 +206,7 @@ const rule2 = new Precondition(
 
 // Action Frame for RetrieveRolePatients class
 const af_RetrieveRolePatients = new Actionframe(
-  "AF_RetrieveRolePatients",
+  `AF_${ActionFrameIDs.DTA.RETRIEVE_ROLE_PATIENTS}`,
   [rule1, rule2],
   new RetrieveRolePatients()
 );
