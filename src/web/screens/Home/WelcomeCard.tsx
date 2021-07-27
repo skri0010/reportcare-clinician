@@ -21,7 +21,12 @@ export const WelcomeCard: FC<WelcomeCardProps> = ({ name }) => {
   return (
     <CardWrapper firstItem>
       <H1 text="Dashboard" style={[styles.username, styles.dashboard]} />
-      <View style={[styles.card, { backgroundColor: colors.primaryContrastTextColor }]}>
+      <View
+        style={[
+          styles.card,
+          { backgroundColor: colors.primaryContrastTextColor }
+        ]}
+      >
         <View>
           <H2
             text={`Welcome Dr. ${name}`}
