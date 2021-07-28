@@ -1,16 +1,12 @@
-import { ClinicianRowGeneralDetails } from "models/PersonRowDetails";
+import { ClinicianInfo } from "aws/models";
 
-interface IMockClinicianDetails {
-  generalDetails: ClinicianRowGeneralDetails;
-  checked: boolean;
-}
-
-export const mockClinician: IMockClinicianDetails = {
-  generalDetails: {
+export const mockClinician: ClinicianInfo[] = [
+  {
     id: "samuel@gmail.com",
     name: "Dr Samuel",
-    occupation: "EP",
-    location: "Melbourne"
-  },
-  checked: true
-};
+    hospitalName: "Sabah Hospital",
+    role: "EP",
+    clinicianID: "20",
+    owner: "?"
+  }
+];

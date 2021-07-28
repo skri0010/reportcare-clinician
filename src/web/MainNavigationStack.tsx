@@ -1,14 +1,14 @@
 import React, { FC } from "react";
-import { View, Dimensions } from "react-native";
+import { View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { SideNavigationBar } from "./SideNavigationBar";
 import { ScreenName, RootStackParamList } from "./screens";
 import { RootState, select } from "util/useRedux";
+import { ScaledSheet, ms } from "react-native-size-matters";
 import { Auth } from "@aws-amplify/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { ms } from "react-native-size-matters";
 import { useToast } from "react-native-toast-notifications";
 import i18n from "util/language/i18n";
 import { AuthState } from "./auth_screens";
@@ -44,7 +44,7 @@ export const MainNavigationStack: FC<MainNavigationStackProps> = ({
   };
 
   return (
-    <View style={{ height: Dimensions.get("window").height }}>
+    <View style={styles.mainContainer}>
       <NavigationContainer>
         <Stack.Navigator>
           {/* Main Tabs */}
@@ -70,3 +70,9 @@ export const MainNavigationStack: FC<MainNavigationStackProps> = ({
     </View>
   );
 };
+
+const styles = ScaledSheet.create({
+  mainContainer: {
+    flex: 1
+  }
+});

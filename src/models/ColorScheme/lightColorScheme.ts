@@ -16,14 +16,15 @@ export const lightColorScheme: ColorScheme = {
   // Background
   primaryBackgroundColor: "#ffffff",
   secondaryBackgroundColor: "#727272",
+  primaryWebBackgroundColor: "#F5F5F5",
 
   // Borders
-  primaryBorderColor: "#000000",
+  primaryBorderColor: "#D2D2D2",
   secondaryBorderColor: "#000000",
   selectedBorderColor: "#000000",
 
   // Separators
-  separatorColor: "#bababa",
+  separatorColor: "#e6e6e6",
 
   // Bars
   primaryBarColor: "#0d8ca8",
@@ -37,6 +38,7 @@ export const lightColorScheme: ColorScheme = {
 
   // Buttons
   primaryButtonColor: "#57c081",
+  primaryWarningButtonColor: "#D11C1C",
 
   // Avatar background
   primaryAvatarBackgroundColor: "#e0e0e0",

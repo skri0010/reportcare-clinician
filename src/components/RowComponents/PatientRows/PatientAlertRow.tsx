@@ -1,11 +1,13 @@
 import React from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import { PatientRowBase } from "./PatientRowBase";
-import { PersonRowGeneralDetails } from "models/PersonRowDetails";
 import { ScaledSheet } from "react-native-size-matters";
+import { H7 } from "components/Text/index";
+import { PatientInfo } from "aws/API";
+import { RiskLevel } from "models/RiskLevel";
 
 export interface PatientRequestRowProps {
-  generalDetails: PersonRowGeneralDetails;
+  generalDetails: PatientInfo;
   request?: string;
   time?: string;
   onBottomButtonPress?: () => void;
@@ -25,13 +27,16 @@ export const PatientRequestRow: React.FC<PatientRequestRowProps> = ({
           label: "",
           value: request || "Missing alert information"
         }}
-        riskLevel={generalDetails.riskLevel}
+        // TODO: Clarify how this is decided and stored
+        riskLevel={
+          generalDetails.id === "1" ? RiskLevel.HIGH : RiskLevel.MEDIUM
+        }
         bottomButtonLabel="View Details"
         onBottomButtonPress={onBottomButtonPress}
       >
         {/* Time container */}
         <View style={styles.sideContainer}>
-          <Text>{time || "?"}</Text>
+          <H7 text={time || "?"} style={null} />
         </View>
       </PatientRowBase>
     </TouchableOpacity>
