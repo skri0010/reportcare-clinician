@@ -15,15 +15,6 @@ interface editHistorySectionProps {
   editType: string;
   timeDate: string;
 }
-// interface TodoDetailsProps {
-//   mainTitleContent: string;
-//   patientContent: string;
-//   notesContent: string;
-//   createdTimeDate: string;
-//   modifiedTimeDate: string;
-//   onViewPress?: () => void;
-//   onEditPress?: () => void;
-// }
 
 export const TodoSection: FC<todoSectionProps> = ({ mainItem, content }) => {
   return (

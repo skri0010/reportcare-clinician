@@ -98,15 +98,16 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
               }
             ]}
             onPress={() => {
-              const newDate = new Date().toLocaleString();
-              const newTodo = {
-                mainTitleContent: titleInput,
-                patientContent: context.patientContent,
-                notesContent: noteInput,
-                createdTimeDate: context.createdTimeDate,
-                modifiedTimeDate: newDate
-              };
-              navigation.navigate("ViewTodo", newTodo);
+              // Should pass in new item into db
+              // const newDate = new Date().toLocaleString();
+              // const newTodo = {
+              //   mainTitleContent: titleInput,
+              //   patientContent: context.patientContent,
+              //   notesContent: noteInput,
+              //   createdTimeDate: context.createdTimeDate,
+              //   modifiedTimeDate: newDate
+              // };
+              // navigation.navigate("ViewTodo", newTodo);
             }}
           >
             <H3 text="Save" style={{ color: colors.primaryTextColor }} />

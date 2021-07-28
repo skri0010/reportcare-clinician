@@ -117,13 +117,14 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = () => {
               </Tab.Screen>
               <Tab.Screen
                 name="Completed"
-                component={TodoCompletedTab}
                 listeners={{
                   tabPress: () => {
                     setAddButton(checkNeedAddButton("Completed"));
                   }
                 }}
-              />
+              >
+                {() => <TodoCompletedTab setTodoSelected={onRowClick} />}
+              </Tab.Screen>
             </Tab.Navigator>
           </RowSelectionWrapper>
         </View>
@@ -140,13 +141,6 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = () => {
                   <Stack.Screen
                     name="ViewTodo"
                     component={TodoDetailsScreen}
-                    // initialParams={{
-                    //   mainTitleContent: todoSelected.title,
-                    //   patientContent: todoSelected.name,
-                    //   notesContent: todoSelected.description,
-                    //   createdTimeDate: "20:30 12-03-2021",
-                    //   modifiedTimeDate: "never"
-                    // }}
                     options={{
                       title: "View Todo",
                       headerStyle: {

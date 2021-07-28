@@ -1,25 +1,28 @@
 import React, { FC } from "react";
 import { View, FlatList } from "react-native";
-// import { ScreenWrapper } from "web/screens/ScreenWrapper";
-// import { MainTitle } from "components/Text";
 import { TodoRow } from "components/RowComponents/TodoRow";
 import { mockPatientRowDetails } from "mock/mockTodoDetails";
 import { RiskLevel } from "models/RiskLevel";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
-// import { TodoScreenProps } from "../TodoScreenProps";
 import { ITodoDetails } from "models/TodoDetails";
 import { SearchBarComponent } from "components/Bars/SearchBarComponent";
+import { RootState, select } from "util/useRedux";
 
-interface TodoCurrentTabProps {
+export interface TodoRowTabProps {
   setTodoSelected: (item: ITodoDetails) => void;
 }
 
-export const TodoCurrentTab: FC<TodoCurrentTabProps> = ({
-  setTodoSelected
-}) => {
+export const TodoCurrentTab: FC<TodoRowTabProps> = ({ setTodoSelected }) => {
   // JH-TODO Replace titles with i18n
-  // JH-TODO Flatlist
   // JH-TODO Remove mock data
+
+  // Function for changing status to completed
+  // function onDonePress(item: ITodoDetails) {
+  //   // api call
+  // }
+  const { colors } = select((state: RootState) => ({
+    colors: state.settings.colors
+  }));
 
   function onCardPress(item: ITodoDetails) {
     setTodoSelected(item);
@@ -34,7 +37,7 @@ export const TodoCurrentTab: FC<TodoCurrentTabProps> = ({
         onSearchClick={() => {
           null;
         }}
-        containerStyle={{ backgroundColor: "white" }}
+        containerStyle={{ backgroundColor: colors.primaryContrastTextColor }}
         placeholder="Search current todo"
       />
       {/* <MainTitle title="Current Todo" /> */}
@@ -53,10 +56,6 @@ export const TodoCurrentTab: FC<TodoCurrentTabProps> = ({
         )}
         keyExtractor={(item) => item.id}
       />
-      {/* <TodoRow
-          todoDetails={mockPatientRowDetails[0]}
-          riskLevel={RiskLevel.HIGH}
-        /> */}
     </View>
   );
 };
