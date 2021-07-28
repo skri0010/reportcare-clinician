@@ -171,10 +171,15 @@ class Agent {
           });
           if (result.data) {
             clinicianStates = result.data.getClinicianProtectedInfo;
+
+            // Avoids nested clinicianInfo from being stored
+            localClinician.protectedInfo = clinicianStates;
+            delete localClinician.protectedInfo?.clinicianInfo;
+
             // Updates local storage
             await AsyncStorage.mergeItem(
               AsyncStorageKeys.CLINICIAN,
-              JSON.stringify(clinicianStates)
+              JSON.stringify(localClinician)
             );
           }
         } else {

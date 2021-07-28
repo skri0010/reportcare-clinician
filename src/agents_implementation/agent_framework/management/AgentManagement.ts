@@ -59,9 +59,13 @@ abstract class AgentManagement {
             protectedInfo = result.data.getClinicianProtectedInfo;
 
             // Updates local storage
+            localClinician.protectedInfo = protectedInfo!;
+
+            // Avoids nested clinicianInfo from being stored
+            delete localClinician.protectedInfo?.clinicianInfo;
             await AsyncStorage.mergeItem(
               AsyncStorageKeys.CLINICIAN,
-              JSON.stringify(protectedInfo)
+              JSON.stringify(localClinician)
             );
           }
         } else {
@@ -210,6 +214,8 @@ abstract class AgentManagement {
           clinicianID: localClinician.clinicianID
         });
         protectedInfo = clinicianProtectedInfo.data.getClinicianProtectedInfo;
+        // Avoids nested clinicianInfo from being stored later on
+        delete protectedInfo?.clinicianInfo;
       } else {
         // Device is offline
         protectedInfo = localClinician.protectedInfo;
