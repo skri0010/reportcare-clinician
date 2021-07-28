@@ -2,13 +2,16 @@ import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
 import { RiskLevel, getRiskLevelColor } from "models/RiskLevel";
 import { ITodoDetails } from "models/TodoDetails";
-import { Text, View, Button, TouchableHighlight } from "react-native";
+import { View, Button, TouchableOpacity } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
+import { H4, H5 } from "components/Text/index";
 
 // Interface that determines what props the search bar accepts
 interface TodoRowProps {
   todoDetails: ITodoDetails;
   riskLevel: RiskLevel;
+  disabled?: boolean;
+  reduceOpacity?: boolean;
   onButtonPress?: () => void;
   onCardPress?: () => void;
 }
@@ -17,6 +20,8 @@ interface TodoRowProps {
 export const TodoRow: FC<TodoRowProps> = ({
   todoDetails,
   riskLevel,
+  disabled = false,
+  reduceOpacity = false,
   onButtonPress = () => null,
   onCardPress
 }) => {
@@ -25,7 +30,11 @@ export const TodoRow: FC<TodoRowProps> = ({
   }));
 
   return (
-    <TouchableHighlight onPress={onCardPress}>
+    <TouchableOpacity
+      onPress={onCardPress}
+      disabled={disabled || !onCardPress}
+      style={{ opacity: reduceOpacity ? 0.2 : 1 }}
+    >
       <View style={styles.mainContainer}>
         {/* Content */}
         <View
@@ -40,9 +49,9 @@ export const TodoRow: FC<TodoRowProps> = ({
           ]}
         >
           <View style={styles.texts}>
-            <Text style={styles.title}> {todoDetails.title} </Text>
-            <Text style={styles.name}> {todoDetails.name} </Text>
-            <Text style={styles.description}> {todoDetails.description} </Text>
+            <H4 text={todoDetails.title} style={styles.title} />
+            <H5 text={todoDetails.name} style={styles.name} />
+            <H5 text={todoDetails.description} style={null} />
           </View>
         </View>
 
@@ -66,11 +75,15 @@ export const TodoRow: FC<TodoRowProps> = ({
           <Button
             title={todoDetails.doneStatus === false ? "DONE" : "UNDO"}
             onPress={onButtonPress}
-            color={todoDetails.doneStatus === false ? "#37BE7D" : "#D11C1C"}
+            color={
+              todoDetails.doneStatus === false
+                ? colors.primaryButtonColor
+                : colors.primaryWarningButtonColor
+            }
           />
         </View>
       </View>
-    </TouchableHighlight>
+    </TouchableOpacity>
   );
 };
 
@@ -79,9 +92,7 @@ const styles = ScaledSheet.create({
     flexDirection: "row"
   },
   contentContainer: {
-    paddingVertical: "10@ms",
-    borderBottomWidth: 1,
-    borderBottomColor: "#D2D2D2",
+    paddingVertical: "3@ms",
     flex: 1
   },
   texts: {
@@ -89,15 +100,10 @@ const styles = ScaledSheet.create({
   },
   title: {
     fontWeight: "bold",
-    fontSize: "18@ms",
     paddingBottom: "10@ms"
   },
   name: {
-    fontSize: "16@ms",
-    paddingBottom: "20@ms"
-  },
-  description: {
-    fontSize: "16@ms"
+    paddingBottom: "10@ms"
   },
   buttonContainer: {
     paddingTop: "15@ms",

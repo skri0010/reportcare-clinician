@@ -1,12 +1,12 @@
 import React, { FC } from "react";
 import { View } from "react-native";
-import { ClinicianRowGeneralDetails } from "models/PersonRowDetails";
+import { ClinicianInfo } from "aws/models";
 import { ScaledSheet } from "react-native-size-matters";
 import { ClinicianRowBase } from "./ClinicianRowBase";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 export interface ClinicanContactRowProps {
-  generalDetails: ClinicianRowGeneralDetails;
+  generalDetails: ClinicianInfo;
   onRowPress?: () => void;
   onPhonePress?: () => void;
   onWhatsAppPress?: () => void;
@@ -24,8 +24,8 @@ export const ClinicianContactRow: FC<ClinicanContactRowProps> = ({
       {/* TODO-JH: Tick for sent */}
       <ClinicianRowBase
         title={generalDetails.name}
-        subtitleOne={{ value: generalDetails.occupation }}
-        subtitleTwo={{ value: generalDetails.location }}
+        subtitleOne={{ value: generalDetails.role }}
+        subtitleTwo={{ value: generalDetails.hospitalName }}
         onRowPress={onRowPress}
       >
         <View style={styles.container}>

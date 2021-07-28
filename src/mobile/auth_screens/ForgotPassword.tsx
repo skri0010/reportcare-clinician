@@ -1,9 +1,8 @@
 import React, { FC, useState, useEffect } from "react";
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import { View } from "react-native";
 import { Auth } from "@aws-amplify/auth";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ms, ScaledSheet } from "react-native-size-matters";
-import { RootState, select } from "util/useRedux";
 import { AuthScreenName, AuthScreensProps } from "mobile/auth_screens";
 import { ScreenWrapper } from "mobile/screens/ScreenWrapper";
 import {
@@ -13,16 +12,13 @@ import {
 } from "util/validation";
 import i18n from "util/language/i18n";
 import { useToast } from "react-native-toast-notifications";
-import { LoadingIndicator } from "components/LoadingIndicator";
+import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
+import { AuthButton } from "components/Buttons/AuthButton";
+import { TextField } from "components/InputComponents/TextField";
 
 export const ForgotPassword: FC<AuthScreensProps[AuthScreenName.FORGOT_PW]> = ({
   navigation
 }) => {
-  const { colors, fonts } = select((state: RootState) => ({
-    colors: state.settings.colors,
-    fonts: state.settings.fonts
-  }));
-
   // Local states
   const [username, setUsername] = useState("");
   const [code, setCode] = useState("");
@@ -83,14 +79,6 @@ export const ForgotPassword: FC<AuthScreensProps[AuthScreenName.FORGOT_PW]> = ({
     }
   }, [username, code, newPassword, codeSent]);
 
-  // Local styles
-  const inputLabelStyle = [styles.inputLabel, { fontSize: fonts.h2Size }];
-  const inputStyle = [styles.input, { fontSize: fonts.h2Size }];
-  const errorTextStyle = [
-    styles.errorText,
-    { fontSize: fonts.h3Size, color: colors.errorColor }
-  ];
-
   return (
     <ScreenWrapper>
       <SafeAreaView
@@ -99,88 +87,57 @@ export const ForgotPassword: FC<AuthScreensProps[AuthScreenName.FORGOT_PW]> = ({
       >
         {/* Before verification code is sent */}
         {!codeSent && (
-          <View>
-            {/* Username */}
-            <Text style={inputLabelStyle}>
-              {i18n.t("Auth_SignIn.Username")}
-            </Text>
-            <TextInput
-              style={[
-                inputStyle,
-                {
-                  borderColor:
-                    username !== "" && !validateUsername(username)
-                      ? colors.errorColor
-                      : colors.primaryBorderColor
-                }
-              ]}
-              value={username}
-              onChangeText={(text) => setUsername(text)}
-              placeholder={i18n.t("Auth_SignIn.UsernamePlaceholder")}
-              autoCapitalize="none"
-            />
-            {username !== "" && !validateUsername(username) && (
-              <Text style={errorTextStyle}>
-                {i18n.t("Auth_SignIn.UsernameError")}
-              </Text>
-            )}
-          </View>
+          // Username
+          <TextField
+            label={i18n.t("Auth_SignIn.Username")}
+            value={username}
+            onChange={(text) => setUsername(text)}
+            placeholder={i18n.t("Auth_SignIn.UsernamePlaceholder")}
+            error={username !== "" && !validateUsername(username)}
+            errorMessage={i18n.t("Auth_SignIn.UsernameError")}
+          />
         )}
 
         {/* After verification code is sent */}
         {codeSent && (
           <View>
             {/* Verification Code */}
-            <Text style={inputLabelStyle}>
-              {i18n.t("Auth_ConfirmRegistration.VerificationCode")}
-            </Text>
-            <TextInput
-              style={inputStyle}
+            <TextField
+              label={i18n.t("Auth_ConfirmRegistration.VerificationCode")}
               value={code}
-              onChangeText={(text) => setCode(text)}
+              onChange={(text) => setCode(text)}
               placeholder={i18n.t(
                 "Auth_ConfirmRegistration.VerificationCodePlaceholder"
               )}
-              autoCapitalize="none"
+              error={code !== "" && !validateCode(code)}
+              errorMessage={i18n.t(
+                "Auth_ConfirmRegistration.VerificationCodeError"
+              )}
             />
-            {code !== "" && !validateCode(code) && (
-              <Text style={errorTextStyle}>
-                {i18n.t("Auth_ConfirmRegistration.VerificationCodeError")}
-              </Text>
-            )}
 
             {/* New Password */}
-            <Text style={inputLabelStyle}>
-              {i18n.t("Auth_ForgotPassword.NewPassword")}
-            </Text>
-            <TextInput
-              style={[
-                inputStyle,
-                {
-                  borderColor:
-                    newPassword !== "" && !validatePassword(newPassword)
-                      ? colors.errorColor
-                      : colors.primaryBorderColor
-                }
-              ]}
+            <TextField
+              label={i18n.t("Auth_ForgotPassword.NewPassword")}
               value={newPassword}
-              onChangeText={(text) => setNewPassword(text)}
+              onChange={(text) => setNewPassword(text)}
               placeholder={i18n.t("Auth_ForgotPassword.NewPasswordPlaceholder")}
-              autoCapitalize="none"
+              secureText
               autoCorrect={false}
-              secureTextEntry
+              error={newPassword !== "" && !validatePassword(newPassword)}
+              errorMessage={i18n.t("Auth_SignIn.PasswordError")}
               textContentType="password"
             />
-            {newPassword !== "" && !validatePassword(newPassword) && (
-              <Text style={errorTextStyle}>
-                {i18n.t("Auth_SignIn.PasswordError")}
-              </Text>
-            )}
           </View>
         )}
 
         {/* Request Code or Submit New Password */}
-        <TouchableOpacity
+        <AuthButton
+          inputValid={inputValid}
+          buttonTitle={
+            codeSent
+              ? i18n.t("Auth_ForgotPassword.Submit")
+              : i18n.t("Auth_ForgotPassword.SendCode")
+          }
           onPress={
             inputValid
               ? codeSent
@@ -188,30 +145,7 @@ export const ForgotPassword: FC<AuthScreensProps[AuthScreenName.FORGOT_PW]> = ({
                 : requestCode
               : () => null
           }
-          style={[
-            {
-              backgroundColor: inputValid
-                ? colors.primaryButtonColor
-                : colors.separatorColor
-            },
-            styles.button
-          ]}
-        >
-          <Text
-            style={[
-              {
-                fontSize: fonts.h2Size,
-                opacity: inputValid ? 1 : 0.3,
-                color: colors.primaryContrastTextColor
-              },
-              styles.buttonText
-            ]}
-          >
-            {codeSent
-              ? i18n.t("Auth_ForgotPassword.Submit")
-              : i18n.t("Auth_ForgotPassword.SendCode")}
-          </Text>
-        </TouchableOpacity>
+        />
       </SafeAreaView>
       {loading && <LoadingIndicator />}
     </ScreenWrapper>
@@ -221,31 +155,5 @@ export const ForgotPassword: FC<AuthScreensProps[AuthScreenName.FORGOT_PW]> = ({
 const styles = ScaledSheet.create({
   safeAreaContainer: {
     margin: ms(20)
-  },
-  inputLabel: {
-    fontWeight: "bold",
-    marginTop: ms(10),
-    marginBottom: ms(10)
-  },
-  input: {
-    borderWidth: ms(2),
-    height: ms(40),
-    marginBottom: ms(5)
-  },
-  button: {
-    height: ms(45),
-    width: ms(250),
-    marginTop: ms(15),
-    borderRadius: "10@ms",
-    justifyContent: "center",
-    alignSelf: "center"
-  },
-  buttonText: {
-    textTransform: "uppercase",
-    textAlign: "center",
-    fontWeight: "bold"
-  },
-  errorText: {
-    fontWeight: "bold"
   }
 });

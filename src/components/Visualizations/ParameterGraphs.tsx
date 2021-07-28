@@ -1,25 +1,20 @@
 import React, { FC, useState, useEffect } from "react";
-import {
-  Text,
-  View,
-  Dimensions,
-  ViewStyle,
-  ScrollView,
-  Platform
-} from "react-native";
+import { View, ScrollView } from "react-native";
 import { RootState, select } from "util/useRedux";
-import { LineChart } from "react-native-chart-kit";
 import { ReportVitals } from "aws/API";
 import { ms, ScaledSheet } from "react-native-size-matters";
+import { H3 } from "components/Text";
+import i18n from "util/language/i18n";
+import { LineChartComponent } from "./LineChart";
 
 enum days {
-  "Sun" = 0,
-  "Mon" = 1,
-  "Tue" = 2,
-  "Wed" = 3,
-  "Thu" = 4,
-  "Fri" = 5,
-  "Sat" = 6
+  "Sunday" = 0,
+  "Monday" = 1,
+  "Tuesday" = 2,
+  "Wednesday" = 3,
+  "Thursday" = 4,
+  "Friday" = 5,
+  "Saturday" = 6
 }
 
 interface AverageStats {
@@ -41,9 +36,8 @@ interface ParameterGraphsProps {
 }
 
 export const ParameterGraphs: FC<ParameterGraphsProps> = ({ data }) => {
-  const { colors, fonts } = select((state: RootState) => ({
-    colors: state.settings.colors,
-    fonts: state.settings.fonts
+  const { colors } = select((state: RootState) => ({
+    colors: state.settings.colors
   }));
 
   const [vitalsData, setVitalsData] = useState<ReportVitals[]>(data);
@@ -94,153 +88,67 @@ export const ParameterGraphs: FC<ParameterGraphsProps> = ({ data }) => {
     }
   }
 
-  // Line graphs configuration
-  const chartConfig = {
-    backgroundGradientFrom: colors.primaryBackgroundColor,
-    backgroundGradientTo: colors.primaryBackgroundColor,
-    color: (opacity = 1) => `rgba(255, 0, 100, ${opacity})`,
-    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-    strokeWidth: ms(4),
-    propsForLabels: {
-      fontSize: fonts.h4Size,
-      fontWeight: "bold"
-    },
-    propsForDots: {
-      r: "6"
-    },
-    propsForBackgroundLines: {
-      strokeWidth: ms(2)
-    }
-  };
+  const xLabels = Object.keys(averageStats).map((key) =>
+    i18n.t(`Parameter_Graphs.Days.${key}`)
+  );
 
   // Local styles
-  const titleStyle = [styles.title, { fontSize: fonts.h2Size }];
-  const unitStyle = [styles.title, { fontSize: fonts.h3Size }];
   const dividerStyle = [
     styles.divider,
     { borderBottomColor: colors.secondaryBackgroundColor }
   ];
 
-  const webChartStyle = {
-    paddingTop: ms(30),
-    paddingRight: ms(50),
-    alignSelf: "center"
-  } as Partial<ViewStyle>;
-
-  const mobileChartStyle = {
-    paddingTop: ms(20),
-    paddingBottom: ms(10),
-    alignSelf: "center"
-  } as Partial<ViewStyle>;
-
-  const chartStyle = Platform.OS === "web" ? webChartStyle : mobileChartStyle;
-
-  const width =
-    Platform.OS === "web"
-      ? Dimensions.get("window").width / 2
-      : (Dimensions.get("window").width * 6) / 7;
-
-  const height =
-    Platform.OS === "web"
-      ? (Dimensions.get("window").height * 3) / 5
-      : Dimensions.get("window").height / 3;
-
   if (Object.keys(averageStats).length > 0) {
     return (
       <ScrollView style={styles.container}>
         {/* Diastolic Blood Pressure graph */}
-        <View style={styles.titleContainer}>
-          <Text style={titleStyle}>Diastolic Blood Pressure </Text>
-          <Text style={unitStyle}>(mmHg)</Text>
-        </View>
-        <LineChart
-          data={{
-            labels: Object.keys(averageStats),
-            datasets: [
-              {
-                data: Object.keys(averageStats).map((key) => {
-                  return averageStats[key].averageDiastolic;
-                })
-              }
-            ]
-          }}
-          width={width}
-          height={height}
-          chartConfig={chartConfig}
-          style={chartStyle}
+        <LineChartComponent
+          graphTitle={i18n.t("Parameter_Graphs.DiastolicBP")}
+          graphSubtitle={i18n.t("Parameter_Graphs.BPUnit")}
+          xLabels={xLabels}
+          data={Object.keys(averageStats).map((key) => {
+            return averageStats[key].averageDiastolic;
+          })}
         />
         <View style={dividerStyle} />
+
         {/* Systolic Blood Pressure graph */}
-        <View style={styles.titleContainer}>
-          <Text style={titleStyle}>Systolic Blood Pressure </Text>
-          <Text style={unitStyle}>(mmHg)</Text>
-        </View>
-        <LineChart
-          data={{
-            labels: Object.keys(averageStats),
-            datasets: [
-              {
-                data: Object.keys(averageStats).map((key) => {
-                  return averageStats[key].averageSystolic;
-                })
-              }
-            ]
-          }}
-          width={width}
-          height={height}
-          chartConfig={chartConfig}
-          style={chartStyle}
+        <LineChartComponent
+          graphTitle={i18n.t("Parameter_Graphs.SystolicBP")}
+          graphSubtitle={i18n.t("Parameter_Graphs.BPUnit")}
+          xLabels={xLabels}
+          data={Object.keys(averageStats).map((key) => {
+            return averageStats[key].averageSystolic;
+          })}
         />
         <View style={dividerStyle} />
+
         {/* Oxygen Saturation graph */}
-        <View style={styles.titleContainer}>
-          <Text style={titleStyle}>Oxygen Saturation </Text>
-          <Text style={unitStyle}>(%)</Text>
-        </View>
-        <LineChart
-          data={{
-            labels: Object.keys(averageStats),
-            datasets: [
-              {
-                data: Object.keys(averageStats).map((key) => {
-                  return averageStats[key].averageOxySat;
-                })
-              }
-            ]
-          }}
-          width={width}
-          height={height}
-          chartConfig={chartConfig}
-          style={chartStyle}
+        <LineChartComponent
+          graphTitle={i18n.t("Parameter_Graphs.OxygenSaturation")}
+          graphSubtitle={i18n.t("Parameter_Graphs.OxygenSaturationUnit")}
+          xLabels={xLabels}
+          data={Object.keys(averageStats).map((key) => {
+            return averageStats[key].averageOxySat;
+          })}
         />
         <View style={dividerStyle} />
+
         {/* Weight graph */}
-        <View style={styles.titleContainer}>
-          <Text style={titleStyle}>Weight </Text>
-          <Text style={unitStyle}>(kg)</Text>
-        </View>
-        <LineChart
-          data={{
-            labels: Object.keys(averageStats),
-            datasets: [
-              {
-                data: Object.keys(averageStats).map((key) => {
-                  return averageStats[key].averageWeight;
-                })
-              }
-            ]
-          }}
-          width={width}
-          height={height}
-          chartConfig={chartConfig}
-          style={chartStyle}
+        <LineChartComponent
+          graphTitle={i18n.t("Parameter_Graphs.Weight")}
+          graphSubtitle={i18n.t("Parameter_Graphs.WeightUnit")}
+          xLabels={xLabels}
+          data={Object.keys(averageStats).map((key) => {
+            return averageStats[key].averageWeight;
+          })}
         />
       </ScrollView>
     );
   }
   return (
     <View style={styles.container}>
-      <Text style={titleStyle}>No data was found</Text>
+      <H3 text={i18n.t("Parameter_Graphs.NoData")} style={styles.title} />
     </View>
   );
 };
@@ -248,11 +156,6 @@ export const ParameterGraphs: FC<ParameterGraphsProps> = ({ data }) => {
 const styles = ScaledSheet.create({
   container: {
     margin: ms(20)
-  },
-  titleContainer: {
-    flexDirection: "row",
-    alignItems: "baseline",
-    marginLeft: ms(10)
   },
   title: {
     fontWeight: "bold"

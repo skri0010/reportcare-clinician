@@ -1,12 +1,14 @@
 import React, { FC } from "react";
-import { Text, View, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import { PatientRowBase } from "./PatientRowBase";
-import { PersonRowGeneralDetails } from "models/PersonRowDetails";
 import { ScaledSheet } from "react-native-size-matters";
 import { RootState, select } from "util/useRedux";
+import { H7 } from "components/Text/index";
+import { PatientInfo } from "aws/API";
+import { RiskLevel } from "models/RiskLevel";
 
 export interface PatientChatRowProps {
-  generalDetails: PersonRowGeneralDetails;
+  generalDetails: PatientInfo;
   message: string;
   unreadMessageCount: number;
   time?: string;
@@ -32,14 +34,14 @@ export const PatientChatRow: FC<PatientChatRowProps> = ({
           { backgroundColor: colors.notificationColor }
         ]}
       >
-        <Text
+        <H7
+          text={count.toString()}
           style={[
             styles.notificationTextStyle,
             { color: colors.primaryTextColor }
           ]}
-        >
-          {count.toString()}
-        </Text>
+        />
+        {/* {count.toString()} */}
       </View>
     );
   };
@@ -49,18 +51,21 @@ export const PatientChatRow: FC<PatientChatRowProps> = ({
       {/* TODO-JH: i18n translation */}
       {/* TODO-JH: Tick for sent */}
       <PatientRowBase
-        title={generalDetails.name}
+        title={generalDetails.name!}
         subtitleOne={{
           label: "Message",
           value: message
         }}
-        riskLevel={generalDetails.riskLevel}
+        // TODO: Clarify how this is decided and stored
+        riskLevel={
+          generalDetails.id === "1" ? RiskLevel.HIGH : RiskLevel.MEDIUM
+        }
       >
         {/* Side container */}
         <View style={styles.sideContainer}>
           {/* Time container */}
           <View style={styles.timeContainer}>
-            <Text style={styles.timeTextStyle}>{time || "?"}</Text>
+            <H7 text={time || "?"} style={null} />
           </View>
           {/* Notification (with count) container */}
           {unreadMessageCount ? (
@@ -93,7 +98,9 @@ const styles = ScaledSheet.create({
   notification: {
     width: "18@ms",
     height: "18@ms",
-    borderRadius: "15@ms"
+    borderRadius: "15@ms",
+    justifyContent: "space-evenly",
+    alignItems: "center"
   },
   notificationTextStyle: {
     textAlign: "center"

@@ -70,15 +70,12 @@ class RetrieveRolePatients extends Activity {
       if (results.length > 0) {
         const patients: Patient[] = results.map((patient) => {
           return {
-            details: {
-              id: patient.patientID!,
-              name: patient.name!,
-              // LS-TODO: Get risk level of patient according to guideline
-              riskLevel: RiskLevel.UNASSIGNED
-            },
+            details: patient,
             userId: patient.id!,
-            class: patient.NHYAclass!,
-            age: 0
+            class: patient.NHYAclass,
+            age: 0,
+            // LS-TODO: Get risk level of patient according to guideline
+            riskLevel: RiskLevel.UNASSIGNED
           };
         });
 
@@ -90,10 +87,10 @@ class RetrieveRolePatients extends Activity {
       else {
         const mockData: Patient[] = mockPatients.map((patient) => {
           return {
-            details: patient.generalDetails,
-            userId: patient.itemId,
-            class: patient.patientClass,
-            age: patient.age
+            details: patient,
+            userId: patient.patientID!,
+            age: 50,
+            riskLevel: RiskLevel.UNASSIGNED
           };
         });
         store.dispatch(setPatients(mockData));

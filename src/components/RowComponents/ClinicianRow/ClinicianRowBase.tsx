@@ -1,8 +1,8 @@
 import React, { FC } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { RootState, select } from "util/useRedux";
-
+import { H5, H6 } from "components/Text/index";
 import { PeopleAvatar } from "../PeopleAvatar";
 
 interface SubtitleItemProps {
@@ -30,12 +30,10 @@ export const ClinicianRowBase: React.FC<ClinicianRowBaseProps> = ({
 
   const SubtitleItem: FC<SubtitleItemProps> = ({ value }) => {
     return (
-      <Text
-        numberOfLines={1}
+      <H6
+        text={value ? `${value}` : ""}
         style={[styles.subtitleTextStyle, { color: colors.secondaryTextColor }]}
-      >
-        {value ? `${value}` : ""}
-      </Text>
+      />
     );
   };
   return (
@@ -47,16 +45,17 @@ export const ClinicianRowBase: React.FC<ClinicianRowBaseProps> = ({
         ]}
       >
         {/* Image (left container) */}
-        <PeopleAvatar iconType="user-md" />
+        <View style={styles.avatarContainer}>
+          <PeopleAvatar iconType="user-md" />
+        </View>
         {/* Content (middle container) */}
         <TouchableOpacity style={styles.container} onPress={onRowPress}>
           {/* Title */}
           {/* TODO-JH: Use custom text component */}
-          <Text
+          <H5
+            text={title}
             style={[styles.titleTextStyle, { color: colors.primaryTextColor }]}
-          >
-            {title}
-          </Text>
+          />
           <View style={styles.subtitleContainer}>
             {/* Subtitles */}
             {subtitleOne ? <SubtitleItem value={subtitleOne.value} /> : null}
@@ -85,16 +84,23 @@ const styles = ScaledSheet.create({
   container: {
     paddingTop: "5@ms",
     flexDirection: "column",
+    paddingLeft: "5@ms",
     flex: 1
   },
   titleTextStyle: {
-    fontWeight: "bold",
-    fontSize: "10@ms"
+    fontWeight: "bold"
+    // fontSize: "10@ms"
   },
   subtitleTextStyle: {
-    fontSize: "9@ms"
+    // fontSize: "9@ms"
   },
   subtitleContainer: {
     paddingBottom: "10@ms"
+  },
+  avatarContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: "7@ms",
+    width: "80@ms0.1"
   }
 });

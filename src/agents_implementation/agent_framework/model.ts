@@ -1,10 +1,10 @@
-import { PersonRowGeneralDetails } from "models/PersonRowDetails";
 import {
   ActivityInfo,
-  PatientInfo,
   ReportSymptom,
-  ReportVitals
+  ReportVitals,
+  PatientInfo
 } from "aws/API";
+import { RiskLevel } from "models/RiskLevel";
 
 export interface Fact {
   [k: string]: { [k: string]: any };
@@ -18,8 +18,8 @@ export interface PatientDetails {
 }
 
 export interface Patient {
-  details: PersonRowGeneralDetails;
+  details: PatientInfo;
   userId: string;
-  class: string;
   age: number;
+  riskLevel: RiskLevel;
 }

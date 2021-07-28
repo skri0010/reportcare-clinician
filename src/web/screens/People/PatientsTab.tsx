@@ -20,7 +20,7 @@ import agentUXSA from "agents_implementation/agents/user-specific-assistant/UXSA
 import { RootState } from "ic-redux/store";
 import { select, useDispatch } from "util/useRedux";
 import { setProcedureOngoing } from "ic-redux/actions/agents/actionCreator";
-import { LoadingIndicator } from "components/LoadingIndicator";
+import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
 import { useNetInfo } from "@react-native-community/netinfo";
 
 export const PatientsTab: FC = () => {
@@ -124,9 +124,9 @@ export const PatientsTab: FC = () => {
         renderItem={({ item }) => (
           <PatientDetailsRow
             generalDetails={item.details}
-            patientClass={item.class}
+            patientClass={item.details.NHYAclass!}
             age={item.age}
-            onRowPress={() => getData(item.details.id)}
+            onRowPress={() => getData(item.details.patientID!)}
           />
         )}
         keyExtractor={(item) => item.userId}

@@ -1,5 +1,5 @@
 import React, { FC, useState, useEffect } from "react";
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import { View, Text } from "react-native";
 import { Auth } from "@aws-amplify/auth";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ms, ScaledSheet } from "react-native-size-matters";
@@ -17,9 +17,11 @@ import {
 import i18n from "util/language/i18n";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useToast } from "react-native-toast-notifications";
-import { LoadingIndicator } from "components/LoadingIndicator";
+import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AsyncStorageKeys } from "agents_implementation/agent_framework/AgentEnums";
+import { AuthButton } from "components/Buttons/AuthButton";
+import { TextField } from "components/InputComponents/TextField";
 
 export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
   navigation
@@ -82,7 +84,7 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
   const rolePickerItems: JSX.Element[] = roles.map((item) => {
     return (
       <Picker.Item
-        style={{ fontWeight: "600", fontSize: fonts.h2Size }}
+        style={{ fontWeight: "600", fontSize: fonts.h4Size }}
         key={item}
         value={item}
         label={i18n.t(`Auth_Registration.${item}`)}
@@ -91,7 +93,7 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
   });
   rolePickerItems.unshift(
     <Picker.Item
-      style={{ fontWeight: "600", fontSize: fonts.h2Size }}
+      style={{ fontWeight: "600", fontSize: fonts.h4Size }}
       key="default"
       value={undefined}
       label={i18n.t("Auth_Registration.RolePlaceholder")}
@@ -103,7 +105,7 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
   const hospitalPickerItems: JSX.Element[] = hospitals.map((item) => {
     return (
       <Picker.Item
-        style={{ fontWeight: "600", fontSize: fonts.h2Size }}
+        style={{ fontWeight: "600", fontSize: fonts.h4Size }}
         key={item}
         value={item}
         label={item}
@@ -112,7 +114,7 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
   });
   hospitalPickerItems.unshift(
     <Picker.Item
-      style={{ fontWeight: "600", fontSize: fonts.h2Size }}
+      style={{ fontWeight: "600", fontSize: fonts.h4Size }}
       key="default"
       value={undefined}
       label={i18n.t("Auth_Registration.HospitalPlaceholder")}
@@ -138,11 +140,10 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
   }, [password, confirmPassword]);
 
   // Local styles
-  const inputLabelStyle = [styles.inputLabel, { fontSize: fonts.h2Size }];
-  const inputStyle = [styles.input, { fontSize: fonts.h2Size }];
-  const errorTextStyle = [
-    styles.errorText,
-    { fontSize: fonts.h3Size, color: colors.errorColor }
+  const inputLabelStyle = [styles.inputLabel, { fontSize: fonts.h3Size }];
+  const pickerStyle = [
+    styles.picker,
+    { borderColor: colors.primaryBorderColor }
   ];
 
   return (
@@ -153,50 +154,33 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
       >
         <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
           {/* Name */}
-          <Text style={[inputLabelStyle, { marginTop: ms(-5) }]}>
-            {i18n.t("Auth_Registration.Name")}
-          </Text>
-          <TextInput
-            style={inputStyle}
+          <TextField
+            label={i18n.t("Auth_Registration.Name")}
+            labelStyle={{ marginTop: ms(-5) }}
             value={name}
-            onChangeText={(text) => setName(text)}
+            onChange={(text) => setName(text)}
             placeholder={i18n.t("Auth_Registration.NamePlaceholder")}
             keyboardType="default"
             autoCapitalize="characters"
           />
 
           {/* Email */}
-          <Text style={inputLabelStyle}>
-            {i18n.t("Auth_Registration.Email")}
-          </Text>
-          <TextInput
-            style={[
-              inputStyle,
-              {
-                borderColor:
-                  email !== "" && !validateEmail(email)
-                    ? colors.errorColor
-                    : colors.primaryBorderColor
-              }
-            ]}
+          <TextField
+            label={i18n.t("Auth_Registration.Email")}
             value={email}
-            onChangeText={(text) => setEmail(text)}
+            onChange={(text) => setEmail(text)}
             placeholder={i18n.t("Auth_Registration.EmailPlaceholder")}
-            autoCapitalize="none"
-            keyboardType="email-address"
+            error={email !== "" && !validateEmail(email)}
+            errorMessage={i18n.t("Auth_Registration.EmailError")}
             textContentType="emailAddress"
+            keyboardType="email-address"
           />
-          {email !== "" && !validateEmail(email) && (
-            <Text style={errorTextStyle}>
-              {i18n.t("Auth_Registration.EmailError")}
-            </Text>
-          )}
 
           {/* Role */}
           <Text style={inputLabelStyle}>
             {i18n.t("Auth_Registration.Role")}
           </Text>
-          <View style={styles.picker}>
+          <View style={pickerStyle}>
             <Picker
               selectedValue={role}
               onValueChange={(value: string) => {
@@ -211,7 +195,7 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
           <Text style={inputLabelStyle}>
             {i18n.t("Auth_Registration.Hospital")}
           </Text>
-          <View style={styles.picker}>
+          <View style={pickerStyle}>
             <Picker
               selectedValue={hospital}
               onValueChange={(value: string) => {
@@ -223,107 +207,48 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
           </View>
 
           {/* Username */}
-          <Text style={inputLabelStyle}>{i18n.t("Auth_SignIn.Username")}</Text>
-          <TextInput
-            style={[
-              inputStyle,
-              {
-                borderColor:
-                  username !== "" && !validateUsername(username)
-                    ? colors.errorColor
-                    : colors.primaryBorderColor
-              }
-            ]}
+          <TextField
+            label={i18n.t("Auth_SignIn.Username")}
             value={username}
-            onChangeText={(text) => setUsername(text)}
+            onChange={(text) => setUsername(text)}
             placeholder={i18n.t("Auth_SignIn.UsernamePlaceholder")}
-            autoCapitalize="none"
+            error={username !== "" && !validateUsername(username)}
+            errorMessage={i18n.t("Auth_SignIn.UsernameError")}
           />
-          {username !== "" && !validateUsername(username) && (
-            <Text style={errorTextStyle}>
-              {i18n.t("Auth_SignIn.UsernameError")}
-            </Text>
-          )}
 
           {/* Password */}
-          <Text style={inputLabelStyle}>{i18n.t("Auth_SignIn.Password")}</Text>
-          <TextInput
-            style={[
-              inputStyle,
-              {
-                borderColor:
-                  password !== "" && !validatePassword(password)
-                    ? colors.errorColor
-                    : colors.primaryBorderColor
-              }
-            ]}
+          <TextField
+            label={i18n.t("Auth_SignIn.Password")}
             value={password}
-            onChangeText={(text) => setPassword(text)}
+            onChange={(text) => setPassword(text)}
             placeholder={i18n.t("Auth_SignIn.PasswordPlaceholder")}
-            autoCapitalize="none"
+            secureText
             autoCorrect={false}
-            secureTextEntry
+            error={password !== "" && !validatePassword(password)}
+            errorMessage={i18n.t("Auth_SignIn.PasswordError")}
             textContentType="password"
           />
-          {password !== "" && !validatePassword(password) && (
-            <Text style={errorTextStyle}>
-              {i18n.t("Auth_SignIn.PasswordError")}
-            </Text>
-          )}
 
           {/* Confirm Password */}
-          <Text style={inputLabelStyle}>
-            {i18n.t("Auth_Registration.ConfirmPassword")}
-          </Text>
-          <TextInput
-            style={[
-              inputStyle,
-              {
-                borderColor:
-                  confirmPassword !== "" && !passwordMatch
-                    ? colors.errorColor
-                    : colors.primaryBorderColor
-              }
-            ]}
+          <TextField
+            label={i18n.t("Auth_Registration.ConfirmPassword")}
             value={confirmPassword}
-            onChangeText={(text) => setConfirmPassword(text)}
+            onChange={(text) => setConfirmPassword(text)}
             placeholder={i18n.t("Auth_Registration.ConfirmPasswordPlaceholder")}
-            autoCapitalize="none"
+            secureText
             autoCorrect={false}
-            secureTextEntry
+            error={confirmPassword !== "" && !passwordMatch}
+            errorMessage={i18n.t("Auth_Registration.ConfirmPasswordError")}
             textContentType="password"
           />
-          {confirmPassword !== "" && !passwordMatch && (
-            <Text style={errorTextStyle}>
-              {i18n.t("Auth_Registration.ConfirmPasswordError")}
-            </Text>
-          )}
 
           {/* Register Button */}
-          <TouchableOpacity
+          <AuthButton
+            inputValid={inputValid}
+            buttonTitle={i18n.t("Auth_Registration.Register")}
             onPress={inputValid ? register : () => null}
-            style={[
-              {
-                backgroundColor: inputValid
-                  ? colors.primaryButtonColor
-                  : colors.separatorColor
-              },
-              styles.button
-            ]}
-          >
-            <Text
-              style={[
-                {
-                  fontSize: fonts.h2Size,
-                  opacity: inputValid ? 1 : 0.3,
-                  color: colors.primaryContrastTextColor
-                },
-                styles.buttonText
-              ]}
-            >
-              {i18n.t("Auth_Registration.Register")}
-            </Text>
-          </TouchableOpacity>
+            style={{ marginBottom: ms(15) }}
+          />
         </KeyboardAwareScrollView>
       </SafeAreaView>
       {registering && <LoadingIndicator />}
@@ -336,13 +261,8 @@ const styles = ScaledSheet.create({
     margin: ms(15)
   },
   inputLabel: {
-    fontWeight: "bold",
+    fontWeight: "600",
     marginTop: ms(10),
-    marginBottom: ms(10)
-  },
-  input: {
-    borderWidth: ms(2),
-    height: ms(40),
     marginBottom: ms(5)
   },
   picker: {
@@ -353,22 +273,5 @@ const styles = ScaledSheet.create({
   },
   pickerItem: {
     fontWeight: "600"
-  },
-  button: {
-    height: ms(45),
-    width: ms(250),
-    marginTop: ms(15),
-    marginBottom: ms(15),
-    borderRadius: "10@ms",
-    justifyContent: "center",
-    alignSelf: "center"
-  },
-  buttonText: {
-    textTransform: "uppercase",
-    textAlign: "center",
-    fontWeight: "bold"
-  },
-  errorText: {
-    fontWeight: "bold"
   }
 });

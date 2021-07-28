@@ -1,10 +1,11 @@
 import React from "react";
 import { TouchableOpacity } from "react-native";
 import { PatientRowBase } from "./PatientRowBase";
-import { PersonRowGeneralDetails } from "models/PersonRowDetails";
+import { PatientInfo } from "aws/API";
+import { RiskLevel } from "models/RiskLevel";
 
 export interface PatientDetailsRowProps {
-  generalDetails: PersonRowGeneralDetails;
+  generalDetails: PatientInfo;
   patientClass: string;
   age: number;
   onRowPress?: () => void;
@@ -20,16 +21,19 @@ export const PatientDetailsRow: React.FC<PatientDetailsRowProps> = ({
     <TouchableOpacity onPress={onRowPress}>
       {/* TODO-JH: i18n translation */}
       <PatientRowBase
-        title={generalDetails.name}
+        title={generalDetails.name!}
         subtitleOne={{
           label: "Class",
-          value: patientClass
+          value: `NHYA ${patientClass}`
         }}
         subtitleTwo={{
           label: "Age",
           value: age.toString()
         }}
-        riskLevel={generalDetails.riskLevel}
+        // TODO: Clarify how this is decided and stored
+        riskLevel={
+          generalDetails.id === "1" ? RiskLevel.HIGH : RiskLevel.MEDIUM
+        }
       />
     </TouchableOpacity>
   );

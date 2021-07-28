@@ -30,7 +30,7 @@ export const AuthNavigationStack: FC<AuthNavigationStackProps> = ({
   };
 
   const headerTitleStyle = {
-    fontSize: fonts.h2Size
+    fontSize: fonts.h3Size
   };
 
   return (
