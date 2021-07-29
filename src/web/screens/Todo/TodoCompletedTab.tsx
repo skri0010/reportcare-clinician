@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from "react";
+import React, { FC } from "react";
 import { FlatList } from "react-native";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { RiskLevel } from "models/RiskLevel";

@@ -50,5 +50,8 @@ export const lightColorScheme: ColorScheme = {
   // Others
   riskLevelBackgroundColors: riskLevelBackgroundColors,
   riskLevelBorderColors: riskLevelBorderColors,
-  riskLevelSelectedBackgroundColors: riskLevelSelectedBackgroundColors
+  riskLevelSelectedBackgroundColors: riskLevelSelectedBackgroundColors,
+
+  // Overlay
+  overlayColor: "#f5fcff88"
 };

@@ -25,15 +25,3 @@ export type EditTodoScreenProps = {
   route: EditTodoScreenRouteProp;
   navigation: EditTodoScreenNavigationProp;
 };
-
-// Add Todo screen
-type AddTodoScreenNavigationProp = StackNavigationProp<
-  TodoStackParamList,
-  "AddTodo"
->;
-type AddTodoScreenRouteProp = RouteProp<TodoStackParamList, "AddTodo">;
-
-export type AddTodoScreenProps = {
-  route: AddTodoScreenRouteProp;
-  navigation: AddTodoScreenNavigationProp;
-};

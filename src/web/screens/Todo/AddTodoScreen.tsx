@@ -1,18 +1,14 @@
 import React, { FC, useState } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  ScrollView
-} from "react-native";
+import { View, TouchableOpacity, TextInput } from "react-native";
 import { ScaledSheet, ms } from "react-native-size-matters";
-import { AddTodoScreenProps } from "../TodoScreenProps";
-import { TodoSection, EditHistorySection } from "./TodoDetailsScreen";
 import { H3 } from "components/Text";
 import { RootState, select } from "util/useRedux";
 
-export const AddTodoScreen: FC<AddTodoScreenProps> = ({ navigation }) => {
+interface AddTodoScreenProps {
+  setModalVisible: (state: boolean) => void;
+}
+
+export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
   }));
@@ -32,8 +28,16 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <H3 text="Title" style={{ fontWeight: "bold", marginBottom: ms(10) }} />
+    <View
+      style={[
+        styles.container,
+        {
+          backgroundColor: colors.primaryWebBackgroundColor,
+          borderColor: colors.secondaryBackgroundColor
+        }
+      ]}
+    >
+      <H3 text="Title" style={{ fontWeight: "bold", marginBottom: ms(5) }} />
       <TextInput
         value={titleInput}
         placeholder="What's this todo about?"
@@ -46,7 +50,7 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ navigation }) => {
         ]}
         onChangeText={onChangeTitle}
       />
-      <H3 text="Patient" style={{ fontWeight: "bold", marginBottom: ms(10) }} />
+      <H3 text="Patient" style={{ fontWeight: "bold", marginBottom: ms(5) }} />
       <TextInput
         value={patientInput}
         placeholder="What's the patient's name?"
@@ -59,7 +63,7 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ navigation }) => {
         ]}
         onChangeText={onChangePatient}
       />
-      <H3 text="Notes" style={{ fontWeight: "bold", marginBottom: ms(10) }} />
+      <H3 text="Notes" style={{ fontWeight: "bold", marginBottom: ms(5) }} />
       <TextInput
         multiline
         value={noteInput}
@@ -81,13 +85,10 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ navigation }) => {
             { backgroundColor: colors.primaryTodoCompleteButtonColor }
           ]}
           onPress={() => {
-            null;
+            // Sends API call to save new Todo data
           }}
         >
-          <H3
-            text="Cancel"
-            style={{ color: colors.primaryContrastTextColor }}
-          />
+          <H3 text="Save" style={{ color: colors.primaryContrastTextColor }} />
         </TouchableOpacity>
         <TouchableOpacity
           style={[
@@ -98,10 +99,10 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ navigation }) => {
             }
           ]}
           onPress={() => {
-            // Sends API call to save new Todo data
+            setModalVisible(false);
           }}
         >
-          <H3 text="Save" style={{ color: colors.primaryTextColor }} />
+          <H3 text="Cancel" style={{ color: colors.primaryTextColor }} />
         </TouchableOpacity>
       </View>
     </View>
@@ -110,12 +111,18 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ navigation }) => {
 
 const styles = ScaledSheet.create({
   container: {
-    flexDirection: "column",
-    margin: "30@ms",
-    marginTop: "20@ms"
+    alignSelf: "center",
+    justifyContent: "center",
+    marginTop: "20@ms",
+    padding: "20@ms",
+    height: "70%",
+    width: "70%",
+    borderWidth: ms(2),
+    borderRadius: ms(10)
   },
   titleInput: {
     height: "30@ms",
+    width: "50%",
     borderWidth: "1@ms",
     borderRadius: "2@ms",
     marginBottom: "20@ms",

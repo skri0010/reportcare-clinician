@@ -1,22 +1,19 @@
 /* eslint-disable no-console */
-import React, { FC, useState, createContext, useContext } from "react";
+import React, { FC, useState, createContext } from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { TodoCurrentTab } from "./TodoCurrentTab";
 import { TodoCompletedTab } from "./TodoCompletedTab";
 import { getTopTabBarOptions } from "util/getStyles";
 import { RootState, select } from "util/useRedux";
-import { ScreenName, WithSideTabsProps, TodoStackParamList } from "web/screens";
-import { View, Dimensions } from "react-native";
+import { ScreenName, WithSideTabsProps } from "web/screens";
+import { View, Dimensions, Modal } from "react-native";
 import { RowSelectionWrapper } from "../RowSelectionTab";
-import { ms } from "react-native-size-matters";
+import { ms, ScaledSheet } from "react-native-size-matters";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { TodoDetailsScreen } from "./TodoDetailsScreen";
 import { EditTodoScreen } from "./EditTodoScreen";
-import {
-  createStackNavigator,
-  HeaderBackButton
-} from "@react-navigation/stack";
-import { NavigationContainer, useNavigation } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import { NavigationContainer } from "@react-navigation/native";
 import { AddTodoScreen } from "./AddTodoScreen";
 import { NoSelectionScreen } from "../Shared/NoSelectionScreen";
 import { ITodoDetails } from "models/TodoDetails";
@@ -39,14 +36,13 @@ function checkNeedAddButton(tabName: string) {
   }
   return needAddButton;
 }
-const testing: FC = () => {
-  return <View />;
-};
+
 export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = () => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
   }));
 
+  const [modalVisible, setModalVisible] = useState(false);
   const [addButton, setAddButton] = useState(true);
   const [todoSelected, setTodoSelected] = useState<ITodoDetails>({
     title: "",
@@ -57,21 +53,10 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = () => {
     modified: "",
     id: ""
   });
-  const [addButtonPressed, setAddButtonPressed] = useState(false);
-  const [selectedChange, setSelectedChanged] = useState<boolean>(false);
-  const [queue, setQueue] = useState<string[]>([]);
-
-  const initialTodo = {
-    mainTitleContent: todoSelected.title,
-    patientContent: todoSelected.name,
-    notesContent: todoSelected.description,
-    createdTimeDate: todoSelected.created,
-    modifiedTimeDate: todoSelected.modified
-  };
+  const [isEmptyTodo, setEmptyTodo] = useState(true);
 
   function onRowClick(item: ITodoDetails) {
     const currentSelected = todoSelected;
-    const changed: boolean = false;
     const emptyTodo: ITodoDetails = {
       title: "",
       name: "",
@@ -82,57 +67,34 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = () => {
       id: ""
     };
     if (currentSelected !== item && item !== emptyTodo) {
-      if (queue.includes("ViewTodo") === false) {
-        queue.push("ViewTodo");
-      }
-      setQueue(queue);
-      setSelectedChanged(!changed);
+      setEmptyTodo(false);
       setTodoSelected(item);
+    } else if (item === emptyTodo) {
+      setEmptyTodo(true);
     }
-    // setTodoSelected(item);
-    // if (todoSelected === null ){
-    //   setTodoSelected(item);
-    // }
-    // else{
-    //   setTodoSelected(null);
-    // }
-    // // eslint-disable-next-line no-console
-    // console.log(todoSelected);
   }
 
-  function checkInitialRoute() {
-    let initialRoute: string = "";
-    if (queue.length === 1) {
-      if (queue[0] === "ViewTodo") {
-        initialRoute = "ViewTodo";
-      } else {
-        initialRoute = "AddTodo";
-      }
-    } else if (queue.length === 2) {
-      if (queue[0] === "ViewTodo") {
-        initialRoute = "AddTodo";
-      } else {
-        queue.shift();
-        setQueue(queue);
-      }
-    }
-    return initialRoute;
-  }
+  const initialTodo = {
+    mainTitleContent: todoSelected.title,
+    patientContent: todoSelected.name,
+    notesContent: todoSelected.description,
+    createdTimeDate: todoSelected.created,
+    modifiedTimeDate: todoSelected.modified
+  };
 
   return (
     // JH-TODO: Replace names with i18n
     <ScreenWrapper>
-      <View style={{ flexDirection: "row", height: "100%" }}>
-        <View style={{ flex: 1, height: Dimensions.get("window").height }}>
+      <View
+        style={styles.container}
+        pointerEvents={modalVisible ? "none" : "auto"}
+      >
+        <View style={styles.rowSelection}>
           <RowSelectionWrapper
             title="Todo"
             addButton={addButton}
             onPress={() => {
-              if (queue.includes("AddTodo") === false) {
-                queue.push("AddTodo");
-              }
-              setQueue(queue);
-              setAddButtonPressed(true);
+              setModalVisible(true);
             }}
             isTodo
           >
@@ -166,14 +128,14 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = () => {
             backgroundColor: colors.primaryWebBackgroundColor
           }}
         >
-          {selectedChange || addButtonPressed ? (
+          {!isEmptyTodo ? (
             <NavigationContainer independent>
               <TodoContext.Provider value={initialTodo}>
-                <Stack.Navigator initialRouteName={checkInitialRoute()}>
+                <Stack.Navigator>
                   <Stack.Screen
                     name="ViewTodo"
                     component={TodoDetailsScreen}
-                    options={({ navigation, route }) => ({
+                    options={() => ({
                       title: "View Todo",
                       headerStyle: {
                         height: ms(45)
@@ -183,7 +145,6 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = () => {
                         fontSize: ms(20),
                         paddingLeft: ms(15)
                       }
-                      // headerLeft: () => null
                     })}
                   />
                   <Stack.Screen
@@ -200,29 +161,6 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = () => {
                       }
                     }}
                   />
-                  <Stack.Screen
-                    name="AddTodo"
-                    component={AddTodoScreen}
-                    options={({ navigation, route }) => ({
-                      title: "Add Todo",
-                      headerStyle: {
-                        height: ms(45)
-                      },
-                      headerTitleStyle: {
-                        fontWeight: "bold",
-                        fontSize: ms(20),
-                        paddingLeft: ms(15)
-                      },
-                      headerLeft: () => (
-                        <HeaderBackButton
-                          onPress={() => {
-                            navigation.navigate("ViewTodo", route.params);
-                            setAddButtonPressed(false);
-                          }}
-                        />
-                      )
-                    })}
-                  />
                 </Stack.Navigator>
               </TodoContext.Provider>
             </NavigationContainer>
@@ -234,6 +172,40 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = () => {
           )}
         </View>
       </View>
+      <View style={styles.modalView}>
+        <Modal
+          transparent
+          visible={modalVisible}
+          animationType="slide"
+          onRequestClose={() => {
+            setModalVisible(false);
+          }}
+        >
+          <View
+            style={[
+              styles.modalContainer,
+              { backgroundColor: colors.overlayColor }
+            ]}
+          >
+            <AddTodoScreen setModalVisible={setModalVisible} />
+          </View>
+        </Modal>
+      </View>
     </ScreenWrapper>
   );
 };
+
+const styles = ScaledSheet.create({
+  container: { flexDirection: "row", height: "100%" },
+  modalView: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  rowSelection: { flex: 1, height: Dimensions.get("window").height },
+  modalContainer: {
+    justifyContent: "center",
+    height: "100%",
+    width: "100%"
+  }
+});

@@ -76,7 +76,7 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
               { backgroundColor: colors.primaryTodoCompleteButtonColor }
             ]}
             onPress={() => {
-              navigation.navigate("ViewTodo", editTodoParam);
+              navigation.goBack();
               // editTodoParam is undefined (no params anymore??)
               // eslint-disable-next-line no-console
               console.log(editTodoParam);
