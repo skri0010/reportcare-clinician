@@ -1,28 +1,20 @@
 import React, { FC, useState } from "react";
-import { View, TextStyle, Dimensions, FlatList } from "react-native";
+import { View, Dimensions, FlatList } from "react-native";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { mockClinician } from "mock/mockClinicians";
 import { ClinicianContactRow } from "components/RowComponents/ClinicianRow/ClinicianContactRow";
 import { ClinicianShareRow } from "components/RowComponents/ClinicianRow/ClinicianShareRow";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { H4 } from "components/Text";
 import { ScaledSheet } from "react-native-size-matters";
 import { lightColorScheme } from "models/ColorScheme";
-import { getTopTabBarOptions } from "util/getStyles";
 import { RootState, select } from "util/useRedux";
 import { ScreenName, WithSideTabsProps } from "web/screens";
-import { ClinicianList } from "./ClinicianList";
 import { createStackNavigator, HeaderBackButton } from "@react-navigation/stack";
 import { RowSelectionWrapper } from "../RowSelectionTab";
-import { Row } from "antd";
-import { ClinicianRowGeneralDetails } from "models/PersonRowDetails";
-import { NavigationContainer } from "@react-navigation/native";
 import { NoSelection } from "./NoSelection";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { ClinicianInfo } from "aws/models";
 
-const Tab = createMaterialTopTabNavigator();
-const Stack = createStackNavigator();
 
 export const CliniciansTab: FC<WithSideTabsProps[ScreenName.CLINICIAN]> = () => {
   const { colors } = select((state: RootState) => ({
