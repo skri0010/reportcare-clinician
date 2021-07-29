@@ -6,6 +6,8 @@ import af_ApprovePatientRequest from "./action-frames/storing-data/ApprovePatien
 import af_RetrievePatientDetails from "./action-frames/hf-outcome-trends/RetrievePatientDetails";
 import af_RequestDetailsDisplay from "./action-frames/hf-outcome-trends/RequestDetailsDisplay";
 import af_RetrieveRolePatients from "./action-frames/hf-outcome-trends/RetrieveRolePatients";
+import af_RetrieveAlertInfo from "./action-frames/triage-alert-hf-clinic/RetrieveAlertInfo";
+import af_RequestAlertDisplay from "./action-frames/triage-alert-hf-clinic/RequestAlertDisplay";
 import {
   AgentIDs,
   CommonAttributes
@@ -20,12 +22,23 @@ const belief1 = new Belief(AgentIDs.DTA, CommonAttributes.LAST_ACTIVITY, null);
 const agentDTA = new Agent(
   AgentIDs.DTA,
   [
+    // ADC
     af_StoreEntryData,
     af_RetrieveEntryData,
+
+    // SRD
     af_ApprovePatientRequest,
+
+    // HF-OTP-II
     af_RetrievePatientDetails,
     af_RequestDetailsDisplay,
-    af_RetrieveRolePatients
+
+    // HF-OTP-I
+    af_RetrieveRolePatients,
+
+    // AT-CP
+    af_RetrieveAlertInfo,
+    af_RequestAlertDisplay
   ], // action frame
   [belief1] // beliefs
 );

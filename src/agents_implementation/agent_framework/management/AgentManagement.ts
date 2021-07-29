@@ -231,6 +231,7 @@ abstract class AgentManagement {
           UXSA: protectedInfo.UXSA,
           NWA: protectedInfo.NWA,
           ALA: protectedInfo.ALA,
+          MHA: protectedInfo.MHA,
           owner: localClinician.clinicianID,
           _version: protectedInfo._version
         };
@@ -247,14 +248,21 @@ abstract class AgentManagement {
               break;
             }
             case AgentIDs.DTA: {
-              // LS-TODO: Temporary fix for duplicated RetrievePatientDetails action frame
+              // LS-TODO: Temporary fix for duplicated RetrievePatientDetails and RetrieveAlertInfo action frames
               const currentBeliefs: Fact = agent.getBeliefs();
-              if (
-                currentBeliefs[AgentIDs.DTA][CommonAttributes.LAST_ACTIVITY] ===
-                ActionFrameIDs.DTA.RETRIEVE_PATIENT_DETAILS
+              switch (
+                currentBeliefs[AgentIDs.DTA][CommonAttributes.LAST_ACTIVITY]
               ) {
-                currentBeliefs[AgentIDs.DTA][CommonAttributes.LAST_ACTIVITY] =
-                  ActionFrameIDs.DTA.REQUEST_DETAILS_DISPLAY;
+                case ActionFrameIDs.DTA.RETRIEVE_PATIENT_DETAILS:
+                  currentBeliefs[AgentIDs.DTA][CommonAttributes.LAST_ACTIVITY] =
+                    ActionFrameIDs.DTA.REQUEST_DETAILS_DISPLAY;
+                  break;
+                case ActionFrameIDs.DTA.RETRIEVE_ALERT_INFO:
+                  currentBeliefs[AgentIDs.DTA][CommonAttributes.LAST_ACTIVITY] =
+                    ActionFrameIDs.DTA.REQUEST_ALERT_DISPLAY;
+                  break;
+                default:
+                  break;
               }
               const updatedBeliefs = JSON.stringify(currentBeliefs);
               updatedProtectedInfo[AgentIDs.DTA] = updatedBeliefs;
@@ -281,6 +289,18 @@ abstract class AgentManagement {
               const updatedBeliefs = JSON.stringify(agent.getBeliefs());
               updatedProtectedInfo[AgentIDs.NWA] = updatedBeliefs;
               localClinician.protectedInfo[AgentIDs.NWA] = updatedBeliefs;
+              break;
+            }
+            case AgentIDs.ALA: {
+              const updatedBeliefs = JSON.stringify(agent.getBeliefs());
+              updatedProtectedInfo[AgentIDs.ALA] = updatedBeliefs;
+              localClinician.protectedInfo[AgentIDs.ALA] = updatedBeliefs;
+              break;
+            }
+            case AgentIDs.MHA: {
+              const updatedBeliefs = JSON.stringify(agent.getBeliefs());
+              updatedProtectedInfo[AgentIDs.MHA] = updatedBeliefs;
+              localClinician.protectedInfo[AgentIDs.MHA] = updatedBeliefs;
               break;
             }
             default: {

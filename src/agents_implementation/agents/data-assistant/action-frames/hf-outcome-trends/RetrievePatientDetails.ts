@@ -38,6 +38,9 @@ class RetrievePatientDetails extends Activity {
     agent.addBelief(
       new Belief(BeliefKeys.PATIENT, PatientAttributes.RETRIEVE_DETAILS, false)
     );
+    agent.addBelief(
+      new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
+    );
 
     try {
       // Gets patientId from facts
@@ -123,11 +126,6 @@ class RetrievePatientDetails extends Activity {
       // eslint-disable-next-line no-console
       console.log(error);
     }
-
-    // Update lastActivity last since RequestDetailsDisplay will be triggered by this
-    agent.addBelief(
-      new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
-    );
   }
 }
 

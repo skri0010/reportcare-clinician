@@ -82,7 +82,8 @@ class StoreEntryData extends Activity {
               DTA: "",
               UXSA: "",
               NWA: "",
-              ALA: ""
+              ALA: "",
+              MHA: ""
             });
 
           const newProtectedInfo =

@@ -3,6 +3,8 @@ import agentAPS from "../../agents/app-configuration-assistant/APS";
 import agentDTA from "../../agents/data-assistant/DTA";
 import agentUXSA from "../../agents/user-specific-assistant/UXSA";
 import agentNWA from "../../agents/network-assistant/NWA";
+import agentALA from "agents_implementation/agents/alert-assistant/ALA";
+import agentMHA from "agents_implementation/agents/medical-health-assistant/MHA";
 
 /**
  * Class for management of active agents on mobile application.
@@ -14,6 +16,8 @@ class MobileAgentManagement extends AgentManagement {
     agentDTA.start();
     agentUXSA.start();
     agentNWA.start();
+    agentALA.start();
+    agentMHA.start();
   }
 }
 

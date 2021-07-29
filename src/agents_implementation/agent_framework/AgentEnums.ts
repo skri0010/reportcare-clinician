@@ -40,7 +40,8 @@ export enum AgentIDs {
   DTA = "DTA",
   UXSA = "UXSA",
   NWA = "NWA",
-  ALA = "ALA"
+  ALA = "ALA",
+  MHA = "MHA"
 }
 
 export const ActionFrameIDs = {
@@ -54,16 +55,27 @@ export const ActionFrameIDs = {
     RETRIEVE_ROLE_PATIENTS: "RetrieveRolePatients",
     RETRIEVE_PATIENT_DETAILS: "RetrievePatientDetails",
     REQUEST_DETAILS_DISPLAY: "RequestDetailsDisplay",
-    APPROVE_PATIENT_REQUEST: "ApprovePatientRequest"
+    APPROVE_PATIENT_REQUEST: "ApprovePatientRequest",
+    RETRIEVE_ALERT_INFO: "RetrieveAlertInfo",
+    REQUEST_ALERT_DISPLAY: "RequestAlertDisplay"
   },
   UXSA: {
     RETRIEVE_ROLE: "RetrieveRole",
     REQUEST_RETRIEVE_ALL: "RequestRetrieveAll",
-    VISUALIZE_PARAMETERS: "VisualizeParameters"
+    VISUALIZE_PARAMETERS: "VisualizeParameters",
+    DISPLAY_ALERT: "DisplayAlert"
   },
   NWA: {
     SYNC_PROTECTED_INFO: "SyncProtectedInfo",
     SYNC_PATIENT_REQUEST: "SyncPatientRequest"
+  },
+  ALA: {
+    SORT_ALERT: "SortAlert",
+    REQUEST_ALERT_INFO: "RequestAlertInfo"
+  },
+  MHA: {
+    RECEIVE_ALERT: "ReceiveAlert",
+    REQUEST_ALERT_SORT: "RequestAlertSort"
   }
 };
 
@@ -93,7 +105,8 @@ export enum ProcedureAttributes {
   ADC = "ADC",
   HF_OTP_I = "HF-OTP-I",
   HF_OTP_II = "HF-OTP-II",
-  SRD = "SRD"
+  SRD = "SRD",
+  AT_CP = "AT-CP"
 }
 
 // Attributes for CLINICIAN key
@@ -117,7 +130,12 @@ export enum PatientAttributes {
   DETAILS = "Details",
   UPDATE_CLINICIAN = "UpdateClinician",
   CLINICIAN_UPDATED = "ClinicianUpdated",
-  UPDATE_SUCCESSFUL = "UpdateSuccessful"
+  INCOMING_ALERT = "IncomingAlert",
+  NEW_ALERT = "NewAlert",
+  ALERT = "Alert",
+  ALERT_SORTED = "AlertSorted",
+  ALERT_INFO = "AlertInfo",
+  ALERT_INFO_RETRIEVED = "AlertInfoRetrieved"
 }
 
 // Keys for locally storing data in AsyncStorage
@@ -127,5 +145,6 @@ export enum AsyncStorageKeys {
   USERNAME = "Username",
   CLINICIAN = "Clinician",
   PATIENTS = "Patients",
-  PATIENT_REQUESTS = "PatientRequests"
+  PATIENT_REQUESTS = "PatientRequests",
+  ALERTS = "Alerts"
 }

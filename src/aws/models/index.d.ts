@@ -99,6 +99,7 @@ export declare class ClinicianProtectedInfo {
   readonly UXSA: string;
   readonly NWA: string;
   readonly ALA: string;
+  readonly MHA: string;
   readonly clinicianInfo: ClinicianInfo;
   readonly owner: string;
   constructor(init: ModelInit<ClinicianProtectedInfo>);

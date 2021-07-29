@@ -413,6 +413,17 @@ export const schema = {
                     }
                 },
                 {
+                    "type": "key",
+                    "properties": {
+                        "name": "byDate",
+                        "fields": [
+                            "patientID",
+                            "Date"
+                        ],
+                        "queryField": "listMedCompliantsByDate"
+                    }
+                },
+                {
                     "type": "auth",
                     "properties": {
                         "rules": [
@@ -893,6 +904,13 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
+                "MHA": {
+                    "name": "MHA",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
                 "clinicianInfo": {
                     "name": "clinicianInfo",
                     "isArray": false,
@@ -1111,5 +1129,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "653f652024b45a5dca522e462cd66efe"
+    "version": "3fcc89070b8074452a889e46c6529de2"
 };

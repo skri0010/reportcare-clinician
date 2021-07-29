@@ -39,6 +39,9 @@ class AssociateData extends Activity {
     agent.addBelief(
       new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.HAS_ENTRY, true)
     );
+    agent.addBelief(
+      new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
+    );
 
     try {
       const [[, username], [, details]] = await AsyncStorage.multiGet([
@@ -87,11 +90,6 @@ class AssociateData extends Activity {
       // eslint-disable-next-line no-console
       console.log(error);
     }
-
-    // Update lastActivity last since RequestEntryData will be triggered by this
-    agent.addBelief(
-      new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
-    );
   }
 }
 

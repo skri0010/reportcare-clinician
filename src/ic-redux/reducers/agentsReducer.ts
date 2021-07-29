@@ -2,6 +2,7 @@ import { actionNames } from "../actions/actionNames";
 import { RootAction } from "../actions/RootAction";
 import { Reducer } from "redux";
 import {
+  AlertInfo,
   Patient,
   PatientDetails
 } from "agents_implementation/agent_framework/model";
@@ -13,6 +14,7 @@ interface AgentsState {
   patients: Patient[];
   patientDetails: PatientDetails;
   patientRequestsSynced: boolean;
+  newAlert: AlertInfo | undefined;
 }
 
 const initialState: AgentsState = {
@@ -25,7 +27,8 @@ const initialState: AgentsState = {
     symptomsReports: [],
     vitalsReports: []
   },
-  patientRequestsSynced: false
+  patientRequestsSynced: false,
+  newAlert: undefined
 };
 
 export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
@@ -36,10 +39,7 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
     case actionNames.SET_PROCEDURE_ONGOING:
       return { ...state, procedureOngoing: action.payload.procedureOngoing };
     case actionNames.SET_PROCEDURE_SUCCESSFUL:
-      return {
-        ...state,
-        procedureSuccessful: action.payload.successful
-      };
+      return { ...state, procedureSuccessful: action.payload.successful };
     case actionNames.SET_PATIENTS:
       return { ...state, patients: action.payload.patients };
     case actionNames.SET_PATIENT_DETAILS:
@@ -49,6 +49,8 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
         ...state,
         patientRequestsSynced: action.payload.patientRequestsSynced
       };
+    case actionNames.SET_NEW_ALERT:
+      return { ...state, newAlert: action.payload.newAlert };
     default:
       return state;
   }

@@ -39,13 +39,11 @@ class RetrieveRole extends Activity {
     agent.addBelief(
       new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.RETRIEVE_ROLE, false)
     );
-
-    const role = await this.queryRole();
-
-    // Update lastActivity last since RequestRetrieveAll will be triggered by this
     agent.addBelief(
       new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
     );
+
+    const role = await this.queryRole();
 
     // Update Facts
     agentAPI.addFact(

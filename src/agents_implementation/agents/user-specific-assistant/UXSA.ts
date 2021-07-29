@@ -3,6 +3,7 @@ import Belief from "../../agent_framework/base/Belief";
 import af_VisualizeParameters from "./action-frames/hf-outcome-trends/VisualizeParameters";
 import af_RetrieveRole from "./action-frames/hf-outcome-trends/RetrieveRole";
 import af_RequestRetrieveAll from "./action-frames/hf-outcome-trends/RequestRetrieveAll";
+import af_DisplayAlert from "./action-frames/triage-alert-hf-clinic/DisplayAlert";
 import {
   AgentIDs,
   CommonAttributes
@@ -14,7 +15,17 @@ const belief1 = new Belief(AgentIDs.UXSA, CommonAttributes.LAST_ACTIVITY, null);
 // User Specific Assistant Agent
 const agentUXSA = new Agent(
   AgentIDs.UXSA,
-  [af_VisualizeParameters, af_RetrieveRole, af_RequestRetrieveAll], // action frame
+  [
+    // HF-OTP-II
+    af_VisualizeParameters,
+
+    // HF-OTP-I
+    af_RetrieveRole,
+    af_RequestRetrieveAll,
+
+    // AT-CP
+    af_DisplayAlert
+  ], // action frame
   [belief1] // beliefs
 );
 

@@ -426,6 +426,7 @@ export const createClinicianInfo = /* GraphQL */ `
         UXSA
         NWA
         ALA
+        MHA
         clinicianID
         owner
         _version
@@ -462,6 +463,7 @@ export const updateClinicianInfo = /* GraphQL */ `
         UXSA
         NWA
         ALA
+        MHA
         clinicianID
         owner
         _version
@@ -498,6 +500,7 @@ export const deleteClinicianInfo = /* GraphQL */ `
         UXSA
         NWA
         ALA
+        MHA
         clinicianID
         owner
         _version
@@ -528,6 +531,7 @@ export const createClinicianProtectedInfo = /* GraphQL */ `
       UXSA
       NWA
       ALA
+      MHA
       clinicianID
       clinicianInfo {
         id
@@ -564,6 +568,7 @@ export const updateClinicianProtectedInfo = /* GraphQL */ `
       UXSA
       NWA
       ALA
+      MHA
       clinicianID
       clinicianInfo {
         id
@@ -600,6 +605,7 @@ export const deleteClinicianProtectedInfo = /* GraphQL */ `
       UXSA
       NWA
       ALA
+      MHA
       clinicianID
       clinicianInfo {
         id

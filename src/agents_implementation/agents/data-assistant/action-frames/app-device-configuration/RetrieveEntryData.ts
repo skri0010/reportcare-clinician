@@ -131,6 +131,30 @@ class RetrieveEntryData extends Activity {
                   }
                   break;
                 }
+                case AgentIDs.ALA: {
+                  if (
+                    clinician.protectedInfo?.ALA &&
+                    Object.entries(JSON.parse(clinician.protectedInfo?.ALA))
+                      .length > 0
+                  ) {
+                    existingAgent.mergeBeliefs(
+                      JSON.parse(clinician.protectedInfo?.ALA)
+                    );
+                  }
+                  break;
+                }
+                case AgentIDs.MHA: {
+                  if (
+                    clinician.protectedInfo?.MHA &&
+                    Object.entries(JSON.parse(clinician.protectedInfo?.MHA))
+                      .length > 0
+                  ) {
+                    existingAgent.mergeBeliefs(
+                      JSON.parse(clinician.protectedInfo?.MHA)
+                    );
+                  }
+                  break;
+                }
                 default: {
                   break;
                 }

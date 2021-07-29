@@ -1,4 +1,5 @@
 import {
+  AlertInfo,
   Patient,
   PatientDetails
 } from "agents_implementation/agent_framework/model";
@@ -37,5 +38,12 @@ export const setPatientRequestsSynced = createAction(
   actionNames.SET_PATIENT_REQUESTS_SYNCED,
   (patientRequestsSynced: boolean) => ({
     patientRequestsSynced: patientRequestsSynced
+  })
+)();
+
+export const setNewAlert = createAction(
+  actionNames.SET_NEW_ALERT,
+  (newAlert: AlertInfo) => ({
+    newAlert: newAlert
   })
 )();

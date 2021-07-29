@@ -74,7 +74,12 @@ type MedCompliant
       { allow: groups, groupsField: "patientID", operations: [read] }
     ]
   )
-  @key(name: "byPatient", fields: ["patientID"]) {
+  @key(name: "byPatient", fields: ["patientID"])
+  @key(
+    name: "byDate"
+    fields: ["patientID", "Date"]
+    queryField: "listMedCompliantsByDate"
+  ) {
   id: ID!
   MedId: String!
   Verification: Boolean!
@@ -199,6 +204,7 @@ type ClinicianProtectedInfo
   UXSA: String!
   NWA: String!
   ALA: String!
+  MHA: String!
   clinicianID: String!
   clinicianInfo: ClinicianInfo! @connection(fields: ["clinicianID"])
   owner: String!

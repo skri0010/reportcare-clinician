@@ -5,7 +5,15 @@ import {
   GetClinicianInfoQueryVariables,
   GetClinicianInfoQuery,
   GetClinicianProtectedInfoQuery,
-  GetClinicianProtectedInfoQueryVariables
+  GetClinicianProtectedInfoQueryVariables,
+  GetMedicationInfoQuery,
+  GetMedicationInfoQueryVariables,
+  GetReportSymptomQueryVariables,
+  GetReportSymptomQuery,
+  GetReportVitalsQuery,
+  GetReportVitalsQueryVariables,
+  GetActivityInfoQuery,
+  GetActivityInfoQueryVariables
 } from "aws/API";
 
 interface GetClinicianInfoResponse extends BaseResponse {
@@ -32,4 +40,56 @@ export const getClinicianProtectedInfo = async (
     query: queries.getClinicianProtectedInfo,
     variables: variables
   })) as GetClinicianProtectedInfoResponse;
+};
+
+interface GetMedicationInfoResponse extends BaseResponse {
+  data: GetMedicationInfoQuery;
+}
+
+export const getMedicationInfo = async (
+  variables: GetMedicationInfoQueryVariables
+): Promise<GetMedicationInfoResponse> => {
+  return (await API.graphql({
+    query: queries.getMedicationInfo,
+    variables: variables
+  })) as GetMedicationInfoResponse;
+};
+
+interface GetReportSymptomResponse extends BaseResponse {
+  data: GetReportSymptomQuery;
+}
+
+export const getReportSymptom = async (
+  variables: GetReportSymptomQueryVariables
+): Promise<GetReportSymptomResponse> => {
+  return (await API.graphql({
+    query: queries.getReportSymptom,
+    variables: variables
+  })) as GetReportSymptomResponse;
+};
+
+interface GetActivityInfoResponse extends BaseResponse {
+  data: GetActivityInfoQuery;
+}
+
+export const getActivityInfo = async (
+  variables: GetActivityInfoQueryVariables
+): Promise<GetActivityInfoResponse> => {
+  return (await API.graphql({
+    query: queries.getActivityInfo,
+    variables: variables
+  })) as GetActivityInfoResponse;
+};
+
+interface GetReportVitalsResponse extends BaseResponse {
+  data: GetReportVitalsQuery;
+}
+
+export const getReportVitals = async (
+  variables: GetReportVitalsQueryVariables
+): Promise<GetReportVitalsResponse> => {
+  return (await API.graphql({
+    query: queries.getReportVitals,
+    variables: variables
+  })) as GetReportVitalsResponse;
 };
