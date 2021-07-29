@@ -11,6 +11,7 @@ export interface ColorScheme {
   // Background
   primaryBackgroundColor: string;
   secondaryBackgroundColor: string;
+  primaryWebBackgroundColor: string;
 
   // Borders
   primaryBorderColor: string;

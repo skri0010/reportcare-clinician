@@ -16,6 +16,7 @@ export const lightColorScheme: ColorScheme = {
   // Background
   primaryBackgroundColor: "#ffffff",
   secondaryBackgroundColor: "#727272",
+  primaryWebBackgroundColor: "#F5F5F5",
 
   // Borders
   primaryBorderColor: "#000000",

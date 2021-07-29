@@ -1,5 +1,5 @@
 import React, { FC, useState } from "react";
-import { View, TextStyle, Dimensions } from "react-native";
+import { View, TextStyle, Dimensions, FlatList } from "react-native";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { mockClinician } from "mock/mockClinicians";
 import { ClinicianContactRow } from "components/RowComponents/ClinicianRow/ClinicianContactRow";
@@ -16,6 +16,10 @@ import { createStackNavigator, HeaderBackButton } from "@react-navigation/stack"
 import { RowSelectionWrapper } from "../RowSelectionTab";
 import { Row } from "antd";
 import { ClinicianRowGeneralDetails } from "models/PersonRowDetails";
+import { NavigationContainer } from "@react-navigation/native";
+import { NoSelection } from "./NoSelection";
+import { ItemSeparator } from "components/RowComponents/ItemSeparator";
+import { ClinicianInfo } from "aws/models";
 
 const Tab = createMaterialTopTabNavigator();
 const Stack = createStackNavigator();
@@ -25,32 +29,9 @@ export const CliniciansTab: FC<WithSideTabsProps[ScreenName.CLINICIAN]> = () => 
     colors: state.settings.colors
   }));
 
-  const [clinicianSelected, setClinicianSelected] = useState<ClinicianRowGeneralDetails>({
-    id: "",
-    name:"",
-    occupation: "",
-    location: ""
-  });
+  const [filteredClinicians, setFilteredClinicians] = useState<ClinicianInfo[]>(mockClinician);
 
-  const [selectedChange, setSelectedChanged] = useState<boolean>(false);
-
-  function onRowClick(clinician: ClinicianRowGeneralDetails){
-    const currentSelected = clinicianSelected;
-    const changed: boolean = false;
-    const emptyClinician: ClinicianRowGeneralDetails = {
-      id: "",
-      name: "",
-      occupation: "",
-      location: ""
-    };
-    if (currentSelected !== clinician && clinician !== emptyClinician){
-      setSelectedChanged(!changed);
-      setClinicianSelected(clinician);
-    }
-
-  }
-
-  const titleColor = { color: colors.primaryContrastTextColor } as TextStyle;
+  const [selectedClinician] = useState(mockClinician[0]);
   // JH-TODO: Replace placeholder with i18n
   return (
     <ScreenWrapper>
@@ -58,7 +39,34 @@ export const CliniciansTab: FC<WithSideTabsProps[ScreenName.CLINICIAN]> = () => 
         <View style={{ flex: 1, height: Dimensions.get("window").height }}>
           <RowSelectionWrapper
             title="Clinician"
-            />
+            >
+            <FlatList
+              showsVerticalScrollIndicator={false}
+              style={{ flex: 1 }}
+              ItemSeparatorComponent={() => <ItemSeparator />}
+              ListHeaderComponent={() => <ItemSeparator />}
+              ListFooterComponent={() => <ItemSeparator />}
+              data = {filteredClinicians}
+              renderItem={({ item }) => (
+                <ClinicianContactRow 
+                generalDetails={item}/>
+              )
+            }
+              />
+            <FlatList
+              showsVerticalScrollIndicator={false}
+              style={{ flex: 1 }}
+              ItemSeparatorComponent={() => <ItemSeparator />}
+              ListHeaderComponent={() => <ItemSeparator />}
+              ListFooterComponent={() => <ItemSeparator />}
+              data = {filteredClinicians}
+              renderItem={({ item }) => (
+                <ClinicianShareRow 
+                generalDetails={item} checked/>
+              )
+            }
+              />
+            </RowSelectionWrapper>
         </View>
       </View>
     </ScreenWrapper>

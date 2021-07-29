@@ -6,9 +6,10 @@ import { ClinicianRowBase } from "./ClinicianRowBase";
 import { RootState } from "ic-redux/store";
 import { select } from "util/useRedux";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import { ClinicianInfo } from "aws/models";
 
 export interface ClinicanShareRowProps {
-  generalDetails: ClinicianRowGeneralDetails;
+  generalDetails: ClinicianInfo;
   checked: boolean;
   onRowPress?: () => void;
 }
@@ -44,8 +45,8 @@ export const ClinicianShareRow: FC<ClinicanShareRowProps> = ({
       {/* TODO-JH: Tick for sent */}
       <ClinicianRowBase
         title={generalDetails.name}
-        subtitleOne={{ value: generalDetails.occupation }}
-        subtitleTwo={{ value: generalDetails.location }}
+        subtitleOne={{ value: generalDetails.role }}
+        subtitleTwo={{ value: generalDetails.hospitalName }}
         onRowPress={onRowPress}
       >
         <View style={styles.container}>
