@@ -5,7 +5,6 @@ import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { ScaledSheet } from "react-native-size-matters";
 import { PatientDetailsRow } from "components/RowComponents/PatientRows/PatientDetailsRow";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
-import { ParameterGraphs } from "components/Visualizations/ParameterGraphs";
 import { ReportVitals } from "aws/models";
 import { Patient } from "agents_implementation/agent_framework/model";
 import agentDTA from "agents_implementation/agents/data-assistant/DTA";
@@ -132,8 +131,8 @@ export const PatientsTab: FC = () => {
         />
       )}
 
-      {/* TODO: Move graphs to PatientsDetails screen */}
-      {graphIsReady && <ParameterGraphs data={vitalsData} />}
+      {/* TODO: Move graphs to PatientsDetails screen
+      {graphIsReady && <ParameterGraphs data={vitalsData} />} */}
     </ScreenWrapper>
   );
 };

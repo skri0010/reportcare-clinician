@@ -63,5 +63,34 @@
   },
   "Auth_SignOut": {
     "SignOutSuccessful": "Sign out successful"
+  },
+  "Internet_Connection": {
+    "OnlineToSignIn": "You must have internet connection to sign in",
+    "OnlineNotice": "Internet connection detected",
+    "OfflineNotice": "No internet connection detected.\nSome data may not be available."
+  },
+  "Patient_Requests": {
+    "ApprovalSuccessful": "Patient request approval successful",
+    "ApprovalFailed": "Failed to approve patient request",
+    "OfflineApproval": "No internet connection detected.\nThe approval will be stored and synced when internet connection is detected."
+  },
+  "Parameter_Graphs": {
+    "DiastolicBP": "Diastolic Blood Pressure ",
+    "SystolicBP": "Systolic Blood Pressure ",
+    "BPUnit": "(mmHg)",
+    "OxygenSaturation": "Oxygen Saturation ",
+    "OxygenSaturationUnit": "(%)",
+    "Weight": "Weight ",
+    "WeightUnit": "(kg)",
+    "NoData": "No data was found",
+    "Days": {
+      "Sunday": "Sun",
+      "Monday": "Mon",
+      "Tuesday": "Tue",
+      "Wednesday": "Wed",
+      "Thursday": "Thu",
+      "Friday": "Fri",
+      "Saturday": "Sat"
+    }
   }
 }

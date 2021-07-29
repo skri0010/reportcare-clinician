@@ -63,5 +63,34 @@
   },
   "Auth_SignOut": {
     "SignOutSuccessful": "Log keluar berjaya"
+  },
+  "Internet_Connection": {
+    "OnlineToSignIn": "Anda mestilah mempunyai sambungan internet untuk log masuk",
+    "OnlineNotice": "Sambungan internet dikesan",
+    "OfflineNotice": "Tiada sambungan internet.\nSebahagian maklumat mungkin tidak tersedia."
+  },
+  "Patient_Requests": {
+    "ApprovalSuccessful": "Kelulusan permintaan pesakit berjaya",
+    "ApprovalFailed": "Gagal meluluskan permintaan pesakit",
+    "OfflineApproval": "Tiada sambungan internet.\nKelulusan akan disimpan dan disegerakkan semasa sambungan internet dikesan."
+  },
+  "Parameter_Graphs": {
+    "DiastolicBP": "Tekanan Darah Diastolik ",
+    "SystolicBP": "Tekanan Darah Sistolik ",
+    "BPUnit": "(mmHg)",
+    "OxygenSaturation": "Ketepuan Oksigen ",
+    "OxygenSaturationUnit": "(%)",
+    "Weight": "Berat Badan ",
+    "WeightUnit": "(kg)",
+    "NoData": "Tiada data dijumpai",
+    "Days": {
+      "Sunday": "Ahad",
+      "Monday": "Isnin",
+      "Tuesday": "Selasa",
+      "Wednesday": "Rabu",
+      "Thursday": "Khamis",
+      "Friday": "Jumaat",
+      "Saturday": "Sabtu"
+    }
   }
 }

@@ -17,11 +17,13 @@ export const HomeScreen: FC<WithSideTabsProps[ScreenName.HOME]> = () => {
 
   return (
     <ScreenWrapper>
-      <WelcomeCard name="Nailah" />
-      <View style={styles.bottomContainer}>
-        <RequestsByMariaCard maxHeight={cardMaxHeight} />
-        <AlertsCard maxHeight={cardMaxHeight} />
-        <TodosCard maxHeight={cardMaxHeight} />
+      <View style={{ paddingVertical: ms(20), paddingHorizontal: ms(10) }}>
+        <WelcomeCard name="Nailah" />
+        <View style={styles.bottomContainer}>
+          <RequestsByMariaCard maxHeight={cardMaxHeight} />
+          <AlertsCard maxHeight={cardMaxHeight} />
+          <TodosCard maxHeight={cardMaxHeight} />
+        </View>
       </View>
     </ScreenWrapper>
   );

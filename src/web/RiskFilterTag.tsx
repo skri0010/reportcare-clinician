@@ -1,4 +1,4 @@
-import React, { useState, FC } from "react";
+import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
 import { Text, TouchableHighlight } from "react-native";
 import { getRiskLevelColor, RiskLevel } from "models/RiskLevel";
@@ -7,19 +7,19 @@ import { moderateScale, ScaledSheet } from "react-native-size-matters";
 interface RiskFilterTagProps {
   title: string;
   riskLevel: RiskLevel;
-  onTagPress: () => void;
+  selected: boolean;
+  onTagPress: (key: RiskLevel) => void;
 }
 
 export const RiskFilterTag: FC<RiskFilterTagProps> = ({
   title,
   riskLevel,
+  selected,
   onTagPress
 }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
   }));
-
-  const [selected, setSelected] = useState<boolean>(false);
 
   return (
     <TouchableHighlight
@@ -55,8 +55,8 @@ export const RiskFilterTag: FC<RiskFilterTagProps> = ({
             ]
       }
       onPress={() => {
-        setSelected(!selected);
-        onTagPress;
+        // setSelected(!selected);
+        onTagPress(riskLevel);
       }}
     >
       <Text
@@ -66,7 +66,7 @@ export const RiskFilterTag: FC<RiskFilterTagProps> = ({
             : styles.textStyle
         }
       >
-        {title}
+        {title === RiskLevel.UNASSIGNED ? "None" : title}
       </Text>
     </TouchableHighlight>
   );
