@@ -112,7 +112,7 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
 const styles = ScaledSheet.create({
   container: {
     alignSelf: "center",
-    justifyContent: "center",
+    justifyContent: "space-between",
     marginTop: "20@ms",
     padding: "20@ms",
     height: "70%",
@@ -121,7 +121,7 @@ const styles = ScaledSheet.create({
     borderRadius: ms(10)
   },
   titleInput: {
-    height: "30@ms",
+    height: "45@ms",
     width: "50%",
     borderWidth: "1@ms",
     borderRadius: "2@ms",
@@ -137,7 +137,6 @@ const styles = ScaledSheet.create({
     paddingTop: "5@ms"
   },
   buttonContainer: {
-    marginBottom: "10@ms",
     alignItem: "center",
     justifyContent: "center",
     flexDirection: "row"
@@ -146,16 +145,16 @@ const styles = ScaledSheet.create({
     textAlign: "center",
     justifyContent: "space-evenly",
     borderRadius: "5@ms",
-    width: "80@ms",
-    height: "30@ms",
+    width: "60@ms",
+    height: "25@ms",
     margin: "10@ms"
   },
   saveButton: {
     textAlign: "center",
     justifyContent: "space-evenly",
     borderRadius: "5@ms",
-    width: "80@ms",
-    height: "30@ms",
+    width: "60@ms",
+    height: "25@ms",
     borderWidth: "1@ms",
     margin: "10@ms"
   }
