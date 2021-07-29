@@ -1,5 +1,4 @@
 import React, { FC } from "react";
-import { RootState, select } from "util/useRedux";
 import { View } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { RiskFilterTab } from "../RiskFilterTab";
@@ -26,10 +25,6 @@ export const RowSelectionWrapper: FC<RowSelectionWrapperProps> = ({
   isTodo = false,
   onPress
 }) => {
-  const { colors } = select((state: RootState) => ({
-    colors: state.settings.colors
-  }));
-
   return (
     <View style={styles.container}>
       {/* Header */}

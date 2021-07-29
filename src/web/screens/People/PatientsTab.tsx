@@ -1,14 +1,10 @@
 import React, { FC } from "react";
 import { View, FlatList, Dimensions } from "react-native";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
-import { ScaledSheet } from "react-native-size-matters";
 import { PatientDetailsRow } from "components/RowComponents/PatientRows/PatientDetailsRow";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { mockPatients } from "mock/mockPatients";
 import { RowSelectionWrapper } from "../RowSelectionTab";
-import { createStackNavigator } from "@react-navigation/stack";
-
-const Stack = createStackNavigator();
 
 export const PatientsTab: FC = () => {
   // JH-TODO: Replace placeholder with i18n
@@ -41,9 +37,3 @@ export const PatientsTab: FC = () => {
     </ScreenWrapper>
   );
 };
-
-const styles = ScaledSheet.create({
-  searchBarWrapper: {
-    paddingBottom: "15@ms"
-  }
-});
