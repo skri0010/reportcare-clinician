@@ -4,7 +4,7 @@ import { View, TextStyle, FlatList } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { TodoRow } from "components/RowComponents/TodoRow";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
-import { mockPatientRowDetails } from "mock/mockTodoDetails";
+import { mockCurrentTodoDetails } from "mock/mockTodoDetails";
 import { RiskLevel } from "models/RiskLevel";
 import { H4 } from "components/Text/index";
 import { CardWrapper } from "./CardWrapper";
@@ -21,7 +21,7 @@ export const TodosCard: FC<TodosCardProps> = ({ maxHeight }) => {
 
   const titleColor = { color: colors.primaryTextColor } as TextStyle;
   // JH-TODO: Replace with actual models
-  const maxPatientsShown = Math.min(mockPatientRowDetails.length, 10); // At 10 items, `Show More` button is displayed
+  const maxPatientsShown = Math.min(mockCurrentTodoDetails.length, 10); // At 10 items, `Show More` button is displayed
   const lastPatientIndex = maxPatientsShown - 1;
 
   return (
@@ -33,7 +33,7 @@ export const TodosCard: FC<TodosCardProps> = ({ maxHeight }) => {
         <FlatList
           showsVerticalScrollIndicator={false}
           ItemSeparatorComponent={() => <ItemSeparator />}
-          data={mockPatientRowDetails}
+          data={mockCurrentTodoDetails}
           renderItem={({ item, index }) => {
             return index === lastPatientIndex ? (
               <>

@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { View, FlatList } from "react-native";
 import { TodoRow } from "components/RowComponents/TodoRow";
-import { mockPatientRowDetails } from "mock/mockTodoDetails";
+import { mockCurrentTodoDetails } from "mock/mockTodoDetails";
 import { RiskLevel } from "models/RiskLevel";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { ITodoDetails } from "models/TodoDetails";
@@ -46,7 +46,7 @@ export const TodoCurrentTab: FC<TodoRowTabProps> = ({ setTodoSelected }) => {
         ItemSeparatorComponent={() => <ItemSeparator />}
         ListHeaderComponent={() => <ItemSeparator />}
         ListFooterComponent={() => <ItemSeparator />}
-        data={mockPatientRowDetails}
+        data={mockCurrentTodoDetails}
         renderItem={({ item }) => (
           <TodoRow
             todoDetails={item}

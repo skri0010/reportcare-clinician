@@ -98,15 +98,7 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ navigation }) => {
             }
           ]}
           onPress={() => {
-            const created = new Date().toLocaleString();
-            const newTodo = {
-              mainTitleContent: titleInput,
-              patientContent: patientInput,
-              notesContent: noteInput,
-              createdTimeDate: created,
-              modifiedTimeDate: "Never"
-            };
-            navigation.navigate("ViewTodo", newTodo);
+            // Sends API call to save new Todo data
           }}
         >
           <H3 text="Save" style={{ color: colors.primaryTextColor }} />

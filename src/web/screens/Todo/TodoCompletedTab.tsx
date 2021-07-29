@@ -8,26 +8,26 @@ import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { TodoRowTabProps } from "./TodoCurrentTab";
 import { ITodoDetails } from "models/TodoDetails";
 import { RootState, select } from "util/useRedux";
-import { mockPatientRowDetails } from "mock/mockTodoDetails";
+import { mockCompletedTodoDetails } from "mock/mockTodoDetails";
 
 export const TodoCompletedTab: FC<TodoRowTabProps> = ({ setTodoSelected }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
   }));
 
-  useEffect(() => {
-    for (let i = 1; i < mockPatientRowDetails.length; i += 1) {
-      mockPatientRowDetails[i].doneStatus = true;
-    }
-  });
-  // Function for changing status to completed
-  // function onDonePress(item: ITodoDetails) {
-  //   // api call
-  // }
+  // useEffect(() => {
+  //   for (let i = 1; i < mockPatientRowDetails.length; i += 1) {
+  //     mockPatientRowDetails[i].doneStatus = true;
+  //   }
+  // });
+  // // Function for changing status to completed
+  // // function onDonePress(item: ITodoDetails) {
+  // //   // api call
+  // // }
 
-  for (let i = 0; i < mockPatientRowDetails.length; i += 1) {
-    mockPatientRowDetails[i].doneStatus = true;
-  }
+  // for (let i = 0; i < mockPatientRowDetails.length; i += 1) {
+  //   mockPatientRowDetails[i].doneStatus = true;
+  // }
 
   function onCardPress(item: ITodoDetails) {
     setTodoSelected(item);
@@ -50,7 +50,7 @@ export const TodoCompletedTab: FC<TodoRowTabProps> = ({ setTodoSelected }) => {
         ItemSeparatorComponent={() => <ItemSeparator />}
         ListHeaderComponent={() => <ItemSeparator />}
         ListFooterComponent={() => <ItemSeparator />}
-        data={mockPatientRowDetails}
+        data={mockCompletedTodoDetails}
         renderItem={({ item }) => (
           <TodoRow
             todoDetails={item}

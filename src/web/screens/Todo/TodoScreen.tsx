@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { FC, useState, createContext, useContext } from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { TodoCurrentTab } from "./TodoCurrentTab";
@@ -15,7 +16,7 @@ import {
   createStackNavigator,
   HeaderBackButton
 } from "@react-navigation/stack";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { AddTodoScreen } from "./AddTodoScreen";
 import { NoSelectionScreen } from "../Shared/NoSelectionScreen";
 import { ITodoDetails } from "models/TodoDetails";
@@ -52,19 +53,20 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = () => {
     name: "",
     description: "",
     doneStatus: false,
+    created: "",
+    modified: "",
     id: ""
   });
   const [addButtonPressed, setAddButtonPressed] = useState(false);
   const [selectedChange, setSelectedChanged] = useState<boolean>(false);
-  const [title, setTitle] = useState(todoSelected.title);
+  const [queue, setQueue] = useState<string[]>([]);
 
   const initialTodo = {
-    mainTitleContent: todoSelected?.title,
-    patientContent: todoSelected?.name,
-    notesContent: todoSelected?.description,
-    createdTimeDate: "20:30 12-03-2021",
-    modifiedTimeDate: "Never",
-    changeTitle: setTitle
+    mainTitleContent: todoSelected.title,
+    patientContent: todoSelected.name,
+    notesContent: todoSelected.description,
+    createdTimeDate: todoSelected.created,
+    modifiedTimeDate: todoSelected.modified
   };
 
   function onRowClick(item: ITodoDetails) {
@@ -75,9 +77,15 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = () => {
       name: "",
       description: "",
       doneStatus: false,
+      created: "",
+      modified: "",
       id: ""
     };
     if (currentSelected !== item && item !== emptyTodo) {
+      if (queue.includes("ViewTodo") === false) {
+        queue.push("ViewTodo");
+      }
+      setQueue(queue);
       setSelectedChanged(!changed);
       setTodoSelected(item);
     }
@@ -91,6 +99,26 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = () => {
     // // eslint-disable-next-line no-console
     // console.log(todoSelected);
   }
+
+  function checkInitialRoute() {
+    let initialRoute: string = "";
+    if (queue.length === 1) {
+      if (queue[0] === "ViewTodo") {
+        initialRoute = "ViewTodo";
+      } else {
+        initialRoute = "AddTodo";
+      }
+    } else if (queue.length === 2) {
+      if (queue[0] === "ViewTodo") {
+        initialRoute = "AddTodo";
+      } else {
+        queue.shift();
+        setQueue(queue);
+      }
+    }
+    return initialRoute;
+  }
+
   return (
     // JH-TODO: Replace names with i18n
     <ScreenWrapper>
@@ -100,7 +128,11 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = () => {
             title="Todo"
             addButton={addButton}
             onPress={() => {
-              setAddButtonPressed(!addButtonPressed);
+              if (queue.includes("AddTodo") === false) {
+                queue.push("AddTodo");
+              }
+              setQueue(queue);
+              setAddButtonPressed(true);
             }}
             isTodo
           >
@@ -134,14 +166,14 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = () => {
             backgroundColor: colors.primaryWebBackgroundColor
           }}
         >
-          {selectedChange ? (
+          {selectedChange || addButtonPressed ? (
             <NavigationContainer independent>
               <TodoContext.Provider value={initialTodo}>
-                <Stack.Navigator initialRouteName="NoSelection">
+                <Stack.Navigator initialRouteName={checkInitialRoute()}>
                   <Stack.Screen
                     name="ViewTodo"
                     component={TodoDetailsScreen}
-                    options={{
+                    options={({ navigation, route }) => ({
                       title: "View Todo",
                       headerStyle: {
                         height: ms(45)
@@ -151,9 +183,9 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = () => {
                         fontSize: ms(20),
                         paddingLeft: ms(15)
                       }
-                    }}
+                      // headerLeft: () => null
+                    })}
                   />
-                  <Stack.Screen name="AddTodo" component={AddTodoScreen} />
                   <Stack.Screen
                     name="EditTodo"
                     component={EditTodoScreen}
@@ -168,6 +200,29 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = () => {
                       }
                     }}
                   />
+                  <Stack.Screen
+                    name="AddTodo"
+                    component={AddTodoScreen}
+                    options={({ navigation, route }) => ({
+                      title: "Add Todo",
+                      headerStyle: {
+                        height: ms(45)
+                      },
+                      headerTitleStyle: {
+                        fontWeight: "bold",
+                        fontSize: ms(20),
+                        paddingLeft: ms(15)
+                      },
+                      headerLeft: () => (
+                        <HeaderBackButton
+                          onPress={() => {
+                            navigation.navigate("ViewTodo", route.params);
+                            setAddButtonPressed(false);
+                          }}
+                        />
+                      )
+                    })}
+                  />
                 </Stack.Navigator>
               </TodoContext.Provider>
             </NavigationContainer>
@@ -177,101 +232,6 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = () => {
               subtitle="Select a Todo item to view its details"
             />
           )}
-          {/* Navigator for Add Button. Please don't remove thankss */}
-          {/* {addButtonPressed ? (
-            <NavigationContainer independent>
-              <Stack.Navigator initialRouteName="AddTodo">
-                <Stack.Screen name="testing" component={testing} />
-                <Stack.Screen
-                  name="AddTodo"
-                  component={AddTodoScreen}
-                  options={({ navigation, route }) => ({
-                    title: "Add Todo",
-                    headerStyle: {
-                      height: ms(45)
-                    },
-                    headerTitleStyle: {
-                      fontWeight: "bold",
-                      fontSize: ms(20),
-                      paddingLeft: ms(15)
-                    }
-                  })}
-                />
-                <Stack.Screen
-                  name="EditTodo"
-                  component={EditTodoScreen}
-                  options={{
-                    title: "Edit Todo",
-                    headerStyle: {
-                      height: ms(45)
-                    },
-                    headerTitleStyle: {
-                      fontWeight: "bold",
-                      fontSize: ms(20)
-                    }
-                  }}
-                />
-                <Stack.Screen
-                  name="ViewTodo"
-                  component={TodoDetailsScreen}
-                  options={({ navigation, route }) => ({
-                    title: "View Todo",
-                    headerStyle: {
-                      height: ms(45)
-                    },
-                    headerTitleStyle: {
-                      fontWeight: "bold",
-                      fontSize: ms(20),
-                      paddingLeft: ms(15)
-                    },
-                    headerLeft: () => null
-                  })}
-                />
-              </Stack.Navigator>
-            </NavigationContainer>
-          ) : (
-            <NavigationContainer independent>
-              <Stack.Navigator initialRouteName="testing">
-                <Stack.Screen name="testing" component={testing} />
-                <Stack.Screen
-                  name="ViewTodo"
-                  component={TodoDetailsScreen}
-                  initialParams={{
-                    mainTitleContent: "Schedule Appointment",
-                    patientContent: "Linda Mario",
-                    notesContent: "Change diet",
-                    createdTimeDate: "20:30 12-03-2021",
-                    modifiedTimeDate: "Never"
-                  }}
-                  options={{
-                    title: "View Todo",
-                    headerStyle: {
-                      height: ms(45)
-                    },
-                    headerTitleStyle: {
-                      fontWeight: "bold",
-                      fontSize: ms(20),
-                      paddingLeft: ms(15)
-                    }
-                  }}
-                />
-                <Stack.Screen
-                  name="EditTodo"
-                  component={EditTodoScreen}
-                  options={{
-                    title: "Edit Todo",
-                    headerStyle: {
-                      height: ms(45)
-                    },
-                    headerTitleStyle: {
-                      fontWeight: "bold",
-                      fontSize: ms(20)
-                    }
-                  }}
-                />
-              </Stack.Navigator>
-            </NavigationContainer>
-          )} */}
         </View>
       </View>
     </ScreenWrapper>
