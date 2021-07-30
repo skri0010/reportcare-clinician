@@ -532,6 +532,7 @@ export const getClinicianInfo = /* GraphQL */ `
         UXSA
         NWA
         ALA
+        MHA
         clinicianID
         owner
         _version
@@ -603,6 +604,7 @@ export const syncClinicianProtectedInfos = /* GraphQL */ `
         UXSA
         NWA
         ALA
+        MHA
         clinicianID
         owner
         _version
@@ -626,20 +628,8 @@ export const getClinicianProtectedInfo = /* GraphQL */ `
       UXSA
       NWA
       ALA
+      MHA
       clinicianID
-      clinicianInfo {
-        id
-        name
-        hospitalName
-        role
-        clinicianID
-        owner
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-      }
       owner
       _version
       _deleted
@@ -672,6 +662,7 @@ export const listClinicianProtectedInfos = /* GraphQL */ `
         UXSA
         NWA
         ALA
+        MHA
         clinicianID
         owner
         _version
@@ -769,6 +760,41 @@ export const listClinicianPatientMaps = /* GraphQL */ `
         _lastChangedAt
         createdAt
         updatedAt
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const listMedCompliantsByDate = /* GraphQL */ `
+  query ListMedCompliantsByDate(
+    $patientID: String
+    $Date: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelMedCompliantFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listMedCompliantsByDate(
+      patientID: $patientID
+      Date: $Date
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        MedId
+        Verification
+        Date
+        patientID
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+        owner
       }
       nextToken
       startedAt

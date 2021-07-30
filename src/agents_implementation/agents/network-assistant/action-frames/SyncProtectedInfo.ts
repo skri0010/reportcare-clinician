@@ -71,6 +71,7 @@ class SyncProtectedInfo extends Activity {
               DTA: clinician.protectedInfo.DTA,
               UXSA: clinician.protectedInfo.UXSA,
               NWA: clinician.protectedInfo.NWA,
+              MHA: clinician.protectedInfo.MHA,
               owner: clinician.clinicianID,
               _version: latestProtectedInfo?._version
             };

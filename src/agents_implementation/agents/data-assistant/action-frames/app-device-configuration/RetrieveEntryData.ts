@@ -64,88 +64,86 @@ class RetrieveEntryData extends Activity {
         );
 
         // Retrieve user's entry in DynamoDB table
-        const query: any = await getClinicianInfo({
+        const query = await getClinicianInfo({
           clinicianID: clinicianUsername
         });
 
-        if (query.data) {
+        if (query.data.getClinicianInfo) {
           const clinician = query.data.getClinicianInfo;
-          if (clinician) {
-            // Merges retrieved facts into current facts
-            if (
-              clinician.protectedInfo?.facts &&
-              Object.entries(JSON.parse(clinician.protectedInfo?.facts))
-                .length > 0
-            ) {
-              agentAPI.mergeFacts(JSON.parse(clinician.protectedInfo?.facts));
-            }
-
-            // Merges retrieved beliefs of each agent into current beliefs
-            agentAPI.getAgents().forEach((existingAgent) => {
-              switch (existingAgent.getID()) {
-                case AgentIDs.APS: {
-                  if (
-                    clinician.protectedInfo?.APS &&
-                    Object.entries(JSON.parse(clinician.protectedInfo?.APS))
-                      .length > 0
-                  ) {
-                    existingAgent.mergeBeliefs(
-                      JSON.parse(clinician.protectedInfo?.APS)
-                    );
-                  }
-                  break;
-                }
-                case AgentIDs.DTA: {
-                  if (
-                    clinician.protectedInfo?.DTA &&
-                    Object.entries(JSON.parse(clinician.protectedInfo?.DTA))
-                      .length > 0
-                  ) {
-                    existingAgent.mergeBeliefs(
-                      JSON.parse(clinician.protectedInfo?.DTA)
-                    );
-                  }
-                  break;
-                }
-                case AgentIDs.UXSA: {
-                  if (
-                    clinician.protectedInfo?.UXSA &&
-                    Object.entries(JSON.parse(clinician.protectedInfo?.UXSA))
-                      .length > 0
-                  ) {
-                    existingAgent.mergeBeliefs(
-                      JSON.parse(clinician.protectedInfo?.UXSA)
-                    );
-                  }
-                  break;
-                }
-                case AgentIDs.NWA: {
-                  if (
-                    clinician.protectedInfo?.NWA &&
-                    Object.entries(JSON.parse(clinician.protectedInfo?.NWA))
-                      .length > 0
-                  ) {
-                    existingAgent.mergeBeliefs(
-                      JSON.parse(clinician.protectedInfo?.NWA)
-                    );
-                  }
-                  break;
-                }
-                default: {
-                  break;
-                }
-              }
-            });
-
-            // Stores clinicianID and clinician locally
-            await AsyncStorage.multiSet([
-              [AsyncStorageKeys.CLINICIAN_ID, clinician.clinicianID],
-              [AsyncStorageKeys.CLINICIAN, JSON.stringify(clinician)]
-            ]);
-
-            // Dispatch to front end that sign in was successful
-            store.dispatch(setProcedureSuccessful(true));
+          // Merges retrieved facts into current facts
+          if (
+            clinician.protectedInfo?.facts &&
+            Object.entries(JSON.parse(clinician.protectedInfo?.facts)).length >
+              0
+          ) {
+            agentAPI.mergeFacts(JSON.parse(clinician.protectedInfo?.facts));
           }
+
+          // Merges retrieved beliefs of each agent into current beliefs
+          agentAPI.getAgents().forEach((existingAgent) => {
+            switch (existingAgent.getID()) {
+              case AgentIDs.APS: {
+                if (
+                  clinician.protectedInfo?.APS &&
+                  Object.entries(JSON.parse(clinician.protectedInfo?.APS))
+                    .length > 0
+                ) {
+                  existingAgent.mergeBeliefs(
+                    JSON.parse(clinician.protectedInfo?.APS)
+                  );
+                }
+                break;
+              }
+              case AgentIDs.DTA: {
+                if (
+                  clinician.protectedInfo?.DTA &&
+                  Object.entries(JSON.parse(clinician.protectedInfo?.DTA))
+                    .length > 0
+                ) {
+                  existingAgent.mergeBeliefs(
+                    JSON.parse(clinician.protectedInfo?.DTA)
+                  );
+                }
+                break;
+              }
+              case AgentIDs.UXSA: {
+                if (
+                  clinician.protectedInfo?.UXSA &&
+                  Object.entries(JSON.parse(clinician.protectedInfo?.UXSA))
+                    .length > 0
+                ) {
+                  existingAgent.mergeBeliefs(
+                    JSON.parse(clinician.protectedInfo?.UXSA)
+                  );
+                }
+                break;
+              }
+              case AgentIDs.NWA: {
+                if (
+                  clinician.protectedInfo?.NWA &&
+                  Object.entries(JSON.parse(clinician.protectedInfo?.NWA))
+                    .length > 0
+                ) {
+                  existingAgent.mergeBeliefs(
+                    JSON.parse(clinician.protectedInfo?.NWA)
+                  );
+                }
+                break;
+              }
+              default: {
+                break;
+              }
+            }
+          });
+
+          // Stores clinicianID and clinician locally
+          await AsyncStorage.multiSet([
+            [AsyncStorageKeys.CLINICIAN_ID, clinician.clinicianID],
+            [AsyncStorageKeys.CLINICIAN, JSON.stringify(clinician)]
+          ]);
+
+          // Dispatch to front end that sign in was successful
+          store.dispatch(setProcedureSuccessful(true));
         }
       }
     } catch (error) {

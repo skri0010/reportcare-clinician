@@ -55,14 +55,12 @@ abstract class AgentManagement {
           const result = await getClinicianProtectedInfo({
             clinicianID: localClinician.clinicianID
           });
-          if (result.data) {
+          if (result.data.getClinicianProtectedInfo) {
             protectedInfo = result.data.getClinicianProtectedInfo;
 
             // Updates local storage
-            localClinician.protectedInfo = protectedInfo!;
+            localClinician.protectedInfo = protectedInfo;
 
-            // Avoids nested clinicianInfo from being stored
-            delete localClinician.protectedInfo?.clinicianInfo;
             await AsyncStorage.mergeItem(
               AsyncStorageKeys.CLINICIAN,
               JSON.stringify(localClinician)
@@ -214,8 +212,6 @@ abstract class AgentManagement {
           clinicianID: localClinician.clinicianID
         });
         protectedInfo = clinicianProtectedInfo.data.getClinicianProtectedInfo;
-        // Avoids nested clinicianInfo from being stored later on
-        delete protectedInfo?.clinicianInfo;
       } else {
         // Device is offline
         protectedInfo = localClinician.protectedInfo;
@@ -231,6 +227,7 @@ abstract class AgentManagement {
           UXSA: protectedInfo.UXSA,
           NWA: protectedInfo.NWA,
           ALA: protectedInfo.ALA,
+          MHA: protectedInfo.MHA,
           owner: localClinician.clinicianID,
           _version: protectedInfo._version
         };
@@ -238,6 +235,7 @@ abstract class AgentManagement {
         // Updates facts and beliefs of each agent
         updatedProtectedInfo.facts = JSON.stringify(this.facts);
 
+        // JH-TODO: Document what's going on here
         this.agents.forEach((agent) => {
           switch (agent.getID()) {
             case AgentIDs.APS: {

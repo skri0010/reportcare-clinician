@@ -413,6 +413,17 @@ export const schema = {
                     }
                 },
                 {
+                    "type": "key",
+                    "properties": {
+                        "name": "byDate",
+                        "fields": [
+                            "patientID",
+                            "Date"
+                        ],
+                        "queryField": "listMedCompliantsByDate"
+                    }
+                },
+                {
                     "type": "auth",
                     "properties": {
                         "rules": [
@@ -754,7 +765,7 @@ export const schema = {
                     "attributes": [],
                     "association": {
                         "connectionType": "HAS_ONE",
-                        "associatedWith": "clinicianInfo",
+                        "associatedWith": "clinicianID",
                         "targetName": "clinicianID"
                     }
                 },
@@ -893,18 +904,19 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "clinicianInfo": {
-                    "name": "clinicianInfo",
+                "MHA": {
+                    "name": "MHA",
                     "isArray": false,
-                    "type": {
-                        "model": "ClinicianInfo"
-                    },
+                    "type": "String",
                     "isRequired": true,
-                    "attributes": [],
-                    "association": {
-                        "connectionType": "BELONGS_TO",
-                        "targetName": "clinicianID"
-                    }
+                    "attributes": []
+                },
+                "clinicianID": {
+                    "name": "clinicianID",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
                 },
                 "owner": {
                     "name": "owner",
@@ -1111,5 +1123,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "653f652024b45a5dca522e462cd66efe"
+    "version": "4e923d6dd27b0baf7538e3ec6b6cf08b"
 };

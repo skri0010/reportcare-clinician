@@ -99,7 +99,8 @@ export declare class ClinicianProtectedInfo {
   readonly UXSA: string;
   readonly NWA: string;
   readonly ALA: string;
-  readonly clinicianInfo: ClinicianInfo;
+  readonly MHA: string;
+  readonly clinicianID: string;
   readonly owner: string;
   constructor(init: ModelInit<ClinicianProtectedInfo>);
   static copyOf(source: ClinicianProtectedInfo, mutator: (draft: MutableModel<ClinicianProtectedInfo>) => MutableModel<ClinicianProtectedInfo> | void): ClinicianProtectedInfo;
