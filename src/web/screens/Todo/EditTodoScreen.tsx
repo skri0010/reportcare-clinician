@@ -1,11 +1,12 @@
 import React, { FC, useState, useContext } from "react";
-import { View, TouchableOpacity, TextInput, ScrollView } from "react-native";
+import { View, TouchableOpacity, TextInput } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { EditTodoScreenProps } from "../TodoScreenProps";
 import { TodoSection, EditHistorySection } from "./TodoDetailsScreen";
 import { H3 } from "components/Text";
 import { RootState, select } from "util/useRedux";
 import { TodoContext } from "./TodoScreen";
+import { ScreenWrapper } from "web/screens/ScreenWrapper";
 
 export const EditTodoScreen: FC<EditTodoScreenProps> = ({
   route,
@@ -15,7 +16,6 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
     colors: state.settings.colors
   }));
 
-  const editTodoParam = route.params;
   const context = useContext(TodoContext);
 
   const [titleInput, setTitleInput] = useState<string>(
@@ -32,7 +32,7 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
   };
 
   return (
-    <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+    <ScreenWrapper>
       <View style={styles.container}>
         <H3 text="Title" style={{ fontWeight: "bold", marginBottom: ms(10) }} />
         <TextInput
@@ -77,11 +77,6 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
             ]}
             onPress={() => {
               navigation.goBack();
-              // editTodoParam is undefined (no params anymore??)
-              // eslint-disable-next-line no-console
-              console.log(editTodoParam);
-              // eslint-disable-next-line no-console
-              console.log(navigation);
             }}
           >
             <H3
@@ -114,7 +109,7 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
           </TouchableOpacity>
         </View>
       </View>
-    </ScrollView>
+    </ScreenWrapper>
   );
 };
 

@@ -93,5 +93,14 @@ export const mockCompletedTodoDetails: ITodoDetails[] = [
     created: "15:30 10-04-2021",
     modified: "Never",
     id: "5"
+  },
+  {
+    title: "Contact",
+    name: "Mario Luigi",
+    description: "Check symptoms",
+    doneStatus: false,
+    created: "15:30 10-04-2021",
+    modified: "Never",
+    id: "6"
   }
 ];

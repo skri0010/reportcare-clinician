@@ -5,6 +5,7 @@ import { TodoScreenProps } from "../TodoScreenProps";
 import { H2, H3, H4, H5 } from "components/Text";
 import { RootState, select } from "util/useRedux";
 import { TodoContext } from "./TodoScreen";
+import { ScreenWrapper } from "web/screens/ScreenWrapper";
 
 interface todoSectionProps {
   mainItem: string;
@@ -51,55 +52,61 @@ export const TodoDetailsScreen: FC<TodoScreenProps> = ({
   const context = useContext(TodoContext);
 
   return (
-    <View style={styles.container}>
-      {/* Title */}
-      <TodoSection mainItem="Title" content={context.mainTitleContent} />
-      {/* Patient */}
-      <View style={styles.todoPatient}>
-        <TodoSection mainItem="Patient" content={context.patientContent} />
-        {/* View patient details button */}
-        <TouchableOpacity
-          style={[
-            styles.viewButton,
-            {
-              backgroundColor: colors.primaryContrastTextColor,
-              borderColor: colors.primaryTextColor
-            }
-          ]}
-          onPress={() => {
-            null;
-          }}
-        >
-          <H5 text="View" style={{ color: colors.primaryTextColor }} />
-        </TouchableOpacity>
+    <ScreenWrapper>
+      <View style={styles.container}>
+        {/* Title */}
+        <TodoSection mainItem="Title" content={context.mainTitleContent} />
+        {/* Patient */}
+        <View style={styles.todoPatient}>
+          <TodoSection mainItem="Patient" content={context.patientContent} />
+          {/* View patient details button */}
+          <TouchableOpacity
+            style={[
+              styles.viewButton,
+              {
+                backgroundColor: colors.primaryContrastTextColor,
+                borderColor: colors.primaryTextColor
+              }
+            ]}
+            onPress={() => {
+              null;
+            }}
+          >
+            <H5 text="View" style={{ color: colors.primaryTextColor }} />
+          </TouchableOpacity>
+        </View>
+        {/* Notes */}
+        <View style={{ marginTop: ms(10) }}>
+          <TodoSection mainItem="Notes" content={context.notesContent} />
+        </View>
+        {/* Edit history */}
+        <EditHistorySection
+          editType="Created on: "
+          timeDate={context.createdTimeDate}
+        />
+        <EditHistorySection
+          editType="Modified on: "
+          timeDate={context.modifiedTimeDate}
+        />
+        {/* Edit button */}
+        <View style={styles.editButtonContainer}>
+          <TouchableOpacity
+            style={[
+              styles.editButton,
+              { backgroundColor: colors.primaryTodoCompleteButtonColor }
+            ]}
+            onPress={() => {
+              navigation.navigate("EditTodo", todoParam);
+            }}
+          >
+            <H2
+              text="Edit"
+              style={{ color: colors.primaryContrastTextColor }}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
-      {/* Notes */}
-      <View style={{ marginTop: ms(10) }}>
-        <TodoSection mainItem="Notes" content={context.notesContent} />
-      </View>
-      {/* Edit history */}
-      <EditHistorySection
-        editType="Created on: "
-        timeDate={context.createdTimeDate}
-      />
-      <EditHistorySection
-        editType="Modified on: "
-        timeDate={context.modifiedTimeDate}
-      />
-      <View style={styles.editButtonContainer}>
-        <TouchableOpacity
-          style={[
-            styles.editButton,
-            { backgroundColor: colors.primaryTodoCompleteButtonColor }
-          ]}
-          onPress={() => {
-            navigation.navigate("EditTodo", todoParam);
-          }}
-        >
-          <H2 text="Edit" style={{ color: colors.primaryContrastTextColor }} />
-        </TouchableOpacity>
-      </View>
-    </View>
+    </ScreenWrapper>
   );
 };
 

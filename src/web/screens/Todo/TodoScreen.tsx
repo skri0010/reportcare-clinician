@@ -6,7 +6,7 @@ import { TodoCompletedTab } from "./TodoCompletedTab";
 import { getTopTabBarOptions } from "util/getStyles";
 import { RootState, select } from "util/useRedux";
 import { ScreenName, WithSideTabsProps } from "web/screens";
-import { View, Dimensions, Modal } from "react-native";
+import { View, Modal } from "react-native";
 import { RowSelectionWrapper } from "../RowSelectionTab";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
@@ -84,7 +84,7 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = () => {
 
   return (
     // JH-TODO: Replace names with i18n
-    <ScreenWrapper>
+    <ScreenWrapper fixed>
       <View
         style={styles.container}
         pointerEvents={modalVisible ? "none" : "auto"}
@@ -172,6 +172,7 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = () => {
           )}
         </View>
       </View>
+
       <View style={styles.modalView}>
         <Modal
           transparent
@@ -202,7 +203,7 @@ const styles = ScaledSheet.create({
     alignItems: "center",
     justifyContent: "center"
   },
-  rowSelection: { flex: 1, height: Dimensions.get("window").height },
+  rowSelection: { flex: 1 },
   modalContainer: {
     justifyContent: "center",
     height: "100%",
