@@ -43,8 +43,9 @@ export const RequestsByMariaCard: FC<RequestsByMariaCardProps> = ({
             return index === lastPatientIndex ? (
               <>
                 <PatientRequestRow
-                  generalDetails={item.generalDetails}
-                  request={item.request}
+                  generalDetails={item}
+                  // TODO clrify how are requests by maria stored
+                  request="Verify titration values"
                   disabled
                   reduceOpacity
                 />
@@ -53,12 +54,13 @@ export const RequestsByMariaCard: FC<RequestsByMariaCardProps> = ({
               </>
             ) : (
               <PatientRequestRow
-                generalDetails={item.generalDetails}
-                request={item.request}
+                generalDetails={item}
+                // TODO clrify how are requests by maria stored
+                request="Verify titration values"
               />
             );
           }}
-          keyExtractor={(item) => item.itemId}
+          keyExtractor={(item) => item.patientID}
         />
       </View>
     </CardWrapper>

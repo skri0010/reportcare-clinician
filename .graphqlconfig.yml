@@ -1,0 +1,18 @@
+projects:
+  reportcare:
+    schemaPath: amplify/backend/api/reportcare/build/schema.graphql
+    includes:
+      - src/aws/graphql/**/*.ts
+    excludes:
+      - ./amplify/**
+    extensions:
+      amplify:
+        codeGenTarget: typescript
+        generatedFileName: src/aws/API.ts
+        docsFilePath: src/aws/graphql
+        region: ap-southeast-1
+        apiId: null
+        maxDepth: 2
+extensions:
+  amplify:
+    version: 3

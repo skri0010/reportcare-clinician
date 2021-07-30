@@ -1,11 +1,9 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable no-console */
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { DeviceEventEmitter } from "react-native";
 import Belief from "./Belief";
 import Actionframe from "./Actionframe";
 import Message from "../communication/Message";
-import agentManager from "../management/AgentManagement";
+import agentAPI from "../AgentAPI";
 import Engine from "./Engine/Engine";
 import ActivityNode from "./Engine/Rete/ActivityNode";
 import ObjNode from "./Engine/Rete/ObjNode";
@@ -13,6 +11,9 @@ import AlphaNode from "./Engine/Rete/AlphaNode";
 import Node from "./Engine/Rete/Node";
 import BetaNode from "./Engine/Rete/BetaNode";
 import { Fact } from "../model";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getClinicianInfo } from "aws";
+import { AsyncStorageKeys } from "../const/AsyncStorageKeys";
 
 /**
  * Class representing the Agent
@@ -49,8 +50,16 @@ class Agent {
     DeviceEventEmitter.addListener(this.id, (message: Message) =>
       this.onMessage(message)
     );
-    DeviceEventEmitter.addListener("env", (fact) => this.onEvent(fact));
+    DeviceEventEmitter.addListener("env", (fact: Belief) => this.onEvent(fact));
     this.initAgent(beliefs, this.actionFrames);
+  }
+
+  /**
+   * Called to trigger the initialization of agent.
+   */
+  // eslint-disable-next-line class-methods-use-this
+  start(): void {
+    // Do nothing
   }
 
   /**
@@ -100,7 +109,6 @@ class Agent {
       this.beliefs[belief.getKey()][belief.getAttribute()] = belief.getValue();
       return true;
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.log(error);
     }
   }
@@ -118,10 +126,18 @@ class Agent {
     this.engine = new Engine(actionFrames);
 
     // Register Agent in the system
-    agentManager.registerAgent(this);
+    // Note: agentManager might be undefined on first attempt, set to retry every 0.5s
+    const timer = setInterval(() => {
+      try {
+        agentAPI.registerAgent(this);
+        clearInterval(timer);
+      } catch (e) {
+        console.log(`${this.id} ${e}`);
+      }
+    }, 500);
 
     // Set Beliefs
-    await this.setBeliefs(beliefs);
+    this.setBeliefs(beliefs);
 
     await this.inference();
   }
@@ -132,18 +148,49 @@ class Agent {
    */
   async setBeliefs(beliefs: Belief[]): Promise<void> {
     try {
-      const beliefJSON = await AsyncStorage.getItem(this.id);
-      if (beliefJSON && Object.entries(JSON.parse(beliefJSON)).length > 0) {
-        this.beliefs = JSON.parse(beliefJSON);
-      } else {
+      let beliefsSet = false;
+      const clinicianID = await AsyncStorage.getItem(
+        AsyncStorageKeys.ClinicianID
+      );
+      if (clinicianID) {
+        const result: any = await getClinicianInfo({
+          clinicianID: clinicianID
+        });
+        const clinician = result.data.getClinicianInfo;
+        if (clinician && this.id in clinician) {
+          const beliefJSON = clinician[this.id as keyof typeof clinician];
+          if (beliefJSON && Object.entries(JSON.parse(beliefJSON)).length > 0) {
+            this.beliefs = JSON.parse(beliefJSON);
+            beliefsSet = true;
+          }
+        }
+      }
+
+      if (!beliefsSet) {
         for (let i = 0; i < beliefs.length; i += 1) {
           this.addBelief(beliefs[i]);
         }
       }
     } catch (e) {
-      // eslint-disable-next-line no-console
-      console.log(e);
+      console.log(this.id + e);
     }
+  }
+
+  /**
+   * Merge incoming beliefs into current beliefs.
+   * This happen when an existing user signs in.
+   * @param {Belief} beliefs
+   */
+  mergeBeliefs(beliefs: Belief): void {
+    Object.entries(beliefs).forEach(([key, innerObj]) => {
+      if (!(key in this.beliefs)) {
+        this.beliefs[key] = innerObj;
+      } else {
+        Object.entries(innerObj).forEach(([attribute, value]) => {
+          this.beliefs[key][attribute] = value;
+        });
+      }
+    });
   }
 
   /**
@@ -194,7 +241,6 @@ class Agent {
     if (this.availableActions.length > 0) {
       await this.startActivity();
     }
-    await AsyncStorage.setItem(this.id, JSON.stringify(this.beliefs));
   }
 
   /**

@@ -21,12 +21,12 @@ export const ChatScreen: FC<WithSideTabsProps[ScreenName.CHAT]> = () => {
           data={mockPatients}
           renderItem={({ item }) => (
             <PatientChatRow
-              generalDetails={item.generalDetails}
-              message={item.message}
-              unreadMessageCount={item.unreadMessageCount}
+              generalDetails={item}
+              message="temporary"
+              unreadMessageCount={2}
             />
           )}
-          keyExtractor={(item) => item.itemId}
+          keyExtractor={(item) => item.patientID}
         />
       </View>
     </ScreenWrapper>

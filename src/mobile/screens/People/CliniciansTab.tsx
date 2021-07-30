@@ -21,11 +21,8 @@ export const CliniciansTab: FC = () => {
           placeholder="Search clinicians"
         />
         {/* <Text> Clinicians </Text> */}
-        <ClinicianContactRow generalDetails={mockClinician.generalDetails} />
-        <ClinicianShareRow
-          generalDetails={mockClinician.generalDetails}
-          checked={mockClinician.checked}
-        />
+        <ClinicianContactRow generalDetails={mockClinician[0]} />
+        <ClinicianShareRow generalDetails={mockClinician[0]} checked />
       </View>
     </ScreenWrapper>
   );
