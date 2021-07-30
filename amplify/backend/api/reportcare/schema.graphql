@@ -128,6 +128,22 @@ type ReportVitals
   patientID: String!
 }
 
+type PatientAssignment
+  @model
+  @auth(
+    rules: [
+      { allow: owner, operations: [create, read, update] }
+      { allow: owner, ownerField: "clinicianID", operations: [read, update] }
+    ]
+  )
+  @key(fields: ["patientID", "clinicianID"])
+  @key(name: "clinicianIDsByPatientID", fields: ["clinicianID", "patientID"]) {
+  id: ID!
+  patientID: String!
+  clinicianID: String!
+  status: String!
+}
+
 """
 == Authorization ==
 1. Clinicians can create and read records
