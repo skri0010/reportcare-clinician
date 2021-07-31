@@ -45,20 +45,10 @@ export const CliniciansTab: FC<WithSideTabsProps[ScreenName.CLINICIAN]> = () => 
               )
             }
               />
-            <FlatList
-              showsVerticalScrollIndicator={false}
-              style={{ flex: 1 }}
-              ItemSeparatorComponent={() => <ItemSeparator />}
-              ListHeaderComponent={() => <ItemSeparator />}
-              ListFooterComponent={() => <ItemSeparator />}
-              data = {filteredClinicians}
-              renderItem={({ item }) => (
-                <ClinicianShareRow 
-                generalDetails={item} checked/>
-              )
-            }
-              />
             </RowSelectionWrapper>
+        </View>
+        <View style = {{ flex: 2, backgroundColor: colors.primaryWebBackgroundColor }}>
+          <NoSelection subtitle="Select Clinician for more info" screenName={ScreenName.CLINICIAN}/>
         </View>
       </View>
     </ScreenWrapper>
