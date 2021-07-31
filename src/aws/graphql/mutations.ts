@@ -590,6 +590,63 @@ export const deleteClinicianProtectedInfo = /* GraphQL */ `
     }
   }
 `;
+export const createPatientAssignment = /* GraphQL */ `
+  mutation CreatePatientAssignment(
+    $input: CreatePatientAssignmentInput!
+    $condition: ModelPatientAssignmentConditionInput
+  ) {
+    createPatientAssignment(input: $input, condition: $condition) {
+      id
+      patientID
+      clinicianID
+      status
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const updatePatientAssignment = /* GraphQL */ `
+  mutation UpdatePatientAssignment(
+    $input: UpdatePatientAssignmentInput!
+    $condition: ModelPatientAssignmentConditionInput
+  ) {
+    updatePatientAssignment(input: $input, condition: $condition) {
+      id
+      patientID
+      clinicianID
+      status
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deletePatientAssignment = /* GraphQL */ `
+  mutation DeletePatientAssignment(
+    $input: DeletePatientAssignmentInput!
+    $condition: ModelPatientAssignmentConditionInput
+  ) {
+    deletePatientAssignment(input: $input, condition: $condition) {
+      id
+      patientID
+      clinicianID
+      status
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
 export const createClinicianPatientMap = /* GraphQL */ `
   mutation CreateClinicianPatientMap(
     $input: CreateClinicianPatientMapInput!

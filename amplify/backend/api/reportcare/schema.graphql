@@ -128,22 +128,6 @@ type ReportVitals
   patientID: String!
 }
 
-type PatientAssignment
-  @model
-  @auth(
-    rules: [
-      { allow: owner, operations: [create, read, update] }
-      { allow: owner, ownerField: "clinicianID", operations: [read, update] }
-    ]
-  )
-  @key(fields: ["patientID", "clinicianID"])
-  @key(name: "clinicianIDsByPatientID", fields: ["clinicianID", "patientID"]) {
-  id: ID!
-  patientID: String!
-  clinicianID: String!
-  status: String!
-}
-
 """
 == Authorization ==
 1. Clinicians can create and read records
@@ -223,6 +207,32 @@ type ClinicianProtectedInfo
   MHA: String!
   clinicianID: String!
   owner: String!
+}
+
+"""
+Authorization
+1. Everyone can create and read their own records
+2. Clinicians can read and update records containing themselves
+"""
+type PatientAssignment
+  @model
+  @auth(
+    rules: [
+      { allow: owner, operations: [create, read] }
+      { allow: owner, ownerField: "clinicianID", operations: [read, update] }
+      { allow: groups, groups: ["Admin"] }
+    ]
+  )
+  @key(fields: ["patientID", "clinicianID"])
+  @key(
+    name: "patientAssignmentByStatus"
+    fields: ["clinicianID", "status"]
+    queryField: "listPatientAssignmentByStatus"
+  ) {
+  id: ID!
+  patientID: String!
+  clinicianID: String!
+  status: String!
 }
 
 """

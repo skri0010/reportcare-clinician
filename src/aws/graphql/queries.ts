@@ -676,6 +676,86 @@ export const listClinicianProtectedInfos = /* GraphQL */ `
     }
   }
 `;
+export const syncPatientAssignments = /* GraphQL */ `
+  query SyncPatientAssignments(
+    $filter: ModelPatientAssignmentFilterInput
+    $limit: Int
+    $nextToken: String
+    $lastSync: AWSTimestamp
+  ) {
+    syncPatientAssignments(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      lastSync: $lastSync
+    ) {
+      items {
+        id
+        patientID
+        clinicianID
+        status
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const getPatientAssignment = /* GraphQL */ `
+  query GetPatientAssignment($patientID: String!, $clinicianID: String!) {
+    getPatientAssignment(patientID: $patientID, clinicianID: $clinicianID) {
+      id
+      patientID
+      clinicianID
+      status
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listPatientAssignments = /* GraphQL */ `
+  query ListPatientAssignments(
+    $patientID: String
+    $clinicianID: ModelStringKeyConditionInput
+    $filter: ModelPatientAssignmentFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listPatientAssignments(
+      patientID: $patientID
+      clinicianID: $clinicianID
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        patientID
+        clinicianID
+        status
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
 export const syncClinicianPatientMaps = /* GraphQL */ `
   query SyncClinicianPatientMaps(
     $filter: ModelClinicianPatientMapFilterInput
@@ -789,6 +869,40 @@ export const listMedCompliantsByDate = /* GraphQL */ `
         Verification
         Date
         patientID
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const listPatientAssignmentByStatus = /* GraphQL */ `
+  query ListPatientAssignmentByStatus(
+    $clinicianID: String
+    $status: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelPatientAssignmentFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listPatientAssignmentByStatus(
+      clinicianID: $clinicianID
+      status: $status
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        patientID
+        clinicianID
+        status
         _version
         _deleted
         _lastChangedAt
