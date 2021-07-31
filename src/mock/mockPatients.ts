@@ -14,7 +14,11 @@ export const mockPatients: PatientInfo[] = [
     hospitalLocation: "Sabah",
     targetWeight: "70",
     targetActivity: "cardio",
-    patientID: "20"
+    patientID: "20",
+    createdAt: "",
+    updatedAt: "",
+    _lastChangedAt: 1627604201979,
+    _version: 1
   },
   {
     __typename: "PatientInfo",
@@ -29,7 +33,11 @@ export const mockPatients: PatientInfo[] = [
     hospitalLocation: "Bercelona",
     targetWeight: "80",
     targetActivity: "cardio",
-    patientID: "30"
+    patientID: "30",
+    createdAt: "",
+    updatedAt: "",
+    _lastChangedAt: 1627604201979,
+    _version: 1
   },
   {
     __typename: "PatientInfo",
@@ -44,7 +52,11 @@ export const mockPatients: PatientInfo[] = [
     hospitalLocation: "Sabah",
     targetWeight: "70",
     targetActivity: "cardio",
-    patientID: "50"
+    patientID: "50",
+    createdAt: "",
+    updatedAt: "",
+    _lastChangedAt: 1627604201979,
+    _version: 1
   },
   {
     __typename: "PatientInfo",
@@ -59,7 +71,11 @@ export const mockPatients: PatientInfo[] = [
     hospitalLocation: "Canberra",
     targetWeight: "55",
     targetActivity: "cardio",
-    patientID: "60"
+    patientID: "60",
+    createdAt: "",
+    updatedAt: "",
+    _lastChangedAt: 1627604201979,
+    _version: 1
   }
 ];
 

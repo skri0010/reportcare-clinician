@@ -765,7 +765,7 @@ export const schema = {
                     "attributes": [],
                     "association": {
                         "connectionType": "HAS_ONE",
-                        "associatedWith": "clinicianInfo",
+                        "associatedWith": "clinicianID",
                         "targetName": "clinicianID"
                     }
                 },
@@ -911,18 +911,12 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "clinicianInfo": {
-                    "name": "clinicianInfo",
+                "clinicianID": {
+                    "name": "clinicianID",
                     "isArray": false,
-                    "type": {
-                        "model": "ClinicianInfo"
-                    },
+                    "type": "String",
                     "isRequired": true,
-                    "attributes": [],
-                    "association": {
-                        "connectionType": "BELONGS_TO",
-                        "targetName": "clinicianID"
-                    }
+                    "attributes": []
                 },
                 "owner": {
                     "name": "owner",
@@ -1129,5 +1123,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "3fcc89070b8074452a889e46c6529de2"
+    "version": "4e923d6dd27b0baf7538e3ec6b6cf08b"
 };

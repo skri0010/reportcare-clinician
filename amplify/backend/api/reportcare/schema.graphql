@@ -206,7 +206,6 @@ type ClinicianProtectedInfo
   ALA: String!
   MHA: String!
   clinicianID: String!
-  clinicianInfo: ClinicianInfo! @connection(fields: ["clinicianID"])
   owner: String!
 }
 

@@ -533,19 +533,6 @@ export const createClinicianProtectedInfo = /* GraphQL */ `
       ALA
       MHA
       clinicianID
-      clinicianInfo {
-        id
-        name
-        hospitalName
-        role
-        clinicianID
-        owner
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-      }
       owner
       _version
       _deleted
@@ -570,19 +557,6 @@ export const updateClinicianProtectedInfo = /* GraphQL */ `
       ALA
       MHA
       clinicianID
-      clinicianInfo {
-        id
-        name
-        hospitalName
-        role
-        clinicianID
-        owner
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-      }
       owner
       _version
       _deleted
@@ -607,19 +581,6 @@ export const deleteClinicianProtectedInfo = /* GraphQL */ `
       ALA
       MHA
       clinicianID
-      clinicianInfo {
-        id
-        name
-        hospitalName
-        role
-        clinicianID
-        owner
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-      }
       owner
       _version
       _deleted

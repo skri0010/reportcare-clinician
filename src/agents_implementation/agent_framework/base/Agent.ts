@@ -19,7 +19,7 @@ import {
   BeliefKeys,
   CommonAttributes
 } from "../AgentEnums";
-import { ClinicianInfo } from "aws/API";
+import { ClinicianInfo, ClinicianProtectedInfo } from "aws/API";
 
 /**
  * Class representing the Agent
@@ -154,7 +154,7 @@ class Agent {
    */
   async setBeliefs(beliefs: Belief[]): Promise<void> {
     let beliefsSet = false;
-    let clinicianStates;
+    let clinicianStates: ClinicianProtectedInfo | null | undefined;
 
     try {
       // Retrieves local clinician
@@ -166,15 +166,11 @@ class Agent {
 
         // Device is online
         if (agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
-          const result: any = await getClinicianProtectedInfo({
+          const query = await getClinicianProtectedInfo({
             clinicianID: localClinician.clinicianID
           });
-          if (result.data) {
-            clinicianStates = result.data.getClinicianProtectedInfo;
-
-            // Avoids nested clinicianInfo from being stored
-            localClinician.protectedInfo = clinicianStates;
-            delete localClinician.protectedInfo?.clinicianInfo;
+          if (query.data) {
+            clinicianStates = query.data.getClinicianProtectedInfo;
 
             // Updates local storage
             await AsyncStorage.mergeItem(
@@ -191,8 +187,11 @@ class Agent {
       if (clinicianStates && this.id in clinicianStates) {
         const beliefJSON =
           clinicianStates[this.id as keyof typeof clinicianStates];
-        if (beliefJSON && Object.entries(JSON.parse(beliefJSON)).length > 0) {
-          this.beliefs = JSON.parse(beliefJSON);
+        if (
+          beliefJSON &&
+          Object.entries(JSON.parse(beliefJSON.toString())).length > 0
+        ) {
+          this.beliefs = JSON.parse(beliefJSON.toString());
           beliefsSet = true;
         }
       }

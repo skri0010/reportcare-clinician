@@ -630,19 +630,6 @@ export const getClinicianProtectedInfo = /* GraphQL */ `
       ALA
       MHA
       clinicianID
-      clinicianInfo {
-        id
-        name
-        hospitalName
-        role
-        clinicianID
-        owner
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-      }
       owner
       _version
       _deleted
