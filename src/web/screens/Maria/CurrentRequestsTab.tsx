@@ -22,12 +22,9 @@ export const CurrentRequestsTab: FC = () => {
           ListFooterComponent={() => <ItemSeparator />}
           data={mockPatients}
           renderItem={({ item }) => (
-            <PatientRequestRow
-              generalDetails={item.generalDetails}
-              request={item.request}
-            />
+            <PatientRequestRow generalDetails={item} request="temporary" />
           )}
-          keyExtractor={(item) => item.itemId}
+          keyExtractor={(item) => item.patientID}
         />
       </View>
     </ScreenWrapper>

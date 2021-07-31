@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
 import { View } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
-import { RiskFilterTab } from "../RiskFilterTab";
+import { FilterTagProps, RiskFilterTab } from "../RiskFilterTab";
 import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { RowSelectionHeader } from "./RowSelectionHeader";
 
@@ -11,9 +11,9 @@ interface RowSelectionWrapperProps {
   addButton?: boolean;
   riskFilterTag?: boolean;
   placeholder?: string;
-  //   listComponent: React.ReactNode;
   isTodo?: boolean;
   onPress?: () => void;
+  onRiskFilterClick?: (item: FilterTagProps[]) => void;
 }
 
 export const RowSelectionWrapper: FC<RowSelectionWrapperProps> = ({
@@ -22,9 +22,9 @@ export const RowSelectionWrapper: FC<RowSelectionWrapperProps> = ({
   riskFilterTag = false,
   placeholder,
   children,
-  // listComponent,
   isTodo = false,
-  onPress
+  onPress,
+  onRiskFilterClick
 }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
@@ -55,7 +55,9 @@ export const RowSelectionWrapper: FC<RowSelectionWrapperProps> = ({
             onSearchClick={() => {
               null;
             }}
-            containerStyle={{ backgroundColor: "white" }}
+            containerStyle={{
+              backgroundColor: colors.primaryContrastTextColor
+            }}
             placeholder={placeholder}
           />
         </View>
@@ -64,11 +66,7 @@ export const RowSelectionWrapper: FC<RowSelectionWrapperProps> = ({
       {/* Risk filter tab */}
       {riskFilterTag ? (
         <View>
-          <RiskFilterTab
-            onTagPress={() => {
-              null;
-            }}
-          />
+          <RiskFilterTab onTagPress={onRiskFilterClick} />
         </View>
       ) : null}
 

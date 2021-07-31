@@ -33,6 +33,7 @@ export interface ColorScheme {
 
   // Buttons
   primaryButtonColor: string;
+  primaryWarningButtonColor: string;
 
   // Avatar background
   primaryAvatarBackgroundColor: string;

@@ -13,6 +13,7 @@ export interface ClinicianRowGeneralDetails {
   location: string;
 }
 
+// TODO: "Clarify if this file is still needed"
 /**
  * Data needed for various row types
  *

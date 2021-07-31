@@ -1,10 +1,9 @@
 import React, { FC } from "react";
 import { View } from "react-native";
-import { ClinicianRowGeneralDetails } from "models/PersonRowDetails";
+import { ClinicianInfo } from "aws/models";
 import { ScaledSheet } from "react-native-size-matters";
 import { ClinicianRowBase } from "./ClinicianRowBase";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { ClinicianInfo } from "aws/models";
 
 export interface ClinicanContactRowProps {
   generalDetails: ClinicianInfo;

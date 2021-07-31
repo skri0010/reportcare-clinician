@@ -74,6 +74,7 @@ export const CliniciansTab: FC<WithSideTabsProps[ScreenName.CLINICIAN]> = () => 
   // JH-TODO: Replace placeholder with i18n
   return (
     <ScreenWrapper>
+<<<<<<< HEAD
       <View style={{ flexDirection: "row", height: "100%" }}>
         <View style={{ flex: 1, height: Dimensions.get("window").height }}>
           <RowSelectionWrapper
@@ -100,6 +101,21 @@ export const CliniciansTab: FC<WithSideTabsProps[ScreenName.CLINICIAN]> = () => 
         <View style = {{ flex: 2, backgroundColor: colors.primaryWebBackgroundColor }}>
           <NoSelection subtitle="Select Clinician for more info" screenName={ScreenName.CLINICIAN}/>
         </View>
+=======
+      <View>
+        <SearchBarComponent
+          onUserInput={() => {
+            null;
+          }}
+          onSearchClick={() => {
+            null;
+          }}
+          placeholder="Search clinicians"
+        />
+        <Text> Clinicians </Text>
+        <ClinicianContactRow generalDetails={mockClinician[0]} />
+        <ClinicianShareRow generalDetails={mockClinician[0]} checked />
+>>>>>>> origin/jy-patients-tab
       </View>
     </ScreenWrapper>
   );

@@ -5,7 +5,6 @@ import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { ScaledSheet } from "react-native-size-matters";
 import { PatientDetailsRow } from "components/RowComponents/PatientRows/PatientDetailsRow";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
-import { ParameterGraphs } from "components/Visualizations/ParameterGraphs";
 import { ReportVitals } from "aws/models";
 import { Patient } from "agents_implementation/agent_framework/model";
 import agentDTA from "agents_implementation/agents/data-assistant/DTA";
@@ -15,6 +14,7 @@ import agentAPI from "agents_implementation/agent_framework/AgentAPI";
 import agentUXSA from "agents_implementation/agents/user-specific-assistant/UXSA";
 import { mockPatients } from "mock/mockPatients";
 import { mockVitals } from "mock/mockVitals";
+import { RiskLevel } from "models/RiskLevel";
 
 export const PatientsTab: FC = () => {
   const [patients, setPatients] = useState<Patient[]>([]);
@@ -46,10 +46,10 @@ export const PatientsTab: FC = () => {
           // To be removed: for testing purposes only
           const mockData: Patient[] = mockPatients.map((patient) => {
             return {
-              details: patient.generalDetails,
-              userId: patient.itemId,
-              class: patient.patientClass,
-              age: patient.age
+              details: patient,
+              userId: patient.patientID,
+              age: 50,
+              riskLevel: RiskLevel.UNASSIGNED
             };
           });
           setPatients(mockData);
@@ -113,7 +113,7 @@ export const PatientsTab: FC = () => {
         renderItem={({ item }) => (
           <PatientDetailsRow
             generalDetails={item.details}
-            patientClass={item.class}
+            patientClass={item.details.NHYAclass}
             age={item.age}
             onRowPress={() => getData(item.details.id)}
           />
@@ -131,8 +131,8 @@ export const PatientsTab: FC = () => {
         />
       )}
 
-      {/* TODO: Move graphs to PatientsDetails screen */}
-      {graphIsReady && <ParameterGraphs data={vitalsData} />}
+      {/* TODO: Move graphs to PatientsDetails screen
+      {graphIsReady && <ParameterGraphs data={vitalsData} />} */}
     </ScreenWrapper>
   );
 };

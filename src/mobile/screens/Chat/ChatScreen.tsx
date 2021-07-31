@@ -20,13 +20,14 @@ export const ChatScreen: FC<WithBottomTabsProps[ScreenName.CHAT]> = () => {
           ListFooterComponent={() => <ItemSeparator />}
           data={mockPatients}
           renderItem={({ item }) => (
+            // TODO : Clarify how chat data is stored
             <PatientChatRow
-              generalDetails={item.generalDetails}
-              message={item.message}
-              unreadMessageCount={item.unreadMessageCount}
+              generalDetails={item}
+              message="Temporary chat"
+              unreadMessageCount={2}
             />
           )}
-          keyExtractor={(item) => item.itemId}
+          keyExtractor={(item) => item.patientID}
         />
       </View>
     </ScreenWrapper>

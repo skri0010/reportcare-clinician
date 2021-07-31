@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { View } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { RootState, select } from "util/useRedux";
-import { RNTextStyle, H2, H3 } from "./index";
+import { RNTextStyle, H2, H5 } from "./index";
 
 interface MainTitleProps {
   title: string;
@@ -30,7 +30,7 @@ export const MainTitle: FC<MainTitleProps> = ({
         translate={translate}
       />
       {details ? (
-        <H3
+        <H5
           style={[styles.detailsStyle, detailsColors]}
           text={details}
           translate={translate}

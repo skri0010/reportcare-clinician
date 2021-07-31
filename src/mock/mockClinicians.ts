@@ -1,6 +1,5 @@
 import { ClinicianInfo } from "aws/models";
 
-
 export const mockClinician: ClinicianInfo[] = [
   {
     id: "samuel@gmail.com",

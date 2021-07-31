@@ -38,15 +38,12 @@ class RetrieveRolePatients extends Activity {
       if (results.length > 0) {
         const patients: Patient[] = results.map((patient) => {
           return {
-            details: {
-              id: patient.patientID,
-              name: patient.name,
-              // LS-TODO: Get risk level of patient according to guideline
-              riskLevel: RiskLevel.UNASSIGNED
-            },
+            details: patient,
             userId: patient.id,
             class: patient.NHYAclass,
-            age: 0
+            age: 0,
+            // LS-TODO: Get risk level of patient according to guideline
+            riskLevel: RiskLevel.UNASSIGNED
           };
         });
 

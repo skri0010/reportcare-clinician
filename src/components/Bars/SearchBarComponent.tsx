@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useState, useEffect, FC } from "react";
+import React, { useState, FC } from "react";
 import { RootState } from "ic-redux/store";
 import {
   StyleProp,

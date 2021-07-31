@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { View } from "react-native";
+import { ScrollView } from "react-native";
 import { RootState, select } from "util/useRedux";
 
 export const ScreenWrapper: FC = ({ children }) => {
@@ -8,8 +8,12 @@ export const ScreenWrapper: FC = ({ children }) => {
   }));
 
   return (
-    <View style={{ backgroundColor: colors.primaryBackgroundColor, flex: 1 }}>
+    <ScrollView
+      style={{
+        backgroundColor: colors.primaryWebBackgroundColor
+      }}
+    >
       {children}
-    </View>
+    </ScrollView>
   );
 };

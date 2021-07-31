@@ -1,6 +1,5 @@
 import React, { FC, useState } from "react";
 import { View, TouchableOpacity } from "react-native";
-import { ClinicianRowGeneralDetails } from "models/PersonRowDetails";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { ClinicianRowBase } from "./ClinicianRowBase";
 import { RootState } from "ic-redux/store";

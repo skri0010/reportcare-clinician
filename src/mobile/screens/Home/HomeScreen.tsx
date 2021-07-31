@@ -36,11 +36,11 @@ export const HomeScreen: FC<WithBottomTabsProps[ScreenName.HOME]> = () => {
         data={mockPatients}
         renderItem={({ item }) => (
           <PatientRequestRow
-            generalDetails={item.generalDetails}
-            request={item.request}
+            generalDetails={item}
+            request="Verify titration values"
           />
         )}
-        keyExtractor={(item) => item.itemId}
+        keyExtractor={(item) => item.patientID}
       />
     </ScreenWrapper>
   );
