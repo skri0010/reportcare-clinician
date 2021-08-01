@@ -1,5 +1,11 @@
 import React, { FC, useState, useContext } from "react";
-import { View, TouchableOpacity, TextInput } from "react-native";
+import {
+  View,
+  TouchableOpacity,
+  TextInput,
+  StyleProp,
+  ViewStyle
+} from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { EditTodoScreenProps } from "../TodoScreenProps";
 import { TodoSection, EditHistorySection } from "./TodoDetailsScreen";
@@ -9,12 +15,17 @@ import { TodoContext } from "./TodoScreen";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 
 export const EditTodoScreen: FC<EditTodoScreenProps> = ({
-  route,
+  // route,
   navigation
 }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
   }));
+
+  const inputBarColor: StyleProp<ViewStyle> = {
+    backgroundColor: colors.primaryContrastTextColor,
+    borderColor: colors.primaryBorderColor
+  };
 
   const context = useContext(TodoContext);
 
@@ -34,28 +45,31 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
   return (
     <ScreenWrapper>
       <View style={styles.container}>
-        <H3 text="Title" style={{ fontWeight: "bold", marginBottom: ms(10) }} />
+        <H3 text="Title" style={styles.detailText} />
         <TextInput
           value={titleInput}
           style={[
-            styles.titleInput,
+            styles.input,
+            inputBarColor,
             {
-              backgroundColor: colors.primaryContrastTextColor,
-              borderColor: colors.primaryTextColor
+              height: ms(30),
+              paddingLeft: ms(10)
             }
           ]}
           onChangeText={onChangeTitle}
         />
         <TodoSection mainItem="Patient" content={context.patientContent} />
-        <H3 text="Notes" style={{ fontWeight: "bold", marginBottom: ms(10) }} />
+        <H3 text="Notes" style={styles.detailText} />
         <TextInput
           multiline
           value={noteInput}
           style={[
-            styles.noteInput,
+            styles.input,
+            inputBarColor,
             {
-              backgroundColor: colors.primaryContrastTextColor,
-              borderColor: colors.primaryTextColor
+              height: ms(100),
+              paddingLeft: ms(10),
+              paddingTop: ms(5)
             }
           ]}
           onChangeText={onChangeNotes}
@@ -72,7 +86,7 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={[
-              styles.cancelButton,
+              styles.button,
               { backgroundColor: colors.primaryTodoCompleteButtonColor }
             ]}
             onPress={() => {
@@ -86,10 +100,11 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
           </TouchableOpacity>
           <TouchableOpacity
             style={[
-              styles.saveButton,
+              styles.button,
               {
                 backgroundColor: colors.primaryContrastTextColor,
-                borderColor: colors.primaryTextColor
+                borderColor: colors.primaryTextColor,
+                borderWidth: ms(1)
               }
             ]}
             onPress={() => {
@@ -119,20 +134,10 @@ const styles = ScaledSheet.create({
     margin: "30@ms",
     marginTop: "20@ms"
   },
-  titleInput: {
-    height: "30@ms",
+  input: {
     borderWidth: "1@ms",
     borderRadius: "2@ms",
-    marginBottom: "20@ms",
-    paddingLeft: "10@ms"
-  },
-  noteInput: {
-    height: "100@ms",
-    borderWidth: "1@ms",
-    borderRadius: "2@ms",
-    paddingLeft: "10@ms",
-    marginBottom: "20@ms",
-    paddingTop: "5@ms"
+    marginBottom: "20@ms"
   },
   buttonContainer: {
     marginBottom: "10@ms",
@@ -140,7 +145,7 @@ const styles = ScaledSheet.create({
     justifyContent: "center",
     flexDirection: "row"
   },
-  cancelButton: {
+  button: {
     textAlign: "center",
     justifyContent: "space-evenly",
     borderRadius: "5@ms",
@@ -148,13 +153,8 @@ const styles = ScaledSheet.create({
     height: "30@ms",
     margin: "10@ms"
   },
-  saveButton: {
-    textAlign: "center",
-    justifyContent: "space-evenly",
-    borderRadius: "5@ms",
-    width: "80@ms",
-    height: "30@ms",
-    borderWidth: "1@ms",
-    margin: "10@ms"
+  detailText: {
+    fontWeight: "bold",
+    marginBottom: "10@ms"
   }
 });

@@ -39,7 +39,7 @@ export const SearchBarComponent: FC<SearchBarComponentProps> = ({
 
   const searchBarContainerStyle: StyleProp<ViewStyle> = {
     backgroundColor: colors.primaryContrastTextColor,
-    borderColor: colors.primaryTextColor
+    borderColor: colors.primaryBorderColor
   };
 
   const searchBarTextStyle: StyleProp<ViewStyle> = {

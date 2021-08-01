@@ -56,5 +56,5 @@ export const lightColorScheme: ColorScheme = {
   errorColor: "#ff1e00",
 
   // Overlay
-  overlayColor: "#f5fcff88"
+  overlayColor: "#e7e8e895"
 };
