@@ -1,19 +1,15 @@
-import React, { FC, useState, createContext } from "react";
+import React, { FC, useState } from "react";
 import { View, Dimensions, FlatList } from "react-native";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { mockClinician } from "mock/mockClinicians";
 import { ClinicianContactRow } from "components/RowComponents/ClinicianRow/ClinicianContactRow";
-import { ClinicianShareRow } from "components/RowComponents/ClinicianRow/ClinicianShareRow";
-import { ScaledSheet } from "react-native-size-matters";
-import { lightColorScheme } from "models/ColorScheme";
 import { RootState, select } from "util/useRedux";
 import { ScreenName, WithSideTabsProps } from "web/screens";
 import { RowSelectionWrapper } from "../RowSelectionTab";
-import { NoSelection } from "./NoSelection";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { ClinicianInfo } from "aws/models";
-import { createStackNavigator } from "@react-navigation/stack";
 import { ContactTitle } from "./ContactTitle";
+import { ClinicianDetails } from "./ClinicianDetails";
 
 
 export const CliniciansTab: FC<WithSideTabsProps[ScreenName.CLINICIAN]> = () => {
@@ -52,6 +48,7 @@ export const CliniciansTab: FC<WithSideTabsProps[ScreenName.CLINICIAN]> = () => 
             </View>
         <View style = {{ flex: 2, backgroundColor: colors.primaryWebBackgroundColor }}>
           <ContactTitle name={selectedClinician.name} isPatient={false}/>
+          <ClinicianDetails generalDetails={selectedClinician}/>
         </View>
         
         </View>
