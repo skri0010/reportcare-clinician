@@ -56,6 +56,20 @@ export const mockPatients: PatientInfo[] = [
     targetWeight: "55",
     targetActivity: "cardio",
     patientID: "60"
+  },
+  {
+    id: "5",
+    name: "Mohammad Abdul",
+    address: "Canberra",
+    deviceNo: "1",
+    diagnosisInfo: "none",
+    NHYAclass: "NHYA III",
+    cardiologist: "Doctor Wong",
+    hospitalName: "Canberra Hospital",
+    hospitalLocation: "Canberra",
+    targetWeight: "55",
+    targetActivity: "cardio",
+    patientID: "60"
   }
 ];
 

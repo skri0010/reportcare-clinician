@@ -9,7 +9,7 @@
 // import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 // import { ScaledSheet } from "react-native-size-matters";
 import React, { FC, useState } from "react";
-import { View, FlatList, Dimensions } from "react-native";
+import { View, FlatList, Modal } from "react-native";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { PatientDetailsRow } from "components/RowComponents/PatientRows/PatientDetailsRow";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
@@ -24,6 +24,12 @@ import { PatientHistory } from "./PatientDetailsScreen/PatientHistory";
 import { ContactTitle } from "./ContactTitle";
 import { PatientParameter } from "./PatientDetailsScreen/PatientParameters";
 import { PatientIcdCrt } from "./PatientDetailsScreen/PatientIcdCrt";
+import { AlertHistoryModal } from "./PatientDetailsScreen/PatientHistoryScreens/AlertHistoryModal";
+import { AlertHistory, MedicalRecords } from "mock/mockPatientDetails";
+import { RiskLevel } from "models/RiskLevel";
+import { ms, ScaledSheet } from "react-native-size-matters";
+import { ViewMedicalRecords } from "./PatientDetailsScreen/PatientHistoryScreens/ViewMedicalRecord";
+import { AddMedicalRecord } from "./PatientDetailsScreen/PatientHistoryScreens/AddMedicalRecord";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -109,7 +115,69 @@ export const PatientsTab: FC = () => {
   const [filteredPatients, setFilteredPatients] =
     useState<PatientInfo[]>(mockPatients);
 
+  const initialAlertHistory = {
+    patientId: "",
+    risk: RiskLevel.UNASSIGNED,
+    date: "",
+    time: "",
+    description: "",
+    HRV: 0,
+    BP: "",
+    symptom: "",
+    signs: ""
+  };
+
+  const initialMedicalRecord = {
+    patientId: "",
+    record: "",
+    content: ""
+  };
+
   const [selectedPatient] = useState(mockPatients[0]);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const [modalAlertVisible, setModalAlertVisible] = useState<boolean>(false);
+  const [displayHistory, setDisplayHistory] =
+    useState<AlertHistory>(initialAlertHistory);
+
+  const [viewMedicalModal, setViewMedicalModal] = useState<boolean>(false);
+  const [displayMedicalRecord, setDisplayMedicalRecord] =
+    useState<MedicalRecords>(initialMedicalRecord);
+
+  const [addMedicalRecord, setAddMedicalRecord] = useState<boolean>(false);
+
+  interface PopUpModalProps {
+    visible: boolean;
+    onRequestClose: () => void;
+  }
+
+  // Wanted to use this as reusable component for pop up modal
+  // But the slide animation during closing of modal is choppy for some reason
+  const PopUpModal: FC<PopUpModalProps> = ({
+    visible,
+    onRequestClose,
+    children
+  }) => {
+    return (
+      <Modal
+        transparent
+        visible={visible}
+        animationType="slide"
+        onRequestClose={() => {
+          onRequestClose;
+        }}
+      >
+        <View
+          style={[
+            styles.modalContainer,
+            { backgroundColor: colors.overlayColor }
+          ]}
+        >
+          {children}
+        </View>
+      </Modal>
+    );
+  };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const filterPatients = (item: FilterTagProps[]) => {
@@ -125,9 +193,13 @@ export const PatientsTab: FC = () => {
   };
   // JH-TODO: Replace placeholder with i18n
   return (
-    <ScreenWrapper>
-      <View style={{ flexDirection: "row", height: "100%" }}>
-        <View style={{ flex: 1, height: Dimensions.get("window").height }}>
+    <ScreenWrapper fixed>
+      {/* <View style={{ flexDirection: "row", height: "100%" }}> */}
+      <View
+        style={styles.container}
+        pointerEvents={modalVisible ? "none" : "auto"}
+      >
+        <View style={{ flex: 1 }}>
           <RowSelectionWrapper
             title="Patient"
             riskFilterTag
@@ -175,11 +247,105 @@ export const PatientsTab: FC = () => {
               {() => <PatientIcdCrt patient={selectedPatient} />}
             </Tab.Screen>
             <Tab.Screen name="History">
-              {() => <PatientHistory patient={selectedPatient} />}
+              {() => (
+                <PatientHistory
+                  patient={selectedPatient}
+                  alertHistoryFunc={{
+                    setDisplayHistory: setDisplayHistory,
+                    setModalAlertVisible: setModalAlertVisible
+                  }}
+                  medicalRecordFunc={{
+                    setViewMedicalModal: setViewMedicalModal,
+                    setDisplayMedicalRecord: setDisplayMedicalRecord,
+                    setAddMedicalRecord: setAddMedicalRecord
+                  }}
+                  // setDisplayHistory={setDisplayHistory}
+                  // setModalAlertVisible={setModalAlertVisible}
+                  // setViewMedicalModal={setViewMedicalModal}
+                  // setDisplayMedicalRecord={setDisplayMedicalRecord}
+                  // setAddMedicalRecord={setAddMedicalRecord}
+                />
+              )}
             </Tab.Screen>
           </Tab.Navigator>
         </View>
       </View>
+
+      <View style={styles.modalView}>
+        <Modal
+          transparent
+          visible={modalAlertVisible}
+          animationType="slide"
+          onRequestClose={() => {
+            setModalAlertVisible(false);
+          }}
+        >
+          <View
+            style={[
+              styles.modalContainer,
+              { backgroundColor: colors.overlayColor }
+            ]}
+          >
+            <AlertHistoryModal
+              name={selectedPatient.name}
+              setModalAlertVisible={setModalAlertVisible}
+              alertHistory={displayHistory}
+            />
+          </View>
+        </Modal>
+        <Modal
+          transparent
+          visible={viewMedicalModal}
+          animationType="slide"
+          onRequestClose={() => {
+            setViewMedicalModal(false);
+          }}
+        >
+          <View
+            style={[
+              styles.modalContainer,
+              { backgroundColor: colors.overlayColor }
+            ]}
+          >
+            <ViewMedicalRecords
+              setViewMedicalModal={setViewMedicalModal}
+              medicalRecord={displayMedicalRecord}
+            />
+          </View>
+        </Modal>
+        <Modal
+          transparent
+          visible={addMedicalRecord}
+          animationType="slide"
+          onRequestClose={() => {
+            setAddMedicalRecord(false);
+          }}
+        >
+          <View
+            style={[
+              styles.modalContainer,
+              { backgroundColor: colors.overlayColor }
+            ]}
+          >
+            <AddMedicalRecord setAddMedicalRecord={setAddMedicalRecord} />
+          </View>
+        </Modal>
+      </View>
     </ScreenWrapper>
   );
 };
+
+const styles = ScaledSheet.create({
+  container: { flexDirection: "row", height: "100%" },
+  modalView: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  rowSelection: { flex: 1 },
+  modalContainer: {
+    justifyContent: "center",
+    height: "100%",
+    width: "100%"
+  }
+});

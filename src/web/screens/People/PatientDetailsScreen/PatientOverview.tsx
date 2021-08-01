@@ -34,6 +34,7 @@ const styles = ScaledSheet.create({
   container: {
     display: "flex",
     flexDirection: "row",
-    flexWrap: "wrap"
+    flexWrap: "wrap",
+    paddingBottom: "20@ms"
   }
 });
