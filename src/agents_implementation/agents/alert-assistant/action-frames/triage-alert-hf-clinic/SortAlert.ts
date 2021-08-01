@@ -12,7 +12,7 @@ import {
   ProcedureConst
 } from "agents_implementation/agent_framework/AgentEnums";
 import agentAPI from "agents_implementation/agent_framework/AgentAPI";
-import { Alert } from "agents_implementation/agent_framework/model";
+import { Alert } from "aws/API";
 
 /**
  * Class to represent the activity for sorting alerts received from MHA.

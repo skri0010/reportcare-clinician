@@ -12,8 +12,7 @@ import {
   ProcedureConst
 } from "agents_implementation/agent_framework/AgentEnums";
 import agentAPI from "agents_implementation/agent_framework/AgentAPI";
-import { Alert } from "agents_implementation/agent_framework/model";
-import { ReportSymptom, ReportVitals } from "aws/API";
+import { ReportSymptom, ReportVitals, Alert } from "aws/API";
 
 /**
  * Class to represent the activity for receiving alert.
@@ -52,12 +51,15 @@ class ReceiveAlert extends Activity {
         Humidity: null,
         NoSteps: "100",
         OxySat: "200",
-        SymptomId: "",
         Temperature: null,
         Weight: "99",
         id: "37e7e083-b61f-4d34-891a-89bc1c6f6cc3",
         owner: "ccf",
-        patientID: "CCF"
+        patientID: "CCF",
+        _version: 1,
+        _lastChangedAt: 0,
+        createdAt: "",
+        updatedAt: ""
       };
 
       const mockSymptomsReport: ReportSymptom = {
@@ -68,14 +70,29 @@ class ReceiveAlert extends Activity {
         Severity: "Much less difficulty breathing",
         id: "5d72b8de-2f68-4915-afa2-2beae592cded",
         owner: "ccf",
-        patientID: "CCF"
+        patientID: "CCF",
+        _version: 1,
+        _lastChangedAt: 0,
+        createdAt: "",
+        updatedAt: ""
       };
 
       const mockAlert: Alert = {
-        patientId: mockVitalsReport.patientID!,
+        __typename: "Alert",
+        id: "",
+        summary: "",
+        patientID: mockVitalsReport.patientID!,
+        vitalsReportID: mockVitalsReport.id,
         vitalsReport: mockVitalsReport,
-        symptomsReport: mockSymptomsReport,
-        dateTime: "2021-04-13T07:08:41.102Z"
+        symptomReportID: mockSymptomsReport.id,
+        symptomReport: mockSymptomsReport,
+        dateTime: "2021-04-13T07:08:41.102Z",
+        completed: false,
+        owner: "",
+        _version: 1,
+        _lastChangedAt: 0,
+        createdAt: "",
+        updatedAt: ""
       };
 
       // Broadcast alert to facts to be sorted by SortAlert action frame of ALA.

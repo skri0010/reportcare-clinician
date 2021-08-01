@@ -13,15 +13,17 @@ import {
   ProcedureAttributes,
   ProcedureConst
 } from "../../../../agent_framework/AgentEnums";
-import { Alert, AlertInfo } from "../../../../agent_framework/model";
+import { AlertInfo } from "../../../../agent_framework/model";
 import agentAPI from "../../../../agent_framework/AgentAPI";
 import {
   listPatientInfos,
   listMedCompliantsByDate,
   getMedicationInfo,
-  getActivityInfo
+  getActivityInfo,
+  getReportVitals,
+  getReportSymptom
 } from "aws";
-import { ModelSortDirection } from "aws/API";
+import { Alert, ModelSortDirection } from "aws/API";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 /**
@@ -55,113 +57,187 @@ class RetrieveAlertInfo extends Activity {
       const isOnline =
         agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE];
 
+      // Device is offline
       if (alert && isOnline) {
-        const alertInfo: AlertInfo = {
-          patientId: alert.patientId,
-          alertDateTime: alert.dateTime
-        };
+        // Ensures vitals and symptoms are present
+        let alertVitals = alert.vitalsReport;
+        let alertSymptoms = alert.symptomReport;
 
-        // Queries patientInfo to get diagnosis and NHYA class
-        const patientInfoQuery = await listPatientInfos({
-          filter: { patientID: { eq: alert.patientId } }
-        });
-
-        if (patientInfoQuery.data) {
-          const results = patientInfoQuery.data.listPatientInfos?.items;
-          if (results && results.length > 0) {
-            const patientInfo = results[0];
-            alertInfo.NHYAclass = patientInfo?.NHYAclass;
-            alertInfo.diagnosis = patientInfo?.diagnosisInfo;
+        // Retrieves vitals
+        if (!alertVitals) {
+          const query = await getReportVitals({ id: alert.vitalsReportID });
+          if (query.data && query.data.getReportVitals) {
+            alertVitals = query.data.getReportVitals;
           }
         }
 
-        // Queries verified medication intake in descending order of date
-        const medCompliantQuery = await listMedCompliantsByDate({
-          sortDirection: ModelSortDirection.DESC,
-          patientID: alert.patientId,
-          filter: { Verification: { eq: true } }
-        });
-
-        if (medCompliantQuery.data) {
-          const results = medCompliantQuery.data.listMedCompliantsByDate?.items;
-          if (results && results.length > 0) {
-            const latestMedCompliant = results[0];
-
-            // Queries medication and dosage
-            const medicationInfoQuery = await getMedicationInfo({
-              id: latestMedCompliant?.MedId
-            });
-            if (medicationInfoQuery.data) {
-              const medicationInfo = medicationInfoQuery.data.getMedicationInfo;
-              alertInfo.lastMedication = medicationInfo?.medname;
-              alertInfo.medicationQuantity = medicationInfo?.dosage;
-            }
+        // Retrieves symptoms
+        if (!alertSymptoms) {
+          const query = await getReportSymptom({ id: alert.symptomReportID });
+          if (query.data && query.data.getReportSymptom) {
+            alertSymptoms = query.data.getReportSymptom;
           }
         }
 
-        // Queries activity associated with symptom report
-        const activityInfoQuery = await getActivityInfo({
-          id: alert.symptomsReport.ActId
-        });
-        if (activityInfoQuery.data) {
-          const activityInfo = activityInfoQuery.data.getActivityInfo;
-          alertInfo.activityDuringAlert = activityInfo?.Actname;
-        }
+        if (alertVitals && alertSymptoms) {
+          /**
+           * LS-TODO:
+           * 1. Figure out where to get HRV
+           * 2. Clarify severity of ReportSymptom vs severity of Alert
+           */
+          const alertInfo: AlertInfo = {
+            id: alert.id,
+            patientId: alert.patientID,
+            dateTime: alert.dateTime,
+            summary: alert.summary,
+            vitals: alertVitals,
+            symptoms: alertSymptoms,
+            completed: alert.completed
+          };
 
-        // Saves alert info locally using patientId as nested key
-        const alertsStr = await AsyncStorage.getItem(AsyncStorageKeys.ALERTS);
-        let alerts: { [k: string]: string };
+          // Queries patientInfo
+          const patientInfoQuery = await listPatientInfos({
+            filter: { patientID: { eq: alert.patientID } }
+          });
 
-        // Alert key exists
-        if (alertsStr) {
-          alerts = JSON.parse(alertsStr);
-
-          // One or more alerts of the current patient were stored previously
-          if (alerts[alert.patientId]) {
-            const patientAlerts: AlertInfo[] = JSON.parse(
-              alerts[alert.patientId]
-            );
-
-            // Checks if alert already exists
-            let existingAlert = false;
-            patientAlerts.forEach((patientAlert) => {
-              if (patientAlert.alertDateTime === alertInfo.alertDateTime) {
-                existingAlert = true;
+          if (patientInfoQuery.data) {
+            const results = patientInfoQuery.data.listPatientInfos?.items;
+            if (results && results.length > 0) {
+              const patientInfo = results[0];
+              if (patientInfo) {
+                alertInfo.patientInfo = patientInfo;
               }
-            });
-
-            // Push non existing alert into the list
-            if (!existingAlert) {
-              patientAlerts.push(alertInfo);
-              alerts[alert.patientId] = JSON.stringify(patientAlerts);
             }
-          } else {
-            // No alert of the current patient has been stored previously
-            alerts[alert.patientId] = JSON.stringify([alertInfo]);
           }
-        }
-        // Alert key does not exist
-        else {
-          alerts = {};
-          alerts[alert.patientId] = JSON.stringify([alertInfo]);
-        }
 
-        if (alerts) {
-          await AsyncStorage.setItem(
-            AsyncStorageKeys.ALERTS,
-            JSON.stringify(alerts)
+          // Queries verified medication intake in descending order of date to get latest medication
+          const medCompliantQuery = await listMedCompliantsByDate({
+            sortDirection: ModelSortDirection.DESC,
+            patientID: alert.patientID,
+            filter: { Verification: { eq: true } }
+          });
+
+          if (medCompliantQuery.data) {
+            const results =
+              medCompliantQuery.data.listMedCompliantByDate?.items;
+            if (results && results.length > 0) {
+              const latestMedCompliant = results[0];
+
+              // Queries medication and dosage
+              if (latestMedCompliant) {
+                const medicationInfoQuery = await getMedicationInfo({
+                  id: latestMedCompliant.MedId
+                });
+                if (medicationInfoQuery.data) {
+                  const medicationInfo =
+                    medicationInfoQuery.data.getMedicationInfo;
+                  alertInfo.lastMedication = medicationInfo?.medname;
+                  alertInfo.medicationQuantity = medicationInfo?.dosage;
+                }
+              }
+            }
+          }
+
+          // Queries activity associated with symptom report
+          const activityInfoQuery = await getActivityInfo({
+            id: alertSymptoms.ActId
+          });
+          if (activityInfoQuery.data) {
+            const activityInfo = activityInfoQuery.data.getActivityInfo;
+            alertInfo.activityDuringAlert = activityInfo?.Actname;
+          }
+
+          // Saves alert info locally using patientId as nested key
+          const alertsStr = await AsyncStorage.getItem(AsyncStorageKeys.ALERTS);
+          let alerts: { [k: string]: string };
+
+          // Alert key exists
+          if (alertsStr) {
+            alerts = JSON.parse(alertsStr);
+
+            // One or more alerts of the current patient were stored previously
+            if (alerts[alert.patientID]) {
+              const patientAlerts: AlertInfo[] = JSON.parse(
+                alerts[alert.patientID]
+              );
+
+              // Checks if alert already exists
+              let existingAlert = false;
+              patientAlerts.forEach((patientAlert) => {
+                if (patientAlert.id === alertInfo.id) {
+                  patientAlert = alertInfo;
+                  existingAlert = true;
+                }
+              });
+
+              // Push non existing alert into the list
+              if (!existingAlert) {
+                patientAlerts.push(alertInfo);
+                alerts[alert.patientID] = JSON.stringify(patientAlerts);
+              }
+            } else {
+              // No alert of the current patient has been stored previously
+              alerts[alert.patientID] = JSON.stringify([alertInfo]);
+            }
+          }
+          // Alert key does not exist
+          else {
+            alerts = {};
+            alerts[alert.patientID] = JSON.stringify([alertInfo]);
+          }
+
+          if (alerts) {
+            await AsyncStorage.setItem(
+              AsyncStorageKeys.ALERTS,
+              JSON.stringify(alerts)
+            );
+          }
+
+          // Adds alert info to facts to be retrieved in DisplayAlert action frame of UXSA
+          agentAPI.addFact(
+            new Belief(
+              BeliefKeys.PATIENT,
+              PatientAttributes.ALERT_INFO,
+              alertInfo
+            ),
+            false
           );
         }
+      }
+      // Devices is offline
+      else if (alert && !isOnline) {
+        let localPatientAlert: AlertInfo | undefined;
 
-        // Adds alert info to facts to be retrieved in DisplayAlert action frame of UXSA
-        agentAPI.addFact(
-          new Belief(
-            BeliefKeys.PATIENT,
-            PatientAttributes.ALERT_INFO,
-            alertInfo
-          ),
-          false
-        );
+        // Retrieves all stored alerts
+        const alertsStr = await AsyncStorage.getItem(AsyncStorageKeys.ALERTS);
+        if (alertsStr) {
+          const localAlerts = JSON.parse(alertsStr);
+
+          // Retrieves stored alerts for current patient
+          const patientAlertsStr = localAlerts[alert.patientID];
+          if (patientAlertsStr) {
+            // Checks if the requested alert is previously stored
+            const localPatientAlerts: AlertInfo[] =
+              JSON.parse(patientAlertsStr);
+            localPatientAlerts.forEach((localAlert) => {
+              if (alert.id === localAlert.id) {
+                localPatientAlert = localAlert;
+              }
+            });
+          }
+        }
+
+        if (localPatientAlert) {
+          // Adds alert info to facts to be retrieved in DisplayAlert action frame of UXSA
+          agentAPI.addFact(
+            new Belief(
+              BeliefKeys.PATIENT,
+              PatientAttributes.ALERT_INFO,
+              localPatientAlert
+            ),
+            false
+          );
+        }
       }
 
       // Update Facts
