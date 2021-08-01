@@ -13,7 +13,11 @@ import {
   GetReportVitalsQuery,
   GetReportVitalsQueryVariables,
   GetActivityInfoQuery,
-  GetActivityInfoQueryVariables
+  GetActivityInfoQueryVariables,
+  GetTodoQuery,
+  GetTodoQueryVariables,
+  GetAlertQuery,
+  GetAlertQueryVariables
 } from "aws/API";
 
 interface GetClinicianInfoResponse extends BaseResponse {
@@ -92,4 +96,30 @@ export const getReportVitals = async (
     query: queries.getReportVitals,
     variables: variables
   })) as GetReportVitalsResponse;
+};
+
+interface GetAlertResponse extends BaseResponse {
+  data: GetAlertQuery;
+}
+
+export const getAlert = async (
+  variables: GetAlertQueryVariables
+): Promise<GetAlertResponse> => {
+  return (await API.graphql({
+    query: queries.getAlert,
+    variables: variables
+  })) as GetAlertResponse;
+};
+
+interface GetTodoResponse extends BaseResponse {
+  data: GetTodoQuery;
+}
+
+export const getTodo = async (
+  variables: GetTodoQueryVariables
+): Promise<GetTodoResponse> => {
+  return (await API.graphql({
+    query: queries.getTodo,
+    variables: variables
+  })) as GetTodoResponse;
 };

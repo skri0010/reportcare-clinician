@@ -97,7 +97,7 @@ export type PatientInfo = {
 };
 
 export type UpdatePatientInfoInput = {
-  id: string,
+  id?: string | null,
   name?: string | null,
   address?: string | null,
   deviceNo?: string | null,
@@ -108,12 +108,12 @@ export type UpdatePatientInfoInput = {
   hospitalLocation?: string | null,
   targetWeight?: string | null,
   targetActivity?: string | null,
-  patientID?: string | null,
+  patientID: string,
   _version?: number | null,
 };
 
 export type DeletePatientInfoInput = {
-  id: string,
+  patientID: string,
   _version?: number | null,
 };
 
@@ -237,12 +237,28 @@ export type CreateMedCompliantInput = {
 };
 
 export type ModelMedCompliantConditionInput = {
-  MedId?: ModelStringInput | null,
+  MedId?: ModelIDInput | null,
   Verification?: ModelBooleanInput | null,
   Date?: ModelStringInput | null,
   and?: Array< ModelMedCompliantConditionInput | null > | null,
   or?: Array< ModelMedCompliantConditionInput | null > | null,
   not?: ModelMedCompliantConditionInput | null,
+};
+
+export type ModelIDInput = {
+  ne?: string | null,
+  eq?: string | null,
+  le?: string | null,
+  lt?: string | null,
+  ge?: string | null,
+  gt?: string | null,
+  contains?: string | null,
+  notContains?: string | null,
+  between?: Array< string | null > | null,
+  beginsWith?: string | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
+  size?: ModelSizeInput | null,
 };
 
 export type ModelBooleanInput = {
@@ -256,6 +272,7 @@ export type MedCompliant = {
   __typename: "MedCompliant",
   id: string,
   MedId: string,
+  MedicationInfo?: MedicationInfo | null,
   Verification: boolean,
   Date: string,
   patientID: string,
@@ -292,7 +309,7 @@ export type CreateReportSymptomInput = {
 };
 
 export type ModelReportSymptomConditionInput = {
-  ActId?: ModelStringInput | null,
+  ActId?: ModelIDInput | null,
   Name?: ModelStringInput | null,
   Severity?: ModelStringInput | null,
   DateTime?: ModelStringInput | null,
@@ -305,6 +322,7 @@ export type ReportSymptom = {
   __typename: "ReportSymptom",
   id: string,
   ActId: string,
+  ActivityInfo?: ActivityInfo | null,
   Name: string,
   Severity: string,
   DateTime: string,
@@ -334,7 +352,6 @@ export type DeleteReportSymptomInput = {
 
 export type CreateReportVitalsInput = {
   id?: string | null,
-  SymptomId: string,
   Temperature?: string | null,
   Humidity?: string | null,
   Weight: string,
@@ -348,7 +365,6 @@ export type CreateReportVitalsInput = {
 };
 
 export type ModelReportVitalsConditionInput = {
-  SymptomId?: ModelStringInput | null,
   Temperature?: ModelStringInput | null,
   Humidity?: ModelStringInput | null,
   Weight?: ModelStringInput | null,
@@ -365,7 +381,6 @@ export type ModelReportVitalsConditionInput = {
 export type ReportVitals = {
   __typename: "ReportVitals",
   id: string,
-  SymptomId: string,
   Temperature?: string | null,
   Humidity?: string | null,
   Weight: string,
@@ -385,7 +400,6 @@ export type ReportVitals = {
 
 export type UpdateReportVitalsInput = {
   id: string,
-  SymptomId?: string | null,
   Temperature?: string | null,
   Humidity?: string | null,
   Weight?: string | null,
@@ -560,6 +574,124 @@ export type DeleteClinicianPatientMapInput = {
   _version?: number | null,
 };
 
+export type CreateAlertInput = {
+  id?: string | null,
+  patientID: string,
+  dateTime: string,
+  summary: string,
+  vitalsReportID: string,
+  symptomReportID: string,
+  completed: boolean,
+  owner: string,
+  _version?: number | null,
+};
+
+export type ModelAlertConditionInput = {
+  dateTime?: ModelStringInput | null,
+  summary?: ModelStringInput | null,
+  vitalsReportID?: ModelIDInput | null,
+  symptomReportID?: ModelIDInput | null,
+  completed?: ModelBooleanInput | null,
+  and?: Array< ModelAlertConditionInput | null > | null,
+  or?: Array< ModelAlertConditionInput | null > | null,
+  not?: ModelAlertConditionInput | null,
+};
+
+export type Alert = {
+  __typename: "Alert",
+  id: string,
+  patientID: string,
+  dateTime: string,
+  summary: string,
+  vitalsReportID: string,
+  vitalsReport?: ReportVitals | null,
+  symptomReportID: string,
+  symptomReport?: ReportSymptom | null,
+  completed: boolean,
+  owner: string,
+  _version: number,
+  _deleted?: boolean | null,
+  _lastChangedAt: number,
+  createdAt: string,
+  updatedAt: string,
+};
+
+export type UpdateAlertInput = {
+  id: string,
+  patientID?: string | null,
+  dateTime?: string | null,
+  summary?: string | null,
+  vitalsReportID?: string | null,
+  symptomReportID?: string | null,
+  completed?: boolean | null,
+  owner?: string | null,
+  _version?: number | null,
+};
+
+export type DeleteAlertInput = {
+  id: string,
+  _version?: number | null,
+};
+
+export type CreateTodoInput = {
+  id?: string | null,
+  clinicianID: string,
+  title: string,
+  notes: string,
+  lastModified: string,
+  alertID?: string | null,
+  completed: boolean,
+  owner: string,
+  _version?: number | null,
+};
+
+export type ModelTodoConditionInput = {
+  clinicianID?: ModelStringInput | null,
+  title?: ModelStringInput | null,
+  notes?: ModelStringInput | null,
+  lastModified?: ModelStringInput | null,
+  alertID?: ModelIDInput | null,
+  completed?: ModelBooleanInput | null,
+  and?: Array< ModelTodoConditionInput | null > | null,
+  or?: Array< ModelTodoConditionInput | null > | null,
+  not?: ModelTodoConditionInput | null,
+};
+
+export type Todo = {
+  __typename: "Todo",
+  id: string,
+  clinicianID: string,
+  title: string,
+  notes: string,
+  lastModified: string,
+  alertID?: string | null,
+  alert?: Alert | null,
+  completed: boolean,
+  owner: string,
+  _version: number,
+  _deleted?: boolean | null,
+  _lastChangedAt: number,
+  createdAt: string,
+  updatedAt: string,
+};
+
+export type UpdateTodoInput = {
+  id: string,
+  clinicianID?: string | null,
+  title?: string | null,
+  notes?: string | null,
+  lastModified?: string | null,
+  alertID?: string | null,
+  completed?: boolean | null,
+  owner?: string | null,
+  _version?: number | null,
+};
+
+export type DeleteTodoInput = {
+  id: string,
+  _version?: number | null,
+};
+
 export type ModelPatientInfoFilterInput = {
   id?: ModelIDInput | null,
   name?: ModelStringInput | null,
@@ -578,28 +710,18 @@ export type ModelPatientInfoFilterInput = {
   not?: ModelPatientInfoFilterInput | null,
 };
 
-export type ModelIDInput = {
-  ne?: string | null,
-  eq?: string | null,
-  le?: string | null,
-  lt?: string | null,
-  ge?: string | null,
-  gt?: string | null,
-  contains?: string | null,
-  notContains?: string | null,
-  between?: Array< string | null > | null,
-  beginsWith?: string | null,
-  attributeExists?: boolean | null,
-  attributeType?: ModelAttributeTypes | null,
-  size?: ModelSizeInput | null,
-};
-
 export type ModelPatientInfoConnection = {
   __typename: "ModelPatientInfoConnection",
   items?:  Array<PatientInfo | null > | null,
   nextToken?: string | null,
   startedAt?: number | null,
 };
+
+export enum ModelSortDirection {
+  ASC = "ASC",
+  DESC = "DESC",
+}
+
 
 export type ModelMedicationInfoFilterInput = {
   id?: ModelIDInput | null,
@@ -640,7 +762,7 @@ export type ModelActivityInfoConnection = {
 
 export type ModelMedCompliantFilterInput = {
   id?: ModelIDInput | null,
-  MedId?: ModelStringInput | null,
+  MedId?: ModelIDInput | null,
   Verification?: ModelBooleanInput | null,
   Date?: ModelStringInput | null,
   patientID?: ModelStringInput | null,
@@ -658,7 +780,7 @@ export type ModelMedCompliantConnection = {
 
 export type ModelReportSymptomFilterInput = {
   id?: ModelIDInput | null,
-  ActId?: ModelStringInput | null,
+  ActId?: ModelIDInput | null,
   Name?: ModelStringInput | null,
   Severity?: ModelStringInput | null,
   DateTime?: ModelStringInput | null,
@@ -677,7 +799,6 @@ export type ModelReportSymptomConnection = {
 
 export type ModelReportVitalsFilterInput = {
   id?: ModelIDInput | null,
-  SymptomId?: ModelStringInput | null,
   Temperature?: ModelStringInput | null,
   Humidity?: ModelStringInput | null,
   Weight?: ModelStringInput | null,
@@ -717,12 +838,6 @@ export type ModelClinicianInfoConnection = {
   nextToken?: string | null,
   startedAt?: number | null,
 };
-
-export enum ModelSortDirection {
-  ASC = "ASC",
-  DESC = "DESC",
-}
-
 
 export type ModelClinicianProtectedInfoFilterInput = {
   id?: ModelIDInput | null,
@@ -772,6 +887,48 @@ export type ModelStringKeyConditionInput = {
   gt?: string | null,
   between?: Array< string | null > | null,
   beginsWith?: string | null,
+};
+
+export type ModelAlertFilterInput = {
+  id?: ModelIDInput | null,
+  patientID?: ModelStringInput | null,
+  dateTime?: ModelStringInput | null,
+  summary?: ModelStringInput | null,
+  vitalsReportID?: ModelIDInput | null,
+  symptomReportID?: ModelIDInput | null,
+  completed?: ModelBooleanInput | null,
+  owner?: ModelStringInput | null,
+  and?: Array< ModelAlertFilterInput | null > | null,
+  or?: Array< ModelAlertFilterInput | null > | null,
+  not?: ModelAlertFilterInput | null,
+};
+
+export type ModelAlertConnection = {
+  __typename: "ModelAlertConnection",
+  items?:  Array<Alert | null > | null,
+  nextToken?: string | null,
+  startedAt?: number | null,
+};
+
+export type ModelTodoFilterInput = {
+  id?: ModelIDInput | null,
+  clinicianID?: ModelStringInput | null,
+  title?: ModelStringInput | null,
+  notes?: ModelStringInput | null,
+  lastModified?: ModelStringInput | null,
+  alertID?: ModelIDInput | null,
+  completed?: ModelBooleanInput | null,
+  owner?: ModelStringInput | null,
+  and?: Array< ModelTodoFilterInput | null > | null,
+  or?: Array< ModelTodoFilterInput | null > | null,
+  not?: ModelTodoFilterInput | null,
+};
+
+export type ModelTodoConnection = {
+  __typename: "ModelTodoConnection",
+  items?:  Array<Todo | null > | null,
+  nextToken?: string | null,
+  startedAt?: number | null,
 };
 
 export type CreatePatientInfoMutationVariables = {
@@ -1006,6 +1163,19 @@ export type CreateMedCompliantMutation = {
     __typename: "MedCompliant",
     id: string,
     MedId: string,
+    MedicationInfo?:  {
+      __typename: "MedicationInfo",
+      id: string,
+      medname: string,
+      dosage: string,
+      patientID: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null,
     Verification: boolean,
     Date: string,
     patientID: string,
@@ -1028,6 +1198,19 @@ export type UpdateMedCompliantMutation = {
     __typename: "MedCompliant",
     id: string,
     MedId: string,
+    MedicationInfo?:  {
+      __typename: "MedicationInfo",
+      id: string,
+      medname: string,
+      dosage: string,
+      patientID: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null,
     Verification: boolean,
     Date: string,
     patientID: string,
@@ -1050,6 +1233,19 @@ export type DeleteMedCompliantMutation = {
     __typename: "MedCompliant",
     id: string,
     MedId: string,
+    MedicationInfo?:  {
+      __typename: "MedicationInfo",
+      id: string,
+      medname: string,
+      dosage: string,
+      patientID: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null,
     Verification: boolean,
     Date: string,
     patientID: string,
@@ -1072,6 +1268,22 @@ export type CreateReportSymptomMutation = {
     __typename: "ReportSymptom",
     id: string,
     ActId: string,
+    ActivityInfo?:  {
+      __typename: "ActivityInfo",
+      id: string,
+      Actname: string,
+      Location: string,
+      Frequency: number,
+      Days: Array< string >,
+      time: string,
+      patientID: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null,
     Name: string,
     Severity: string,
     DateTime: string,
@@ -1095,6 +1307,22 @@ export type UpdateReportSymptomMutation = {
     __typename: "ReportSymptom",
     id: string,
     ActId: string,
+    ActivityInfo?:  {
+      __typename: "ActivityInfo",
+      id: string,
+      Actname: string,
+      Location: string,
+      Frequency: number,
+      Days: Array< string >,
+      time: string,
+      patientID: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null,
     Name: string,
     Severity: string,
     DateTime: string,
@@ -1118,6 +1346,22 @@ export type DeleteReportSymptomMutation = {
     __typename: "ReportSymptom",
     id: string,
     ActId: string,
+    ActivityInfo?:  {
+      __typename: "ActivityInfo",
+      id: string,
+      Actname: string,
+      Location: string,
+      Frequency: number,
+      Days: Array< string >,
+      time: string,
+      patientID: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null,
     Name: string,
     Severity: string,
     DateTime: string,
@@ -1140,7 +1384,6 @@ export type CreateReportVitalsMutation = {
   createReportVitals?:  {
     __typename: "ReportVitals",
     id: string,
-    SymptomId: string,
     Temperature?: string | null,
     Humidity?: string | null,
     Weight: string,
@@ -1168,7 +1411,6 @@ export type UpdateReportVitalsMutation = {
   updateReportVitals?:  {
     __typename: "ReportVitals",
     id: string,
-    SymptomId: string,
     Temperature?: string | null,
     Humidity?: string | null,
     Weight: string,
@@ -1196,7 +1438,6 @@ export type DeleteReportVitalsMutation = {
   deleteReportVitals?:  {
     __typename: "ReportVitals",
     id: string,
-    SymptomId: string,
     Temperature?: string | null,
     Humidity?: string | null,
     Weight: string,
@@ -1515,6 +1756,300 @@ export type DeleteClinicianPatientMapMutation = {
   } | null,
 };
 
+export type CreateAlertMutationVariables = {
+  input: CreateAlertInput,
+  condition?: ModelAlertConditionInput | null,
+};
+
+export type CreateAlertMutation = {
+  createAlert?:  {
+    __typename: "Alert",
+    id: string,
+    patientID: string,
+    dateTime: string,
+    summary: string,
+    vitalsReportID: string,
+    vitalsReport?:  {
+      __typename: "ReportVitals",
+      id: string,
+      Temperature?: string | null,
+      Humidity?: string | null,
+      Weight: string,
+      BPSys: string,
+      BPDi: string,
+      NoSteps: string,
+      OxySat: string,
+      DateTime: string,
+      patientID: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null,
+    symptomReportID: string,
+    symptomReport?:  {
+      __typename: "ReportSymptom",
+      id: string,
+      ActId: string,
+      Name: string,
+      Severity: string,
+      DateTime: string,
+      patientID: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null,
+    completed: boolean,
+    owner: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateAlertMutationVariables = {
+  input: UpdateAlertInput,
+  condition?: ModelAlertConditionInput | null,
+};
+
+export type UpdateAlertMutation = {
+  updateAlert?:  {
+    __typename: "Alert",
+    id: string,
+    patientID: string,
+    dateTime: string,
+    summary: string,
+    vitalsReportID: string,
+    vitalsReport?:  {
+      __typename: "ReportVitals",
+      id: string,
+      Temperature?: string | null,
+      Humidity?: string | null,
+      Weight: string,
+      BPSys: string,
+      BPDi: string,
+      NoSteps: string,
+      OxySat: string,
+      DateTime: string,
+      patientID: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null,
+    symptomReportID: string,
+    symptomReport?:  {
+      __typename: "ReportSymptom",
+      id: string,
+      ActId: string,
+      Name: string,
+      Severity: string,
+      DateTime: string,
+      patientID: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null,
+    completed: boolean,
+    owner: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteAlertMutationVariables = {
+  input: DeleteAlertInput,
+  condition?: ModelAlertConditionInput | null,
+};
+
+export type DeleteAlertMutation = {
+  deleteAlert?:  {
+    __typename: "Alert",
+    id: string,
+    patientID: string,
+    dateTime: string,
+    summary: string,
+    vitalsReportID: string,
+    vitalsReport?:  {
+      __typename: "ReportVitals",
+      id: string,
+      Temperature?: string | null,
+      Humidity?: string | null,
+      Weight: string,
+      BPSys: string,
+      BPDi: string,
+      NoSteps: string,
+      OxySat: string,
+      DateTime: string,
+      patientID: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null,
+    symptomReportID: string,
+    symptomReport?:  {
+      __typename: "ReportSymptom",
+      id: string,
+      ActId: string,
+      Name: string,
+      Severity: string,
+      DateTime: string,
+      patientID: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null,
+    completed: boolean,
+    owner: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateTodoMutationVariables = {
+  input: CreateTodoInput,
+  condition?: ModelTodoConditionInput | null,
+};
+
+export type CreateTodoMutation = {
+  createTodo?:  {
+    __typename: "Todo",
+    id: string,
+    clinicianID: string,
+    title: string,
+    notes: string,
+    lastModified: string,
+    alertID?: string | null,
+    alert?:  {
+      __typename: "Alert",
+      id: string,
+      patientID: string,
+      dateTime: string,
+      summary: string,
+      vitalsReportID: string,
+      symptomReportID: string,
+      completed: boolean,
+      owner: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    completed: boolean,
+    owner: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateTodoMutationVariables = {
+  input: UpdateTodoInput,
+  condition?: ModelTodoConditionInput | null,
+};
+
+export type UpdateTodoMutation = {
+  updateTodo?:  {
+    __typename: "Todo",
+    id: string,
+    clinicianID: string,
+    title: string,
+    notes: string,
+    lastModified: string,
+    alertID?: string | null,
+    alert?:  {
+      __typename: "Alert",
+      id: string,
+      patientID: string,
+      dateTime: string,
+      summary: string,
+      vitalsReportID: string,
+      symptomReportID: string,
+      completed: boolean,
+      owner: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    completed: boolean,
+    owner: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteTodoMutationVariables = {
+  input: DeleteTodoInput,
+  condition?: ModelTodoConditionInput | null,
+};
+
+export type DeleteTodoMutation = {
+  deleteTodo?:  {
+    __typename: "Todo",
+    id: string,
+    clinicianID: string,
+    title: string,
+    notes: string,
+    lastModified: string,
+    alertID?: string | null,
+    alert?:  {
+      __typename: "Alert",
+      id: string,
+      patientID: string,
+      dateTime: string,
+      summary: string,
+      vitalsReportID: string,
+      symptomReportID: string,
+      completed: boolean,
+      owner: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    completed: boolean,
+    owner: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type SyncPatientInfosQueryVariables = {
   filter?: ModelPatientInfoFilterInput | null,
   limit?: number | null,
@@ -1552,7 +2087,7 @@ export type SyncPatientInfosQuery = {
 };
 
 export type GetPatientInfoQueryVariables = {
-  id: string,
+  patientID: string,
 };
 
 export type GetPatientInfoQuery = {
@@ -1580,9 +2115,11 @@ export type GetPatientInfoQuery = {
 };
 
 export type ListPatientInfosQueryVariables = {
+  patientID?: string | null,
   filter?: ModelPatientInfoFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
 };
 
 export type ListPatientInfosQuery = {
@@ -1811,6 +2348,19 @@ export type GetMedCompliantQuery = {
     __typename: "MedCompliant",
     id: string,
     MedId: string,
+    MedicationInfo?:  {
+      __typename: "MedicationInfo",
+      id: string,
+      medname: string,
+      dosage: string,
+      patientID: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null,
     Verification: boolean,
     Date: string,
     patientID: string,
@@ -1890,6 +2440,22 @@ export type GetReportSymptomQuery = {
     __typename: "ReportSymptom",
     id: string,
     ActId: string,
+    ActivityInfo?:  {
+      __typename: "ActivityInfo",
+      id: string,
+      Actname: string,
+      Location: string,
+      Frequency: number,
+      Days: Array< string >,
+      time: string,
+      patientID: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null,
     Name: string,
     Severity: string,
     DateTime: string,
@@ -1945,7 +2511,6 @@ export type SyncReportVitalsQuery = {
     items?:  Array< {
       __typename: "ReportVitals",
       id: string,
-      SymptomId: string,
       Temperature?: string | null,
       Humidity?: string | null,
       Weight: string,
@@ -1975,7 +2540,6 @@ export type GetReportVitalsQuery = {
   getReportVitals?:  {
     __typename: "ReportVitals",
     id: string,
-    SymptomId: string,
     Temperature?: string | null,
     Humidity?: string | null,
     Weight: string,
@@ -2006,7 +2570,6 @@ export type ListReportVitalssQuery = {
     items?:  Array< {
       __typename: "ReportVitals",
       id: string,
-      SymptomId: string,
       Temperature?: string | null,
       Humidity?: string | null,
       Weight: string,
@@ -2308,7 +2871,316 @@ export type ListClinicianPatientMapsQuery = {
   } | null,
 };
 
-export type ListMedCompliantsByDateQueryVariables = {
+export type SyncAlertsQueryVariables = {
+  filter?: ModelAlertFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  lastSync?: number | null,
+};
+
+export type SyncAlertsQuery = {
+  syncAlerts?:  {
+    __typename: "ModelAlertConnection",
+    items?:  Array< {
+      __typename: "Alert",
+      id: string,
+      patientID: string,
+      dateTime: string,
+      summary: string,
+      vitalsReportID: string,
+      symptomReportID: string,
+      completed: boolean,
+      owner: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
+export type GetAlertQueryVariables = {
+  id: string,
+};
+
+export type GetAlertQuery = {
+  getAlert?:  {
+    __typename: "Alert",
+    id: string,
+    patientID: string,
+    dateTime: string,
+    summary: string,
+    vitalsReportID: string,
+    vitalsReport?:  {
+      __typename: "ReportVitals",
+      id: string,
+      Temperature?: string | null,
+      Humidity?: string | null,
+      Weight: string,
+      BPSys: string,
+      BPDi: string,
+      NoSteps: string,
+      OxySat: string,
+      DateTime: string,
+      patientID: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null,
+    symptomReportID: string,
+    symptomReport?:  {
+      __typename: "ReportSymptom",
+      id: string,
+      ActId: string,
+      Name: string,
+      Severity: string,
+      DateTime: string,
+      patientID: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null,
+    completed: boolean,
+    owner: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListAlertsQueryVariables = {
+  filter?: ModelAlertFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListAlertsQuery = {
+  listAlerts?:  {
+    __typename: "ModelAlertConnection",
+    items?:  Array< {
+      __typename: "Alert",
+      id: string,
+      patientID: string,
+      dateTime: string,
+      summary: string,
+      vitalsReportID: string,
+      symptomReportID: string,
+      completed: boolean,
+      owner: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
+export type SyncTodosQueryVariables = {
+  filter?: ModelTodoFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  lastSync?: number | null,
+};
+
+export type SyncTodosQuery = {
+  syncTodos?:  {
+    __typename: "ModelTodoConnection",
+    items?:  Array< {
+      __typename: "Todo",
+      id: string,
+      clinicianID: string,
+      title: string,
+      notes: string,
+      lastModified: string,
+      alertID?: string | null,
+      completed: boolean,
+      owner: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
+export type GetTodoQueryVariables = {
+  id: string,
+};
+
+export type GetTodoQuery = {
+  getTodo?:  {
+    __typename: "Todo",
+    id: string,
+    clinicianID: string,
+    title: string,
+    notes: string,
+    lastModified: string,
+    alertID?: string | null,
+    alert?:  {
+      __typename: "Alert",
+      id: string,
+      patientID: string,
+      dateTime: string,
+      summary: string,
+      vitalsReportID: string,
+      symptomReportID: string,
+      completed: boolean,
+      owner: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    completed: boolean,
+    owner: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListTodosQueryVariables = {
+  filter?: ModelTodoFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListTodosQuery = {
+  listTodos?:  {
+    __typename: "ModelTodoConnection",
+    items?:  Array< {
+      __typename: "Todo",
+      id: string,
+      clinicianID: string,
+      title: string,
+      notes: string,
+      lastModified: string,
+      alertID?: string | null,
+      completed: boolean,
+      owner: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
+export type ListMedicationInfoByPatientIDQueryVariables = {
+  patientID?: string | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelMedicationInfoFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListMedicationInfoByPatientIDQuery = {
+  listMedicationInfoByPatientID?:  {
+    __typename: "ModelMedicationInfoConnection",
+    items?:  Array< {
+      __typename: "MedicationInfo",
+      id: string,
+      medname: string,
+      dosage: string,
+      patientID: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null > | null,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
+export type ListActivityInfoByPatientIDQueryVariables = {
+  patientID?: string | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelActivityInfoFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListActivityInfoByPatientIDQuery = {
+  listActivityInfoByPatientID?:  {
+    __typename: "ModelActivityInfoConnection",
+    items?:  Array< {
+      __typename: "ActivityInfo",
+      id: string,
+      Actname: string,
+      Location: string,
+      Frequency: number,
+      Days: Array< string >,
+      time: string,
+      patientID: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null > | null,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
+export type ListMedCompliantByPatientIDQueryVariables = {
+  patientID?: string | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelMedCompliantFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListMedCompliantByPatientIDQuery = {
+  listMedCompliantByPatientID?:  {
+    __typename: "ModelMedCompliantConnection",
+    items?:  Array< {
+      __typename: "MedCompliant",
+      id: string,
+      MedId: string,
+      Verification: boolean,
+      Date: string,
+      patientID: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null > | null,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
+export type ListMedCompliantByDateQueryVariables = {
   patientID?: string | null,
   Date?: ModelStringKeyConditionInput | null,
   sortDirection?: ModelSortDirection | null,
@@ -2317,8 +3189,8 @@ export type ListMedCompliantsByDateQueryVariables = {
   nextToken?: string | null,
 };
 
-export type ListMedCompliantsByDateQuery = {
-  listMedCompliantsByDate?:  {
+export type ListMedCompliantByDateQuery = {
+  listMedCompliantByDate?:  {
     __typename: "ModelMedCompliantConnection",
     items?:  Array< {
       __typename: "MedCompliant",
@@ -2326,6 +3198,140 @@ export type ListMedCompliantsByDateQuery = {
       MedId: string,
       Verification: boolean,
       Date: string,
+      patientID: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null > | null,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
+export type ListReportSymptomByPatientIDQueryVariables = {
+  patientID?: string | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelReportSymptomFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListReportSymptomByPatientIDQuery = {
+  listReportSymptomByPatientID?:  {
+    __typename: "ModelReportSymptomConnection",
+    items?:  Array< {
+      __typename: "ReportSymptom",
+      id: string,
+      ActId: string,
+      Name: string,
+      Severity: string,
+      DateTime: string,
+      patientID: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null > | null,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
+export type ListReportSymptomByDateTimeQueryVariables = {
+  patientID?: string | null,
+  DateTime?: ModelStringKeyConditionInput | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelReportSymptomFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListReportSymptomByDateTimeQuery = {
+  listReportSymptomByDateTime?:  {
+    __typename: "ModelReportSymptomConnection",
+    items?:  Array< {
+      __typename: "ReportSymptom",
+      id: string,
+      ActId: string,
+      Name: string,
+      Severity: string,
+      DateTime: string,
+      patientID: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null > | null,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
+export type ListReportVitalByPatientIDQueryVariables = {
+  patientID?: string | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelReportVitalsFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListReportVitalByPatientIDQuery = {
+  listReportVitalByPatientID?:  {
+    __typename: "ModelReportVitalsConnection",
+    items?:  Array< {
+      __typename: "ReportVitals",
+      id: string,
+      Temperature?: string | null,
+      Humidity?: string | null,
+      Weight: string,
+      BPSys: string,
+      BPDi: string,
+      NoSteps: string,
+      OxySat: string,
+      DateTime: string,
+      patientID: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null > | null,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
+export type ListReportVitalByDateTimeQueryVariables = {
+  patientID?: string | null,
+  DateTime?: ModelStringKeyConditionInput | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelReportVitalsFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListReportVitalByDateTimeQuery = {
+  listReportVitalByDateTime?:  {
+    __typename: "ModelReportVitalsConnection",
+    items?:  Array< {
+      __typename: "ReportVitals",
+      id: string,
+      Temperature?: string | null,
+      Humidity?: string | null,
+      Weight: string,
+      BPSys: string,
+      BPDi: string,
+      NoSteps: string,
+      OxySat: string,
+      DateTime: string,
       patientID: string,
       _version: number,
       _deleted?: boolean | null,
@@ -2356,6 +3362,136 @@ export type ClinicianIDsByPatientIDQuery = {
       id: string,
       clinicianID: string,
       patientID: string,
+      owner: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
+export type ListAlertsByPatientIDQueryVariables = {
+  patientID?: string | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelAlertFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListAlertsByPatientIDQuery = {
+  listAlertsByPatientID?:  {
+    __typename: "ModelAlertConnection",
+    items?:  Array< {
+      __typename: "Alert",
+      id: string,
+      patientID: string,
+      dateTime: string,
+      summary: string,
+      vitalsReportID: string,
+      symptomReportID: string,
+      completed: boolean,
+      owner: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
+export type ListAlertsByDateTimeQueryVariables = {
+  patientID?: string | null,
+  dateTime?: ModelStringKeyConditionInput | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelAlertFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListAlertsByDateTimeQuery = {
+  listAlertsByDateTime?:  {
+    __typename: "ModelAlertConnection",
+    items?:  Array< {
+      __typename: "Alert",
+      id: string,
+      patientID: string,
+      dateTime: string,
+      summary: string,
+      vitalsReportID: string,
+      symptomReportID: string,
+      completed: boolean,
+      owner: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
+export type ListTodosByClinicianIDQueryVariables = {
+  clinicianID?: string | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelTodoFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListTodosByClinicianIDQuery = {
+  listTodosByClinicianID?:  {
+    __typename: "ModelTodoConnection",
+    items?:  Array< {
+      __typename: "Todo",
+      id: string,
+      clinicianID: string,
+      title: string,
+      notes: string,
+      lastModified: string,
+      alertID?: string | null,
+      completed: boolean,
+      owner: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
+export type ListTodosByLastModifiedDateQueryVariables = {
+  clinicianID?: string | null,
+  lastModified?: ModelStringKeyConditionInput | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelTodoFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListTodosByLastModifiedDateQuery = {
+  listTodosByLastModifiedDate?:  {
+    __typename: "ModelTodoConnection",
+    items?:  Array< {
+      __typename: "Todo",
+      id: string,
+      clinicianID: string,
+      title: string,
+      notes: string,
+      lastModified: string,
+      alertID?: string | null,
+      completed: boolean,
       owner: string,
       _version: number,
       _deleted?: boolean | null,
@@ -2590,6 +3726,19 @@ export type OnCreateMedCompliantSubscription = {
     __typename: "MedCompliant",
     id: string,
     MedId: string,
+    MedicationInfo?:  {
+      __typename: "MedicationInfo",
+      id: string,
+      medname: string,
+      dosage: string,
+      patientID: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null,
     Verification: boolean,
     Date: string,
     patientID: string,
@@ -2611,6 +3760,19 @@ export type OnUpdateMedCompliantSubscription = {
     __typename: "MedCompliant",
     id: string,
     MedId: string,
+    MedicationInfo?:  {
+      __typename: "MedicationInfo",
+      id: string,
+      medname: string,
+      dosage: string,
+      patientID: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null,
     Verification: boolean,
     Date: string,
     patientID: string,
@@ -2632,6 +3794,19 @@ export type OnDeleteMedCompliantSubscription = {
     __typename: "MedCompliant",
     id: string,
     MedId: string,
+    MedicationInfo?:  {
+      __typename: "MedicationInfo",
+      id: string,
+      medname: string,
+      dosage: string,
+      patientID: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null,
     Verification: boolean,
     Date: string,
     patientID: string,
@@ -2653,6 +3828,22 @@ export type OnCreateReportSymptomSubscription = {
     __typename: "ReportSymptom",
     id: string,
     ActId: string,
+    ActivityInfo?:  {
+      __typename: "ActivityInfo",
+      id: string,
+      Actname: string,
+      Location: string,
+      Frequency: number,
+      Days: Array< string >,
+      time: string,
+      patientID: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null,
     Name: string,
     Severity: string,
     DateTime: string,
@@ -2675,6 +3866,22 @@ export type OnUpdateReportSymptomSubscription = {
     __typename: "ReportSymptom",
     id: string,
     ActId: string,
+    ActivityInfo?:  {
+      __typename: "ActivityInfo",
+      id: string,
+      Actname: string,
+      Location: string,
+      Frequency: number,
+      Days: Array< string >,
+      time: string,
+      patientID: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null,
     Name: string,
     Severity: string,
     DateTime: string,
@@ -2697,6 +3904,22 @@ export type OnDeleteReportSymptomSubscription = {
     __typename: "ReportSymptom",
     id: string,
     ActId: string,
+    ActivityInfo?:  {
+      __typename: "ActivityInfo",
+      id: string,
+      Actname: string,
+      Location: string,
+      Frequency: number,
+      Days: Array< string >,
+      time: string,
+      patientID: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null,
     Name: string,
     Severity: string,
     DateTime: string,
@@ -2718,7 +3941,6 @@ export type OnCreateReportVitalsSubscription = {
   onCreateReportVitals?:  {
     __typename: "ReportVitals",
     id: string,
-    SymptomId: string,
     Temperature?: string | null,
     Humidity?: string | null,
     Weight: string,
@@ -2745,7 +3967,6 @@ export type OnUpdateReportVitalsSubscription = {
   onUpdateReportVitals?:  {
     __typename: "ReportVitals",
     id: string,
-    SymptomId: string,
     Temperature?: string | null,
     Humidity?: string | null,
     Weight: string,
@@ -2772,7 +3993,6 @@ export type OnDeleteReportVitalsSubscription = {
   onDeleteReportVitals?:  {
     __typename: "ReportVitals",
     id: string,
-    SymptomId: string,
     Temperature?: string | null,
     Humidity?: string | null,
     Weight: string,
@@ -3076,6 +4296,294 @@ export type OnDeleteClinicianPatientMapSubscription = {
       createdAt: string,
       updatedAt: string,
     },
+    owner: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateAlertSubscriptionVariables = {
+  owner?: string | null,
+};
+
+export type OnCreateAlertSubscription = {
+  onCreateAlert?:  {
+    __typename: "Alert",
+    id: string,
+    patientID: string,
+    dateTime: string,
+    summary: string,
+    vitalsReportID: string,
+    vitalsReport?:  {
+      __typename: "ReportVitals",
+      id: string,
+      Temperature?: string | null,
+      Humidity?: string | null,
+      Weight: string,
+      BPSys: string,
+      BPDi: string,
+      NoSteps: string,
+      OxySat: string,
+      DateTime: string,
+      patientID: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null,
+    symptomReportID: string,
+    symptomReport?:  {
+      __typename: "ReportSymptom",
+      id: string,
+      ActId: string,
+      Name: string,
+      Severity: string,
+      DateTime: string,
+      patientID: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null,
+    completed: boolean,
+    owner: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateAlertSubscriptionVariables = {
+  owner?: string | null,
+};
+
+export type OnUpdateAlertSubscription = {
+  onUpdateAlert?:  {
+    __typename: "Alert",
+    id: string,
+    patientID: string,
+    dateTime: string,
+    summary: string,
+    vitalsReportID: string,
+    vitalsReport?:  {
+      __typename: "ReportVitals",
+      id: string,
+      Temperature?: string | null,
+      Humidity?: string | null,
+      Weight: string,
+      BPSys: string,
+      BPDi: string,
+      NoSteps: string,
+      OxySat: string,
+      DateTime: string,
+      patientID: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null,
+    symptomReportID: string,
+    symptomReport?:  {
+      __typename: "ReportSymptom",
+      id: string,
+      ActId: string,
+      Name: string,
+      Severity: string,
+      DateTime: string,
+      patientID: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null,
+    completed: boolean,
+    owner: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteAlertSubscriptionVariables = {
+  owner?: string | null,
+};
+
+export type OnDeleteAlertSubscription = {
+  onDeleteAlert?:  {
+    __typename: "Alert",
+    id: string,
+    patientID: string,
+    dateTime: string,
+    summary: string,
+    vitalsReportID: string,
+    vitalsReport?:  {
+      __typename: "ReportVitals",
+      id: string,
+      Temperature?: string | null,
+      Humidity?: string | null,
+      Weight: string,
+      BPSys: string,
+      BPDi: string,
+      NoSteps: string,
+      OxySat: string,
+      DateTime: string,
+      patientID: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null,
+    symptomReportID: string,
+    symptomReport?:  {
+      __typename: "ReportSymptom",
+      id: string,
+      ActId: string,
+      Name: string,
+      Severity: string,
+      DateTime: string,
+      patientID: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null,
+    completed: boolean,
+    owner: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateTodoSubscriptionVariables = {
+  owner?: string | null,
+};
+
+export type OnCreateTodoSubscription = {
+  onCreateTodo?:  {
+    __typename: "Todo",
+    id: string,
+    clinicianID: string,
+    title: string,
+    notes: string,
+    lastModified: string,
+    alertID?: string | null,
+    alert?:  {
+      __typename: "Alert",
+      id: string,
+      patientID: string,
+      dateTime: string,
+      summary: string,
+      vitalsReportID: string,
+      symptomReportID: string,
+      completed: boolean,
+      owner: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    completed: boolean,
+    owner: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateTodoSubscriptionVariables = {
+  owner?: string | null,
+};
+
+export type OnUpdateTodoSubscription = {
+  onUpdateTodo?:  {
+    __typename: "Todo",
+    id: string,
+    clinicianID: string,
+    title: string,
+    notes: string,
+    lastModified: string,
+    alertID?: string | null,
+    alert?:  {
+      __typename: "Alert",
+      id: string,
+      patientID: string,
+      dateTime: string,
+      summary: string,
+      vitalsReportID: string,
+      symptomReportID: string,
+      completed: boolean,
+      owner: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    completed: boolean,
+    owner: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteTodoSubscriptionVariables = {
+  owner?: string | null,
+};
+
+export type OnDeleteTodoSubscription = {
+  onDeleteTodo?:  {
+    __typename: "Todo",
+    id: string,
+    clinicianID: string,
+    title: string,
+    notes: string,
+    lastModified: string,
+    alertID?: string | null,
+    alert?:  {
+      __typename: "Alert",
+      id: string,
+      patientID: string,
+      dateTime: string,
+      summary: string,
+      vitalsReportID: string,
+      symptomReportID: string,
+      completed: boolean,
+      owner: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    completed: boolean,
     owner: string,
     _version: number,
     _deleted?: boolean | null,

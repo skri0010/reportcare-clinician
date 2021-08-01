@@ -91,7 +91,7 @@ class ApprovePatientRequest extends Activity {
                 // JH-TODO: Note, we must check the version from the DB. If this version is not
                 //          the latest, then it auto merge might ignore it!
                 const updatePatient = await updatePatientInfo({
-                  id: patient.id,
+                  patientID: patient.patientID,
                   cardiologist: clinicianId,
                   _version: patient._version
                 });

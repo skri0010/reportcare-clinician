@@ -45,6 +45,7 @@ export declare class ActivityInfo {
 export declare class MedCompliant {
   readonly id: string;
   readonly MedId: string;
+  readonly MedicationInfo?: MedicationInfo;
   readonly Verification: boolean;
   readonly Date: string;
   readonly patientID: string;
@@ -55,6 +56,7 @@ export declare class MedCompliant {
 export declare class ReportSymptom {
   readonly id: string;
   readonly ActId: string;
+  readonly ActivityInfo?: ActivityInfo;
   readonly Name: string;
   readonly Severity: string;
   readonly DateTime: string;
@@ -65,7 +67,6 @@ export declare class ReportSymptom {
 
 export declare class ReportVitals {
   readonly id: string;
-  readonly SymptomId: string;
   readonly Temperature?: string;
   readonly Humidity?: string;
   readonly Weight: string;
@@ -113,4 +114,33 @@ export declare class ClinicianPatientMap {
   readonly owner: string;
   constructor(init: ModelInit<ClinicianPatientMap>);
   static copyOf(source: ClinicianPatientMap, mutator: (draft: MutableModel<ClinicianPatientMap>) => MutableModel<ClinicianPatientMap> | void): ClinicianPatientMap;
+}
+
+export declare class Alert {
+  readonly id: string;
+  readonly patientID: string;
+  readonly dateTime: string;
+  readonly summary: string;
+  readonly vitalsReportID: string;
+  readonly vitalsReport?: ReportVitals;
+  readonly symptomReportID: string;
+  readonly symptomReport?: ReportSymptom;
+  readonly completed: boolean;
+  readonly owner: string;
+  constructor(init: ModelInit<Alert>);
+  static copyOf(source: Alert, mutator: (draft: MutableModel<Alert>) => MutableModel<Alert> | void): Alert;
+}
+
+export declare class Todo {
+  readonly id: string;
+  readonly clinicianID: string;
+  readonly title: string;
+  readonly notes: string;
+  readonly lastModified: string;
+  readonly alertID?: string;
+  readonly alert?: Alert;
+  readonly completed: boolean;
+  readonly owner: string;
+  constructor(init: ModelInit<Todo>);
+  static copyOf(source: Todo, mutator: (draft: MutableModel<Todo>) => MutableModel<Todo> | void): Todo;
 }
