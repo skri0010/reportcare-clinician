@@ -9,7 +9,8 @@ export const actionNames = {
   SET_PATIENTS: "SET_PATIENTS",
   SET_PATIENT_DETAILS: "SET_PATIENT_DETAILS",
   SET_PATIENT_REQUESTS_SYNCED: "SET_PATIENT_REQUESTS_SYNCED",
-  SET_NEW_ALERT: "SET_NEW_ALERT"
+  SET_NEW_ALERT: "SET_NEW_ALERT",
+  SET_NEW_TODO: "SET_NEW_TODO"
 } as const;
 
 // DO NOT REMOVE "as const", this is necessary for TypeScript checking

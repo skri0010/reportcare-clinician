@@ -8,6 +8,8 @@ import af_RequestDetailsDisplay from "./action-frames/hf-outcome-trends/RequestD
 import af_RetrieveRolePatients from "./action-frames/hf-outcome-trends/RetrieveRolePatients";
 import af_RetrieveAlertInfo from "./action-frames/triage-alert-hf-clinic/RetrieveAlertInfo";
 import af_RequestAlertDisplay from "./action-frames/triage-alert-hf-clinic/RequestAlertDisplay";
+import af_CreateTodo from "./action-frames/storing-data/CreateTodo";
+import af_UpdateTodo from "./action-frames/storing-data/UpdateTodo";
 import {
   AgentIDs,
   CommonAttributes
@@ -28,6 +30,8 @@ const agentDTA = new Agent(
 
     // SRD
     af_ApprovePatientRequest,
+    af_CreateTodo,
+    af_UpdateTodo,
 
     // HF-OTP-II
     af_RetrievePatientDetails,

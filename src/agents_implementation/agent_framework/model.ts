@@ -10,6 +10,7 @@ export interface Fact {
   [k: string]: { [k: string]: any };
 }
 
+// Interfaces used by front end
 export interface PatientDetails {
   patientInfo?: PatientInfo;
   activityInfo: ActivityInfo[];
@@ -24,39 +25,41 @@ export interface Patient {
   riskLevel: RiskLevel;
 }
 
-export interface Alert {
-  patientId: string;
-  // LS-TODO: Either complete vitals and symptoms reports or their IDs
-  vitalsReport: ReportVitals;
-  symptomsReport: ReportSymptom;
-  dateTime: string;
-}
-
 export interface AlertInfo {
+  id: string;
   patientId: string;
-  alertDateTime: string;
-  NHYAclass?: string;
-  diagnosis?: string;
+  patientInfo?: PatientInfo;
+  dateTime: string;
+  summary: string;
+  vitals?: ReportVitals;
+  symptoms?: ReportSymptom;
   lastMedication?: string;
   medicationQuantity?: string;
   activityDuringAlert?: string;
+  completed: boolean;
 }
 
-export enum AlertStatus {
-  NEW = "New",
-  PREVIOUS = "Previous"
+export interface NewTodoInput {
+  title: string;
+  notes: string;
+  alert?: AlertInfo;
 }
 
-export interface AlertDetails {
-  patientName: string;
-  patientId: string;
-  summary: string;
-  severity: RiskLevel;
-  HRV: number;
-  systolicBP: number;
-  diastolicBP: number;
-  symptom: string;
-  sign: string;
-  dateTime: string;
-  status: AlertStatus;
+export interface UpdatedTodoInput {
+  id: string;
+  title: string;
+  notes: string;
+  completed: boolean;
+}
+
+export interface Todo {
+  id?: string;
+  title: string;
+  notes: string;
+  completed: boolean;
+  alertId?: string;
+  patientId?: string;
+  createdAt: string;
+  lastModified?: string;
+  pendingSync: boolean;
 }

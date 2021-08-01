@@ -68,7 +68,7 @@ class RetrieveEntryData extends Activity {
           clinicianID: clinicianUsername
         });
 
-        if (query.data.getClinicianInfo) {
+        if (query.data && query.data.getClinicianInfo) {
           const clinician = query.data.getClinicianInfo;
           // Merges retrieved facts into current facts
           if (

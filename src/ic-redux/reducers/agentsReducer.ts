@@ -4,7 +4,8 @@ import { Reducer } from "redux";
 import {
   AlertInfo,
   Patient,
-  PatientDetails
+  PatientDetails,
+  Todo
 } from "agents_implementation/agent_framework/model";
 
 interface AgentsState {
@@ -15,6 +16,7 @@ interface AgentsState {
   patientDetails: PatientDetails;
   patientRequestsSynced: boolean;
   newAlert: AlertInfo | undefined;
+  newTodo: Todo | undefined;
 }
 
 const initialState: AgentsState = {
@@ -28,7 +30,8 @@ const initialState: AgentsState = {
     vitalsReports: []
   },
   patientRequestsSynced: false,
-  newAlert: undefined
+  newAlert: undefined,
+  newTodo: undefined
 };
 
 export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
@@ -51,6 +54,8 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
       };
     case actionNames.SET_NEW_ALERT:
       return { ...state, newAlert: action.payload.newAlert };
+    case actionNames.SET_NEW_TODO:
+      return { ...state, newTodo: action.payload.newTodo };
     default:
       return state;
   }

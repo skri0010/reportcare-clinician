@@ -57,7 +57,9 @@ export const ActionFrameIDs = {
     REQUEST_DETAILS_DISPLAY: "RequestDetailsDisplay",
     APPROVE_PATIENT_REQUEST: "ApprovePatientRequest",
     RETRIEVE_ALERT_INFO: "RetrieveAlertInfo",
-    REQUEST_ALERT_DISPLAY: "RequestAlertDisplay"
+    REQUEST_ALERT_DISPLAY: "RequestAlertDisplay",
+    CREATE_TODO: "CreateTodo",
+    UPDATE_TODO: "UpdateTodo"
   },
   UXSA: {
     RETRIEVE_ROLE: "RetrieveRole",
@@ -67,7 +69,9 @@ export const ActionFrameIDs = {
   },
   NWA: {
     SYNC_PROTECTED_INFO: "SyncProtectedInfo",
-    SYNC_PATIENT_REQUEST: "SyncPatientRequest"
+    SYNC_PATIENT_REQUEST: "SyncPatientRequest",
+    SYNC_NEW_TODOS: "SyncNewTodos",
+    SYNC_UDPATED_TODOS: "SyncUpdatedTodos"
   },
   ALA: {
     SORT_ALERT: "SortAlert",
@@ -97,7 +101,9 @@ export enum AppAttributes {
   CONFIGURED = "Configured",
   ONLINE = "Online",
   PENDING_PROTECTED_INFO_SYNC = "PendingProtectedInfoSync",
-  PENDING_PATIENT_REQUEST_SYNC = "PendingPatientRequestSync"
+  PENDING_PATIENT_REQUEST_SYNC = "PendingPatientRequestSync",
+  PENDING_TODO_INSERT_SYNC = "PendingTodoInsertSync",
+  PENDING_TODO_UPDATE_SYNC = "PendingTodoUpdateSync"
 }
 
 // Attributes for PROCEDURE key
@@ -117,7 +123,10 @@ export enum ClinicianAttributes {
   CONFIGURED = "Configured",
   RETRIEVE_ENTRY = "RetrieveEntry",
   ROLE = "Role",
-  RETRIEVE_ROLE = "RetrieveRole"
+  RETRIEVE_ROLE = "RetrieveRole",
+  NEW_TODO = "NewTodo",
+  EDIT_TODO = "EditTodo",
+  TODO = "Todo"
 }
 
 // Attributes for PATIENT key
@@ -146,5 +155,6 @@ export enum AsyncStorageKeys {
   CLINICIAN = "Clinician",
   PATIENTS = "Patients",
   PATIENT_REQUESTS = "PatientRequests",
-  ALERTS = "Alerts"
+  ALERTS = "Alerts",
+  TODOS = "Todos"
 }

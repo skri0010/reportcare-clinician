@@ -1,7 +1,8 @@
 import {
   AlertInfo,
   Patient,
-  PatientDetails
+  PatientDetails,
+  Todo
 } from "agents_implementation/agent_framework/model";
 import { actionNames } from "ic-redux/actions/actionNames";
 import { createAction } from "typesafe-actions";
@@ -45,5 +46,12 @@ export const setNewAlert = createAction(
   actionNames.SET_NEW_ALERT,
   (newAlert: AlertInfo) => ({
     newAlert: newAlert
+  })
+)();
+
+export const setNewTodo = createAction(
+  actionNames.SET_NEW_TODO,
+  (newTodo: Todo) => ({
+    newTodo: newTodo
   })
 )();
