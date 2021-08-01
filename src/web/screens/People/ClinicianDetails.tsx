@@ -18,21 +18,21 @@ export const ClinicianDetails: FC<ClinicianDetails> = ({
 
     return (
         <CardWrapper maxHeight={ms(120)}>
-            <View style={{ display: "flex", flexDirection: "column" }}>
+            <View style={styles.rowStyle}>
                 <H3 text="Clinician Info:" style={{ fontWeight:"bold", color: colors.primaryTextColor }}/>
                 <View style={{ display: "flex", flexDirection: "row" }}>
                     <H4 text="Name: " style={{ fontWeight: "bold", color: colors.primaryTextColor }}/>
                     <H4 text={generalDetails.name} style={{ color: colors.primaryTextColor }}/>
                 </View>
-                <View style={{ display: "flex", flexDirection: "row" }}>
+                <View style={styles.rowStyle}>
                     <H4 text="Hospital Name: " style={{ fontWeight: "bold", color: colors.primaryTextColor }}/>
                     <H4 text={generalDetails.hospitalName} style={{ color: colors.primaryTextColor }}/>
                 </View>
-                <View style={{ display: "flex", flexDirection: "row" }}>
+                <View style={styles.rowStyle}>
                     <H4 text="Email: " style={{ fontWeight: "bold", color: colors.primaryTextColor }}/>
                     <H4 text={generalDetails.id} style={{ color: colors.primaryTextColor }}/>
                 </View>
-                <View style={{ display: "flex", flexDirection: "row" }}>
+                <View style={styles.rowStyle}>
                     <H4 text="Role: " style={{ fontWeight: "bold", color: colors.primaryTextColor }}/>
                     <H4 text={generalDetails.role} style={{ color: colors.primaryTextColor }}/>
                 </View>
@@ -41,3 +41,10 @@ export const ClinicianDetails: FC<ClinicianDetails> = ({
 
     );
 };
+
+const styles = ScaledSheet.create({
+    rowStyle: {
+        display: "flex",
+        flexDirection: "row"
+    }
+});
