@@ -54,7 +54,8 @@ export const ActionFrameIDs = {
     RETRIEVE_ROLE_PATIENTS: "RetrieveRolePatients",
     RETRIEVE_PATIENT_DETAILS: "RetrievePatientDetails",
     REQUEST_DETAILS_DISPLAY: "RequestDetailsDisplay",
-    APPROVE_PATIENT_ASSIGNMENT: "ApprovePatientAssignment"
+    APPROVE_PATIENT_ASSIGNMENT: "ApprovePatientAssignment",
+    REASSIGN_PATIENT_ASSIGNMENT: "ReassignPatientAssignment"
   },
   UXSA: {
     RETRIEVE_ROLE: "RetrieveRole",
@@ -85,7 +86,8 @@ export enum AppAttributes {
   CONFIGURED = "Configured",
   ONLINE = "Online",
   PENDING_PROTECTED_INFO_SYNC = "PendingProtectedInfoSync",
-  PENDING_PATIENT_ASSIGNMENT_SYNC = "PendingPatientAssignmentSync"
+  PENDING_PATIENT_ASSIGNMENT_SYNC = "PendingPatientAssignmentSync",
+  PENDING_PATIENT_REASSIGNMENT_SYNC = "PendingPatientReassignmentSync"
 }
 
 // Attributes for PROCEDURE key
@@ -115,8 +117,10 @@ export enum PatientAttributes {
   DETAILS_RETRIEVED = "DetailsRetrieved",
   VIEW_DETAILS = "ViewDetails",
   DETAILS = "Details",
-  UPDATE_CLINICIAN = "UpdateClinician",
-  CLINICIAN_UPDATED = "ClinicianUpdated",
+  APPROVE_ASSIGNMENT = "ApproveAssignment",
+  ASSIGNMENT_UPDATED = "AssignmentUpdated",
+  REASSIGN_CLINICIAN = "ReassignClinician",
+  REASSIGNMENT_UPDATED = "ReassignmentUpdated",
   UPDATE_SUCCESSFUL = "UpdateSuccessful"
 }
 
@@ -127,5 +131,6 @@ export enum AsyncStorageKeys {
   USERNAME = "Username",
   CLINICIAN = "Clinician",
   PATIENTS = "Patients",
-  PATIENT_ASSIGNMENTS = "PatientAssignments"
+  PATIENT_ASSIGNMENTS = "PatientAssignments",
+  PATIENT_REASSIGNMENTS = "PatientReassignments"
 }

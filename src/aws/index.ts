@@ -15,3 +15,14 @@ type ErrorsArray = [
 export interface BaseResponse {
   error: ErrorsArray;
 }
+
+export enum PatientAssignmentStatus {
+  PENDING = "PENDING",
+  APPROVED = "APPROVED",
+  REASSIGNED = "REASSIGNED"
+}
+
+export interface Reassignment {
+  patientID: string;
+  clinicianID: string;
+}

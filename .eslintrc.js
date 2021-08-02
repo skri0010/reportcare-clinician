@@ -110,6 +110,13 @@ module.exports = {
             message:
               "Please import the component directly (eg @react-native-picker/picker/js/Picker.web)"
           }
+        ],
+        patterns: [
+          {
+            group: ["aws/graphql/queries"],
+            message:
+              "Use exports from aws/graphql/TypedAPI files instead. If statements do not exists, create your own"
+          }
         ]
       }
     ]

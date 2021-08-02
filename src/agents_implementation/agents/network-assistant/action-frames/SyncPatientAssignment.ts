@@ -82,7 +82,7 @@ class SyncPatientAssignment extends Activity {
               if (patient) {
                 // Updates patient's cardiologist
                 const updatePatient = await updatePatientInfo({
-                  id: patient.id!,
+                  patientID: patient.id!,
                   cardiologist: clinicianId,
                   _version: patient._version
                 });

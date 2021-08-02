@@ -214,6 +214,18 @@ export const createMedCompliant = /* GraphQL */ `
     createMedCompliant(input: $input, condition: $condition) {
       id
       MedId
+      MedicationInfo {
+        id
+        medname
+        dosage
+        patientID
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+        owner
+      }
       Verification
       Date
       patientID
@@ -234,6 +246,18 @@ export const updateMedCompliant = /* GraphQL */ `
     updateMedCompliant(input: $input, condition: $condition) {
       id
       MedId
+      MedicationInfo {
+        id
+        medname
+        dosage
+        patientID
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+        owner
+      }
       Verification
       Date
       patientID
@@ -254,6 +278,18 @@ export const deleteMedCompliant = /* GraphQL */ `
     deleteMedCompliant(input: $input, condition: $condition) {
       id
       MedId
+      MedicationInfo {
+        id
+        medname
+        dosage
+        patientID
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+        owner
+      }
       Verification
       Date
       patientID
@@ -274,6 +310,21 @@ export const createReportSymptom = /* GraphQL */ `
     createReportSymptom(input: $input, condition: $condition) {
       id
       ActId
+      ActivityInfo {
+        id
+        Actname
+        Location
+        Frequency
+        Days
+        time
+        patientID
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+        owner
+      }
       Name
       Severity
       DateTime
@@ -295,6 +346,21 @@ export const updateReportSymptom = /* GraphQL */ `
     updateReportSymptom(input: $input, condition: $condition) {
       id
       ActId
+      ActivityInfo {
+        id
+        Actname
+        Location
+        Frequency
+        Days
+        time
+        patientID
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+        owner
+      }
       Name
       Severity
       DateTime
@@ -316,6 +382,21 @@ export const deleteReportSymptom = /* GraphQL */ `
     deleteReportSymptom(input: $input, condition: $condition) {
       id
       ActId
+      ActivityInfo {
+        id
+        Actname
+        Location
+        Frequency
+        Days
+        time
+        patientID
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+        owner
+      }
       Name
       Severity
       DateTime
@@ -336,7 +417,6 @@ export const createReportVitals = /* GraphQL */ `
   ) {
     createReportVitals(input: $input, condition: $condition) {
       id
-      SymptomId
       Temperature
       Humidity
       Weight
@@ -362,7 +442,6 @@ export const updateReportVitals = /* GraphQL */ `
   ) {
     updateReportVitals(input: $input, condition: $condition) {
       id
-      SymptomId
       Temperature
       Humidity
       Weight
@@ -388,7 +467,6 @@ export const deleteReportVitals = /* GraphQL */ `
   ) {
     deleteReportVitals(input: $input, condition: $condition) {
       id
-      SymptomId
       Temperature
       Humidity
       Weight
@@ -590,63 +668,6 @@ export const deleteClinicianProtectedInfo = /* GraphQL */ `
     }
   }
 `;
-export const createPatientAssignment = /* GraphQL */ `
-  mutation CreatePatientAssignment(
-    $input: CreatePatientAssignmentInput!
-    $condition: ModelPatientAssignmentConditionInput
-  ) {
-    createPatientAssignment(input: $input, condition: $condition) {
-      id
-      patientID
-      clinicianID
-      status
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const updatePatientAssignment = /* GraphQL */ `
-  mutation UpdatePatientAssignment(
-    $input: UpdatePatientAssignmentInput!
-    $condition: ModelPatientAssignmentConditionInput
-  ) {
-    updatePatientAssignment(input: $input, condition: $condition) {
-      id
-      patientID
-      clinicianID
-      status
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const deletePatientAssignment = /* GraphQL */ `
-  mutation DeletePatientAssignment(
-    $input: DeletePatientAssignmentInput!
-    $condition: ModelPatientAssignmentConditionInput
-  ) {
-    deletePatientAssignment(input: $input, condition: $condition) {
-      id
-      patientID
-      clinicianID
-      status
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
 export const createClinicianPatientMap = /* GraphQL */ `
   mutation CreateClinicianPatientMap(
     $input: CreateClinicianPatientMapInput!
@@ -731,6 +752,336 @@ export const deleteClinicianPatientMap = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      owner
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createPatientAssignment = /* GraphQL */ `
+  mutation CreatePatientAssignment(
+    $input: CreatePatientAssignmentInput!
+    $condition: ModelPatientAssignmentConditionInput
+  ) {
+    createPatientAssignment(input: $input, condition: $condition) {
+      id
+      patientID
+      clinicianID
+      status
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const updatePatientAssignment = /* GraphQL */ `
+  mutation UpdatePatientAssignment(
+    $input: UpdatePatientAssignmentInput!
+    $condition: ModelPatientAssignmentConditionInput
+  ) {
+    updatePatientAssignment(input: $input, condition: $condition) {
+      id
+      patientID
+      clinicianID
+      status
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deletePatientAssignment = /* GraphQL */ `
+  mutation DeletePatientAssignment(
+    $input: DeletePatientAssignmentInput!
+    $condition: ModelPatientAssignmentConditionInput
+  ) {
+    deletePatientAssignment(input: $input, condition: $condition) {
+      id
+      patientID
+      clinicianID
+      status
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const createAlert = /* GraphQL */ `
+  mutation CreateAlert(
+    $input: CreateAlertInput!
+    $condition: ModelAlertConditionInput
+  ) {
+    createAlert(input: $input, condition: $condition) {
+      id
+      patientID
+      dateTime
+      summary
+      vitalsReportID
+      vitalsReport {
+        id
+        Temperature
+        Humidity
+        Weight
+        BPSys
+        BPDi
+        NoSteps
+        OxySat
+        DateTime
+        patientID
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+        owner
+      }
+      symptomReportID
+      symptomReport {
+        id
+        ActId
+        Name
+        Severity
+        DateTime
+        patientID
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+        owner
+      }
+      completed
+      owner
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateAlert = /* GraphQL */ `
+  mutation UpdateAlert(
+    $input: UpdateAlertInput!
+    $condition: ModelAlertConditionInput
+  ) {
+    updateAlert(input: $input, condition: $condition) {
+      id
+      patientID
+      dateTime
+      summary
+      vitalsReportID
+      vitalsReport {
+        id
+        Temperature
+        Humidity
+        Weight
+        BPSys
+        BPDi
+        NoSteps
+        OxySat
+        DateTime
+        patientID
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+        owner
+      }
+      symptomReportID
+      symptomReport {
+        id
+        ActId
+        Name
+        Severity
+        DateTime
+        patientID
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+        owner
+      }
+      completed
+      owner
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteAlert = /* GraphQL */ `
+  mutation DeleteAlert(
+    $input: DeleteAlertInput!
+    $condition: ModelAlertConditionInput
+  ) {
+    deleteAlert(input: $input, condition: $condition) {
+      id
+      patientID
+      dateTime
+      summary
+      vitalsReportID
+      vitalsReport {
+        id
+        Temperature
+        Humidity
+        Weight
+        BPSys
+        BPDi
+        NoSteps
+        OxySat
+        DateTime
+        patientID
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+        owner
+      }
+      symptomReportID
+      symptomReport {
+        id
+        ActId
+        Name
+        Severity
+        DateTime
+        patientID
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+        owner
+      }
+      completed
+      owner
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createTodo = /* GraphQL */ `
+  mutation CreateTodo(
+    $input: CreateTodoInput!
+    $condition: ModelTodoConditionInput
+  ) {
+    createTodo(input: $input, condition: $condition) {
+      id
+      clinicianID
+      title
+      notes
+      lastModified
+      alertID
+      alert {
+        id
+        patientID
+        dateTime
+        summary
+        vitalsReportID
+        symptomReportID
+        completed
+        owner
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      completed
+      owner
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateTodo = /* GraphQL */ `
+  mutation UpdateTodo(
+    $input: UpdateTodoInput!
+    $condition: ModelTodoConditionInput
+  ) {
+    updateTodo(input: $input, condition: $condition) {
+      id
+      clinicianID
+      title
+      notes
+      lastModified
+      alertID
+      alert {
+        id
+        patientID
+        dateTime
+        summary
+        vitalsReportID
+        symptomReportID
+        completed
+        owner
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      completed
+      owner
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteTodo = /* GraphQL */ `
+  mutation DeleteTodo(
+    $input: DeleteTodoInput!
+    $condition: ModelTodoConditionInput
+  ) {
+    deleteTodo(input: $input, condition: $condition) {
+      id
+      clinicianID
+      title
+      notes
+      lastModified
+      alertID
+      alert {
+        id
+        patientID
+        dateTime
+        summary
+        vitalsReportID
+        symptomReportID
+        completed
+        owner
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      completed
       owner
       _version
       _deleted

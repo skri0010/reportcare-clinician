@@ -15,7 +15,7 @@ type PatientInfo
       { allow: groups, groupsField: "patientID", operations: [read] }
     ]
   )
-  @key(name: "byPatient", fields: ["patientID"]) {
+  @key(fields: ["patientID"]) {
   id: ID!
   name: String!
   address: String!
@@ -39,7 +39,11 @@ type MedicationInfo
       { allow: groups, groupsField: "patientID", operations: [read] }
     ]
   )
-  @key(name: "byPatient", fields: ["patientID"]) {
+  @key(
+    name: "medicationInfoByPatientID"
+    fields: ["patientID"]
+    queryField: "listMedicationInfoByPatientID"
+  ) {
   id: ID!
   medname: String!
   dosage: String!
@@ -55,7 +59,11 @@ type ActivityInfo
       { allow: groups, groupsField: "patientID", operations: [read] }
     ]
   )
-  @key(name: "byPatient", fields: ["patientID"]) {
+  @key(
+    name: "activityInfoByPatientID"
+    fields: ["patientID"]
+    queryField: "listActivityInfoByPatientID"
+  ) {
   id: ID!
   Actname: String!
   Location: String!
@@ -74,14 +82,19 @@ type MedCompliant
       { allow: groups, groupsField: "patientID", operations: [read] }
     ]
   )
-  @key(name: "byPatient", fields: ["patientID"])
   @key(
-    name: "byDate"
+    name: "medCompliantByPatientID"
+    fields: ["patientID"]
+    queryField: "listMedCompliantByPatientID"
+  )
+  @key(
+    name: "medCompliantByDate"
     fields: ["patientID", "Date"]
-    queryField: "listMedCompliantsByDate"
+    queryField: "listMedCompliantByDate"
   ) {
   id: ID!
-  MedId: String!
+  MedId: ID!
+  MedicationInfo: MedicationInfo @connection(fields: ["MedId"])
   Verification: Boolean!
   Date: AWSDateTime!
   patientID: String!
@@ -96,9 +109,19 @@ type ReportSymptom
       { allow: groups, groupsField: "patientID", operations: [read] }
     ]
   )
-  @key(name: "byPatient", fields: ["patientID"]) {
+  @key(
+    name: "reportSymptomByPatientID"
+    fields: ["patientID"]
+    queryField: "listReportSymptomByPatientID"
+  )
+  @key(
+    name: "reportSymptomByDateTime"
+    fields: ["patientID", "DateTime"]
+    queryField: "listReportSymptomByDateTime"
+  ) {
   id: ID!
-  ActId: String!
+  ActId: ID!
+  ActivityInfo: ActivityInfo @connection(fields: ["ActId"])
   Name: String!
   Severity: String!
   DateTime: AWSDateTime!
@@ -114,9 +137,17 @@ type ReportVitals
       { allow: groups, groupsField: "patientID", operations: [read] }
     ]
   )
-  @key(name: "byPatient", fields: ["patientID"]) {
+  @key(
+    name: "reportVitalByPatientID"
+    fields: ["patientID"]
+    queryField: "listReportVitalByPatientID"
+  )
+  @key(
+    name: "reportVitalByDateTime"
+    fields: ["patientID", "DateTime"]
+    queryField: "listReportVitalByDateTime"
+  ) {
   id: ID!
-  SymptomId: String!
   Temperature: String
   Humidity: String
   Weight: String!
@@ -210,32 +241,6 @@ type ClinicianProtectedInfo
 }
 
 """
-Authorization
-1. Everyone can create and read their own records
-2. Clinicians can read and update records containing themselves
-"""
-type PatientAssignment
-  @model
-  @auth(
-    rules: [
-      { allow: owner, operations: [create, read] }
-      { allow: owner, ownerField: "clinicianID", operations: [read, update] }
-      { allow: groups, groups: ["Admin"] }
-    ]
-  )
-  @key(fields: ["patientID", "clinicianID"])
-  @key(
-    name: "patientAssignmentByStatus"
-    fields: ["clinicianID", "status"]
-    queryField: "listPatientAssignmentByStatus"
-  ) {
-  id: ID!
-  patientID: String!
-  clinicianID: String!
-  status: String!
-}
-
-"""
 == Authorization ==
 1. Clinicians can create records
 2. Clinicians can read records containing their patients
@@ -278,5 +283,114 @@ type ClinicianPatientMap
   clinicianID: String!
   patientID: String!
   clinicianInfo: ClinicianInfo! @connection(fields: ["clinicianID"])
+  owner: String!
+}
+
+"""
+Authorization
+1. Everyone can create and read their own records
+2. Clinicians can read and update records containing themselves
+"""
+type PatientAssignment
+  @model
+  @auth(
+    rules: [
+      { allow: owner, operations: [create, read] }
+      { allow: owner, ownerField: "clinicianID", operations: [read, update] }
+      { allow: groups, groups: ["Admin"] }
+    ]
+  )
+  @key(fields: ["patientID", "clinicianID"])
+  @key(
+    name: "patientAssignmentByStatus"
+    fields: ["clinicianID", "status"]
+    queryField: "listPatientAssignmentByStatus"
+  ) {
+  id: ID!
+  patientID: String!
+  clinicianID: String!
+  status: String!
+}
+
+"""
+== Authorization ==
+1. Patients can create records
+2. Owners can read their own records
+3. Clinicians can read and update records containing their patients
+"""
+type Alert
+  @model
+  @auth(
+    rules: [
+      { allow: owner, operations: [read] }
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groupsField: "patientID", operations: [read, update] }
+      { allow: groups, groups: ["Patients"], operations: [create] }
+    ]
+  )
+  @key(
+    name: "alertsByPatientID"
+    fields: ["patientID"]
+    queryField: "listAlertsByPatientID"
+  )
+  @key(
+    name: "alertsByDateTime"
+    fields: ["patientID", "dateTime"]
+    queryField: "listAlertsByDateTime"
+  ) {
+  id: ID!
+  patientID: String!
+  dateTime: AWSDateTime!
+  summary: String!
+  vitalsReportID: ID!
+  vitalsReport: ReportVitals @connection(fields: ["vitalsReportID"])
+  symptomReportID: ID!
+  symptomReport: ReportSymptom @connection(fields: ["symptomReportID"])
+  completed: Boolean!
+  owner: String!
+}
+
+"""
+== Authorization ==
+1. Clinicians can create records
+2. Owners can read and update their own records
+"""
+type Todo
+  @model
+  @auth(
+    rules: [
+      { allow: owner, operations: [read, update] }
+      { allow: groups, groups: ["Admin"] }
+      {
+        allow: groups
+        groups: [
+          "EPs"
+          "Nurses"
+          "HFSpecialists"
+          "MedicalOfficers"
+          "Pharmacists"
+        ]
+        operations: [create]
+      }
+    ]
+  )
+  @key(
+    name: "todosByClinicianID"
+    fields: ["clinicianID"]
+    queryField: "listTodosByClinicianID"
+  )
+  @key(
+    name: "todosByLastModifiedDate"
+    fields: ["clinicianID", "lastModified"]
+    queryField: "listTodosByLastModifiedDate"
+  ) {
+  id: ID!
+  clinicianID: String!
+  title: String!
+  notes: String!
+  lastModified: AWSDateTime!
+  alertID: ID
+  alert: Alert @connection(fields: ["alertID"])
+  completed: Boolean!
   owner: String!
 }

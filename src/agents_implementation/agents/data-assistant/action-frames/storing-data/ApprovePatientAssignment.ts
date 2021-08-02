@@ -1,8 +1,8 @@
-import Actionframe from "../../../../agent_framework/base/Actionframe";
-import Activity from "../../../../agent_framework/base/Activity";
-import Agent from "../../../../agent_framework/base/Agent";
-import Belief from "../../../../agent_framework/base/Belief";
-import Precondition from "../../../../agent_framework/base/Precondition";
+import Actionframe from "agents_implementation/agent_framework/base/Actionframe";
+import Activity from "agents_implementation/agent_framework/base/Activity";
+import Agent from "agents_implementation/agent_framework/base/Agent";
+import Belief from "agents_implementation/agent_framework/base/Belief";
+import Precondition from "agents_implementation/agent_framework/base/Precondition";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   ProcedureConst,
@@ -13,16 +13,19 @@ import {
   ProcedureAttributes,
   AppAttributes,
   ActionFrameIDs
-} from "../../../../agent_framework/AgentEnums";
-import agentAPI from "../../../../agent_framework/AgentAPI";
+} from "agents_implementation/agent_framework/AgentEnums";
+import agentAPI from "agents_implementation/agent_framework/AgentAPI";
 import {
+  PatientAssignmentStatus,
   getPatientInfo,
+  createClinicianPatientMap,
   updatePatientInfo,
-  createClinicianPatientMap
+  updatePatientAssignment
 } from "aws";
 import { store } from "ic-redux/store";
 import { setProcedureSuccessful } from "ic-redux/actions/agents/actionCreator";
 import agentNWA from "agents_implementation/agents/network-assistant/NWA";
+import Auth from "@aws-amplify/auth";
 
 /**
  * LS-TODO: To be updated
@@ -31,8 +34,8 @@ import agentNWA from "agents_implementation/agents/network-assistant/NWA";
  */
 
 /**
- * Class to represent an activity for updating patient's clinician.
- * This happens in Procedure Storing Data (SRD) when a clinician accepts a patient's assignment.
+ * Class to represent an activity for assigning self as patient's clinician.
+ * This happens in Procedure Storing Data (SRD) when a clinician approves a patient's assignment.
  */
 class ApprovePatientAssignment extends Activity {
   constructor() {
@@ -48,7 +51,7 @@ class ApprovePatientAssignment extends Activity {
 
     // Update Beliefs
     agent.addBelief(
-      new Belief(BeliefKeys.PATIENT, PatientAttributes.CLINICIAN_UPDATED, false)
+      new Belief(BeliefKeys.PATIENT, PatientAttributes.ASSIGNMENT_UPDATED, true)
     );
     agent.addBelief(
       new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
@@ -58,7 +61,7 @@ class ApprovePatientAssignment extends Activity {
       // Gets patientId to be updated
       const patientId =
         agentAPI.getFacts()[BeliefKeys.PATIENT]?.[
-          PatientAttributes.UPDATE_CLINICIAN
+          PatientAttributes.APPROVE_ASSIGNMENT
         ];
 
       // Gets locally stored clinicianId
@@ -69,16 +72,24 @@ class ApprovePatientAssignment extends Activity {
       if (patientId && clinicianId) {
         // Device is online
         if (agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
-          // Inserts into ClinicianPatientMap
+          // Insert ClinicianPatientMap, update PatientAssignment status, update access token
           await createClinicianPatientMap({
             clinicianID: clinicianId,
             patientID: patientId,
             owner: clinicianId
           });
+          await updatePatientAssignment({
+            patientID: patientId,
+            clinicianID: clinicianId,
+            status: PatientAssignmentStatus.APPROVED
+          });
+          await Auth.currentAuthenticatedUser({ bypassCache: true }); // pre token generation Lambda is triggered
 
+          // JH-TODO: May need to remove.
           // Update patient
           const query = await getPatientInfo(patientId);
 
+          // JH-TODO: cardiologist attribute seem irrelevant. Needs checking
           if (query.data.getPatientInfo) {
             const patient = query.data.getPatientInfo;
             if (patient) {
@@ -86,14 +97,14 @@ class ApprovePatientAssignment extends Activity {
               // LS-TODO: Whether to update cardiologist using ClinicianID or name
               // JH-TODO: Note, we must check the version from the DB. If this version is not
               //          the latest, then it auto merge might ignore it!
-              // JH-TODO: cardiologist attribute seem irrelevant. Needs checking
+
               const updatePatient = await updatePatientInfo({
-                id: patient.id,
+                patientID: patient.id,
                 cardiologist: clinicianId,
                 _version: patient._version
               });
 
-              // Saves patient locally with patientId as key
+              // Save patient locally with patientId as key
               if (updatePatient.data) {
                 await AsyncStorage.setItem(
                   patientId,
@@ -103,14 +114,15 @@ class ApprovePatientAssignment extends Activity {
             }
           }
         }
-        // Device is offline: saves patientId locally with PatientAssignments as key
+        // Device is offline: Save locally in PatientAssignments
         else {
-          const pendingRequests = await AsyncStorage.getItem(
+          // Append current patientID into list of other pending assignments
+          const pendingAssignments = await AsyncStorage.getItem(
             AsyncStorageKeys.PATIENT_ASSIGNMENTS
           );
-          // Other pending requests exist: append current patientId into the list
-          if (pendingRequests) {
-            const pendingPatientIds: string[] = JSON.parse(pendingRequests);
+          // Key exists in AsyncStorage
+          if (pendingAssignments) {
+            const pendingPatientIds: string[] = JSON.parse(pendingAssignments);
 
             // Checks if patientId already exists in the list
             if (!(patientId in pendingPatientIds)) {
@@ -120,7 +132,9 @@ class ApprovePatientAssignment extends Activity {
                 JSON.stringify(pendingPatientIds)
               );
             }
-          } else {
+          }
+          // Key does not exist in AsyncStorage
+          else {
             // No other pending requests: create a new list
             await AsyncStorage.setItem(
               AsyncStorageKeys.PATIENT_ASSIGNMENTS,
@@ -128,7 +142,7 @@ class ApprovePatientAssignment extends Activity {
             );
           }
 
-          // Notifies NWA
+          // Notify NWA
           agentNWA.addBelief(
             new Belief(
               BeliefKeys.APP,
@@ -147,12 +161,16 @@ class ApprovePatientAssignment extends Activity {
     }
 
     // Update Facts
-    // Removes patientId to be updated from facts
+    // Remove patientId to be updated from facts
     agentAPI.addFact(
-      new Belief(BeliefKeys.PATIENT, PatientAttributes.UPDATE_CLINICIAN, null),
+      new Belief(
+        BeliefKeys.PATIENT,
+        PatientAttributes.APPROVE_ASSIGNMENT,
+        null
+      ),
       false
     );
-    // Stops the procedure
+    // Stop the procedure
     agentAPI.addFact(
       new Belief(
         BeliefKeys.PROCEDURE,
@@ -173,8 +191,8 @@ const rule1 = new Precondition(
 );
 const rule2 = new Precondition(
   BeliefKeys.PATIENT,
-  PatientAttributes.CLINICIAN_UPDATED,
-  true
+  PatientAttributes.ASSIGNMENT_UPDATED,
+  false
 );
 
 // Action Frame for ApprovePatientAssignment class
