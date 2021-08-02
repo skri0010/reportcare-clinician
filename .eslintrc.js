@@ -66,6 +66,7 @@ module.exports = {
         tsx: "never"
       }
     ],
+    "no-plusplus": "off",
     "import/order": 0,
     "import/no-extraneous-dependencies": 0,
     "no-use-before-define": "off",

@@ -11,8 +11,8 @@ import {
   BeliefKeys,
   CommonAttributes
 } from "agents_implementation/agent_framework/AgentEnums";
-import { approve } from "agents_implementation/agents/data-assistant/action-frames/storing-data/ApprovePatientAssignment";
-import { AssignmentParams } from "aws";
+import { resolvePatientAssignment } from "agents_implementation/agents/data-assistant/action-frames/storing-data/ResolvePatientAssignment";
+import { Assignment } from "aws";
 
 // LS-TODO: To be tested once ApprovePatientAssignment is working
 
@@ -39,7 +39,7 @@ class SyncPatientAssignment extends Activity {
     agent.addBelief(
       new Belief(
         BeliefKeys.APP,
-        AppAttributes.PENDING_PATIENT_ASSIGNMENT_SYNC,
+        AppAttributes.PENDING_PATIENT_ASSIGNMENT,
         false
       )
     );
@@ -48,9 +48,9 @@ class SyncPatientAssignment extends Activity {
     );
 
     try {
-      // Get locally stored list of assignments
+      // Get locally stored list of assignments to resolve
       const assignmentListJSON = await AsyncStorage.getItem(
-        AsyncStorageKeys.PATIENT_ASSIGNMENTS
+        AsyncStorageKeys.PATIENT_ASSIGNMENTS_TO_RESOLVE
       );
 
       // Get locally stored clinicianId
@@ -59,16 +59,31 @@ class SyncPatientAssignment extends Activity {
       );
 
       if (assignmentListJSON && clinicianId) {
-        const assignmentList: AssignmentParams[] =
-          JSON.parse(assignmentListJSON);
+        const remainingList: Assignment[] = [];
+        const assignmentList: Assignment[] = JSON.parse(assignmentListJSON);
 
-        assignmentList.forEach(async (assignment) => {
-          if (assignment.clinicianID === clinicianId) {
-            // Approve and remove pending patient assignments from local storage
-            await approve(assignment);
-            await AsyncStorage.removeItem(AsyncStorageKeys.PATIENT_ASSIGNMENTS);
+        // JH-TODO: Assignment should have an expiry date and this loop should flush if past expiry
+        for (let i = 0; i < assignmentList.length; i++) {
+          try {
+            // Resolve (APPROVE or REASSIGN based on assignment)
+            // eslint-disable-next-line no-await-in-loop
+            await resolvePatientAssignment({
+              assignment: assignmentList[i],
+              ownClinicianId: clinicianId
+            });
+          } catch (error) {
+            // eslint-disable-next-line no-console
+            console.log(error);
+            // Collect failed assignments to store back into local storage
+            remainingList.push(assignmentList[i]);
           }
-        });
+        }
+
+        // Store failed assignments back into local storage
+        await AsyncStorage.setItem(
+          JSON.stringify(remainingList),
+          AsyncStorageKeys.PATIENT_ASSIGNMENTS_TO_RESOLVE
+        );
       }
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -78,7 +93,7 @@ class SyncPatientAssignment extends Activity {
       agent.addBelief(
         new Belief(
           BeliefKeys.APP,
-          AppAttributes.PENDING_PATIENT_ASSIGNMENT_SYNC,
+          AppAttributes.PENDING_PATIENT_ASSIGNMENT,
           true
         )
       );
@@ -90,7 +105,7 @@ class SyncPatientAssignment extends Activity {
 const rule1 = new Precondition(BeliefKeys.APP, AppAttributes.ONLINE, true);
 const rule2 = new Precondition(
   BeliefKeys.APP,
-  AppAttributes.PENDING_PATIENT_ASSIGNMENT_SYNC,
+  AppAttributes.PENDING_PATIENT_ASSIGNMENT,
   true
 );
 
