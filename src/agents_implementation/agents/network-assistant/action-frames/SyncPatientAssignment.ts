@@ -16,17 +16,17 @@ import { updatePatientInfo } from "aws/TypedAPI/updateMutations";
 import { createClinicianPatientMap } from "aws/TypedAPI/createMutations";
 import { PatientInfo } from "aws/API";
 
-// LS-TODO: To be tested once ApprovePatientRequest is working
+// LS-TODO: To be tested once ApprovePatientAssignment is working
 
 /**
- * Class to represent the activity for syncing local approval of patient requests.
+ * Class to represent the activity for syncing local approval of patient assignments.
  */
-class SyncPatientRequest extends Activity {
+class SyncPatientAssignment extends Activity {
   /**
-   * Constructor for the SyncPatientRequest class
+   * Constructor for the SyncPatientAssignment class
    */
   constructor() {
-    super(ActionFrameIDs.NWA.SYNC_PATIENT_REQUEST);
+    super(ActionFrameIDs.NWA.SYNC_PATIENT_ASSIGNMENT);
   }
 
   /**
@@ -40,19 +40,19 @@ class SyncPatientRequest extends Activity {
       new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
     );
 
-    // Prevents the activity from being executed multiple times while requests are being synced
+    // Prevents the activity from being executed multiple times while assignments are being synced
     agent.addBelief(
       new Belief(
         BeliefKeys.APP,
-        AppAttributes.PENDING_PATIENT_REQUEST_SYNC,
+        AppAttributes.PENDING_PATIENT_ASSIGNMENT_SYNC,
         false
       )
     );
 
     try {
-      // Gets patientIds for locally approved patient requests
+      // Gets patientIds for locally approved patient assignments
       const patientIdsStr = await AsyncStorage.getItem(
-        AsyncStorageKeys.PATIENT_REQUESTS
+        AsyncStorageKeys.PATIENT_ASSIGNMENTS
       );
 
       // Gets locally stored clinicianId
@@ -99,8 +99,8 @@ class SyncPatientRequest extends Activity {
           }
         });
 
-        // Removes pending patient requests from local storage
-        await AsyncStorage.removeItem(AsyncStorageKeys.PATIENT_REQUESTS);
+        // Removes pending patient assignments from local storage
+        await AsyncStorage.removeItem(AsyncStorageKeys.PATIENT_ASSIGNMENTS);
       }
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -110,7 +110,7 @@ class SyncPatientRequest extends Activity {
       agent.addBelief(
         new Belief(
           BeliefKeys.APP,
-          AppAttributes.PENDING_PATIENT_REQUEST_SYNC,
+          AppAttributes.PENDING_PATIENT_ASSIGNMENT_SYNC,
           true
         )
       );
@@ -118,19 +118,19 @@ class SyncPatientRequest extends Activity {
   }
 }
 
-// Rules or preconditions for activating the SyncPatientRequest class
+// Rules or preconditions for activating the SyncPatientAssignments class
 const rule1 = new Precondition(BeliefKeys.APP, AppAttributes.ONLINE, true);
 const rule2 = new Precondition(
   BeliefKeys.APP,
-  AppAttributes.PENDING_PATIENT_REQUEST_SYNC,
+  AppAttributes.PENDING_PATIENT_ASSIGNMENT_SYNC,
   true
 );
 
-// Actionframe of the SyncPatientRequest class
-const af_SyncPatientRequest = new Actionframe(
-  `AF_${ActionFrameIDs.NWA.SYNC_PATIENT_REQUEST}`,
+// Actionframe of the SyncPatientAssignments class
+const af_SyncPatientAssignment = new Actionframe(
+  `AF_${ActionFrameIDs.NWA.SYNC_PATIENT_ASSIGNMENT}`,
   [rule1, rule2],
-  new SyncPatientRequest()
+  new SyncPatientAssignment()
 );
 
-export default af_SyncPatientRequest;
+export default af_SyncPatientAssignment;

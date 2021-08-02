@@ -143,14 +143,19 @@ abstract class AgentManagement {
     updateDb: boolean = false
   ): Promise<void> {
     try {
-      // Clears intermediate attributes and values of actions
-      if (fact.getValue() === null && fact.getKey() in this.facts) {
-        delete this.facts[fact.getKey()][fact.getAttribute()];
+      const key = fact.getKey();
+      const value = fact.getValue();
+      const attribute = fact.getAttribute();
+
+      if (value === null && key in this.facts) {
+        // Clears intermediate attributes and values of actions from current facts
+        delete this.facts[key][attribute];
       } else {
-        if (!(fact.getKey() in this.facts)) {
-          this.facts[fact.getKey()] = {};
+        // Add new fact
+        if (!(key in this.facts)) {
+          this.facts[key] = {};
         }
-        this.facts[fact.getKey()][fact.getAttribute()] = fact.getValue();
+        this.facts[key][attribute] = value;
 
         if (broadcast) {
           DeviceEventEmitter.emit("env", fact);
@@ -174,8 +179,10 @@ abstract class AgentManagement {
   mergeFacts(facts: Belief): void {
     Object.entries(facts).forEach(([key, innerObj]) => {
       if (!(key in this.facts)) {
+        // Insert fact if it does not exist
         this.facts[key] = innerObj;
       } else {
+        // Replace with fact if it exists
         Object.entries(innerObj).forEach(([attribute, value]) => {
           this.facts[key][attribute] = value;
         });
@@ -185,7 +192,7 @@ abstract class AgentManagement {
 
   /**
    * Get all the facts
-   * @return {{ [k: string]: { [k: string]: unknown } }} facts or state of the environment
+   * @return {Fact} facts or state of the environment
    */
   getFacts(): Fact {
     return this.facts;
@@ -206,14 +213,14 @@ abstract class AgentManagement {
     if (localClinicianStr) {
       const localClinician = JSON.parse(localClinicianStr);
 
-      // Device is online
       if (isOnline) {
+        // Device is online - get online data
         const clinicianProtectedInfo = await getClinicianProtectedInfo({
           clinicianID: localClinician.clinicianID
         });
         protectedInfo = clinicianProtectedInfo.data.getClinicianProtectedInfo;
       } else {
-        // Device is offline
+        // Device is offline - use local data
         protectedInfo = localClinician.protectedInfo;
       }
 

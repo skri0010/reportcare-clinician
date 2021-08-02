@@ -154,7 +154,7 @@ class Agent {
    */
   async setBeliefs(beliefs: Belief[]): Promise<void> {
     let beliefsSet = false;
-    let clinicianStates: ClinicianProtectedInfo | null | undefined;
+    let protectedInfo: ClinicianProtectedInfo | null | undefined;
 
     try {
       // Retrieves local clinician
@@ -170,7 +170,7 @@ class Agent {
             clinicianID: localClinician.clinicianID
           });
           if (query.data) {
-            clinicianStates = query.data.getClinicianProtectedInfo;
+            protectedInfo = query.data.getClinicianProtectedInfo;
 
             // Updates local storage
             await AsyncStorage.mergeItem(
@@ -179,20 +179,19 @@ class Agent {
             );
           }
         } else {
-          clinicianStates = localClinician.protectedInfo;
+          protectedInfo = localClinician.protectedInfo;
         }
       }
 
-      // Initializes agent's beliefs using the retrieved states
-      if (clinicianStates && this.id in clinicianStates) {
-        const beliefJSON =
-          clinicianStates[this.id as keyof typeof clinicianStates];
-        if (
-          beliefJSON &&
-          Object.entries(JSON.parse(beliefJSON.toString())).length > 0
-        ) {
-          this.beliefs = JSON.parse(beliefJSON.toString());
-          beliefsSet = true;
+      // Initializes agent's beliefs using the retrieved states in protected info
+      if (protectedInfo && this.id in protectedInfo) {
+        const beliefJSON = protectedInfo[this.id as keyof typeof protectedInfo];
+        if (beliefJSON) {
+          const parsedBelief = JSON.parse(beliefJSON.toString());
+          if (Object.entries(parsedBelief).length > 0) {
+            this.beliefs = parsedBelief;
+            beliefsSet = true;
+          }
         }
       }
 

@@ -54,7 +54,7 @@ export const ActionFrameIDs = {
     RETRIEVE_ROLE_PATIENTS: "RetrieveRolePatients",
     RETRIEVE_PATIENT_DETAILS: "RetrievePatientDetails",
     REQUEST_DETAILS_DISPLAY: "RequestDetailsDisplay",
-    APPROVE_PATIENT_REQUEST: "ApprovePatientRequest"
+    APPROVE_PATIENT_ASSIGNMENT: "ApprovePatientAssignment"
   },
   UXSA: {
     RETRIEVE_ROLE: "RetrieveRole",
@@ -63,7 +63,7 @@ export const ActionFrameIDs = {
   },
   NWA: {
     SYNC_PROTECTED_INFO: "SyncProtectedInfo",
-    SYNC_PATIENT_REQUEST: "SyncPatientRequest"
+    SYNC_PATIENT_ASSIGNMENT: "SyncPatientAssignment"
   }
 };
 
@@ -85,7 +85,7 @@ export enum AppAttributes {
   CONFIGURED = "Configured",
   ONLINE = "Online",
   PENDING_PROTECTED_INFO_SYNC = "PendingProtectedInfoSync",
-  PENDING_PATIENT_REQUEST_SYNC = "PendingPatientRequestSync"
+  PENDING_PATIENT_ASSIGNMENT_SYNC = "PendingPatientAssignmentSync"
 }
 
 // Attributes for PROCEDURE key
@@ -127,5 +127,5 @@ export enum AsyncStorageKeys {
   USERNAME = "Username",
   CLINICIAN = "Clinician",
   PATIENTS = "Patients",
-  PATIENT_REQUESTS = "PatientRequests"
+  PATIENT_ASSIGNMENTS = "PatientAssignments"
 }

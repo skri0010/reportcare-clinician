@@ -16,7 +16,7 @@ import {
 } from "../../../../agent_framework/AgentEnums";
 import agentAPI from "../../../../agent_framework/AgentAPI";
 import {
-  listPatientInfos,
+  getPatientInfo,
   updatePatientInfo,
   createClinicianPatientMap
 } from "aws";
@@ -32,11 +32,11 @@ import agentNWA from "agents_implementation/agents/network-assistant/NWA";
 
 /**
  * Class to represent an activity for updating patient's clinician.
- * This happens in Procedure Storing Data (SRD) when a clinician accepts a patient's request.
+ * This happens in Procedure Storing Data (SRD) when a clinician accepts a patient's assignment.
  */
-class ApprovePatientRequest extends Activity {
+class ApprovePatientAssignment extends Activity {
   constructor() {
-    super(ActionFrameIDs.DTA.APPROVE_PATIENT_REQUEST);
+    super(ActionFrameIDs.DTA.APPROVE_PATIENT_ASSIGNMENT);
   }
 
   /**
@@ -76,41 +76,37 @@ class ApprovePatientRequest extends Activity {
             owner: clinicianId
           });
 
-          // Updates patient
-          const query: any = await listPatientInfos({
-            filter: { patientID: { eq: patientId } }
-          });
+          // Update patient
+          const query = await getPatientInfo(patientId);
 
-          if (query.data) {
-            const results = query.data.listPatientInfos?.items;
-            if (results && results.length > 0) {
-              const patient = results.pop();
-              if (patient) {
-                // Updates patient's cardiologist
-                // LS-TODO: Whether to update cardiologist using ClinicianID or name
-                // JH-TODO: Note, we must check the version from the DB. If this version is not
-                //          the latest, then it auto merge might ignore it!
-                const updatePatient = await updatePatientInfo({
-                  id: patient.id,
-                  cardiologist: clinicianId,
-                  _version: patient._version
-                });
+          if (query.data.getPatientInfo) {
+            const patient = query.data.getPatientInfo;
+            if (patient) {
+              // Updates patient's cardiologist
+              // LS-TODO: Whether to update cardiologist using ClinicianID or name
+              // JH-TODO: Note, we must check the version from the DB. If this version is not
+              //          the latest, then it auto merge might ignore it!
+              // JH-TODO: cardiologist attribute seem irrelevant. Needs checking
+              const updatePatient = await updatePatientInfo({
+                id: patient.id,
+                cardiologist: clinicianId,
+                _version: patient._version
+              });
 
-                // Saves patient locally with patientId as key
-                if (updatePatient.data) {
-                  await AsyncStorage.setItem(
-                    patientId,
-                    JSON.stringify(updatePatient.data.updatePatientInfo)
-                  );
-                }
+              // Saves patient locally with patientId as key
+              if (updatePatient.data) {
+                await AsyncStorage.setItem(
+                  patientId,
+                  JSON.stringify(updatePatient.data.updatePatientInfo)
+                );
               }
             }
           }
         }
-        // Device is offline: saves patientId locally with PatientRequest as key
+        // Device is offline: saves patientId locally with PatientAssignments as key
         else {
           const pendingRequests = await AsyncStorage.getItem(
-            AsyncStorageKeys.PATIENT_REQUESTS
+            AsyncStorageKeys.PATIENT_ASSIGNMENTS
           );
           // Other pending requests exist: append current patientId into the list
           if (pendingRequests) {
@@ -120,14 +116,14 @@ class ApprovePatientRequest extends Activity {
             if (!(patientId in pendingPatientIds)) {
               pendingPatientIds.push(patientId);
               await AsyncStorage.setItem(
-                AsyncStorageKeys.PATIENT_REQUESTS,
+                AsyncStorageKeys.PATIENT_ASSIGNMENTS,
                 JSON.stringify(pendingPatientIds)
               );
             }
           } else {
             // No other pending requests: create a new list
             await AsyncStorage.setItem(
-              AsyncStorageKeys.PATIENT_REQUESTS,
+              AsyncStorageKeys.PATIENT_ASSIGNMENTS,
               JSON.stringify([patientId])
             );
           }
@@ -136,7 +132,7 @@ class ApprovePatientRequest extends Activity {
           agentNWA.addBelief(
             new Belief(
               BeliefKeys.APP,
-              AppAttributes.PENDING_PATIENT_REQUEST_SYNC,
+              AppAttributes.PENDING_PATIENT_ASSIGNMENT_SYNC,
               true
             )
           );
@@ -169,7 +165,7 @@ class ApprovePatientRequest extends Activity {
   }
 }
 
-// Preconditions for activating the ApprovePatientRequest class
+// Preconditions for activating the ApprovePatientAssignment class
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
   ProcedureAttributes.SRD,
@@ -181,11 +177,11 @@ const rule2 = new Precondition(
   true
 );
 
-// Action Frame for ApprovePatientRequest class
-const af_ApprovePatientRequest = new Actionframe(
-  `AF_${ActionFrameIDs.DTA.APPROVE_PATIENT_REQUEST}`,
+// Action Frame for ApprovePatientAssignment class
+const af_ApprovePatientAssignment = new Actionframe(
+  `AF_${ActionFrameIDs.DTA.APPROVE_PATIENT_ASSIGNMENT}`,
   [rule1, rule2],
-  new ApprovePatientRequest()
+  new ApprovePatientAssignment()
 );
 
-export default af_ApprovePatientRequest;
+export default af_ApprovePatientAssignment;

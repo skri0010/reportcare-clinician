@@ -69,7 +69,7 @@
     "OnlineNotice": "Sambungan internet dikesan",
     "OfflineNotice": "Tiada sambungan internet.\nSebahagian maklumat mungkin tidak tersedia."
   },
-  "Patient_Requests": {
+  "PATIENT_ASSIGNMENTS": {
     "ApprovalSuccessful": "Kelulusan permintaan pesakit berjaya",
     "ApprovalFailed": "Gagal meluluskan permintaan pesakit",
     "OfflineApproval": "Tiada sambungan internet.\nKelulusan akan disimpan dan disegerakkan semasa sambungan internet dikesan."
