@@ -24,7 +24,7 @@ i18n
     // you can use the i18n.changeLanguage function to change the language manually: https://www.i18next.com/overview/api#changelanguage
     // allow keys to be phrases having `:`, `.`
     nsSeparator: false,
-    keySeparator: false,
+    // keySeparator: false,
     interpolation: {
       escapeValue: false // react already safe from xss
     }

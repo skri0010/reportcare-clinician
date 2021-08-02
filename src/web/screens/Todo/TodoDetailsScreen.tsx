@@ -6,6 +6,7 @@ import { H2, H3, H4, H5 } from "components/Text";
 import { RootState, select } from "util/useRedux";
 import { TodoContext } from "./TodoScreen";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
+import i18n from "util/language/i18n";
 
 interface todoSectionProps {
   mainItem: string;
@@ -55,10 +56,16 @@ export const TodoDetailsScreen: FC<TodoScreenProps> = ({
     <ScreenWrapper>
       <View style={styles.container}>
         {/* Title */}
-        <TodoSection mainItem="Title" content={context.mainTitleContent} />
+        <TodoSection
+          mainItem={i18n.t("Todo.Title")}
+          content={context.mainTitleContent}
+        />
         {/* Patient */}
         <View style={styles.todoPatient}>
-          <TodoSection mainItem="Patient" content={context.patientContent} />
+          <TodoSection
+            mainItem={i18n.t("Todo.Patient")}
+            content={context.patientContent}
+          />
           {/* View patient details button */}
           <TouchableOpacity
             style={[
@@ -72,20 +79,26 @@ export const TodoDetailsScreen: FC<TodoScreenProps> = ({
               null;
             }}
           >
-            <H5 text="View" style={{ color: colors.primaryTextColor }} />
+            <H5
+              text={i18n.t("Todo.ViewButton")}
+              style={{ color: colors.primaryTextColor }}
+            />
           </TouchableOpacity>
         </View>
         {/* Notes */}
         <View style={{ marginTop: ms(10) }}>
-          <TodoSection mainItem="Notes" content={context.notesContent} />
+          <TodoSection
+            mainItem={i18n.t("Todo.Notes")}
+            content={context.notesContent}
+          />
         </View>
         {/* Edit history */}
         <EditHistorySection
-          editType="Created on: "
+          editType={i18n.t("Todo.CreatedOn")}
           timeDate={context.createdTimeDate}
         />
         <EditHistorySection
-          editType="Modified on: "
+          editType={i18n.t("Todo.ModifiedOn")}
           timeDate={context.modifiedTimeDate}
         />
         {/* Edit button */}
@@ -100,7 +113,7 @@ export const TodoDetailsScreen: FC<TodoScreenProps> = ({
             }}
           >
             <H2
-              text="Edit"
+              text={i18n.t("Todo.EditButton")}
               style={{ color: colors.primaryContrastTextColor }}
             />
           </TouchableOpacity>

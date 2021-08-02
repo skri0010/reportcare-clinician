@@ -4,13 +4,13 @@ import { ScaledSheet } from "react-native-size-matters";
 import { RiskFilterTab } from "../RiskFilterTab";
 import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { RowSelectionHeader } from "./RowSelectionHeader";
+import { RootState, select } from "util/useRedux";
 
 interface RowSelectionWrapperProps {
   title: string;
   addButton?: boolean;
   riskFilterTag?: boolean;
   placeholder?: string;
-  //   listComponent: React.ReactNode;
   isTodo?: boolean;
   onPress?: () => void;
 }
@@ -20,11 +20,13 @@ export const RowSelectionWrapper: FC<RowSelectionWrapperProps> = ({
   addButton = false,
   riskFilterTag = false,
   placeholder,
-  children,
-  // listComponent,
   isTodo = false,
   onPress
 }) => {
+  const { colors } = select((state: RootState) => ({
+    colors: state.settings.colors
+  }));
+
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -50,7 +52,9 @@ export const RowSelectionWrapper: FC<RowSelectionWrapperProps> = ({
             onSearchClick={() => {
               null;
             }}
-            containerStyle={{ backgroundColor: "white" }}
+            containerStyle={{
+              backgroundColor: colors.primaryContrastTextColor
+            }}
             placeholder={placeholder}
           />
         </View>
@@ -66,9 +70,6 @@ export const RowSelectionWrapper: FC<RowSelectionWrapperProps> = ({
           />
         </View>
       ) : null}
-
-      {/* Other components to be placed in the left side tab eg list of patients */}
-      <View style={{ flex: 1 }}>{children}</View>
     </View>
   );
 };
@@ -76,20 +77,9 @@ export const RowSelectionWrapper: FC<RowSelectionWrapperProps> = ({
 const styles = ScaledSheet.create({
   container: {
     flexDirection: "column",
-    flex: 1,
     alignContent: "stretch"
   },
   addButtonSize: {
     fontSize: "5@ms"
-  },
-  addButtonColor: {
-    color: "white"
-  },
-  iconStyle: {
-    position: "absolute",
-    right: 2,
-    top: 15,
-    bottom: 15,
-    paddingRight: 10
   }
 });

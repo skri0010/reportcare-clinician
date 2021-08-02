@@ -9,6 +9,7 @@ import {
 import { ScaledSheet, ms } from "react-native-size-matters";
 import { H3 } from "components/Text";
 import { RootState, select } from "util/useRedux";
+import i18n from "util/language/i18n";
 
 interface AddTodoScreenProps {
   setModalVisible: (state: boolean) => void;
@@ -49,10 +50,10 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
         }
       ]}
     >
-      <H3 text="Title" style={styles.inputTitle} />
+      <H3 text={i18n.t("Todo.Title")} style={styles.inputTitle} />
       <TextInput
         value={titleInput}
-        placeholder="What's this todo about?"
+        placeholder={i18n.t("Todo.TitleInputPlaceholder")}
         style={[
           styles.input,
           shortTodoTextInputStyle,
@@ -60,10 +61,10 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
         ]}
         onChangeText={onChangeTitle}
       />
-      <H3 text="Patient" style={styles.inputTitle} />
+      <H3 text={i18n.t("Todo.Patient")} style={styles.inputTitle} />
       <TextInput
         value={patientInput}
-        placeholder="What's the patient's name?"
+        placeholder={i18n.t("Todo.PatientInputPlaceholder")}
         style={[
           styles.input,
           shortTodoTextInputStyle,
@@ -71,11 +72,11 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
         ]}
         onChangeText={onChangePatient}
       />
-      <H3 text="Notes" style={styles.inputTitle} />
+      <H3 text={i18n.t("Todo.Notes")} style={styles.inputTitle} />
       <TextInput
         multiline
         value={noteInput}
-        placeholder="Anything notable?"
+        placeholder={i18n.t("Todo.NotesInputPlaceholder")}
         style={[
           styles.input,
           {
@@ -99,7 +100,10 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
             // Sends API call to save new Todo data
           }}
         >
-          <H3 text="Save" style={{ color: colors.primaryContrastTextColor }} />
+          <H3
+            text={i18n.t("Todo.SaveButton")}
+            style={{ color: colors.primaryContrastTextColor }}
+          />
         </TouchableOpacity>
         <TouchableOpacity
           style={[
@@ -114,7 +118,10 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
             setModalVisible(false);
           }}
         >
-          <H3 text="Cancel" style={{ color: colors.primaryTextColor }} />
+          <H3
+            text={i18n.t("Todo.CancelButton")}
+            style={{ color: colors.primaryTextColor }}
+          />
         </TouchableOpacity>
       </View>
     </View>

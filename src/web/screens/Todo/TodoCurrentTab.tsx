@@ -7,6 +7,7 @@ import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { ITodoDetails } from "models/TodoDetails";
 import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { RootState, select } from "util/useRedux";
+import i18n from "util/language/i18n";
 
 export interface TodoRowTabProps {
   setTodoSelected: (item: ITodoDetails) => void;
@@ -16,10 +17,11 @@ export const TodoCurrentTab: FC<TodoRowTabProps> = ({ setTodoSelected }) => {
   // JH-TODO Replace titles with i18n
   // JH-TODO Remove mock data
 
-  // Function for changing status to completed
+  // JY-TODO Function for changing status to completed
   // function onDonePress(item: ITodoDetails) {
   //   // api call
   // }
+
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
   }));
@@ -38,14 +40,12 @@ export const TodoCurrentTab: FC<TodoRowTabProps> = ({ setTodoSelected }) => {
           null;
         }}
         containerStyle={{ backgroundColor: colors.primaryContrastTextColor }}
-        placeholder="Search current todo"
+        placeholder={i18n.t("Todo.SearchBarCurrentPlaceholder")}
       />
       {/* <MainTitle title="Current Todo" /> */}
       <FlatList
         showsVerticalScrollIndicator={false}
         ItemSeparatorComponent={() => <ItemSeparator />}
-        ListHeaderComponent={() => <ItemSeparator />}
-        ListFooterComponent={() => <ItemSeparator />}
         data={mockCurrentTodoDetails}
         renderItem={({ item }) => (
           <TodoRow

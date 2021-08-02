@@ -23,37 +23,22 @@ export const RiskFilterTag: FC<RiskFilterTagProps> = ({
 
   return (
     <TouchableHighlight
-      style={
-        !selected
-          ? [
-              styles.container,
-              {
-                backgroundColor: getRiskLevelColor(
-                  colors.riskLevelBackgroundColors,
-                  riskLevel
-                ),
-                borderColor: getRiskLevelColor(
-                  colors.riskLevelBorderColors,
-                  riskLevel
-                ),
-                borderWidth: moderateScale(1)
-              }
-            ]
-          : [
-              styles.container,
-              {
-                backgroundColor: getRiskLevelColor(
-                  colors.riskLevelSelectedBackgroundColors,
-                  riskLevel
-                ),
-                borderColor: getRiskLevelColor(
-                  colors.riskLevelBorderColors,
-                  riskLevel
-                ),
-                borderWidth: moderateScale(1.5)
-              }
-            ]
-      }
+      style={[
+        styles.container,
+        {
+          backgroundColor: !selected
+            ? getRiskLevelColor(colors.riskLevelBackgroundColors, riskLevel)
+            : getRiskLevelColor(
+                colors.riskLevelSelectedBackgroundColors,
+                riskLevel
+              ),
+          borderWidth: !selected ? moderateScale(1) : moderateScale(1.5),
+          borderColor: getRiskLevelColor(
+            colors.riskLevelBorderColors,
+            riskLevel
+          )
+        }
+      ]}
       onPress={() => {
         setSelected(!selected);
         onTagPress;
@@ -78,7 +63,6 @@ const styles = ScaledSheet.create({
     height: "20@ms",
     justifyContent: "center",
     borderRadius: "5@ms"
-    // borderWidth: "1@ms"
   },
   textStyle: {
     textAlign: "center"

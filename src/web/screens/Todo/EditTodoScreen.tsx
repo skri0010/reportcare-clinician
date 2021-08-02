@@ -13,6 +13,7 @@ import { H3 } from "components/Text";
 import { RootState, select } from "util/useRedux";
 import { TodoContext } from "./TodoScreen";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
+import i18n from "util/language/i18n";
 
 export const EditTodoScreen: FC<EditTodoScreenProps> = ({
   // route,
@@ -45,7 +46,7 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
   return (
     <ScreenWrapper>
       <View style={styles.container}>
-        <H3 text="Title" style={styles.detailText} />
+        <H3 text={i18n.t("Todo.Title")} style={styles.detailText} />
         <TextInput
           value={titleInput}
           style={[
@@ -58,8 +59,11 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
           ]}
           onChangeText={onChangeTitle}
         />
-        <TodoSection mainItem="Patient" content={context.patientContent} />
-        <H3 text="Notes" style={styles.detailText} />
+        <TodoSection
+          mainItem={i18n.t("Todo.Patient")}
+          content={context.patientContent}
+        />
+        <H3 text={i18n.t("Todo.Notes")} style={styles.detailText} />
         <TextInput
           multiline
           value={noteInput}
@@ -76,11 +80,11 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
         />
 
         <EditHistorySection
-          editType="Created on: "
+          editType={i18n.t("Todo.CreatedOn")}
           timeDate={context.createdTimeDate}
         />
         <EditHistorySection
-          editType="Modified on: "
+          editType={i18n.t("Todo.ModifiedOn")}
           timeDate={context.modifiedTimeDate}
         />
         <View style={styles.buttonContainer}>
@@ -94,7 +98,7 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
             }}
           >
             <H3
-              text="Cancel"
+              text={i18n.t("Todo.CancelButton")}
               style={{ color: colors.primaryContrastTextColor }}
             />
           </TouchableOpacity>
@@ -108,7 +112,7 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
               }
             ]}
             onPress={() => {
-              // Should pass in new item into db
+              // JY/JQ-TODO Make API call to pass new Todo item into db
               // const newDate = new Date().toLocaleString();
               // const newTodo = {
               //   mainTitleContent: titleInput,
@@ -120,7 +124,10 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
               // navigation.navigate("ViewTodo", newTodo);
             }}
           >
-            <H3 text="Save" style={{ color: colors.primaryTextColor }} />
+            <H3
+              text={i18n.t("Todo.SaveButton")}
+              style={{ color: colors.primaryTextColor }}
+            />
           </TouchableOpacity>
         </View>
       </View>

@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React, { FC, useState, createContext } from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { TodoCurrentTab } from "./TodoCurrentTab";
@@ -17,6 +16,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { AddTodoScreen } from "./AddTodoScreen";
 import { NoSelectionScreen } from "../Shared/NoSelectionScreen";
 import { ITodoDetails } from "models/TodoDetails";
+import i18n from "util/language/i18n";
 
 const Tab = createMaterialTopTabNavigator();
 const Stack = createStackNavigator();
@@ -91,36 +91,35 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = () => {
       >
         <View style={styles.rowSelection}>
           <RowSelectionWrapper
-            title="Todo"
+            title={i18n.t("TabTitle.Todo")}
             addButton={addButton}
             onPress={() => {
               setModalVisible(true);
             }}
             isTodo
-          >
-            <Tab.Navigator tabBarOptions={getTopTabBarOptions(colors)}>
-              <Tab.Screen
-                name="Current"
-                listeners={{
-                  tabPress: () => {
-                    setAddButton(checkNeedAddButton("Todo"));
-                  }
-                }}
-              >
-                {() => <TodoCurrentTab setTodoSelected={onRowClick} />}
-              </Tab.Screen>
-              <Tab.Screen
-                name="Completed"
-                listeners={{
-                  tabPress: () => {
-                    setAddButton(checkNeedAddButton("Completed"));
-                  }
-                }}
-              >
-                {() => <TodoCompletedTab setTodoSelected={onRowClick} />}
-              </Tab.Screen>
-            </Tab.Navigator>
-          </RowSelectionWrapper>
+          />
+          <Tab.Navigator tabBarOptions={getTopTabBarOptions(colors)}>
+            <Tab.Screen
+              name={i18n.t("Todo.Current")}
+              listeners={{
+                tabPress: () => {
+                  setAddButton(checkNeedAddButton("Todo"));
+                }
+              }}
+            >
+              {() => <TodoCurrentTab setTodoSelected={onRowClick} />}
+            </Tab.Screen>
+            <Tab.Screen
+              name={i18n.t("Todo.Completed")}
+              listeners={{
+                tabPress: () => {
+                  setAddButton(checkNeedAddButton("Completed"));
+                }
+              }}
+            >
+              {() => <TodoCompletedTab setTodoSelected={onRowClick} />}
+            </Tab.Screen>
+          </Tab.Navigator>
         </View>
         <View
           style={{
@@ -136,7 +135,7 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = () => {
                     name="ViewTodo"
                     component={TodoDetailsScreen}
                     options={() => ({
-                      title: "View Todo",
+                      title: i18n.t("Todo.ViewTodo"),
                       headerStyle: {
                         height: ms(45)
                       },
@@ -151,7 +150,7 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = () => {
                     name="EditTodo"
                     component={EditTodoScreen}
                     options={{
-                      title: "Edit Todo",
+                      title: i18n.t("Todo.EditTodo"),
                       headerStyle: {
                         height: ms(45)
                       },
@@ -167,7 +166,7 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = () => {
           ) : (
             <NoSelectionScreen
               screenName={ScreenName.TODO}
-              subtitle="Select a Todo item to view its details"
+              subtitle={i18n.t("Todo.NoSelection")}
             />
           )}
         </View>

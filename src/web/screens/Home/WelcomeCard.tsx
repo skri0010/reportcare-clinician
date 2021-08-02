@@ -1,9 +1,10 @@
 import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
-import { View, TextStyle, Image } from "react-native";
+import { View, TextStyle, Image, Text } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { H1, H2, H4 } from "components/Text/index";
 import { CardWrapper } from "./CardWrapper";
+import i18n from "util/language/i18n";
 
 interface WelcomeCardProps {
   name: string;
@@ -20,7 +21,10 @@ export const WelcomeCard: FC<WelcomeCardProps> = ({ name }) => {
 
   return (
     <CardWrapper firstItem>
-      <H1 text="Dashboard" style={[styles.username, styles.dashboard]} />
+      <H1
+        text={i18n.t("Home.Dashboard")}
+        style={[styles.username, styles.dashboard]}
+      />
       <View
         style={[
           styles.card,
@@ -29,12 +33,12 @@ export const WelcomeCard: FC<WelcomeCardProps> = ({ name }) => {
       >
         <View>
           <H2
-            text={`Welcome Dr. ${name}`}
+            text={`${i18n.t("Home.Welcome")}${name}`}
             style={[styles.username, cardTextColor]}
           />
           <H4
-            text={`Check on your patients health, ${"\n"}monitor their vitals and chat with ${"\n"}them.`}
             style={[styles.message, cardTextColor]}
+            text={i18n.t("Home.WelcomeMsg")}
           />
         </View>
         <View>

@@ -9,6 +9,7 @@ import { RiskLevel } from "models/RiskLevel";
 import { H4 } from "components/Text/index";
 import { CardWrapper } from "./CardWrapper";
 import { FloatingShowMoreButton } from "components/Buttons/FloatingShowMoreButton";
+import i18n from "util/language/i18n";
 
 interface TodosCardProps {
   maxHeight: number;
@@ -27,7 +28,7 @@ export const TodosCard: FC<TodosCardProps> = ({ maxHeight }) => {
   return (
     <CardWrapper maxHeight={maxHeight}>
       <View style={styles.titleContainer}>
-        <H4 text="Todos" style={[styles.title, titleColor]} />
+        <H4 text={i18n.t("Home.Todos")} style={[styles.title, titleColor]} />
       </View>
       <View style={styles.listContainer}>
         <FlatList

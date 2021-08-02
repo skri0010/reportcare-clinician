@@ -8,6 +8,7 @@ import { PatientRequestRow } from "components/RowComponents/PatientRows/PatientR
 import { H4, H6 } from "components/Text";
 import { CardWrapper } from "./CardWrapper";
 import { FloatingShowMoreButton } from "components/Buttons/FloatingShowMoreButton";
+import i18n from "util/language/i18n";
 
 interface RequestsByMariaCardProps {
   maxHeight: number;
@@ -30,8 +31,14 @@ export const RequestsByMariaCard: FC<RequestsByMariaCardProps> = ({
     <CardWrapper maxHeight={maxHeight}>
       {/* Requests by MARIA */}
       <View style={styles.titleContainer}>
-        <H4 text="Requests by Maria" style={[styles.title, titleColor]} />
-        <H6 text="(2 remaining)" style={[styles.details, detailsColors]} />
+        <H4
+          text={i18n.t("Home.RequestsByMaria")}
+          style={[styles.title, titleColor]}
+        />
+        <H6
+          text={`(2 ${i18n.t("Home.ItemsRemaining")})`}
+          style={[styles.details, detailsColors]}
+        />
       </View>
       {/* Patient Requests List */}
       <View style={styles.patientRequestsContainer}>
