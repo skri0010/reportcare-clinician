@@ -127,5 +127,5 @@ export enum AsyncStorageKeys {
   USERNAME = "Username",
   CLINICIAN = "Clinician",
   PATIENTS = "Patients",
-  PATIENT_ASSIGNMENTS_TO_RESOLVE = "PatientAssignmentsToResolve"
+  PATIENT_ASSIGNMENTS = "PatientAssignments"
 }

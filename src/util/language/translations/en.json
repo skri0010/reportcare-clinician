@@ -69,7 +69,7 @@
     "OnlineNotice": "Internet connection detected",
     "OfflineNotice": "No internet connection detected.\nSome data may not be available."
   },
-  "PATIENT_ASSIGNMENTS": {
+  "Patient_Assignments": {
     "ApprovalSuccessful": "Patient request approval successful",
     "ApprovalFailed": "Failed to approve patient request",
     "OfflineApproval": "No internet connection detected.\nThe approval will be stored and synced when internet connection is detected."

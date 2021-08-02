@@ -37,7 +37,7 @@ import Auth from "@aws-amplify/auth";
  * Class to represent an activity for resolving patient assignment (APPROVE or REASSIGN) .
  * This happens in Procedure Storing Data (SRD) when clinician performs an action to resolve patient assignment.
  */
-class HandlePatientAssignment extends Activity {
+class ResolvePatientAssignment extends Activity {
   constructor() {
     super(ActionFrameIDs.DTA.RESOLVE_PATIENT_ASSIGNMENT);
   }
@@ -73,7 +73,7 @@ class HandlePatientAssignment extends Activity {
         AsyncStorageKeys.CLINICIAN_ID
       );
 
-      if (assignment && clinicianId === assignment.clinicianID) {
+      if (assignment && clinicianId) {
         // Device is online
         if (agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
           // Resolve (APPROVE or REASSIGN based on assignment)
@@ -86,7 +86,7 @@ class HandlePatientAssignment extends Activity {
         else {
           // Append current assignments to resolve to locally stored assignments to resolve
           const localData = await AsyncStorage.getItem(
-            AsyncStorageKeys.PATIENT_ASSIGNMENTS_TO_RESOLVE
+            AsyncStorageKeys.PATIENT_ASSIGNMENTS
           );
           // Key exists in AsyncStorage
           if (localData) {
@@ -100,7 +100,7 @@ class HandlePatientAssignment extends Activity {
             if (!assignmentExists) {
               pendingAssignments.push(assignment);
               await AsyncStorage.setItem(
-                AsyncStorageKeys.PATIENT_ASSIGNMENTS_TO_RESOLVE,
+                AsyncStorageKeys.PATIENT_ASSIGNMENTS,
                 JSON.stringify(pendingAssignments)
               );
             }
@@ -109,7 +109,7 @@ class HandlePatientAssignment extends Activity {
           else {
             // No other pending requests: create a new list
             await AsyncStorage.setItem(
-              AsyncStorageKeys.PATIENT_ASSIGNMENTS_TO_RESOLVE,
+              AsyncStorageKeys.PATIENT_ASSIGNMENTS,
               JSON.stringify([assignment])
             );
           }
@@ -187,19 +187,18 @@ export const resolvePatientAssignment: (params: {
 const approvePatientAssignment: (params: {
   assignment: Assignment;
 }) => Promise<void> = async ({ assignment }) => {
-  const { patientID, clinicianID, _version } = assignment;
   // Insert ClinicianPatientMap, update PatientAssignment status, update access token
   await createClinicianPatientMap({
-    patientID: patientID,
-    clinicianID: clinicianID,
-    owner: clinicianID
+    patientID: assignment.patientID,
+    clinicianID: assignment.clinicianID,
+    owner: assignment.clinicianID
   });
   await updatePatientAssignment({
-    patientID: patientID,
-    clinicianID: clinicianID,
+    patientID: assignment.patientID,
+    clinicianID: assignment.clinicianID,
     pending: null, // Removes it from GSI to ensure it is sparse
     resolution: PatientAssignmentResolution.APPROVED,
-    _version: _version
+    _version: assignment._version
   });
   await Auth.currentAuthenticatedUser({ bypassCache: true }); // pre token generation Lambda is triggered
 };
@@ -242,5 +241,5 @@ const rule2 = new Precondition(
 export const af_ResolvePatientAssignment = new Actionframe(
   `AF_${ActionFrameIDs.DTA.RESOLVE_PATIENT_ASSIGNMENT}`,
   [rule1, rule2],
-  new HandlePatientAssignment()
+  new ResolvePatientAssignment()
 );

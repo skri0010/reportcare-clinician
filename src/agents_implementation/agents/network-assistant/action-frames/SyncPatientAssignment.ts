@@ -50,7 +50,7 @@ class SyncPatientAssignment extends Activity {
     try {
       // Get locally stored list of assignments to resolve
       const assignmentListJSON = await AsyncStorage.getItem(
-        AsyncStorageKeys.PATIENT_ASSIGNMENTS_TO_RESOLVE
+        AsyncStorageKeys.PATIENT_ASSIGNMENTS
       );
 
       // Get locally stored clinicianId
@@ -81,8 +81,8 @@ class SyncPatientAssignment extends Activity {
 
         // Store failed assignments back into local storage
         await AsyncStorage.setItem(
-          JSON.stringify(remainingList),
-          AsyncStorageKeys.PATIENT_ASSIGNMENTS_TO_RESOLVE
+          AsyncStorageKeys.PATIENT_ASSIGNMENTS,
+          JSON.stringify(remainingList)
         );
       }
     } catch (error) {
