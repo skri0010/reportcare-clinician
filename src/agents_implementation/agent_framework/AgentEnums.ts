@@ -64,7 +64,8 @@ export const ActionFrameIDs = {
   },
   NWA: {
     SYNC_PROTECTED_INFO: "SyncProtectedInfo",
-    SYNC_PATIENT_ASSIGNMENT: "SyncPatientAssignment"
+    SYNC_PATIENT_ASSIGNMENT: "SyncPatientAssignment",
+    SYNC_PATIENT_REASSIGNMENT: "SyncPatientReassignment"
   }
 };
 
@@ -117,10 +118,10 @@ export enum PatientAttributes {
   DETAILS_RETRIEVED = "DetailsRetrieved",
   VIEW_DETAILS = "ViewDetails",
   DETAILS = "Details",
-  APPROVE_ASSIGNMENT = "ApproveAssignment",
-  ASSIGNMENT_UPDATED = "AssignmentUpdated",
-  REASSIGN_CLINICIAN = "ReassignClinician",
-  REASSIGNMENT_UPDATED = "ReassignmentUpdated",
+  APPROVE_PATIENT_ASSIGNMENT = "ApprovePatientAssignment",
+  REASSIGN_PATIENT_ASSIGNMENT = "ReassignPatientAssignment",
+  PENDING_APPROVE_PATIENT_ASSIGNMENT = "PendingApprovePatientAssignment",
+  PENDING_REASSIGN_PATIENT_ASSIGNMENT = "PendingReassignPatientAssignment",
   UPDATE_SUCCESSFUL = "UpdateSuccessful"
 }
 

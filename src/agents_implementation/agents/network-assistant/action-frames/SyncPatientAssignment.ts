@@ -11,10 +11,8 @@ import {
   BeliefKeys,
   CommonAttributes
 } from "agents_implementation/agent_framework/AgentEnums";
-import { listPatientInfos } from "aws/TypedAPI/listQueries";
-import { updatePatientInfo } from "aws/TypedAPI/updateMutations";
-import { createClinicianPatientMap } from "aws/TypedAPI/createMutations";
-import { PatientInfo } from "aws/API";
+import { approve } from "agents_implementation/agents/data-assistant/action-frames/storing-data/ApprovePatientAssignment";
+import { AssignmentParams } from "aws";
 
 // LS-TODO: To be tested once ApprovePatientAssignment is working
 
@@ -36,11 +34,8 @@ class SyncPatientAssignment extends Activity {
   async doActivity(agent: Agent): Promise<void> {
     super.doActivity(agent);
 
-    agent.addBelief(
-      new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
-    );
-
-    // Prevents the activity from being executed multiple times while assignments are being synced
+    // Update Beliefs
+    // Prevent the activity from being executed multiple times while assignments are being synced
     agent.addBelief(
       new Belief(
         BeliefKeys.APP,
@@ -48,59 +43,32 @@ class SyncPatientAssignment extends Activity {
         false
       )
     );
+    agent.addBelief(
+      new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
+    );
 
     try {
-      // Gets patientIds for locally approved patient assignments
-      const patientIdsStr = await AsyncStorage.getItem(
+      // Get locally stored list of assignments
+      const assignmentListJSON = await AsyncStorage.getItem(
         AsyncStorageKeys.PATIENT_ASSIGNMENTS
       );
 
-      // Gets locally stored clinicianId
+      // Get locally stored clinicianId
       const clinicianId = await AsyncStorage.getItem(
         AsyncStorageKeys.CLINICIAN_ID
       );
 
-      if (patientIdsStr && clinicianId) {
-        const patientIds: string[] = JSON.parse(patientIdsStr);
+      if (assignmentListJSON && clinicianId) {
+        const assignmentList: AssignmentParams[] =
+          JSON.parse(assignmentListJSON);
 
-        patientIds.forEach(async (patientId) => {
-          // Inserts into ClinicianPatientMap
-          await createClinicianPatientMap({
-            clinicianID: clinicianId,
-            patientID: patientId,
-            owner: clinicianId
-          });
-
-          // Updates patients
-          const query: any = await listPatientInfos({
-            filter: { patientID: { eq: patientId } }
-          });
-          if (query.data) {
-            const results = query.data.listPatientInfos?.items;
-            if (results && results.length > 0) {
-              const patient: PatientInfo = results.pop();
-              if (patient) {
-                // Updates patient's cardiologist
-                const updatePatient = await updatePatientInfo({
-                  patientID: patient.id!,
-                  cardiologist: clinicianId,
-                  _version: patient._version
-                });
-
-                // Saves patient locally with patientId as key
-                if (updatePatient.data) {
-                  await AsyncStorage.setItem(
-                    patientId,
-                    JSON.stringify(updatePatient.data.updatePatientInfo)
-                  );
-                }
-              }
-            }
+        assignmentList.forEach(async (assignment) => {
+          if (assignment.clinicianID === clinicianId) {
+            // Approve and remove pending patient assignments from local storage
+            await approve(assignment);
+            await AsyncStorage.removeItem(AsyncStorageKeys.PATIENT_ASSIGNMENTS);
           }
         });
-
-        // Removes pending patient assignments from local storage
-        await AsyncStorage.removeItem(AsyncStorageKeys.PATIENT_ASSIGNMENTS);
       }
     } catch (error) {
       // eslint-disable-next-line no-console

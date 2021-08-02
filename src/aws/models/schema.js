@@ -1191,11 +1191,18 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "status": {
-                    "name": "status",
+                "pending": {
+                    "name": "pending",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": true,
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "resolution": {
+                    "name": "resolution",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
                     "attributes": []
                 }
             },
@@ -1218,12 +1225,12 @@ export const schema = {
                 {
                     "type": "key",
                     "properties": {
-                        "name": "patientAssignmentByStatus",
+                        "name": "patientAssignmentByPending",
                         "fields": [
                             "clinicianID",
-                            "status"
+                            "pending"
                         ],
-                        "queryField": "listPatientAssignmentByStatus"
+                        "queryField": "listPatientAssignmentBy"
                     }
                 },
                 {
@@ -1592,5 +1599,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "f0dda3a0c48bfe0dda7aad1db23dd85f"
+    "version": "55a395414cb80751c045cc5e3fdb577d"
 };

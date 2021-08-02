@@ -16,10 +16,10 @@ import {
 } from "agents_implementation/agent_framework/AgentEnums";
 import agentAPI from "agents_implementation/agent_framework/AgentAPI";
 import {
-  PatientAssignmentStatus,
+  PatientAssignmentResolution,
   createPatientAssignment,
   updatePatientAssignment,
-  Reassignment
+  AssignmentParams
 } from "aws";
 import { store } from "ic-redux/store";
 import { setProcedureSuccessful } from "ic-redux/actions/agents/actionCreator";
@@ -51,8 +51,8 @@ class ReassignPatientAssignment extends Activity {
     agent.addBelief(
       new Belief(
         BeliefKeys.PATIENT,
-        PatientAttributes.REASSIGNMENT_UPDATED,
-        true
+        PatientAttributes.PENDING_REASSIGN_PATIENT_ASSIGNMENT,
+        false
       )
     );
     agent.addBelief(
@@ -61,9 +61,9 @@ class ReassignPatientAssignment extends Activity {
 
     try {
       // Get reassignment data
-      const reassignment: Reassignment =
+      const reassignment: AssignmentParams =
         agentAPI.getFacts()[BeliefKeys.PATIENT]?.[
-          PatientAttributes.REASSIGN_CLINICIAN
+          PatientAttributes.REASSIGN_PATIENT_ASSIGNMENT
         ];
 
       // Get locally stored clinicianId
@@ -73,22 +73,15 @@ class ReassignPatientAssignment extends Activity {
 
       if (
         reassignment &&
-        reassignment.patientID &&
-        reassignment.clinicianID &&
-        clinicianId
+        clinicianId &&
+        reassignment.clinicianID !== clinicianId
       ) {
         // Device is online
         if (agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
-          // Insert PatientAssignment for another clinician and update PatientAssignment status
-          await createPatientAssignment({
-            patientID: reassignment.patientID,
-            clinicianID: reassignment.clinicianID,
-            status: PatientAssignmentStatus.PENDING
-          });
-          await updatePatientAssignment({
-            patientID: reassignment.patientID,
-            clinicianID: clinicianId,
-            status: PatientAssignmentStatus.REASSIGNED
+          // Reassign
+          await reassign({
+            reassignment: reassignment,
+            ownClinicianId: clinicianId
           });
         }
         // Device is offline: Save locally in PatientReassignments
@@ -100,7 +93,8 @@ class ReassignPatientAssignment extends Activity {
           // Key exists in AsyncStorage
           if (localData) {
             // Insert and store if this reassignment does not exist (ie same patientID)
-            const pendingReassignments: Reassignment[] = JSON.parse(localData);
+            const pendingReassignments: AssignmentParams[] =
+              JSON.parse(localData);
             const reassignmentExists = pendingReassignments.find(
               (storedReassignment) =>
                 storedReassignment.patientID === reassignment.patientID
@@ -142,11 +136,11 @@ class ReassignPatientAssignment extends Activity {
     }
 
     // Update Facts
-    // Remove reassignment from facts
+    // Remove AssignmentParams from facts
     agentAPI.addFact(
       new Belief(
         BeliefKeys.PATIENT,
-        PatientAttributes.REASSIGN_CLINICIAN,
+        PatientAttributes.REASSIGN_PATIENT_ASSIGNMENT,
         null
       ),
       false
@@ -164,6 +158,28 @@ class ReassignPatientAssignment extends Activity {
   }
 }
 
+/**
+ * Reassign API calls for online device
+ */
+const reassign: (params: {
+  reassignment: AssignmentParams;
+  ownClinicianId: string;
+}) => Promise<void> = async ({ reassignment, ownClinicianId }) => {
+  // Insert PatientAssignment for another clinician and update PatientAssignment status
+  await createPatientAssignment({
+    patientID: reassignment.patientID,
+    clinicianID: reassignment.clinicianID,
+    pending: PatientAssignmentResolution.PENDING
+  });
+  await updatePatientAssignment({
+    patientID: reassignment.patientID,
+    clinicianID: ownClinicianId,
+    pending: null, // Removes it from GSI to ensure it is sparse
+    resolution: PatientAssignmentResolution.REASSIGNED,
+    _version: reassignment._version
+  });
+};
+
 // Preconditions for activating the ReassignPatientAssignment class
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
@@ -172,8 +188,8 @@ const rule1 = new Precondition(
 );
 const rule2 = new Precondition(
   BeliefKeys.PATIENT,
-  PatientAttributes.REASSIGNMENT_UPDATED,
-  false
+  PatientAttributes.PENDING_REASSIGN_PATIENT_ASSIGNMENT,
+  true
 );
 
 // Action Frame for ApprovePatientAssignment class

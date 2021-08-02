@@ -16,11 +16,10 @@ import {
 } from "agents_implementation/agent_framework/AgentEnums";
 import agentAPI from "agents_implementation/agent_framework/AgentAPI";
 import {
-  PatientAssignmentStatus,
-  getPatientInfo,
+  PatientAssignmentResolution,
   createClinicianPatientMap,
-  updatePatientInfo,
-  updatePatientAssignment
+  updatePatientAssignment,
+  AssignmentParams
 } from "aws";
 import { store } from "ic-redux/store";
 import { setProcedureSuccessful } from "ic-redux/actions/agents/actionCreator";
@@ -51,85 +50,55 @@ class ApprovePatientAssignment extends Activity {
 
     // Update Beliefs
     agent.addBelief(
-      new Belief(BeliefKeys.PATIENT, PatientAttributes.ASSIGNMENT_UPDATED, true)
+      new Belief(
+        BeliefKeys.PATIENT,
+        PatientAttributes.PENDING_APPROVE_PATIENT_ASSIGNMENT,
+        false
+      )
     );
     agent.addBelief(
       new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
     );
 
     try {
-      // Gets patientId to be updated
-      const patientId =
+      // Get assignment
+      const assignment: AssignmentParams =
         agentAPI.getFacts()[BeliefKeys.PATIENT]?.[
-          PatientAttributes.APPROVE_ASSIGNMENT
+          PatientAttributes.APPROVE_PATIENT_ASSIGNMENT
         ];
 
-      // Gets locally stored clinicianId
+      // Get locally stored clinicianId
       const clinicianId = await AsyncStorage.getItem(
         AsyncStorageKeys.CLINICIAN_ID
       );
 
-      if (patientId && clinicianId) {
+      if (assignment && clinicianId === assignment.clinicianID) {
         // Device is online
         if (agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
-          // Insert ClinicianPatientMap, update PatientAssignment status, update access token
-          await createClinicianPatientMap({
-            clinicianID: clinicianId,
-            patientID: patientId,
-            owner: clinicianId
-          });
-          await updatePatientAssignment({
-            patientID: patientId,
-            clinicianID: clinicianId,
-            status: PatientAssignmentStatus.APPROVED
-          });
-          await Auth.currentAuthenticatedUser({ bypassCache: true }); // pre token generation Lambda is triggered
-
-          // JH-TODO: May need to remove.
-          // Update patient
-          const query = await getPatientInfo(patientId);
-
-          // JH-TODO: cardiologist attribute seem irrelevant. Needs checking
-          if (query.data.getPatientInfo) {
-            const patient = query.data.getPatientInfo;
-            if (patient) {
-              // Updates patient's cardiologist
-              // LS-TODO: Whether to update cardiologist using ClinicianID or name
-              // JH-TODO: Note, we must check the version from the DB. If this version is not
-              //          the latest, then it auto merge might ignore it!
-
-              const updatePatient = await updatePatientInfo({
-                patientID: patient.id,
-                cardiologist: clinicianId,
-                _version: patient._version
-              });
-
-              // Save patient locally with patientId as key
-              if (updatePatient.data) {
-                await AsyncStorage.setItem(
-                  patientId,
-                  JSON.stringify(updatePatient.data.updatePatientInfo)
-                );
-              }
-            }
-          }
+          // Approve
+          await approve(assignment);
         }
         // Device is offline: Save locally in PatientAssignments
         else {
-          // Append current patientID into list of other pending assignments
-          const pendingAssignments = await AsyncStorage.getItem(
+          // Append current reassignment into list of other pending reassignments
+          const localData = await AsyncStorage.getItem(
             AsyncStorageKeys.PATIENT_ASSIGNMENTS
           );
           // Key exists in AsyncStorage
-          if (pendingAssignments) {
-            const pendingPatientIds: string[] = JSON.parse(pendingAssignments);
+          if (localData) {
+            // Insert and store if this assignment does not exist (ie same patientID)
+            const pendingAssignments: AssignmentParams[] =
+              JSON.parse(localData);
+            const assignmentExists = pendingAssignments.find(
+              (storedAssignment) =>
+                storedAssignment.patientID === assignment.patientID
+            );
 
-            // Checks if patientId already exists in the list
-            if (!(patientId in pendingPatientIds)) {
-              pendingPatientIds.push(patientId);
+            if (!assignmentExists) {
+              pendingAssignments.push(assignment);
               await AsyncStorage.setItem(
                 AsyncStorageKeys.PATIENT_ASSIGNMENTS,
-                JSON.stringify(pendingPatientIds)
+                JSON.stringify(pendingAssignments)
               );
             }
           }
@@ -138,7 +107,7 @@ class ApprovePatientAssignment extends Activity {
             // No other pending requests: create a new list
             await AsyncStorage.setItem(
               AsyncStorageKeys.PATIENT_ASSIGNMENTS,
-              JSON.stringify([patientId])
+              JSON.stringify([assignment])
             );
           }
 
@@ -161,11 +130,11 @@ class ApprovePatientAssignment extends Activity {
     }
 
     // Update Facts
-    // Remove patientId to be updated from facts
+    // Remove AssignParams from facts
     agentAPI.addFact(
       new Belief(
         BeliefKeys.PATIENT,
-        PatientAttributes.APPROVE_ASSIGNMENT,
+        PatientAttributes.APPROVE_PATIENT_ASSIGNMENT,
         null
       ),
       false
@@ -183,6 +152,31 @@ class ApprovePatientAssignment extends Activity {
   }
 }
 
+/**
+ * Approve API calls for online device
+ */
+export const approve: (params: AssignmentParams) => Promise<void> = async ({
+  patientID,
+  clinicianID,
+  _version
+}) => {
+  // Query to get _version and ensure
+  // Insert ClinicianPatientMap, update PatientAssignment status, update access token
+  await createClinicianPatientMap({
+    patientID: patientID,
+    clinicianID: clinicianID,
+    owner: clinicianID
+  });
+  await updatePatientAssignment({
+    patientID: patientID,
+    clinicianID: clinicianID,
+    pending: null, // Removes it from GSI to ensure it is sparse
+    resolution: PatientAssignmentResolution.APPROVED,
+    _version: _version
+  });
+  await Auth.currentAuthenticatedUser({ bypassCache: true }); // pre token generation Lambda is triggered
+};
+
 // Preconditions for activating the ApprovePatientAssignment class
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
@@ -191,8 +185,8 @@ const rule1 = new Precondition(
 );
 const rule2 = new Precondition(
   BeliefKeys.PATIENT,
-  PatientAttributes.ASSIGNMENT_UPDATED,
-  false
+  PatientAttributes.PENDING_APPROVE_PATIENT_ASSIGNMENT,
+  true
 );
 
 // Action Frame for ApprovePatientAssignment class

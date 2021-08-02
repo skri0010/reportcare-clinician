@@ -815,7 +815,8 @@ export const syncPatientAssignments = /* GraphQL */ `
         id
         patientID
         clinicianID
-        status
+        pending
+        resolution
         _version
         _deleted
         _lastChangedAt
@@ -834,7 +835,8 @@ export const getPatientAssignment = /* GraphQL */ `
       id
       patientID
       clinicianID
-      status
+      pending
+      resolution
       _version
       _deleted
       _lastChangedAt
@@ -865,7 +867,8 @@ export const listPatientAssignments = /* GraphQL */ `
         id
         patientID
         clinicianID
-        status
+        pending
+        resolution
         _version
         _deleted
         _lastChangedAt
@@ -1399,18 +1402,18 @@ export const clinicianIDsByPatientID = /* GraphQL */ `
     }
   }
 `;
-export const listPatientAssignmentByStatus = /* GraphQL */ `
-  query ListPatientAssignmentByStatus(
+export const listPatientAssignmentBy = /* GraphQL */ `
+  query ListPatientAssignmentBy(
     $clinicianID: String
-    $status: ModelStringKeyConditionInput
+    $pending: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
     $filter: ModelPatientAssignmentFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listPatientAssignmentByStatus(
+    listPatientAssignmentBy(
       clinicianID: $clinicianID
-      status: $status
+      pending: $pending
       sortDirection: $sortDirection
       filter: $filter
       limit: $limit
@@ -1420,7 +1423,8 @@ export const listPatientAssignmentByStatus = /* GraphQL */ `
         id
         patientID
         clinicianID
-        status
+        pending
+        resolution
         _version
         _deleted
         _lastChangedAt

@@ -770,7 +770,8 @@ export const createPatientAssignment = /* GraphQL */ `
       id
       patientID
       clinicianID
-      status
+      pending
+      resolution
       _version
       _deleted
       _lastChangedAt
@@ -789,7 +790,8 @@ export const updatePatientAssignment = /* GraphQL */ `
       id
       patientID
       clinicianID
-      status
+      pending
+      resolution
       _version
       _deleted
       _lastChangedAt
@@ -808,7 +810,8 @@ export const deletePatientAssignment = /* GraphQL */ `
       id
       patientID
       clinicianID
-      status
+      pending
+      resolution
       _version
       _deleted
       _lastChangedAt

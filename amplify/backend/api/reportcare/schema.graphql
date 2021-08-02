@@ -302,14 +302,15 @@ type PatientAssignment
   )
   @key(fields: ["patientID", "clinicianID"])
   @key(
-    name: "patientAssignmentByStatus"
-    fields: ["clinicianID", "status"]
-    queryField: "listPatientAssignmentByStatus"
+    name: "patientAssignmentByPending"
+    fields: ["clinicianID", "pending"]
+    queryField: "listPatientAssignmentBy"
   ) {
   id: ID!
   patientID: String!
   clinicianID: String!
-  status: String!
+  pending: String
+  resolution: String
 }
 
 """

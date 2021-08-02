@@ -16,13 +16,14 @@ export interface BaseResponse {
   error: ErrorsArray;
 }
 
-export enum PatientAssignmentStatus {
+export enum PatientAssignmentResolution {
   PENDING = "PENDING",
   APPROVED = "APPROVED",
   REASSIGNED = "REASSIGNED"
 }
 
-export interface Reassignment {
+export interface AssignmentParams {
   patientID: string;
   clinicianID: string;
+  _version: number;
 }
