@@ -54,8 +54,7 @@ export const ActionFrameIDs = {
     RETRIEVE_ROLE_PATIENTS: "RetrieveRolePatients",
     RETRIEVE_PATIENT_DETAILS: "RetrievePatientDetails",
     REQUEST_DETAILS_DISPLAY: "RequestDetailsDisplay",
-    APPROVE_PATIENT_ASSIGNMENT: "ApprovePatientAssignment",
-    REASSIGN_PATIENT_ASSIGNMENT: "ReassignPatientAssignment"
+    RESOLVE_PATIENT_ASSIGNMENT: "ResolvePatientAssignment"
   },
   UXSA: {
     RETRIEVE_ROLE: "RetrieveRole",
@@ -64,8 +63,7 @@ export const ActionFrameIDs = {
   },
   NWA: {
     SYNC_PROTECTED_INFO: "SyncProtectedInfo",
-    SYNC_PATIENT_ASSIGNMENT: "SyncPatientAssignment",
-    SYNC_PATIENT_REASSIGNMENT: "SyncPatientReassignment"
+    SYNC_PATIENT_ASSIGNMENT: "SyncPatientAssignment"
   }
 };
 
@@ -87,8 +85,7 @@ export enum AppAttributes {
   CONFIGURED = "Configured",
   ONLINE = "Online",
   PENDING_PROTECTED_INFO_SYNC = "PendingProtectedInfoSync",
-  PENDING_PATIENT_ASSIGNMENT_SYNC = "PendingPatientAssignmentSync",
-  PENDING_PATIENT_REASSIGNMENT_SYNC = "PendingPatientReassignmentSync"
+  PENDING_PATIENT_ASSIGNMENT = "PendingPatientAssignmentSync"
 }
 
 // Attributes for PROCEDURE key
@@ -118,10 +115,8 @@ export enum PatientAttributes {
   DETAILS_RETRIEVED = "DetailsRetrieved",
   VIEW_DETAILS = "ViewDetails",
   DETAILS = "Details",
-  APPROVE_PATIENT_ASSIGNMENT = "ApprovePatientAssignment",
-  REASSIGN_PATIENT_ASSIGNMENT = "ReassignPatientAssignment",
-  PENDING_APPROVE_PATIENT_ASSIGNMENT = "PendingApprovePatientAssignment",
-  PENDING_REASSIGN_PATIENT_ASSIGNMENT = "PendingReassignPatientAssignment",
+  RESOLVE_PATIENT_ASSIGNMENT = "ResolvePatientAssignment",
+  PENDING_RESOLVE_PATIENT_ASSIGNMENT = "PendingResolvePatientAssignment",
   UPDATE_SUCCESSFUL = "UpdateSuccessful"
 }
 
@@ -132,6 +127,5 @@ export enum AsyncStorageKeys {
   USERNAME = "Username",
   CLINICIAN = "Clinician",
   PATIENTS = "Patients",
-  PATIENT_ASSIGNMENTS = "PatientAssignments",
-  PATIENT_REASSIGNMENTS = "PatientReassignments"
+  PATIENT_ASSIGNMENT_RESOLUTIONS = "PatientAssignmentResolutions"
 }

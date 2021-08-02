@@ -17,27 +17,29 @@ import {
 import agentAPI from "agents_implementation/agent_framework/AgentAPI";
 import {
   PatientAssignmentResolution,
+  createClinicianPatientMap,
   createPatientAssignment,
   updatePatientAssignment,
-  AssignmentParams
+  AssignmentToResolve
 } from "aws";
 import { store } from "ic-redux/store";
 import { setProcedureSuccessful } from "ic-redux/actions/agents/actionCreator";
 import agentNWA from "agents_implementation/agents/network-assistant/NWA";
+import Auth from "@aws-amplify/auth";
 
 /**
- * JH-TODO: To be updated
+ * LS-TODO: JH-TODO: To be updated
  * Currently unable to get PatientInfo of the new patient
  * Add front end trigger to start this activity
  */
 
 /**
- * Class to represent an activity for reassigning a patient's clinician.
- * This happens in Procedure Storing Data (SRD) when a clinician reassigns a patient's assignment.
+ * Class to represent an activity for resolving patient assignment (APPROVE or REASSIGN) .
+ * This happens in Procedure Storing Data (SRD) when clinician performs an action to resolve patient assignment.
  */
-class ReassignPatientAssignment extends Activity {
+class HandlePatientAssignment extends Activity {
   constructor() {
-    super(ActionFrameIDs.DTA.REASSIGN_PATIENT_ASSIGNMENT);
+    super(ActionFrameIDs.DTA.RESOLVE_PATIENT_ASSIGNMENT);
   }
 
   /**
@@ -51,7 +53,7 @@ class ReassignPatientAssignment extends Activity {
     agent.addBelief(
       new Belief(
         BeliefKeys.PATIENT,
-        PatientAttributes.PENDING_REASSIGN_PATIENT_ASSIGNMENT,
+        PatientAttributes.PENDING_RESOLVE_PATIENT_ASSIGNMENT,
         false
       )
     );
@@ -60,10 +62,10 @@ class ReassignPatientAssignment extends Activity {
     );
 
     try {
-      // Get reassignment data
-      const reassignment: AssignmentParams =
+      // Get assignment
+      const assignment: AssignmentToResolve =
         agentAPI.getFacts()[BeliefKeys.PATIENT]?.[
-          PatientAttributes.REASSIGN_PATIENT_ASSIGNMENT
+          PatientAttributes.RESOLVE_PATIENT_ASSIGNMENT
         ];
 
       // Get locally stored clinicianId
@@ -71,49 +73,57 @@ class ReassignPatientAssignment extends Activity {
         AsyncStorageKeys.CLINICIAN_ID
       );
 
-      if (
-        reassignment &&
-        clinicianId &&
-        reassignment.clinicianID !== clinicianId
-      ) {
+      if (assignment && clinicianId === assignment.clinicianID) {
         // Device is online
         if (agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
-          // Reassign
-          await reassign({
-            reassignment: reassignment,
-            ownClinicianId: clinicianId
-          });
+          // Approve patient to self
+          if (
+            assignment.resolution === PatientAssignmentResolution.APPROVED &&
+            assignment.clinicianID === clinicianId
+          ) {
+            await approve(assignment);
+          }
+          // Reassign patient to another clinician
+          else if (
+            assignment.resolution === PatientAssignmentResolution.REASSIGNED &&
+            assignment.clinicianID !== clinicianId
+          ) {
+            await reassign({
+              reassignment: assignment,
+              ownClinicianId: clinicianId
+            });
+          }
         }
-        // Device is offline: Save locally in PatientReassignments
+        // Device is offline: Save locally in PatientAssignmentResolutions
         else {
-          // Append current reassignment into list of other pending reassignments
+          // Append current assignments to locally stored assignments
           const localData = await AsyncStorage.getItem(
-            AsyncStorageKeys.PATIENT_REASSIGNMENTS
+            AsyncStorageKeys.PATIENT_ASSIGNMENT_RESOLUTIONS
           );
           // Key exists in AsyncStorage
           if (localData) {
-            // Insert and store if this reassignment does not exist (ie same patientID)
-            const pendingReassignments: AssignmentParams[] =
+            // Insert and store if this assignment does not exist (ie new patientID)
+            const pendingAssignments: AssignmentToResolve[] =
               JSON.parse(localData);
-            const reassignmentExists = pendingReassignments.find(
-              (storedReassignment) =>
-                storedReassignment.patientID === reassignment.patientID
+            const assignmentExists = pendingAssignments.find(
+              (storedAssignment) =>
+                storedAssignment.patientID === assignment.patientID
             );
 
-            if (!reassignmentExists) {
-              pendingReassignments.push(reassignment);
+            if (!assignmentExists) {
+              pendingAssignments.push(assignment);
               await AsyncStorage.setItem(
-                AsyncStorageKeys.PATIENT_REASSIGNMENTS,
-                JSON.stringify(pendingReassignments)
+                AsyncStorageKeys.PATIENT_ASSIGNMENT_RESOLUTIONS,
+                JSON.stringify(pendingAssignments)
               );
             }
           }
           // Key does not exist in AsyncStorage
           else {
-            // Insert this new reassignment
+            // No other pending requests: create a new list
             await AsyncStorage.setItem(
-              AsyncStorageKeys.PATIENT_REASSIGNMENTS,
-              JSON.stringify([reassignment])
+              AsyncStorageKeys.PATIENT_ASSIGNMENT_RESOLUTIONS,
+              JSON.stringify([assignment])
             );
           }
 
@@ -121,7 +131,7 @@ class ReassignPatientAssignment extends Activity {
           agentNWA.addBelief(
             new Belief(
               BeliefKeys.APP,
-              AppAttributes.PENDING_PATIENT_REASSIGNMENT_SYNC,
+              AppAttributes.PENDING_PATIENT_ASSIGNMENT,
               true
             )
           );
@@ -136,11 +146,11 @@ class ReassignPatientAssignment extends Activity {
     }
 
     // Update Facts
-    // Remove AssignmentParams from facts
+    // Remove assignment from facts
     agentAPI.addFact(
       new Belief(
         BeliefKeys.PATIENT,
-        PatientAttributes.REASSIGN_PATIENT_ASSIGNMENT,
+        PatientAttributes.RESOLVE_PATIENT_ASSIGNMENT,
         null
       ),
       false
@@ -159,10 +169,34 @@ class ReassignPatientAssignment extends Activity {
 }
 
 /**
+ * Approve API calls for online device
+ */
+export const approve: (params: AssignmentToResolve) => Promise<void> = async ({
+  patientID,
+  clinicianID,
+  _version
+}) => {
+  // Insert ClinicianPatientMap, update PatientAssignment status, update access token
+  await createClinicianPatientMap({
+    patientID: patientID,
+    clinicianID: clinicianID,
+    owner: clinicianID
+  });
+  await updatePatientAssignment({
+    patientID: patientID,
+    clinicianID: clinicianID,
+    pending: null, // Removes it from GSI to ensure it is sparse
+    resolution: PatientAssignmentResolution.APPROVED,
+    _version: _version
+  });
+  await Auth.currentAuthenticatedUser({ bypassCache: true }); // pre token generation Lambda is triggered
+};
+
+/**
  * Reassign API calls for online device
  */
 const reassign: (params: {
-  reassignment: AssignmentParams;
+  reassignment: AssignmentToResolve;
   ownClinicianId: string;
 }) => Promise<void> = async ({ reassignment, ownClinicianId }) => {
   // Insert PatientAssignment for another clinician and update PatientAssignment status
@@ -180,7 +214,7 @@ const reassign: (params: {
   });
 };
 
-// Preconditions for activating the ReassignPatientAssignment class
+// Preconditions for activating the ApprovePatientAssignment class
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
   ProcedureAttributes.SRD,
@@ -188,15 +222,13 @@ const rule1 = new Precondition(
 );
 const rule2 = new Precondition(
   BeliefKeys.PATIENT,
-  PatientAttributes.PENDING_REASSIGN_PATIENT_ASSIGNMENT,
+  PatientAttributes.PENDING_RESOLVE_PATIENT_ASSIGNMENT,
   true
 );
 
 // Action Frame for ApprovePatientAssignment class
-const af_ReassignPatientAssignment = new Actionframe(
-  `AF_${ActionFrameIDs.DTA.REASSIGN_PATIENT_ASSIGNMENT}`,
+export const af_ResolvePatientAssignment = new Actionframe(
+  `AF_${ActionFrameIDs.DTA.RESOLVE_PATIENT_ASSIGNMENT}`,
   [rule1, rule2],
-  new ReassignPatientAssignment()
+  new HandlePatientAssignment()
 );
-
-export default af_ReassignPatientAssignment;

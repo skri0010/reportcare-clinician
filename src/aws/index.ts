@@ -22,8 +22,9 @@ export enum PatientAssignmentResolution {
   REASSIGNED = "REASSIGNED"
 }
 
-export interface AssignmentParams {
+export interface AssignmentToResolve {
   patientID: string;
   clinicianID: string;
+  resolution: PatientAssignmentResolution;
   _version: number;
 }
