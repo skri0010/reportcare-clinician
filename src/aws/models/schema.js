@@ -1167,6 +1167,115 @@ export const schema = {
                 }
             ]
         },
+        "PatientAssignment": {
+            "name": "PatientAssignment",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "patientID": {
+                    "name": "patientID",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "clinicianID": {
+                    "name": "clinicianID",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "pending": {
+                    "name": "pending",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "resolution": {
+                    "name": "resolution",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                }
+            },
+            "syncable": true,
+            "pluralName": "PatientAssignments",
+            "attributes": [
+                {
+                    "type": "model",
+                    "properties": {}
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "fields": [
+                            "patientID",
+                            "clinicianID"
+                        ]
+                    }
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "patientAssignmentByPending",
+                        "fields": [
+                            "clinicianID",
+                            "pending"
+                        ],
+                        "queryField": "listPatientAssignmentBy"
+                    }
+                },
+                {
+                    "type": "auth",
+                    "properties": {
+                        "rules": [
+                            {
+                                "provider": "userPools",
+                                "ownerField": "owner",
+                                "allow": "owner",
+                                "operations": [
+                                    "create",
+                                    "read"
+                                ],
+                                "identityClaim": "cognito:username"
+                            },
+                            {
+                                "provider": "userPools",
+                                "ownerField": "clinicianID",
+                                "allow": "owner",
+                                "operations": [
+                                    "read",
+                                    "update"
+                                ],
+                                "identityClaim": "cognito:username"
+                            },
+                            {
+                                "groupClaim": "cognito:groups",
+                                "provider": "userPools",
+                                "allow": "groups",
+                                "groups": [
+                                    "Admin"
+                                ],
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
         "Alert": {
             "name": "Alert",
             "fields": {
@@ -1193,6 +1302,13 @@ export const schema = {
                 },
                 "summary": {
                     "name": "summary",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "colorCode": {
+                    "name": "colorCode",
                     "isArray": false,
                     "type": "String",
                     "isRequired": true,
@@ -1490,5 +1606,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "17c34895eb568a0c95540413e6f200b1"
+    "version": "c0accdde9889b7679617b1c8bf5505cb"
 };

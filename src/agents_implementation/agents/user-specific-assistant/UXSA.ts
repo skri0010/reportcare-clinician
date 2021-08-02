@@ -3,7 +3,7 @@ import Belief from "../../agent_framework/base/Belief";
 import af_VisualizeParameters from "./action-frames/hf-outcome-trends/VisualizeParameters";
 import af_RetrieveRole from "./action-frames/hf-outcome-trends/RetrieveRole";
 import af_RequestRetrieveAll from "./action-frames/hf-outcome-trends/RequestRetrieveAll";
-import af_DisplayAlert from "./action-frames/triage-alert-hf-clinic/DisplayAlert";
+import af_DisplayAlerts from "./action-frames/triage-alert-hf-clinic/DisplayAlerts";
 import {
   AgentIDs,
   CommonAttributes
@@ -24,7 +24,7 @@ const agentUXSA = new Agent(
     af_RequestRetrieveAll,
 
     // AT-CP
-    af_DisplayAlert
+    af_DisplayAlerts
   ], // action frame
   [belief1] // beliefs
 );

@@ -15,20 +15,24 @@ import {
 } from "../../../../agent_framework/AgentEnums";
 
 /**
- * Class to represent the activity for requesting sorting of a new alert.
+ * Class to represent the activity for requesting display of alerts.
  * This happens in Procedure Triage Alert HF Clinic (AT-CP).
  */
-class RequestAlertSort extends Communicate {
+class RequestAlertsDisplay extends Communicate {
   /**
-   * Constructor for the RequestAlertSort class
+   * Constructor for the RequestAlertsDisplay class
    */
   constructor() {
     super(
-      ActionFrameIDs.MHA.REQUEST_ALERT_SORT,
+      ActionFrameIDs.DTA.REQUEST_ALERTS_DISPLAY,
       Performative.REQUEST,
-      // Triggers SortAlert action frame of ALA
-      new Belief(BeliefKeys.PATIENT, PatientAttributes.NEW_ALERT, true),
-      [AgentIDs.ALA]
+      // Triggers DisplayAlerts action frame of UXSA
+      new Belief(
+        BeliefKeys.PATIENT,
+        PatientAttributes.ALERT_INFOS_RETRIEVED,
+        true
+      ),
+      [AgentIDs.UXSA]
     );
   }
 
@@ -51,23 +55,23 @@ class RequestAlertSort extends Communicate {
   }
 }
 
-// Rules or preconditions for activating the RequestAlertSort class
+// Rules or preconditions for activating the RequestAlertsDisplay class
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
   ProcedureAttributes.AT_CP,
   ProcedureConst.ACTIVE
 );
 const rule2 = new Precondition(
-  AgentIDs.MHA,
+  AgentIDs.DTA,
   CommonAttributes.LAST_ACTIVITY,
-  ActionFrameIDs.MHA.RECEIVE_ALERT
+  ActionFrameIDs.DTA.RETRIEVE_ALERT_INFOS
 );
 
-// Actionframe of the RequestAlertSort class
-const af_RequestAlertSort = new Actionframe(
-  `AF_${ActionFrameIDs.MHA.REQUEST_ALERT_SORT}`,
+// Actionframe of the RequestAlertsDisplay class
+const af_RequestAlertsDisplay = new Actionframe(
+  `AF_${ActionFrameIDs.DTA.REQUEST_ALERTS_DISPLAY}`,
   [rule1, rule2],
-  new RequestAlertSort()
+  new RequestAlertsDisplay()
 );
 
-export default af_RequestAlertSort;
+export default af_RequestAlertsDisplay;

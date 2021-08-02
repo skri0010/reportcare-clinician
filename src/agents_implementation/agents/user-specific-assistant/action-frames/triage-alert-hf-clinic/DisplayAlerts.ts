@@ -15,17 +15,19 @@ import agentAPI from "../../../../agent_framework/AgentAPI";
 import { AlertInfo } from "agents_implementation/agent_framework/model";
 import { store } from "util/useRedux";
 import {
-  setNewAlert,
-  setProcedureOngoing
+  setNewHighRiskAlerts,
+  setNewLowRiskAlerts,
+  setNewMediumRiskAlerts,
+  setNewUnassignedRiskAlerts
 } from "ic-redux/actions/agents/actionCreator";
 
 /**
- * Class to represent an activity for triggering the display of a newly received alert.
+ * Class to represent an activity for triggering the display of newly received alerts.
  * This happens in Procedure Triage Alert HF Clinic (AT-CP).
  */
-class DisplayAlert extends Activity {
+class DisplayAlerts extends Activity {
   constructor() {
-    super(ActionFrameIDs.UXSA.DISPLAY_ALERT);
+    super(ActionFrameIDs.UXSA.DISPLAY_ALERTS);
   }
 
   /**
@@ -39,7 +41,7 @@ class DisplayAlert extends Activity {
     agent.addBelief(
       new Belief(
         BeliefKeys.PATIENT,
-        PatientAttributes.ALERT_INFO_RETRIEVED,
+        PatientAttributes.ALERT_INFOS_RETRIEVED,
         false
       )
     );
@@ -48,16 +50,36 @@ class DisplayAlert extends Activity {
     );
 
     try {
-      const alertInfo: AlertInfo =
-        agentAPI.getFacts()[BeliefKeys.PATIENT]?.[PatientAttributes.ALERT_INFO];
+      const alertInfos: {
+        highRisk: AlertInfo[];
+        mediumRisk: AlertInfo[];
+        lowRisk: AlertInfo[];
+        unassignedRisk: AlertInfo[];
+      } =
+        agentAPI.getFacts()[BeliefKeys.PATIENT]?.[
+          PatientAttributes.ALERT_INFOS
+        ];
 
-      if (alertInfo) {
-        // Dispatch new alert info to front end for display
-        store.dispatch(setNewAlert(alertInfo));
+      if (alertInfos) {
+        // LS-TODO: Irrelevant alert infos should be filtered out depending on user's role
+
+        // Dispatch new alert infos to front end for display
+        if (alertInfos.highRisk.length > 0) {
+          store.dispatch(setNewHighRiskAlerts(alertInfos.highRisk));
+        }
+        if (alertInfos.mediumRisk.length > 0) {
+          store.dispatch(setNewMediumRiskAlerts(alertInfos.mediumRisk));
+        }
+        if (alertInfos.lowRisk.length > 0) {
+          store.dispatch(setNewLowRiskAlerts(alertInfos.lowRisk));
+        }
+        if (alertInfos.unassignedRisk.length > 0) {
+          store.dispatch(setNewUnassignedRiskAlerts(alertInfos.unassignedRisk));
+        }
 
         // Removes alert info from facts
         agentAPI.addFact(
-          new Belief(BeliefKeys.PATIENT, PatientAttributes.ALERT_INFO, null),
+          new Belief(BeliefKeys.PATIENT, PatientAttributes.ALERT_INFOS, null),
           false
         );
       }
@@ -76,13 +98,10 @@ class DisplayAlert extends Activity {
       true,
       true
     );
-
-    // Dispatch to front end that procedure has been completed
-    store.dispatch(setProcedureOngoing(false));
   }
 }
 
-// Preconditions for activating the DisplayAlert class
+// Preconditions for activating the DisplayAlerts class
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
   ProcedureAttributes.AT_CP,
@@ -90,15 +109,15 @@ const rule1 = new Precondition(
 );
 const rule2 = new Precondition(
   BeliefKeys.PATIENT,
-  PatientAttributes.ALERT_INFO_RETRIEVED,
+  PatientAttributes.ALERT_INFOS_RETRIEVED,
   true
 );
 
-// Action Frame for DisplayAlert class
-const af_DisplayAlert = new Actionframe(
-  `AF_${ActionFrameIDs.UXSA.DISPLAY_ALERT}`,
+// Action Frame for DisplayAlerts class
+const af_DisplayAlerts = new Actionframe(
+  `AF_${ActionFrameIDs.UXSA.DISPLAY_ALERTS}`,
   [rule1, rule2],
-  new DisplayAlert()
+  new DisplayAlerts()
 );
 
-export default af_DisplayAlert;
+export default af_DisplayAlerts;

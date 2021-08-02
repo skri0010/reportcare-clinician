@@ -574,11 +574,59 @@ export type DeleteClinicianPatientMapInput = {
   _version?: number | null,
 };
 
+export type CreatePatientAssignmentInput = {
+  id?: string | null,
+  patientID: string,
+  clinicianID: string,
+  pending?: string | null,
+  resolution?: string | null,
+  _version?: number | null,
+};
+
+export type ModelPatientAssignmentConditionInput = {
+  pending?: ModelStringInput | null,
+  resolution?: ModelStringInput | null,
+  and?: Array< ModelPatientAssignmentConditionInput | null > | null,
+  or?: Array< ModelPatientAssignmentConditionInput | null > | null,
+  not?: ModelPatientAssignmentConditionInput | null,
+};
+
+export type PatientAssignment = {
+  __typename: "PatientAssignment",
+  id: string,
+  patientID: string,
+  clinicianID: string,
+  pending?: string | null,
+  resolution?: string | null,
+  _version: number,
+  _deleted?: boolean | null,
+  _lastChangedAt: number,
+  createdAt: string,
+  updatedAt: string,
+  owner?: string | null,
+};
+
+export type UpdatePatientAssignmentInput = {
+  id?: string | null,
+  patientID: string,
+  clinicianID: string,
+  pending?: string | null,
+  resolution?: string | null,
+  _version?: number | null,
+};
+
+export type DeletePatientAssignmentInput = {
+  patientID: string,
+  clinicianID: string,
+  _version?: number | null,
+};
+
 export type CreateAlertInput = {
   id?: string | null,
   patientID: string,
   dateTime: string,
   summary: string,
+  colorCode: string,
   vitalsReportID: string,
   symptomReportID: string,
   completed: boolean,
@@ -589,6 +637,7 @@ export type CreateAlertInput = {
 export type ModelAlertConditionInput = {
   dateTime?: ModelStringInput | null,
   summary?: ModelStringInput | null,
+  colorCode?: ModelStringInput | null,
   vitalsReportID?: ModelIDInput | null,
   symptomReportID?: ModelIDInput | null,
   completed?: ModelBooleanInput | null,
@@ -603,6 +652,7 @@ export type Alert = {
   patientID: string,
   dateTime: string,
   summary: string,
+  colorCode: string,
   vitalsReportID: string,
   vitalsReport?: ReportVitals | null,
   symptomReportID: string,
@@ -621,6 +671,7 @@ export type UpdateAlertInput = {
   patientID?: string | null,
   dateTime?: string | null,
   summary?: string | null,
+  colorCode?: string | null,
   vitalsReportID?: string | null,
   symptomReportID?: string | null,
   completed?: boolean | null,
@@ -889,11 +940,30 @@ export type ModelStringKeyConditionInput = {
   beginsWith?: string | null,
 };
 
+export type ModelPatientAssignmentFilterInput = {
+  id?: ModelIDInput | null,
+  patientID?: ModelStringInput | null,
+  clinicianID?: ModelStringInput | null,
+  pending?: ModelStringInput | null,
+  resolution?: ModelStringInput | null,
+  and?: Array< ModelPatientAssignmentFilterInput | null > | null,
+  or?: Array< ModelPatientAssignmentFilterInput | null > | null,
+  not?: ModelPatientAssignmentFilterInput | null,
+};
+
+export type ModelPatientAssignmentConnection = {
+  __typename: "ModelPatientAssignmentConnection",
+  items?:  Array<PatientAssignment | null > | null,
+  nextToken?: string | null,
+  startedAt?: number | null,
+};
+
 export type ModelAlertFilterInput = {
   id?: ModelIDInput | null,
   patientID?: ModelStringInput | null,
   dateTime?: ModelStringInput | null,
   summary?: ModelStringInput | null,
+  colorCode?: ModelStringInput | null,
   vitalsReportID?: ModelIDInput | null,
   symptomReportID?: ModelIDInput | null,
   completed?: ModelBooleanInput | null,
@@ -1756,6 +1826,72 @@ export type DeleteClinicianPatientMapMutation = {
   } | null,
 };
 
+export type CreatePatientAssignmentMutationVariables = {
+  input: CreatePatientAssignmentInput,
+  condition?: ModelPatientAssignmentConditionInput | null,
+};
+
+export type CreatePatientAssignmentMutation = {
+  createPatientAssignment?:  {
+    __typename: "PatientAssignment",
+    id: string,
+    patientID: string,
+    clinicianID: string,
+    pending?: string | null,
+    resolution?: string | null,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type UpdatePatientAssignmentMutationVariables = {
+  input: UpdatePatientAssignmentInput,
+  condition?: ModelPatientAssignmentConditionInput | null,
+};
+
+export type UpdatePatientAssignmentMutation = {
+  updatePatientAssignment?:  {
+    __typename: "PatientAssignment",
+    id: string,
+    patientID: string,
+    clinicianID: string,
+    pending?: string | null,
+    resolution?: string | null,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type DeletePatientAssignmentMutationVariables = {
+  input: DeletePatientAssignmentInput,
+  condition?: ModelPatientAssignmentConditionInput | null,
+};
+
+export type DeletePatientAssignmentMutation = {
+  deletePatientAssignment?:  {
+    __typename: "PatientAssignment",
+    id: string,
+    patientID: string,
+    clinicianID: string,
+    pending?: string | null,
+    resolution?: string | null,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
 export type CreateAlertMutationVariables = {
   input: CreateAlertInput,
   condition?: ModelAlertConditionInput | null,
@@ -1768,6 +1904,7 @@ export type CreateAlertMutation = {
     patientID: string,
     dateTime: string,
     summary: string,
+    colorCode: string,
     vitalsReportID: string,
     vitalsReport?:  {
       __typename: "ReportVitals",
@@ -1826,6 +1963,7 @@ export type UpdateAlertMutation = {
     patientID: string,
     dateTime: string,
     summary: string,
+    colorCode: string,
     vitalsReportID: string,
     vitalsReport?:  {
       __typename: "ReportVitals",
@@ -1884,6 +2022,7 @@ export type DeleteAlertMutation = {
     patientID: string,
     dateTime: string,
     summary: string,
+    colorCode: string,
     vitalsReportID: string,
     vitalsReport?:  {
       __typename: "ReportVitals",
@@ -1950,6 +2089,7 @@ export type CreateTodoMutation = {
       patientID: string,
       dateTime: string,
       summary: string,
+      colorCode: string,
       vitalsReportID: string,
       symptomReportID: string,
       completed: boolean,
@@ -1990,6 +2130,7 @@ export type UpdateTodoMutation = {
       patientID: string,
       dateTime: string,
       summary: string,
+      colorCode: string,
       vitalsReportID: string,
       symptomReportID: string,
       completed: boolean,
@@ -2030,6 +2171,7 @@ export type DeleteTodoMutation = {
       patientID: string,
       dateTime: string,
       summary: string,
+      colorCode: string,
       vitalsReportID: string,
       symptomReportID: string,
       completed: boolean,
@@ -2871,6 +3013,88 @@ export type ListClinicianPatientMapsQuery = {
   } | null,
 };
 
+export type SyncPatientAssignmentsQueryVariables = {
+  filter?: ModelPatientAssignmentFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  lastSync?: number | null,
+};
+
+export type SyncPatientAssignmentsQuery = {
+  syncPatientAssignments?:  {
+    __typename: "ModelPatientAssignmentConnection",
+    items?:  Array< {
+      __typename: "PatientAssignment",
+      id: string,
+      patientID: string,
+      clinicianID: string,
+      pending?: string | null,
+      resolution?: string | null,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null > | null,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
+export type GetPatientAssignmentQueryVariables = {
+  patientID: string,
+  clinicianID: string,
+};
+
+export type GetPatientAssignmentQuery = {
+  getPatientAssignment?:  {
+    __typename: "PatientAssignment",
+    id: string,
+    patientID: string,
+    clinicianID: string,
+    pending?: string | null,
+    resolution?: string | null,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type ListPatientAssignmentsQueryVariables = {
+  patientID?: string | null,
+  clinicianID?: ModelStringKeyConditionInput | null,
+  filter?: ModelPatientAssignmentFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListPatientAssignmentsQuery = {
+  listPatientAssignments?:  {
+    __typename: "ModelPatientAssignmentConnection",
+    items?:  Array< {
+      __typename: "PatientAssignment",
+      id: string,
+      patientID: string,
+      clinicianID: string,
+      pending?: string | null,
+      resolution?: string | null,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null > | null,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
 export type SyncAlertsQueryVariables = {
   filter?: ModelAlertFilterInput | null,
   limit?: number | null,
@@ -2887,6 +3111,7 @@ export type SyncAlertsQuery = {
       patientID: string,
       dateTime: string,
       summary: string,
+      colorCode: string,
       vitalsReportID: string,
       symptomReportID: string,
       completed: boolean,
@@ -2913,6 +3138,7 @@ export type GetAlertQuery = {
     patientID: string,
     dateTime: string,
     summary: string,
+    colorCode: string,
     vitalsReportID: string,
     vitalsReport?:  {
       __typename: "ReportVitals",
@@ -2974,6 +3200,7 @@ export type ListAlertsQuery = {
       patientID: string,
       dateTime: string,
       summary: string,
+      colorCode: string,
       vitalsReportID: string,
       symptomReportID: string,
       completed: boolean,
@@ -3039,6 +3266,7 @@ export type GetTodoQuery = {
       patientID: string,
       dateTime: string,
       summary: string,
+      colorCode: string,
       vitalsReportID: string,
       symptomReportID: string,
       completed: boolean,
@@ -3374,6 +3602,37 @@ export type ClinicianIDsByPatientIDQuery = {
   } | null,
 };
 
+export type ListPatientAssignmentByQueryVariables = {
+  clinicianID?: string | null,
+  pending?: ModelStringKeyConditionInput | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelPatientAssignmentFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListPatientAssignmentByQuery = {
+  listPatientAssignmentBy?:  {
+    __typename: "ModelPatientAssignmentConnection",
+    items?:  Array< {
+      __typename: "PatientAssignment",
+      id: string,
+      patientID: string,
+      clinicianID: string,
+      pending?: string | null,
+      resolution?: string | null,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null > | null,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
 export type ListAlertsByPatientIDQueryVariables = {
   patientID?: string | null,
   sortDirection?: ModelSortDirection | null,
@@ -3391,6 +3650,7 @@ export type ListAlertsByPatientIDQuery = {
       patientID: string,
       dateTime: string,
       summary: string,
+      colorCode: string,
       vitalsReportID: string,
       symptomReportID: string,
       completed: boolean,
@@ -3424,6 +3684,7 @@ export type ListAlertsByDateTimeQuery = {
       patientID: string,
       dateTime: string,
       summary: string,
+      colorCode: string,
       vitalsReportID: string,
       symptomReportID: string,
       completed: boolean,
@@ -4305,6 +4566,72 @@ export type OnDeleteClinicianPatientMapSubscription = {
   } | null,
 };
 
+export type OnCreatePatientAssignmentSubscriptionVariables = {
+  owner?: string | null,
+  clinicianID?: string | null,
+};
+
+export type OnCreatePatientAssignmentSubscription = {
+  onCreatePatientAssignment?:  {
+    __typename: "PatientAssignment",
+    id: string,
+    patientID: string,
+    clinicianID: string,
+    pending?: string | null,
+    resolution?: string | null,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnUpdatePatientAssignmentSubscriptionVariables = {
+  owner?: string | null,
+  clinicianID?: string | null,
+};
+
+export type OnUpdatePatientAssignmentSubscription = {
+  onUpdatePatientAssignment?:  {
+    __typename: "PatientAssignment",
+    id: string,
+    patientID: string,
+    clinicianID: string,
+    pending?: string | null,
+    resolution?: string | null,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnDeletePatientAssignmentSubscriptionVariables = {
+  owner?: string | null,
+  clinicianID?: string | null,
+};
+
+export type OnDeletePatientAssignmentSubscription = {
+  onDeletePatientAssignment?:  {
+    __typename: "PatientAssignment",
+    id: string,
+    patientID: string,
+    clinicianID: string,
+    pending?: string | null,
+    resolution?: string | null,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
 export type OnCreateAlertSubscriptionVariables = {
   owner?: string | null,
 };
@@ -4316,6 +4643,7 @@ export type OnCreateAlertSubscription = {
     patientID: string,
     dateTime: string,
     summary: string,
+    colorCode: string,
     vitalsReportID: string,
     vitalsReport?:  {
       __typename: "ReportVitals",
@@ -4373,6 +4701,7 @@ export type OnUpdateAlertSubscription = {
     patientID: string,
     dateTime: string,
     summary: string,
+    colorCode: string,
     vitalsReportID: string,
     vitalsReport?:  {
       __typename: "ReportVitals",
@@ -4430,6 +4759,7 @@ export type OnDeleteAlertSubscription = {
     patientID: string,
     dateTime: string,
     summary: string,
+    colorCode: string,
     vitalsReportID: string,
     vitalsReport?:  {
       __typename: "ReportVitals",
@@ -4495,6 +4825,7 @@ export type OnCreateTodoSubscription = {
       patientID: string,
       dateTime: string,
       summary: string,
+      colorCode: string,
       vitalsReportID: string,
       symptomReportID: string,
       completed: boolean,
@@ -4534,6 +4865,7 @@ export type OnUpdateTodoSubscription = {
       patientID: string,
       dateTime: string,
       summary: string,
+      colorCode: string,
       vitalsReportID: string,
       symptomReportID: string,
       completed: boolean,
@@ -4573,6 +4905,7 @@ export type OnDeleteTodoSubscription = {
       patientID: string,
       dateTime: string,
       summary: string,
+      colorCode: string,
       vitalsReportID: string,
       symptomReportID: string,
       completed: boolean,

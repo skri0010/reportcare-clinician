@@ -34,9 +34,8 @@ const Stack = createStackNavigator<RootStackParamList>();
 export const MainNavigationStack: FC<MainNavigationStackProps> = ({
   setAuthState
 }) => {
-  const { colors, newAlert } = select((state: RootState) => ({
-    colors: state.settings.colors,
-    newAlert: state.agents.newAlert
+  const { colors } = select((state: RootState) => ({
+    colors: state.settings.colors
   }));
 
   const toast = useToast();
@@ -49,12 +48,6 @@ export const MainNavigationStack: FC<MainNavigationStackProps> = ({
   const screenHeaderStyle = {
     backgroundColor: colors.primaryBarColor
   };
-
-  useEffect(() => {
-    if (newAlert) {
-      toast.show("An alert has arrived", { type: "success" });
-    }
-  }, [newAlert, toast]);
 
   const signOut = async (): Promise<void> => {
     await Auth.signOut().then(async () => {
@@ -111,9 +104,8 @@ export const MainNavigationStack: FC<MainNavigationStackProps> = ({
 
   const triggerAlert = () => {
     agentALA.start();
-    // console.log(agentAPI.getAgents());
     agentMHA.addBelief(
-      new Belief(BeliefKeys.PATIENT, PatientAttributes.INCOMING_ALERT, true)
+      new Belief(BeliefKeys.PATIENT, PatientAttributes.INCOMING_ALERTS, true)
     );
     agentAPI.addFact(
       new Belief(

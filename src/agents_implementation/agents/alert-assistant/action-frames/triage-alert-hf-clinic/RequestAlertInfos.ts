@@ -15,24 +15,20 @@ import {
 } from "../../../../agent_framework/AgentEnums";
 
 /**
- * Class to represent the activity for requesting display of alert patients.
+ * Class to represent the activity for requesting patient's information associated with alerts.
  * This happens in Procedure Triage Alert HF Clinic (AT-CP).
  */
-class RequestAlertDisplay extends Communicate {
+class RequestAlertInfos extends Communicate {
   /**
-   * Constructor for the RequestAlertDisplay class
+   * Constructor for the RequestAlertInfos class
    */
   constructor() {
     super(
-      ActionFrameIDs.DTA.REQUEST_ALERT_DISPLAY,
+      ActionFrameIDs.ALA.REQUEST_ALERT_INFOS,
       Performative.REQUEST,
-      // Triggers DisplayAlerts action frame of UXSA
-      new Belief(
-        BeliefKeys.PATIENT,
-        PatientAttributes.ALERT_INFO_RETRIEVED,
-        true
-      ),
-      [AgentIDs.UXSA]
+      // Triggers RetrieveAlertInfos action frame of DTA
+      new Belief(BeliefKeys.PATIENT, PatientAttributes.ALERTS_SORTED, true),
+      [AgentIDs.DTA]
     );
   }
 
@@ -55,23 +51,23 @@ class RequestAlertDisplay extends Communicate {
   }
 }
 
-// Rules or preconditions for activating the RequestAlertDisplay class
+// Rules or preconditions for activating the RequestAlertInfos class
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
   ProcedureAttributes.AT_CP,
   ProcedureConst.ACTIVE
 );
 const rule2 = new Precondition(
-  AgentIDs.DTA,
+  AgentIDs.ALA,
   CommonAttributes.LAST_ACTIVITY,
-  ActionFrameIDs.DTA.RETRIEVE_ALERT_INFO
+  ActionFrameIDs.ALA.SORT_ALERTS
 );
 
-// Actionframe of the RequestAlertDisplay class
-const af_RequestAlertDisplay = new Actionframe(
-  `AF_${ActionFrameIDs.DTA.REQUEST_ALERT_DISPLAY}`,
+// Actionframe of the RequestAlertInfos class
+const af_RequestAlertInfos = new Actionframe(
+  `AF_${ActionFrameIDs.ALA.REQUEST_ALERT_INFOS}`,
   [rule1, rule2],
-  new RequestAlertDisplay()
+  new RequestAlertInfos()
 );
 
-export default af_RequestAlertDisplay;
+export default af_RequestAlertInfos;

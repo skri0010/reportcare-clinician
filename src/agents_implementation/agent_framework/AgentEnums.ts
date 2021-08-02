@@ -56,26 +56,26 @@ export const ActionFrameIDs = {
     RETRIEVE_PATIENT_DETAILS: "RetrievePatientDetails",
     REQUEST_DETAILS_DISPLAY: "RequestDetailsDisplay",
     APPROVE_PATIENT_REQUEST: "ApprovePatientRequest",
-    RETRIEVE_ALERT_INFO: "RetrieveAlertInfo",
-    REQUEST_ALERT_DISPLAY: "RequestAlertDisplay"
+    RETRIEVE_ALERT_INFOS: "RetrieveAlertInfos",
+    REQUEST_ALERTS_DISPLAY: "RequestAlertsDisplay"
   },
   UXSA: {
     RETRIEVE_ROLE: "RetrieveRole",
     REQUEST_RETRIEVE_ALL: "RequestRetrieveAll",
     VISUALIZE_PARAMETERS: "VisualizeParameters",
-    DISPLAY_ALERT: "DisplayAlert"
+    DISPLAY_ALERTS: "DisplayAlerts"
   },
   NWA: {
     SYNC_PROTECTED_INFO: "SyncProtectedInfo",
     SYNC_PATIENT_REQUEST: "SyncPatientRequest"
   },
   ALA: {
-    SORT_ALERT: "SortAlert",
-    REQUEST_ALERT_INFO: "RequestAlertInfo"
+    SORT_ALERTS: "SortAlerts",
+    REQUEST_ALERT_INFOS: "RequestAlertInfos"
   },
   MHA: {
-    RECEIVE_ALERT: "ReceiveAlert",
-    REQUEST_ALERT_SORT: "RequestAlertSort"
+    RECEIVE_ALERTS: "ReceiveAlerts",
+    REQUEST_ALERTS_SORT: "RequestAlertsSort"
   }
 };
 
@@ -130,12 +130,13 @@ export enum PatientAttributes {
   DETAILS = "Details",
   UPDATE_CLINICIAN = "UpdateClinician",
   CLINICIAN_UPDATED = "ClinicianUpdated",
-  INCOMING_ALERT = "IncomingAlert",
-  NEW_ALERT = "NewAlert",
-  ALERT = "Alert",
-  ALERT_SORTED = "AlertSorted",
-  ALERT_INFO = "AlertInfo",
-  ALERT_INFO_RETRIEVED = "AlertInfoRetrieved"
+  INCOMING_ALERTS = "IncomingAlerts",
+  NEW_ALERTS = "NewAlerts",
+  ALERTS_TO_SORT = "AlertsToSort",
+  SORTED_ALERTS = "SortedAlerts",
+  ALERTS_SORTED = "AlertsSorted",
+  ALERT_INFOS = "AlertInfos",
+  ALERT_INFOS_RETRIEVED = "AlertInfosRetrieved"
 }
 
 // Keys for locally storing data in AsyncStorage

@@ -254,9 +254,9 @@ abstract class AgentManagement {
                   currentBeliefs[AgentIDs.DTA][CommonAttributes.LAST_ACTIVITY] =
                     ActionFrameIDs.DTA.REQUEST_DETAILS_DISPLAY;
                   break;
-                case ActionFrameIDs.DTA.RETRIEVE_ALERT_INFO:
+                case ActionFrameIDs.DTA.RETRIEVE_ALERT_INFOS:
                   currentBeliefs[AgentIDs.DTA][CommonAttributes.LAST_ACTIVITY] =
-                    ActionFrameIDs.DTA.REQUEST_ALERT_DISPLAY;
+                    ActionFrameIDs.DTA.REQUEST_ALERTS_DISPLAY;
                   break;
                 default:
                   break;

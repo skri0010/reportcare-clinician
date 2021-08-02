@@ -761,6 +761,66 @@ export const deleteClinicianPatientMap = /* GraphQL */ `
     }
   }
 `;
+export const createPatientAssignment = /* GraphQL */ `
+  mutation CreatePatientAssignment(
+    $input: CreatePatientAssignmentInput!
+    $condition: ModelPatientAssignmentConditionInput
+  ) {
+    createPatientAssignment(input: $input, condition: $condition) {
+      id
+      patientID
+      clinicianID
+      pending
+      resolution
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const updatePatientAssignment = /* GraphQL */ `
+  mutation UpdatePatientAssignment(
+    $input: UpdatePatientAssignmentInput!
+    $condition: ModelPatientAssignmentConditionInput
+  ) {
+    updatePatientAssignment(input: $input, condition: $condition) {
+      id
+      patientID
+      clinicianID
+      pending
+      resolution
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deletePatientAssignment = /* GraphQL */ `
+  mutation DeletePatientAssignment(
+    $input: DeletePatientAssignmentInput!
+    $condition: ModelPatientAssignmentConditionInput
+  ) {
+    deletePatientAssignment(input: $input, condition: $condition) {
+      id
+      patientID
+      clinicianID
+      pending
+      resolution
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
 export const createAlert = /* GraphQL */ `
   mutation CreateAlert(
     $input: CreateAlertInput!
@@ -771,6 +831,7 @@ export const createAlert = /* GraphQL */ `
       patientID
       dateTime
       summary
+      colorCode
       vitalsReportID
       vitalsReport {
         id
@@ -825,6 +886,7 @@ export const updateAlert = /* GraphQL */ `
       patientID
       dateTime
       summary
+      colorCode
       vitalsReportID
       vitalsReport {
         id
@@ -879,6 +941,7 @@ export const deleteAlert = /* GraphQL */ `
       patientID
       dateTime
       summary
+      colorCode
       vitalsReportID
       vitalsReport {
         id
@@ -940,6 +1003,7 @@ export const createTodo = /* GraphQL */ `
         patientID
         dateTime
         summary
+        colorCode
         vitalsReportID
         symptomReportID
         completed
@@ -977,6 +1041,7 @@ export const updateTodo = /* GraphQL */ `
         patientID
         dateTime
         summary
+        colorCode
         vitalsReportID
         symptomReportID
         completed
@@ -1014,6 +1079,7 @@ export const deleteTodo = /* GraphQL */ `
         patientID
         dateTime
         summary
+        colorCode
         vitalsReportID
         symptomReportID
         completed

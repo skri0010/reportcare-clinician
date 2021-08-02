@@ -798,6 +798,89 @@ export const listClinicianPatientMaps = /* GraphQL */ `
     }
   }
 `;
+export const syncPatientAssignments = /* GraphQL */ `
+  query SyncPatientAssignments(
+    $filter: ModelPatientAssignmentFilterInput
+    $limit: Int
+    $nextToken: String
+    $lastSync: AWSTimestamp
+  ) {
+    syncPatientAssignments(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      lastSync: $lastSync
+    ) {
+      items {
+        id
+        patientID
+        clinicianID
+        pending
+        resolution
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const getPatientAssignment = /* GraphQL */ `
+  query GetPatientAssignment($patientID: String!, $clinicianID: String!) {
+    getPatientAssignment(patientID: $patientID, clinicianID: $clinicianID) {
+      id
+      patientID
+      clinicianID
+      pending
+      resolution
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listPatientAssignments = /* GraphQL */ `
+  query ListPatientAssignments(
+    $patientID: String
+    $clinicianID: ModelStringKeyConditionInput
+    $filter: ModelPatientAssignmentFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listPatientAssignments(
+      patientID: $patientID
+      clinicianID: $clinicianID
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        patientID
+        clinicianID
+        pending
+        resolution
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
 export const syncAlerts = /* GraphQL */ `
   query SyncAlerts(
     $filter: ModelAlertFilterInput
@@ -816,6 +899,7 @@ export const syncAlerts = /* GraphQL */ `
         patientID
         dateTime
         summary
+        colorCode
         vitalsReportID
         symptomReportID
         completed
@@ -838,6 +922,7 @@ export const getAlert = /* GraphQL */ `
       patientID
       dateTime
       summary
+      colorCode
       vitalsReportID
       vitalsReport {
         id
@@ -894,6 +979,7 @@ export const listAlerts = /* GraphQL */ `
         patientID
         dateTime
         summary
+        colorCode
         vitalsReportID
         symptomReportID
         completed
@@ -956,6 +1042,7 @@ export const getTodo = /* GraphQL */ `
         patientID
         dateTime
         summary
+        colorCode
         vitalsReportID
         symptomReportID
         completed
@@ -1319,6 +1406,41 @@ export const clinicianIDsByPatientID = /* GraphQL */ `
     }
   }
 `;
+export const listPatientAssignmentBy = /* GraphQL */ `
+  query ListPatientAssignmentBy(
+    $clinicianID: String
+    $pending: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelPatientAssignmentFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listPatientAssignmentBy(
+      clinicianID: $clinicianID
+      pending: $pending
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        patientID
+        clinicianID
+        pending
+        resolution
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
 export const listAlertsByPatientID = /* GraphQL */ `
   query ListAlertsByPatientID(
     $patientID: String
@@ -1339,6 +1461,7 @@ export const listAlertsByPatientID = /* GraphQL */ `
         patientID
         dateTime
         summary
+        colorCode
         vitalsReportID
         symptomReportID
         completed
@@ -1376,6 +1499,7 @@ export const listAlertsByDateTime = /* GraphQL */ `
         patientID
         dateTime
         summary
+        colorCode
         vitalsReportID
         symptomReportID
         completed

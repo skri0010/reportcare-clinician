@@ -680,6 +680,57 @@ export const onDeleteClinicianPatientMap = /* GraphQL */ `
     }
   }
 `;
+export const onCreatePatientAssignment = /* GraphQL */ `
+  subscription OnCreatePatientAssignment($owner: String, $clinicianID: String) {
+    onCreatePatientAssignment(owner: $owner, clinicianID: $clinicianID) {
+      id
+      patientID
+      clinicianID
+      pending
+      resolution
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onUpdatePatientAssignment = /* GraphQL */ `
+  subscription OnUpdatePatientAssignment($owner: String, $clinicianID: String) {
+    onUpdatePatientAssignment(owner: $owner, clinicianID: $clinicianID) {
+      id
+      patientID
+      clinicianID
+      pending
+      resolution
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onDeletePatientAssignment = /* GraphQL */ `
+  subscription OnDeletePatientAssignment($owner: String, $clinicianID: String) {
+    onDeletePatientAssignment(owner: $owner, clinicianID: $clinicianID) {
+      id
+      patientID
+      clinicianID
+      pending
+      resolution
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
 export const onCreateAlert = /* GraphQL */ `
   subscription OnCreateAlert($owner: String) {
     onCreateAlert(owner: $owner) {
@@ -687,6 +738,7 @@ export const onCreateAlert = /* GraphQL */ `
       patientID
       dateTime
       summary
+      colorCode
       vitalsReportID
       vitalsReport {
         id
@@ -738,6 +790,7 @@ export const onUpdateAlert = /* GraphQL */ `
       patientID
       dateTime
       summary
+      colorCode
       vitalsReportID
       vitalsReport {
         id
@@ -789,6 +842,7 @@ export const onDeleteAlert = /* GraphQL */ `
       patientID
       dateTime
       summary
+      colorCode
       vitalsReportID
       vitalsReport {
         id
@@ -847,6 +901,7 @@ export const onCreateTodo = /* GraphQL */ `
         patientID
         dateTime
         summary
+        colorCode
         vitalsReportID
         symptomReportID
         completed
@@ -881,6 +936,7 @@ export const onUpdateTodo = /* GraphQL */ `
         patientID
         dateTime
         summary
+        colorCode
         vitalsReportID
         symptomReportID
         completed
@@ -915,6 +971,7 @@ export const onDeleteTodo = /* GraphQL */ `
         patientID
         dateTime
         summary
+        colorCode
         vitalsReportID
         symptomReportID
         completed

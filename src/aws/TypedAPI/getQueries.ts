@@ -17,7 +17,9 @@ import {
   GetTodoQuery,
   GetTodoQueryVariables,
   GetAlertQuery,
-  GetAlertQueryVariables
+  GetAlertQueryVariables,
+  GetPatientInfoQuery,
+  GetPatientInfoQueryVariables
 } from "aws/API";
 
 interface GetClinicianInfoResponse extends BaseResponse {
@@ -44,6 +46,19 @@ export const getClinicianProtectedInfo = async (
     query: queries.getClinicianProtectedInfo,
     variables: variables
   })) as GetClinicianProtectedInfoResponse;
+};
+
+interface GetPatientInfoResponse extends BaseResponse {
+  data: GetPatientInfoQuery;
+}
+
+export const getPatientInfo = async (
+  variables: GetPatientInfoQueryVariables
+): Promise<GetPatientInfoResponse> => {
+  return (await API.graphql({
+    query: queries.getPatientInfo,
+    variables: variables
+  })) as GetPatientInfoResponse;
 };
 
 interface GetMedicationInfoResponse extends BaseResponse {

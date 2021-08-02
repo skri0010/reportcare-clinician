@@ -116,11 +116,22 @@ export declare class ClinicianPatientMap {
   static copyOf(source: ClinicianPatientMap, mutator: (draft: MutableModel<ClinicianPatientMap>) => MutableModel<ClinicianPatientMap> | void): ClinicianPatientMap;
 }
 
+export declare class PatientAssignment {
+  readonly id: string;
+  readonly patientID: string;
+  readonly clinicianID: string;
+  readonly pending?: string;
+  readonly resolution?: string;
+  constructor(init: ModelInit<PatientAssignment>);
+  static copyOf(source: PatientAssignment, mutator: (draft: MutableModel<PatientAssignment>) => MutableModel<PatientAssignment> | void): PatientAssignment;
+}
+
 export declare class Alert {
   readonly id: string;
   readonly patientID: string;
   readonly dateTime: string;
   readonly summary: string;
+  readonly colorCode: string;
   readonly vitalsReportID: string;
   readonly vitalsReport?: ReportVitals;
   readonly symptomReportID: string;

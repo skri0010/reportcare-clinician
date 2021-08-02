@@ -25,6 +25,13 @@ export interface Patient {
   riskLevel: RiskLevel;
 }
 
+export enum AlertColorCode {
+  HIGH = "red",
+  MEDIUM = "yellow",
+  LOW = "green",
+  UNASSIGNED = "white"
+}
+
 export interface AlertInfo {
   id: string;
   patientId: string;
