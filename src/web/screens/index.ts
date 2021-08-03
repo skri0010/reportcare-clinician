@@ -47,3 +47,21 @@ export type MainScreenProps = StackScreenProps<
 
 // Type checking for bottom tabs (navigation and route)
 export type { WithSideTabsProps } from "web/screens/WithSideTabProps";
+
+export type TodoStackParamList = {
+  ViewTodo: {
+    mainTitleContent: string;
+    patientContent: string;
+    notesContent: string;
+    createdTimeDate: string;
+    modifiedTimeDate: string;
+  };
+  EditTodo: {
+    mainTitleContent: string;
+    patientContent: string;
+    notesContent: string;
+    createdTimeDate: string;
+    modifiedTimeDate: string;
+  };
+  AddTodo: undefined;
+};

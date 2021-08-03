@@ -1,8 +1,6 @@
 {
   "welcome": "Welcome",
 
-  "Alerts": "Alerts",
-
   "Auth_SignIn": {
     "SignIn": "Sign In",
     "Username": "Username",
@@ -92,5 +90,52 @@
       "Friday": "Fri",
       "Saturday": "Sat"
     }
+  },
+  "TabTitle": {
+    "Home": "Home",
+    "Patients": "Patients",
+    "Clinicians": "Clinicians",
+    "Chat": "Chat",
+    "Todo": "Todo",
+    "MARIA": "MARIA",
+    "Settings": "Settings",
+    "Help": "Help"
+  },
+  "Home": {
+    "Dashboard": "Dashboard",
+    "Welcome": "Welcome Dr. ",
+    "WelcomeMsg": "Check on your patient's health,\nmonitor their vitals and chat with\nthem.",
+    "RequestsByMaria": "Requests by MARIA ",
+    "Alerts": "Alerts ",
+    "Todos": "Todos ",
+    "ItemsRemaining": "remaining",
+    "ShowMoreButton": "SHOW MORE"
+  },
+  "Alerts": {
+    "HighRisk": "High Risk",
+    "MediumRisk": "Medium Risk",
+    "LowRisk": "Low Risk",
+    "UnassignedRisk": "Unassigned Risk"
+  },
+  "Todo": {
+    "Current": "Current",
+    "Completed": "Completed",
+    "SearchBarCurrentPlaceholder": "Search current todo",
+    "SearchBarCompletePlaceholder": "Search completed todo",
+    "ViewTodo": "View Todo",
+    "EditTodo": "Edit Todo",
+    "Title": "Title",
+    "Patient": "Patient",
+    "Notes": "Notes",
+    "CreatedOn": "Created on: ",
+    "ModifiedOn": "Modified on: ",
+    "ViewButton": "View",
+    "EditButton": "Edit",
+    "CancelButton": "Cancel",
+    "SaveButton": "Save",
+    "TitleInputPlaceholder": "What's this todo about?",
+    "PatientInputPlaceholder": "What's the patient's name?",
+    "NotesInputPlaceholder": "Anything notable?",
+    "NoSelection": "Select a Todo item to view its details"
   }
 }

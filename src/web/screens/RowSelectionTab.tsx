@@ -79,20 +79,9 @@ export const RowSelectionWrapper: FC<RowSelectionWrapperProps> = ({
 const styles = ScaledSheet.create({
   container: {
     flexDirection: "column",
-    flex: 1,
     alignContent: "stretch"
   },
   addButtonSize: {
     fontSize: "5@ms"
-  },
-  addButtonColor: {
-    color: "white"
-  },
-  iconStyle: {
-    position: "absolute",
-    right: 2,
-    top: 15,
-    bottom: 15,
-    paddingRight: 10
   }
 });

@@ -1,11 +1,10 @@
 import React, { FC } from "react";
-import { View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { SideNavigationBar } from "./SideNavigationBar";
 import { ScreenName, RootStackParamList } from "./screens";
 import { RootState, select } from "util/useRedux";
-import { ScaledSheet, ms } from "react-native-size-matters";
+import { ms } from "react-native-size-matters";
 import { Auth } from "@aws-amplify/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -44,35 +43,27 @@ export const MainNavigationStack: FC<MainNavigationStackProps> = ({
   };
 
   return (
-    <View style={styles.mainContainer}>
-      <NavigationContainer>
-        <Stack.Navigator>
-          {/* Main Tabs */}
-          <Stack.Screen
-            name={ScreenName.MAIN}
-            component={SideNavigationBar}
-            options={{
-              headerTitle: () => null,
-              headerStyle: screenHeaderStyle,
-              headerRight: () => (
-                <Icon
-                  name="logout"
-                  color={colors.primaryContrastTextColor}
-                  size={ms(20)}
-                  style={{ paddingEnd: ms(10) }}
-                  onPress={signOut}
-                />
-              )
-            }}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator>
+        {/* Main Tabs */}
+        <Stack.Screen
+          name={ScreenName.MAIN}
+          component={SideNavigationBar}
+          options={{
+            headerTitle: () => null,
+            headerStyle: screenHeaderStyle,
+            headerRight: () => (
+              <Icon
+                name="logout"
+                color={colors.primaryContrastTextColor}
+                size={ms(20)}
+                style={{ paddingEnd: ms(10) }}
+                onPress={signOut}
+              />
+            )
+          }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
-
-const styles = ScaledSheet.create({
-  mainContainer: {
-    flex: 1
-  }
-});

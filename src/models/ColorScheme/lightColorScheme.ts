@@ -39,9 +39,13 @@ export const lightColorScheme: ColorScheme = {
   // Buttons
   primaryButtonColor: "#57c081",
   primaryWarningButtonColor: "#D11C1C",
+  primaryTodoCompleteButtonColor: "#A484FF",
 
   // Avatar background
   primaryAvatarBackgroundColor: "#e0e0e0",
+
+  // Icons
+  primaryIconColor: "#ABA9A9",
 
   // Others
   riskLevelBackgroundColors: riskLevelBackgroundColors,
@@ -52,5 +56,5 @@ export const lightColorScheme: ColorScheme = {
   errorColor: "#ff1e00",
 
   // Overlay
-  overlayColor: "#f5fcff88"
+  overlayColor: "#e7e8e895"
 };
