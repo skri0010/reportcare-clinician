@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { View, TouchableOpacity, ScrollView } from "react-native";
 import { RootState, select } from "util/useRedux";
-import { H3, H4, H5 } from "components/Text/index";
+import { H3, H4 } from "components/Text/index";
 import { ScaledSheet, ms } from "react-native-size-matters";
 import { MedicalRecords } from "mock/mockPatientDetails";
 
@@ -21,23 +21,20 @@ export const ViewMedicalRecords: FC<ViewMedicalRecordsProps> = ({
     <View
       style={[
         styles.container,
-        { backgroundColor: colors.primaryWebBackgroundColor }
+        { backgroundColor: colors.primaryContrastTextColor }
       ]}
     >
-      <H3
-        text={`${medicalRecord.record}`}
-        style={{ fontWeight: "bold", paddingTop: ms(10) }}
-      />
+      <H3 text={`${medicalRecord.record}`} style={styles.recordTitle} />
       <View style={styles.descriptionContainer}>
         <H4 text="Description" style={{ fontWeight: "bold" }} />
         <View style={styles.descriptionContent}>
           <ScrollView>
-            <H5 text={`${medicalRecord.content}`} style={null} />
+            <H4 text={`${medicalRecord.content}`} style={null} />
           </ScrollView>
         </View>
       </View>
 
-      <View style={{ alignItems: "center" }}>
+      <View style={{ alignItems: "center", paddingTop: ms(20) }}>
         <TouchableOpacity
           style={[
             styles.closeButton,
@@ -69,20 +66,23 @@ const styles = ScaledSheet.create({
   },
   container: {
     width: "50%",
-    height: "80%",
-    paddingHorizontal: "10@ms",
+    height: "85%",
+    paddingHorizontal: "40@ms",
     borderRadius: "10@ms",
-    borderWidth: "1@ms",
     marginHorizontal: "25%"
   },
   descriptionContainer: {
-    paddingVertical: ms(20),
     width: "100%",
-    height: "80%"
+    height: "60%"
   },
   descriptionContent: {
     height: "100%",
     flex: 1,
-    paddingTop: ms(10)
+    paddingTop: "10@ms"
+  },
+  recordTitle: {
+    fontWeight: "bold",
+    paddingTop: "25@ms",
+    paddingBottom: "30@ms"
   }
 });

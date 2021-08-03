@@ -43,12 +43,12 @@ export const AlertHistoryModal: FC<AlertHistoryModalProps> = ({
       style={[
         styles.container,
         {
-          backgroundColor: colors.primaryWebBackgroundColor,
-          borderColor: colors.secondaryBorderColor
+          backgroundColor: colors.primaryContrastTextColor,
+          borderColor: colors.primaryBorderColor
         }
       ]}
     >
-      <H3 text={`${name}`} style={{ fontWeight: "bold", paddingTop: ms(10) }} />
+      <H3 text={`${name}`} style={{ fontWeight: "bold", paddingTop: ms(20) }} />
       <View style={{ paddingTop: ms(20) }}>
         <H4 text="Alert Summary" style={{ fontWeight: "bold" }} />
         <H5 text={`${alertHistory.description}`} style={null} />
@@ -78,7 +78,7 @@ export const AlertHistoryModal: FC<AlertHistoryModalProps> = ({
           detailContent={alertHistory.signs}
         />
       </View>
-      <View style={{ flexDirection: "row", paddingTop: ms(20) }}>
+      <View style={{ flexDirection: "row", paddingVertical: ms(20) }}>
         <H5
           text="Created on: "
           style={{ fontWeight: "bold", color: colors.secondaryTextColor }}
@@ -120,10 +120,9 @@ const styles = ScaledSheet.create({
   },
   container: {
     width: "30%",
-    height: "60%",
-    paddingLeft: "10@ms",
+    height: "65%",
+    paddingLeft: "15@ms",
     borderRadius: "10@ms",
-    borderWidth: "1@ms",
     marginHorizontal: "35%"
   }
 });

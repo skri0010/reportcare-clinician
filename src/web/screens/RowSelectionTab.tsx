@@ -21,7 +21,6 @@ export const RowSelectionWrapper: FC<RowSelectionWrapperProps> = ({
   addButton = false,
   riskFilterTag = false,
   placeholder,
-  children,
   isTodo = false,
   onPress,
   onRiskFilterClick
@@ -69,9 +68,6 @@ export const RowSelectionWrapper: FC<RowSelectionWrapperProps> = ({
           <RiskFilterTab onTagPress={onRiskFilterClick} />
         </View>
       ) : null}
-
-      {/* Other components to be placed in the left side tab eg list of patients */}
-      <View style={{ flex: 1 }}>{children}</View>
     </View>
   );
 };

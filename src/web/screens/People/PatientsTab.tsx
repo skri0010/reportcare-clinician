@@ -27,7 +27,7 @@ import { PatientIcdCrt } from "./PatientDetailsScreen/PatientIcdCrt";
 import { AlertHistoryModal } from "./PatientDetailsScreen/PatientHistoryScreens/AlertHistoryModal";
 import { AlertHistory, MedicalRecords } from "mock/mockPatientDetails";
 import { RiskLevel } from "models/RiskLevel";
-import { ms, ScaledSheet } from "react-native-size-matters";
+import { ScaledSheet } from "react-native-size-matters";
 import { ViewMedicalRecords } from "./PatientDetailsScreen/PatientHistoryScreens/ViewMedicalRecord";
 import { AddMedicalRecord } from "./PatientDetailsScreen/PatientHistoryScreens/AddMedicalRecord";
 
@@ -134,6 +134,7 @@ export const PatientsTab: FC = () => {
   };
 
   const [selectedPatient] = useState(mockPatients[0]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [modalVisible, setModalVisible] = useState(false);
 
   const [modalAlertVisible, setModalAlertVisible] = useState<boolean>(false);
@@ -153,6 +154,7 @@ export const PatientsTab: FC = () => {
 
   // Wanted to use this as reusable component for pop up modal
   // But the slide animation during closing of modal is choppy for some reason
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const PopUpModal: FC<PopUpModalProps> = ({
     visible,
     onRequestClose,
@@ -204,24 +206,21 @@ export const PatientsTab: FC = () => {
             title="Patient"
             riskFilterTag
             onRiskFilterClick={filterPatients}
-          >
-            <FlatList
-              showsVerticalScrollIndicator={false}
-              style={{ flex: 1 }}
-              ItemSeparatorComponent={() => <ItemSeparator />}
-              ListHeaderComponent={() => <ItemSeparator />}
-              ListFooterComponent={() => <ItemSeparator />}
-              data={filteredPatients}
-              renderItem={({ item }) => (
-                <PatientDetailsRow
-                  generalDetails={item}
-                  patientClass={item.NHYAclass}
-                  age={23}
-                />
-              )}
-              keyExtractor={(item) => item.patientID}
-            />
-          </RowSelectionWrapper>
+          />
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            style={{ flex: 1 }}
+            ItemSeparatorComponent={() => <ItemSeparator />}
+            data={filteredPatients}
+            renderItem={({ item }) => (
+              <PatientDetailsRow
+                generalDetails={item}
+                patientClass={item.NHYAclass}
+                age={23}
+              />
+            )}
+            keyExtractor={(item) => item.patientID}
+          />
         </View>
         <View
           style={{ flex: 2, backgroundColor: colors.primaryWebBackgroundColor }}
@@ -259,11 +258,6 @@ export const PatientsTab: FC = () => {
                     setDisplayMedicalRecord: setDisplayMedicalRecord,
                     setAddMedicalRecord: setAddMedicalRecord
                   }}
-                  // setDisplayHistory={setDisplayHistory}
-                  // setModalAlertVisible={setModalAlertVisible}
-                  // setViewMedicalModal={setViewMedicalModal}
-                  // setDisplayMedicalRecord={setDisplayMedicalRecord}
-                  // setAddMedicalRecord={setAddMedicalRecord}
                 />
               )}
             </Tab.Screen>

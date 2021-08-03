@@ -23,9 +23,10 @@ export const AddMedicalRecord: FC<AddMedicalRecordProps> = ({
 
   const textInputStyle: StyleProp<ViewStyle> = {
     borderWidth: ms(1),
-    borderColor: colors.primaryTextColor,
-    paddingLeft: ms(5),
-    backgroundColor: colors.primaryContrastTextColor
+    borderColor: colors.primaryBorderColor,
+    paddingLeft: ms(10),
+    backgroundColor: colors.primaryContrastTextColor,
+    borderRadius: ms(3)
   };
 
   const [title, setTitle] = useState<string>("");
@@ -43,12 +44,16 @@ export const AddMedicalRecord: FC<AddMedicalRecordProps> = ({
     <View
       style={[
         styles.container,
-        { backgroundColor: colors.primaryWebBackgroundColor }
+        { backgroundColor: colors.primaryContrastTextColor }
       ]}
     >
       <H3
         text="Title"
-        style={{ fontWeight: "bold", paddingVertical: ms(10) }}
+        style={{
+          fontWeight: "bold",
+          paddingVertical: ms(10),
+          paddingTop: ms(25)
+        }}
       />
       <TextInput
         onChangeText={onChangeTitle}
@@ -56,7 +61,12 @@ export const AddMedicalRecord: FC<AddMedicalRecordProps> = ({
         value={title}
         style={[
           textInputStyle,
-          { width: "100%", height: ms(20), fontSize: fonts.h5Size }
+          {
+            width: "100%",
+            height: ms(30),
+            fontSize: fonts.h4Size,
+            paddingVertical: ms(10)
+          }
         ]}
       />
       <H3
@@ -66,18 +76,24 @@ export const AddMedicalRecord: FC<AddMedicalRecordProps> = ({
       <TextInput
         onChangeText={onChangeRecord}
         multiline
-        placeholder="What is the content in the medical record?"
+        placeholder="What is the content of the medical record?"
         value={record}
         style={[
           textInputStyle,
-          { width: "100%", height: "60%", fontSize: fonts.h5Size }
+          {
+            width: "100%",
+            height: "50%",
+            fontSize: fonts.h4Size,
+            paddingTop: ms(5)
+          }
         ]}
       />
       <View
         style={{
           flexDirection: "row",
           alignItems: "center",
-          justifyContent: "center"
+          justifyContent: "center",
+          paddingTop: ms(20)
         }}
       >
         <TouchableOpacity
@@ -133,10 +149,9 @@ const styles = ScaledSheet.create({
   },
   container: {
     width: "50%",
-    height: "80%",
-    paddingHorizontal: "10@ms",
+    height: "90%",
+    paddingHorizontal: "40@ms",
     borderRadius: "10@ms",
-    borderWidth: "1@ms",
     marginHorizontal: "25%"
   }
 });

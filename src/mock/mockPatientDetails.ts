@@ -58,7 +58,7 @@ export const mockMedicalRecord: MedicalRecords[] = [
   {
     patientId: "1",
     record: "6 minute Walk Test",
-    content: " 6 mintue walk test results"
+    content: "6 minute walk test results"
   },
   {
     patientId: "1",

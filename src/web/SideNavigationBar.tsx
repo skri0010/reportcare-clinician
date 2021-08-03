@@ -57,7 +57,7 @@ export const SideNavigationBar: FC<MainScreenProps> = () => {
         backgroundColor: colors.primaryBarColor,
         width: drawerSize
       }}
-      initialRouteName={ScreenName.PATIENT}
+      initialRouteName={ScreenName.HOME}
     >
       <Drawer.Screen
         name={ScreenName.HOME}

@@ -40,7 +40,7 @@ export const RiskFilterTag: FC<RiskFilterTagProps> = ({
         }
       ]}
       onPress={() => {
-        onTagPress;
+        onTagPress(riskLevel);
       }}
     >
       <Text
@@ -62,7 +62,6 @@ const styles = ScaledSheet.create({
     height: "20@ms",
     justifyContent: "center",
     borderRadius: "5@ms"
-    // borderWidth: "1@ms"
   },
   textStyle: {
     textAlign: "center"
