@@ -17,13 +17,8 @@ import agentAPI from "agents_implementation/agent_framework/AgentAPI";
 import Belief from "agents_implementation/agent_framework/base/Belief";
 import {
   AppAttributes,
-  BeliefKeys,
-  PatientAttributes,
-  ProcedureAttributes,
-  ProcedureConst
+  BeliefKeys
 } from "agents_implementation/agent_framework/AgentEnums";
-import agentMHA from "agents_implementation/agents/medical-health-assistant/MHA";
-import agentALA from "agents_implementation/agents/alert-assistant/ALA";
 
 interface MainNavigationStackProps {
   setAuthState: (state: string) => void;
@@ -102,20 +97,6 @@ export const MainNavigationStack: FC<MainNavigationStackProps> = ({
     warningToastShown
   ]);
 
-  const triggerAlert = () => {
-    agentALA.start();
-    agentMHA.addBelief(
-      new Belief(BeliefKeys.PATIENT, PatientAttributes.INCOMING_ALERTS, true)
-    );
-    agentAPI.addFact(
-      new Belief(
-        BeliefKeys.PROCEDURE,
-        ProcedureAttributes.AT_CP,
-        ProcedureConst.ACTIVE
-      )
-    );
-  };
-
   return (
     <View style={styles.mainContainer}>
       <NavigationContainer>
@@ -134,15 +115,6 @@ export const MainNavigationStack: FC<MainNavigationStackProps> = ({
                   size={ms(20)}
                   style={{ paddingEnd: ms(10) }}
                   onPress={signOut}
-                />
-              ),
-              headerLeft: () => (
-                <Icon
-                  name="logout"
-                  color={colors.primaryContrastTextColor}
-                  size={ms(25)}
-                  style={{ paddingStart: ms(10) }}
-                  onPress={triggerAlert}
                 />
               )
             }}

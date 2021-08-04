@@ -300,13 +300,6 @@ class Agent {
     await this.inference();
   }
 
-  displayState(): void {
-    console.log(`Agent ${this.getID()}`);
-    console.log("Beliefs ...............................................");
-    console.log(this.beliefs);
-    console.log(".......................................................");
-  }
-
   displayEngine(): void {
     // Root Node
     const currNode = this.engine.getNetwork();

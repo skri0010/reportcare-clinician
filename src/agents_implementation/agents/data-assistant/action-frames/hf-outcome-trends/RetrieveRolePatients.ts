@@ -44,19 +44,6 @@ class RetrieveRolePatients extends Activity {
   async doActivity(agent: Agent): Promise<void> {
     await super.doActivity(agent);
 
-    /**
-     * Stops the procedure
-     * Note: Stopping procedure early otherwise UXSA's RetrieveRole and RequestRetrieveAll
-     * action frames will be executed multiple times in web version
-     */
-    agentAPI.addFact(
-      new Belief(
-        BeliefKeys.PROCEDURE,
-        ProcedureAttributes.HF_OTP_I,
-        ProcedureConst.INACTIVE
-      )
-    );
-
     // Update Beliefs
     agent.addBelief(
       new Belief(BeliefKeys.PATIENT, PatientAttributes.RETRIEVE_ALL, false)
@@ -104,7 +91,17 @@ class RetrieveRolePatients extends Activity {
     // Removes role from facts
     agentAPI.addFact(
       new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.ROLE, null),
-      false,
+      false
+    );
+
+    // Stops the procedure
+    agentAPI.addFact(
+      new Belief(
+        BeliefKeys.PROCEDURE,
+        ProcedureAttributes.HF_OTP_I,
+        ProcedureConst.INACTIVE
+      ),
+      true,
       true
     );
 

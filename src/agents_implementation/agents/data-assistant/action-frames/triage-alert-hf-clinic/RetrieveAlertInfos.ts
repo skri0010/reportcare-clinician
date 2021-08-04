@@ -25,6 +25,25 @@ import {
 } from "aws";
 import { Alert, ModelSortDirection } from "aws/API";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { RiskLevel } from "models/RiskLevel";
+
+interface AlertInfos {
+  highRisk: AlertInfo[];
+  mediumRisk: AlertInfo[];
+  lowRisk: AlertInfo[];
+  unassignedRisk: AlertInfo[];
+}
+
+interface SortedAlerts {
+  highRisk: Alert[];
+  mediumRisk: Alert[];
+  lowRisk: Alert[];
+  unassignedRisk: Alert[];
+}
+
+interface LocalAlerts {
+  [k: string]: string;
+}
 
 /**
  * Class to represent an activity for retrieving patient's information associated with the sorted alerts.
@@ -52,12 +71,7 @@ class RetrieveAlertInfos extends Activity {
 
     try {
       // Gets sorted alerts from facts
-      const sortedAlerts: {
-        highRisk: Alert[];
-        mediumRisk: Alert[];
-        lowRisk: Alert[];
-        unassignedRisk: Alert[];
-      } =
+      const sortedAlerts: SortedAlerts =
         agentAPI.getFacts()[BeliefKeys.PATIENT]?.[
           PatientAttributes.SORTED_ALERTS
         ];
@@ -68,68 +82,95 @@ class RetrieveAlertInfos extends Activity {
 
       // Retrieves local alerts to save new alerts locally
       const alertsStr = await AsyncStorage.getItem(AsyncStorageKeys.ALERTS);
-      let localAlerts: { [k: string]: string } | null = null;
+      let localAlerts: LocalAlerts | null = null;
       if (alertsStr) {
         localAlerts = JSON.parse(alertsStr);
       }
 
       // Device is online
       if (sortedAlerts && isOnline) {
-        const alertInfos: {
-          highRisk: AlertInfo[];
-          mediumRisk: AlertInfo[];
-          lowRisk: AlertInfo[];
-          unassignedRisk: AlertInfo[];
-        } = {
+        const alertInfos: AlertInfos = {
           highRisk: [],
           mediumRisk: [],
           lowRisk: [],
           unassignedRisk: []
         };
 
-        // Retrieves information for high risk alerts
-        sortedAlerts.highRisk.forEach(async (alert) => {
-          const result = await this.constructAlertInfo(alert, localAlerts);
-          if (result && result.alertInfo) {
-            alertInfos.highRisk.push(result.alertInfo);
-          }
-          if (result && result.updatedLocalAlerts) {
-            localAlerts = result.updatedLocalAlerts;
-          }
-        });
+        if (sortedAlerts.highRisk.length > 0) {
+          await Promise.all(
+            sortedAlerts.highRisk.map(async (alert) => {
+              const result = await this.queryAlertInfo(alert, localAlerts);
+              if (result && result.updatedLocalAlerts) {
+                localAlerts = result.updatedLocalAlerts;
+              }
+              if (result && result.alertInfo) {
+                result.alertInfo.riskLevel = RiskLevel.HIGH;
+                if (alertInfos.highRisk) {
+                  alertInfos.highRisk.push(result.alertInfo);
+                } else {
+                  alertInfos.highRisk = [result.alertInfo];
+                }
+              }
+            })
+          );
+        }
 
-        // Retrieves information for medium risk alerts
-        sortedAlerts.mediumRisk.forEach(async (alert) => {
-          const result = await this.constructAlertInfo(alert, localAlerts);
-          if (result && result.alertInfo) {
-            alertInfos.highRisk.push(result.alertInfo);
-          }
-          if (result && result.updatedLocalAlerts) {
-            localAlerts = result.updatedLocalAlerts;
-          }
-        });
+        if (sortedAlerts.mediumRisk.length > 0) {
+          await Promise.all(
+            sortedAlerts.mediumRisk.map(async (alert) => {
+              const result = await this.queryAlertInfo(alert, localAlerts);
+              if (result && result.updatedLocalAlerts) {
+                localAlerts = result.updatedLocalAlerts;
+              }
+              if (result && result.alertInfo) {
+                result.alertInfo.riskLevel = RiskLevel.MEDIUM;
+                if (alertInfos.mediumRisk) {
+                  alertInfos.mediumRisk.push(result.alertInfo);
+                } else {
+                  alertInfos.mediumRisk = [result.alertInfo];
+                }
+              }
+            })
+          );
+        }
 
-        // Retrieves information for low risk alerts
-        sortedAlerts.lowRisk.forEach(async (alert) => {
-          const result = await this.constructAlertInfo(alert, localAlerts);
-          if (result && result.alertInfo) {
-            alertInfos.highRisk.push(result.alertInfo);
-          }
-          if (result && result.updatedLocalAlerts) {
-            localAlerts = result.updatedLocalAlerts;
-          }
-        });
+        if (sortedAlerts.lowRisk.length > 0) {
+          await Promise.all(
+            sortedAlerts.lowRisk.map(async (alert) => {
+              const result = await this.queryAlertInfo(alert, localAlerts);
+              if (result && result.updatedLocalAlerts) {
+                localAlerts = result.updatedLocalAlerts;
+              }
+              if (result && result.alertInfo) {
+                result.alertInfo.riskLevel = RiskLevel.LOW;
+                if (alertInfos.lowRisk) {
+                  alertInfos.lowRisk.push(result.alertInfo);
+                } else {
+                  alertInfos.lowRisk = [result.alertInfo];
+                }
+              }
+            })
+          );
+        }
 
-        // Retrieves information for unassigned risk alerts
-        sortedAlerts.unassignedRisk.forEach(async (alert) => {
-          const result = await this.constructAlertInfo(alert, localAlerts);
-          if (result && result.alertInfo) {
-            alertInfos.highRisk.push(result.alertInfo);
-          }
-          if (result && result.updatedLocalAlerts) {
-            localAlerts = result.updatedLocalAlerts;
-          }
-        });
+        if (sortedAlerts.unassignedRisk.length > 0) {
+          await Promise.all(
+            sortedAlerts.unassignedRisk.map(async (alert) => {
+              const result = await this.queryAlertInfo(alert, localAlerts);
+              if (result && result.updatedLocalAlerts) {
+                localAlerts = result.updatedLocalAlerts;
+              }
+              if (result && result.alertInfo) {
+                result.alertInfo.riskLevel = RiskLevel.UNASSIGNED;
+                if (alertInfos.unassignedRisk) {
+                  alertInfos.unassignedRisk.push(result.alertInfo);
+                } else {
+                  alertInfos.unassignedRisk = [result.alertInfo];
+                }
+              }
+            })
+          );
+        }
 
         // Saves alert infos locally
         if (localAlerts) {
@@ -139,15 +180,17 @@ class RetrieveAlertInfos extends Activity {
           );
         }
 
-        // Adds alert infos to facts to be retrieved in DisplayAlert action frame of UXSA
-        agentAPI.addFact(
-          new Belief(
-            BeliefKeys.PATIENT,
-            PatientAttributes.ALERT_INFOS,
-            alertInfos
-          ),
-          false
-        );
+        if (Object.entries(alertInfos).length > 0) {
+          // Adds alert infos to facts to be retrieved in DisplayAlert action frame of UXSA
+          agentAPI.addFact(
+            new Belief(
+              BeliefKeys.PATIENT,
+              PatientAttributes.ALERT_INFOS,
+              alertInfos
+            ),
+            false
+          );
+        }
       }
 
       // Update Facts
@@ -163,7 +206,7 @@ class RetrieveAlertInfos extends Activity {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  async constructAlertInfo(
+  async queryAlertInfo(
     alert: Alert,
     localAlerts: { [k: string]: string } | null
   ): Promise<{
@@ -278,7 +321,6 @@ class RetrieveAlertInfos extends Activity {
         localAlerts = {};
         localAlerts[alert.patientID] = JSON.stringify([alertInfo]);
       }
-
       return { alertInfo: alertInfo, updatedLocalAlerts: localAlerts };
     }
     return null;

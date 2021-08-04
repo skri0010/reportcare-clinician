@@ -32,7 +32,7 @@ class SortAlert extends Activity {
    * @param {Agent} agent - agent executing the activity
    */
   async doActivity(agent: Agent): Promise<void> {
-    super.doActivity(agent);
+    await super.doActivity(agent);
 
     // Update beliefs to stop the procedure from repeating
     agent.addBelief(
@@ -47,6 +47,7 @@ class SortAlert extends Activity {
         agentAPI.getFacts()[BeliefKeys.PATIENT]?.[
           PatientAttributes.ALERTS_TO_SORT
         ];
+
       if (alerts) {
         // Sorts the alerts
         const sortedAlerts: {

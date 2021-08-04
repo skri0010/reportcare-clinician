@@ -10,12 +10,10 @@ import {
   ClinicianInfo
 } from "aws/API";
 import {
-  ActionFrameIDs,
   AgentIDs,
   AppAttributes,
   AsyncStorageKeys,
-  BeliefKeys,
-  CommonAttributes
+  BeliefKeys
 } from "../AgentEnums";
 
 /**
@@ -245,39 +243,13 @@ abstract class AgentManagement {
               break;
             }
             case AgentIDs.DTA: {
-              // LS-TODO: Temporary fix for duplicated RetrievePatientDetails and RetrieveAlertInfo action frames
-              const currentBeliefs: Fact = agent.getBeliefs();
-              switch (
-                currentBeliefs[AgentIDs.DTA][CommonAttributes.LAST_ACTIVITY]
-              ) {
-                case ActionFrameIDs.DTA.RETRIEVE_PATIENT_DETAILS:
-                  currentBeliefs[AgentIDs.DTA][CommonAttributes.LAST_ACTIVITY] =
-                    ActionFrameIDs.DTA.REQUEST_DETAILS_DISPLAY;
-                  break;
-                case ActionFrameIDs.DTA.RETRIEVE_ALERT_INFOS:
-                  currentBeliefs[AgentIDs.DTA][CommonAttributes.LAST_ACTIVITY] =
-                    ActionFrameIDs.DTA.REQUEST_ALERTS_DISPLAY;
-                  break;
-                default:
-                  break;
-              }
-              const updatedBeliefs = JSON.stringify(currentBeliefs);
+              const updatedBeliefs = JSON.stringify(agent.getBeliefs());
               updatedProtectedInfo[AgentIDs.DTA] = updatedBeliefs;
               localClinician.protectedInfo[AgentIDs.DTA] = updatedBeliefs;
               break;
             }
             case AgentIDs.UXSA: {
-              // LS-TODO: Temporary fix for duplicated RetrieveRole action frame
-              const currentBeliefs: Fact = agent.getBeliefs();
-              if (
-                currentBeliefs[AgentIDs.UXSA][
-                  CommonAttributes.LAST_ACTIVITY
-                ] === ActionFrameIDs.UXSA.RETRIEVE_ROLE
-              ) {
-                currentBeliefs[AgentIDs.UXSA][CommonAttributes.LAST_ACTIVITY] =
-                  ActionFrameIDs.UXSA.REQUEST_RETRIEVE_ALL;
-              }
-              const updatedBeliefs = JSON.stringify(currentBeliefs);
+              const updatedBeliefs = JSON.stringify(agent.getBeliefs());
               updatedProtectedInfo[AgentIDs.UXSA] = updatedBeliefs;
               localClinician.protectedInfo[AgentIDs.UXSA] = updatedBeliefs;
               break;

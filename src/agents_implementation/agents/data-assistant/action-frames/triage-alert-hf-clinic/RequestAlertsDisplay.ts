@@ -42,7 +42,7 @@ class RequestAlertsDisplay extends Communicate {
    */
   async doActivity(agent: Agent): Promise<void> {
     try {
-      super.doActivity(agent);
+      await super.doActivity(agent);
 
       // Update Beliefs
       agent.addBelief(
