@@ -15,24 +15,20 @@ import {
 } from "../../../../agent_framework/AgentEnums";
 
 /**
- * Class to represent the activity for requesting display of alert patients.
+ * Class to represent the activity for requesting sorting of new alerts.
  * This happens in Procedure Triage Alert HF Clinic (AT-CP).
  */
-class RequestAlertDisplay extends Communicate {
+class RequestAlertsSort extends Communicate {
   /**
-   * Constructor for the RequestAlertDisplay class
+   * Constructor for the RequestAlertsSort class
    */
   constructor() {
     super(
-      ActionFrameIDs.DTA.REQUEST_ALERT_DISPLAY,
+      ActionFrameIDs.MHA.REQUEST_ALERTS_SORT,
       Performative.REQUEST,
-      // Triggers DisplayAlerts action frame of UXSA
-      new Belief(
-        BeliefKeys.PATIENT,
-        PatientAttributes.ALERT_INFO_RETRIEVED,
-        true
-      ),
-      [AgentIDs.UXSA]
+      // Triggers SortAlerts action frame of ALA
+      new Belief(BeliefKeys.PATIENT, PatientAttributes.NEW_ALERTS, true),
+      [AgentIDs.ALA]
     );
   }
 
@@ -42,7 +38,7 @@ class RequestAlertDisplay extends Communicate {
    */
   async doActivity(agent: Agent): Promise<void> {
     try {
-      super.doActivity(agent);
+      await super.doActivity(agent);
 
       // Update Beliefs
       agent.addBelief(
@@ -55,23 +51,23 @@ class RequestAlertDisplay extends Communicate {
   }
 }
 
-// Rules or preconditions for activating the RequestAlertDisplay class
+// Rules or preconditions for activating the RequestAlertsSort class
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
   ProcedureAttributes.AT_CP,
   ProcedureConst.ACTIVE
 );
 const rule2 = new Precondition(
-  AgentIDs.DTA,
+  AgentIDs.MHA,
   CommonAttributes.LAST_ACTIVITY,
-  ActionFrameIDs.DTA.RETRIEVE_ALERT_INFO
+  ActionFrameIDs.MHA.RECEIVE_ALERTS
 );
 
-// Actionframe of the RequestAlertDisplay class
-const af_RequestAlertDisplay = new Actionframe(
-  `AF_${ActionFrameIDs.DTA.REQUEST_ALERT_DISPLAY}`,
+// Actionframe of the RequestAlertsSort class
+const af_RequestAlertsSort = new Actionframe(
+  `AF_${ActionFrameIDs.MHA.REQUEST_ALERTS_SORT}`,
   [rule1, rule2],
-  new RequestAlertDisplay()
+  new RequestAlertsSort()
 );
 
-export default af_RequestAlertDisplay;
+export default af_RequestAlertsSort;

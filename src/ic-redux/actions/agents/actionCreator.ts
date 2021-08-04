@@ -41,9 +41,30 @@ export const setPatientAssignmentsSynced = createAction(
   })
 )();
 
-export const setNewAlert = createAction(
-  actionNames.SET_NEW_ALERT,
-  (newAlert: AlertInfo) => ({
-    newAlert: newAlert
+export const setNewHighRiskAlerts = createAction(
+  actionNames.SET_NEW_HIGH_RISK_ALERTS,
+  (newHighRiskAlerts: AlertInfo[]) => ({
+    newHighRiskAlerts: newHighRiskAlerts
+  })
+)();
+
+export const setNewMediumRiskAlerts = createAction(
+  actionNames.SET_NEW_MEDIUM_RISK_ALERTS,
+  (newMediumRiskAlerts: AlertInfo[]) => ({
+    newMediumRiskAlerts: newMediumRiskAlerts
+  })
+)();
+
+export const setNewLowRiskAlerts = createAction(
+  actionNames.SET_NEW_LOW_RISK_ALERTS,
+  (newLowRiskAlerts: AlertInfo[]) => ({
+    newLowRiskAlerts: newLowRiskAlerts
+  })
+)();
+
+export const setNewUnassignedRiskAlerts = createAction(
+  actionNames.SET_NEW_UNASSIGNED_RISK_ALERTS,
+  (newUnassignedRiskAlerts: AlertInfo[]) => ({
+    newUnassignedRiskAlerts: newUnassignedRiskAlerts
   })
 )();

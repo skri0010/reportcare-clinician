@@ -899,6 +899,7 @@ export const syncAlerts = /* GraphQL */ `
         patientID
         dateTime
         summary
+        colorCode
         vitalsReportID
         symptomReportID
         completed
@@ -921,6 +922,7 @@ export const getAlert = /* GraphQL */ `
       patientID
       dateTime
       summary
+      colorCode
       vitalsReportID
       vitalsReport {
         id
@@ -977,6 +979,7 @@ export const listAlerts = /* GraphQL */ `
         patientID
         dateTime
         summary
+        colorCode
         vitalsReportID
         symptomReportID
         completed
@@ -1039,6 +1042,7 @@ export const getTodo = /* GraphQL */ `
         patientID
         dateTime
         summary
+        colorCode
         vitalsReportID
         symptomReportID
         completed
@@ -1457,6 +1461,7 @@ export const listAlertsByPatientID = /* GraphQL */ `
         patientID
         dateTime
         summary
+        colorCode
         vitalsReportID
         symptomReportID
         completed
@@ -1494,6 +1499,7 @@ export const listAlertsByDateTime = /* GraphQL */ `
         patientID
         dateTime
         summary
+        colorCode
         vitalsReportID
         symptomReportID
         completed

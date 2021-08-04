@@ -15,19 +15,19 @@ import {
 } from "../../../../agent_framework/AgentEnums";
 
 /**
- * Class to represent the activity for requesting patient's information associated with an alert.
+ * Class to represent the activity for requesting patient's information associated with alerts.
  * This happens in Procedure Triage Alert HF Clinic (AT-CP).
  */
-class RequestAlertInfo extends Communicate {
+class RequestAlertInfos extends Communicate {
   /**
-   * Constructor for the RequestAlertInfo class
+   * Constructor for the RequestAlertInfos class
    */
   constructor() {
     super(
-      ActionFrameIDs.ALA.REQUEST_ALERT_INFO,
+      ActionFrameIDs.ALA.REQUEST_ALERT_INFOS,
       Performative.REQUEST,
-      // Triggers RetrieveAlertInfo action frame of DTA
-      new Belief(BeliefKeys.PATIENT, PatientAttributes.ALERT_SORTED, true),
+      // Triggers RetrieveAlertInfos action frame of DTA
+      new Belief(BeliefKeys.PATIENT, PatientAttributes.ALERTS_SORTED, true),
       [AgentIDs.DTA]
     );
   }
@@ -38,7 +38,7 @@ class RequestAlertInfo extends Communicate {
    */
   async doActivity(agent: Agent): Promise<void> {
     try {
-      super.doActivity(agent);
+      await super.doActivity(agent);
 
       // Update Beliefs
       agent.addBelief(
@@ -51,7 +51,7 @@ class RequestAlertInfo extends Communicate {
   }
 }
 
-// Rules or preconditions for activating the RequestAlertInfo class
+// Rules or preconditions for activating the RequestAlertInfos class
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
   ProcedureAttributes.AT_CP,
@@ -60,14 +60,14 @@ const rule1 = new Precondition(
 const rule2 = new Precondition(
   AgentIDs.ALA,
   CommonAttributes.LAST_ACTIVITY,
-  ActionFrameIDs.ALA.SORT_ALERT
+  ActionFrameIDs.ALA.SORT_ALERTS
 );
 
-// Actionframe of the RequestAlertInfo class
-const af_RequestAlertInfo = new Actionframe(
-  `AF_${ActionFrameIDs.ALA.REQUEST_ALERT_INFO}`,
+// Actionframe of the RequestAlertInfos class
+const af_RequestAlertInfos = new Actionframe(
+  `AF_${ActionFrameIDs.ALA.REQUEST_ALERT_INFOS}`,
   [rule1, rule2],
-  new RequestAlertInfo()
+  new RequestAlertInfos()
 );
 
-export default af_RequestAlertInfo;
+export default af_RequestAlertInfos;

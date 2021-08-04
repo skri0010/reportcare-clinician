@@ -12,18 +12,20 @@ import {
   ProcedureConst
 } from "agents_implementation/agent_framework/AgentEnums";
 import agentAPI from "agents_implementation/agent_framework/AgentAPI";
-import { Alert } from "aws/API";
+import { mockAlerts } from "mock/mockAlerts";
+
+// LS-TODO: To be revised regarding communication between MHA agents of patient and clinician
 
 /**
- * Class to represent the activity for sorting alerts received from MHA.
+ * Class to represent the activity for receiving alerts.
  * This happens in Procedure Triage Alert HF Clinic (AT-CP).
  */
-class SortAlert extends Activity {
+class ReceiveAlerts extends Activity {
   /**
-   * Constructor for the SortAlert class
+   * Constructor for the ReceiveAlerts class
    */
   constructor() {
-    super(ActionFrameIDs.ALA.SORT_ALERT);
+    super(ActionFrameIDs.MHA.RECEIVE_ALERTS);
   }
 
   /**
@@ -31,26 +33,28 @@ class SortAlert extends Activity {
    * @param {Agent} agent - agent executing the activity
    */
   async doActivity(agent: Agent): Promise<void> {
-    super.doActivity(agent);
+    await super.doActivity(agent);
 
     // Update beliefs to stop the procedure from repeating
     agent.addBelief(
-      new Belief(BeliefKeys.PATIENT, PatientAttributes.NEW_ALERT, false)
+      new Belief(BeliefKeys.PATIENT, PatientAttributes.INCOMING_ALERTS, false)
     );
     agent.addBelief(
       new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
     );
 
     try {
-      const alert: Alert =
-        agentAPI.getFacts()[BeliefKeys.PATIENT]?.[PatientAttributes.ALERT];
-      if (alert) {
-        // LS-TODO: Figure out how to sort
-        agentAPI.addFact(
-          new Belief(BeliefKeys.PATIENT, PatientAttributes.ALERT, alert),
-          false
-        );
-      }
+      // LS-TODO: Retrieve alert information and pack into Alert
+
+      // Broadcast alert to facts to be sorted by SortAlerts action frame of ALA.
+      agentAPI.addFact(
+        new Belief(
+          BeliefKeys.PATIENT,
+          PatientAttributes.ALERTS_TO_SORT,
+          mockAlerts
+        ),
+        false
+      );
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
@@ -58,7 +62,7 @@ class SortAlert extends Activity {
   }
 }
 
-// Rules or preconditions for activating the SortAlert class
+// Rules or preconditions for activating the ReceiveAlerts class
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
   ProcedureAttributes.AT_CP,
@@ -66,15 +70,15 @@ const rule1 = new Precondition(
 );
 const rule2 = new Precondition(
   BeliefKeys.PATIENT,
-  PatientAttributes.NEW_ALERT,
+  PatientAttributes.INCOMING_ALERTS,
   true
 );
 
-// Actionframe of the SortAlert class
-const af_SortAlert = new Actionframe(
-  `AF_${ActionFrameIDs.ALA.SORT_ALERT}`,
+// Actionframe of the ReceiveAlerts class
+const af_ReceiveAlerts = new Actionframe(
+  `AF_${ActionFrameIDs.MHA.RECEIVE_ALERTS}`,
   [rule1, rule2],
-  new SortAlert()
+  new ReceiveAlerts()
 );
 
-export default af_SortAlert;
+export default af_ReceiveAlerts;

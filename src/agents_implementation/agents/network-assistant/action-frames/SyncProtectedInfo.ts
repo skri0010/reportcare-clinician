@@ -31,7 +31,7 @@ class SyncProtectedInfo extends Activity {
    * @param {Agent} agent - agent executing the activity
    */
   async doActivity(agent: Agent): Promise<void> {
-    super.doActivity(agent);
+    await super.doActivity(agent);
 
     agent.addBelief(
       new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())

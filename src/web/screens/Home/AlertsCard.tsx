@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useState, useEffect } from "react";
 import { RootState, select } from "util/useRedux";
 import { RiskLevel } from "models/RiskLevel";
 import { View, TextStyle } from "react-native";
@@ -12,23 +12,76 @@ interface AlertsCardProps {
 }
 
 export const AlertsCard: FC<AlertsCardProps> = ({ maxHeight }) => {
-  const { colors } = select((state: RootState) => ({
-    colors: state.settings.colors
+  const {
+    colors,
+    newHighRiskAlerts,
+    newMediumRiskAlerts,
+    newLowRiskAlerts,
+    newUnassignedRiskAlerts
+  } = select((state: RootState) => ({
+    colors: state.settings.colors,
+    newHighRiskAlerts: state.agents.newHighRiskAlerts,
+    newMediumRiskAlerts: state.agents.newMediumRiskAlerts,
+    newLowRiskAlerts: state.agents.newLowRiskAlerts,
+    newUnassignedRiskAlerts: state.agents.newUnassignedRiskAlerts
   }));
 
   const titleColor = { color: colors.primaryTextColor } as TextStyle;
   const detailsColors = { color: colors.secondaryTextColor } as TextStyle;
 
+  const [pendingAlertsCount, setPendingAlertsCount] = useState(0);
+
+  useEffect(() => {
+    setPendingAlertsCount(
+      newHighRiskAlerts.length +
+        newMediumRiskAlerts.length +
+        newLowRiskAlerts.length +
+        newUnassignedRiskAlerts.length
+    );
+  }, [
+    newHighRiskAlerts,
+    newMediumRiskAlerts,
+    newLowRiskAlerts,
+    newUnassignedRiskAlerts
+  ]);
+
   return (
     <CardWrapper maxHeight={maxHeight}>
       <View style={styles.titleContainer}>
         <H3 text="Alerts" style={[styles.title, titleColor]} />
-        <H5 text="   (2 remaining)" style={[styles.title, detailsColors]} />
+        <H5
+          text={`   (${pendingAlertsCount} remaining)`}
+          style={[styles.title, detailsColors]}
+        />
       </View>
-      <LongAlertButton riskLevel={RiskLevel.HIGH} alertCount={3} />
-      <LongAlertButton riskLevel={RiskLevel.MEDIUM} alertCount={3} />
-      <LongAlertButton riskLevel={RiskLevel.LOW} />
-      <LongAlertButton riskLevel={RiskLevel.UNASSIGNED} alertCount={3} />
+      <LongAlertButton
+        riskLevel={RiskLevel.HIGH}
+        alertCount={
+          newHighRiskAlerts.length > 0 ? newHighRiskAlerts.length : undefined
+        }
+      />
+      <LongAlertButton
+        riskLevel={RiskLevel.MEDIUM}
+        alertCount={
+          newMediumRiskAlerts.length > 0
+            ? newMediumRiskAlerts.length
+            : undefined
+        }
+      />
+      <LongAlertButton
+        riskLevel={RiskLevel.LOW}
+        alertCount={
+          newLowRiskAlerts.length > 0 ? newLowRiskAlerts.length : undefined
+        }
+      />
+      <LongAlertButton
+        riskLevel={RiskLevel.UNASSIGNED}
+        alertCount={
+          newUnassignedRiskAlerts.length > 0
+            ? newUnassignedRiskAlerts.length
+            : undefined
+        }
+      />
     </CardWrapper>
   );
 };

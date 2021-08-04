@@ -738,6 +738,7 @@ export const onCreateAlert = /* GraphQL */ `
       patientID
       dateTime
       summary
+      colorCode
       vitalsReportID
       vitalsReport {
         id
@@ -789,6 +790,7 @@ export const onUpdateAlert = /* GraphQL */ `
       patientID
       dateTime
       summary
+      colorCode
       vitalsReportID
       vitalsReport {
         id
@@ -840,6 +842,7 @@ export const onDeleteAlert = /* GraphQL */ `
       patientID
       dateTime
       summary
+      colorCode
       vitalsReportID
       vitalsReport {
         id
@@ -898,6 +901,7 @@ export const onCreateTodo = /* GraphQL */ `
         patientID
         dateTime
         summary
+        colorCode
         vitalsReportID
         symptomReportID
         completed
@@ -932,6 +936,7 @@ export const onUpdateTodo = /* GraphQL */ `
         patientID
         dateTime
         summary
+        colorCode
         vitalsReportID
         symptomReportID
         completed
@@ -966,6 +971,7 @@ export const onDeleteTodo = /* GraphQL */ `
         patientID
         dateTime
         summary
+        colorCode
         vitalsReportID
         symptomReportID
         completed

@@ -10,7 +10,14 @@ export interface Fact {
   [k: string]: { [k: string]: any };
 }
 
-// Interfaces used by front end
+export enum AlertColorCode {
+  HIGH = "red",
+  MEDIUM = "yellow",
+  LOW = "green",
+  UNASSIGNED = "white"
+}
+
+// Interfaces shared with front end
 export interface PatientDetails {
   patientInfo?: PatientInfo;
   activityInfo: ActivityInfo[];
@@ -37,6 +44,7 @@ export interface AlertInfo {
   medicationQuantity?: string;
   activityDuringAlert?: string;
   completed: boolean;
+  riskLevel?: RiskLevel;
 }
 
 export interface NewTodoInput {

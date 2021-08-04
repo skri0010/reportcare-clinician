@@ -540,7 +540,33 @@ class Engine {
         }
       }
     }
-    return availableActions;
+
+    return this.validateAvailableActions(availableActions);
+  }
+
+  /**
+   * Filters valid action in which the parent of the activity node is still active.
+   * @param availableActions List of available actions from network traversal
+   * @returns list of valid available actions
+   */
+  // eslint-disable-next-line class-methods-use-this
+  async validateAvailableActions(
+    availableActions: ActivityNode[]
+  ): Promise<ActivityNode[]> {
+    let validActivity: number[] = [];
+    return Promise.all(
+      (validActivity = availableActions.map((action, index) => {
+        const parentNode = action.getParent();
+        if (parentNode.isActive()) {
+          return index;
+        }
+        return -1;
+      }))
+    ).then(() => {
+      return availableActions.filter((_, index) =>
+        validActivity.includes(index)
+      );
+    });
   }
 }
 

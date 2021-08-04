@@ -51,6 +51,19 @@ export const getClinicianProtectedInfo = async (
   })) as GetClinicianProtectedInfoResponse;
 };
 
+interface GetPatientInfoResponse extends BaseResponse {
+  data: GetPatientInfoQuery;
+}
+
+export const getPatientInfo = async (
+  variables: GetPatientInfoQueryVariables
+): Promise<GetPatientInfoResponse> => {
+  return (await API.graphql({
+    query: queries.getPatientInfo,
+    variables: variables
+  })) as GetPatientInfoResponse;
+};
+
 interface GetMedicationInfoResponse extends BaseResponse {
   data: GetMedicationInfoQuery;
 }
@@ -127,18 +140,6 @@ export const getTodo = async (
     query: queries.getTodo,
     variables: variables
   })) as GetTodoResponse;
-};
-interface GetPatientInfoResponse extends BaseResponse {
-  data: GetPatientInfoQuery;
-}
-
-export const getPatientInfo = async (
-  variables: GetPatientInfoQueryVariables
-): Promise<GetPatientInfoResponse> => {
-  return (await API.graphql({
-    query: queries.getPatientInfo,
-    variables: variables
-  })) as GetPatientInfoResponse;
 };
 
 interface GetPatientAssignmentResponse extends BaseResponse {

@@ -343,6 +343,7 @@ type Alert
   patientID: String!
   dateTime: AWSDateTime!
   summary: String!
+  colorCode: String!
   vitalsReportID: ID!
   vitalsReport: ReportVitals @connection(fields: ["vitalsReportID"])
   symptomReportID: ID!

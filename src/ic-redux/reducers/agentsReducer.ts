@@ -13,8 +13,12 @@ interface AgentsState {
   online: boolean;
   patients: Patient[];
   patientDetails: PatientDetails;
-  newAlert: AlertInfo | undefined;
+
   patientAssignmentsSynced: boolean;
+  newHighRiskAlerts: AlertInfo[];
+  newMediumRiskAlerts: AlertInfo[];
+  newLowRiskAlerts: AlertInfo[];
+  newUnassignedRiskAlerts: AlertInfo[];
 }
 
 const initialState: AgentsState = {
@@ -27,8 +31,11 @@ const initialState: AgentsState = {
     symptomsReports: [],
     vitalsReports: []
   },
-  newAlert: undefined,
-  patientAssignmentsSynced: false
+  patientAssignmentsSynced: false,
+  newHighRiskAlerts: [],
+  newMediumRiskAlerts: [],
+  newLowRiskAlerts: [],
+  newUnassignedRiskAlerts: []
 };
 
 export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
@@ -49,8 +56,20 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
         ...state,
         patientAssignmentsSynced: action.payload.patientAssignmentsSynced
       };
-    case actionNames.SET_NEW_ALERT:
-      return { ...state, newAlert: action.payload.newAlert };
+    case actionNames.SET_NEW_HIGH_RISK_ALERTS:
+      return { ...state, newHighRiskAlerts: action.payload.newHighRiskAlerts };
+    case actionNames.SET_NEW_MEDIUM_RISK_ALERTS:
+      return {
+        ...state,
+        newMediumRiskAlerts: action.payload.newMediumRiskAlerts
+      };
+    case actionNames.SET_NEW_LOW_RISK_ALERTS:
+      return { ...state, newLowRiskAlerts: action.payload.newLowRiskAlerts };
+    case actionNames.SET_NEW_UNASSIGNED_RISK_ALERTS:
+      return {
+        ...state,
+        newUnassignedRiskAlerts: action.payload.newUnassignedRiskAlerts
+      };
     default:
       return state;
   }

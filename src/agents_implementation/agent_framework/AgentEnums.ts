@@ -55,27 +55,27 @@ export const ActionFrameIDs = {
     RETRIEVE_ROLE_PATIENTS: "RetrieveRolePatients",
     RETRIEVE_PATIENT_DETAILS: "RetrievePatientDetails",
     REQUEST_DETAILS_DISPLAY: "RequestDetailsDisplay",
-    RETRIEVE_ALERT_INFO: "RetrieveAlertInfo",
-    REQUEST_ALERT_DISPLAY: "RequestAlertDisplay",
-    RESOLVE_PATIENT_ASSIGNMENT: "ResolvePatientAssignment"
+    RESOLVE_PATIENT_ASSIGNMENT: "ResolvePatientAssignment",
+    RETRIEVE_ALERT_INFOS: "RetrieveAlertInfos",
+    REQUEST_ALERTS_DISPLAY: "RequestAlertsDisplay"
   },
   UXSA: {
     RETRIEVE_ROLE: "RetrieveRole",
     REQUEST_RETRIEVE_ALL: "RequestRetrieveAll",
     VISUALIZE_PARAMETERS: "VisualizeParameters",
-    DISPLAY_ALERT: "DisplayAlert"
+    DISPLAY_ALERTS: "DisplayAlerts"
   },
   NWA: {
     SYNC_PROTECTED_INFO: "SyncProtectedInfo",
     SYNC_PATIENT_ASSIGNMENT: "SyncPatientAssignment"
   },
   ALA: {
-    SORT_ALERT: "SortAlert",
-    REQUEST_ALERT_INFO: "RequestAlertInfo"
+    SORT_ALERTS: "SortAlerts",
+    REQUEST_ALERT_INFOS: "RequestAlertInfos"
   },
   MHA: {
-    RECEIVE_ALERT: "ReceiveAlert",
-    REQUEST_ALERT_SORT: "RequestAlertSort"
+    RECEIVE_ALERTS: "ReceiveAlerts",
+    REQUEST_ALERTS_SORT: "RequestAlertsSort"
   }
 };
 
@@ -128,15 +128,15 @@ export enum PatientAttributes {
   DETAILS_RETRIEVED = "DetailsRetrieved",
   VIEW_DETAILS = "ViewDetails",
   DETAILS = "Details",
-  INCOMING_ALERT = "IncomingAlert",
-  NEW_ALERT = "NewAlert",
-  ALERT = "Alert",
-  ALERT_SORTED = "AlertSorted",
-  ALERT_INFO = "AlertInfo",
-  ALERT_INFO_RETRIEVED = "AlertInfoRetrieved",
   RESOLVE_PATIENT_ASSIGNMENT = "ResolvePatientAssignment",
   PENDING_RESOLVE_PATIENT_ASSIGNMENT = "PendingResolvePatientAssignment",
-  UPDATE_SUCCESSFUL = "UpdateSuccessful"
+  INCOMING_ALERTS = "IncomingAlerts",
+  NEW_ALERTS = "NewAlerts",
+  ALERTS_TO_SORT = "AlertsToSort",
+  SORTED_ALERTS = "SortedAlerts",
+  ALERTS_SORTED = "AlertsSorted",
+  ALERT_INFOS = "AlertInfos",
+  ALERT_INFOS_RETRIEVED = "AlertInfosRetrieved"
 }
 
 // Keys for locally storing data in AsyncStorage

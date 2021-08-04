@@ -17,13 +17,8 @@ import agentAPI from "agents_implementation/agent_framework/AgentAPI";
 import Belief from "agents_implementation/agent_framework/base/Belief";
 import {
   AppAttributes,
-  BeliefKeys,
-  PatientAttributes,
-  ProcedureAttributes,
-  ProcedureConst
+  BeliefKeys
 } from "agents_implementation/agent_framework/AgentEnums";
-import agentMHA from "agents_implementation/agents/medical-health-assistant/MHA";
-import agentALA from "agents_implementation/agents/alert-assistant/ALA";
 
 interface MainNavigationStackProps {
   setAuthState: (state: string) => void;
@@ -34,9 +29,8 @@ const Stack = createStackNavigator<RootStackParamList>();
 export const MainNavigationStack: FC<MainNavigationStackProps> = ({
   setAuthState
 }) => {
-  const { colors, newAlert } = select((state: RootState) => ({
-    colors: state.settings.colors,
-    newAlert: state.agents.newAlert
+  const { colors } = select((state: RootState) => ({
+    colors: state.settings.colors
   }));
 
   const toast = useToast();
@@ -49,12 +43,6 @@ export const MainNavigationStack: FC<MainNavigationStackProps> = ({
   const screenHeaderStyle = {
     backgroundColor: colors.primaryBarColor
   };
-
-  useEffect(() => {
-    if (newAlert) {
-      toast.show("An alert has arrived", { type: "success" });
-    }
-  }, [newAlert, toast]);
 
   const signOut = async (): Promise<void> => {
     await Auth.signOut().then(async () => {
@@ -109,21 +97,6 @@ export const MainNavigationStack: FC<MainNavigationStackProps> = ({
     warningToastShown
   ]);
 
-  const triggerAlert = () => {
-    agentALA.start();
-    // console.log(agentAPI.getAgents());
-    agentMHA.addBelief(
-      new Belief(BeliefKeys.PATIENT, PatientAttributes.INCOMING_ALERT, true)
-    );
-    agentAPI.addFact(
-      new Belief(
-        BeliefKeys.PROCEDURE,
-        ProcedureAttributes.AT_CP,
-        ProcedureConst.ACTIVE
-      )
-    );
-  };
-
   return (
     <View style={styles.mainContainer}>
       <NavigationContainer>
@@ -142,15 +115,6 @@ export const MainNavigationStack: FC<MainNavigationStackProps> = ({
                   size={ms(20)}
                   style={{ paddingEnd: ms(10) }}
                   onPress={signOut}
-                />
-              ),
-              headerLeft: () => (
-                <Icon
-                  name="logout"
-                  color={colors.primaryContrastTextColor}
-                  size={ms(25)}
-                  style={{ paddingStart: ms(10) }}
-                  onPress={triggerAlert}
                 />
               )
             }}
