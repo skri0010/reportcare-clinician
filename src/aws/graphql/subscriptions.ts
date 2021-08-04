@@ -680,6 +680,57 @@ export const onDeleteClinicianPatientMap = /* GraphQL */ `
     }
   }
 `;
+export const onCreatePatientAssignment = /* GraphQL */ `
+  subscription OnCreatePatientAssignment($owner: String, $clinicianID: String) {
+    onCreatePatientAssignment(owner: $owner, clinicianID: $clinicianID) {
+      id
+      patientID
+      clinicianID
+      pending
+      resolution
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onUpdatePatientAssignment = /* GraphQL */ `
+  subscription OnUpdatePatientAssignment($owner: String, $clinicianID: String) {
+    onUpdatePatientAssignment(owner: $owner, clinicianID: $clinicianID) {
+      id
+      patientID
+      clinicianID
+      pending
+      resolution
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onDeletePatientAssignment = /* GraphQL */ `
+  subscription OnDeletePatientAssignment($owner: String, $clinicianID: String) {
+    onDeletePatientAssignment(owner: $owner, clinicianID: $clinicianID) {
+      id
+      patientID
+      clinicianID
+      pending
+      resolution
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
 export const onCreateAlert = /* GraphQL */ `
   subscription OnCreateAlert($owner: String) {
     onCreateAlert(owner: $owner) {

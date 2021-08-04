@@ -34,10 +34,10 @@ export const setPatientDetails = createAction(
   })
 )();
 
-export const setPatientRequestsSynced = createAction(
-  actionNames.SET_PATIENT_REQUESTS_SYNCED,
-  (patientRequestsSynced: boolean) => ({
-    patientRequestsSynced: patientRequestsSynced
+export const setPatientAssignmentsSynced = createAction(
+  actionNames.SET_PATIENT_ASSIGNMENTS_SYNCED,
+  (patientAssignmentsSynced: boolean) => ({
+    patientAssignmentsSynced: patientAssignmentsSynced
   })
 )();
 

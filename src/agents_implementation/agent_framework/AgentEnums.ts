@@ -55,9 +55,9 @@ export const ActionFrameIDs = {
     RETRIEVE_ROLE_PATIENTS: "RetrieveRolePatients",
     RETRIEVE_PATIENT_DETAILS: "RetrievePatientDetails",
     REQUEST_DETAILS_DISPLAY: "RequestDetailsDisplay",
-    APPROVE_PATIENT_REQUEST: "ApprovePatientRequest",
     RETRIEVE_ALERT_INFO: "RetrieveAlertInfo",
-    REQUEST_ALERT_DISPLAY: "RequestAlertDisplay"
+    REQUEST_ALERT_DISPLAY: "RequestAlertDisplay",
+    RESOLVE_PATIENT_ASSIGNMENT: "ResolvePatientAssignment"
   },
   UXSA: {
     RETRIEVE_ROLE: "RetrieveRole",
@@ -67,7 +67,7 @@ export const ActionFrameIDs = {
   },
   NWA: {
     SYNC_PROTECTED_INFO: "SyncProtectedInfo",
-    SYNC_PATIENT_REQUEST: "SyncPatientRequest"
+    SYNC_PATIENT_ASSIGNMENT: "SyncPatientAssignment"
   },
   ALA: {
     SORT_ALERT: "SortAlert",
@@ -97,7 +97,7 @@ export enum AppAttributes {
   CONFIGURED = "Configured",
   ONLINE = "Online",
   PENDING_PROTECTED_INFO_SYNC = "PendingProtectedInfoSync",
-  PENDING_PATIENT_REQUEST_SYNC = "PendingPatientRequestSync"
+  PENDING_PATIENT_ASSIGNMENT = "PendingPatientAssignmentSync"
 }
 
 // Attributes for PROCEDURE key
@@ -128,14 +128,15 @@ export enum PatientAttributes {
   DETAILS_RETRIEVED = "DetailsRetrieved",
   VIEW_DETAILS = "ViewDetails",
   DETAILS = "Details",
-  UPDATE_CLINICIAN = "UpdateClinician",
-  CLINICIAN_UPDATED = "ClinicianUpdated",
   INCOMING_ALERT = "IncomingAlert",
   NEW_ALERT = "NewAlert",
   ALERT = "Alert",
   ALERT_SORTED = "AlertSorted",
   ALERT_INFO = "AlertInfo",
-  ALERT_INFO_RETRIEVED = "AlertInfoRetrieved"
+  ALERT_INFO_RETRIEVED = "AlertInfoRetrieved",
+  RESOLVE_PATIENT_ASSIGNMENT = "ResolvePatientAssignment",
+  PENDING_RESOLVE_PATIENT_ASSIGNMENT = "PendingResolvePatientAssignment",
+  UPDATE_SUCCESSFUL = "UpdateSuccessful"
 }
 
 // Keys for locally storing data in AsyncStorage
@@ -145,6 +146,6 @@ export enum AsyncStorageKeys {
   USERNAME = "Username",
   CLINICIAN = "Clinician",
   PATIENTS = "Patients",
-  PATIENT_REQUESTS = "PatientRequests",
-  ALERTS = "Alerts"
+  ALERTS = "Alerts",
+  PATIENT_ASSIGNMENTS = "PatientAssignments"
 }

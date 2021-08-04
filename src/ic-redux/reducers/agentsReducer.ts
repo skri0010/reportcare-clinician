@@ -13,8 +13,8 @@ interface AgentsState {
   online: boolean;
   patients: Patient[];
   patientDetails: PatientDetails;
-  patientRequestsSynced: boolean;
   newAlert: AlertInfo | undefined;
+  patientAssignmentsSynced: boolean;
 }
 
 const initialState: AgentsState = {
@@ -27,8 +27,8 @@ const initialState: AgentsState = {
     symptomsReports: [],
     vitalsReports: []
   },
-  patientRequestsSynced: false,
-  newAlert: undefined
+  newAlert: undefined,
+  patientAssignmentsSynced: false
 };
 
 export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
@@ -44,10 +44,10 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
       return { ...state, patients: action.payload.patients };
     case actionNames.SET_PATIENT_DETAILS:
       return { ...state, patientDetails: action.payload.patientDetails };
-    case actionNames.SET_PATIENT_REQUESTS_SYNCED:
+    case actionNames.SET_PATIENT_ASSIGNMENTS_SYNCED:
       return {
         ...state,
-        patientRequestsSynced: action.payload.patientRequestsSynced
+        patientAssignmentsSynced: action.payload.patientAssignmentsSynced
       };
     case actionNames.SET_NEW_ALERT:
       return { ...state, newAlert: action.payload.newAlert };

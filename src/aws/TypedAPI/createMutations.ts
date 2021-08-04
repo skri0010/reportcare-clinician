@@ -1,4 +1,5 @@
 import API from "@aws-amplify/api-graphql";
+// eslint-disable-next-line no-restricted-imports
 import * as mutations from "aws/graphql/mutations";
 import { BaseResponse } from "aws";
 import {
@@ -9,7 +10,9 @@ import {
   ClinicianPatientMap,
   CreateClinicianPatientMapInput,
   Todo,
-  CreateTodoInput
+  CreateTodoInput,
+  PatientAssignment,
+  CreatePatientAssignmentInput
 } from "aws/API";
 
 interface CreateClinicianInfoResponse extends BaseResponse {
@@ -62,4 +65,16 @@ export const createTodo = async (
     query: mutations.createTodo,
     variables: { input: input }
   })) as CreateTodoResponse;
+};
+interface CreatePatientAssignmentResponse extends BaseResponse {
+  data: { createPatientAssignment?: PatientAssignment };
+}
+
+export const createPatientAssignment = async (
+  input: CreatePatientAssignmentInput
+): Promise<CreatePatientAssignmentResponse> => {
+  return (await API.graphql({
+    query: mutations.createPatientAssignment,
+    variables: { input: input }
+  })) as CreatePatientAssignmentResponse;
 };

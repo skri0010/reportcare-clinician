@@ -1,4 +1,5 @@
 import API from "@aws-amplify/api-graphql";
+// eslint-disable-next-line no-restricted-imports
 import * as queries from "aws/graphql/queries";
 import { BaseResponse } from "aws";
 import {

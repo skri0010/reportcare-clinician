@@ -574,6 +574,53 @@ export type DeleteClinicianPatientMapInput = {
   _version?: number | null,
 };
 
+export type CreatePatientAssignmentInput = {
+  id?: string | null,
+  patientID: string,
+  clinicianID: string,
+  pending?: string | null,
+  resolution?: string | null,
+  _version?: number | null,
+};
+
+export type ModelPatientAssignmentConditionInput = {
+  pending?: ModelStringInput | null,
+  resolution?: ModelStringInput | null,
+  and?: Array< ModelPatientAssignmentConditionInput | null > | null,
+  or?: Array< ModelPatientAssignmentConditionInput | null > | null,
+  not?: ModelPatientAssignmentConditionInput | null,
+};
+
+export type PatientAssignment = {
+  __typename: "PatientAssignment",
+  id: string,
+  patientID: string,
+  clinicianID: string,
+  pending?: string | null,
+  resolution?: string | null,
+  _version: number,
+  _deleted?: boolean | null,
+  _lastChangedAt: number,
+  createdAt: string,
+  updatedAt: string,
+  owner?: string | null,
+};
+
+export type UpdatePatientAssignmentInput = {
+  id?: string | null,
+  patientID: string,
+  clinicianID: string,
+  pending?: string | null,
+  resolution?: string | null,
+  _version?: number | null,
+};
+
+export type DeletePatientAssignmentInput = {
+  patientID: string,
+  clinicianID: string,
+  _version?: number | null,
+};
+
 export type CreateAlertInput = {
   id?: string | null,
   patientID: string,
@@ -887,6 +934,24 @@ export type ModelStringKeyConditionInput = {
   gt?: string | null,
   between?: Array< string | null > | null,
   beginsWith?: string | null,
+};
+
+export type ModelPatientAssignmentFilterInput = {
+  id?: ModelIDInput | null,
+  patientID?: ModelStringInput | null,
+  clinicianID?: ModelStringInput | null,
+  pending?: ModelStringInput | null,
+  resolution?: ModelStringInput | null,
+  and?: Array< ModelPatientAssignmentFilterInput | null > | null,
+  or?: Array< ModelPatientAssignmentFilterInput | null > | null,
+  not?: ModelPatientAssignmentFilterInput | null,
+};
+
+export type ModelPatientAssignmentConnection = {
+  __typename: "ModelPatientAssignmentConnection",
+  items?:  Array<PatientAssignment | null > | null,
+  nextToken?: string | null,
+  startedAt?: number | null,
 };
 
 export type ModelAlertFilterInput = {
@@ -1753,6 +1818,72 @@ export type DeleteClinicianPatientMapMutation = {
     _lastChangedAt: number,
     createdAt: string,
     updatedAt: string,
+  } | null,
+};
+
+export type CreatePatientAssignmentMutationVariables = {
+  input: CreatePatientAssignmentInput,
+  condition?: ModelPatientAssignmentConditionInput | null,
+};
+
+export type CreatePatientAssignmentMutation = {
+  createPatientAssignment?:  {
+    __typename: "PatientAssignment",
+    id: string,
+    patientID: string,
+    clinicianID: string,
+    pending?: string | null,
+    resolution?: string | null,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type UpdatePatientAssignmentMutationVariables = {
+  input: UpdatePatientAssignmentInput,
+  condition?: ModelPatientAssignmentConditionInput | null,
+};
+
+export type UpdatePatientAssignmentMutation = {
+  updatePatientAssignment?:  {
+    __typename: "PatientAssignment",
+    id: string,
+    patientID: string,
+    clinicianID: string,
+    pending?: string | null,
+    resolution?: string | null,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type DeletePatientAssignmentMutationVariables = {
+  input: DeletePatientAssignmentInput,
+  condition?: ModelPatientAssignmentConditionInput | null,
+};
+
+export type DeletePatientAssignmentMutation = {
+  deletePatientAssignment?:  {
+    __typename: "PatientAssignment",
+    id: string,
+    patientID: string,
+    clinicianID: string,
+    pending?: string | null,
+    resolution?: string | null,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -2871,6 +3002,88 @@ export type ListClinicianPatientMapsQuery = {
   } | null,
 };
 
+export type SyncPatientAssignmentsQueryVariables = {
+  filter?: ModelPatientAssignmentFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  lastSync?: number | null,
+};
+
+export type SyncPatientAssignmentsQuery = {
+  syncPatientAssignments?:  {
+    __typename: "ModelPatientAssignmentConnection",
+    items?:  Array< {
+      __typename: "PatientAssignment",
+      id: string,
+      patientID: string,
+      clinicianID: string,
+      pending?: string | null,
+      resolution?: string | null,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null > | null,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
+export type GetPatientAssignmentQueryVariables = {
+  patientID: string,
+  clinicianID: string,
+};
+
+export type GetPatientAssignmentQuery = {
+  getPatientAssignment?:  {
+    __typename: "PatientAssignment",
+    id: string,
+    patientID: string,
+    clinicianID: string,
+    pending?: string | null,
+    resolution?: string | null,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type ListPatientAssignmentsQueryVariables = {
+  patientID?: string | null,
+  clinicianID?: ModelStringKeyConditionInput | null,
+  filter?: ModelPatientAssignmentFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListPatientAssignmentsQuery = {
+  listPatientAssignments?:  {
+    __typename: "ModelPatientAssignmentConnection",
+    items?:  Array< {
+      __typename: "PatientAssignment",
+      id: string,
+      patientID: string,
+      clinicianID: string,
+      pending?: string | null,
+      resolution?: string | null,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null > | null,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
 export type SyncAlertsQueryVariables = {
   filter?: ModelAlertFilterInput | null,
   limit?: number | null,
@@ -3368,6 +3581,37 @@ export type ClinicianIDsByPatientIDQuery = {
       _lastChangedAt: number,
       createdAt: string,
       updatedAt: string,
+    } | null > | null,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
+export type ListPatientAssignmentByQueryVariables = {
+  clinicianID?: string | null,
+  pending?: ModelStringKeyConditionInput | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelPatientAssignmentFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListPatientAssignmentByQuery = {
+  listPatientAssignmentBy?:  {
+    __typename: "ModelPatientAssignmentConnection",
+    items?:  Array< {
+      __typename: "PatientAssignment",
+      id: string,
+      patientID: string,
+      clinicianID: string,
+      pending?: string | null,
+      resolution?: string | null,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
     } | null > | null,
     nextToken?: string | null,
     startedAt?: number | null,
@@ -4302,6 +4546,72 @@ export type OnDeleteClinicianPatientMapSubscription = {
     _lastChangedAt: number,
     createdAt: string,
     updatedAt: string,
+  } | null,
+};
+
+export type OnCreatePatientAssignmentSubscriptionVariables = {
+  owner?: string | null,
+  clinicianID?: string | null,
+};
+
+export type OnCreatePatientAssignmentSubscription = {
+  onCreatePatientAssignment?:  {
+    __typename: "PatientAssignment",
+    id: string,
+    patientID: string,
+    clinicianID: string,
+    pending?: string | null,
+    resolution?: string | null,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnUpdatePatientAssignmentSubscriptionVariables = {
+  owner?: string | null,
+  clinicianID?: string | null,
+};
+
+export type OnUpdatePatientAssignmentSubscription = {
+  onUpdatePatientAssignment?:  {
+    __typename: "PatientAssignment",
+    id: string,
+    patientID: string,
+    clinicianID: string,
+    pending?: string | null,
+    resolution?: string | null,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnDeletePatientAssignmentSubscriptionVariables = {
+  owner?: string | null,
+  clinicianID?: string | null,
+};
+
+export type OnDeletePatientAssignmentSubscription = {
+  onDeletePatientAssignment?:  {
+    __typename: "PatientAssignment",
+    id: string,
+    patientID: string,
+    clinicianID: string,
+    pending?: string | null,
+    resolution?: string | null,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 

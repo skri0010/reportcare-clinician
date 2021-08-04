@@ -1,4 +1,5 @@
 import API from "@aws-amplify/api-graphql";
+// eslint-disable-next-line no-restricted-imports
 import * as queries from "aws/graphql/queries";
 import { BaseResponse } from "aws";
 import {
@@ -17,7 +18,11 @@ import {
   GetTodoQuery,
   GetTodoQueryVariables,
   GetAlertQuery,
-  GetAlertQueryVariables
+  GetAlertQueryVariables,
+  GetPatientInfoQuery,
+  GetPatientInfoQueryVariables,
+  GetPatientAssignmentQuery,
+  GetPatientAssignmentQueryVariables
 } from "aws/API";
 
 interface GetClinicianInfoResponse extends BaseResponse {
@@ -122,4 +127,29 @@ export const getTodo = async (
     query: queries.getTodo,
     variables: variables
   })) as GetTodoResponse;
+};
+interface GetPatientInfoResponse extends BaseResponse {
+  data: GetPatientInfoQuery;
+}
+
+export const getPatientInfo = async (
+  variables: GetPatientInfoQueryVariables
+): Promise<GetPatientInfoResponse> => {
+  return (await API.graphql({
+    query: queries.getPatientInfo,
+    variables: variables
+  })) as GetPatientInfoResponse;
+};
+
+interface GetPatientAssignmentResponse extends BaseResponse {
+  data: GetPatientAssignmentQuery;
+}
+
+export const getPatientAssignment = async (
+  variables: GetPatientAssignmentQueryVariables
+): Promise<GetPatientAssignmentResponse> => {
+  return (await API.graphql({
+    query: queries.getPatientAssignment,
+    variables: variables
+  })) as GetPatientAssignmentResponse;
 };

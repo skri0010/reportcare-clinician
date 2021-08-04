@@ -1,4 +1,5 @@
 import API from "@aws-amplify/api-graphql";
+// eslint-disable-next-line no-restricted-imports
 import * as mutations from "aws/graphql/mutations";
 import { BaseResponse } from "aws";
 import {
@@ -10,10 +11,13 @@ import {
   Alert,
   UpdateAlertInput,
   Todo,
-  UpdateTodoInput
+  UpdateTodoInput,
+  PatientAssignment,
+  UpdatePatientAssignmentInput
 } from "aws/API";
 
-// JH-TODO: Not sure if this is the correct return type
+// JH-TODO: Check if the return types are correct
+
 interface UpdateClinicianInfoResponse extends BaseResponse {
   data: { updateClinicianInfo?: ClinicianInfo };
 }
@@ -41,7 +45,6 @@ export const updateClinicianProtectedInfo = async (
   })) as UpdateClinicianProtectedInfoResponse;
 };
 
-// JH-TODO: Not sure if this is the correct return type
 interface UpdatePatientInfoResponse extends BaseResponse {
   data: { updatePatientInfo?: PatientInfo };
 }
@@ -79,4 +82,16 @@ export const updateTodo = async (
     query: mutations.updateTodo,
     variables: { input: input }
   })) as UpdateTodoResponse;
+};
+interface UpdatePatientAssignmentResponse extends BaseResponse {
+  data: { updatePatientAssignment?: PatientAssignment };
+}
+
+export const updatePatientAssignment = async (
+  input: UpdatePatientAssignmentInput
+): Promise<UpdatePatientAssignmentResponse> => {
+  return (await API.graphql({
+    query: mutations.updatePatientAssignment,
+    variables: { input: input }
+  })) as UpdatePatientAssignmentResponse;
 };

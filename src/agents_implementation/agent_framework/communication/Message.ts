@@ -16,7 +16,7 @@ class Message {
    * Constructor of the Message class
    * @param {string} performative - performative of the message
    * @param {string} sender - sender or owner of the message
-   * @param {string} receiver - reciever for the message
+   * @param {string} receiver - receiver for the message
    * @param {Belief} content - message content in belief form
    */
   constructor(

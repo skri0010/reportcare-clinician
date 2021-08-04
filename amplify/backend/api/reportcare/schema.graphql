@@ -287,6 +287,33 @@ type ClinicianPatientMap
 }
 
 """
+Authorization
+1. Everyone can create and read their own records
+2. Clinicians can read and update records containing themselves
+"""
+type PatientAssignment
+  @model
+  @auth(
+    rules: [
+      { allow: owner, operations: [create, read] }
+      { allow: owner, ownerField: "clinicianID", operations: [read, update] }
+      { allow: groups, groups: ["Admin"] }
+    ]
+  )
+  @key(fields: ["patientID", "clinicianID"])
+  @key(
+    name: "patientAssignmentByPending"
+    fields: ["clinicianID", "pending"]
+    queryField: "listPatientAssignmentBy"
+  ) {
+  id: ID!
+  patientID: String!
+  clinicianID: String!
+  pending: String
+  resolution: String
+}
+
+"""
 == Authorization ==
 1. Patients can create records
 2. Owners can read their own records

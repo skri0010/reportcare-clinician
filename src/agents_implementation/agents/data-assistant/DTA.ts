@@ -2,7 +2,7 @@ import Agent from "../../agent_framework/base/Agent";
 import Belief from "../../agent_framework/base/Belief";
 import af_StoreEntryData from "./action-frames/app-device-configuration/StoreEntryData";
 import af_RetrieveEntryData from "./action-frames/app-device-configuration/RetrieveEntryData";
-import af_ApprovePatientRequest from "./action-frames/storing-data/ApprovePatientRequest";
+import { af_ResolvePatientAssignment } from "./action-frames/storing-data/ResolvePatientAssignment";
 import af_RetrievePatientDetails from "./action-frames/hf-outcome-trends/RetrievePatientDetails";
 import af_RequestDetailsDisplay from "./action-frames/hf-outcome-trends/RequestDetailsDisplay";
 import af_RetrieveRolePatients from "./action-frames/hf-outcome-trends/RetrieveRolePatients";
@@ -27,13 +27,11 @@ const agentDTA = new Agent(
     af_RetrieveEntryData,
 
     // SRD
-    af_ApprovePatientRequest,
-
-    // HF-OTP-II
-    af_RetrievePatientDetails,
-    af_RequestDetailsDisplay,
+    af_ResolvePatientAssignment,
 
     // HF-OTP-I
+    af_RetrievePatientDetails,
+    af_RequestDetailsDisplay,
     af_RetrieveRolePatients,
 
     // AT-CP

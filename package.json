@@ -10,7 +10,7 @@
     "start": "react-native start",
     "prepare": "husky install",
     "test": "jest",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx,.web.js,.web.jsx,.web.ts,.web.tsx && tsc",
+    "lint": "tsc && eslint . --ext .js,.jsx,.ts,.tsx,.web.js,.web.jsx,.web.ts,.web.tsx",
     "format": "prettier --write ."
   },
   "dependencies": {
@@ -73,7 +73,7 @@
     "babel-plugin-react-native-web": "^0.17.1",
     "babel-preset-airbnb": "^5.0.0",
     "babel-preset-react-native": "^4.0.1",
-    "eslint": "^7.24.0",
+    "eslint": "7.32.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-import": "^2.22.1",
