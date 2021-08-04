@@ -12,6 +12,11 @@ interface LineChartProps {
   data: number[];
 }
 
+/*
+ * There seems to be an issue with the line chart package and react-natiove-svg where there is no onPress support for web
+ * https://stackoverflow.com/questions/62124540/react-native-chart-graph-library-that-supports-user-onpress
+ */
+
 export const LineChartComponent: FC<LineChartProps> = ({
   graphTitle,
   graphSubtitle,
