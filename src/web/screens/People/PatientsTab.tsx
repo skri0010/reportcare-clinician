@@ -16,7 +16,7 @@ import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { PatientInfo } from "aws/models";
 import { mockPatients } from "mock/mockPatients";
 import { RowSelectionWrapper } from "../RowSelectionTab";
-import { FilterTagProps } from "web/RiskFilterTab";
+import { FilterTagProps } from "web/RiskFilterComponent";
 import { PatientOverview } from "./PatientDetailsScreen/PatientOverview";
 import { RootState, select } from "util/useRedux";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";

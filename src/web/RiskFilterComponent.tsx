@@ -4,7 +4,7 @@ import { RiskFilterTag } from "./RiskFilterTag";
 import { View } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 
-interface RiskFilterTabProps {
+interface RiskFilterComponentProps {
   onTagPress?: (item: FilterTagProps[]) => void;
 }
 
@@ -14,7 +14,9 @@ export interface FilterTagProps {
   selected: boolean;
 }
 
-export const RiskFilterTab: FC<RiskFilterTabProps> = ({ onTagPress }) => {
+export const RiskFilterComponent: FC<RiskFilterComponentProps> = ({
+  onTagPress
+}) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const riskLevels: FilterTagProps[] = Object.entries(RiskLevel).map(
     ([key, value]) => ({ key: key, value: value, selected: false })
