@@ -28,7 +28,7 @@ export const SymptomsCard: FC<SymptomProps> = () => {
         showsVerticalScrollIndicator={false}
         data={mockSymptoms}
         renderItem={({ item }) => <H4 text={`  ${item.Name}`} style={null} />}
-        keyExtractor={(item) => item.patientID}
+        keyExtractor={(item) => item.id}
       />
     </CardWrapper>
   );

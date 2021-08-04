@@ -59,7 +59,7 @@ export const PatientMedicalRecordCard: FC<PatientMedicalRecordProps> = ({
             onRowPress={() => onRowPress(item)}
           />
         )}
-        keyExtractor={(alert) => alert.patientId}
+        keyExtractor={(alert) => alert.id}
       />
     </CardWrapper>
   );

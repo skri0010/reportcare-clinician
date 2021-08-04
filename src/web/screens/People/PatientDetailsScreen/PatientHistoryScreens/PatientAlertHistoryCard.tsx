@@ -49,10 +49,10 @@ export const PatientAlertHistoryCard: FC<PatientAlertHistoryProps> = ({
             description={item.description}
             date={item.date}
             onRowPress={() => onRowPress(item)}
-            key={item.patientId}
+            key={item.id}
           />
         )}
-        keyExtractor={(alert) => alert.patientId}
+        keyExtractor={(alert) => alert.id}
       />
     </CardWrapper>
   );

@@ -33,7 +33,7 @@ export const MedicationTakenCard: FC<MedicationTakenProps> = () => {
         renderItem={({ item }) => (
           <H4 text={`  ${item.medname}`} style={null} />
         )}
-        keyExtractor={(item) => item.patientID}
+        keyExtractor={(item) => item.id}
       />
     </CardWrapper>
   );

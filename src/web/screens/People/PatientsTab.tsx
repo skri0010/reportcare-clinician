@@ -46,10 +46,8 @@ export const PatientsTab: FC = () => {
     })
   );
 
-  const [filteredPatients, setFilteredPatients] =
-    useState<PatientInfo[]>(mockPatients);
-
   const initialAlertHistory = {
+    id: "",
     patientId: "",
     risk: RiskLevel.UNASSIGNED,
     date: "",
@@ -62,10 +60,19 @@ export const PatientsTab: FC = () => {
   };
 
   const initialMedicalRecord = {
+    id: "",
     patientId: "",
     record: "",
     content: ""
   };
+
+  interface PopUpModalProps {
+    visible: boolean;
+    onRequestClose: () => void;
+  }
+
+  const [filteredPatients, setFilteredPatients] =
+    useState<PatientInfo[]>(mockPatients);
 
   const [selectedPatient] = useState(mockPatients[0]);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -86,11 +93,6 @@ export const PatientsTab: FC = () => {
 
   const dispatch = useDispatch();
   const netInfo = useNetInfo();
-
-  interface PopUpModalProps {
-    visible: boolean;
-    onRequestClose: () => void;
-  }
 
   // Wanted to use this as reusable component for pop up modal
   // But the slide animation during closing of modal is choppy for some reason

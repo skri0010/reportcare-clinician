@@ -1,6 +1,7 @@
 import { RiskLevel } from "models/RiskLevel";
 
 export interface AlertHistory {
+  id: string;
   patientId: string;
   risk: RiskLevel;
   date: string;
@@ -14,6 +15,7 @@ export interface AlertHistory {
 
 export const mockAlertHistory: AlertHistory[] = [
   {
+    id: "1",
     patientId: "1",
     risk: RiskLevel.HIGH,
     date: "05-07-2020",
@@ -25,6 +27,7 @@ export const mockAlertHistory: AlertHistory[] = [
     signs: "Edema (Scale 3)"
   },
   {
+    id: "2",
     patientId: "1",
     risk: RiskLevel.HIGH,
     date: "06-07-2020",
@@ -36,6 +39,7 @@ export const mockAlertHistory: AlertHistory[] = [
     signs: "Edema (Scale 3)"
   },
   {
+    id: "3",
     patientId: "1",
     risk: RiskLevel.MEDIUM,
     date: "07-07-2020",
@@ -49,6 +53,7 @@ export const mockAlertHistory: AlertHistory[] = [
 ];
 
 export interface MedicalRecords {
+  id: string;
   patientId: string;
   record: string;
   content: string;
@@ -56,16 +61,19 @@ export interface MedicalRecords {
 
 export const mockMedicalRecord: MedicalRecords[] = [
   {
+    id: "1",
     patientId: "1",
     record: "6 minute Walk Test",
     content: "6 minute walk test results"
   },
   {
+    id: "2",
     patientId: "1",
     record: "Family Background",
     content: "Family history of diabetes and high blood pressure"
   },
   {
+    id: "3",
     patientId: "1",
     record: "Initial Record",
     content: "Diabetic"
