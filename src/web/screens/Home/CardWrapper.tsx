@@ -4,12 +4,14 @@ import { ms } from "react-native-size-matters";
 import { RootState, select } from "util/useRedux";
 
 interface CardWrapperProps {
+  flex?: number;
   maxHeight?: number;
   firstItem?: boolean;
 }
 
 export const CardWrapper: FC<CardWrapperProps> = ({
   children,
+  flex = 1,
   maxHeight,
   firstItem = false
 }) => {
@@ -20,7 +22,7 @@ export const CardWrapper: FC<CardWrapperProps> = ({
   return (
     <View
       style={{
-        flex: 1,
+        flex: flex,
         backgroundColor: colors.primaryBackgroundColor,
         padding: ms(10),
         marginTop: firstItem ? ms(0) : ms(20),

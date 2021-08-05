@@ -311,6 +311,7 @@ type PatientAssignment
   clinicianID: String!
   pending: String
   resolution: String
+  patientName: String!
 }
 
 """

@@ -4,6 +4,7 @@ import af_VisualizeParameters from "./action-frames/hf-outcome-trends/VisualizeP
 import af_RetrieveRole from "./action-frames/hf-outcome-trends/RetrieveRole";
 import af_RequestRetrieveAll from "./action-frames/hf-outcome-trends/RequestRetrieveAll";
 import af_DisplayAlerts from "./action-frames/triage-alert-hf-clinic/DisplayAlerts";
+import { af_RetrievePendingPatientAssignments } from "./action-frames/hf-outcome-trends/RetrievePendingPatientAssignments";
 import {
   AgentIDs,
   CommonAttributes
@@ -22,6 +23,9 @@ const agentUXSA = new Agent(
     // HF-OTP-I
     af_RetrieveRole,
     af_RequestRetrieveAll,
+
+    // HF-OTP-III
+    af_RetrievePendingPatientAssignments,
 
     // AT-CP
     af_DisplayAlerts

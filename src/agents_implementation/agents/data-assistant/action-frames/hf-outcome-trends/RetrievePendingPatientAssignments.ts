@@ -23,7 +23,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 /**
  * Class to represent an activity for retrieving pending patient assignments.
- * This happens in Procedure HF Outcome Trends (HF-OTP-III).
+ * This happens in Procedure Storing Data (SRD).
  */
 class RetrievePendingPatientAssignments extends Activity {
   constructor() {
@@ -38,7 +38,6 @@ class RetrievePendingPatientAssignments extends Activity {
     await super.doActivity(agent);
     let pendingPatientAssignments: PatientAssignment[] | null | undefined;
 
-    // console.log("Starting");
     // Update Beliefs
     agent.addBelief(
       new Belief(
@@ -46,9 +45,6 @@ class RetrievePendingPatientAssignments extends Activity {
         PatientAttributes.RETRIEVE_PENDING_PATIENT_ASSIGNMENTS,
         false
       )
-    );
-    agent.addBelief(
-      new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
     );
 
     try {
@@ -99,6 +95,9 @@ class RetrievePendingPatientAssignments extends Activity {
           false
         );
       }
+      agent.addBelief(
+        new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
+      );
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
@@ -109,7 +108,7 @@ class RetrievePendingPatientAssignments extends Activity {
 // Preconditions for activating the RetrievePendingPatientAssignments class
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.HF_OTP_III,
+  ProcedureAttributes.SRD,
   ProcedureConst.ACTIVE
 );
 const rule2 = new Precondition(

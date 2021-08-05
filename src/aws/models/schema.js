@@ -1204,6 +1204,13 @@ export const schema = {
                     "type": "String",
                     "isRequired": false,
                     "attributes": []
+                },
+                "patientName": {
+                    "name": "patientName",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
                 }
             },
             "syncable": true,
@@ -1606,5 +1613,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "d046acd4efbefc45b8cdca271167d995"
+    "version": "ef5012ae700cbbe3385e71e0cb102b4e"
 };

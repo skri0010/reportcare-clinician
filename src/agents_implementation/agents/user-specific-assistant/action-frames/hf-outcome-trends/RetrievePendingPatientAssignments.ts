@@ -19,11 +19,11 @@ import { setPendingPatientAssignments } from "ic-redux/actions/agents/actionCrea
 
 /**
  * Class to represent an activity for retrieving pending patient assignments.
- * This happens in Procedure HF Outcome Trends (HF-OTP-III).
+ * This happens in Procedure Storing Data (SRD).
  */
 class RetrievePendingPatientAssignments extends Activity {
   constructor() {
-    super(ActionFrameIDs.UXSA.RETRIEVE_ROLE);
+    super(ActionFrameIDs.UXSA.RETRIEVE_PENDING_PATIENT_ASSIGNMENTS);
   }
 
   /**
@@ -37,7 +37,7 @@ class RetrievePendingPatientAssignments extends Activity {
     agent.addBelief(
       new Belief(
         BeliefKeys.PATIENT,
-        PatientAttributes.RETRIEVE_PENDING_PATIENT_ASSIGNMENTS,
+        PatientAttributes.PENDING_PATIENT_ASSIGNMENTS_RETRIEVED,
         false
       )
     );
@@ -56,9 +56,10 @@ class RetrievePendingPatientAssignments extends Activity {
     agentAPI.addFact(
       new Belief(
         BeliefKeys.PROCEDURE,
-        ProcedureAttributes.HF_OTP_III,
+        ProcedureAttributes.SRD,
         ProcedureConst.INACTIVE
-      )
+      ),
+      false
     );
   }
 }
@@ -66,12 +67,12 @@ class RetrievePendingPatientAssignments extends Activity {
 // Preconditions for activating the RetrievePendingPatientAssignments class
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.HF_OTP_III,
+  ProcedureAttributes.SRD,
   ProcedureConst.ACTIVE
 );
 const rule2 = new Precondition(
   BeliefKeys.PATIENT,
-  PatientAttributes.RETRIEVE_PENDING_PATIENT_ASSIGNMENTS,
+  PatientAttributes.PENDING_PATIENT_ASSIGNMENTS_RETRIEVED,
   true
 );
 

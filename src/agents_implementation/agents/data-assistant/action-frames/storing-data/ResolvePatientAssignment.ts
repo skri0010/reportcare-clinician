@@ -219,7 +219,8 @@ const reassignPatientAssignment: (params: {
   await createPatientAssignment({
     patientID: reassignment.patientID,
     clinicianID: reassignment.clinicianID,
-    pending: PatientAssignmentStatus.PENDING
+    pending: PatientAssignmentStatus.PENDING,
+    patientName: reassignment.patientName
   });
   await updatePatientAssignment({
     patientID: reassignment.patientID,

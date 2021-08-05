@@ -14,6 +14,12 @@ import {
   ProcedureConst
 } from "agents_implementation/agent_framework/AgentEnums";
 import { agentDTA } from "agents_implementation/agents";
+import {
+  PatientAssignmentStatus,
+  PatientAssignmentResolution
+} from "agents_implementation/agent_framework/model";
+import { PatientAssignment } from "aws/API";
+import { PatientAssignmentRow } from "components/RowComponents/PatientRows/PatientAssignmentRow";
 
 interface PendingPatientAssignmentsCardProps {
   maxHeight: number;
@@ -28,6 +34,9 @@ export const PendingPatientAssignmentsCard: FC<PendingPatientAssignmentsCardProp
       })
     );
 
+    const titleColor = { color: colors.primaryTextColor } as TextStyle;
+
+    // Trigger agent to fetch pending assignments
     useEffect(() => {
       agentDTA.addBelief(
         new Belief(
@@ -40,16 +49,39 @@ export const PendingPatientAssignmentsCard: FC<PendingPatientAssignmentsCardProp
       agentAPI.addFact(
         new Belief(
           BeliefKeys.PROCEDURE,
-          ProcedureAttributes.HF_OTP_III,
+          ProcedureAttributes.SRD,
           ProcedureConst.ACTIVE
         )
       );
-
-      // console.log("I did something");
-      // JH-TODO Trigger fetch once
     }, []);
 
-    const titleColor = { color: colors.primaryTextColor } as TextStyle;
+    // Trigger agent to resolve pending assignment
+    const resolvePatientAssignment = (
+      assignment: PatientAssignment,
+      resolution: PatientAssignmentStatus,
+      targetClinicianId: string
+    ) => {
+      const patientAssignmentResolution: PatientAssignmentResolution = {
+        patientID: assignment.patientID,
+        clinicianID: targetClinicianId,
+        resolution: resolution,
+        patientName: assignment.patientName,
+        _version: assignment._version
+      };
+    };
+
+    //
+    const approvePatientAssignment = (item: PatientAssignment) => {
+      // JH-TODO: Approve patient assignment
+      // eslint-disable-next-line no-console
+      console.log("Approve");
+    };
+
+    const reassignPatientAssignment = (item: PatientAssignment) => {
+      // JH-TODO: Reassign patient assignment
+      // eslint-disable-next-line no-console
+      console.log("Reassign");
+    };
 
     return (
       <CardWrapper maxHeight={maxHeight}>
@@ -65,11 +97,13 @@ export const PendingPatientAssignmentsCard: FC<PendingPatientAssignmentsCardProp
               showsVerticalScrollIndicator={false}
               ItemSeparatorComponent={() => <ItemSeparator />}
               data={pendingPatientAssignments}
-              renderItem={({ item, index }) => {
+              renderItem={({ item }) => {
                 return (
-                  <View>
-                    <H4 text="Hi" />
-                  </View>
+                  <PatientAssignmentRow
+                    patientName={item.patientName}
+                    onApprove={() => approvePatientAssignment(item)}
+                    onReassign={() => reassignPatientAssignment(item)}
+                  />
                 );
               }}
               keyExtractor={(item) => item.id}

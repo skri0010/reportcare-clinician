@@ -13,7 +13,7 @@ interface SubtitleItemProps {
 
 export interface PatientRowBaseProps {
   title: string;
-  riskLevel: RiskLevel;
+  riskLevel: RiskLevel | null;
   image?: string; // JH-TODO: Replace with image implementation
   subtitleOne?: SubtitleItemProps;
   subtitleTwo?: SubtitleItemProps;
@@ -54,7 +54,9 @@ export const PatientRowBase: React.FC<PatientRowBaseProps> = ({
         ]}
       >
         {/* Image (left container) */}
-        <PatientImageContainer riskLevel={riskLevel} onPress={onImagePress} />
+        {riskLevel ? (
+          <PatientImageContainer riskLevel={riskLevel} onPress={onImagePress} />
+        ) : null}
         {/* Content (middle container) */}
         <View style={styles.container}>
           {/* Title */}
@@ -62,21 +64,23 @@ export const PatientRowBase: React.FC<PatientRowBaseProps> = ({
             text={title}
             style={[styles.titleTextStyle, { color: colors.primaryTextColor }]}
           />
-          <View style={styles.subtitleContainer}>
-            {/* Subtitles */}
-            {subtitleOne ? (
-              <SubtitleItem
-                label={subtitleOne.label}
-                value={subtitleOne.value}
-              />
-            ) : null}
-            {subtitleTwo ? (
-              <SubtitleItem
-                label={subtitleTwo.label}
-                value={subtitleTwo.value}
-              />
-            ) : null}
-          </View>
+          {subtitleOne || subtitleTwo ? (
+            <View style={styles.subtitleContainer}>
+              {/* Subtitles */}
+              {subtitleOne ? (
+                <SubtitleItem
+                  label={subtitleOne.label}
+                  value={subtitleOne.value}
+                />
+              ) : null}
+              {subtitleTwo ? (
+                <SubtitleItem
+                  label={subtitleTwo.label}
+                  value={subtitleTwo.value}
+                />
+              ) : null}
+            </View>
+          ) : null}
           {/* Bottom Button */}
           {onBottomButtonPress ? (
             <View style={styles.bottomButtonWrapper}>

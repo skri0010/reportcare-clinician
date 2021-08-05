@@ -2,8 +2,8 @@ import React, { FC, useState, useEffect } from "react";
 import { RootState, select } from "util/useRedux";
 import { RiskLevel } from "models/RiskLevel";
 import { View, TextStyle } from "react-native";
-import { ScaledSheet } from "react-native-size-matters";
-import { LongAlertButton } from "components/Buttons/LongAlertButton";
+import { ms, ScaledSheet } from "react-native-size-matters";
+import { AlertButton } from "components/Buttons/AlertButton";
 import { H4, H6 } from "components/Text";
 import { CardWrapper } from "./CardWrapper";
 import i18n from "util/language/i18n";
@@ -21,6 +21,7 @@ export const AlertsCard: FC<AlertsCardProps> = ({ maxHeight }) => {
     newUnassignedRiskAlerts
   } = select((state: RootState) => ({
     colors: state.settings.colors,
+    fonts: state.settings.fonts,
     newHighRiskAlerts: state.agents.newHighRiskAlerts,
     newMediumRiskAlerts: state.agents.newMediumRiskAlerts,
     newLowRiskAlerts: state.agents.newLowRiskAlerts,
@@ -46,6 +47,8 @@ export const AlertsCard: FC<AlertsCardProps> = ({ maxHeight }) => {
     newUnassignedRiskAlerts
   ]);
 
+  const iconSize = ms(25);
+
   return (
     <CardWrapper maxHeight={maxHeight}>
       <View style={styles.titleContainer}>
@@ -55,34 +58,22 @@ export const AlertsCard: FC<AlertsCardProps> = ({ maxHeight }) => {
           style={[styles.title, detailsColors]}
         />
       </View>
-      <LongAlertButton
-        riskLevel={RiskLevel.HIGH}
-        alertCount={
-          newHighRiskAlerts.length > 0 ? newHighRiskAlerts.length : undefined
-        }
-      />
-      <LongAlertButton
-        riskLevel={RiskLevel.MEDIUM}
-        alertCount={
-          newMediumRiskAlerts.length > 0
-            ? newMediumRiskAlerts.length
-            : undefined
-        }
-      />
-      <LongAlertButton
-        riskLevel={RiskLevel.LOW}
-        alertCount={
-          newLowRiskAlerts.length > 0 ? newLowRiskAlerts.length : undefined
-        }
-      />
-      <LongAlertButton
-        riskLevel={RiskLevel.UNASSIGNED}
-        alertCount={
-          newUnassignedRiskAlerts.length > 0
-            ? newUnassignedRiskAlerts.length
-            : undefined
-        }
-      />
+      {/* Alert Button Row */}
+      <View style={styles.alertsContainer}>
+        {/* JH-TODO: Remove hardcoding of alertCount */}
+        <AlertButton
+          riskLevel={RiskLevel.HIGH}
+          alertCount={1}
+          iconSize={iconSize}
+        />
+        <AlertButton
+          riskLevel={RiskLevel.MEDIUM}
+          alertCount={1}
+          iconSize={iconSize}
+        />
+        <AlertButton riskLevel={RiskLevel.LOW} iconSize={iconSize} />
+        <AlertButton riskLevel={RiskLevel.UNASSIGNED} iconSize={iconSize} />
+      </View>
     </CardWrapper>
   );
 };
@@ -95,5 +86,12 @@ const styles = ScaledSheet.create({
   },
   title: {
     fontWeight: "bold"
+  },
+  alertsContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    maxWidth: "150@ms",
+    alignSelf: "center",
+    paddingTop: "10@ms"
   }
 });

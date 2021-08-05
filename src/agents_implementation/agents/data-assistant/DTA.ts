@@ -8,6 +8,8 @@ import af_RequestDetailsDisplay from "./action-frames/hf-outcome-trends/RequestD
 import af_RetrieveRolePatients from "./action-frames/hf-outcome-trends/RetrieveRolePatients";
 import af_RetrieveAlertInfos from "./action-frames/triage-alert-hf-clinic/RetrieveAlertInfos";
 import af_RequestAlertsDisplay from "./action-frames/triage-alert-hf-clinic/RequestAlertsDisplay";
+import { af_RetrievePendingPatientAssignments } from "./action-frames/hf-outcome-trends/RetrievePendingPatientAssignments";
+import { af_RequestPendingPatientAssignments } from "./action-frames/hf-outcome-trends/RequestPendingPatientAssignments";
 import {
   AgentIDs,
   CommonAttributes
@@ -33,6 +35,10 @@ const agentDTA = new Agent(
     af_RetrievePatientDetails,
     af_RequestDetailsDisplay,
     af_RetrieveRolePatients,
+
+    // HF-OTP-II
+    af_RetrievePendingPatientAssignments,
+    af_RequestPendingPatientAssignments,
 
     // AT-CP
     af_RetrieveAlertInfos,

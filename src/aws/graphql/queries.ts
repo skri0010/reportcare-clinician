@@ -817,6 +817,7 @@ export const syncPatientAssignments = /* GraphQL */ `
         clinicianID
         pending
         resolution
+        patientName
         _version
         _deleted
         _lastChangedAt
@@ -837,6 +838,7 @@ export const getPatientAssignment = /* GraphQL */ `
       clinicianID
       pending
       resolution
+      patientName
       _version
       _deleted
       _lastChangedAt
@@ -869,6 +871,7 @@ export const listPatientAssignments = /* GraphQL */ `
         clinicianID
         pending
         resolution
+        patientName
         _version
         _deleted
         _lastChangedAt
@@ -1429,6 +1432,7 @@ export const listPendingPatientAssignments = /* GraphQL */ `
         clinicianID
         pending
         resolution
+        patientName
         _version
         _deleted
         _lastChangedAt

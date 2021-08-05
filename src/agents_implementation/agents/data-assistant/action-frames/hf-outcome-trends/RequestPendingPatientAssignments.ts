@@ -18,7 +18,7 @@ import {
 
 /**
  * Class to represent the activity for requesting display of retrieved pending patient assignments.
- * This happens in Procedure HF Outcome Trends (HF-OTP-III).
+ * This happens in Procedure Storing Data (SRD).
  */
 class RequestPendingPatientAssignments extends Communicate {
   constructor() {
@@ -42,7 +42,6 @@ class RequestPendingPatientAssignments extends Communicate {
   async doActivity(agent: Agent): Promise<void> {
     try {
       await super.doActivity(agent);
-
       // Update Beliefs
       agent.addBelief(
         new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
@@ -57,7 +56,7 @@ class RequestPendingPatientAssignments extends Communicate {
 // Rules or preconditions for activating the RequestPendingPatientAssignments class
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.HF_OTP_III,
+  ProcedureAttributes.SRD,
   ProcedureConst.ACTIVE
 );
 const rule2 = new Precondition(

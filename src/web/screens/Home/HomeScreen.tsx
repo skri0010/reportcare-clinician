@@ -11,23 +11,27 @@ import { PendingPatientAssignmentsCard } from "./PendingPatientAssignmentsCard";
 
 export const HomeScreen: FC<WithSideTabsProps[ScreenName.HOME]> = () => {
   // JH-TODO Replace titles with i18n
-  const cardMaxHeight = ms(300);
+  // JH-TODO Replace welcome card name
+  const topMaxHeight = ms(150);
+  const maxHeight = ms(250);
 
   return (
     <ScreenWrapper padding>
-      <WelcomeCard name="Nailah" />
-      <View style={styles.bottomContainer}>
-        <RequestsByMariaCard maxHeight={cardMaxHeight} />
-        <PendingPatientAssignmentsCard maxHeight={cardMaxHeight} />
-        {/* <AlertsCard maxHeight={cardMaxHeight} /> */}
-        <TodosCard maxHeight={cardMaxHeight} />
+      <View style={styles.container}>
+        <WelcomeCard name="Nailah" maxHeight={topMaxHeight} />
+      </View>
+      <View style={styles.container}>
+        <AlertsCard maxHeight={maxHeight} />
+        <RequestsByMariaCard maxHeight={maxHeight} />
+        <TodosCard maxHeight={maxHeight} />
+        <PendingPatientAssignmentsCard maxHeight={maxHeight} />
       </View>
     </ScreenWrapper>
   );
 };
 
 const styles = ScaledSheet.create({
-  bottomContainer: {
+  container: {
     flexWrap: "wrap",
     flexDirection: "row",
     justifyContent: "space-between"

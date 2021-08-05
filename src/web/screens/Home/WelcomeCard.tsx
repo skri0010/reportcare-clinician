@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
-import { View, TextStyle, Image, Text } from "react-native";
+import { View, TextStyle, Image } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { H1, H2, H4 } from "components/Text/index";
 import { CardWrapper } from "./CardWrapper";
@@ -8,9 +8,10 @@ import i18n from "util/language/i18n";
 
 interface WelcomeCardProps {
   name: string;
+  maxHeight: number;
 }
 
-export const WelcomeCard: FC<WelcomeCardProps> = ({ name }) => {
+export const WelcomeCard: FC<WelcomeCardProps> = ({ name, maxHeight }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
   }));
@@ -20,7 +21,7 @@ export const WelcomeCard: FC<WelcomeCardProps> = ({ name }) => {
   } as TextStyle;
 
   return (
-    <CardWrapper firstItem>
+    <CardWrapper firstItem maxHeight={maxHeight}>
       <H1
         text={i18n.t("Home.Dashboard")}
         style={[styles.username, styles.dashboard]}
