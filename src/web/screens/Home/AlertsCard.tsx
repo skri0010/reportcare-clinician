@@ -51,7 +51,7 @@ export const AlertsCard: FC<AlertsCardProps> = ({ maxHeight }) => {
       <View style={styles.titleContainer}>
         <H4 text={i18n.t("Home.Alerts")} style={[styles.title, titleColor]} />
         <H6
-          text={`   (${pendingAlertsCount} remaining)`}
+          text={`(${pendingAlertsCount} remaining)`}
           style={[styles.title, detailsColors]}
         />
       </View>

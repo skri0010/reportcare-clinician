@@ -1,9 +1,10 @@
-import Actionframe from "../../../agent_framework/base/Actionframe";
-import Activity from "../../../agent_framework/base/Activity";
-import Agent from "../../../agent_framework/base/Agent";
-import Belief from "../../../agent_framework/base/Belief";
-import Precondition from "../../../agent_framework/base/Precondition";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+  Actionframe,
+  Agent,
+  Belief,
+  Activity,
+  Precondition
+} from "agents_implementation/agent_framework";
 import {
   ActionFrameIDs,
   AppAttributes,
@@ -11,8 +12,9 @@ import {
   BeliefKeys,
   CommonAttributes
 } from "agents_implementation/agent_framework/AgentEnums";
+import { Assignment } from "agents_implementation/agent_framework/model";
 import { resolvePatientAssignment } from "agents_implementation/agents/data-assistant/action-frames/storing-data/ResolvePatientAssignment";
-import { Assignment } from "aws";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // LS-TODO: To be tested once ApprovePatientAssignment is working
 

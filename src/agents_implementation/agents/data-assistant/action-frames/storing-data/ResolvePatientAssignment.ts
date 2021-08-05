@@ -1,9 +1,11 @@
-import Actionframe from "agents_implementation/agent_framework/base/Actionframe";
-import Activity from "agents_implementation/agent_framework/base/Activity";
-import Agent from "agents_implementation/agent_framework/base/Agent";
-import Belief from "agents_implementation/agent_framework/base/Belief";
-import Precondition from "agents_implementation/agent_framework/base/Precondition";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+  Actionframe,
+  Agent,
+  Belief,
+  Activity,
+  Precondition,
+  agentAPI
+} from "agents_implementation/agent_framework";
 import {
   ProcedureConst,
   AsyncStorageKeys,
@@ -14,17 +16,19 @@ import {
   AppAttributes,
   ActionFrameIDs
 } from "agents_implementation/agent_framework/AgentEnums";
-import agentAPI from "agents_implementation/agent_framework/AgentAPI";
 import {
-  PatientAssignmentResolution,
+  Assignment,
+  PatientAssignmentResolution
+} from "agents_implementation/agent_framework/model";
+import {
   createClinicianPatientMap,
   createPatientAssignment,
-  updatePatientAssignment,
-  Assignment
+  updatePatientAssignment
 } from "aws";
 import { store } from "ic-redux/store";
 import { setProcedureSuccessful } from "ic-redux/actions/agents/actionCreator";
 import agentNWA from "agents_implementation/agents/network-assistant/NWA";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Auth from "@aws-amplify/auth";
 
 /**

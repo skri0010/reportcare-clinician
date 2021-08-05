@@ -10,6 +10,12 @@ export interface Fact {
   [k: string]: { [k: string]: any };
 }
 
+export enum PatientAssignmentResolution {
+  PENDING = "PENDING",
+  APPROVED = "APPROVED",
+  REASSIGNED = "REASSIGNED"
+}
+
 export enum AlertColorCode {
   HIGH = "red",
   MEDIUM = "yellow",
@@ -30,6 +36,13 @@ export interface Patient {
   userId: string;
   age: number;
   riskLevel: RiskLevel;
+}
+
+export interface Assignment {
+  patientID: string;
+  clinicianID: string;
+  resolution: PatientAssignmentResolution;
+  _version: number;
 }
 
 export interface AlertInfo {
