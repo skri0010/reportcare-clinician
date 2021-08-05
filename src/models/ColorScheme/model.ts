@@ -34,13 +34,18 @@ export interface ColorScheme {
   // Buttons
   primaryButtonColor: string;
   primaryWarningButtonColor: string;
+  primaryTodoCompleteButtonColor: string;
 
   // Avatar background
   primaryAvatarBackgroundColor: string;
 
+  // Icons
+  primaryIconColor: string;
+
   // Others
   riskLevelBackgroundColors: IRiskLevelMap;
   riskLevelBorderColors: IRiskLevelMap;
+  riskLevelSelectedBackgroundColors: IRiskLevelMap;
 
   // Errors
   errorColor: string;

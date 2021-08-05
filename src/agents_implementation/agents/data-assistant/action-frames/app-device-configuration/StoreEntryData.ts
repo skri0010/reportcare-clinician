@@ -111,9 +111,6 @@ class StoreEntryData extends Activity {
     }
 
     // Update Facts
-    agentAPI.addFact(
-      new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.CONFIGURED, true)
-    );
     // Removes sign up details from facts
     agentAPI.addFact(
       new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.ENTRY_DATA, null),
@@ -130,7 +127,11 @@ class StoreEntryData extends Activity {
         BeliefKeys.PROCEDURE,
         ProcedureAttributes.ADC,
         ProcedureConst.INACTIVE
-      ),
+      )
+    );
+    // Prevents RetrieveEntryData from being triggered if the procedure is still active
+    agentAPI.addFact(
+      new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.CONFIGURED, true),
       true,
       true
     );

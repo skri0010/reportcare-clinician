@@ -1,7 +1,8 @@
 import { ColorScheme } from "models/ColorScheme/model";
 import {
   riskLevelBackgroundColors,
-  riskLevelBorderColors
+  riskLevelBorderColors,
+  riskLevelSelectedBackgroundColors
 } from "models/ColorScheme/common/riskLevelColors";
 
 export const lightColorScheme: ColorScheme = {
@@ -38,17 +39,22 @@ export const lightColorScheme: ColorScheme = {
   // Buttons
   primaryButtonColor: "#57c081",
   primaryWarningButtonColor: "#D11C1C",
+  primaryTodoCompleteButtonColor: "#A484FF",
 
   // Avatar background
   primaryAvatarBackgroundColor: "#e0e0e0",
 
+  // Icons
+  primaryIconColor: "#ABA9A9",
+
   // Others
   riskLevelBackgroundColors: riskLevelBackgroundColors,
   riskLevelBorderColors: riskLevelBorderColors,
+  riskLevelSelectedBackgroundColors: riskLevelSelectedBackgroundColors,
 
   // Errors
   errorColor: "#ff1e00",
 
   // Overlay
-  overlayColor: "#f5fcff88"
+  overlayColor: "#e7e8e895"
 };

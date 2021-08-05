@@ -540,7 +540,6 @@ class Engine {
         }
       }
     }
-
     return this.validateAvailableActions(availableActions);
   }
 

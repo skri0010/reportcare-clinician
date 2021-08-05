@@ -3,5 +3,7 @@ export interface ITodoDetails {
   name: string;
   description: string;
   doneStatus: boolean;
+  created: string;
+  modified: string;
   id: string;
 }

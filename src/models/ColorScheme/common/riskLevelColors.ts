@@ -13,3 +13,10 @@ export const riskLevelBorderColors: IRiskLevelMap = {
   LOW: "#00c64f",
   UNASSIGNED: "#000000"
 };
+
+export const riskLevelSelectedBackgroundColors: IRiskLevelMap = {
+  HIGH: "#ed6464",
+  MEDIUM: "#ebd860",
+  LOW: "#81d488",
+  UNASSIGNED: "#d4d4d4"
+};

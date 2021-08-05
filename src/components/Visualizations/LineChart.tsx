@@ -3,7 +3,7 @@ import { Dimensions, ViewStyle, Platform, View } from "react-native";
 import { RootState, select } from "util/useRedux";
 import { LineChart } from "react-native-chart-kit";
 import { ms, ScaledSheet } from "react-native-size-matters";
-import { H3, H5 } from "components/Text";
+import { H4, H5 } from "components/Text";
 
 interface LineChartProps {
   graphTitle: string;
@@ -11,6 +11,11 @@ interface LineChartProps {
   xLabels: string[];
   data: number[];
 }
+
+/*
+ * There seems to be an issue with the line chart package and react-natiove-svg where there is no onPress support for web
+ * https://stackoverflow.com/questions/62124540/react-native-chart-graph-library-that-supports-user-onpress
+ */
 
 export const LineChartComponent: FC<LineChartProps> = ({
   graphTitle,
@@ -59,18 +64,18 @@ export const LineChartComponent: FC<LineChartProps> = ({
 
   const width =
     Platform.OS === "web"
-      ? Dimensions.get("window").width / 3
+      ? Dimensions.get("window").width / 4.5
       : (Dimensions.get("window").width * 6) / 7;
 
   const height =
     Platform.OS === "web"
-      ? (Dimensions.get("window").height * 3) / 7
+      ? (Dimensions.get("window").height * 3) / 9
       : Dimensions.get("window").height / 3;
 
   return (
     <View>
       <View style={styles.titleContainer}>
-        <H3 text={graphTitle} style={styles.title} />
+        <H4 text={graphTitle} style={styles.title} />
         {graphSubtitle && <H5 text={graphSubtitle} style={styles.title} />}
       </View>
       <LineChart
