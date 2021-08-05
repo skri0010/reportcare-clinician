@@ -275,9 +275,9 @@ type ClinicianPatientMap
   )
   @key(fields: ["clinicianID", "patientID"])
   @key(
-    name: "clinicianIDsByPatientID"
+    name: "clinicianMappingsByPatientID"
     fields: ["patientID", "clinicianID"]
-    queryField: "clinicianIDsByPatientID"
+    queryField: "listClinicianMappingsByPatientID"
   ) {
   id: ID!
   clinicianID: String!
@@ -302,9 +302,9 @@ type PatientAssignment
   )
   @key(fields: ["patientID", "clinicianID"])
   @key(
-    name: "patientAssignmentByPending"
+    name: "pendingPatientAssignments"
     fields: ["clinicianID", "pending"]
-    queryField: "listPatientAssignmentBy"
+    queryField: "listPendingPatientAssignments"
   ) {
   id: ID!
   patientID: String!

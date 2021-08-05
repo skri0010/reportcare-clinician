@@ -55,12 +55,17 @@ export const ActionFrameIDs = {
     RETRIEVE_ROLE_PATIENTS: "RetrieveRolePatients",
     RETRIEVE_PATIENT_DETAILS: "RetrievePatientDetails",
     REQUEST_DETAILS_DISPLAY: "RequestDetailsDisplay",
-    RESOLVE_PATIENT_ASSIGNMENT: "ResolvePatientAssignment",
     RETRIEVE_ALERT_INFOS: "RetrieveAlertInfos",
-    REQUEST_ALERTS_DISPLAY: "RequestAlertsDisplay"
+    REQUEST_ALERTS_DISPLAY: "RequestAlertsDisplay",
+
+    // Patient Assignments
+    REQUEST_PENDING_PATIENT_ASSIGNMENTS: "RequestPendingPatientAssignments",
+    RETRIEVE_PENDING_PATIENT_ASSIGNMENTS: "RetrievePendingPatientAssignments",
+    RESOLVE_PATIENT_ASSIGNMENT: "ResolvePatientAssignment"
   },
   UXSA: {
     RETRIEVE_ROLE: "RetrieveRole",
+    RETRIEVE_PENDING_PATIENT_ASSIGNMENTS: "RetrievePendingPatientAssignments",
     REQUEST_RETRIEVE_ALL: "RequestRetrieveAll",
     VISUALIZE_PARAMETERS: "VisualizeParameters",
     DISPLAY_ALERTS: "DisplayAlerts"
@@ -128,8 +133,15 @@ export enum PatientAttributes {
   DETAILS_RETRIEVED = "DetailsRetrieved",
   VIEW_DETAILS = "ViewDetails",
   DETAILS = "Details",
+
+  // Patient Assignments
+  PENDING_PATIENT_ASSIGNMENTS = "PendingPatientAssignments",
+  RETRIEVE_PENDING_PATIENT_ASSIGNMENTS = "RetrievePendingPatientAssignments",
+  PENDING_PATIENT_ASSIGNMENTS_RETRIEVED = "PendingPatientAssignmentsRetrieved",
   RESOLVE_PATIENT_ASSIGNMENT = "ResolvePatientAssignment",
   PENDING_RESOLVE_PATIENT_ASSIGNMENT = "PendingResolvePatientAssignment",
+
+  // Alerts
   INCOMING_ALERTS = "IncomingAlerts",
   NEW_ALERTS = "NewAlerts",
   ALERTS_TO_SORT = "AlertsToSort",
@@ -147,5 +159,6 @@ export enum AsyncStorageKeys {
   CLINICIAN = "Clinician",
   PATIENTS = "Patients",
   ALERTS = "Alerts",
-  PATIENT_ASSIGNMENTS = "PatientAssignments"
+  PENDING_PATIENT_ASSIGNMENTS = "PendingPatientAssignments",
+  PATIENT_ASSIGNMENTS_RESOLUTIONS = "PatientAssignmentsResolutions"
 }

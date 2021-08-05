@@ -17,7 +17,9 @@ import {
   ListMedCompliantsQueryVariables,
   ListMedicationInfosQuery,
   ListMedCompliantByDateQuery,
-  ListMedCompliantByDateQueryVariables
+  ListMedCompliantByDateQueryVariables,
+  ListPendingPatientAssignmentsQuery,
+  ListPendingPatientAssignmentsQueryVariables
 } from "aws/API";
 
 interface ListClinicianInfosResponse extends BaseResponse {
@@ -122,4 +124,17 @@ export const listMedCompliantsByDate = async (
     query: queries.listMedCompliantByDate,
     variables: variables
   })) as ListMedCompliantsByDateResponse;
+};
+
+interface ListPendingPatientAssignmentResponse extends BaseResponse {
+  data: ListPendingPatientAssignmentsQuery;
+}
+
+export const listPendingPatientAssignments = async (
+  variables: ListPendingPatientAssignmentsQueryVariables
+): Promise<ListPendingPatientAssignmentResponse> => {
+  return (await API.graphql({
+    query: queries.listPendingPatientAssignments,
+    variables: variables
+  })) as ListPendingPatientAssignmentResponse;
 };

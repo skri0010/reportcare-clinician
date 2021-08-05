@@ -17,8 +17,8 @@ import {
   ActionFrameIDs
 } from "agents_implementation/agent_framework/AgentEnums";
 import {
-  Assignment,
-  PatientAssignmentResolution
+  PatientAssignmentResolution,
+  PatientAssignmentStatus
 } from "agents_implementation/agent_framework/model";
 import {
   createClinicianPatientMap,
@@ -67,7 +67,7 @@ class ResolvePatientAssignment extends Activity {
 
     try {
       // Get assignment to resolve
-      const assignment: Assignment =
+      const assignment: PatientAssignmentResolution =
         agentAPI.getFacts()[BeliefKeys.PATIENT]?.[
           PatientAttributes.RESOLVE_PATIENT_ASSIGNMENT
         ];
@@ -90,12 +90,13 @@ class ResolvePatientAssignment extends Activity {
         else {
           // Append current assignments to resolve to locally stored assignments to resolve
           const localData = await AsyncStorage.getItem(
-            AsyncStorageKeys.PATIENT_ASSIGNMENTS
+            AsyncStorageKeys.PATIENT_ASSIGNMENTS_RESOLUTIONS
           );
           // Key exists in AsyncStorage
           if (localData) {
             // Insert and store if this assignment does not exist (ie new patientID)
-            const pendingAssignments: Assignment[] = JSON.parse(localData);
+            const pendingAssignments: PatientAssignmentResolution[] =
+              JSON.parse(localData);
             const assignmentExists = pendingAssignments.find(
               (storedAssignment) =>
                 storedAssignment.patientID === assignment.patientID
@@ -104,7 +105,7 @@ class ResolvePatientAssignment extends Activity {
             if (!assignmentExists) {
               pendingAssignments.push(assignment);
               await AsyncStorage.setItem(
-                AsyncStorageKeys.PATIENT_ASSIGNMENTS,
+                AsyncStorageKeys.PATIENT_ASSIGNMENTS_RESOLUTIONS,
                 JSON.stringify(pendingAssignments)
               );
             }
@@ -113,7 +114,7 @@ class ResolvePatientAssignment extends Activity {
           else {
             // No other pending requests: create a new list
             await AsyncStorage.setItem(
-              AsyncStorageKeys.PATIENT_ASSIGNMENTS,
+              AsyncStorageKeys.PATIENT_ASSIGNMENTS_RESOLUTIONS,
               JSON.stringify([assignment])
             );
           }
@@ -163,19 +164,19 @@ class ResolvePatientAssignment extends Activity {
  * Resolve (APPROVE or REASSIGN based on assignment)
  */
 export const resolvePatientAssignment: (params: {
-  assignment: Assignment;
+  assignment: PatientAssignmentResolution;
   ownClinicianId: string;
 }) => Promise<void> = async ({ assignment, ownClinicianId }) => {
   // Approve patient to self
   if (
-    assignment.resolution === PatientAssignmentResolution.APPROVED &&
+    assignment.resolution === PatientAssignmentStatus.APPROVED &&
     assignment.clinicianID === ownClinicianId
   ) {
     await approvePatientAssignment({ assignment: assignment });
   }
   // Reassign patient to another clinician
   else if (
-    assignment.resolution === PatientAssignmentResolution.REASSIGNED &&
+    assignment.resolution === PatientAssignmentStatus.REASSIGNED &&
     assignment.clinicianID !== ownClinicianId
   ) {
     await reassignPatientAssignment({
@@ -189,7 +190,7 @@ export const resolvePatientAssignment: (params: {
  * Approve API calls for online device
  */
 const approvePatientAssignment: (params: {
-  assignment: Assignment;
+  assignment: PatientAssignmentResolution;
 }) => Promise<void> = async ({ assignment }) => {
   // Insert ClinicianPatientMap, update PatientAssignment status, update access token
   await createClinicianPatientMap({
@@ -201,7 +202,7 @@ const approvePatientAssignment: (params: {
     patientID: assignment.patientID,
     clinicianID: assignment.clinicianID,
     pending: null, // Removes it from GSI to ensure it is sparse
-    resolution: PatientAssignmentResolution.APPROVED,
+    resolution: PatientAssignmentStatus.APPROVED,
     _version: assignment._version
   });
   await Auth.currentAuthenticatedUser({ bypassCache: true }); // pre token generation Lambda is triggered
@@ -211,20 +212,20 @@ const approvePatientAssignment: (params: {
  * Reassign API calls for online device
  */
 const reassignPatientAssignment: (params: {
-  reassignment: Assignment;
+  reassignment: PatientAssignmentResolution;
   ownClinicianId: string;
 }) => Promise<void> = async ({ reassignment, ownClinicianId }) => {
   // Insert PatientAssignment for another clinician and update PatientAssignment status
   await createPatientAssignment({
     patientID: reassignment.patientID,
     clinicianID: reassignment.clinicianID,
-    pending: PatientAssignmentResolution.PENDING
+    pending: PatientAssignmentStatus.PENDING
   });
   await updatePatientAssignment({
     patientID: reassignment.patientID,
     clinicianID: ownClinicianId,
     pending: null, // Removes it from GSI to ensure it is sparse
-    resolution: PatientAssignmentResolution.REASSIGNED,
+    resolution: PatientAssignmentStatus.REASSIGNED,
     _version: reassignment._version
   });
 };

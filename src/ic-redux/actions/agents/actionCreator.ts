@@ -5,6 +5,7 @@ import {
 } from "agents_implementation/agent_framework/model";
 import { actionNames } from "ic-redux/actions/actionNames";
 import { createAction } from "typesafe-actions";
+import { PatientAssignment } from "aws/API";
 
 export const setProcedureOngoing = createAction(
   actionNames.SET_PROCEDURE_ONGOING,
@@ -31,6 +32,13 @@ export const setPatientDetails = createAction(
   actionNames.SET_PATIENT_DETAILS,
   (patientDetails: PatientDetails) => ({
     patientDetails: patientDetails
+  })
+)();
+
+export const setPendingPatientAssignments = createAction(
+  actionNames.SET_PENDING_PATIENT_ASSIGNMENTS,
+  (pendingPatientAssignments: PatientAssignment[]) => ({
+    pendingPatientAssignments: pendingPatientAssignments
   })
 )();
 

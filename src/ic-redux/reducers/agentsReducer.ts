@@ -6,6 +6,7 @@ import {
   Patient,
   PatientDetails
 } from "agents_implementation/agent_framework/model";
+import { PatientAssignment } from "aws/API";
 
 interface AgentsState {
   procedureSuccessful: boolean;
@@ -13,7 +14,7 @@ interface AgentsState {
   online: boolean;
   patients: Patient[];
   patientDetails: PatientDetails;
-
+  pendingPatientAssignments: PatientAssignment[];
   patientAssignmentsSynced: boolean;
   newHighRiskAlerts: AlertInfo[];
   newMediumRiskAlerts: AlertInfo[];
@@ -31,6 +32,7 @@ const initialState: AgentsState = {
     symptomsReports: [],
     vitalsReports: []
   },
+  pendingPatientAssignments: [],
   patientAssignmentsSynced: false,
   newHighRiskAlerts: [],
   newMediumRiskAlerts: [],
@@ -51,6 +53,11 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
       return { ...state, patients: action.payload.patients };
     case actionNames.SET_PATIENT_DETAILS:
       return { ...state, patientDetails: action.payload.patientDetails };
+    case actionNames.SET_PENDING_PATIENT_ASSIGNMENTS:
+      return {
+        ...state,
+        pendingPatientAssignments: action.payload.pendingPatientAssignments
+      };
     case actionNames.SET_PATIENT_ASSIGNMENTS_SYNCED:
       return {
         ...state,

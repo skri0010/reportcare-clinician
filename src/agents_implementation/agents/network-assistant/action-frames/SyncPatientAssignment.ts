@@ -12,7 +12,7 @@ import {
   BeliefKeys,
   CommonAttributes
 } from "agents_implementation/agent_framework/AgentEnums";
-import { Assignment } from "agents_implementation/agent_framework/model";
+import { PatientAssignmentResolution } from "agents_implementation/agent_framework/model";
 import { resolvePatientAssignment } from "agents_implementation/agents/data-assistant/action-frames/storing-data/ResolvePatientAssignment";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -52,7 +52,7 @@ class SyncPatientAssignment extends Activity {
     try {
       // Get locally stored list of assignments to resolve
       const assignmentListJSON = await AsyncStorage.getItem(
-        AsyncStorageKeys.PATIENT_ASSIGNMENTS
+        AsyncStorageKeys.PATIENT_ASSIGNMENTS_RESOLUTIONS
       );
 
       // Get locally stored clinicianId
@@ -61,8 +61,9 @@ class SyncPatientAssignment extends Activity {
       );
 
       if (assignmentListJSON && clinicianId) {
-        const remainingList: Assignment[] = [];
-        const assignmentList: Assignment[] = JSON.parse(assignmentListJSON);
+        const remainingList: PatientAssignmentResolution[] = [];
+        const assignmentList: PatientAssignmentResolution[] =
+          JSON.parse(assignmentListJSON);
 
         // JH-TODO: Assignment should have an expiry date and this loop should flush if past expiry
         for (let i = 0; i < assignmentList.length; i++) {
@@ -83,7 +84,7 @@ class SyncPatientAssignment extends Activity {
 
         // Store failed assignments back into local storage
         await AsyncStorage.setItem(
-          AsyncStorageKeys.PATIENT_ASSIGNMENTS,
+          AsyncStorageKeys.PATIENT_ASSIGNMENTS_RESOLUTIONS,
           JSON.stringify(remainingList)
         );
       }

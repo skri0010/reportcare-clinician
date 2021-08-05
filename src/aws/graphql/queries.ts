@@ -1373,8 +1373,8 @@ export const listReportVitalByDateTime = /* GraphQL */ `
     }
   }
 `;
-export const clinicianIDsByPatientID = /* GraphQL */ `
-  query ClinicianIDsByPatientID(
+export const listClinicianMappingsByPatientID = /* GraphQL */ `
+  query ListClinicianMappingsByPatientID(
     $patientID: String
     $clinicianID: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
@@ -1382,7 +1382,7 @@ export const clinicianIDsByPatientID = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    clinicianIDsByPatientID(
+    listClinicianMappingsByPatientID(
       patientID: $patientID
       clinicianID: $clinicianID
       sortDirection: $sortDirection
@@ -1406,8 +1406,8 @@ export const clinicianIDsByPatientID = /* GraphQL */ `
     }
   }
 `;
-export const listPatientAssignmentBy = /* GraphQL */ `
-  query ListPatientAssignmentBy(
+export const listPendingPatientAssignments = /* GraphQL */ `
+  query ListPendingPatientAssignments(
     $clinicianID: String
     $pending: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
@@ -1415,7 +1415,7 @@ export const listPatientAssignmentBy = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    listPatientAssignmentBy(
+    listPendingPatientAssignments(
       clinicianID: $clinicianID
       pending: $pending
       sortDirection: $sortDirection

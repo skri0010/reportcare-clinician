@@ -3573,7 +3573,7 @@ export type ListReportVitalByDateTimeQuery = {
   } | null,
 };
 
-export type ClinicianIDsByPatientIDQueryVariables = {
+export type ListClinicianMappingsByPatientIDQueryVariables = {
   patientID?: string | null,
   clinicianID?: ModelStringKeyConditionInput | null,
   sortDirection?: ModelSortDirection | null,
@@ -3582,8 +3582,8 @@ export type ClinicianIDsByPatientIDQueryVariables = {
   nextToken?: string | null,
 };
 
-export type ClinicianIDsByPatientIDQuery = {
-  clinicianIDsByPatientID?:  {
+export type ListClinicianMappingsByPatientIDQuery = {
+  listClinicianMappingsByPatientID?:  {
     __typename: "ModelClinicianPatientMapConnection",
     items?:  Array< {
       __typename: "ClinicianPatientMap",
@@ -3602,7 +3602,7 @@ export type ClinicianIDsByPatientIDQuery = {
   } | null,
 };
 
-export type ListPatientAssignmentByQueryVariables = {
+export type ListPendingPatientAssignmentsQueryVariables = {
   clinicianID?: string | null,
   pending?: ModelStringKeyConditionInput | null,
   sortDirection?: ModelSortDirection | null,
@@ -3611,8 +3611,8 @@ export type ListPatientAssignmentByQueryVariables = {
   nextToken?: string | null,
 };
 
-export type ListPatientAssignmentByQuery = {
-  listPatientAssignmentBy?:  {
+export type ListPendingPatientAssignmentsQuery = {
+  listPendingPatientAssignments?:  {
     __typename: "ModelPatientAssignmentConnection",
     items?:  Array< {
       __typename: "PatientAssignment",

@@ -1093,12 +1093,12 @@ export const schema = {
                 {
                     "type": "key",
                     "properties": {
-                        "name": "clinicianIDsByPatientID",
+                        "name": "clinicianMappingsByPatientID",
                         "fields": [
                             "patientID",
                             "clinicianID"
                         ],
-                        "queryField": "clinicianIDsByPatientID"
+                        "queryField": "listClinicianMappingsByPatientID"
                     }
                 },
                 {
@@ -1225,12 +1225,12 @@ export const schema = {
                 {
                     "type": "key",
                     "properties": {
-                        "name": "patientAssignmentByPending",
+                        "name": "pendingPatientAssignments",
                         "fields": [
                             "clinicianID",
                             "pending"
                         ],
-                        "queryField": "listPatientAssignmentBy"
+                        "queryField": "listPendingPatientAssignments"
                     }
                 },
                 {
@@ -1606,5 +1606,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "c0accdde9889b7679617b1c8bf5505cb"
+    "version": "d046acd4efbefc45b8cdca271167d995"
 };
