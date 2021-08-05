@@ -23,7 +23,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 /**
  * Class to represent an activity for retrieving pending patient assignments.
- * This happens in Procedure HF Outcome Trends (HF-OTP-II).
+ * This happens in Procedure HF Outcome Trends (HF-OTP-III).
  */
 class RetrievePendingPatientAssignments extends Activity {
   constructor() {
@@ -38,6 +38,7 @@ class RetrievePendingPatientAssignments extends Activity {
     await super.doActivity(agent);
     let pendingPatientAssignments: PatientAssignment[] | null | undefined;
 
+    // console.log("Starting");
     // Update Beliefs
     agent.addBelief(
       new Belief(
@@ -57,7 +58,6 @@ class RetrievePendingPatientAssignments extends Activity {
       );
       const isOnline =
         agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE];
-
       // Device is online
       if (clinicianId && isOnline) {
         // Retrieve pending patient assignments
@@ -109,7 +109,7 @@ class RetrievePendingPatientAssignments extends Activity {
 // Preconditions for activating the RetrievePendingPatientAssignments class
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.HF_OTP_II,
+  ProcedureAttributes.HF_OTP_III,
   ProcedureConst.ACTIVE
 );
 const rule2 = new Precondition(

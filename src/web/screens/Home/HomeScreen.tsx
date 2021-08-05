@@ -7,6 +7,7 @@ import { ms, ScaledSheet } from "react-native-size-matters";
 import { RequestsByMariaCard } from "./RequestsByMariaCard";
 import { AlertsCard } from "./AlertsCard";
 import { TodosCard } from "./TodosCard";
+import { PendingPatientAssignmentsCard } from "./PendingPatientAssignmentsCard";
 
 export const HomeScreen: FC<WithSideTabsProps[ScreenName.HOME]> = () => {
   // JH-TODO Replace titles with i18n
@@ -17,7 +18,8 @@ export const HomeScreen: FC<WithSideTabsProps[ScreenName.HOME]> = () => {
       <WelcomeCard name="Nailah" />
       <View style={styles.bottomContainer}>
         <RequestsByMariaCard maxHeight={cardMaxHeight} />
-        <AlertsCard maxHeight={cardMaxHeight} />
+        <PendingPatientAssignmentsCard maxHeight={cardMaxHeight} />
+        {/* <AlertsCard maxHeight={cardMaxHeight} /> */}
         <TodosCard maxHeight={cardMaxHeight} />
       </View>
     </ScreenWrapper>

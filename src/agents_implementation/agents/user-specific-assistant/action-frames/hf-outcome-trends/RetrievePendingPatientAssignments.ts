@@ -18,8 +18,8 @@ import { store } from "ic-redux/store";
 import { setPendingPatientAssignments } from "ic-redux/actions/agents/actionCreator";
 
 /**
- * Class to represent an activity for retrieving role of user for retrieving patients.
- * This happens in Procedure HF Outcome Trends (HF-OTP-I).
+ * Class to represent an activity for retrieving pending patient assignments.
+ * This happens in Procedure HF Outcome Trends (HF-OTP-III).
  */
 class RetrievePendingPatientAssignments extends Activity {
   constructor() {
@@ -51,13 +51,22 @@ class RetrievePendingPatientAssignments extends Activity {
       ];
 
     store.dispatch(setPendingPatientAssignments(pendingPatientAssignments));
+
+    // Update Facts and end procedure
+    agentAPI.addFact(
+      new Belief(
+        BeliefKeys.PROCEDURE,
+        ProcedureAttributes.HF_OTP_III,
+        ProcedureConst.INACTIVE
+      )
+    );
   }
 }
 
-// Preconditions for activating the RetrieveRole class
+// Preconditions for activating the RetrievePendingPatientAssignments class
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.HF_OTP_I,
+  ProcedureAttributes.HF_OTP_III,
   ProcedureConst.ACTIVE
 );
 const rule2 = new Precondition(
@@ -66,7 +75,7 @@ const rule2 = new Precondition(
   true
 );
 
-// Action Frame for RetrieveRole class
+// Action Frame for RetrievePendingPatientAssignments class
 const af_RetrievePendingPatientAssignments = new Actionframe(
   `AF_${ActionFrameIDs.UXSA.RETRIEVE_PENDING_PATIENT_ASSIGNMENTS}`,
   [rule1, rule2],

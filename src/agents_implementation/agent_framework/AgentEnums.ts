@@ -110,6 +110,7 @@ export enum ProcedureAttributes {
   ADC = "ADC",
   HF_OTP_I = "HF-OTP-I",
   HF_OTP_II = "HF-OTP-II",
+  HF_OTP_III = "HF-OTP-III",
   SRD = "SRD",
   AT_CP = "AT-CP"
 }

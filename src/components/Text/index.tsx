@@ -9,7 +9,7 @@ export type RNTextStyle = StyleProp<TextStyle>; // Default text style props
 
 interface TextProps {
   text: string;
-  style: RNTextStyle;
+  style?: RNTextStyle;
   translate?: boolean; // translates text by default (@see BaseText)
 }
 
