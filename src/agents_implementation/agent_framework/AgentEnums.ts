@@ -56,6 +56,7 @@ export const ActionFrameIDs = {
     RETRIEVE_PATIENT_DETAILS: "RetrievePatientDetails",
     REQUEST_DETAILS_DISPLAY: "RequestDetailsDisplay",
     RESOLVE_PATIENT_ASSIGNMENT: "ResolvePatientAssignment",
+    RETRIEVE_ALL_ALERTS: "RetrieveAllAlerts",
     RETRIEVE_ALERT_INFOS: "RetrieveAlertInfos",
     REQUEST_ALERTS_DISPLAY: "RequestAlertsDisplay"
   },
@@ -63,7 +64,8 @@ export const ActionFrameIDs = {
     RETRIEVE_ROLE: "RetrieveRole",
     REQUEST_RETRIEVE_ALL: "RequestRetrieveAll",
     VISUALIZE_PARAMETERS: "VisualizeParameters",
-    DISPLAY_ALERTS: "DisplayAlerts"
+    DISPLAY_ALL_ALERTS: "DisplayAllAlerts",
+    DISPLAY_NEW_ALERTS: "DisplayNewAlerts"
   },
   NWA: {
     SYNC_PROTECTED_INFO: "SyncProtectedInfo",
@@ -136,7 +138,8 @@ export enum PatientAttributes {
   SORTED_ALERTS = "SortedAlerts",
   ALERTS_SORTED = "AlertsSorted",
   ALERT_INFOS = "AlertInfos",
-  ALERT_INFOS_RETRIEVED = "AlertInfosRetrieved"
+  ALERT_INFOS_RETRIEVED = "AlertInfosRetrieved",
+  RETRIEVE_ALERTS = "RetrieveAlerts"
 }
 
 // Keys for locally storing data in AsyncStorage

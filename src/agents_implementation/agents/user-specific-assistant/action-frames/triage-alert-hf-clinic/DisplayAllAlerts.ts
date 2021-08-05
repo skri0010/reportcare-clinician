@@ -25,9 +25,9 @@ import {
  * Class to represent an activity for triggering the display of newly received alerts.
  * This happens in Procedure Triage Alert HF Clinic (AT-CP).
  */
-class DisplayAlerts extends Activity {
+class DisplayAllAlerts extends Activity {
   constructor() {
-    super(ActionFrameIDs.UXSA.DISPLAY_ALERTS);
+    super(ActionFrameIDs.UXSA.DISPLAY_ALL_ALERTS);
   }
 
   /**
@@ -95,13 +95,13 @@ class DisplayAlerts extends Activity {
         ProcedureAttributes.AT_CP,
         ProcedureConst.INACTIVE
       ),
-      true,
       true
+      // true
     );
   }
 }
 
-// Preconditions for activating the DisplayAlerts class
+// Preconditions for activating the DisplayAllAlerts class
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
   ProcedureAttributes.AT_CP,
@@ -113,11 +113,11 @@ const rule2 = new Precondition(
   true
 );
 
-// Action Frame for DisplayAlerts class
-const af_DisplayAlerts = new Actionframe(
-  `AF_${ActionFrameIDs.UXSA.DISPLAY_ALERTS}`,
+// Action Frame for DisplayAllAlerts class
+const af_DisplayAllAlerts = new Actionframe(
+  `AF_${ActionFrameIDs.UXSA.DISPLAY_ALL_ALERTS}`,
   [rule1, rule2],
-  new DisplayAlerts()
+  new DisplayAllAlerts()
 );
 
-export default af_DisplayAlerts;
+export default af_DisplayAllAlerts;

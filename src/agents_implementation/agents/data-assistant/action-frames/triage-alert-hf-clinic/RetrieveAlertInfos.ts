@@ -13,7 +13,7 @@ import {
   ProcedureAttributes,
   ProcedureConst
 } from "../../../../agent_framework/AgentEnums";
-import { AlertInfo } from "../../../../agent_framework/model";
+import { AlertInfo, AlertInfos } from "../../../../agent_framework/model";
 import agentAPI from "../../../../agent_framework/AgentAPI";
 import {
   listMedCompliantsByDate,
@@ -26,13 +26,6 @@ import {
 import { Alert, ModelSortDirection } from "aws/API";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { RiskLevel } from "models/RiskLevel";
-
-interface AlertInfos {
-  highRisk: AlertInfo[];
-  mediumRisk: AlertInfo[];
-  lowRisk: AlertInfo[];
-  unassignedRisk: AlertInfo[];
-}
 
 interface SortedAlerts {
   highRisk: Alert[];
@@ -180,17 +173,15 @@ class RetrieveAlertInfos extends Activity {
           );
         }
 
-        if (Object.entries(alertInfos).length > 0) {
-          // Adds alert infos to facts to be retrieved in DisplayAlert action frame of UXSA
-          agentAPI.addFact(
-            new Belief(
-              BeliefKeys.PATIENT,
-              PatientAttributes.ALERT_INFOS,
-              alertInfos
-            ),
-            false
-          );
-        }
+        // Adds alert infos to facts to be retrieved in DisplayAlert action frame of UXSA
+        agentAPI.addFact(
+          new Belief(
+            BeliefKeys.PATIENT,
+            PatientAttributes.ALERT_INFOS,
+            alertInfos
+          ),
+          false
+        );
       }
 
       // Update Facts

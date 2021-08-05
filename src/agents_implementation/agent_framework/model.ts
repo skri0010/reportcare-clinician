@@ -10,6 +10,13 @@ export interface Fact {
   [k: string]: { [k: string]: any };
 }
 
+export interface AlertInfos {
+  highRisk: AlertInfo[];
+  mediumRisk: AlertInfo[];
+  lowRisk: AlertInfo[];
+  unassignedRisk: AlertInfo[];
+}
+
 export enum AlertColorCode {
   HIGH = "red",
   MEDIUM = "yellow",

@@ -5,7 +5,6 @@ import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { ScaledSheet } from "react-native-size-matters";
 import { PatientDetailsRow } from "components/RowComponents/PatientRows/PatientDetailsRow";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
-import { ParameterGraphs } from "components/Visualizations/ParameterGraphs";
 import agentDTA from "agents_implementation/agents/data-assistant/DTA";
 import Belief from "agents_implementation/agent_framework/base/Belief";
 import {
@@ -23,13 +22,10 @@ import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicato
 import { useNetInfo } from "@react-native-community/netinfo";
 
 export const PatientsTab: FC = () => {
-  const { patients, patientDetails, procedureOngoing } = select(
-    (state: RootState) => ({
-      patients: state.agents.patients,
-      procedureOngoing: state.agents.procedureOngoing,
-      patientDetails: state.agents.patientDetails
-    })
-  );
+  const { patients, procedureOngoing } = select((state: RootState) => ({
+    patients: state.agents.patients,
+    procedureOngoing: state.agents.procedureOngoing
+  }));
 
   const [retrieving, setRetrieving] = useState(false); // used locally to indicate ongoing retrieval of details
   const [showGraph, setShowGraph] = useState(false); // used locally for graph display
@@ -142,7 +138,7 @@ export const PatientsTab: FC = () => {
       )}
 
       {/* TODO: Move graphs to PatientsDetails screen */}
-      {showGraph && <ParameterGraphs data={patientDetails.vitalsReports} />}
+      {/* {showGraph && <ParameterGraphs data={patientDetails.vitalsReports} />} */}
 
       {(retrieving || procedureOngoing) && <LoadingIndicator />}
     </ScreenWrapper>
