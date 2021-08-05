@@ -28,7 +28,7 @@ export const PatientAssignmentRow: React.FC<PatientAssignmentRowProps> = ({
         <TouchableOpacity style={styles.iconWrapper}>
           <MaterialIcon
             name="person-add"
-            color="#6AC574"
+            color={colors.acceptIconColor}
             size={fonts.h3Size}
             onPress={onApprove}
           />
@@ -36,7 +36,7 @@ export const PatientAssignmentRow: React.FC<PatientAssignmentRowProps> = ({
         <TouchableOpacity style={styles.iconWrapper}>
           <MaterialCommunityIcon
             name="account-arrow-right"
-            color="#6AC574"
+            color={colors.primaryIconColor}
             size={fonts.h3Size}
             onPress={onReassign}
           />
@@ -48,9 +48,8 @@ export const PatientAssignmentRow: React.FC<PatientAssignmentRowProps> = ({
 
 const styles = ScaledSheet.create({
   mainContainer: {
-    maxWidth: "200@ms",
-    backgroundColor: "black",
-    alignSelf: "center"
+    alignSelf: "center",
+    paddingTop: "10@ms"
   },
   rightIconsContainer: {
     flexDirection: "row",

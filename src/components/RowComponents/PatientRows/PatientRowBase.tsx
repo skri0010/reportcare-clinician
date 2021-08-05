@@ -4,7 +4,7 @@ import { PatientImageContainer } from "./PatientImageContainer";
 import { ScaledSheet } from "react-native-size-matters";
 import { RootState, select } from "util/useRedux";
 import { RiskLevel } from "models/RiskLevel";
-import { H4, H5, H6 } from "components/Text/index";
+import { H5, H6 } from "components/Text/index";
 
 interface SubtitleItemProps {
   label?: string;
@@ -38,7 +38,7 @@ export const PatientRowBase: React.FC<PatientRowBaseProps> = ({
 
   const SubtitleItem: FC<SubtitleItemProps> = ({ label, value }) => {
     return (
-      <H5
+      <H6
         text={label ? `${label}: ${value}` : value}
         style={[{ color: colors.secondaryTextColor }]}
       />
@@ -60,7 +60,7 @@ export const PatientRowBase: React.FC<PatientRowBaseProps> = ({
         {/* Content (middle container) */}
         <View style={styles.container}>
           {/* Title */}
-          <H4
+          <H5
             text={title}
             style={[styles.titleTextStyle, { color: colors.primaryTextColor }]}
           />

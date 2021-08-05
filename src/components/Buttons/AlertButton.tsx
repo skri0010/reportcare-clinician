@@ -86,8 +86,8 @@ const styles = ScaledSheet.create({
   mainContainer: {
     flexDirection: "column",
     alignItems: "center",
-    paddingBottom: "10@ms",
-    paddingHorizontal: "10@ms"
+    paddingHorizontal: "8@ms",
+    paddingBottom: "10@ms"
   },
   buttonContainer: {
     justifyContent: "center",

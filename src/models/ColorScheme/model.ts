@@ -41,6 +41,8 @@ export interface ColorScheme {
 
   // Icons
   primaryIconColor: string;
+  secondaryIconColor: string;
+  acceptIconColor: string;
 
   // Others
   riskLevelBackgroundColors: IRiskLevelMap;

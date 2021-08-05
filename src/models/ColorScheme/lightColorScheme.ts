@@ -24,7 +24,7 @@ export const lightColorScheme: ColorScheme = {
   selectedBorderColor: "#000000",
 
   // Separators
-  separatorColor: "#e6e6e6",
+  separatorColor: "#363636",
 
   // Bars
   primaryBarColor: "#0d8ca8",
@@ -45,7 +45,9 @@ export const lightColorScheme: ColorScheme = {
   primaryAvatarBackgroundColor: "#e0e0e0",
 
   // Icons
-  primaryIconColor: "#ABA9A9",
+  primaryIconColor: "#000000",
+  secondaryIconColor: "#ABA9A9",
+  acceptIconColor: "#6AC574",
 
   // Others
   riskLevelBackgroundColors: riskLevelBackgroundColors,

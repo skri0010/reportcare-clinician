@@ -9,10 +9,11 @@ import { CardWrapper } from "./CardWrapper";
 import i18n from "util/language/i18n";
 
 interface AlertsCardProps {
+  flex?: number;
   maxHeight: number;
 }
 
-export const AlertsCard: FC<AlertsCardProps> = ({ maxHeight }) => {
+export const AlertsCard: FC<AlertsCardProps> = ({ flex = 1, maxHeight }) => {
   const {
     colors,
     newHighRiskAlerts,
@@ -47,10 +48,10 @@ export const AlertsCard: FC<AlertsCardProps> = ({ maxHeight }) => {
     newUnassignedRiskAlerts
   ]);
 
-  const iconSize = ms(25);
+  const iconSize = ms(15);
 
   return (
-    <CardWrapper maxHeight={maxHeight}>
+    <CardWrapper flex={flex} maxHeight={maxHeight}>
       <View style={styles.titleContainer}>
         <H4 text={i18n.t("Home.Alerts")} style={[styles.title, titleColor]} />
         <H6
@@ -80,7 +81,6 @@ export const AlertsCard: FC<AlertsCardProps> = ({ maxHeight }) => {
 
 const styles = ScaledSheet.create({
   titleContainer: {
-    display: "flex",
     flexDirection: "row",
     alignItems: "baseline"
   },
@@ -90,8 +90,8 @@ const styles = ScaledSheet.create({
   alertsContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
-    maxWidth: "150@ms",
     alignSelf: "center",
-    paddingTop: "10@ms"
+    justifyContent: "center",
+    paddingTop: "15@ms"
   }
 });

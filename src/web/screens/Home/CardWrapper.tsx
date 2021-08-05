@@ -29,7 +29,9 @@ export const CardWrapper: FC<CardWrapperProps> = ({
         marginHorizontal: ms(10, 0.2),
         borderRadius: ms(5),
         minWidth: ms(200),
-        ...(maxHeight ? { maxHeight: maxHeight } : {})
+        ...(maxHeight ? { maxHeight: maxHeight } : {}),
+        shadowRadius: ms(1),
+        shadowOpacity: 0.1
       }}
     >
       {children}

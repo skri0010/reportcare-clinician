@@ -116,11 +116,11 @@ export const PendingPatientAssignmentsCard: FC<PendingPatientAssignmentsCardProp
 
 const styles = ScaledSheet.create({
   title: {
-    fontWeight: "bold",
-    paddingBottom: "5@ms"
+    fontWeight: "bold"
   },
   listContainer: {
-    flex: 1
+    flex: 1,
+    paddingTop: "15@ms"
   },
   titleContainer: {
     display: "flex",
