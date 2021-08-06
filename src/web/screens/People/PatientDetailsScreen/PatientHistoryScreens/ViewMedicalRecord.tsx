@@ -4,6 +4,7 @@ import { RootState, select } from "util/useRedux";
 import { H3, H4 } from "components/Text/index";
 import { ScaledSheet, ms } from "react-native-size-matters";
 import { MedicalRecords } from "mock/mockPatientDetails";
+import i18n from "util/language/i18n";
 
 interface ViewMedicalRecordsProps {
   medicalRecord: MedicalRecords;
@@ -26,7 +27,10 @@ export const ViewMedicalRecords: FC<ViewMedicalRecordsProps> = ({
     >
       <H3 text={`${medicalRecord.record}`} style={styles.recordTitle} />
       <View style={styles.descriptionContainer}>
-        <H4 text="Description" style={{ fontWeight: "bold" }} />
+        <H4
+          text={i18n.t("Patient_History.AddMedicalRecordCard.Description")}
+          style={{ fontWeight: "bold" }}
+        />
         <View style={styles.descriptionContent}>
           <ScrollView>
             <H4 text={`${medicalRecord.content}`} style={null} />
@@ -47,7 +51,10 @@ export const ViewMedicalRecords: FC<ViewMedicalRecordsProps> = ({
             setViewMedicalModal(false);
           }}
         >
-          <H3 text="Close" style={{ color: colors.primaryTextColor }} />
+          <H3
+            text={i18n.t("Patient_History.CloseButton")}
+            style={{ color: colors.primaryTextColor }}
+          />
         </TouchableOpacity>
       </View>
     </View>

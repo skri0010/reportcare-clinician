@@ -4,6 +4,7 @@ import { View } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { H3, H4 } from "components/Text/index";
 import { CardWrapper } from "web/screens/Home/CardWrapper";
+import i18n from "util/language/i18n";
 
 interface OxygenSaturationProps {
   oxySatValue: string;
@@ -19,7 +20,7 @@ export const OxygenSaturationCard: FC<OxygenSaturationProps> = ({
   return (
     <CardWrapper maxHeight={ms(120)}>
       <H3
-        text="Oxygen Saturation"
+        text={i18n.t("Patient_Overview.OxygenSaturation")}
         style={{ fontWeight: "bold", color: colors.primaryTextColor }}
       />
       <View style={styles.container}>

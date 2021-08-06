@@ -105,9 +105,9 @@
     "Dashboard": "Dashboard",
     "Welcome": "Selamat Datang Dr. ",
     "WelcomeMsg": "Menyemak kesihatan pesakit-pesakit anda, \nmengawasi vital mereka dan berbual \ndengan mereka.",
-    "RequestsByMaria": "Permintaan daripada MARIA ",
-    "Alerts": "Amaran ",
-    "Todos": "Todos ",
+    "RequestsByMaria": "Permintaan daripada MARIA",
+    "Alerts": "Amaran",
+    "Todos": "Todos",
     "ItemsRemaining": "lagi",
     "ShowMoreButton": "LIHAT LEBIH"
   },
@@ -137,5 +137,54 @@
     "PatientInputPlaceholder": "Siapakah nama pesakit?",
     "NotesInputPlaceholder": "Apakah yang perlu dicatatkan?",
     "NoSelection": "Pilihkan salah satu item Todo untuk melihat butirannya"
+  },
+  "Patient": {
+    "SearchBarPlaceholder": "Cari pesakit (contohnya John)",
+    "Overview": "Ringkasan",
+    "Parameters": "Parameter",
+    "ICD/CRT": "ICD/CRT",
+    "History": "Sejarah"
+  },
+  "Patient_Overview": {
+    "BloodPressure": "Tekanan Darah",
+    "Systolic": "Sistolik",
+    "Diastolic": "Diastolik",
+    "MedicationTaken": "Ubatan diambil",
+    "OxygenSaturation": "Ketepuan Oksigen",
+    "Weight": "Berat Badan",
+    "TargetWeight": "Berat Badan Sasaran",
+    "Symptoms": "Simptom"
+  },
+  "Patient_ICD/CRT": {},
+  "Patient_History": {
+    "Alert": "Amaran",
+    "Risk": {
+      "High": "Tinggi",
+      "Medium": "Sederhana",
+      "Low": "Rendah",
+      "Unassigned": "Belum tetap"
+    },
+    "ViewButton": "Lihat",
+    "MedicalRecords": "Rekod perubatan",
+    "AddButton": "Tambah",
+    "CloseButton": "Tutup",
+    "SaveButton": "Simpan",
+    "CancelButton": "Batal",
+    "AlertSummaryCard": {
+      "AlertSummary": "Ringkasan Amaran",
+      "AlertDetails": "Butiran Amaran",
+      "Severity": "Keterukan: ",
+      "HRV": "HRV: ",
+      "BP": "BP: ",
+      "Symptom": "Simptom: ",
+      "Signs": "Tanda-tanda: ",
+      "CreatedOn": "Dicipta pada: "
+    },
+    "AddMedicalRecordCard": {
+      "Title": "Tajuk",
+      "TitleInputPlaceholder": "Berikan nama kepada rekod perubatan ini (contohnya latar belakang)",
+      "Description": "Deskripsi",
+      "DescriptionInputPlaceholder": "Apakah isi-isi deskripsi ini?"
+    }
   }
 }

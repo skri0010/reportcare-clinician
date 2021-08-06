@@ -81,7 +81,8 @@ const styles = ScaledSheet.create({
   },
   title: {
     fontWeight: "bold",
-    paddingBottom: "8@ms"
+    paddingBottom: "8@ms",
+    paddingRight: "5@ms"
   },
   patientRequestsContainer: {
     flex: 1

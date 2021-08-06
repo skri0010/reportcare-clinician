@@ -6,6 +6,7 @@ import { CardWrapper } from "web/screens/Home/CardWrapper";
 import { MedicationInfo } from "aws/models";
 import { FlatList, View } from "react-native";
 import { mockMedicationRecord } from "mock/mockMedication";
+import i18n from "util/language/i18n";
 
 interface MedicationTakenProps {
   medications: MedicationInfo[];
@@ -22,7 +23,7 @@ export const MedicationTakenCard: FC<MedicationTakenProps> = () => {
     <CardWrapper maxHeight={ms(120)}>
       <View>
         <H3
-          text="Medication Taken"
+          text={i18n.t("Patient_Overview.MedicationTaken")}
           style={{ fontWeight: "bold", color: colors.primaryTextColor }}
         />
       </View>

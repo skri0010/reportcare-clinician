@@ -5,6 +5,7 @@ import { CardWrapper } from "web/screens/Home/CardWrapper";
 import { AlertHistoryRow } from "./AlertHistoryRow";
 import { mockAlertHistory, AlertHistory } from "mock/mockPatientDetails";
 import { FlatList } from "react-native";
+import i18n from "util/language/i18n";
 
 interface PatientAlertHistoryProps {
   patientId: string;
@@ -37,7 +38,7 @@ export const PatientAlertHistoryCard: FC<PatientAlertHistoryProps> = ({
   return (
     <CardWrapper maxHeight={maxHeight}>
       <H3
-        text="Alert"
+        text={i18n.t("Patient_History.Alert")}
         style={[{ fontWeight: "bold", color: colors.primaryTextColor }]}
       />
       <FlatList

@@ -4,6 +4,7 @@ import { View } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { H3, H4 } from "components/Text/index";
 import { CardWrapper } from "web/screens/Home/CardWrapper";
+import i18n from "util/language/i18n";
 
 interface BloodPressureProps {
   systolic: string;
@@ -21,12 +22,12 @@ export const BloodPressureCard: FC<BloodPressureProps> = ({
   return (
     <CardWrapper maxHeight={ms(120)}>
       <H3
-        text="Blood Pressure"
+        text={i18n.t("Patient_Overview.BloodPressure")}
         style={{ fontWeight: "bold", color: colors.primaryTextColor }}
       />
       <View style={styles.container}>
         <View style={styles.text}>
-          <H4 text="Systolic" style={null} />
+          <H4 text={i18n.t("Patient_Overview.Systolic")} style={null} />
           <H4
             text={systolic}
             style={{ fontWeight: "bold", color: colors.primaryTextColor }}
@@ -34,7 +35,7 @@ export const BloodPressureCard: FC<BloodPressureProps> = ({
           <H4 text="mmHg" style={null} />
         </View>
         <View style={styles.text}>
-          <H4 text="Dystolic" style={null} />
+          <H4 text={i18n.t("Patient_Overview.Diastolic")} style={null} />
           <H4
             text={dystolic}
             style={{ fontWeight: "bold", color: colors.primaryTextColor }}

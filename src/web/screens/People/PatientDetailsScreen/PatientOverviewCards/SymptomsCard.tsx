@@ -6,6 +6,7 @@ import { CardWrapper } from "web/screens/Home/CardWrapper";
 import { ReportSymptom } from "aws/models";
 import { FlatList } from "react-native";
 import { mockSymptomRecords } from "mock/mockSymptoms";
+import i18n from "util/language/i18n";
 
 interface SymptomProps {
   symptoms: ReportSymptom[];
@@ -21,7 +22,7 @@ export const SymptomsCard: FC<SymptomProps> = () => {
   return (
     <CardWrapper maxHeight={ms(120)}>
       <H3
-        text="Symptoms"
+        text={i18n.t("Patient_Overview.Symptoms")}
         style={{ fontWeight: "bold", color: colors.primaryTextColor }}
       />
       <FlatList

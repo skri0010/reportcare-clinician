@@ -33,6 +33,7 @@ import agentAPI from "agents_implementation/agent_framework/AgentAPI";
 import agentUXSA from "agents_implementation/agents/user-specific-assistant/UXSA";
 import { setProcedureOngoing } from "ic-redux/actions/agents/actionCreator";
 import { useNetInfo } from "@react-native-community/netinfo";
+import i18n from "util/language/i18n";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -209,9 +210,10 @@ export const PatientsTab: FC = () => {
       >
         <View style={{ flex: 1 }}>
           <RowSelectionWrapper
-            title="Patient"
+            title={i18n.t("TabTitle.Patients")}
             riskFilterTag
             onRiskFilterClick={filterPatients}
+            placeholder={i18n.t("Patient.SearchBarPlaceholder")}
           />
           <FlatList
             showsVerticalScrollIndicator={false}
@@ -242,16 +244,16 @@ export const PatientsTab: FC = () => {
               }
             }}
           >
-            <Tab.Screen name="Overview">
+            <Tab.Screen name={i18n.t("Patient.Overview")}>
               {() => <PatientOverview patient={selectedPatient} />}
             </Tab.Screen>
-            <Tab.Screen name="Parameters">
+            <Tab.Screen name={i18n.t("Patient.Parameters")}>
               {() => <PatientParameter patient={selectedPatient} />}
             </Tab.Screen>
-            <Tab.Screen name="ICD/CRT">
+            <Tab.Screen name={i18n.t("Patient.ICD/CRT")}>
               {() => <PatientIcdCrt patient={selectedPatient} />}
             </Tab.Screen>
-            <Tab.Screen name="History">
+            <Tab.Screen name={i18n.t("Patient.History")}>
               {() => (
                 <PatientHistory
                   patient={selectedPatient}

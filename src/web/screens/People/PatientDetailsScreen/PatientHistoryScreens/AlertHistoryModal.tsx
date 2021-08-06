@@ -5,6 +5,7 @@ import { getRiskLevelColor } from "models/RiskLevel";
 import { H3, H4, H5 } from "components/Text/index";
 import { ScaledSheet, ms } from "react-native-size-matters";
 import { AlertHistory } from "mock/mockPatientDetails";
+import i18n from "util/language/i18n";
 
 interface AlertHistoryModalProps {
   name: string;
@@ -50,13 +51,22 @@ export const AlertHistoryModal: FC<AlertHistoryModalProps> = ({
     >
       <H3 text={`${name}`} style={{ fontWeight: "bold", paddingTop: ms(20) }} />
       <View style={{ paddingTop: ms(20) }}>
-        <H4 text="Alert Summary" style={{ fontWeight: "bold" }} />
+        <H4
+          text={i18n.t("Patient_History.AlertSummaryCard.AlertSummary")}
+          style={{ fontWeight: "bold" }}
+        />
         <H5 text={`${alertHistory.description}`} style={null} />
       </View>
       <View style={{ paddingTop: ms(10) }}>
-        <H4 text="Alert Details" style={{ fontWeight: "bold" }} />
+        <H4
+          text={i18n.t("Patient_History.AlertSummaryCard.AlertDetails")}
+          style={{ fontWeight: "bold" }}
+        />
         <View style={{ flexDirection: "row" }}>
-          <H5 text="Severity: " style={{ fontWeight: "bold" }} />
+          <H5
+            text={i18n.t("Patient_History.AlertSummaryCard.Severity")}
+            style={{ fontWeight: "bold" }}
+          />
           <H5
             text={`${alertHistory.risk}`}
             style={{
@@ -67,20 +77,26 @@ export const AlertHistoryModal: FC<AlertHistoryModalProps> = ({
             }}
           />
         </View>
-        <AlertDetailsRow detailTitle="HRV: " detailContent={alertHistory.HRV} />
-        <AlertDetailsRow detailTitle="BP: " detailContent={alertHistory.BP} />
         <AlertDetailsRow
-          detailTitle="Symptom: "
+          detailTitle={i18n.t("Patient_History.AlertSummaryCard.HRV")}
+          detailContent={alertHistory.HRV}
+        />
+        <AlertDetailsRow
+          detailTitle={i18n.t("Patient_History.AlertSummaryCard.BP")}
+          detailContent={alertHistory.BP}
+        />
+        <AlertDetailsRow
+          detailTitle={i18n.t("Patient_History.AlertSummaryCard.Symptom")}
           detailContent={alertHistory.symptom}
         />
         <AlertDetailsRow
-          detailTitle="Signs: "
+          detailTitle={i18n.t("Patient_History.AlertSummaryCard.Signs")}
           detailContent={alertHistory.signs}
         />
       </View>
       <View style={{ flexDirection: "row", paddingVertical: ms(20) }}>
         <H5
-          text="Created on: "
+          text={i18n.t("Patient_History.AlertSummaryCard.CreatedOn")}
           style={{ fontWeight: "bold", color: colors.secondaryTextColor }}
         />
         <H5
@@ -101,7 +117,10 @@ export const AlertHistoryModal: FC<AlertHistoryModalProps> = ({
             setModalAlertVisible(false);
           }}
         >
-          <H3 text="Close" style={{ color: colors.primaryTextColor }} />
+          <H3
+            text={i18n.t("Patient_History.CloseButton")}
+            style={{ color: colors.primaryTextColor }}
+          />
         </TouchableOpacity>
       </View>
     </View>

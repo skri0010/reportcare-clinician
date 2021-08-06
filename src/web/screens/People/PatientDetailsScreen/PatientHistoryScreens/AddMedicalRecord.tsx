@@ -9,6 +9,7 @@ import {
 import { RootState, select } from "util/useRedux";
 import { H3 } from "components/Text/index";
 import { ScaledSheet, ms } from "react-native-size-matters";
+import i18n from "util/language/i18n";
 
 interface AddMedicalRecordProps {
   setAddMedicalRecord: (state: boolean) => void;
@@ -48,7 +49,7 @@ export const AddMedicalRecord: FC<AddMedicalRecordProps> = ({
       ]}
     >
       <H3
-        text="Title"
+        text={i18n.t("Patient_History.AddMedicalRecordCard.Title")}
         style={{
           fontWeight: "bold",
           paddingVertical: ms(10),
@@ -57,7 +58,9 @@ export const AddMedicalRecord: FC<AddMedicalRecordProps> = ({
       />
       <TextInput
         onChangeText={onChangeTitle}
-        placeholder="Give the medical record a name (eg Family Background)"
+        placeholder={i18n.t(
+          "Patient_History.AddMedicalRecordCard.TitleInputPlaceholder"
+        )}
         value={title}
         style={[
           textInputStyle,
@@ -70,13 +73,15 @@ export const AddMedicalRecord: FC<AddMedicalRecordProps> = ({
         ]}
       />
       <H3
-        text="Description"
+        text={i18n.t("Patient_History.AddMedicalRecordCard.Description")}
         style={{ fontWeight: "bold", paddingVertical: ms(10) }}
       />
       <TextInput
         onChangeText={onChangeRecord}
         multiline
-        placeholder="What is the content of the medical record?"
+        placeholder={i18n.t(
+          "Patient_History.AddMedicalRecordCard.DescriptionInputPlaceholder"
+        )}
         value={record}
         style={[
           textInputStyle,
@@ -108,7 +113,10 @@ export const AddMedicalRecord: FC<AddMedicalRecordProps> = ({
             // Send API call to save medical record
           }}
         >
-          <H3 text="Save" style={{ color: colors.primaryTextColor }} />
+          <H3
+            text={i18n.t("Patient_History.SaveButton")}
+            style={{ color: colors.primaryTextColor }}
+          />
         </TouchableOpacity>
         <TouchableOpacity
           style={[
@@ -122,7 +130,10 @@ export const AddMedicalRecord: FC<AddMedicalRecordProps> = ({
             setAddMedicalRecord(false);
           }}
         >
-          <H3 text="Cancel" style={{ color: colors.primaryTextColor }} />
+          <H3
+            text={i18n.t("Patient_History.CancelButton")}
+            style={{ color: colors.primaryTextColor }}
+          />
         </TouchableOpacity>
       </View>
     </View>

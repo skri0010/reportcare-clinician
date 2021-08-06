@@ -6,6 +6,7 @@ import { CardWrapper } from "web/screens/Home/CardWrapper";
 import { mockMedicalRecord, MedicalRecords } from "mock/mockPatientDetails";
 import { FlatList, TouchableOpacity, View } from "react-native";
 import { MedicalRecordRow } from "./MedicalRecordRow";
+import i18n from "util/language/i18n";
 
 interface PatientMedicalRecordProps {
   patientId: string;
@@ -36,7 +37,7 @@ export const PatientMedicalRecordCard: FC<PatientMedicalRecordProps> = ({
     <CardWrapper maxHeight={maxHeight}>
       <View style={styles.title}>
         <H3
-          text="Medical Records"
+          text={i18n.t("Patient_History.MedicalRecords")}
           style={[{ fontWeight: "bold", color: colors.primaryTextColor }]}
         />
         <TouchableOpacity
@@ -46,7 +47,10 @@ export const PatientMedicalRecordCard: FC<PatientMedicalRecordProps> = ({
             { backgroundColor: colors.primaryButtonColor }
           ]}
         >
-          <H3 text="Add" style={{ color: colors.primaryContrastTextColor }} />
+          <H3
+            text={i18n.t("Patient_History.AddButton")}
+            style={{ color: colors.primaryContrastTextColor }}
+          />
         </TouchableOpacity>
       </View>
 
