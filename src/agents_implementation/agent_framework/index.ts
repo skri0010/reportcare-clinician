@@ -8,6 +8,6 @@ export { default as Precondition } from "./base/Precondition";
 export { default as agentAPI } from "./AgentAPI";
 
 export const setRetryLaterTimeout = (func: () => void): void => {
-  const delay = 15;
+  const delay = 15000;
   setTimeout(func, delay);
 };

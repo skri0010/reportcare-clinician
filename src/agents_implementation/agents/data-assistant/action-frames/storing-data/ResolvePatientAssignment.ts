@@ -23,7 +23,9 @@ import {
 import {
   createClinicianPatientMap,
   createPatientAssignment,
-  updatePatientAssignment
+  updatePatientAssignment,
+  getClinicianPatientMap,
+  getPatientAssignment
 } from "aws";
 import { store } from "ic-redux/store";
 import { setFetchNewPatientAssignments } from "ic-redux/actions/agents/actionCreator";
@@ -193,20 +195,36 @@ export const resolvePatientAssignment: (params: {
 const approvePatientAssignment: (params: {
   assignment: PatientAssignmentResolution;
 }) => Promise<void> = async ({ assignment }) => {
-  // Insert ClinicianPatientMap, update PatientAssignment status, update access token
-  await createClinicianPatientMap({
-    patientID: assignment.patientID,
-    clinicianID: assignment.clinicianID,
-    owner: assignment.clinicianID
-  });
-  await updatePatientAssignment({
-    patientID: assignment.patientID,
-    clinicianID: assignment.clinicianID,
-    pending: null, // Removes it from GSI to ensure it is sparse
-    resolution: PatientAssignmentStatus.APPROVED,
-    _version: assignment._version
-  });
-  await Auth.currentAuthenticatedUser({ bypassCache: true }); // pre token generation Lambda is triggered
+  // Create ClinicianPatientMap, update PatientAssignment status, update access token
+  let createSuccessful = false;
+  try {
+    await createClinicianPatientMap({
+      patientID: assignment.patientID,
+      clinicianID: assignment.clinicianID,
+      owner: assignment.clinicianID
+    });
+    createSuccessful = true;
+  } catch (error) {
+    // If clinician patient map is already created, proceed with patient assignment update
+    const query = await getClinicianPatientMap({
+      clinicianID: assignment.clinicianID,
+      patientID: assignment.patientID
+    });
+    if (query.data.getClinicianPatientMap) {
+      createSuccessful = true;
+    }
+  }
+
+  if (createSuccessful) {
+    await updatePatientAssignment({
+      patientID: assignment.patientID,
+      clinicianID: assignment.clinicianID,
+      pending: null, // Removes it from GSI to ensure it is sparse
+      resolution: PatientAssignmentStatus.APPROVED,
+      _version: assignment._version
+    });
+    await Auth.currentAuthenticatedUser({ bypassCache: true }); // pre token generation Lambda is triggered
+  }
 };
 
 /**
@@ -216,20 +234,36 @@ const reassignPatientAssignment: (params: {
   reassignment: PatientAssignmentResolution;
   ownClinicianId: string;
 }) => Promise<void> = async ({ reassignment, ownClinicianId }) => {
-  // Insert PatientAssignment for another clinician and update PatientAssignment status
-  await createPatientAssignment({
-    patientID: reassignment.patientID,
-    clinicianID: reassignment.clinicianID,
-    pending: PatientAssignmentStatus.PENDING,
-    patientName: reassignment.patientName
-  });
-  await updatePatientAssignment({
-    patientID: reassignment.patientID,
-    clinicianID: ownClinicianId,
-    pending: null, // Removes it from GSI to ensure it is sparse
-    resolution: PatientAssignmentStatus.REASSIGNED,
-    _version: reassignment._version
-  });
+  // Create PatientAssignment for another clinician and update PatientAssignment status
+  let createSuccessful = false;
+  try {
+    await createPatientAssignment({
+      patientID: reassignment.patientID,
+      clinicianID: reassignment.clinicianID,
+      pending: PatientAssignmentStatus.PENDING,
+      patientName: reassignment.patientName
+    });
+    createSuccessful = true;
+  } catch (error) {
+    // If patient assignment is already created, proceed with patient assignment update
+    const query = await getPatientAssignment({
+      clinicianID: reassignment.clinicianID,
+      patientID: reassignment.patientID
+    });
+    if (query.data.getPatientAssignment) {
+      createSuccessful = true;
+    }
+  }
+
+  if (createSuccessful) {
+    await updatePatientAssignment({
+      patientID: reassignment.patientID,
+      clinicianID: ownClinicianId,
+      pending: null, // Removes it from GSI to ensure it is sparse
+      resolution: PatientAssignmentStatus.REASSIGNED,
+      _version: reassignment._version
+    });
+  }
 };
 
 // Preconditions for activating the ApprovePatientAssignment class

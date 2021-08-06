@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect } from "react";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { View, TextStyle, FlatList } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
@@ -8,7 +8,6 @@ import { CardWrapper } from "./CardWrapper";
 import i18n from "util/language/i18n";
 import { agentAPI, Belief } from "agents_implementation/agent_framework";
 import {
-  AppAttributes,
   BeliefKeys,
   PatientAttributes,
   ProcedureAttributes,
@@ -22,6 +21,7 @@ import {
 import { PatientAssignment } from "aws/API";
 import { PatientAssignmentRow } from "components/RowComponents/PatientRows/PatientPendingAssignmentRow";
 import { setFetchNewPatientAssignments } from "ic-redux/actions/agents/actionCreator";
+import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
 
 interface PendingPatientAssignmentsCardProps {
   maxHeight: number;
@@ -83,7 +83,8 @@ export const PendingPatientAssignmentsCard: FC<PendingPatientAssignmentsCardProp
           BeliefKeys.PATIENT,
           PatientAttributes.PATIENT_ASSIGNMENT_RESOLUTION,
           patientAssignmentResolution
-        )
+        ),
+        false
       );
 
       agentAPI.addFact(
@@ -95,11 +96,8 @@ export const PendingPatientAssignmentsCard: FC<PendingPatientAssignmentsCardProp
       );
     };
 
-    //
+    // Approve patient assignment
     const approvePatientAssignment = (assignment: PatientAssignment) => {
-      // JH-TODO: Approve patient assignment
-      // eslint-disable-next-line no-console
-      console.log("Approve");
       const patientAssignmentResolution: PatientAssignmentResolution = {
         patientID: assignment.patientID,
         clinicianID: assignment.clinicianID,
@@ -112,8 +110,6 @@ export const PendingPatientAssignmentsCard: FC<PendingPatientAssignmentsCardProp
 
     const reassignPatientAssignment = (assignment: PatientAssignment) => {
       // JH-TODO: Reassign patient assignment
-      // eslint-disable-next-line no-console
-      console.log("Reassign");
     };
 
     return (
@@ -124,9 +120,16 @@ export const PendingPatientAssignmentsCard: FC<PendingPatientAssignmentsCardProp
             style={[styles.title, titleColor]}
           />
         </View>
+        {/* Loading indicator */}
+        {fetchNewPatientAssignments ? <LoadingIndicator /> : null}
+
+        {/* List of pending patient assignments */}
         {pendingPatientAssignments ? (
           <View style={styles.listContainer}>
             <FlatList
+              style={
+                fetchNewPatientAssignments ? styles.flatlistLoadingOpacity : {}
+              }
               showsVerticalScrollIndicator={false}
               ItemSeparatorComponent={() => <ItemSeparator />}
               data={pendingPatientAssignments}
@@ -154,6 +157,9 @@ const styles = ScaledSheet.create({
   listContainer: {
     flex: 1,
     paddingTop: "15@ms"
+  },
+  flatlistLoadingOpacity: {
+    opacity: 0.5
   },
   titleContainer: {
     display: "flex",
