@@ -7,81 +7,121 @@ import { LongAlertButton } from "components/Buttons/LongAlertButton";
 import { H4, H6 } from "components/Text";
 import { CardWrapper } from "./CardWrapper";
 import i18n from "util/language/i18n";
+import agentMHA from "agents_implementation/agents/medical-health-assistant/MHA";
+import Belief from "agents_implementation/agent_framework/base/Belief";
+import {
+  BeliefKeys,
+  ClinicianAttributes,
+  ProcedureAttributes,
+  ProcedureConst
+} from "agents_implementation/agent_framework/AgentEnums";
+import agentAPI from "agents_implementation/agent_framework/AgentAPI";
+import { AlertStatus } from "aws";
 
 interface AlertsCardProps {
   maxHeight: number;
 }
 
 export const AlertsCard: FC<AlertsCardProps> = ({ maxHeight }) => {
-  const {
-    colors,
-    newHighRiskAlerts,
-    newMediumRiskAlerts,
-    newLowRiskAlerts,
-    newUnassignedRiskAlerts
-  } = select((state: RootState) => ({
+  const { colors, pendingAlertCount } = select((state: RootState) => ({
     colors: state.settings.colors,
-    newHighRiskAlerts: state.agents.newHighRiskAlerts,
-    newMediumRiskAlerts: state.agents.newMediumRiskAlerts,
-    newLowRiskAlerts: state.agents.newLowRiskAlerts,
-    newUnassignedRiskAlerts: state.agents.newUnassignedRiskAlerts
+    pendingAlertCount: state.agents.pendingAlertCount
   }));
 
   const titleColor = { color: colors.primaryTextColor } as TextStyle;
   const detailsColors = { color: colors.secondaryTextColor } as TextStyle;
 
-  const [pendingAlertsCount, setPendingAlertsCount] = useState(0);
+  const [remainingAlert, setRemainingAlert] = useState(0);
 
   useEffect(() => {
-    setPendingAlertsCount(
-      newHighRiskAlerts.length +
-        newMediumRiskAlerts.length +
-        newLowRiskAlerts.length +
-        newUnassignedRiskAlerts.length
+    setRemainingAlert(
+      pendingAlertCount.highRisk +
+        pendingAlertCount.mediumRisk +
+        pendingAlertCount.lowRisk +
+        pendingAlertCount.unassignedRisk
     );
-  }, [
-    newHighRiskAlerts,
-    newMediumRiskAlerts,
-    newLowRiskAlerts,
-    newUnassignedRiskAlerts
-  ]);
+  }, [pendingAlertCount]);
+
+  const getPendingRiskAlerts = async (
+    alertStatus: AlertStatus,
+    riskLevel: RiskLevel
+  ) => {
+    // Adds alert status and risk level to be used by agents
+    agentAPI.addFact(
+      new Belief(
+        BeliefKeys.CLINICIAN,
+        ClinicianAttributes.ALERT_STATUS,
+        alertStatus
+      ),
+      false
+    );
+    agentAPI.addFact(
+      new Belief(
+        BeliefKeys.CLINICIAN,
+        ClinicianAttributes.ALERT_RISK_LEVEL,
+        riskLevel
+      ),
+      false
+    );
+    // Triggers MHA to retrieve alerts
+    agentMHA.addBelief(
+      new Belief(
+        BeliefKeys.CLINICIAN,
+        ClinicianAttributes.RETRIEVE_ALERTS,
+        true
+      )
+    );
+    agentAPI.addFact(
+      new Belief(
+        BeliefKeys.PROCEDURE,
+        ProcedureAttributes.AT_CP,
+        ProcedureConst.ACTIVE
+      )
+    );
+  };
 
   return (
     <CardWrapper maxHeight={maxHeight}>
       <View style={styles.titleContainer}>
         <H4 text={i18n.t("Home.Alerts")} style={[styles.title, titleColor]} />
         <H6
-          text={`(${pendingAlertsCount} ${i18n.t("Home.ItemsRemaining")})`}
+          text={`(${remainingAlert} ${i18n.t("Home.ItemsRemaining")})`}
           style={[styles.title, detailsColors]}
         />
       </View>
       <LongAlertButton
         riskLevel={RiskLevel.HIGH}
         alertCount={
-          newHighRiskAlerts.length > 0 ? newHighRiskAlerts.length : undefined
+          pendingAlertCount.highRisk > 0
+            ? pendingAlertCount.highRisk
+            : undefined
         }
+        onPress={getPendingRiskAlerts}
       />
       <LongAlertButton
         riskLevel={RiskLevel.MEDIUM}
         alertCount={
-          newMediumRiskAlerts.length > 0
-            ? newMediumRiskAlerts.length
+          pendingAlertCount.mediumRisk > 0
+            ? pendingAlertCount.mediumRisk
             : undefined
         }
+        onPress={getPendingRiskAlerts}
       />
       <LongAlertButton
         riskLevel={RiskLevel.LOW}
         alertCount={
-          newLowRiskAlerts.length > 0 ? newLowRiskAlerts.length : undefined
+          pendingAlertCount.lowRisk > 0 ? pendingAlertCount.lowRisk : undefined
         }
+        onPress={getPendingRiskAlerts}
       />
       <LongAlertButton
         riskLevel={RiskLevel.UNASSIGNED}
         alertCount={
-          newUnassignedRiskAlerts.length > 0
-            ? newUnassignedRiskAlerts.length
+          pendingAlertCount.unassignedRisk > 0
+            ? pendingAlertCount.unassignedRisk
             : undefined
         }
+        onPress={getPendingRiskAlerts}
       />
     </CardWrapper>
   );

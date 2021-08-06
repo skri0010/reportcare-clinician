@@ -817,6 +817,7 @@ export const syncPatientAssignments = /* GraphQL */ `
         clinicianID
         pending
         resolution
+        patientName
         _version
         _deleted
         _lastChangedAt
@@ -837,6 +838,7 @@ export const getPatientAssignment = /* GraphQL */ `
       clinicianID
       pending
       resolution
+      patientName
       _version
       _deleted
       _lastChangedAt
@@ -869,6 +871,7 @@ export const listPatientAssignments = /* GraphQL */ `
         clinicianID
         pending
         resolution
+        patientName
         _version
         _deleted
         _lastChangedAt
@@ -897,11 +900,13 @@ export const syncAlerts = /* GraphQL */ `
       items {
         id
         patientID
+        patientName
         dateTime
         summary
         colorCode
         vitalsReportID
         symptomReportID
+        pending
         completed
         owner
         _version
@@ -920,6 +925,7 @@ export const getAlert = /* GraphQL */ `
     getAlert(id: $id) {
       id
       patientID
+      patientName
       dateTime
       summary
       colorCode
@@ -957,6 +963,7 @@ export const getAlert = /* GraphQL */ `
         updatedAt
         owner
       }
+      pending
       completed
       owner
       _version
@@ -977,11 +984,13 @@ export const listAlerts = /* GraphQL */ `
       items {
         id
         patientID
+        patientName
         dateTime
         summary
         colorCode
         vitalsReportID
         symptomReportID
+        pending
         completed
         owner
         _version
@@ -1012,6 +1021,7 @@ export const syncTodos = /* GraphQL */ `
         id
         clinicianID
         title
+        patientName
         notes
         lastModified
         alertID
@@ -1034,17 +1044,20 @@ export const getTodo = /* GraphQL */ `
       id
       clinicianID
       title
+      patientName
       notes
       lastModified
       alertID
       alert {
         id
         patientID
+        patientName
         dateTime
         summary
         colorCode
         vitalsReportID
         symptomReportID
+        pending
         completed
         owner
         _version
@@ -1074,6 +1087,7 @@ export const listTodos = /* GraphQL */ `
         id
         clinicianID
         title
+        patientName
         notes
         lastModified
         alertID
@@ -1090,15 +1104,15 @@ export const listTodos = /* GraphQL */ `
     }
   }
 `;
-export const listMedicationInfoByPatientID = /* GraphQL */ `
-  query ListMedicationInfoByPatientID(
+export const listMedicationInfosByPatientID = /* GraphQL */ `
+  query ListMedicationInfosByPatientID(
     $patientID: String
     $sortDirection: ModelSortDirection
     $filter: ModelMedicationInfoFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listMedicationInfoByPatientID(
+    listMedicationInfosByPatientID(
       patientID: $patientID
       sortDirection: $sortDirection
       filter: $filter
@@ -1122,15 +1136,15 @@ export const listMedicationInfoByPatientID = /* GraphQL */ `
     }
   }
 `;
-export const listActivityInfoByPatientID = /* GraphQL */ `
-  query ListActivityInfoByPatientID(
+export const listActivityInfosByPatientID = /* GraphQL */ `
+  query ListActivityInfosByPatientID(
     $patientID: String
     $sortDirection: ModelSortDirection
     $filter: ModelActivityInfoFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listActivityInfoByPatientID(
+    listActivityInfosByPatientID(
       patientID: $patientID
       sortDirection: $sortDirection
       filter: $filter
@@ -1157,15 +1171,15 @@ export const listActivityInfoByPatientID = /* GraphQL */ `
     }
   }
 `;
-export const listMedCompliantByPatientID = /* GraphQL */ `
-  query ListMedCompliantByPatientID(
+export const listMedCompliantsByPatientID = /* GraphQL */ `
+  query ListMedCompliantsByPatientID(
     $patientID: String
     $sortDirection: ModelSortDirection
     $filter: ModelMedCompliantFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listMedCompliantByPatientID(
+    listMedCompliantsByPatientID(
       patientID: $patientID
       sortDirection: $sortDirection
       filter: $filter
@@ -1190,8 +1204,8 @@ export const listMedCompliantByPatientID = /* GraphQL */ `
     }
   }
 `;
-export const listMedCompliantByDate = /* GraphQL */ `
-  query ListMedCompliantByDate(
+export const listMedCompliantsByDate = /* GraphQL */ `
+  query ListMedCompliantsByDate(
     $patientID: String
     $Date: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
@@ -1199,7 +1213,7 @@ export const listMedCompliantByDate = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    listMedCompliantByDate(
+    listMedCompliantsByDate(
       patientID: $patientID
       Date: $Date
       sortDirection: $sortDirection
@@ -1225,15 +1239,15 @@ export const listMedCompliantByDate = /* GraphQL */ `
     }
   }
 `;
-export const listReportSymptomByPatientID = /* GraphQL */ `
-  query ListReportSymptomByPatientID(
+export const listReportSymptomsByPatientID = /* GraphQL */ `
+  query ListReportSymptomsByPatientID(
     $patientID: String
     $sortDirection: ModelSortDirection
     $filter: ModelReportSymptomFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listReportSymptomByPatientID(
+    listReportSymptomsByPatientID(
       patientID: $patientID
       sortDirection: $sortDirection
       filter: $filter
@@ -1259,8 +1273,8 @@ export const listReportSymptomByPatientID = /* GraphQL */ `
     }
   }
 `;
-export const listReportSymptomByDateTime = /* GraphQL */ `
-  query ListReportSymptomByDateTime(
+export const listReportSymptomsByDateTime = /* GraphQL */ `
+  query ListReportSymptomsByDateTime(
     $patientID: String
     $DateTime: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
@@ -1268,7 +1282,7 @@ export const listReportSymptomByDateTime = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    listReportSymptomByDateTime(
+    listReportSymptomsByDateTime(
       patientID: $patientID
       DateTime: $DateTime
       sortDirection: $sortDirection
@@ -1295,15 +1309,15 @@ export const listReportSymptomByDateTime = /* GraphQL */ `
     }
   }
 `;
-export const listReportVitalByPatientID = /* GraphQL */ `
-  query ListReportVitalByPatientID(
+export const listReportVitalsByPatientID = /* GraphQL */ `
+  query ListReportVitalsByPatientID(
     $patientID: String
     $sortDirection: ModelSortDirection
     $filter: ModelReportVitalsFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listReportVitalByPatientID(
+    listReportVitalsByPatientID(
       patientID: $patientID
       sortDirection: $sortDirection
       filter: $filter
@@ -1333,8 +1347,8 @@ export const listReportVitalByPatientID = /* GraphQL */ `
     }
   }
 `;
-export const listReportVitalByDateTime = /* GraphQL */ `
-  query ListReportVitalByDateTime(
+export const listReportVitalsByDateTime = /* GraphQL */ `
+  query ListReportVitalsByDateTime(
     $patientID: String
     $DateTime: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
@@ -1342,7 +1356,7 @@ export const listReportVitalByDateTime = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    listReportVitalByDateTime(
+    listReportVitalsByDateTime(
       patientID: $patientID
       DateTime: $DateTime
       sortDirection: $sortDirection
@@ -1373,8 +1387,8 @@ export const listReportVitalByDateTime = /* GraphQL */ `
     }
   }
 `;
-export const clinicianIDsByPatientID = /* GraphQL */ `
-  query ClinicianIDsByPatientID(
+export const listClinicianMappingsByPatientID = /* GraphQL */ `
+  query ListClinicianMappingsByPatientID(
     $patientID: String
     $clinicianID: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
@@ -1382,7 +1396,7 @@ export const clinicianIDsByPatientID = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    clinicianIDsByPatientID(
+    listClinicianMappingsByPatientID(
       patientID: $patientID
       clinicianID: $clinicianID
       sortDirection: $sortDirection
@@ -1406,8 +1420,8 @@ export const clinicianIDsByPatientID = /* GraphQL */ `
     }
   }
 `;
-export const listPatientAssignmentBy = /* GraphQL */ `
-  query ListPatientAssignmentBy(
+export const listPendingPatientAssignments = /* GraphQL */ `
+  query ListPendingPatientAssignments(
     $clinicianID: String
     $pending: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
@@ -1415,7 +1429,7 @@ export const listPatientAssignmentBy = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    listPatientAssignmentBy(
+    listPendingPatientAssignments(
       clinicianID: $clinicianID
       pending: $pending
       sortDirection: $sortDirection
@@ -1429,6 +1443,7 @@ export const listPatientAssignmentBy = /* GraphQL */ `
         clinicianID
         pending
         resolution
+        patientName
         _version
         _deleted
         _lastChangedAt
@@ -1441,16 +1456,18 @@ export const listPatientAssignmentBy = /* GraphQL */ `
     }
   }
 `;
-export const listAlertsByPatientID = /* GraphQL */ `
-  query ListAlertsByPatientID(
+export const listPatientAlertsByDateTime = /* GraphQL */ `
+  query ListPatientAlertsByDateTime(
     $patientID: String
+    $dateTime: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
     $filter: ModelAlertFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listAlertsByPatientID(
+    listPatientAlertsByDateTime(
       patientID: $patientID
+      dateTime: $dateTime
       sortDirection: $sortDirection
       filter: $filter
       limit: $limit
@@ -1459,11 +1476,13 @@ export const listAlertsByPatientID = /* GraphQL */ `
       items {
         id
         patientID
+        patientName
         dateTime
         summary
         colorCode
         vitalsReportID
         symptomReportID
+        pending
         completed
         owner
         _version
@@ -1477,17 +1496,17 @@ export const listAlertsByPatientID = /* GraphQL */ `
     }
   }
 `;
-export const listAlertsByDateTime = /* GraphQL */ `
-  query ListAlertsByDateTime(
-    $patientID: String
+export const listPendingAlertsByDateTime = /* GraphQL */ `
+  query ListPendingAlertsByDateTime(
+    $pending: String
     $dateTime: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
     $filter: ModelAlertFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listAlertsByDateTime(
-      patientID: $patientID
+    listPendingAlertsByDateTime(
+      pending: $pending
       dateTime: $dateTime
       sortDirection: $sortDirection
       filter: $filter
@@ -1497,11 +1516,93 @@ export const listAlertsByDateTime = /* GraphQL */ `
       items {
         id
         patientID
+        patientName
         dateTime
         summary
         colorCode
         vitalsReportID
         symptomReportID
+        pending
+        completed
+        owner
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const listPendingRiskAlerts = /* GraphQL */ `
+  query ListPendingRiskAlerts(
+    $pending: String
+    $colorCode: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelAlertFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listPendingRiskAlerts(
+      pending: $pending
+      colorCode: $colorCode
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        patientID
+        patientName
+        dateTime
+        summary
+        colorCode
+        vitalsReportID
+        symptomReportID
+        pending
+        completed
+        owner
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const listCompletedRiskAlerts = /* GraphQL */ `
+  query ListCompletedRiskAlerts(
+    $completed: String
+    $colorCode: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelAlertFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCompletedRiskAlerts(
+      completed: $completed
+      colorCode: $colorCode
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        patientID
+        patientName
+        dateTime
+        summary
+        colorCode
+        vitalsReportID
+        symptomReportID
+        pending
         completed
         owner
         _version
@@ -1534,6 +1635,7 @@ export const listTodosByClinicianID = /* GraphQL */ `
         id
         clinicianID
         title
+        patientName
         notes
         lastModified
         alertID
@@ -1571,6 +1673,7 @@ export const listTodosByLastModifiedDate = /* GraphQL */ `
         id
         clinicianID
         title
+        patientName
         notes
         lastModified
         alertID

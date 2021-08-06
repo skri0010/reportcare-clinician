@@ -3,11 +3,12 @@ import Belief from "../../agent_framework/base/Belief";
 import af_VisualizeParameters from "./action-frames/hf-outcome-trends/VisualizeParameters";
 import af_RetrieveRole from "./action-frames/hf-outcome-trends/RetrieveRole";
 import af_RequestRetrieveAll from "./action-frames/hf-outcome-trends/RequestRetrieveAll";
-import af_DisplayNewAlerts from "./action-frames/triage-alert-hf-clinic/DisplayNewAlerts";
+import af_DisplayAlerts from "./action-frames/triage-alert-hf-clinic/DisplayAlerts";
 import {
   AgentIDs,
   CommonAttributes
 } from "agents_implementation/agent_framework/AgentEnums";
+import af_DisplayPendingAlertCount from "./action-frames/triage-alert-hf-clinic/DisplayPendingAlertCount";
 
 // Initial Beliefs of Agent
 const belief1 = new Belief(AgentIDs.UXSA, CommonAttributes.LAST_ACTIVITY, null);
@@ -24,7 +25,8 @@ const agentUXSA = new Agent(
     af_RequestRetrieveAll,
 
     // AT-CP
-    af_DisplayNewAlerts
+    af_DisplayPendingAlertCount,
+    af_DisplayAlerts
   ], // action frame
   [belief1] // beliefs
 );

@@ -4,8 +4,6 @@ import {
 } from "agents_implementation/agent_framework/AgentEnums";
 import Agent from "../../agent_framework/base/Agent";
 import Belief from "../../agent_framework/base/Belief";
-import af_SortAlerts from "./action-frames/triage-alert-hf-clinic/SortAlerts";
-import af_RequestAlertInfos from "./action-frames/triage-alert-hf-clinic/RequestAlertInfos";
 
 // Initial Beliefs of Agent
 const belief1 = new Belief(AgentIDs.ALA, CommonAttributes.LAST_ACTIVITY, null);
@@ -13,11 +11,7 @@ const belief1 = new Belief(AgentIDs.ALA, CommonAttributes.LAST_ACTIVITY, null);
 // Alert Assistant Agent
 const agentALA = new Agent(
   AgentIDs.ALA,
-  [
-    // AT-CP
-    af_SortAlerts,
-    af_RequestAlertInfos
-  ], // action frame
+  [], // action frame
   [belief1] // beliefs
 );
 

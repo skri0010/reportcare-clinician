@@ -10,13 +10,6 @@ export interface Fact {
   [k: string]: { [k: string]: any };
 }
 
-export interface AlertInfos {
-  highRisk: AlertInfo[];
-  mediumRisk: AlertInfo[];
-  lowRisk: AlertInfo[];
-  unassignedRisk: AlertInfo[];
-}
-
 export enum AlertColorCode {
   HIGH = "red",
   MEDIUM = "yellow",
@@ -39,10 +32,20 @@ export interface Patient {
   riskLevel: RiskLevel;
 }
 
+export interface PendingAlertCount {
+  highRisk: number;
+  mediumRisk: number;
+  lowRisk: number;
+  unassignedRisk: number;
+}
+
 export interface AlertInfo {
   id: string;
   patientId: string;
-  patientInfo?: PatientInfo;
+  patientName: string;
+  riskLevel?: RiskLevel;
+  NHYAClass?: string;
+  diagnosis?: string;
   dateTime: string;
   summary: string;
   vitals?: ReportVitals;
@@ -51,7 +54,6 @@ export interface AlertInfo {
   medicationQuantity?: string;
   activityDuringAlert?: string;
   completed: boolean;
-  riskLevel?: RiskLevel;
 }
 
 export interface NewTodoInput {

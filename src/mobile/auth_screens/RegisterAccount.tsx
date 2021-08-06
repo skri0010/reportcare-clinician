@@ -5,7 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { ms, ScaledSheet } from "react-native-size-matters";
 // eslint-disable-next-line no-restricted-imports
 import { Picker } from "@react-native-picker/picker";
-import { Role, Hospital } from "models/ClinicianEnums";
+import { Role, Hospital } from "aws";
 import { RootState, select } from "util/useRedux";
 import { AuthScreenName, AuthScreensProps } from "mobile/auth_screens";
 import { ScreenWrapper } from "mobile/screens/ScreenWrapper";

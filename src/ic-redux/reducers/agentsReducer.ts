@@ -4,7 +4,8 @@ import { Reducer } from "redux";
 import {
   AlertInfo,
   Patient,
-  PatientDetails
+  PatientDetails,
+  PendingAlertCount
 } from "agents_implementation/agent_framework/model";
 
 interface AgentsState {
@@ -13,12 +14,9 @@ interface AgentsState {
   online: boolean;
   patients: Patient[];
   patientDetails: PatientDetails;
-
   patientAssignmentsSynced: boolean;
-  newHighRiskAlerts: AlertInfo[];
-  newMediumRiskAlerts: AlertInfo[];
-  newLowRiskAlerts: AlertInfo[];
-  newUnassignedRiskAlerts: AlertInfo[];
+  pendingAlertCount: PendingAlertCount;
+  alerts: AlertInfo[];
 }
 
 const initialState: AgentsState = {
@@ -32,10 +30,13 @@ const initialState: AgentsState = {
     vitalsReports: []
   },
   patientAssignmentsSynced: false,
-  newHighRiskAlerts: [],
-  newMediumRiskAlerts: [],
-  newLowRiskAlerts: [],
-  newUnassignedRiskAlerts: []
+  pendingAlertCount: {
+    highRisk: 0,
+    mediumRisk: 0,
+    lowRisk: 0,
+    unassignedRisk: 0
+  },
+  alerts: []
 };
 
 export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
@@ -56,19 +57,15 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
         ...state,
         patientAssignmentsSynced: action.payload.patientAssignmentsSynced
       };
-    case actionNames.SET_NEW_HIGH_RISK_ALERTS:
-      return { ...state, newHighRiskAlerts: action.payload.newHighRiskAlerts };
-    case actionNames.SET_NEW_MEDIUM_RISK_ALERTS:
+    case actionNames.SET_PENDING_ALERT_COUNT:
       return {
         ...state,
-        newMediumRiskAlerts: action.payload.newMediumRiskAlerts
+        pendingAlertCount: action.payload.pendingAlertCount
       };
-    case actionNames.SET_NEW_LOW_RISK_ALERTS:
-      return { ...state, newLowRiskAlerts: action.payload.newLowRiskAlerts };
-    case actionNames.SET_NEW_UNASSIGNED_RISK_ALERTS:
+    case actionNames.SET_ALERTS:
       return {
         ...state,
-        newUnassignedRiskAlerts: action.payload.newUnassignedRiskAlerts
+        alerts: action.payload.alerts
       };
     default:
       return state;

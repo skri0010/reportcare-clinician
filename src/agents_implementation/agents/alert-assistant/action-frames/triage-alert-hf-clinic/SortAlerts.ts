@@ -6,14 +6,17 @@ import Precondition from "../../../../agent_framework/base/Precondition";
 import {
   ActionFrameIDs,
   BeliefKeys,
+  ClinicianAttributes,
   CommonAttributes,
-  PatientAttributes,
   ProcedureAttributes,
   ProcedureConst
 } from "agents_implementation/agent_framework/AgentEnums";
 import agentAPI from "agents_implementation/agent_framework/AgentAPI";
 import { Alert } from "aws/API";
 import { AlertColorCode } from "agents_implementation/agent_framework/model";
+
+// LS-TODO: To be revised.
+// NOTE: This file is currently unused.
 
 /**
  * Class to represent the activity for sorting alerts received from MHA into the appropriate categories.
@@ -36,7 +39,7 @@ class SortAlert extends Activity {
 
     // Update beliefs to stop the procedure from repeating
     agent.addBelief(
-      new Belief(BeliefKeys.PATIENT, PatientAttributes.NEW_ALERTS, false)
+      new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.SORT_ALERTS, false)
     );
     agent.addBelief(
       new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
@@ -44,8 +47,8 @@ class SortAlert extends Activity {
 
     try {
       const alerts: Alert[] =
-        agentAPI.getFacts()[BeliefKeys.PATIENT]?.[
-          PatientAttributes.ALERTS_TO_SORT
+        agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[
+          ClinicianAttributes.ALERTS_TO_SORT
         ];
 
       if (alerts) {
@@ -85,8 +88,8 @@ class SortAlert extends Activity {
         // Adds sorted alerts to facts to be used by DTA for retrieving alerts information
         agentAPI.addFact(
           new Belief(
-            BeliefKeys.PATIENT,
-            PatientAttributes.SORTED_ALERTS,
+            BeliefKeys.CLINICIAN,
+            ClinicianAttributes.SORTED_ALERTS,
             sortedAlerts
           ),
           false
@@ -95,8 +98,8 @@ class SortAlert extends Activity {
         // Removes alerts to sort from facts
         agentAPI.addFact(
           new Belief(
-            BeliefKeys.PATIENT,
-            PatientAttributes.ALERTS_TO_SORT,
+            BeliefKeys.CLINICIAN,
+            ClinicianAttributes.ALERTS_TO_SORT,
             null
           ),
           false
@@ -116,8 +119,8 @@ const rule1 = new Precondition(
   ProcedureConst.ACTIVE
 );
 const rule2 = new Precondition(
-  BeliefKeys.PATIENT,
-  PatientAttributes.NEW_ALERTS,
+  BeliefKeys.CLINICIAN,
+  ClinicianAttributes.SORT_ALERTS,
   true
 );
 

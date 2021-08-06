@@ -12,6 +12,8 @@ import {
   AgentIDs,
   CommonAttributes
 } from "agents_implementation/agent_framework/AgentEnums";
+import af_RetrievePendingAlertCount from "./action-frames/triage-alert-hf-clinic/RetrievePendingAlertCount";
+import af_RequestPendingAlertCountDisplay from "./action-frames/triage-alert-hf-clinic/RequestPendingAlertCountDisplay";
 
 // Initial Beliefs of Agent
 
@@ -35,6 +37,8 @@ const agentDTA = new Agent(
     af_RetrieveRolePatients,
 
     // AT-CP
+    af_RetrievePendingAlertCount,
+    af_RequestPendingAlertCountDisplay,
     af_RetrieveAlertInfos,
     af_RequestAlertsDisplay
   ], // action frame

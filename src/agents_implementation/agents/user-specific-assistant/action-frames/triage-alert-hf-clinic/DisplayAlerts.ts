@@ -6,28 +6,23 @@ import Precondition from "../../../../agent_framework/base/Precondition";
 import {
   ActionFrameIDs,
   BeliefKeys,
+  ClinicianAttributes,
   CommonAttributes,
-  PatientAttributes,
   ProcedureAttributes,
   ProcedureConst
 } from "../../../../agent_framework/AgentEnums";
 import agentAPI from "../../../../agent_framework/AgentAPI";
 import { AlertInfo } from "agents_implementation/agent_framework/model";
 import { store } from "util/useRedux";
-import {
-  setNewHighRiskAlerts,
-  setNewLowRiskAlerts,
-  setNewMediumRiskAlerts,
-  setNewUnassignedRiskAlerts
-} from "ic-redux/actions/agents/actionCreator";
+import { setAlerts } from "ic-redux/actions/agents/actionCreator";
 
 /**
- * Class to represent an activity for triggering the display of newly received alerts.
+ * Class to represent an activity for triggering the display of alerts.
  * This happens in Procedure Triage Alert HF Clinic (AT-CP).
  */
-class DisplayAllAlerts extends Activity {
+class DisplayAlerts extends Activity {
   constructor() {
-    super(ActionFrameIDs.UXSA.DISPLAY_ALL_ALERTS);
+    super(ActionFrameIDs.UXSA.DISPLAY_ALERTS);
   }
 
   /**
@@ -40,8 +35,8 @@ class DisplayAllAlerts extends Activity {
     // Update Beliefs
     agent.addBelief(
       new Belief(
-        BeliefKeys.PATIENT,
-        PatientAttributes.ALERT_INFOS_RETRIEVED,
+        BeliefKeys.CLINICIAN,
+        ClinicianAttributes.ALERT_INFOS_RETRIEVED,
         false
       )
     );
@@ -50,36 +45,24 @@ class DisplayAllAlerts extends Activity {
     );
 
     try {
-      const alertInfos: {
-        highRisk: AlertInfo[];
-        mediumRisk: AlertInfo[];
-        lowRisk: AlertInfo[];
-        unassignedRisk: AlertInfo[];
-      } =
-        agentAPI.getFacts()[BeliefKeys.PATIENT]?.[
-          PatientAttributes.ALERT_INFOS
+      const alertInfos: AlertInfo[] =
+        agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[
+          ClinicianAttributes.ALERT_INFOS
         ];
 
       if (alertInfos) {
         // LS-TODO: Irrelevant alert infos should be filtered out depending on user's role
 
-        // Dispatch new alert infos to front end for display
-        if (alertInfos.highRisk.length > 0) {
-          store.dispatch(setNewHighRiskAlerts(alertInfos.highRisk));
-        }
-        if (alertInfos.mediumRisk.length > 0) {
-          store.dispatch(setNewMediumRiskAlerts(alertInfos.mediumRisk));
-        }
-        if (alertInfos.lowRisk.length > 0) {
-          store.dispatch(setNewLowRiskAlerts(alertInfos.lowRisk));
-        }
-        if (alertInfos.unassignedRisk.length > 0) {
-          store.dispatch(setNewUnassignedRiskAlerts(alertInfos.unassignedRisk));
-        }
+        // Dispatch alert infos to front end for display
+        store.dispatch(setAlerts(alertInfos));
 
         // Removes alert info from facts
         agentAPI.addFact(
-          new Belief(BeliefKeys.PATIENT, PatientAttributes.ALERT_INFOS, null),
+          new Belief(
+            BeliefKeys.CLINICIAN,
+            ClinicianAttributes.ALERT_INFOS,
+            null
+          ),
           false
         );
       }
@@ -95,29 +78,29 @@ class DisplayAllAlerts extends Activity {
         ProcedureAttributes.AT_CP,
         ProcedureConst.INACTIVE
       ),
+      true,
       true
-      // true
     );
   }
 }
 
-// Preconditions for activating the DisplayAllAlerts class
+// Preconditions for activating the DisplayAlerts class
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
   ProcedureAttributes.AT_CP,
   ProcedureConst.ACTIVE
 );
 const rule2 = new Precondition(
-  BeliefKeys.PATIENT,
-  PatientAttributes.ALERT_INFOS_RETRIEVED,
+  BeliefKeys.CLINICIAN,
+  ClinicianAttributes.ALERT_INFOS_RETRIEVED,
   true
 );
 
-// Action Frame for DisplayAllAlerts class
-const af_DisplayAllAlerts = new Actionframe(
-  `AF_${ActionFrameIDs.UXSA.DISPLAY_ALL_ALERTS}`,
+// Action Frame for DisplayAlerts class
+const af_DisplayAlerts = new Actionframe(
+  `AF_${ActionFrameIDs.UXSA.DISPLAY_ALERTS}`,
   [rule1, rule2],
-  new DisplayAllAlerts()
+  new DisplayAlerts()
 );
 
-export default af_DisplayAllAlerts;
+export default af_DisplayAlerts;

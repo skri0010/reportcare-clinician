@@ -14,9 +14,8 @@ import {
   ActionFrameIDs
 } from "../../../../agent_framework/AgentEnums";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Role } from "../../../../../models/ClinicianEnums";
+import { Role, getClinicianInfo } from "aws";
 import agentAPI from "../../../../agent_framework/AgentAPI";
-import { getClinicianInfo } from "aws";
 import { ClinicianInfo } from "aws/API";
 
 /**

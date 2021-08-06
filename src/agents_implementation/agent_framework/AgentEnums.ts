@@ -56,7 +56,8 @@ export const ActionFrameIDs = {
     RETRIEVE_PATIENT_DETAILS: "RetrievePatientDetails",
     REQUEST_DETAILS_DISPLAY: "RequestDetailsDisplay",
     RESOLVE_PATIENT_ASSIGNMENT: "ResolvePatientAssignment",
-    RETRIEVE_ALL_ALERTS: "RetrieveAllAlerts",
+    RETRIEVE_PENDING_ALERT_COUNT: "RetrievePendingAlertCount",
+    REQUEST_PENDING_ALERT_COUNT_DISPLAY: "RequestPendingAlertCountDisplay",
     RETRIEVE_ALERT_INFOS: "RetrieveAlertInfos",
     REQUEST_ALERTS_DISPLAY: "RequestAlertsDisplay"
   },
@@ -64,19 +65,19 @@ export const ActionFrameIDs = {
     RETRIEVE_ROLE: "RetrieveRole",
     REQUEST_RETRIEVE_ALL: "RequestRetrieveAll",
     VISUALIZE_PARAMETERS: "VisualizeParameters",
-    DISPLAY_ALL_ALERTS: "DisplayAllAlerts",
-    DISPLAY_NEW_ALERTS: "DisplayNewAlerts"
+    DISPLAY_PENDING_ALERT_COUNT: "DisplayPendingAlertCount",
+    DISPLAY_ALERTS: "DisplayAlerts"
   },
   NWA: {
     SYNC_PROTECTED_INFO: "SyncProtectedInfo",
     SYNC_PATIENT_ASSIGNMENT: "SyncPatientAssignment"
   },
   ALA: {
-    SORT_ALERTS: "SortAlerts",
-    REQUEST_ALERT_INFOS: "RequestAlertInfos"
+    SORT_ALERTS: "SortAlerts"
   },
   MHA: {
-    RECEIVE_ALERTS: "ReceiveAlerts",
+    RETRIEVE_ALERTS: "RetrieveAlerts",
+    REQUEST_ALERT_INFOS: "RequestAlertInfos",
     REQUEST_ALERTS_SORT: "RequestAlertsSort"
   }
 };
@@ -119,7 +120,19 @@ export enum ClinicianAttributes {
   CONFIGURED = "Configured",
   RETRIEVE_ENTRY = "RetrieveEntry",
   ROLE = "Role",
-  RETRIEVE_ROLE = "RetrieveRole"
+  RETRIEVE_ROLE = "RetrieveRole",
+  RETRIEVE_PENDING_ALERT_COUNT = "RetrievePendingAlertCount",
+  PENDING_ALERT_COUNT_RETRIEVED = "PendingAlertCountRetrieved",
+  ALERT_STATUS = "AlertStatus",
+  ALERT_RISK_LEVEL = "AlertRiskLevel",
+  ALERTS = "Alerts",
+  RETRIEVE_ALERTS = "RetrieveAlerts",
+  SORT_ALERTS = "SortAlerts",
+  ALERTS_TO_SORT = "AlertsToSort",
+  SORTED_ALERTS = "SortedAlerts",
+  ALERTS_SORTED = "AlertsSorted",
+  ALERT_INFOS = "AlertInfos",
+  ALERT_INFOS_RETRIEVED = "AlertInfosRetrieved"
 }
 
 // Attributes for PATIENT key
@@ -131,15 +144,7 @@ export enum PatientAttributes {
   VIEW_DETAILS = "ViewDetails",
   DETAILS = "Details",
   RESOLVE_PATIENT_ASSIGNMENT = "ResolvePatientAssignment",
-  PENDING_RESOLVE_PATIENT_ASSIGNMENT = "PendingResolvePatientAssignment",
-  INCOMING_ALERTS = "IncomingAlerts",
-  NEW_ALERTS = "NewAlerts",
-  ALERTS_TO_SORT = "AlertsToSort",
-  SORTED_ALERTS = "SortedAlerts",
-  ALERTS_SORTED = "AlertsSorted",
-  ALERT_INFOS = "AlertInfos",
-  ALERT_INFOS_RETRIEVED = "AlertInfosRetrieved",
-  RETRIEVE_ALERTS = "RetrieveAlerts"
+  PENDING_RESOLVE_PATIENT_ASSIGNMENT = "PendingResolvePatientAssignment"
 }
 
 // Keys for locally storing data in AsyncStorage

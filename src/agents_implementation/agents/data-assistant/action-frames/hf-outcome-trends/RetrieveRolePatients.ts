@@ -15,12 +15,11 @@ import {
   ActionFrameIDs
 } from "agents_implementation/agent_framework/AgentEnums";
 import { Patient } from "../../../../agent_framework/model";
-import { Role } from "models/ClinicianEnums";
 import { PatientInfo } from "aws/API";
 import { RiskLevel } from "models/RiskLevel";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import agentAPI from "../../../../agent_framework/AgentAPI";
-import { getClinicianInfo, listPatientInfos } from "aws";
+import { Role, getClinicianInfo, listPatientInfos } from "aws";
 import { store } from "util/useRedux";
 import {
   setPatients,

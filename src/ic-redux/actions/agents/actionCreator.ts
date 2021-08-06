@@ -1,7 +1,8 @@
 import {
   AlertInfo,
   Patient,
-  PatientDetails
+  PatientDetails,
+  PendingAlertCount
 } from "agents_implementation/agent_framework/model";
 import { actionNames } from "ic-redux/actions/actionNames";
 import { createAction } from "typesafe-actions";
@@ -41,30 +42,16 @@ export const setPatientAssignmentsSynced = createAction(
   })
 )();
 
-export const setNewHighRiskAlerts = createAction(
-  actionNames.SET_NEW_HIGH_RISK_ALERTS,
-  (newHighRiskAlerts: AlertInfo[]) => ({
-    newHighRiskAlerts: newHighRiskAlerts
+export const setPendingAlertCount = createAction(
+  actionNames.SET_PENDING_ALERT_COUNT,
+  (pendingAlertCount: PendingAlertCount) => ({
+    pendingAlertCount: pendingAlertCount
   })
 )();
 
-export const setNewMediumRiskAlerts = createAction(
-  actionNames.SET_NEW_MEDIUM_RISK_ALERTS,
-  (newMediumRiskAlerts: AlertInfo[]) => ({
-    newMediumRiskAlerts: newMediumRiskAlerts
-  })
-)();
-
-export const setNewLowRiskAlerts = createAction(
-  actionNames.SET_NEW_LOW_RISK_ALERTS,
-  (newLowRiskAlerts: AlertInfo[]) => ({
-    newLowRiskAlerts: newLowRiskAlerts
-  })
-)();
-
-export const setNewUnassignedRiskAlerts = createAction(
-  actionNames.SET_NEW_UNASSIGNED_RISK_ALERTS,
-  (newUnassignedRiskAlerts: AlertInfo[]) => ({
-    newUnassignedRiskAlerts: newUnassignedRiskAlerts
+export const setAlerts = createAction(
+  actionNames.SET_ALERTS,
+  (alerts: AlertInfo[]) => ({
+    alerts: alerts
   })
 )();
