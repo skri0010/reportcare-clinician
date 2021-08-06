@@ -130,6 +130,7 @@ export declare class PatientAssignment {
 export declare class Alert {
   readonly id: string;
   readonly patientID: string;
+  readonly patientName: string;
   readonly dateTime: string;
   readonly summary: string;
   readonly colorCode: string;
@@ -137,7 +138,8 @@ export declare class Alert {
   readonly vitalsReport?: ReportVitals;
   readonly symptomReportID: string;
   readonly symptomReport?: ReportSymptom;
-  readonly completed: boolean;
+  readonly pending?: string;
+  readonly completed?: string;
   readonly owner: string;
   constructor(init: ModelInit<Alert>);
   static copyOf(source: Alert, mutator: (draft: MutableModel<Alert>) => MutableModel<Alert> | void): Alert;
@@ -147,6 +149,7 @@ export declare class Todo {
   readonly id: string;
   readonly clinicianID: string;
   readonly title: string;
+  readonly patientName: string;
   readonly notes: string;
   readonly lastModified: string;
   readonly alertID?: string;

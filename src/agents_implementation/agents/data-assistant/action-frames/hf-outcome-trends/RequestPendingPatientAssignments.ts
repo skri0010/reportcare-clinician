@@ -43,6 +43,15 @@ class RequestPendingPatientAssignments extends Communicate {
     try {
       await super.doActivity(agent);
       // Update Beliefs
+      // Reset precondition
+      agent.addBelief(
+        new Belief(
+          BeliefKeys.PATIENT,
+          PatientAttributes.PENDING_PATIENT_ASSIGNMENTS_RETRIEVED,
+          false
+        )
+      );
+      // Set last activity
       agent.addBelief(
         new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
       );
@@ -64,10 +73,15 @@ const rule2 = new Precondition(
   CommonAttributes.LAST_ACTIVITY,
   ActionFrameIDs.DTA.RETRIEVE_PENDING_PATIENT_ASSIGNMENTS
 );
+const rule3 = new Precondition(
+  BeliefKeys.PATIENT,
+  PatientAttributes.PENDING_PATIENT_ASSIGNMENTS_RETRIEVED,
+  true
+);
 
 // Actionframe of the RequestPendingPatientAssignment class
 export const af_RequestPendingPatientAssignments = new Actionframe(
   `AF_${ActionFrameIDs.DTA.REQUEST_PENDING_PATIENT_ASSIGNMENTS}`,
-  [rule1, rule2],
+  [rule1, rule2, rule3],
   new RequestPendingPatientAssignments()
 );

@@ -4,7 +4,8 @@ import {
   Belief,
   Activity,
   Precondition,
-  agentAPI
+  agentAPI,
+  setRetryLaterTimeout
 } from "agents_implementation/agent_framework";
 import {
   ActionFrameIDs,
@@ -20,6 +21,8 @@ import { PatientAssignmentStatus } from "agents_implementation/agent_framework/m
 import { listPendingPatientAssignments } from "aws";
 import { PatientAssignment } from "aws/API";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { setFetchNewPatientAssignments } from "ic-redux/actions/agents/actionCreator";
+import { store } from "ic-redux/store";
 
 /**
  * Class to represent an activity for retrieving pending patient assignments.
@@ -37,15 +40,6 @@ class RetrievePendingPatientAssignments extends Activity {
   async doActivity(agent: Agent): Promise<void> {
     await super.doActivity(agent);
     let pendingPatientAssignments: PatientAssignment[] | null | undefined;
-
-    // Update Beliefs
-    agent.addBelief(
-      new Belief(
-        BeliefKeys.PATIENT,
-        PatientAttributes.RETRIEVE_PENDING_PATIENT_ASSIGNMENTS,
-        false
-      )
-    );
 
     try {
       // Get locally stored clinicianId
@@ -84,8 +78,9 @@ class RetrievePendingPatientAssignments extends Activity {
         }
       }
 
-      // Update Facts
       if (pendingPatientAssignments) {
+        // Update Facts and Beliefs
+        // Store items
         agentAPI.addFact(
           new Belief(
             BeliefKeys.PATIENT,
@@ -94,7 +89,31 @@ class RetrievePendingPatientAssignments extends Activity {
           ),
           false
         );
+        // Trigger request to Communicate to USXA
+        agent.addBelief(
+          new Belief(
+            BeliefKeys.PATIENT,
+            PatientAttributes.PENDING_PATIENT_ASSIGNMENTS_RETRIEVED,
+            true
+          )
+        );
+      } else {
+        // Dispatch to store boolean to fetch updated patient assignments later
+        setRetryLaterTimeout(() =>
+          store.dispatch(setFetchNewPatientAssignments(true))
+        );
       }
+
+      // Update Beliefs
+      // Reset precondition
+      agent.addBelief(
+        new Belief(
+          BeliefKeys.PATIENT,
+          PatientAttributes.RETRIEVE_PENDING_PATIENT_ASSIGNMENTS,
+          false
+        )
+      );
+      // Set last activity
       agent.addBelief(
         new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
       );

@@ -33,26 +33,18 @@ class RetrievePendingPatientAssignments extends Activity {
   async doActivity(agent: Agent): Promise<void> {
     await super.doActivity(agent);
 
-    // Update Beliefs
-    agent.addBelief(
-      new Belief(
-        BeliefKeys.PATIENT,
-        PatientAttributes.PENDING_PATIENT_ASSIGNMENTS_RETRIEVED,
-        false
-      )
-    );
-    agent.addBelief(
-      new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
-    );
-
     const pendingPatientAssignments =
       agentAPI.getFacts()[BeliefKeys.PATIENT]?.[
         PatientAttributes.PENDING_PATIENT_ASSIGNMENTS
       ];
 
-    store.dispatch(setPendingPatientAssignments(pendingPatientAssignments));
+    if (pendingPatientAssignments) {
+      // Dispatch to store boolean to store fetched pending patient assignments
+      store.dispatch(setPendingPatientAssignments(pendingPatientAssignments));
+    }
 
-    // Update Facts and end procedure
+    // Update Facts and Belief
+    // End procedure
     agentAPI.addFact(
       new Belief(
         BeliefKeys.PROCEDURE,
@@ -60,6 +52,18 @@ class RetrievePendingPatientAssignments extends Activity {
         ProcedureConst.INACTIVE
       ),
       false
+    );
+    // Reset precondition
+    agent.addBelief(
+      new Belief(
+        BeliefKeys.PATIENT,
+        PatientAttributes.PENDING_PATIENT_ASSIGNMENTS_RETRIEVED,
+        false
+      )
+    );
+    // Set last activity
+    agent.addBelief(
+      new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
     );
   }
 }

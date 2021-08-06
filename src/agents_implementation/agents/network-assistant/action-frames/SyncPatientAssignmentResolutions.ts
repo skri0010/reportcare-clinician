@@ -15,6 +15,8 @@ import {
 import { PatientAssignmentResolution } from "agents_implementation/agent_framework/model";
 import { resolvePatientAssignment } from "agents_implementation/agents/data-assistant/action-frames/storing-data/ResolvePatientAssignment";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { store } from "ic-redux/store";
+import { setFetchNewPatientAssignments } from "ic-redux/actions/agents/actionCreator";
 
 // LS-TODO: To be tested once ApprovePatientAssignment is working
 
@@ -26,7 +28,7 @@ class SyncPatientAssignment extends Activity {
    * Constructor for the SyncPatientAssignment class
    */
   constructor() {
-    super(ActionFrameIDs.NWA.SYNC_PATIENT_ASSIGNMENT);
+    super(ActionFrameIDs.NWA.SYNC_PATIENT_ASSIGNMENT_RESOLUTIONS);
   }
 
   /**
@@ -35,19 +37,6 @@ class SyncPatientAssignment extends Activity {
    */
   async doActivity(agent: Agent): Promise<void> {
     super.doActivity(agent);
-
-    // Update Beliefs
-    // Prevent the activity from being executed multiple times while assignments are being synced
-    agent.addBelief(
-      new Belief(
-        BeliefKeys.APP,
-        AppAttributes.PENDING_PATIENT_ASSIGNMENT,
-        false
-      )
-    );
-    agent.addBelief(
-      new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
-    );
 
     try {
       // Get locally stored list of assignments to resolve
@@ -87,19 +76,26 @@ class SyncPatientAssignment extends Activity {
           AsyncStorageKeys.PATIENT_ASSIGNMENTS_RESOLUTIONS,
           JSON.stringify(remainingList)
         );
+        // Dispatch to store boolean to fetch updated patient assignments
+        store.dispatch(setFetchNewPatientAssignments(true));
       }
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.log(error);
 
-      // Activity did not succeed
+      // Update Beliefs
+      // Reset precondition
       agent.addBelief(
         new Belief(
           BeliefKeys.APP,
-          AppAttributes.PENDING_PATIENT_ASSIGNMENT,
-          true
+          AppAttributes.PENDING_PATIENT_ASSIGNMENT_SYNC,
+          false
         )
       );
+      // Set last activity
+      agent.addBelief(
+        new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
+      );
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.log(error);
     }
   }
 }
@@ -108,15 +104,15 @@ class SyncPatientAssignment extends Activity {
 const rule1 = new Precondition(BeliefKeys.APP, AppAttributes.ONLINE, true);
 const rule2 = new Precondition(
   BeliefKeys.APP,
-  AppAttributes.PENDING_PATIENT_ASSIGNMENT,
+  AppAttributes.PENDING_PATIENT_ASSIGNMENT_SYNC,
   true
 );
 
 // Actionframe of the SyncPatientAssignments class
-const af_SyncPatientAssignment = new Actionframe(
-  `AF_${ActionFrameIDs.NWA.SYNC_PATIENT_ASSIGNMENT}`,
+const af_SyncPatientAssignmentResolutions = new Actionframe(
+  `AF_${ActionFrameIDs.NWA.SYNC_PATIENT_ASSIGNMENT_RESOLUTIONS}`,
   [rule1, rule2],
   new SyncPatientAssignment()
 );
 
-export default af_SyncPatientAssignment;
+export default af_SyncPatientAssignmentResolutions;

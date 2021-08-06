@@ -35,6 +35,13 @@ export const setPatientDetails = createAction(
   })
 )();
 
+export const setFetchNewPatientAssignments = createAction(
+  actionNames.SET_FETCH_NEW_PATIENT_ASSIGNMENTS,
+  (fetchNewPatientAssignments: boolean) => ({
+    fetchNewPatientAssignments: fetchNewPatientAssignments
+  })
+)();
+
 export const setPendingPatientAssignments = createAction(
   actionNames.SET_PENDING_PATIENT_ASSIGNMENTS,
   (pendingPatientAssignments: PatientAssignment[]) => ({

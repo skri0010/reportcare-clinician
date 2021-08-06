@@ -72,7 +72,7 @@ export const ActionFrameIDs = {
   },
   NWA: {
     SYNC_PROTECTED_INFO: "SyncProtectedInfo",
-    SYNC_PATIENT_ASSIGNMENT: "SyncPatientAssignment"
+    SYNC_PATIENT_ASSIGNMENT_RESOLUTIONS: "SyncPatientAssignmentResolutions"
   },
   ALA: {
     SORT_ALERTS: "SortAlerts",
@@ -102,7 +102,7 @@ export enum AppAttributes {
   CONFIGURED = "Configured",
   ONLINE = "Online",
   PENDING_PROTECTED_INFO_SYNC = "PendingProtectedInfoSync",
-  PENDING_PATIENT_ASSIGNMENT = "PendingPatientAssignmentSync"
+  PENDING_PATIENT_ASSIGNMENT_SYNC = "PendingPatientAssignmentSync"
 }
 
 // Attributes for PROCEDURE key
@@ -139,7 +139,7 @@ export enum PatientAttributes {
   PENDING_PATIENT_ASSIGNMENTS = "PendingPatientAssignments",
   RETRIEVE_PENDING_PATIENT_ASSIGNMENTS = "RetrievePendingPatientAssignments",
   PENDING_PATIENT_ASSIGNMENTS_RETRIEVED = "PendingPatientAssignmentsRetrieved",
-  RESOLVE_PATIENT_ASSIGNMENT = "ResolvePatientAssignment",
+  PATIENT_ASSIGNMENT_RESOLUTION = "PatientAssignmentResolution",
   PENDING_RESOLVE_PATIENT_ASSIGNMENT = "PendingResolvePatientAssignment",
 
   // Alerts

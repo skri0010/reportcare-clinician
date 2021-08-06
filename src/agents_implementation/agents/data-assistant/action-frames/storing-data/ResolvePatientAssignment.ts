@@ -26,7 +26,7 @@ import {
   updatePatientAssignment
 } from "aws";
 import { store } from "ic-redux/store";
-import { setProcedureSuccessful } from "ic-redux/actions/agents/actionCreator";
+import { setFetchNewPatientAssignments } from "ic-redux/actions/agents/actionCreator";
 import agentNWA from "agents_implementation/agents/network-assistant/NWA";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Auth from "@aws-amplify/auth";
@@ -53,23 +53,11 @@ class ResolvePatientAssignment extends Activity {
   async doActivity(agent: Agent): Promise<void> {
     await super.doActivity(agent);
 
-    // Update Beliefs
-    agent.addBelief(
-      new Belief(
-        BeliefKeys.PATIENT,
-        PatientAttributes.PENDING_RESOLVE_PATIENT_ASSIGNMENT,
-        false
-      )
-    );
-    agent.addBelief(
-      new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
-    );
-
     try {
       // Get assignment to resolve
       const assignment: PatientAssignmentResolution =
         agentAPI.getFacts()[BeliefKeys.PATIENT]?.[
-          PatientAttributes.RESOLVE_PATIENT_ASSIGNMENT
+          PatientAttributes.PATIENT_ASSIGNMENT_RESOLUTION
         ];
 
       // Get locally stored clinicianId
@@ -85,6 +73,9 @@ class ResolvePatientAssignment extends Activity {
             assignment: assignment,
             ownClinicianId: clinicianId
           });
+
+          // Dispatch to store boolean to fetch updated patient assignments
+          store.dispatch(setFetchNewPatientAssignments(true));
         }
         // Device is offline: Save locally in PatientAssignmentResolutions
         else {
@@ -119,34 +110,44 @@ class ResolvePatientAssignment extends Activity {
             );
           }
 
-          // Notify NWA
+          // Update Belief of NWA
           agentNWA.addBelief(
             new Belief(
               BeliefKeys.APP,
-              AppAttributes.PENDING_PATIENT_ASSIGNMENT,
+              AppAttributes.PENDING_PATIENT_ASSIGNMENT_SYNC,
               true
             )
           );
         }
-
-        // Dispatch to front end to indicate that procedure is successful
-        store.dispatch(setProcedureSuccessful(true));
       }
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
     }
 
-    // Update Facts
-    // Remove assignment from facts
+    // Update Facts and Beliefs
+    // Remove item
     agentAPI.addFact(
       new Belief(
         BeliefKeys.PATIENT,
-        PatientAttributes.RESOLVE_PATIENT_ASSIGNMENT,
+        PatientAttributes.PATIENT_ASSIGNMENT_RESOLUTION,
         null
       ),
       false
     );
+    // Reset precondition
+    agent.addBelief(
+      new Belief(
+        BeliefKeys.PATIENT,
+        PatientAttributes.PENDING_RESOLVE_PATIENT_ASSIGNMENT,
+        false
+      )
+    );
+    // Set last activity
+    agent.addBelief(
+      new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
+    );
+
     // Stop the procedure
     agentAPI.addFact(
       new Belief(
