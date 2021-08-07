@@ -17,7 +17,7 @@ import { agentDTA } from "rc-agents/agents";
 import {
   PatientAssignmentStatus,
   PatientAssignmentResolution
-} from "rc-agents/framework/model";
+} from "rc-agents/model";
 import { PatientAssignment } from "aws/API";
 import { PatientAssignmentRow } from "components/RowComponents/PatientRows/PatientPendingAssignmentRow";
 import { setFetchNewPatientAssignments } from "ic-redux/actions/agents/actionCreator";

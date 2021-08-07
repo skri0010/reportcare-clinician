@@ -20,7 +20,7 @@ import { Alert, ModelSortDirection } from "aws/API";
 import { mockPendingAlerts } from "mock/mockAlerts";
 import { AlertStatus, listPendingAlertsByDateTime } from "aws";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AlertInfo } from "rc-agents/framework/model";
+import { AlertInfo } from "rc-agents/model";
 
 /**
  * Class to represent an activity for retrieving pending alerts.

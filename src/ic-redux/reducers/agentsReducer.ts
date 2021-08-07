@@ -6,7 +6,7 @@ import {
   Patient,
   PatientDetails,
   PendingAlertCount
-} from "rc-agents/framework/model";
+} from "rc-agents/model";
 import { PatientAssignment } from "aws/API";
 
 interface AgentsState {

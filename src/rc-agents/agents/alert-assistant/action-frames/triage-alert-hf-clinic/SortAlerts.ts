@@ -15,7 +15,7 @@ import {
 } from "rc-agents/framework/AgentEnums";
 import agentAPI from "rc-agents/framework/AgentAPI";
 import { Alert } from "aws/API";
-import { AlertColorCode } from "rc-agents/framework/model";
+import { AlertColorCode } from "rc-agents/model";
 
 // LS-TODO: To be revised.
 // NOTE: This file is currently unused.

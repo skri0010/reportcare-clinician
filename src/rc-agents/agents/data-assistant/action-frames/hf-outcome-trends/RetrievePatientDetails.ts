@@ -14,7 +14,7 @@ import {
   ProcedureAttributes,
   ProcedureConst
 } from "rc-agents/framework/AgentEnums";
-import { PatientDetails } from "rc-agents/framework/model";
+import { PatientDetails } from "rc-agents/model";
 import agentAPI from "rc-agents/framework/AgentAPI";
 import { listActivityInfos, listReportSymptoms, listReportVitals } from "aws";
 import { ActivityInfo, ReportSymptom, ReportVitals } from "aws/API";

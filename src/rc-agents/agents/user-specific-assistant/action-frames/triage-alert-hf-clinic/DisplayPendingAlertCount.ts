@@ -14,11 +14,7 @@ import {
   ProcedureConst
 } from "rc-agents/framework/AgentEnums";
 import agentAPI from "rc-agents/framework/AgentAPI";
-import {
-  AlertColorCode,
-  AlertInfo,
-  PendingAlertCount
-} from "rc-agents/framework/model";
+import { AlertColorCode, AlertInfo, PendingAlertCount } from "rc-agents/model";
 import { store } from "util/useRedux";
 import { Alert } from "aws/API";
 import { setPendingAlertCount } from "ic-redux/actions/agents/actionCreator";

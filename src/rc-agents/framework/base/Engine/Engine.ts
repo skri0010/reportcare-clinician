@@ -6,7 +6,7 @@ import ObjNode from "./Rete/ObjNode";
 import Actionframe from "../Actionframe";
 import Precondition from "../Precondition";
 import Agent from "../Agent";
-import { Fact } from "../../model";
+import { Fact } from "../../../model";
 
 /**
  * Class representing the engine for inference

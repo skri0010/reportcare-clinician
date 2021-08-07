@@ -14,7 +14,7 @@ import {
   ProcedureConst
 } from "rc-agents/framework/AgentEnums";
 import agentAPI from "rc-agents/framework/AgentAPI";
-import { AlertInfo } from "rc-agents/framework/model";
+import { AlertInfo } from "rc-agents/model";
 import { store } from "util/useRedux";
 import { setAlerts } from "ic-redux/actions/agents/actionCreator";
 

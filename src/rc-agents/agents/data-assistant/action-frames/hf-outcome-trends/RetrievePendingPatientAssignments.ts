@@ -17,7 +17,7 @@ import {
   ProcedureConst,
   AsyncStorageKeys
 } from "rc-agents/framework/AgentEnums";
-import { PatientAssignmentStatus } from "rc-agents/framework/model";
+import { PatientAssignmentStatus } from "rc-agents/model";
 import { listPendingPatientAssignments } from "aws";
 import { PatientAssignment } from "aws/API";
 import AsyncStorage from "@react-native-async-storage/async-storage";

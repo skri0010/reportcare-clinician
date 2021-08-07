@@ -12,7 +12,7 @@ import {
   BeliefKeys,
   CommonAttributes
 } from "rc-agents/framework/AgentEnums";
-import { PatientAssignmentResolution } from "rc-agents/framework/model";
+import { PatientAssignmentResolution } from "rc-agents/model";
 import { resolvePatientAssignment } from "rc-agents/agents/data-assistant/action-frames/storing-data/ResolvePatientAssignment";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { store } from "ic-redux/store";

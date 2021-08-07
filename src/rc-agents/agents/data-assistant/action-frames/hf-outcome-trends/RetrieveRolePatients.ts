@@ -16,7 +16,7 @@ import {
   AppAttributes,
   ActionFrameIDs
 } from "rc-agents/framework/AgentEnums";
-import { Patient } from "rc-agents/framework/model";
+import { Patient } from "rc-agents/model";
 import { PatientInfo } from "aws/API";
 import { RiskLevel } from "models/RiskLevel";
 import AsyncStorage from "@react-native-async-storage/async-storage";

@@ -3,7 +3,7 @@ import Belief from "./base/Belief";
 import AgentManagement from "./management/AgentManagement";
 import WebAgentManagement from "./management/WebAgentManagement";
 import MobileAgentManagement from "./management/MobileAgentManagement";
-import { Fact } from "./model";
+import { Fact } from "../model";
 import Agent from "./base/Agent";
 
 /**

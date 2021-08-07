@@ -1,7 +1,7 @@
 import { DeviceEventEmitter } from "react-native";
 import Agent from "../base/Agent";
 import Belief from "../base/Belief";
-import { Fact } from "../model";
+import { Fact } from "../../model";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getClinicianProtectedInfo, updateClinicianProtectedInfo } from "aws";
 import {

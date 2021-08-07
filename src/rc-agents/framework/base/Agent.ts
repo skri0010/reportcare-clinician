@@ -10,7 +10,7 @@ import ObjNode from "./Engine/Rete/ObjNode";
 import AlphaNode from "./Engine/Rete/AlphaNode";
 import Node from "./Engine/Rete/Node";
 import BetaNode from "./Engine/Rete/BetaNode";
-import { Fact } from "../model";
+import { Fact } from "../../model";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getClinicianProtectedInfo } from "aws";
 import {

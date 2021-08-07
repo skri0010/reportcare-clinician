@@ -15,7 +15,7 @@ import {
   ProcedureAttributes,
   ProcedureConst
 } from "rc-agents/framework/AgentEnums";
-import { AlertColorCode, AlertInfo } from "rc-agents/framework/model";
+import { AlertColorCode, AlertInfo } from "rc-agents/model";
 import agentAPI from "rc-agents/framework/AgentAPI";
 import {
   listMedCompliantsByDate,

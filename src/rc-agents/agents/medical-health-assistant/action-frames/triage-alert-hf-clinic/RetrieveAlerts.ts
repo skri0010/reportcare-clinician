@@ -22,7 +22,7 @@ import {
   listCompletedRiskAlerts,
   listPendingRiskAlerts
 } from "aws";
-import { AlertColorCode, AlertInfo } from "rc-agents/framework/model";
+import { AlertColorCode, AlertInfo } from "rc-agents/model";
 import { RiskLevel } from "models/RiskLevel";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Alert } from "aws/API";

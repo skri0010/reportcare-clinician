@@ -14,7 +14,7 @@ import {
   ProcedureConst
 } from "rc-agents/framework/AgentEnums";
 import agentAPI from "rc-agents/framework/AgentAPI";
-import { PatientDetails } from "rc-agents/framework/model";
+import { PatientDetails } from "rc-agents/model";
 import { store } from "util/useRedux";
 import {
   setProcedureOngoing,

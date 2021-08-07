@@ -19,7 +19,7 @@ import {
 import {
   PatientAssignmentResolution,
   PatientAssignmentStatus
-} from "rc-agents/framework/model";
+} from "rc-agents/model";
 import {
   createClinicianPatientMap,
   createPatientAssignment,
