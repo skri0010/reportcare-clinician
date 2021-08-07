@@ -111,7 +111,7 @@
     "ItemsRemaining": "lagi",
     "ShowMoreButton": "LIHAT LEBIH"
   },
-  "Alerts": {
+  "Alert": {
     "HighRisk": "Risiko Tinggi",
     "MediumRisk": "Risiko Sederhana",
     "LowRisk": "Risiko Rendah",
@@ -138,12 +138,13 @@
     "NotesInputPlaceholder": "Apakah yang perlu dicatatkan?",
     "NoSelection": "Pilihkan salah satu item Todo untuk melihat butirannya"
   },
-  "Patient": {
+  "Patients": {
     "SearchBarPlaceholder": "Cari pesakit (contohnya John)",
     "Overview": "Ringkasan",
     "Parameters": "Parameter",
     "ICD/CRT": "ICD/CRT",
-    "History": "Sejarah"
+    "History": "Sejarah",
+    "Info": "Info"
   },
   "Patient_Overview": {
     "BloodPressure": "Tekanan Darah",
@@ -186,5 +187,23 @@
       "Description": "Deskripsi",
       "DescriptionInputPlaceholder": "Apakah isi-isi deskripsi ini?"
     }
+  },
+  "Patient_Info": {
+    "Male": "Lelaki",
+    "Female": "Perempuan",
+    "Malay": "Bahasa Melayu",
+    "English": "Bahasa Inggeris",
+    "Gender": "Jantina",
+    "Age": "Umur",
+    "Location": "Lokasi",
+    "Class": "Kelas",
+    "DOB": "Tarikh Lahir",
+    "HPNumber": "Nombor Telefon",
+    "Email": "Emel",
+    "Address": "Alamat Rumah",
+    "LanguageSpoken": "Bahasa Pertuturan",
+    "EmergencyContact": "Talian Kecemasan",
+    "BasicInfo": "Informasi Asas",
+    "ContactInfo": "Informasi Hubungan"
   }
 }

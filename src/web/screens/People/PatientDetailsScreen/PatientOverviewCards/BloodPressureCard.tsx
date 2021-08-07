@@ -23,12 +23,16 @@ export const BloodPressureCard: FC<BloodPressureProps> = ({
     <CardWrapper maxHeight={ms(120)}>
       <H3
         text={i18n.t("Patient_Overview.BloodPressure")}
-        style={{ fontWeight: "bold", color: colors.primaryTextColor }}
+        style={{
+          fontWeight: "bold",
+          color: colors.primaryTextColor,
+          paddingLeft: ms(5)
+        }}
       />
       <View style={styles.container}>
         <View style={styles.text}>
           <H4 text={i18n.t("Patient_Overview.Systolic")} style={null} />
-          <H4
+          <H3
             text={systolic}
             style={{ fontWeight: "bold", color: colors.primaryTextColor }}
           />
@@ -36,7 +40,7 @@ export const BloodPressureCard: FC<BloodPressureProps> = ({
         </View>
         <View style={styles.text}>
           <H4 text={i18n.t("Patient_Overview.Diastolic")} style={null} />
-          <H4
+          <H3
             text={dystolic}
             style={{ fontWeight: "bold", color: colors.primaryTextColor }}
           />

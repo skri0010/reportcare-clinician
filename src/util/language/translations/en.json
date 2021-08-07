@@ -106,12 +106,12 @@
     "Welcome": "Welcome Dr. ",
     "WelcomeMsg": "Check on your patient's health,\nmonitor their vitals and chat with\nthem.",
     "RequestsByMaria": "Requests by MARIA",
-    "Alerts": "Alert",
+    "Alerts": "Alerts",
     "Todos": "Todos",
     "ItemsRemaining": "remaining",
     "ShowMoreButton": "SHOW MORE"
   },
-  "Alerts": {
+  "Alert": {
     "HighRisk": "High Risk",
     "MediumRisk": "Medium Risk",
     "LowRisk": "Low Risk",
@@ -138,12 +138,13 @@
     "NotesInputPlaceholder": "Anything notable?",
     "NoSelection": "Select a Todo item to view its details"
   },
-  "Patient": {
+  "Patients": {
     "SearchBarPlaceholder": "Search patient (eg John)",
     "Overview": "Overview",
     "Parameters": "Parameters",
     "ICD/CRT": "ICD/CRT",
-    "History": "History"
+    "History": "History",
+    "Info": "Info"
   },
   "Patient_Overview": {
     "BloodPressure": "Blood Pressure",
@@ -186,5 +187,23 @@
       "Description": "Description",
       "DescriptionInputPlaceholder": "What is the content of the medical record?"
     }
+  },
+  "Patient_Info": {
+    "Male": "Male",
+    "Female": "Female",
+    "Malay": "Malay",
+    "English": "English",
+    "Gender": "Gender",
+    "Age": "Age",
+    "Location": "Location",
+    "Class": "Class",
+    "DOB": "Birthdate",
+    "HPNumber": "Phone number",
+    "Email": "Email",
+    "Address": "House Address",
+    "LanguageSpoken": "Language Spoken",
+    "EmergencyContact": "Emergency Contact",
+    "BasicInfo": "Basic Information",
+    "ContactInfo": "Contact Information"
   }
 }

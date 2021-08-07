@@ -1,7 +1,7 @@
 import React, { FC } from "react";
-import { ms } from "react-native-size-matters";
+import { ms, ScaledSheet } from "react-native-size-matters";
 import { ScreenWrapper } from "../../ScreenWrapper";
-import { Dimensions } from "react-native";
+import { Dimensions, View } from "react-native";
 import { PatientAlertHistoryCard } from "./PatientHistoryScreens/PatientAlertHistoryCard";
 import { PatientMedicalRecordCard } from "./PatientHistoryScreens/PatientMedicalRecordCard";
 import { PatientInfo } from "aws/models";
@@ -48,20 +48,30 @@ export const PatientHistory: FC<PatientHistoryProps> = ({
 
   return (
     <ScreenWrapper>
-      <PatientAlertHistoryCard
-        name={patient.name}
-        patientId={patient.patientID}
-        maxHeight={cardMaxHeight}
-        setDisplayHistory={alertHistoryFunc.setDisplayHistory}
-        setModalAlertVisible={alertHistoryFunc.setModalAlertVisible}
-      />
-      <PatientMedicalRecordCard
-        patientId={patient.patientID}
-        maxHeight={cardMaxHeight}
-        onAddPress={() => medicalRecordFunc.setAddMedicalRecord(true)}
-        setViewMedicalModal={medicalRecordFunc.setViewMedicalModal}
-        setDisplayMedicalRecord={medicalRecordFunc.setDisplayMedicalRecord}
-      />
+      <View style={styles.container}>
+        <PatientAlertHistoryCard
+          name={patient.name}
+          patientId={patient.patientID}
+          maxHeight={cardMaxHeight}
+          setDisplayHistory={alertHistoryFunc.setDisplayHistory}
+          setModalAlertVisible={alertHistoryFunc.setModalAlertVisible}
+        />
+        <PatientMedicalRecordCard
+          patientId={patient.patientID}
+          maxHeight={cardMaxHeight}
+          onAddPress={() => medicalRecordFunc.setAddMedicalRecord(true)}
+          setViewMedicalModal={medicalRecordFunc.setViewMedicalModal}
+          setDisplayMedicalRecord={medicalRecordFunc.setDisplayMedicalRecord}
+        />
+      </View>
     </ScreenWrapper>
   );
 };
+
+const styles = ScaledSheet.create({
+  container: {
+    flexWrap: "wrap",
+    flexDirection: "row",
+    justifyContent: "space-between"
+  }
+});

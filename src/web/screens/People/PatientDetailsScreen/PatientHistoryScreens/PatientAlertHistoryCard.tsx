@@ -6,6 +6,7 @@ import { AlertHistoryRow } from "./AlertHistoryRow";
 import { mockAlertHistory, AlertHistory } from "mock/mockPatientDetails";
 import { FlatList } from "react-native";
 import i18n from "util/language/i18n";
+import { ms } from "react-native-size-matters";
 
 interface PatientAlertHistoryProps {
   patientId: string;
@@ -38,8 +39,14 @@ export const PatientAlertHistoryCard: FC<PatientAlertHistoryProps> = ({
   return (
     <CardWrapper maxHeight={maxHeight}>
       <H3
-        text={i18n.t("Patient_History.Alert")}
-        style={[{ fontWeight: "bold", color: colors.primaryTextColor }]}
+        text={i18n.t("Home.Alerts")}
+        style={[
+          {
+            fontWeight: "bold",
+            color: colors.primaryTextColor,
+            paddingBottom: ms(15)
+          }
+        ]}
       />
       <FlatList
         showsVerticalScrollIndicator={false}

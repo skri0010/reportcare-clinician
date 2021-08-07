@@ -1,9 +1,9 @@
 import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
-import { ScaledSheet } from "react-native-size-matters";
+import { ms, ScaledSheet } from "react-native-size-matters";
 import { H4 } from "components/Text/index";
 import { getRiskLevelColor, RiskLevel } from "models/RiskLevel";
-import { TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View, Text } from "react-native";
 import i18n from "util/language/i18n";
 
 interface AlertHistoryRowProps {
@@ -32,8 +32,9 @@ export const AlertHistoryRow: FC<AlertHistoryRowProps> = ({
   description,
   onRowPress
 }) => {
-  const { colors } = select((state: RootState) => ({
-    colors: state.settings.colors
+  const { colors, fonts } = select((state: RootState) => ({
+    colors: state.settings.colors,
+    fonts: state.settings.fonts
   }));
 
   return (
@@ -56,7 +57,16 @@ export const AlertHistoryRow: FC<AlertHistoryRowProps> = ({
             style={{ fontWeight: "bold", color: colors.primaryTextColor }}
           />
         </View>
-        <H4 text={description} style={{ color: colors.primaryTextColor }} />
+        <Text
+          numberOfLines={1}
+          style={{
+            color: colors.primaryTextColor,
+            fontSize: fonts.h4Size
+          }}
+        >
+          {description}
+        </Text>
+        {/* <H4 text={description} style={{ color: colors.primaryTextColor }} /> */}
       </View>
       <View style={[styles.buttonContainer]}>
         <TouchableOpacity style={[styles.button]} onPress={onRowPress}>
@@ -75,10 +85,11 @@ const styles = ScaledSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    marginTop: "5@ms"
+    marginTop: "5@ms",
+    paddingBottom: "10@ms"
   },
   contentTitle: {
-    display: "flex",
+    // display: "flex",
     flexDirection: "row"
   },
   button: {
@@ -86,7 +97,8 @@ const styles = ScaledSheet.create({
     borderWidth: "1@ms"
   },
   buttonContainer: {
-    flex: 1
+    // flex: 1
+    flex: 2
   },
   textContainer: {
     flex: 7

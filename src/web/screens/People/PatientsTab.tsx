@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from "react";
-import { View, FlatList, Modal } from "react-native";
+import { View, FlatList, Modal, Text } from "react-native";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { PatientDetailsRow } from "components/RowComponents/PatientRows/PatientDetailsRow";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
@@ -34,6 +34,7 @@ import agentUXSA from "agents_implementation/agents/user-specific-assistant/UXSA
 import { setProcedureOngoing } from "ic-redux/actions/agents/actionCreator";
 import { useNetInfo } from "@react-native-community/netinfo";
 import i18n from "util/language/i18n";
+import { PatientInformation } from "./PatientDetailsScreen/PatientInformation";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -213,7 +214,7 @@ export const PatientsTab: FC = () => {
             title={i18n.t("TabTitle.Patients")}
             riskFilterTag
             onRiskFilterClick={filterPatients}
-            placeholder={i18n.t("Patient.SearchBarPlaceholder")}
+            placeholder={i18n.t("Patients.SearchBarPlaceholder")}
           />
           <FlatList
             showsVerticalScrollIndicator={false}
@@ -244,16 +245,16 @@ export const PatientsTab: FC = () => {
               }
             }}
           >
-            <Tab.Screen name={i18n.t("Patient.Overview")}>
+            <Tab.Screen name={i18n.t("Patients.Overview")}>
               {() => <PatientOverview patient={selectedPatient} />}
             </Tab.Screen>
-            <Tab.Screen name={i18n.t("Patient.Parameters")}>
+            <Tab.Screen name={i18n.t("Patients.Parameters")}>
               {() => <PatientParameter patient={selectedPatient} />}
             </Tab.Screen>
-            <Tab.Screen name={i18n.t("Patient.ICD/CRT")}>
+            <Tab.Screen name={i18n.t("Patients.ICD/CRT")}>
               {() => <PatientIcdCrt patient={selectedPatient} />}
             </Tab.Screen>
-            <Tab.Screen name={i18n.t("Patient.History")}>
+            <Tab.Screen name={i18n.t("Patients.History")}>
               {() => (
                 <PatientHistory
                   patient={selectedPatient}
@@ -268,6 +269,9 @@ export const PatientsTab: FC = () => {
                   }}
                 />
               )}
+            </Tab.Screen>
+            <Tab.Screen name={i18n.t("Patients.Info")}>
+              {() => <PatientInformation patientInfo={selectedPatient} />}
             </Tab.Screen>
           </Tab.Navigator>
         </View>

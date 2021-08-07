@@ -1,6 +1,6 @@
 import React, { FC, useState } from "react";
 import { RootState, select } from "util/useRedux";
-import { ms } from "react-native-size-matters";
+import { ms, ScaledSheet } from "react-native-size-matters";
 import { H3, H4 } from "components/Text/index";
 import { CardWrapper } from "web/screens/Home/CardWrapper";
 import { ReportSymptom } from "aws/models";
@@ -23,9 +23,15 @@ export const SymptomsCard: FC<SymptomProps> = () => {
     <CardWrapper maxHeight={ms(120)}>
       <H3
         text={i18n.t("Patient_Overview.Symptoms")}
-        style={{ fontWeight: "bold", color: colors.primaryTextColor }}
+        style={[
+          styles.cardTitle,
+          {
+            color: colors.primaryTextColor
+          }
+        ]}
       />
       <FlatList
+        style={{ paddingLeft: ms(10) }}
         showsVerticalScrollIndicator={false}
         data={mockSymptoms}
         renderItem={({ item }) => <H4 text={`  ${item.Name}`} style={null} />}
@@ -34,3 +40,7 @@ export const SymptomsCard: FC<SymptomProps> = () => {
     </CardWrapper>
   );
 };
+
+const styles = ScaledSheet.create({
+  cardTitle: { fontWeight: "bold", paddingLeft: ms(5), paddingBottom: ms(5) }
+});

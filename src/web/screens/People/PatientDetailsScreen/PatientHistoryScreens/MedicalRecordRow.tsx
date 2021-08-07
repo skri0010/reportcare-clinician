@@ -37,7 +37,8 @@ const styles = ScaledSheet.create({
     display: "flex",
     flexDirection: "row",
     marginTop: "10@ms",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
+    paddingBottom: "20@ms"
   },
   button: {
     borderRadius: "2@ms",

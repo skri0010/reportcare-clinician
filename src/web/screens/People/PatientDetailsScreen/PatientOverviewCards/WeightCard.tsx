@@ -20,11 +20,15 @@ export const WeightCard: FC<WeightProps> = ({ weight, targetWeight }) => {
     <CardWrapper maxHeight={ms(120)}>
       <H3
         text={i18n.t("Patient_Overview.Weight")}
-        style={{ fontWeight: "bold", color: colors.primaryTextColor }}
+        style={{
+          fontWeight: "bold",
+          color: colors.primaryTextColor,
+          paddingLeft: ms(5)
+        }}
       />
       <View style={styles.container}>
         <View style={styles.text}>
-          <H4
+          <H3
             text={weight}
             style={{ fontWeight: "bold", color: colors.primaryTextColor }}
           />

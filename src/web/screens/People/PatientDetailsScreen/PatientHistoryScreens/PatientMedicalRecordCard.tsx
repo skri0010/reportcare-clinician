@@ -1,6 +1,6 @@
 import React, { FC, useState } from "react";
 import { RootState, select } from "util/useRedux";
-import { ScaledSheet } from "react-native-size-matters";
+import { ScaledSheet, ms } from "react-native-size-matters";
 import { H3 } from "components/Text/index";
 import { CardWrapper } from "web/screens/Home/CardWrapper";
 import { mockMedicalRecord, MedicalRecords } from "mock/mockPatientDetails";
@@ -38,7 +38,12 @@ export const PatientMedicalRecordCard: FC<PatientMedicalRecordProps> = ({
       <View style={styles.title}>
         <H3
           text={i18n.t("Patient_History.MedicalRecords")}
-          style={[{ fontWeight: "bold", color: colors.primaryTextColor }]}
+          style={[
+            {
+              fontWeight: "bold",
+              color: colors.primaryTextColor
+            }
+          ]}
         />
         <TouchableOpacity
           onPress={onAddPress}
@@ -73,7 +78,8 @@ const styles = ScaledSheet.create({
   title: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
+    paddingBottom: "15@ms"
   },
   button: {
     width: "70@ms",
