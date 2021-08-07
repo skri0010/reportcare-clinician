@@ -15,6 +15,7 @@ import { useNetInfo } from "@react-native-community/netinfo";
 import agentAPI from "rc_agents/framework/AgentAPI";
 import Belief from "rc_agents/framework/base/Belief";
 import { AppAttributes, BeliefKeys } from "rc_agents/AgentEnums";
+import { getMainScreenHeaderStyle } from "util/getStyles";
 
 interface MainNavigationStackProps {
   setAuthState: (state: string) => void;
@@ -36,9 +37,7 @@ export const MainNavigationStack: FC<MainNavigationStackProps> = ({
   const [successToastShown, setSuccessToast] = useState(false);
   const [warningToastShown, setWarningToast] = useState(false);
 
-  const screenHeaderStyle = {
-    backgroundColor: colors.primaryBarColor
-  };
+  const screenHeaderStyle = getMainScreenHeaderStyle(colors);
 
   const signOut = async (): Promise<void> => {
     await Auth.signOut().then(async () => {
