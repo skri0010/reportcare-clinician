@@ -5,13 +5,13 @@ import {
   Activity,
   Precondition,
   agentAPI,
-  setRetryLaterTimeout
+  setRetryLaterTimeout,
+  ResettablePrecondition
 } from "rc_agents/framework";
 import {
   ActionFrameIDs,
   AppAttributes,
   BeliefKeys,
-  CommonAttributes,
   PatientAttributes,
   ProcedureAttributes,
   ProcedureConst,
@@ -38,9 +38,10 @@ class RetrievePendingPatientAssignments extends Activity {
    * @param {Agent} agent - context of the agent
    */
   async doActivity(agent: Agent): Promise<void> {
-    await super.doActivity(agent);
-    let pendingPatientAssignments: PatientAssignment[] | null | undefined;
+    // Reset preconditions
+    await super.doActivity(agent, [rule2]);
 
+    let pendingPatientAssignments: PatientAssignment[] | null | undefined;
     try {
       // Get locally stored clinicianId
       const clinicianId = await AsyncStorage.getItem(
@@ -103,20 +104,6 @@ class RetrievePendingPatientAssignments extends Activity {
           store.dispatch(setFetchNewPatientAssignments(true))
         );
       }
-
-      // Update Beliefs
-      // Reset precondition
-      agent.addBelief(
-        new Belief(
-          BeliefKeys.PATIENT,
-          PatientAttributes.RETRIEVE_PENDING_PATIENT_ASSIGNMENTS,
-          false
-        )
-      );
-      // Set last activity
-      agent.addBelief(
-        new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
-      );
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
@@ -130,7 +117,7 @@ const rule1 = new Precondition(
   ProcedureAttributes.SRD,
   ProcedureConst.ACTIVE
 );
-const rule2 = new Precondition(
+const rule2 = new ResettablePrecondition(
   BeliefKeys.PATIENT,
   PatientAttributes.RETRIEVE_PENDING_PATIENT_ASSIGNMENTS,
   true

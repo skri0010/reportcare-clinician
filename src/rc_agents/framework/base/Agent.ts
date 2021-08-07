@@ -302,9 +302,18 @@ class Agent {
    */
   async startActivity(): Promise<void> {
     if (this.availableActions.length > 0) {
+      // If working, do activity and set belief for last activity
       this.working = true;
       const activityNode = this.availableActions.shift()!;
-      await activityNode.getActivity().doActivity(this);
+      const activity = activityNode.getActivity();
+      await activity.doActivity(this);
+      this.addBelief(
+        new Belief(
+          this.getID(),
+          CommonAttributes.LAST_ACTIVITY,
+          activity.getID()
+        )
+      );
     }
     this.working = false;
 

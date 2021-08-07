@@ -3,7 +3,8 @@ import {
   Agent,
   Belief,
   Communicate,
-  Precondition
+  Precondition,
+  ResettablePrecondition
 } from "rc_agents/framework";
 import {
   ActionFrameIDs,
@@ -41,20 +42,7 @@ class RequestPendingPatientAssignments extends Communicate {
    */
   async doActivity(agent: Agent): Promise<void> {
     try {
-      await super.doActivity(agent);
-      // Update Beliefs
-      // Reset precondition
-      agent.addBelief(
-        new Belief(
-          BeliefKeys.PATIENT,
-          PatientAttributes.PENDING_PATIENT_ASSIGNMENTS_RETRIEVED,
-          false
-        )
-      );
-      // Set last activity
-      agent.addBelief(
-        new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
-      );
+      await super.doActivity(agent, [rule3]);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
@@ -73,7 +61,7 @@ const rule2 = new Precondition(
   CommonAttributes.LAST_ACTIVITY,
   ActionFrameIDs.DTA.RETRIEVE_PENDING_PATIENT_ASSIGNMENTS
 );
-const rule3 = new Precondition(
+const rule3 = new ResettablePrecondition(
   BeliefKeys.PATIENT,
   PatientAttributes.PENDING_PATIENT_ASSIGNMENTS_RETRIEVED,
   true

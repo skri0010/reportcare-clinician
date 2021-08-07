@@ -4,6 +4,7 @@ import messageChannel from "../communication/MessageChannel";
 import Activity from "./Activity";
 import Agent from "./Agent";
 import Belief from "./Belief";
+import ResettablePrecondition from "./ResettablePrecondition";
 
 /**
  * Class representing the broadcast activity
@@ -28,9 +29,13 @@ class Broadcast extends Activity {
   /**
    * Perform this activity
    * @param {Agent} agent - agent executing this activity
+   * @param {reset} ResettablePrecondition - preconditions to reset
    */
-  async doActivity(agent: Agent): Promise<void> {
-    super.doActivity(agent);
+  async doActivity(
+    agent: Agent,
+    reset?: ResettablePrecondition[]
+  ): Promise<void> {
+    super.doActivity(agent, reset);
     const sender = agent.getID();
     const receivers = agentAPI.getAgents();
     for (let i = 0; i < receivers.length; i += 1) {

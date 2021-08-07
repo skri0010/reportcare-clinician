@@ -3,12 +3,12 @@ import {
   Agent,
   Belief,
   Activity,
-  Precondition
+  Precondition,
+  ResettablePrecondition
 } from "rc_agents/framework";
 import {
   ActionFrameIDs,
   BeliefKeys,
-  CommonAttributes,
   PatientAttributes,
   ProcedureAttributes,
   ProcedureConst
@@ -31,7 +31,7 @@ class RetrievePendingPatientAssignments extends Activity {
    * @param {Agent} agent - context of the agent
    */
   async doActivity(agent: Agent): Promise<void> {
-    await super.doActivity(agent);
+    await super.doActivity(agent, [rule2]);
 
     const pendingPatientAssignments =
       agentAPI.getFacts()[BeliefKeys.PATIENT]?.[
@@ -51,19 +51,8 @@ class RetrievePendingPatientAssignments extends Activity {
         ProcedureAttributes.SRD,
         ProcedureConst.INACTIVE
       ),
-      false
-    );
-    // Reset precondition
-    agent.addBelief(
-      new Belief(
-        BeliefKeys.PATIENT,
-        PatientAttributes.PENDING_PATIENT_ASSIGNMENTS_RETRIEVED,
-        false
-      )
-    );
-    // Set last activity
-    agent.addBelief(
-      new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
+      true,
+      true
     );
   }
 }
@@ -74,7 +63,7 @@ const rule1 = new Precondition(
   ProcedureAttributes.SRD,
   ProcedureConst.ACTIVE
 );
-const rule2 = new Precondition(
+const rule2 = new ResettablePrecondition(
   BeliefKeys.PATIENT,
   PatientAttributes.PENDING_PATIENT_ASSIGNMENTS_RETRIEVED,
   true
