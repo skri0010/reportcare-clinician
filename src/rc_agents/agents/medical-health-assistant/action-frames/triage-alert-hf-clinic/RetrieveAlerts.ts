@@ -258,10 +258,8 @@ const rule2 = new Precondition(
 );
 
 // Actionframe of the RetrieveAlerts class
-const af_RetrieveAlerts = new Actionframe(
+export const af_RetrieveAlerts = new Actionframe(
   `AF_${ActionFrameIDs.MHA.RETRIEVE_ALERTS}`,
   [rule1, rule2],
   new RetrieveAlerts()
 );
-
-export default af_RetrieveAlerts;

@@ -69,10 +69,8 @@ const rule2 = new Precondition(
 );
 
 // Actionframe of the RequestAlertsSort class
-const af_RequestAlertsSort = new Actionframe(
+export const af_RequestAlertsSort = new Actionframe(
   `AF_${ActionFrameIDs.MHA.REQUEST_ALERTS_SORT}`,
   [rule1, rule2],
   new RequestAlertsSort()
 );
-
-export default af_RequestAlertsSort;

@@ -68,10 +68,8 @@ const rule2 = new Precondition(
 );
 
 // Actionframe of the RequestAlertInfos class
-const af_RequestAlertInfos = new Actionframe(
+export const af_RequestAlertInfos = new Actionframe(
   `AF_${ActionFrameIDs.MHA.REQUEST_ALERT_INFOS}`,
   [rule1, rule2],
   new RequestAlertInfos()
 );
-
-export default af_RequestAlertInfos;
