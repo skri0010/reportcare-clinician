@@ -20,11 +20,21 @@ export const PatientOverview: FC<PatientParameterProps> = () => {
   return (
     <ScreenWrapper>
       <View style={styles.container}>
-        <BloodPressureCard systolic="23" dystolic="130" />
-        <MedicationTakenCard medications={[]} />
-        <OxygenSaturationCard oxySatValue="90" />
-        <WeightCard weight="60" targetWeight="60" />
-        <SymptomsCard symptoms={[]} />
+        <View style={styles.regular}>
+          <BloodPressureCard systolic="23" dystolic="130" />
+        </View>
+        <View style={styles.regular}>
+          <MedicationTakenCard medications={[]} />
+        </View>
+        <View style={styles.combined}>
+          <OxygenSaturationCard oxySatValue="90" />
+        </View>
+        <View style={styles.combined}>
+          <WeightCard weight="60" targetWeight="60" />
+        </View>
+        <View style={styles.regular}>
+          <SymptomsCard symptoms={[]} />
+        </View>
       </View>
     </ScreenWrapper>
   );
@@ -34,7 +44,15 @@ const styles = ScaledSheet.create({
   container: {
     display: "flex",
     flexDirection: "row",
-    flexWrap: "wrap",
-    paddingBottom: "20@ms"
+    flexWrap: "wrap"
+  },
+  regular: {
+    flexGrow: 1,
+    flexShrink: 0,
+    flexBasis: "50%"
+  },
+  combined: {
+    flexBasis: "25%",
+    flexShrink: 0
   }
 });

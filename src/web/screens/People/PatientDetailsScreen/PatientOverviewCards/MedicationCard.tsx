@@ -24,7 +24,7 @@ export const MedicationTakenCard: FC<MedicationTakenProps> = () => {
     <CardWrapper maxHeight={ms(120)}>
       <View>
         <H3
-          text={i18n.t("Patient_Overview.MedicationTaken")}
+          text={i18n.t("Patient_Overview.Medications")}
           style={{
             fontWeight: "bold",
             color: colors.primaryTextColor,

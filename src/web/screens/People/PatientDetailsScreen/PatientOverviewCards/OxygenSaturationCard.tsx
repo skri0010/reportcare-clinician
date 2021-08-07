@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
 import { View } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
-import { H3, H4 } from "components/Text/index";
+import { H1, H3, H4 } from "components/Text/index";
 import { CardWrapper } from "web/screens/Home/CardWrapper";
 import i18n from "util/language/i18n";
 
@@ -18,18 +18,19 @@ export const OxygenSaturationCard: FC<OxygenSaturationProps> = ({
   }));
 
   return (
-    <CardWrapper maxHeight={ms(120)}>
+    <CardWrapper maxHeight={ms(120)} minWidthRequired={false}>
       <H3
         text={i18n.t("Patient_Overview.OxygenSaturation")}
         style={{
           fontWeight: "bold",
           color: colors.primaryTextColor,
-          paddingLeft: ms(5)
+          paddingLeft: ms(5),
+          flexWrap: "wrap"
         }}
       />
       <View style={styles.container}>
         <View style={styles.text}>
-          <H3
+          <H1
             text={oxySatValue}
             style={{ fontWeight: "bold", color: colors.primaryTextColor }}
           />

@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
 import { View } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
-import { H3, H4 } from "components/Text/index";
+import { H1, H3, H4 } from "components/Text/index";
 import { CardWrapper } from "web/screens/Home/CardWrapper";
 import i18n from "util/language/i18n";
 
@@ -32,7 +32,7 @@ export const BloodPressureCard: FC<BloodPressureProps> = ({
       <View style={styles.container}>
         <View style={styles.text}>
           <H4 text={i18n.t("Patient_Overview.Systolic")} style={null} />
-          <H3
+          <H1
             text={systolic}
             style={{ fontWeight: "bold", color: colors.primaryTextColor }}
           />
@@ -40,7 +40,7 @@ export const BloodPressureCard: FC<BloodPressureProps> = ({
         </View>
         <View style={styles.text}>
           <H4 text={i18n.t("Patient_Overview.Diastolic")} style={null} />
-          <H3
+          <H1
             text={dystolic}
             style={{ fontWeight: "bold", color: colors.primaryTextColor }}
           />
