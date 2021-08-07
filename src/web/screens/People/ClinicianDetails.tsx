@@ -18,9 +18,9 @@ export const ClinicianDetails: FC<ClinicianDetails> = ({
 
     return (
         <CardWrapper maxHeight={ms(120)}>
-            <View style={styles.rowStyle}>
+            <View style={{ display: "flex", flexDirection: "column" }}>
                 <H3 text="Clinician Info:" style={{ fontWeight:"bold", color: colors.primaryTextColor }}/>
-                <View style={{ display: "flex", flexDirection: "row" }}>
+                <View style={styles.rowStyle}>
                     <H4 text="Name: " style={{ fontWeight: "bold", color: colors.primaryTextColor }}/>
                     <H4 text={generalDetails.name} style={{ color: colors.primaryTextColor }}/>
                 </View>
