@@ -120,10 +120,8 @@ const rule2 = new Precondition(
 );
 
 // Action Frame for RetrieveRole class
-const af_RetrieveRole = new Actionframe(
+export const af_RetrieveRole = new Actionframe(
   `AF_${ActionFrameIDs.UXSA.RETRIEVE_ROLE}`,
   [rule1, rule2],
   new RetrieveRole()
 );
-
-export default af_RetrieveRole;

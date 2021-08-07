@@ -142,10 +142,8 @@ const rule2 = new Precondition(
 );
 
 // Action Frame for DisplayPendingAlertCount class
-const af_DisplayPendingAlertCount = new Actionframe(
+export const af_DisplayPendingAlertCount = new Actionframe(
   `AF_${ActionFrameIDs.UXSA.DISPLAY_PENDING_ALERT_COUNT}`,
   [rule1, rule2],
   new DisplayPendingAlertCount()
 );
-
-export default af_DisplayPendingAlertCount;

@@ -99,10 +99,8 @@ const rule2 = new Precondition(
 );
 
 // Action Frame for DisplayAlerts class
-const af_DisplayAlerts = new Actionframe(
+export const af_DisplayAlerts = new Actionframe(
   `AF_${ActionFrameIDs.UXSA.DISPLAY_ALERTS}`,
   [rule1, rule2],
   new DisplayAlerts()
 );
-
-export default af_DisplayAlerts;

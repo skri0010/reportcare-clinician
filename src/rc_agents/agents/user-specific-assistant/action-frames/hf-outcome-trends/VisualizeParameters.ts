@@ -105,10 +105,8 @@ const rule2 = new Precondition(
 );
 
 // Action Frame for VisualizeParameters class
-const af_VisualizeParameters = new Actionframe(
+export const af_VisualizeParameters = new Actionframe(
   `AF_${ActionFrameIDs.UXSA.VISUALIZE_PARAMETERS}`,
   [rule1, rule2],
   new VisualizeParameters()
 );
-
-export default af_VisualizeParameters;

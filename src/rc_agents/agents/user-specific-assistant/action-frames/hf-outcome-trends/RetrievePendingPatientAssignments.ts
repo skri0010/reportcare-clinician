@@ -81,10 +81,8 @@ const rule2 = new Precondition(
 );
 
 // Action Frame for RetrievePendingPatientAssignments class
-const af_RetrievePendingPatientAssignments = new Actionframe(
+export const af_RetrievePendingPatientAssignments = new Actionframe(
   `AF_${ActionFrameIDs.UXSA.RETRIEVE_PENDING_PATIENT_ASSIGNMENTS}`,
   [rule1, rule2],
   new RetrievePendingPatientAssignments()
 );
-
-export { af_RetrievePendingPatientAssignments };

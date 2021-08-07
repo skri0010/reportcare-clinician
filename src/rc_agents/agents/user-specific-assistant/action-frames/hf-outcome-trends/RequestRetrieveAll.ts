@@ -66,10 +66,8 @@ const rule2 = new Precondition(
 );
 
 // Actionframe of the RequestRetrieveAll class
-const af_RequestRetrieveAll = new Actionframe(
+export const af_RequestRetrieveAll = new Actionframe(
   `AF_${ActionFrameIDs.UXSA.REQUEST_RETRIEVE_ALL}`,
   [rule1, rule2],
   new RequestRetrieveAll()
 );
-
-export default af_RequestRetrieveAll;
