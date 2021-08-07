@@ -7,8 +7,8 @@ import {
   ActionFrameIDs,
   AgentIDs,
   BeliefKeys,
+  ClinicianAttributes,
   CommonAttributes,
-  PatientAttributes,
   Performative,
   ProcedureAttributes,
   ProcedureConst
@@ -28,8 +28,8 @@ class RequestAlertsDisplay extends Communicate {
       Performative.REQUEST,
       // Triggers DisplayAlerts action frame of UXSA
       new Belief(
-        BeliefKeys.PATIENT,
-        PatientAttributes.ALERT_INFOS_RETRIEVED,
+        BeliefKeys.CLINICIAN,
+        ClinicianAttributes.ALERT_INFOS_RETRIEVED,
         true
       ),
       [AgentIDs.UXSA]

@@ -55,6 +55,8 @@ export const ActionFrameIDs = {
     RETRIEVE_ROLE_PATIENTS: "RetrieveRolePatients",
     RETRIEVE_PATIENT_DETAILS: "RetrievePatientDetails",
     REQUEST_DETAILS_DISPLAY: "RequestDetailsDisplay",
+    RETRIEVE_PENDING_ALERT_COUNT: "RetrievePendingAlertCount",
+    REQUEST_PENDING_ALERT_COUNT_DISPLAY: "RequestPendingAlertCountDisplay",
     RETRIEVE_ALERT_INFOS: "RetrieveAlertInfos",
     REQUEST_ALERTS_DISPLAY: "RequestAlertsDisplay",
 
@@ -68,6 +70,7 @@ export const ActionFrameIDs = {
     RETRIEVE_PENDING_PATIENT_ASSIGNMENTS: "RetrievePendingPatientAssignments",
     REQUEST_RETRIEVE_ALL: "RequestRetrieveAll",
     VISUALIZE_PARAMETERS: "VisualizeParameters",
+    DISPLAY_PENDING_ALERT_COUNT: "DisplayPendingAlertCount",
     DISPLAY_ALERTS: "DisplayAlerts"
   },
   NWA: {
@@ -75,11 +78,11 @@ export const ActionFrameIDs = {
     SYNC_PATIENT_ASSIGNMENT_RESOLUTIONS: "SyncPatientAssignmentResolutions"
   },
   ALA: {
-    SORT_ALERTS: "SortAlerts",
-    REQUEST_ALERT_INFOS: "RequestAlertInfos"
+    SORT_ALERTS: "SortAlerts"
   },
   MHA: {
-    RECEIVE_ALERTS: "ReceiveAlerts",
+    RETRIEVE_ALERTS: "RetrieveAlerts",
+    REQUEST_ALERT_INFOS: "RequestAlertInfos",
     REQUEST_ALERTS_SORT: "RequestAlertsSort"
   }
 };
@@ -123,7 +126,19 @@ export enum ClinicianAttributes {
   CONFIGURED = "Configured",
   RETRIEVE_ENTRY = "RetrieveEntry",
   ROLE = "Role",
-  RETRIEVE_ROLE = "RetrieveRole"
+  RETRIEVE_ROLE = "RetrieveRole",
+  RETRIEVE_PENDING_ALERT_COUNT = "RetrievePendingAlertCount",
+  PENDING_ALERT_COUNT_RETRIEVED = "PendingAlertCountRetrieved",
+  ALERT_STATUS = "AlertStatus",
+  ALERT_RISK_LEVEL = "AlertRiskLevel",
+  ALERTS = "Alerts",
+  RETRIEVE_ALERTS = "RetrieveAlerts",
+  SORT_ALERTS = "SortAlerts",
+  ALERTS_TO_SORT = "AlertsToSort",
+  SORTED_ALERTS = "SortedAlerts",
+  ALERTS_SORTED = "AlertsSorted",
+  ALERT_INFOS = "AlertInfos",
+  ALERT_INFOS_RETRIEVED = "AlertInfosRetrieved"
 }
 
 // Attributes for PATIENT key
@@ -134,22 +149,12 @@ export enum PatientAttributes {
   DETAILS_RETRIEVED = "DetailsRetrieved",
   VIEW_DETAILS = "ViewDetails",
   DETAILS = "Details",
-
   // Patient Assignments
   PENDING_PATIENT_ASSIGNMENTS = "PendingPatientAssignments",
   RETRIEVE_PENDING_PATIENT_ASSIGNMENTS = "RetrievePendingPatientAssignments",
   PENDING_PATIENT_ASSIGNMENTS_RETRIEVED = "PendingPatientAssignmentsRetrieved",
   PATIENT_ASSIGNMENT_RESOLUTION = "PatientAssignmentResolution",
-  PENDING_RESOLVE_PATIENT_ASSIGNMENT = "PendingResolvePatientAssignment",
-
-  // Alerts
-  INCOMING_ALERTS = "IncomingAlerts",
-  NEW_ALERTS = "NewAlerts",
-  ALERTS_TO_SORT = "AlertsToSort",
-  SORTED_ALERTS = "SortedAlerts",
-  ALERTS_SORTED = "AlertsSorted",
-  ALERT_INFOS = "AlertInfos",
-  ALERT_INFOS_RETRIEVED = "AlertInfosRetrieved"
+  PENDING_RESOLVE_PATIENT_ASSIGNMENT = "PendingResolvePatientAssignment"
 }
 
 // Keys for locally storing data in AsyncStorage

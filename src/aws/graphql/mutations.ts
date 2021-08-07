@@ -832,6 +832,7 @@ export const createAlert = /* GraphQL */ `
     createAlert(input: $input, condition: $condition) {
       id
       patientID
+      patientName
       dateTime
       summary
       colorCode
@@ -869,6 +870,7 @@ export const createAlert = /* GraphQL */ `
         updatedAt
         owner
       }
+      pending
       completed
       owner
       _version
@@ -887,6 +889,7 @@ export const updateAlert = /* GraphQL */ `
     updateAlert(input: $input, condition: $condition) {
       id
       patientID
+      patientName
       dateTime
       summary
       colorCode
@@ -924,6 +927,7 @@ export const updateAlert = /* GraphQL */ `
         updatedAt
         owner
       }
+      pending
       completed
       owner
       _version
@@ -942,6 +946,7 @@ export const deleteAlert = /* GraphQL */ `
     deleteAlert(input: $input, condition: $condition) {
       id
       patientID
+      patientName
       dateTime
       summary
       colorCode
@@ -979,6 +984,7 @@ export const deleteAlert = /* GraphQL */ `
         updatedAt
         owner
       }
+      pending
       completed
       owner
       _version
@@ -998,17 +1004,20 @@ export const createTodo = /* GraphQL */ `
       id
       clinicianID
       title
+      patientName
       notes
       lastModified
       alertID
       alert {
         id
         patientID
+        patientName
         dateTime
         summary
         colorCode
         vitalsReportID
         symptomReportID
+        pending
         completed
         owner
         _version
@@ -1036,17 +1045,20 @@ export const updateTodo = /* GraphQL */ `
       id
       clinicianID
       title
+      patientName
       notes
       lastModified
       alertID
       alert {
         id
         patientID
+        patientName
         dateTime
         summary
         colorCode
         vitalsReportID
         symptomReportID
+        pending
         completed
         owner
         _version
@@ -1074,17 +1086,20 @@ export const deleteTodo = /* GraphQL */ `
       id
       clinicianID
       title
+      patientName
       notes
       lastModified
       alertID
       alert {
         id
         patientID
+        patientName
         dateTime
         summary
         colorCode
         vitalsReportID
         symptomReportID
+        pending
         completed
         owner
         _version

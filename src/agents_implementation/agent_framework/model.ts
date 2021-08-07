@@ -45,10 +45,20 @@ export interface PatientAssignmentResolution {
   _version: number;
 }
 
+export interface PendingAlertCount {
+  highRisk: number;
+  mediumRisk: number;
+  lowRisk: number;
+  unassignedRisk: number;
+}
+
 export interface AlertInfo {
   id: string;
   patientId: string;
-  patientInfo?: PatientInfo;
+  patientName: string;
+  riskLevel?: RiskLevel;
+  NHYAClass?: string;
+  diagnosis?: string;
   dateTime: string;
   summary: string;
   vitals?: ReportVitals;
@@ -57,7 +67,6 @@ export interface AlertInfo {
   medicationQuantity?: string;
   activityDuringAlert?: string;
   completed: boolean;
-  riskLevel?: RiskLevel;
 }
 
 export interface NewTodoInput {

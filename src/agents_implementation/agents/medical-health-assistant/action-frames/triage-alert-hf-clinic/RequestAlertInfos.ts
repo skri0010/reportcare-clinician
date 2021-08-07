@@ -7,12 +7,14 @@ import {
   ActionFrameIDs,
   AgentIDs,
   BeliefKeys,
+  ClinicianAttributes,
   CommonAttributes,
-  PatientAttributes,
   Performative,
   ProcedureAttributes,
   ProcedureConst
 } from "../../../../agent_framework/AgentEnums";
+
+// LS-TODO: This is previously an action frame for ALA with condition LastActivity = SortAlerts.
 
 /**
  * Class to represent the activity for requesting patient's information associated with alerts.
@@ -24,10 +26,10 @@ class RequestAlertInfos extends Communicate {
    */
   constructor() {
     super(
-      ActionFrameIDs.ALA.REQUEST_ALERT_INFOS,
+      ActionFrameIDs.MHA.REQUEST_ALERT_INFOS,
       Performative.REQUEST,
       // Triggers RetrieveAlertInfos action frame of DTA
-      new Belief(BeliefKeys.PATIENT, PatientAttributes.ALERTS_SORTED, true),
+      new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.ALERTS_SORTED, true),
       [AgentIDs.DTA]
     );
   }
@@ -58,14 +60,14 @@ const rule1 = new Precondition(
   ProcedureConst.ACTIVE
 );
 const rule2 = new Precondition(
-  AgentIDs.ALA,
+  AgentIDs.MHA,
   CommonAttributes.LAST_ACTIVITY,
-  ActionFrameIDs.ALA.SORT_ALERTS
+  ActionFrameIDs.MHA.RETRIEVE_ALERTS
 );
 
 // Actionframe of the RequestAlertInfos class
 const af_RequestAlertInfos = new Actionframe(
-  `AF_${ActionFrameIDs.ALA.REQUEST_ALERT_INFOS}`,
+  `AF_${ActionFrameIDs.MHA.REQUEST_ALERT_INFOS}`,
   [rule1, rule2],
   new RequestAlertInfos()
 );

@@ -9,6 +9,7 @@ import {
   AgentIDs,
   CommonAttributes
 } from "agents_implementation/agent_framework/AgentEnums";
+import af_DisplayPendingAlertCount from "./action-frames/triage-alert-hf-clinic/DisplayPendingAlertCount";
 
 // Initial Beliefs of Agent
 const belief1 = new Belief(AgentIDs.UXSA, CommonAttributes.LAST_ACTIVITY, null);
@@ -28,6 +29,7 @@ const agentUXSA = new Agent(
     af_RetrievePendingPatientAssignments,
 
     // AT-CP
+    af_DisplayPendingAlertCount,
     af_DisplayAlerts
   ], // action frame
   [belief1] // beliefs

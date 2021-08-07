@@ -57,12 +57,6 @@ class RetrieveEntryData extends Activity {
         ];
 
       if (clinicianUsername) {
-        // Removes username from facts
-        agentAPI.addFact(
-          new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.USERNAME, null),
-          false
-        );
-
         // Retrieve user's entry in DynamoDB table
         const query = await getClinicianInfo({
           clinicianID: clinicianUsername
@@ -165,6 +159,16 @@ class RetrieveEntryData extends Activity {
             [AsyncStorageKeys.CLINICIAN_ID, clinician.clinicianID],
             [AsyncStorageKeys.CLINICIAN, JSON.stringify(clinician)]
           ]);
+
+          // Removes username from facts
+          agentAPI.addFact(
+            new Belief(
+              BeliefKeys.CLINICIAN,
+              ClinicianAttributes.USERNAME,
+              null
+            ),
+            false
+          );
 
           // Dispatch to front end that sign in was successful
           store.dispatch(setProcedureSuccessful(true));

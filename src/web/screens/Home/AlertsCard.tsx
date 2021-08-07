@@ -7,6 +7,16 @@ import { AlertButton } from "components/Buttons/AlertButton";
 import { H4, H6 } from "components/Text";
 import { CardWrapper } from "./CardWrapper";
 import i18n from "util/language/i18n";
+import agentMHA from "agents_implementation/agents/medical-health-assistant/MHA";
+import Belief from "agents_implementation/agent_framework/base/Belief";
+import {
+  BeliefKeys,
+  ClinicianAttributes,
+  ProcedureAttributes,
+  ProcedureConst
+} from "agents_implementation/agent_framework/AgentEnums";
+import agentAPI from "agents_implementation/agent_framework/AgentAPI";
+import { AlertStatus } from "aws";
 
 interface AlertsCardProps {
   flex?: number;
@@ -14,39 +24,62 @@ interface AlertsCardProps {
 }
 
 export const AlertsCard: FC<AlertsCardProps> = ({ flex = 1, maxHeight }) => {
-  const {
-    colors,
-    newHighRiskAlerts,
-    newMediumRiskAlerts,
-    newLowRiskAlerts,
-    newUnassignedRiskAlerts
-  } = select((state: RootState) => ({
+  const { colors, pendingAlertCount } = select((state: RootState) => ({
     colors: state.settings.colors,
-    fonts: state.settings.fonts,
-    newHighRiskAlerts: state.agents.newHighRiskAlerts,
-    newMediumRiskAlerts: state.agents.newMediumRiskAlerts,
-    newLowRiskAlerts: state.agents.newLowRiskAlerts,
-    newUnassignedRiskAlerts: state.agents.newUnassignedRiskAlerts
+    pendingAlertCount: state.agents.pendingAlertCount
   }));
 
   const titleColor = { color: colors.primaryTextColor } as TextStyle;
   const detailsColors = { color: colors.secondaryTextColor } as TextStyle;
 
-  const [pendingAlertsCount, setPendingAlertsCount] = useState(0);
+  const [remainingAlert, setRemainingAlert] = useState(0);
 
   useEffect(() => {
-    setPendingAlertsCount(
-      newHighRiskAlerts.length +
-        newMediumRiskAlerts.length +
-        newLowRiskAlerts.length +
-        newUnassignedRiskAlerts.length
+    setRemainingAlert(
+      pendingAlertCount.highRisk +
+        pendingAlertCount.mediumRisk +
+        pendingAlertCount.lowRisk +
+        pendingAlertCount.unassignedRisk
     );
-  }, [
-    newHighRiskAlerts,
-    newMediumRiskAlerts,
-    newLowRiskAlerts,
-    newUnassignedRiskAlerts
-  ]);
+  }, [pendingAlertCount]);
+
+  const getPendingRiskAlerts = (
+    alertStatus: AlertStatus,
+    riskLevel: RiskLevel
+  ) => {
+    // Adds alert status and risk level to be used by agents
+    agentAPI.addFact(
+      new Belief(
+        BeliefKeys.CLINICIAN,
+        ClinicianAttributes.ALERT_STATUS,
+        alertStatus
+      ),
+      false
+    );
+    agentAPI.addFact(
+      new Belief(
+        BeliefKeys.CLINICIAN,
+        ClinicianAttributes.ALERT_RISK_LEVEL,
+        riskLevel
+      ),
+      false
+    );
+    // Triggers MHA to retrieve alerts
+    agentMHA.addBelief(
+      new Belief(
+        BeliefKeys.CLINICIAN,
+        ClinicianAttributes.RETRIEVE_ALERTS,
+        true
+      )
+    );
+    agentAPI.addFact(
+      new Belief(
+        BeliefKeys.PROCEDURE,
+        ProcedureAttributes.AT_CP,
+        ProcedureConst.ACTIVE
+      )
+    );
+  };
 
   const iconSize = ms(15);
 
@@ -55,7 +88,7 @@ export const AlertsCard: FC<AlertsCardProps> = ({ flex = 1, maxHeight }) => {
       <View style={styles.titleContainer}>
         <H4 text={i18n.t("Home.Alerts")} style={[styles.title, titleColor]} />
         <H6
-          text={`(${pendingAlertsCount} remaining)`}
+          text={`(${pendingAlertCount} remaining)`}
           style={[styles.title, detailsColors]}
         />
       </View>
@@ -64,16 +97,52 @@ export const AlertsCard: FC<AlertsCardProps> = ({ flex = 1, maxHeight }) => {
         {/* JH-TODO: Remove hardcoding of alertCount */}
         <AlertButton
           riskLevel={RiskLevel.HIGH}
-          alertCount={1}
+          alertCount={
+            pendingAlertCount.highRisk > 0
+              ? pendingAlertCount.highRisk
+              : undefined
+          }
           iconSize={iconSize}
+          onPress={() =>
+            getPendingRiskAlerts(AlertStatus.PENDING, RiskLevel.HIGH)
+          }
         />
         <AlertButton
           riskLevel={RiskLevel.MEDIUM}
-          alertCount={1}
+          alertCount={
+            pendingAlertCount.mediumRisk > 0
+              ? pendingAlertCount.mediumRisk
+              : undefined
+          }
           iconSize={iconSize}
+          onPress={() =>
+            getPendingRiskAlerts(AlertStatus.PENDING, RiskLevel.MEDIUM)
+          }
         />
-        <AlertButton riskLevel={RiskLevel.LOW} iconSize={iconSize} />
-        <AlertButton riskLevel={RiskLevel.UNASSIGNED} iconSize={iconSize} />
+        <AlertButton
+          riskLevel={RiskLevel.LOW}
+          alertCount={
+            pendingAlertCount.lowRisk > 0
+              ? pendingAlertCount.lowRisk
+              : undefined
+          }
+          iconSize={iconSize}
+          onPress={() =>
+            getPendingRiskAlerts(AlertStatus.PENDING, RiskLevel.LOW)
+          }
+        />
+        <AlertButton
+          riskLevel={RiskLevel.UNASSIGNED}
+          iconSize={iconSize}
+          alertCount={
+            pendingAlertCount.unassignedRisk > 0
+              ? pendingAlertCount.unassignedRisk
+              : undefined
+          }
+          onPress={() =>
+            getPendingRiskAlerts(AlertStatus.PENDING, RiskLevel.UNASSIGNED)
+          }
+        />
       </View>
     </CardWrapper>
   );

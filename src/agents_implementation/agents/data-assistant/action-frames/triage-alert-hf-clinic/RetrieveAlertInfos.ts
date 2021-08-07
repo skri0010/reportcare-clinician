@@ -8,12 +8,12 @@ import {
   AppAttributes,
   AsyncStorageKeys,
   BeliefKeys,
+  ClinicianAttributes,
   CommonAttributes,
-  PatientAttributes,
   ProcedureAttributes,
   ProcedureConst
 } from "../../../../agent_framework/AgentEnums";
-import { AlertInfo } from "../../../../agent_framework/model";
+import { AlertColorCode, AlertInfo } from "../../../../agent_framework/model";
 import agentAPI from "../../../../agent_framework/AgentAPI";
 import {
   listMedCompliantsByDate,
@@ -21,25 +21,12 @@ import {
   getActivityInfo,
   getReportVitals,
   getReportSymptom,
-  getPatientInfo
+  getPatientInfo,
+  AlertStatus
 } from "aws";
 import { Alert, ModelSortDirection } from "aws/API";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { RiskLevel } from "models/RiskLevel";
-
-interface AlertInfos {
-  highRisk: AlertInfo[];
-  mediumRisk: AlertInfo[];
-  lowRisk: AlertInfo[];
-  unassignedRisk: AlertInfo[];
-}
-
-interface SortedAlerts {
-  highRisk: Alert[];
-  mediumRisk: Alert[];
-  lowRisk: Alert[];
-  unassignedRisk: Alert[];
-}
 
 interface LocalAlerts {
   [k: string]: string;
@@ -63,110 +50,32 @@ class RetrieveAlertInfos extends Activity {
 
     // Update Beliefs
     agent.addBelief(
-      new Belief(BeliefKeys.PATIENT, PatientAttributes.ALERTS_SORTED, false)
-    );
-    agent.addBelief(
-      new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
+      new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.ALERTS_SORTED, false)
     );
 
     try {
-      // Gets sorted alerts from facts
-      const sortedAlerts: SortedAlerts =
-        agentAPI.getFacts()[BeliefKeys.PATIENT]?.[
-          PatientAttributes.SORTED_ALERTS
-        ];
+      const facts = agentAPI.getFacts();
+      let alertInfos: AlertInfo[] = [];
 
-      // Checks whether device is online
-      const isOnline =
-        agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE];
+      if (facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
+        // Device is online: get alerts from facts
+        const alerts: Alert[] =
+          facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.SORTED_ALERTS];
 
-      // Retrieves local alerts to save new alerts locally
-      const alertsStr = await AsyncStorage.getItem(AsyncStorageKeys.ALERTS);
-      let localAlerts: LocalAlerts | null = null;
-      if (alertsStr) {
-        localAlerts = JSON.parse(alertsStr);
-      }
-
-      // Device is online
-      if (sortedAlerts && isOnline) {
-        const alertInfos: AlertInfos = {
-          highRisk: [],
-          mediumRisk: [],
-          lowRisk: [],
-          unassignedRisk: []
-        };
-
-        if (sortedAlerts.highRisk.length > 0) {
-          await Promise.all(
-            sortedAlerts.highRisk.map(async (alert) => {
-              const result = await this.queryAlertInfo(alert, localAlerts);
-              if (result && result.updatedLocalAlerts) {
-                localAlerts = result.updatedLocalAlerts;
-              }
-              if (result && result.alertInfo) {
-                result.alertInfo.riskLevel = RiskLevel.HIGH;
-                if (alertInfos.highRisk) {
-                  alertInfos.highRisk.push(result.alertInfo);
-                } else {
-                  alertInfos.highRisk = [result.alertInfo];
-                }
-              }
-            })
-          );
+        // Retrieves local alerts to save new alerts locally
+        const alertsStr = await AsyncStorage.getItem(AsyncStorageKeys.ALERTS);
+        let localAlerts: LocalAlerts | null = null;
+        if (alertsStr) {
+          localAlerts = JSON.parse(alertsStr);
         }
 
-        if (sortedAlerts.mediumRisk.length > 0) {
+        if (alerts) {
           await Promise.all(
-            sortedAlerts.mediumRisk.map(async (alert) => {
-              const result = await this.queryAlertInfo(alert, localAlerts);
-              if (result && result.updatedLocalAlerts) {
-                localAlerts = result.updatedLocalAlerts;
-              }
-              if (result && result.alertInfo) {
-                result.alertInfo.riskLevel = RiskLevel.MEDIUM;
-                if (alertInfos.mediumRisk) {
-                  alertInfos.mediumRisk.push(result.alertInfo);
-                } else {
-                  alertInfos.mediumRisk = [result.alertInfo];
-                }
-              }
-            })
-          );
-        }
-
-        if (sortedAlerts.lowRisk.length > 0) {
-          await Promise.all(
-            sortedAlerts.lowRisk.map(async (alert) => {
-              const result = await this.queryAlertInfo(alert, localAlerts);
-              if (result && result.updatedLocalAlerts) {
-                localAlerts = result.updatedLocalAlerts;
-              }
-              if (result && result.alertInfo) {
-                result.alertInfo.riskLevel = RiskLevel.LOW;
-                if (alertInfos.lowRisk) {
-                  alertInfos.lowRisk.push(result.alertInfo);
-                } else {
-                  alertInfos.lowRisk = [result.alertInfo];
-                }
-              }
-            })
-          );
-        }
-
-        if (sortedAlerts.unassignedRisk.length > 0) {
-          await Promise.all(
-            sortedAlerts.unassignedRisk.map(async (alert) => {
-              const result = await this.queryAlertInfo(alert, localAlerts);
-              if (result && result.updatedLocalAlerts) {
-                localAlerts = result.updatedLocalAlerts;
-              }
-              if (result && result.alertInfo) {
-                result.alertInfo.riskLevel = RiskLevel.UNASSIGNED;
-                if (alertInfos.unassignedRisk) {
-                  alertInfos.unassignedRisk.push(result.alertInfo);
-                } else {
-                  alertInfos.unassignedRisk = [result.alertInfo];
-                }
+            alerts.map(async (alert) => {
+              const alertInfo = await this.queryAlertInfo(alert);
+              if (alertInfo) {
+                alertInfos.push(alertInfo);
+                localAlerts = this.mergeLocalAlerts(alertInfo, localAlerts);
               }
             })
           );
@@ -179,40 +88,47 @@ class RetrieveAlertInfos extends Activity {
             JSON.stringify(localAlerts)
           );
         }
+      } else {
+        // Device is offline: get alert infos from facts
+        alertInfos =
+          facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.SORTED_ALERTS];
+      }
 
-        if (Object.entries(alertInfos).length > 0) {
-          // Adds alert infos to facts to be retrieved in DisplayAlert action frame of UXSA
-          agentAPI.addFact(
-            new Belief(
-              BeliefKeys.PATIENT,
-              PatientAttributes.ALERT_INFOS,
-              alertInfos
-            ),
-            false
-          );
-        }
+      if (alertInfos && alertInfos.length > 0) {
+        // Adds alert infos to facts to be retrieved in DisplayAlerts action frame of UXSA
+        agentAPI.addFact(
+          new Belief(
+            BeliefKeys.CLINICIAN,
+            ClinicianAttributes.ALERT_INFOS,
+            alertInfos
+          ),
+          false
+        );
       }
 
       // Update Facts
       // Removes sorted alerts from facts
       agentAPI.addFact(
-        new Belief(BeliefKeys.PATIENT, PatientAttributes.SORTED_ALERTS, null),
+        new Belief(
+          BeliefKeys.CLINICIAN,
+          ClinicianAttributes.SORTED_ALERTS,
+          null
+        ),
         false
       );
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
     }
+
+    // Updates belief last to prevent RequestAlertsDisplay from being triggered early
+    agent.addBelief(
+      new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
+    );
   }
 
   // eslint-disable-next-line class-methods-use-this
-  async queryAlertInfo(
-    alert: Alert,
-    localAlerts: { [k: string]: string } | null
-  ): Promise<{
-    alertInfo: AlertInfo;
-    updatedLocalAlerts: { [k: string]: string } | null;
-  } | null> {
+  async queryAlertInfo(alert: Alert): Promise<AlertInfo | null> {
     // Ensures vitals and symptoms are present
     let alertVitals = alert.vitalsReport;
     let alertSymptoms = alert.symptomReport;
@@ -234,24 +150,46 @@ class RetrieveAlertInfos extends Activity {
     }
 
     if (alertVitals && alertSymptoms) {
-      // LS-TODO: Figure out where to get HRV
+      // LS-TODO: To include HRV
       const alertInfo: AlertInfo = {
         id: alert.id,
         patientId: alert.patientID,
+        patientName: alert.patientName,
         dateTime: alert.dateTime,
         summary: alert.summary,
         vitals: alertVitals,
         symptoms: alertSymptoms,
-        completed: alert.completed
+        completed: alert.completed === AlertStatus.COMPLETED
       };
 
-      // Queries patientInfo
+      // Assigns risk level according to color code
+      switch (alert.colorCode) {
+        case AlertColorCode.HIGH:
+          alertInfo.riskLevel = RiskLevel.HIGH;
+          break;
+        case AlertColorCode.MEDIUM:
+          alertInfo.riskLevel = RiskLevel.MEDIUM;
+          break;
+        case AlertColorCode.LOW:
+          alertInfo.riskLevel = RiskLevel.LOW;
+          break;
+        case AlertColorCode.UNASSIGNED:
+          alertInfo.riskLevel = RiskLevel.UNASSIGNED;
+          break;
+        default:
+          alertInfo.riskLevel = RiskLevel.UNASSIGNED;
+          break;
+      }
+
+      // Queries patientInfo to get diagnosis and NHYA class
       const patientInfoQuery = await getPatientInfo({
         patientID: alert.patientID
       });
 
       if (patientInfoQuery.data && patientInfoQuery.data.getPatientInfo) {
-        alertInfo.patientInfo = patientInfoQuery.data.getPatientInfo;
+        const patientInfo = patientInfoQuery.data.getPatientInfo;
+        alertInfo.diagnosis = patientInfo.diagnosisInfo;
+        alertInfo.NHYAClass = patientInfo.NHYAclass;
       }
 
       // Queries verified medication intake in descending order of date to get latest medication
@@ -262,7 +200,7 @@ class RetrieveAlertInfos extends Activity {
       });
 
       if (medCompliantQuery.data) {
-        const results = medCompliantQuery.data.listMedCompliantByDate?.items;
+        const results = medCompliantQuery.data.listMedCompliantsByDate?.items;
         if (results && results.length > 0) {
           const latestMedCompliant = results[0];
 
@@ -281,49 +219,67 @@ class RetrieveAlertInfos extends Activity {
       }
 
       // Queries activity associated with symptom report
-      const activityInfoQuery = await getActivityInfo({
-        id: alertSymptoms.ActId
-      });
-      if (activityInfoQuery.data) {
-        const activityInfo = activityInfoQuery.data.getActivityInfo;
-        alertInfo.activityDuringAlert = activityInfo?.Actname;
-      }
-
-      // Saves alert info locally using patientId as nested key
-      if (localAlerts) {
-        // One or more alerts of the current patient were stored previously
-        if (localAlerts[alert.patientID]) {
-          const patientAlerts: AlertInfo[] = JSON.parse(
-            localAlerts[alert.patientID]
-          );
-
-          // Checks if alert already exists
-          let existingAlert = false;
-          patientAlerts.forEach((patientAlert) => {
-            if (patientAlert.id === alertInfo.id) {
-              patientAlert = alertInfo;
-              existingAlert = true;
-            }
-          });
-
-          // Push non existing alert into the list
-          if (!existingAlert) {
-            patientAlerts.push(alertInfo);
-            localAlerts[alert.patientID] = JSON.stringify(patientAlerts);
-          }
-        } else {
-          // No alert of the current patient has been stored previously
-          localAlerts[alert.patientID] = JSON.stringify([alertInfo]);
+      if (alertSymptoms.ActivityInfo) {
+        alertInfo.activityDuringAlert = alertSymptoms.ActivityInfo.Actname;
+        // Prevents the entire ActivityInfo from being stored locally
+        delete alertInfo.symptoms?.ActivityInfo;
+      } else {
+        const activityInfoQuery = await getActivityInfo({
+          id: alertSymptoms.ActId
+        });
+        if (activityInfoQuery.data) {
+          const activityInfo = activityInfoQuery.data.getActivityInfo;
+          alertInfo.activityDuringAlert = activityInfo?.Actname;
         }
       }
-      // Alert key does not exist
-      else {
-        localAlerts = {};
-        localAlerts[alert.patientID] = JSON.stringify([alertInfo]);
-      }
-      return { alertInfo: alertInfo, updatedLocalAlerts: localAlerts };
+
+      return alertInfo;
     }
     return null;
+  }
+
+  /**
+   * Merges current alert info into localAlerts JSON for local storage.
+   * @param alertInfo current alert info
+   * @param localAlerts localAlerts JSON
+   * @returns merged localAlerts JSON
+   */
+  // eslint-disable-next-line class-methods-use-this
+  mergeLocalAlerts(alertInfo: AlertInfo, localAlerts: LocalAlerts | null) {
+    // Saves alert info locally using patientId as nested key
+    if (localAlerts) {
+      // One or more alerts of the current patient were stored previously
+      if (localAlerts[alertInfo.patientId]) {
+        const patientAlerts: AlertInfo[] = JSON.parse(
+          localAlerts[alertInfo.patientId]
+        );
+
+        // Checks if alert already exists
+        let existingAlert = false;
+        patientAlerts.forEach((patientAlert) => {
+          if (patientAlert.id === alertInfo.id) {
+            patientAlert = alertInfo;
+            existingAlert = true;
+          }
+        });
+
+        // Push non existing alert into the list
+        if (!existingAlert) {
+          patientAlerts.push(alertInfo);
+          localAlerts[alertInfo.patientId] = JSON.stringify(patientAlerts);
+        }
+      } else {
+        // No alert of the current patient has been stored previously
+        localAlerts[alertInfo.patientId] = JSON.stringify([alertInfo]);
+      }
+    }
+    // Alert key does not exist
+    else {
+      localAlerts = {};
+      localAlerts[alertInfo.patientId] = JSON.stringify([alertInfo]);
+    }
+
+    return localAlerts;
   }
 }
 
@@ -334,8 +290,8 @@ const rule1 = new Precondition(
   ProcedureConst.ACTIVE
 );
 const rule2 = new Precondition(
-  BeliefKeys.PATIENT,
-  PatientAttributes.ALERTS_SORTED,
+  BeliefKeys.CLINICIAN,
+  ClinicianAttributes.ALERTS_SORTED,
   true
 );
 
