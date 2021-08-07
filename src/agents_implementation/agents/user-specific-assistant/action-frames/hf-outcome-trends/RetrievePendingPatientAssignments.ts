@@ -13,7 +13,7 @@ import {
   ProcedureAttributes,
   ProcedureConst
 } from "agents_implementation/agent_framework/AgentEnums";
-import agentAPI from "../../../../agent_framework/AgentAPI";
+import agentAPI from "agents_implementation/agent_framework/AgentAPI";
 import { store } from "ic-redux/store";
 import { setPendingPatientAssignments } from "ic-redux/actions/agents/actionCreator";
 

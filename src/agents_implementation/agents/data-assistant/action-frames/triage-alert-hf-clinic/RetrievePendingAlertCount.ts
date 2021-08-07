@@ -1,8 +1,10 @@
-import Actionframe from "../../../../agent_framework/base/Actionframe";
-import Activity from "../../../../agent_framework/base/Activity";
-import Agent from "../../../../agent_framework/base/Agent";
-import Belief from "../../../../agent_framework/base/Belief";
-import Precondition from "../../../../agent_framework/base/Precondition";
+import {
+  Actionframe,
+  Activity,
+  Agent,
+  Belief,
+  Precondition
+} from "agents_implementation/agent_framework";
 import {
   ActionFrameIDs,
   AppAttributes,
@@ -12,8 +14,8 @@ import {
   CommonAttributes,
   ProcedureAttributes,
   ProcedureConst
-} from "../../../../agent_framework/AgentEnums";
-import agentAPI from "../../../../agent_framework/AgentAPI";
+} from "agents_implementation/agent_framework/AgentEnums";
+import agentAPI from "agents_implementation/agent_framework/AgentAPI";
 import { Alert, ModelSortDirection } from "aws/API";
 import { mockPendingAlerts } from "mock/mockAlerts";
 import { AlertStatus, listPendingAlertsByDateTime } from "aws";

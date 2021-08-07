@@ -1,8 +1,10 @@
-import Actionframe from "../../../../agent_framework/base/Actionframe";
-import Activity from "../../../../agent_framework/base/Activity";
-import Agent from "../../../../agent_framework/base/Agent";
-import Belief from "../../../../agent_framework/base/Belief";
-import Precondition from "../../../../agent_framework/base/Precondition";
+import {
+  Actionframe,
+  Activity,
+  Agent,
+  Belief,
+  Precondition
+} from "agents_implementation/agent_framework";
 import {
   ProcedureConst,
   AsyncStorageKeys,
@@ -12,10 +14,10 @@ import {
   ProcedureAttributes,
   AppAttributes,
   ActionFrameIDs
-} from "../../../../agent_framework/AgentEnums";
+} from "agents_implementation/agent_framework/AgentEnums";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Role, getClinicianInfo } from "aws";
-import agentAPI from "../../../../agent_framework/AgentAPI";
+import agentAPI from "agents_implementation/agent_framework/AgentAPI";
 import { ClinicianInfo } from "aws/API";
 
 /**

@@ -1,8 +1,10 @@
-import Actionframe from "../../../../agent_framework/base/Actionframe";
-import Agent from "../../../../agent_framework/base/Agent";
-import Belief from "../../../../agent_framework/base/Belief";
-import Communicate from "../../../../agent_framework/base/Communicate";
-import Precondition from "../../../../agent_framework/base/Precondition";
+import {
+  Actionframe,
+  Communicate,
+  Agent,
+  Belief,
+  Precondition
+} from "agents_implementation/agent_framework";
 import {
   ActionFrameIDs,
   AgentIDs,
@@ -12,7 +14,7 @@ import {
   Performative,
   ProcedureAttributes,
   ProcedureConst
-} from "../../../../agent_framework/AgentEnums";
+} from "agents_implementation/agent_framework/AgentEnums";
 
 /**
  * Class to represent the activity for requesting display of alerts.

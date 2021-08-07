@@ -1,8 +1,10 @@
-import Actionframe from "../../../../agent_framework/base/Actionframe";
-import Activity from "../../../../agent_framework/base/Activity";
-import Agent from "../../../../agent_framework/base/Agent";
-import Belief from "../../../../agent_framework/base/Belief";
-import Precondition from "../../../../agent_framework/base/Precondition";
+import {
+  Actionframe,
+  Activity,
+  Agent,
+  Belief,
+  Precondition
+} from "agents_implementation/agent_framework";
 import {
   ActionFrameIDs,
   AppAttributes,
@@ -11,9 +13,9 @@ import {
   PatientAttributes,
   ProcedureAttributes,
   ProcedureConst
-} from "../../../../agent_framework/AgentEnums";
-import { PatientDetails } from "../../../../agent_framework/model";
-import agentAPI from "../../../../agent_framework/AgentAPI";
+} from "agents_implementation/agent_framework/AgentEnums";
+import { PatientDetails } from "agents_implementation/agent_framework/model";
+import agentAPI from "agents_implementation/agent_framework/AgentAPI";
 import { listActivityInfos, listReportSymptoms, listReportVitals } from "aws";
 import { ActivityInfo, ReportSymptom, ReportVitals } from "aws/API";
 import AsyncStorage from "@react-native-async-storage/async-storage";
