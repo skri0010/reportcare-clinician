@@ -70,10 +70,8 @@ const rule2 = new Precondition(
 );
 
 // Actionframe of the RequestEntryData class
-const af_RequestEntryData = new Actionframe(
+export const af_RequestEntryData = new Actionframe(
   `AF_${ActionFrameIDs.APS.REQUEST_ENTRY_DATA}`,
   [rule1, rule2],
   new RequestEntryData()
 );
-
-export default af_RequestEntryData;

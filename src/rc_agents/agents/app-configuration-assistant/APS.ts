@@ -1,8 +1,7 @@
+import { Agent, Belief } from "rc_agents/framework";
 import { AgentIDs, CommonAttributes } from "rc_agents/AgentEnums";
-import Agent from "../../framework/base/Agent";
-import Belief from "../../framework/base/Belief";
-import af_AssociateData from "./action-frames/app-device-configuration/AssociateData";
-import af_RequestEntryData from "./action-frames/app-device-configuration/RequestEntryData";
+import { af_AssociateData } from "./action-frames/app-device-configuration/AssociateData";
+import { af_RequestEntryData } from "./action-frames/app-device-configuration/RequestEntryData";
 
 // Initial Beliefs of the Agent
 

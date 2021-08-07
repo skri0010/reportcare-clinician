@@ -109,10 +109,8 @@ const rule3 = new Precondition(
 );
 
 // Actionframe of the AssociateData class
-const af_AssociateData = new Actionframe(
+export const af_AssociateData = new Actionframe(
   `AF_${ActionFrameIDs.APS.ASSOCIATE_DATA}`,
   [rule1, rule2, rule3],
   new AssociateData()
 );
-
-export default af_AssociateData;
