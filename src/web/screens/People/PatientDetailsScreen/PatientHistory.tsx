@@ -42,7 +42,7 @@ export const PatientHistory: FC<PatientHistoryProps> = ({
 }) => {
   const cardMaxHeight = Math.max(
     ms(250),
-    Dimensions.get("window").height * 0.5
+    Dimensions.get("window").height * 0.65
   );
   // Query history data by patientId here or pass it into component for query
 

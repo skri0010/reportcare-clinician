@@ -4,8 +4,6 @@ import { ScreenWrapper } from "../../ScreenWrapper";
 import { View } from "react-native";
 import { PatientInfo } from "aws/models";
 import { RootState, select } from "util/useRedux";
-import { H3, H4 } from "components/Text/index";
-import i18n from "util/language/i18n";
 import { BasicInfoCard } from "./PatientInfoCards/BasicInfoCard";
 import { ContactInfoCard } from "./PatientInfoCards/ContactInfoCard";
 

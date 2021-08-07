@@ -16,7 +16,7 @@ export const PatientInfoRow: FC<PatientInfoRowProps> = ({ title, content }) => {
     >
       <H4
         text={`${title}`}
-        style={{ fontWeight: "bold", paddingBottom: ms(3) }}
+        style={{ fontWeight: "600", paddingBottom: ms(3) }}
       />
       <H4 text={content} style={null} />
     </View>
