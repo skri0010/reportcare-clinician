@@ -298,10 +298,8 @@ const rule2 = new Precondition(
 );
 
 // Action Frame for RetrieveAlertInfos class
-const af_RetrieveAlertInfos = new Actionframe(
+export const af_RetrieveAlertInfos = new Actionframe(
   `AF_${ActionFrameIDs.DTA.RETRIEVE_ALERT_INFOS}`,
   [rule1, rule2],
   new RetrieveAlertInfos()
 );
-
-export default af_RetrieveAlertInfos;

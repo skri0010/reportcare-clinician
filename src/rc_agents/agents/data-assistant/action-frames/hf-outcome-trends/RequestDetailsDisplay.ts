@@ -66,10 +66,8 @@ const rule2 = new Precondition(
 );
 
 // Actionframe of the RequestDetailsDisplay class
-const af_RequestDetailsDisplay = new Actionframe(
+export const af_RequestDetailsDisplay = new Actionframe(
   `AF_${ActionFrameIDs.DTA.REQUEST_DETAILS_DISPLAY}`,
   [rule1, rule2],
   new RequestDetailsDisplay()
 );
-
-export default af_RequestDetailsDisplay;

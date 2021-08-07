@@ -216,10 +216,8 @@ const rule3 = new Precondition(
 );
 
 // Action Frame for RetrieveEntryData class
-const af_RetrieveEntryData = new Actionframe(
+export const af_RetrieveEntryData = new Actionframe(
   `AF_${ActionFrameIDs.DTA.RETRIEVE_ENTRY_DATA}`,
   [rule1, rule2, rule3],
   new RetrieveEntryData()
 );
-
-export default af_RetrieveEntryData;

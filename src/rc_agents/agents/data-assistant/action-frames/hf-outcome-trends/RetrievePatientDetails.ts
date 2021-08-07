@@ -146,10 +146,8 @@ const rule2 = new Precondition(
 );
 
 // Action Frame for RetrievePatientDetails class
-const af_RetrievePatientDetails = new Actionframe(
+export const af_RetrievePatientDetails = new Actionframe(
   `AF_${ActionFrameIDs.DTA.RETRIEVE_PATIENT_DETAILS}`,
   [rule1, rule2],
   new RetrievePatientDetails()
 );
-
-export default af_RetrievePatientDetails;

@@ -125,10 +125,8 @@ const rule2 = new Precondition(
 );
 
 // Action Frame for RetrievePendingAlertCount class
-const af_RetrievePendingAlertCount = new Actionframe(
+export const af_RetrievePendingAlertCount = new Actionframe(
   `AF_${ActionFrameIDs.DTA.RETRIEVE_PENDING_ALERT_COUNT}`,
   [rule1, rule2],
   new RetrievePendingAlertCount()
 );
-
-export default af_RetrievePendingAlertCount;

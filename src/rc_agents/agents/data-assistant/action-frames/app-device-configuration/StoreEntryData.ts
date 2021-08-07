@@ -161,10 +161,8 @@ const rule3 = new Precondition(
 );
 
 // Action Frame for StoreEntryData class
-const af_StoreEntryData = new Actionframe(
+export const af_StoreEntryData = new Actionframe(
   `AF_${ActionFrameIDs.DTA.STORE_ENTRY_DATA}`,
   [rule1, rule2, rule3],
   new StoreEntryData()
 );
-
-export default af_StoreEntryData;

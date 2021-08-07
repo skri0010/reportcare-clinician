@@ -200,10 +200,8 @@ const rule2 = new Precondition(
 );
 
 // Action Frame for RetrieveRolePatients class
-const af_RetrieveRolePatients = new Actionframe(
+export const af_RetrieveRolePatients = new Actionframe(
   `AF_${ActionFrameIDs.DTA.RETRIEVE_ROLE_PATIENTS}`,
   [rule1, rule2],
   new RetrieveRolePatients()
 );
-
-export default af_RetrieveRolePatients;

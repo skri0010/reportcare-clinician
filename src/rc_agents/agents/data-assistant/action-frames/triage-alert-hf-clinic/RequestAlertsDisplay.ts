@@ -70,10 +70,8 @@ const rule2 = new Precondition(
 );
 
 // Actionframe of the RequestAlertsDisplay class
-const af_RequestAlertsDisplay = new Actionframe(
+export const af_RequestAlertsDisplay = new Actionframe(
   `AF_${ActionFrameIDs.DTA.REQUEST_ALERTS_DISPLAY}`,
   [rule1, rule2],
   new RequestAlertsDisplay()
 );
-
-export default af_RequestAlertsDisplay;

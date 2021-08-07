@@ -70,10 +70,8 @@ const rule2 = new Precondition(
 );
 
 // Actionframe of the RequestPendingAlertCountDisplay class
-const af_RequestPendingAlertCountDisplay = new Actionframe(
+export const af_RequestPendingAlertCountDisplay = new Actionframe(
   `AF_${ActionFrameIDs.DTA.REQUEST_PENDING_ALERT_COUNT_DISPLAY}`,
   [rule1, rule2],
   new RequestPendingAlertCountDisplay()
 );
-
-export default af_RequestPendingAlertCountDisplay;
