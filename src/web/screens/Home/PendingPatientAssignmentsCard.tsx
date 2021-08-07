@@ -68,7 +68,7 @@ export const PendingPatientAssignmentsCard: FC<PendingPatientAssignmentsCardProp
       agentDTA.addBelief(
         new Belief(
           BeliefKeys.PATIENT,
-          PatientAttributes.PENDING_RESOLVE_PATIENT_ASSIGNMENT,
+          PatientAttributes.RESOLVE_PATIENT_ASSIGNMENT,
           true
         )
       );

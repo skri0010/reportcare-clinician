@@ -3,7 +3,7 @@ import { af_VisualizeParameters } from "./action-frames/hf-outcome-trends/Visual
 import { af_RetrieveRole } from "./action-frames/hf-outcome-trends/RetrieveRole";
 import { af_RequestRetrieveAll } from "./action-frames/hf-outcome-trends/RequestRetrieveAll";
 import { af_DisplayAlerts } from "./action-frames/triage-alert-hf-clinic/DisplayAlerts";
-import { af_RetrievePendingPatientAssignments } from "./action-frames/hf-outcome-trends/RetrievePendingPatientAssignments";
+import { af_DisplayPendingPatientAssignments } from "./action-frames/storing-data/DisplayPendingPatientAssignments";
 import { AgentIDs, CommonAttributes } from "rc_agents/AgentEnums";
 import { af_DisplayPendingAlertCount } from "./action-frames/triage-alert-hf-clinic/DisplayPendingAlertCount";
 
@@ -21,8 +21,8 @@ const agentUXSA = new Agent(
     af_RetrieveRole,
     af_RequestRetrieveAll,
 
-    // HF-OTP-III
-    af_RetrievePendingPatientAssignments,
+    // SRD
+    af_DisplayPendingPatientAssignments,
 
     // AT-CP
     af_DisplayPendingAlertCount,

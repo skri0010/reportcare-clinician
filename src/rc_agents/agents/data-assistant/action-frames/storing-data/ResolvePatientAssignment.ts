@@ -141,7 +141,7 @@ class ResolvePatientAssignment extends Activity {
     agent.addBelief(
       new Belief(
         BeliefKeys.PATIENT,
-        PatientAttributes.PENDING_RESOLVE_PATIENT_ASSIGNMENT,
+        PatientAttributes.RESOLVE_PATIENT_ASSIGNMENT,
         false
       )
     );
@@ -274,7 +274,7 @@ const rule1 = new Precondition(
 );
 const rule2 = new Precondition(
   BeliefKeys.PATIENT,
-  PatientAttributes.PENDING_RESOLVE_PATIENT_ASSIGNMENT,
+  PatientAttributes.RESOLVE_PATIENT_ASSIGNMENT,
   true
 );
 

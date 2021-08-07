@@ -23,13 +23,13 @@ import {
  */
 class RequestPendingPatientAssignments extends Communicate {
   constructor() {
-    // Trigger RetrievePendingPatientAssignments procedure of UXSA agent
+    // Trigger DisplayPendingPatientAssignments of UXSA agent
     super(
       ActionFrameIDs.DTA.REQUEST_DETAILS_DISPLAY,
       Performative.REQUEST,
       new Belief(
         BeliefKeys.PATIENT,
-        PatientAttributes.PENDING_PATIENT_ASSIGNMENTS_RETRIEVED,
+        PatientAttributes.DISPLAY_PENDING_ASSIGNMENTS_REQUESTED,
         true
       ),
       [AgentIDs.UXSA]

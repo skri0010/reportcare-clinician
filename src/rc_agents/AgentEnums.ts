@@ -67,7 +67,7 @@ export const ActionFrameIDs = {
   },
   UXSA: {
     RETRIEVE_ROLE: "RetrieveRole",
-    RETRIEVE_PENDING_PATIENT_ASSIGNMENTS: "RetrievePendingPatientAssignments",
+    DISPLAY_PENDING_PATIENT_ASSIGNMENTS: "DisplayPendingPatientAssignments",
     REQUEST_RETRIEVE_ALL: "RequestRetrieveAll",
     VISUALIZE_PARAMETERS: "VisualizeParameters",
     DISPLAY_PENDING_ALERT_COUNT: "DisplayPendingAlertCount",
@@ -149,12 +149,14 @@ export enum PatientAttributes {
   DETAILS_RETRIEVED = "DetailsRetrieved",
   VIEW_DETAILS = "ViewDetails",
   DETAILS = "Details",
-  // Patient Assignments
+
+  // SRD - Patient Assignments
   PENDING_PATIENT_ASSIGNMENTS = "PendingPatientAssignments",
   RETRIEVE_PENDING_PATIENT_ASSIGNMENTS = "RetrievePendingPatientAssignments",
   PENDING_PATIENT_ASSIGNMENTS_RETRIEVED = "PendingPatientAssignmentsRetrieved",
+  DISPLAY_PENDING_ASSIGNMENTS_REQUESTED = "DisplayPendingAssignmentsRequested",
   PATIENT_ASSIGNMENT_RESOLUTION = "PatientAssignmentResolution",
-  PENDING_RESOLVE_PATIENT_ASSIGNMENT = "PendingResolvePatientAssignment"
+  RESOLVE_PATIENT_ASSIGNMENT = "ResolvePatientAssignment"
 }
 
 // Keys for locally storing data in AsyncStorage

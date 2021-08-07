@@ -18,12 +18,12 @@ import { store } from "ic-redux/store";
 import { setPendingPatientAssignments } from "ic-redux/actions/agents/actionCreator";
 
 /**
- * Class to represent an activity for retrieving pending patient assignments.
+ * Class to represent an activity for displaying pending patient assignments.
  * This happens in Procedure Storing Data (SRD).
  */
-class RetrievePendingPatientAssignments extends Activity {
+class DisplayPendingPatientAssignments extends Activity {
   constructor() {
-    super(ActionFrameIDs.UXSA.RETRIEVE_PENDING_PATIENT_ASSIGNMENTS);
+    super(ActionFrameIDs.UXSA.DISPLAY_PENDING_PATIENT_ASSIGNMENTS);
   }
 
   /**
@@ -57,7 +57,7 @@ class RetrievePendingPatientAssignments extends Activity {
   }
 }
 
-// Preconditions for activating the RetrievePendingPatientAssignments class
+// Preconditions for activating the DisplayPendingPatientAssignments class
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
   ProcedureAttributes.SRD,
@@ -65,13 +65,13 @@ const rule1 = new Precondition(
 );
 const rule2 = new ResettablePrecondition(
   BeliefKeys.PATIENT,
-  PatientAttributes.PENDING_PATIENT_ASSIGNMENTS_RETRIEVED,
+  PatientAttributes.DISPLAY_PENDING_ASSIGNMENTS_REQUESTED,
   true
 );
 
-// Action Frame for RetrievePendingPatientAssignments class
-export const af_RetrievePendingPatientAssignments = new Actionframe(
-  `AF_${ActionFrameIDs.UXSA.RETRIEVE_PENDING_PATIENT_ASSIGNMENTS}`,
+// Action Frame for DisplayPendingPatientAssignments class
+export const af_DisplayPendingPatientAssignments = new Actionframe(
+  `AF_${ActionFrameIDs.UXSA.DISPLAY_PENDING_PATIENT_ASSIGNMENTS}`,
   [rule1, rule2],
-  new RetrievePendingPatientAssignments()
+  new DisplayPendingPatientAssignments()
 );
