@@ -37,6 +37,8 @@ class Agent {
 
   private working: boolean;
 
+  private initialized: boolean;
+
   private engine!: Engine;
 
   /**
@@ -52,6 +54,7 @@ class Agent {
     this.messageQueue = [];
     this.availableActions = [];
     this.working = false;
+    this.initialized = false;
 
     DeviceEventEmitter.addListener(this.id, (message: Message) =>
       this.onMessage(message)
@@ -97,6 +100,13 @@ class Agent {
   }
 
   /**
+   * Get agent initialized boolean
+   */
+  getInitialized(): boolean {
+    return this.initialized;
+  }
+
+  /**
    * Check if it is working
    */
   isWorking(): boolean {
@@ -136,6 +146,7 @@ class Agent {
     const timer = setInterval(() => {
       try {
         agentAPI.registerAgent(this);
+        this.setInitialized(true);
         clearInterval(timer);
       } catch (e) {
         console.log(`${this.id} ${e}`);
@@ -146,6 +157,13 @@ class Agent {
     this.setBeliefs(beliefs);
 
     await this.inference();
+  }
+
+  /**
+   * Set agent initialized boolean
+   */
+  setInitialized(initialized: boolean): void {
+    this.initialized = initialized;
   }
 
   /**

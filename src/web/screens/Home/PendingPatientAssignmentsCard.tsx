@@ -41,29 +41,24 @@ export const PendingPatientAssignmentsCard: FC<PendingPatientAssignmentsCardProp
 
     // Trigger agent to fetch pending assignments
     useEffect(() => {
-      // JH-TODO: Remove timeout once agent initialization verification has been implemented
-      const trigger = () => {
-        if (fetchNewPatientAssignments) {
-          dispatch(setFetchNewPatientAssignments(!fetchNewPatientAssignments));
-          agentDTA.addBelief(
-            new Belief(
-              BeliefKeys.PATIENT,
-              PatientAttributes.RETRIEVE_PENDING_PATIENT_ASSIGNMENTS,
-              true
-            )
-          );
+      if (fetchNewPatientAssignments) {
+        dispatch(setFetchNewPatientAssignments(!fetchNewPatientAssignments));
+        agentDTA.addBelief(
+          new Belief(
+            BeliefKeys.PATIENT,
+            PatientAttributes.RETRIEVE_PENDING_PATIENT_ASSIGNMENTS,
+            true
+          )
+        );
 
-          agentAPI.addFact(
-            new Belief(
-              BeliefKeys.PROCEDURE,
-              ProcedureAttributes.SRD,
-              ProcedureConst.ACTIVE
-            )
-          );
-        }
-      };
-
-      setTimeout(trigger, 1000);
+        agentAPI.addFact(
+          new Belief(
+            BeliefKeys.PROCEDURE,
+            ProcedureAttributes.SRD,
+            ProcedureConst.ACTIVE
+          )
+        );
+      }
     }, [fetchNewPatientAssignments, dispatch]);
 
     // Trigger agent to resolve pending assignment
