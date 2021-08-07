@@ -20,12 +20,12 @@ module.exports = {
           ".json"
         ],
         alias: {
-          agents_implementation: "./src/agents_implementation",
           aws: "./src/aws",
           components: "./src/components",
           "ic-redux": "./src/ic-redux",
           mock: "./src/mock",
           models: "./src/models",
+          rc_agents: "./src/rc_agents",
           util: "./src/util",
           mobile: "./src/mobile"
         }

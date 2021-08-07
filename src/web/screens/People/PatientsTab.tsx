@@ -20,17 +20,17 @@ import { RiskLevel } from "models/RiskLevel";
 import { ScaledSheet } from "react-native-size-matters";
 import { ViewMedicalRecords } from "./PatientDetailsScreen/PatientHistoryScreens/ViewMedicalRecord";
 import { AddMedicalRecord } from "./PatientDetailsScreen/PatientHistoryScreens/AddMedicalRecord";
-import agentDTA from "rc-agents/agents/data-assistant/DTA";
-import Belief from "rc-agents/framework/base/Belief";
+import agentDTA from "rc_agents/agents/data-assistant/DTA";
+import Belief from "rc_agents/framework/base/Belief";
 import {
   BeliefKeys,
   ClinicianAttributes,
   PatientAttributes,
   ProcedureAttributes,
   ProcedureConst
-} from "rc-agents/framework/AgentEnums";
-import agentAPI from "rc-agents/framework/AgentAPI";
-import agentUXSA from "rc-agents/agents/user-specific-assistant/UXSA";
+} from "rc_agents/AgentEnums";
+import agentAPI from "rc_agents/framework/AgentAPI";
+import agentUXSA from "rc_agents/agents/user-specific-assistant/UXSA";
 import { setProcedureOngoing } from "ic-redux/actions/agents/actionCreator";
 import { useNetInfo } from "@react-native-community/netinfo";
 

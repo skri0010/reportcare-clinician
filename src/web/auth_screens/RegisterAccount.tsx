@@ -18,7 +18,7 @@ import i18n from "util/language/i18n";
 import { useToast } from "react-native-toast-notifications";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AsyncStorageKeys } from "rc-agents/framework/AgentEnums";
+import { AsyncStorageKeys } from "rc_agents/AgentEnums";
 import { AuthButton } from "components/Buttons/AuthButton";
 import { TextField } from "components/InputComponents/TextField";
 

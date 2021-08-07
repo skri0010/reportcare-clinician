@@ -9,8 +9,8 @@ import { Auth } from "@aws-amplify/auth";
 import { LogBox } from "react-native";
 import { AuthState } from "./auth_screens";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import agentAPI from "rc-agents/framework/AgentAPI";
-import { AsyncStorageKeys } from "rc-agents/framework/AgentEnums";
+import agentAPI from "rc_agents/framework/AgentAPI";
+import { AsyncStorageKeys } from "rc_agents/AgentEnums";
 import { ToastProviderComponent } from "components/IndicatorComponents/ToastProvider";
 
 Amplify.configure(awsconfig);

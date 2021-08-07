@@ -12,13 +12,13 @@ import {
 } from "mobile/auth_screens";
 import { ScreenWrapper } from "mobile/screens/ScreenWrapper";
 import { validatePassword, validateUsername } from "util/validation";
-import agentAPI from "rc-agents/framework/AgentAPI";
+import agentAPI from "rc_agents/framework/AgentAPI";
 import i18n from "util/language/i18n";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useToast } from "react-native-toast-notifications";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
-import agentAPS from "rc-agents/agents/app-configuration-assistant/APS";
-import Belief from "rc-agents/framework/base/Belief";
+import agentAPS from "rc_agents/agents/app-configuration-assistant/APS";
+import Belief from "rc_agents/framework/base/Belief";
 import {
   ProcedureConst,
   AsyncStorageKeys,
@@ -26,7 +26,7 @@ import {
   AppAttributes,
   ClinicianAttributes,
   ProcedureAttributes
-} from "rc-agents/framework/AgentEnums";
+} from "rc_agents/AgentEnums";
 import { useNetInfo } from "@react-native-community/netinfo";
 import { setProcedureOngoing } from "ic-redux/actions/agents/actionCreator";
 import { AuthButton } from "components/Buttons/AuthButton";

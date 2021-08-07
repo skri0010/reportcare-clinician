@@ -8,10 +8,10 @@ import { Amplify } from "@aws-amplify/core";
 import { Auth } from "@aws-amplify/auth";
 import { AuthState } from "web/auth_screens";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import agentAPI from "rc-agents/framework/AgentAPI";
-import { AsyncStorageKeys } from "rc-agents/framework/AgentEnums";
+import agentAPI from "rc_agents/framework/AgentAPI";
+import { AsyncStorageKeys } from "rc_agents/AgentEnums";
 import { ToastProviderComponent } from "components/IndicatorComponents/ToastProvider";
-import { expectedAgentIds } from "rc-agents/agents";
+import { expectedAgentIds } from "rc_agents/agents";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
 
 Amplify.configure(awsconfig);

@@ -6,18 +6,18 @@ import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { H4 } from "components/Text/index";
 import { CardWrapper } from "./CardWrapper";
 import i18n from "util/language/i18n";
-import { agentAPI, Belief } from "rc-agents/framework";
+import { agentAPI, Belief } from "rc_agents/framework";
 import {
   BeliefKeys,
   PatientAttributes,
   ProcedureAttributes,
   ProcedureConst
-} from "rc-agents/framework/AgentEnums";
-import { agentDTA } from "rc-agents/agents";
+} from "rc_agents/AgentEnums";
+import { agentDTA } from "rc_agents/agents";
 import {
   PatientAssignmentStatus,
   PatientAssignmentResolution
-} from "rc-agents/model";
+} from "rc_agents/model";
 import { PatientAssignment } from "aws/API";
 import { PatientAssignmentRow } from "components/RowComponents/PatientRows/PatientPendingAssignmentRow";
 import { setFetchNewPatientAssignments } from "ic-redux/actions/agents/actionCreator";

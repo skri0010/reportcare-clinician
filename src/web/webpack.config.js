@@ -111,12 +111,12 @@ const svgLoaderConfiguration = {
 // Map key-value pairs of all alias paths
 const srcFolderAliasPaths = {};
 const srcFolderAliasKeys = [
-  "agents_implementation",
   "aws",
   "components",
   "ic-redux",
   "mock",
   "models",
+  "rc_agents",
   "util",
   "web"
 ];
@@ -140,10 +140,10 @@ module.exports = {
       "react-native-svg": "react-native-svg-web",
       [path.resolve(
         appDirectory,
-        "src/agents_implementation/agent_framework/management/MobileAgentManagement"
+        "src/rc_agents/framework/management/MobileAgentManagement"
       )]: path.resolve(
         appDirectory,
-        "src/agents_implementation/agent_framework/management/WebAgentManagement"
+        "src/rc_agents/framework/management/WebAgentManagement"
       ),
       ...srcFolderAliasPaths
     },
