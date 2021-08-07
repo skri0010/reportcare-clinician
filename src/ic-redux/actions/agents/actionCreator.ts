@@ -3,7 +3,7 @@ import {
   Patient,
   PatientDetails,
   PendingAlertCount
-} from "agents_implementation/agent_framework/model";
+} from "rc-agents/framework/model";
 import { actionNames } from "ic-redux/actions/actionNames";
 import { createAction } from "typesafe-actions";
 import { PatientAssignment } from "aws/API";

@@ -12,12 +12,9 @@ import { useToast } from "react-native-toast-notifications";
 import i18n from "util/language/i18n";
 import { AuthState } from "./auth_screens";
 import { useNetInfo } from "@react-native-community/netinfo";
-import agentAPI from "agents_implementation/agent_framework/AgentAPI";
-import Belief from "agents_implementation/agent_framework/base/Belief";
-import {
-  AppAttributes,
-  BeliefKeys
-} from "agents_implementation/agent_framework/AgentEnums";
+import agentAPI from "rc-agents/framework/AgentAPI";
+import Belief from "rc-agents/framework/base/Belief";
+import { AppAttributes, BeliefKeys } from "rc-agents/framework/AgentEnums";
 
 interface MainNavigationStackProps {
   setAuthState: (state: string) => void;

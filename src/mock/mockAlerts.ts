@@ -1,4 +1,4 @@
-import { AlertColorCode } from "agents_implementation/agent_framework/model";
+import { AlertColorCode } from "rc-agents/framework/model";
 import { AlertStatus } from "aws";
 import { Alert } from "aws/API";
 

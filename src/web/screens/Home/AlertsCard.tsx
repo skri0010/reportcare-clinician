@@ -7,15 +7,15 @@ import { AlertButton } from "components/Buttons/AlertButton";
 import { H4, H6 } from "components/Text";
 import { CardWrapper } from "./CardWrapper";
 import i18n from "util/language/i18n";
-import agentMHA from "agents_implementation/agents/medical-health-assistant/MHA";
-import Belief from "agents_implementation/agent_framework/base/Belief";
+import agentMHA from "rc-agents/agents/medical-health-assistant/MHA";
+import Belief from "rc-agents/framework/base/Belief";
 import {
   BeliefKeys,
   ClinicianAttributes,
   ProcedureAttributes,
   ProcedureConst
-} from "agents_implementation/agent_framework/AgentEnums";
-import agentAPI from "agents_implementation/agent_framework/AgentAPI";
+} from "rc-agents/framework/AgentEnums";
+import agentAPI from "rc-agents/framework/AgentAPI";
 import { AlertStatus } from "aws";
 
 interface AlertsCardProps {
