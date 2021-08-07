@@ -34,12 +34,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Auth from "@aws-amplify/auth";
 
 /**
- * LS-TODO: JH-TODO: To be updated
- * Currently unable to get PatientInfo of the new patient
- * Add front end trigger to start this activity
- */
-
-/**
  * Class to represent an activity for resolving patient assignment (APPROVE or REASSIGN) .
  * This happens in Procedure Storing Data (SRD) when clinician performs an action to resolve patient assignment.
  */
@@ -116,7 +110,7 @@ class ResolvePatientAssignment extends Activity {
           agentNWA.addBelief(
             new Belief(
               BeliefKeys.APP,
-              AppAttributes.PENDING_PATIENT_ASSIGNMENT_SYNC,
+              AppAttributes.SYNC_PATIENT_ASSIGNMENT_RESOLUTIONS,
               true
             )
           );

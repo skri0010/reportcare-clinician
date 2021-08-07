@@ -105,7 +105,7 @@ export enum AppAttributes {
   CONFIGURED = "Configured",
   ONLINE = "Online",
   PENDING_PROTECTED_INFO_SYNC = "PendingProtectedInfoSync",
-  PENDING_PATIENT_ASSIGNMENT_SYNC = "PendingPatientAssignmentSync"
+  SYNC_PATIENT_ASSIGNMENT_RESOLUTIONS = "SyncPatientAssignmentResolutions"
 }
 
 // Attributes for PROCEDURE key

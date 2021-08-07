@@ -23,7 +23,7 @@ import { setFetchNewPatientAssignments } from "ic-redux/actions/agents/actionCre
 /**
  * Class to represent the activity for syncing local approval of patient assignments.
  */
-class SyncPatientAssignment extends Activity {
+class SyncPatientAssignmentResolutions extends Activity {
   /**
    * Constructor for the SyncPatientAssignment class
    */
@@ -85,7 +85,7 @@ class SyncPatientAssignment extends Activity {
       agent.addBelief(
         new Belief(
           BeliefKeys.APP,
-          AppAttributes.PENDING_PATIENT_ASSIGNMENT_SYNC,
+          AppAttributes.SYNC_PATIENT_ASSIGNMENT_RESOLUTIONS,
           false
         )
       );
@@ -100,17 +100,17 @@ class SyncPatientAssignment extends Activity {
   }
 }
 
-// Rules or preconditions for activating the SyncPatientAssignments class
+// Rules or preconditions for activating the SyncPatientAssignmentResolutions class
 const rule1 = new Precondition(BeliefKeys.APP, AppAttributes.ONLINE, true);
 const rule2 = new Precondition(
   BeliefKeys.APP,
-  AppAttributes.PENDING_PATIENT_ASSIGNMENT_SYNC,
+  AppAttributes.SYNC_PATIENT_ASSIGNMENT_RESOLUTIONS,
   true
 );
 
-// Actionframe of the SyncPatientAssignments class
+// Actionframe of the SyncPatientAssignmentResolutions class
 export const af_SyncPatientAssignmentResolutions = new Actionframe(
   `AF_${ActionFrameIDs.NWA.SYNC_PATIENT_ASSIGNMENT_RESOLUTIONS}`,
   [rule1, rule2],
-  new SyncPatientAssignment()
+  new SyncPatientAssignmentResolutions()
 );
