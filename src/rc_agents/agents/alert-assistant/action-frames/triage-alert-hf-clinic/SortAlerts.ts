@@ -127,10 +127,8 @@ const rule2 = new Precondition(
 );
 
 // Actionframe of the SortAlert class
-const af_SortAlert = new Actionframe(
+export const af_SortAlert = new Actionframe(
   `AF_${ActionFrameIDs.ALA.SORT_ALERTS}`,
   [rule1, rule2],
   new SortAlert()
 );
-
-export default af_SortAlert;
