@@ -21,7 +21,7 @@ import { PatientAssignmentStatus } from "rc_agents/model";
 import { listPendingPatientAssignments } from "aws";
 import { PatientAssignment } from "aws/API";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { setFetchNewPatientAssignments } from "ic-redux/actions/agents/actionCreator";
+import { setFetchingPendingPatientAssignments } from "ic-redux/actions/agents/actionCreator";
 import { store } from "ic-redux/store";
 
 /**
@@ -40,6 +40,9 @@ class RetrievePendingPatientAssignments extends Activity {
   async doActivity(agent: Agent): Promise<void> {
     // Reset preconditions
     await super.doActivity(agent, [rule2]);
+
+    // Dispatch to store to indicate fetching
+    store.dispatch(setFetchingPendingPatientAssignments(true));
 
     let pendingPatientAssignments: PatientAssignment[] | null | undefined;
     try {
@@ -99,10 +102,27 @@ class RetrievePendingPatientAssignments extends Activity {
           )
         );
       } else {
-        // Dispatch to store boolean to fetch updated patient assignments later
-        setRetryLaterTimeout(() =>
-          store.dispatch(setFetchNewPatientAssignments(true))
-        );
+        // Set to retry later
+        setRetryLaterTimeout(() => {
+          agent.addBelief(
+            new Belief(
+              BeliefKeys.PATIENT,
+              PatientAttributes.RETRIEVE_PENDING_PATIENT_ASSIGNMENTS,
+              true
+            )
+          );
+
+          agentAPI.addFact(
+            new Belief(
+              BeliefKeys.PROCEDURE,
+              ProcedureAttributes.SRD,
+              ProcedureConst.ACTIVE
+            )
+          );
+        });
+
+        // Dispatch to store to indicate fetching has ended
+        store.dispatch(setFetchingPendingPatientAssignments(false));
       }
     } catch (error) {
       // eslint-disable-next-line no-console

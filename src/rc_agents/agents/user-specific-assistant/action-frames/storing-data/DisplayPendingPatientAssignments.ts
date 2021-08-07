@@ -15,7 +15,10 @@ import {
 } from "rc_agents/AgentEnums";
 import agentAPI from "rc_agents/framework/AgentAPI";
 import { store } from "ic-redux/store";
-import { setPendingPatientAssignments } from "ic-redux/actions/agents/actionCreator";
+import {
+  setFetchingPendingPatientAssignments,
+  setPendingPatientAssignments
+} from "ic-redux/actions/agents/actionCreator";
 
 /**
  * Class to represent an activity for displaying pending patient assignments.
@@ -42,6 +45,9 @@ class DisplayPendingPatientAssignments extends Activity {
       // Dispatch to store boolean to store fetched pending patient assignments
       store.dispatch(setPendingPatientAssignments(pendingPatientAssignments));
     }
+
+    // Dispatch to store to indicate fetching has ended
+    store.dispatch(setFetchingPendingPatientAssignments(false));
 
     // Update Facts
     // End procedure

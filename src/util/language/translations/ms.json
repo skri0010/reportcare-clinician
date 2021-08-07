@@ -70,7 +70,8 @@
   "Patient_Assignments": {
     "ApprovalSuccessful": "Kelulusan permintaan pesakit berjaya",
     "ApprovalFailed": "Gagal meluluskan permintaan pesakit",
-    "OfflineApproval": "Tiada sambungan internet.\nKelulusan akan disimpan dan disegerakkan semasa sambungan internet dikesan."
+    "OfflineApproval": "Tiada sambungan internet.\nKelulusan akan disimpan dan disegerakkan semasa sambungan internet dikesan.",
+    "NoPendingAssignments": "Setiap tugasan pesakit diselesai!"
   },
   "Parameter_Graphs": {
     "DiastolicBP": "Tekanan Darah Diastolik ",

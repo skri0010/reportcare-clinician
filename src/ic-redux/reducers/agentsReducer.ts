@@ -17,7 +17,7 @@ interface AgentsState {
   patientDetails: PatientDetails;
   pendingPatientAssignments: PatientAssignment[] | null;
   patientAssignmentsSynced: boolean;
-  fetchNewPatientAssignments: boolean;
+  fetchingPendingPatientAssignments: boolean;
   pendingAlertCount: PendingAlertCount;
   alerts: AlertInfo[];
 }
@@ -33,7 +33,7 @@ const initialState: AgentsState = {
     vitalsReports: []
   },
   pendingPatientAssignments: null,
-  fetchNewPatientAssignments: true,
+  fetchingPendingPatientAssignments: false,
   patientAssignmentsSynced: false,
   pendingAlertCount: {
     highRisk: 0,
@@ -57,10 +57,11 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
       return { ...state, patients: action.payload.patients };
     case actionNames.SET_PATIENT_DETAILS:
       return { ...state, patientDetails: action.payload.patientDetails };
-    case actionNames.SET_FETCH_NEW_PATIENT_ASSIGNMENTS:
+    case actionNames.SET_FETCHING_PENDING_PATIENT_ASSIGNMENTS:
       return {
         ...state,
-        fetchNewPatientAssignments: action.payload.fetchNewPatientAssignments
+        fetchingPendingPatientAssignments:
+          action.payload.fetchingPendingPatientAssignments
       };
     case actionNames.SET_PENDING_PATIENT_ASSIGNMENTS:
       return {

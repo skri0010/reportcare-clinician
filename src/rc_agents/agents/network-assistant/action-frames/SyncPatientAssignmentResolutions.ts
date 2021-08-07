@@ -17,7 +17,7 @@ import { PatientAssignmentResolution } from "rc_agents/model";
 import { resolvePatientAssignment } from "rc_agents/agents/data-assistant/action-frames/storing-data/ResolvePatientAssignment";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { store } from "ic-redux/store";
-import { setFetchNewPatientAssignments } from "ic-redux/actions/agents/actionCreator";
+import { setFetchingPendingPatientAssignments } from "ic-redux/actions/agents/actionCreator";
 
 // LS-TODO: To be tested once ApprovePatientAssignment is working
 
@@ -78,7 +78,7 @@ class SyncPatientAssignmentResolutions extends Activity {
           JSON.stringify(remainingList)
         );
         // Dispatch to store boolean to fetch updated patient assignments
-        store.dispatch(setFetchNewPatientAssignments(true));
+        store.dispatch(setFetchingPendingPatientAssignments(true));
       }
     } catch (error) {
       // eslint-disable-next-line no-console

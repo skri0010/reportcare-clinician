@@ -70,7 +70,8 @@
   "Patient_Assignments": {
     "ApprovalSuccessful": "Patient request approval successful",
     "ApprovalFailed": "Failed to approve patient request",
-    "OfflineApproval": "No internet connection detected.\nThe approval will be stored and synced when internet connection is detected."
+    "OfflineApproval": "No internet connection detected.\nThe approval will be stored and synced when internet connection is detected.",
+    "NoPendingAssignments": "All patient assignments have been resolved!"
   },
   "Parameter_Graphs": {
     "DiastolicBP": "Diastolic Blood Pressure ",

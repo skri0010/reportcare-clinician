@@ -36,10 +36,10 @@ export const setPatientDetails = createAction(
   })
 )();
 
-export const setFetchNewPatientAssignments = createAction(
-  actionNames.SET_FETCH_NEW_PATIENT_ASSIGNMENTS,
-  (fetchNewPatientAssignments: boolean) => ({
-    fetchNewPatientAssignments: fetchNewPatientAssignments
+export const setFetchingPendingPatientAssignments = createAction(
+  actionNames.SET_FETCHING_PENDING_PATIENT_ASSIGNMENTS,
+  (fetchingPendingPatientAssignments: boolean) => ({
+    fetchingPendingPatientAssignments: fetchingPendingPatientAssignments
   })
 )();
 

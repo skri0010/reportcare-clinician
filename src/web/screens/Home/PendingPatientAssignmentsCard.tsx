@@ -1,9 +1,9 @@
 import React, { FC, useEffect } from "react";
-import { RootState, select, useDispatch } from "util/useRedux";
+import { RootState, select } from "util/useRedux";
 import { View, TextStyle, FlatList } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
-import { H4 } from "components/Text/index";
+import { H4, H5 } from "components/Text/index";
 import { CardWrapper } from "./CardWrapper";
 import i18n from "util/language/i18n";
 import { agentAPI, Belief } from "rc_agents/framework";
@@ -20,7 +20,6 @@ import {
 } from "rc_agents/model";
 import { PatientAssignment } from "aws/API";
 import { PatientAssignmentRow } from "components/RowComponents/PatientRows/PatientPendingAssignmentRow";
-import { setFetchNewPatientAssignments } from "ic-redux/actions/agents/actionCreator";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
 
 interface PendingPatientAssignmentsCardProps {
@@ -29,37 +28,37 @@ interface PendingPatientAssignmentsCardProps {
 
 export const PendingPatientAssignmentsCard: FC<PendingPatientAssignmentsCardProps> =
   ({ maxHeight }) => {
-    const { colors, pendingPatientAssignments, fetchNewPatientAssignments } =
-      select((state: RootState) => ({
-        colors: state.settings.colors,
-        pendingPatientAssignments: state.agents.pendingPatientAssignments,
-        fetchNewPatientAssignments: state.agents.fetchNewPatientAssignments
-      }));
+    const {
+      colors,
+      pendingPatientAssignments,
+      fetchingPendingPatientAssignments
+    } = select((state: RootState) => ({
+      colors: state.settings.colors,
+      pendingPatientAssignments: state.agents.pendingPatientAssignments,
+      fetchingPendingPatientAssignments:
+        state.agents.fetchingPendingPatientAssignments
+    }));
 
     const titleColor = { color: colors.primaryTextColor } as TextStyle;
-    const dispatch = useDispatch();
 
-    // Trigger agent to fetch pending assignments
+    // Trigger agent to fetch pending assignments on initial load
     useEffect(() => {
-      if (fetchNewPatientAssignments) {
-        dispatch(setFetchNewPatientAssignments(!fetchNewPatientAssignments));
-        agentDTA.addBelief(
-          new Belief(
-            BeliefKeys.PATIENT,
-            PatientAttributes.RETRIEVE_PENDING_PATIENT_ASSIGNMENTS,
-            true
-          )
-        );
+      agentDTA.addBelief(
+        new Belief(
+          BeliefKeys.PATIENT,
+          PatientAttributes.RETRIEVE_PENDING_PATIENT_ASSIGNMENTS,
+          true
+        )
+      );
 
-        agentAPI.addFact(
-          new Belief(
-            BeliefKeys.PROCEDURE,
-            ProcedureAttributes.SRD,
-            ProcedureConst.ACTIVE
-          )
-        );
-      }
-    }, [fetchNewPatientAssignments, dispatch]);
+      agentAPI.addFact(
+        new Belief(
+          BeliefKeys.PROCEDURE,
+          ProcedureAttributes.SRD,
+          ProcedureConst.ACTIVE
+        )
+      );
+    }, []);
 
     // Trigger agent to resolve pending assignment
     const resolvePatientAssignment = (
@@ -116,30 +115,42 @@ export const PendingPatientAssignmentsCard: FC<PendingPatientAssignmentsCardProp
           />
         </View>
         {/* Loading indicator */}
-        {fetchNewPatientAssignments ? <LoadingIndicator /> : null}
+        {fetchingPendingPatientAssignments ? <LoadingIndicator /> : null}
 
         {/* List of pending patient assignments */}
         {pendingPatientAssignments ? (
-          <View style={styles.listContainer}>
-            <FlatList
-              style={
-                fetchNewPatientAssignments ? styles.flatlistLoadingOpacity : {}
-              }
-              showsVerticalScrollIndicator={false}
-              ItemSeparatorComponent={() => <ItemSeparator />}
-              data={pendingPatientAssignments}
-              renderItem={({ item }) => {
-                return (
-                  <PatientAssignmentRow
-                    patientName={item.patientName}
-                    onApprove={() => approvePatientAssignment(item)}
-                    onReassign={() => reassignPatientAssignment(item)}
-                  />
-                );
-              }}
-              keyExtractor={(item) => item.id}
-            />
-          </View>
+          pendingPatientAssignments.length > 0 ? (
+            <View style={styles.listContainer}>
+              <FlatList
+                style={
+                  fetchingPendingPatientAssignments
+                    ? styles.flatlistLoadingOpacity
+                    : {}
+                }
+                showsVerticalScrollIndicator={false}
+                ItemSeparatorComponent={() => <ItemSeparator />}
+                data={pendingPatientAssignments}
+                renderItem={({ item }) => {
+                  return (
+                    <PatientAssignmentRow
+                      patientName={item.patientName}
+                      onApprove={() => approvePatientAssignment(item)}
+                      onReassign={() => reassignPatientAssignment(item)}
+                    />
+                  );
+                }}
+                keyExtractor={(item) => item.id}
+              />
+            </View>
+          ) : (
+            // Display text to indicate no pending assignments
+            <View style={styles.noPendingTextContainer}>
+              <H5
+                text={i18n.t("Patient_Assignments.NoPendingAssignments")}
+                style={styles.noPendingText}
+              />
+            </View>
+          )
         ) : null}
       </CardWrapper>
     );
@@ -160,5 +171,14 @@ const styles = ScaledSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "baseline"
+  },
+  noPendingTextContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: "30@ms"
+  },
+  noPendingText: {
+    textAlign: "center"
   }
 });
