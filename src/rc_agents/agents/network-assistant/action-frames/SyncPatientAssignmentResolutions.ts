@@ -109,10 +109,8 @@ const rule2 = new Precondition(
 );
 
 // Actionframe of the SyncPatientAssignments class
-const af_SyncPatientAssignmentResolutions = new Actionframe(
+export const af_SyncPatientAssignmentResolutions = new Actionframe(
   `AF_${ActionFrameIDs.NWA.SYNC_PATIENT_ASSIGNMENT_RESOLUTIONS}`,
   [rule1, rule2],
   new SyncPatientAssignment()
 );
-
-export default af_SyncPatientAssignmentResolutions;

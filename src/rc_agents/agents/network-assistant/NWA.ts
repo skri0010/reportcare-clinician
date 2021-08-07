@@ -1,8 +1,7 @@
+import { Agent, Belief } from "rc_agents/framework";
 import { AgentIDs, CommonAttributes } from "rc_agents/AgentEnums";
-import Agent from "../../framework/base/Agent";
-import Belief from "../../framework/base/Belief";
-import af_SyncProtectedInfo from "./action-frames/SyncProtectedInfo";
-import af_SyncPatientAssignmentResolutions from "./action-frames/SyncPatientAssignmentResolutions";
+import { af_SyncProtectedInfo } from "./action-frames/SyncProtectedInfo";
+import { af_SyncPatientAssignmentResolutions } from "./action-frames/SyncPatientAssignmentResolutions";
 
 // Initial Beliefs of Agent
 const belief1 = new Belief(AgentIDs.NWA, CommonAttributes.LAST_ACTIVITY, null);

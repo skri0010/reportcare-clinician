@@ -98,10 +98,8 @@ const rule2 = new Precondition(
 );
 
 // Actionframe of the SyncProtectedInfo class
-const af_SyncProtectedInfo = new Actionframe(
+export const af_SyncProtectedInfo = new Actionframe(
   `AF_${ActionFrameIDs.NWA.SYNC_PROTECTED_INFO}`,
   [rule1, rule2],
   new SyncProtectedInfo()
 );
-
-export default af_SyncProtectedInfo;
