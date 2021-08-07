@@ -4,7 +4,8 @@ import {
   Belief,
   Activity,
   Precondition,
-  agentAPI
+  agentAPI,
+  ResettablePrecondition
 } from "rc_agents/framework";
 import {
   ProcedureConst,
@@ -47,7 +48,8 @@ class ResolvePatientAssignment extends Activity {
    * @param {Agent} agent - context of the agent
    */
   async doActivity(agent: Agent): Promise<void> {
-    await super.doActivity(agent);
+    await super.doActivity(agent, [rule2]);
+    let resolvedOnline = false;
 
     try {
       // Get assignment to resolve
@@ -69,9 +71,7 @@ class ResolvePatientAssignment extends Activity {
             assignment: assignment,
             ownClinicianId: clinicianId
           });
-
-          // Dispatch to store boolean to fetch updated patient assignments
-          store.dispatch(setFetchNewPatientAssignments(true));
+          resolvedOnline = true;
         }
         // Device is offline: Save locally in PatientAssignmentResolutions
         else {
@@ -106,6 +106,7 @@ class ResolvePatientAssignment extends Activity {
             );
           }
 
+          // JH-TODO: This may need Communicate instead
           // Update Belief of NWA
           agentNWA.addBelief(
             new Belief(
@@ -121,7 +122,18 @@ class ResolvePatientAssignment extends Activity {
       console.log(error);
     }
 
-    // Update Facts and Beliefs
+    if (resolvedOnline) {
+      // Retrieve new pending patient assignments
+      agent.addBelief(
+        new Belief(
+          BeliefKeys.PATIENT,
+          PatientAttributes.RETRIEVE_PENDING_PATIENT_ASSIGNMENTS,
+          true
+        )
+      );
+    }
+
+    // Update Facts
     // Remove item
     agentAPI.addFact(
       new Belief(
@@ -130,29 +142,6 @@ class ResolvePatientAssignment extends Activity {
         null
       ),
       false
-    );
-    // Reset precondition
-    agent.addBelief(
-      new Belief(
-        BeliefKeys.PATIENT,
-        PatientAttributes.RESOLVE_PATIENT_ASSIGNMENT,
-        false
-      )
-    );
-    // Set last activity
-    agent.addBelief(
-      new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
-    );
-
-    // Stop the procedure
-    agentAPI.addFact(
-      new Belief(
-        BeliefKeys.PROCEDURE,
-        ProcedureAttributes.SRD,
-        ProcedureConst.INACTIVE
-      ),
-      true,
-      true
     );
   }
 }
@@ -266,7 +255,7 @@ const rule1 = new Precondition(
   ProcedureAttributes.SRD,
   ProcedureConst.ACTIVE
 );
-const rule2 = new Precondition(
+const rule2 = new ResettablePrecondition(
   BeliefKeys.PATIENT,
   PatientAttributes.RESOLVE_PATIENT_ASSIGNMENT,
   true

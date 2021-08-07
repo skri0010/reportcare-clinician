@@ -3,7 +3,8 @@ import {
   Agent,
   Belief,
   Activity,
-  Precondition
+  Precondition,
+  ResettablePrecondition
 } from "rc_agents/framework";
 import {
   ActionFrameIDs,
@@ -36,7 +37,7 @@ class SyncPatientAssignmentResolutions extends Activity {
    * @param {Agent} agent - agent executing the activity
    */
   async doActivity(agent: Agent): Promise<void> {
-    super.doActivity(agent);
+    super.doActivity(agent, [rule2]);
 
     try {
       // Get locally stored list of assignments to resolve
@@ -79,20 +80,6 @@ class SyncPatientAssignmentResolutions extends Activity {
         // Dispatch to store boolean to fetch updated patient assignments
         store.dispatch(setFetchNewPatientAssignments(true));
       }
-
-      // Update Beliefs
-      // Reset precondition
-      agent.addBelief(
-        new Belief(
-          BeliefKeys.APP,
-          AppAttributes.SYNC_PATIENT_ASSIGNMENT_RESOLUTIONS,
-          false
-        )
-      );
-      // Set last activity
-      agent.addBelief(
-        new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
-      );
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
@@ -102,7 +89,7 @@ class SyncPatientAssignmentResolutions extends Activity {
 
 // Rules or preconditions for activating the SyncPatientAssignmentResolutions class
 const rule1 = new Precondition(BeliefKeys.APP, AppAttributes.ONLINE, true);
-const rule2 = new Precondition(
+const rule2 = new ResettablePrecondition(
   BeliefKeys.APP,
   AppAttributes.SYNC_PATIENT_ASSIGNMENT_RESOLUTIONS,
   true
