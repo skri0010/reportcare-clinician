@@ -8,13 +8,13 @@ import {
 import {
   ActionFrameIDs,
   AppAttributes,
-  AsyncStorageKeys,
   BeliefKeys,
   ClinicianAttributes,
   CommonAttributes,
   ProcedureAttributes,
   ProcedureConst
 } from "rc_agents/AgentEnums";
+import { AsyncStorageKeys } from "rc_agents/storage";
 import agentAPI from "rc_agents/framework/AgentAPI";
 import { Alert, ModelSortDirection } from "aws/API";
 import { mockPendingAlerts } from "mock/mockAlerts";

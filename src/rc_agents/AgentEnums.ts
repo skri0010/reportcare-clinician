@@ -1,5 +1,3 @@
-import { PatientAssignmentResolution } from "rc_agents/model";
-
 // Constant values for the state of activity
 export enum ActivityStatus {
   INACTIVE = "inactive",
@@ -163,21 +161,3 @@ export enum PatientAttributes {
   PATIENT_ASSIGNMENT_RESOLVED = "PatientAssignmentResolved",
   RESOLVE_PATIENT_ASSIGNMENT = "ResolvePatientAssignment"
 }
-
-// Keys for locally storing data in AsyncStorage
-export enum AsyncStorageKeys {
-  CLINICIAN_ID = "ClinicianID",
-  SIGN_UP_DETAILS = "SignUpDetails",
-  USERNAME = "Username",
-  CLINICIAN = "Clinician",
-  PATIENTS = "Patients",
-  ALERTS = "Alerts",
-  PENDING_PATIENT_ASSIGNMENTS = "PendingPatientAssignments",
-  PATIENT_ASSIGNMENTS_RESOLUTIONS = "PatientAssignmentsResolutions"
-}
-
-export type AsyncStorageType = {
-  [AsyncStorageKeys.PATIENT_ASSIGNMENTS_RESOLUTIONS]: {
-    [key: string]: PatientAssignmentResolution;
-  };
-};

@@ -7,7 +7,6 @@ import {
 } from "rc_agents/framework";
 import {
   ProcedureConst,
-  AsyncStorageKeys,
   BeliefKeys,
   PatientAttributes,
   CommonAttributes,
@@ -16,6 +15,7 @@ import {
   AppAttributes,
   ActionFrameIDs
 } from "rc_agents/AgentEnums";
+import { AsyncStorageKeys } from "rc_agents/storage";
 import { Patient } from "rc_agents/model";
 import { PatientInfo } from "aws/API";
 import { RiskLevel } from "models/RiskLevel";

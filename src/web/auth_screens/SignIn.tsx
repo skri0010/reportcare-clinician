@@ -16,12 +16,12 @@ import agentAPS from "rc_agents/agents/app-configuration-assistant/APS";
 import Belief from "rc_agents/framework/base/Belief";
 import {
   ProcedureConst,
-  AsyncStorageKeys,
   BeliefKeys,
   AppAttributes,
   ClinicianAttributes,
   ProcedureAttributes
 } from "rc_agents/AgentEnums";
+import { AsyncStorageKeys } from "rc_agents/storage";
 import { useNetInfo } from "@react-native-community/netinfo";
 import { setProcedureOngoing } from "ic-redux/actions/agents/actionCreator";
 import { AuthButton } from "components/Buttons/AuthButton";

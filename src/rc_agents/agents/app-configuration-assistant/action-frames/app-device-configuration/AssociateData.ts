@@ -7,7 +7,6 @@ import {
 } from "rc_agents/framework";
 import {
   ProcedureConst,
-  AsyncStorageKeys,
   BeliefKeys,
   ClinicianAttributes,
   CommonAttributes,
@@ -15,6 +14,7 @@ import {
   ProcedureAttributes,
   ActionFrameIDs
 } from "rc_agents/AgentEnums";
+import { AsyncStorageKeys } from "rc_agents/storage";
 import agentAPI from "rc_agents/framework/AgentAPI";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
