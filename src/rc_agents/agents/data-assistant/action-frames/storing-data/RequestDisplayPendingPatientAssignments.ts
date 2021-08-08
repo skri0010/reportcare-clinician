@@ -21,11 +21,11 @@ import {
  * Class to represent the activity for requesting display of retrieved pending patient assignments.
  * This happens in Procedure Storing Data (SRD).
  */
-class RequestPendingPatientAssignments extends Communicate {
+class RequestDisplayPendingPatientAssignments extends Communicate {
   constructor() {
     // Trigger DisplayPendingPatientAssignments of UXSA agent
     super(
-      ActionFrameIDs.DTA.REQUEST_DETAILS_DISPLAY,
+      ActionFrameIDs.DTA.REQUEST_DISPLAY_PENDING_PATIENT_ASSIGNMENTS,
       Performative.REQUEST,
       new Belief(
         BeliefKeys.PATIENT,
@@ -69,8 +69,8 @@ const rule3 = new ResettablePrecondition(
 );
 
 // Actionframe
-export const af_RequestPendingPatientAssignments = new Actionframe(
-  `AF_${ActionFrameIDs.DTA.REQUEST_PENDING_PATIENT_ASSIGNMENTS}`,
+export const af_RequestDisplayPendingPatientAssignments = new Actionframe(
+  `AF_${ActionFrameIDs.DTA.REQUEST_DISPLAY_PENDING_PATIENT_ASSIGNMENTS}`,
   [rule1, rule2, rule3],
-  new RequestPendingPatientAssignments()
+  new RequestDisplayPendingPatientAssignments()
 );

@@ -8,7 +8,7 @@ import { af_RetrieveRolePatients } from "./action-frames/hf-outcome-trends/Retri
 import { af_RetrieveAlertInfos } from "./action-frames/triage-alert-hf-clinic/RetrieveAlertInfos";
 import { af_RequestAlertsDisplay } from "./action-frames/triage-alert-hf-clinic/RequestAlertsDisplay";
 import { af_RetrievePendingPatientAssignments } from "./action-frames/storing-data/RetrievePendingPatientAssignments";
-import { af_RequestPendingPatientAssignments } from "./action-frames/storing-data/RequestPendingPatientAssignments";
+import { af_RequestDisplayPendingPatientAssignments } from "./action-frames/storing-data/RequestDisplayPendingPatientAssignments";
 import { af_ResolvePatientAssignment } from "./action-frames/storing-data/ResolvePatientAssignment";
 import { af_RequestSyncPatientAssignmentResolutions } from "./action-frames/storing-data/RequestSyncPatientAssignmentResolutions";
 import { af_RetrievePendingAlertCount } from "./action-frames/triage-alert-hf-clinic/RetrievePendingAlertCount";
@@ -29,7 +29,7 @@ const agentDTA = new Agent(
 
     // SRD
     af_RetrievePendingPatientAssignments,
-    af_RequestPendingPatientAssignments,
+    af_RequestDisplayPendingPatientAssignments,
     af_ResolvePatientAssignment,
     af_RequestSyncPatientAssignmentResolutions,
 
