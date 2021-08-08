@@ -10,7 +10,6 @@ import {
 import {
   ProcedureConst,
   AsyncStorageKeys,
-  CommonAttributes,
   BeliefKeys,
   PatientAttributes,
   ProcedureAttributes,
@@ -28,8 +27,6 @@ import {
   getClinicianPatientMap,
   getPatientAssignment
 } from "aws";
-import { store } from "ic-redux/store";
-import { setFetchingPendingPatientAssignments } from "ic-redux/actions/agents/actionCreator";
 import agentNWA from "rc_agents/agents/network-assistant/NWA";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Auth from "@aws-amplify/auth";

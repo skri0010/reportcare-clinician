@@ -101,32 +101,40 @@ class RetrievePendingPatientAssignments extends Activity {
             true
           )
         );
-      } else {
-        // Set to retry later
-        setRetryLaterTimeout(() => {
-          agent.addBelief(
-            new Belief(
-              BeliefKeys.PATIENT,
-              PatientAttributes.RETRIEVE_PENDING_PATIENT_ASSIGNMENTS,
-              true
-            )
-          );
-
-          agentAPI.addFact(
-            new Belief(
-              BeliefKeys.PROCEDURE,
-              ProcedureAttributes.SRD,
-              ProcedureConst.ACTIVE
-            )
-          );
-        });
-
-        // Dispatch to store to indicate fetching has ended
-        store.dispatch(setFetchingPendingPatientAssignments(false));
       }
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
+      // Set to retry later
+      setRetryLaterTimeout(() => {
+        agent.addBelief(
+          new Belief(
+            BeliefKeys.PATIENT,
+            PatientAttributes.RETRIEVE_PENDING_PATIENT_ASSIGNMENTS,
+            true
+          )
+        );
+        agentAPI.addFact(
+          new Belief(
+            BeliefKeys.PROCEDURE,
+            ProcedureAttributes.SRD,
+            ProcedureConst.ACTIVE
+          )
+        );
+      });
+
+      // Update Facts
+      // End the procedure
+      agentAPI.addFact(
+        new Belief(
+          BeliefKeys.PROCEDURE,
+          ProcedureAttributes.SRD,
+          ProcedureConst.INACTIVE
+        )
+      );
+    } finally {
+      // Dispatch to store to indicate fetching has ended
+      store.dispatch(setFetchingPendingPatientAssignments(false));
     }
   }
 }

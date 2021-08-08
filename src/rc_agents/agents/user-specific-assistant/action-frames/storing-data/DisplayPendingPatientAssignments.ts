@@ -50,7 +50,7 @@ class DisplayPendingPatientAssignments extends Activity {
     store.dispatch(setFetchingPendingPatientAssignments(false));
 
     // Update Facts
-    // End procedure
+    // End the procedure
     agentAPI.addFact(
       new Belief(
         BeliefKeys.PROCEDURE,
