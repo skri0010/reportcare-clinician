@@ -16,7 +16,7 @@ export const NoSelection: FC<NoSelectionProps> = ({
     subtitle
 }) => {
     return (
-        <View style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", height: "100% "}}>
+        <View style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", height: "100%" }}>
             <H4 text={subtitle} style={{ marginTop: ms(20) }}/>
         </View>
     );

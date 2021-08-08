@@ -5,6 +5,7 @@ import { ClinicianInfo } from "aws/models";
 import { H3, H4 } from "components/Text";
 import { select, RootState } from "util/useRedux";
 import { CardWrapper } from "../Home/CardWrapper";
+import { ScreenWrapper } from "../ScreenWrapper";
 
 interface ClinicianDetails {
     generalDetails: ClinicianInfo;
@@ -17,7 +18,7 @@ export const ClinicianDetails: FC<ClinicianDetails> = ({
     }));
 
     return (
-        <CardWrapper maxHeight={ms(120)}>
+        <ScreenWrapper>
             <View style={{ display: "flex", flexDirection: "column" }}>
                 <H3 text="Clinician Info:" style={{ fontWeight:"bold", color: colors.primaryTextColor }}/>
                 <View style={styles.rowStyle}>
@@ -37,7 +38,7 @@ export const ClinicianDetails: FC<ClinicianDetails> = ({
                     <H4 text={generalDetails.role} style={{ color: colors.primaryTextColor }}/>
                 </View>
             </View>
-        </CardWrapper>
+        </ScreenWrapper>
 
     );
 };
