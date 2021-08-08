@@ -62,7 +62,8 @@ export const ActionFrameIDs = {
 
     // Patient Assignments
     RETRIEVE_PENDING_PATIENT_ASSIGNMENTS: "RetrievePendingPatientAssignments",
-    REQUEST_PENDING_PATIENT_ASSIGNMENTS: "RequestPendingPatientAssignments",
+    REQUEST_DISPLAY_PENDING_PATIENT_ASSIGNMENTS:
+      "RequestDisplayPendingPatientAssignments",
     RESOLVE_PATIENT_ASSIGNMENT: "ResolvePatientAssignment",
     REQUEST_SYNC_PATIENT_ASSIGNMENT_RESOLUTIONS:
       "RequestSyncPatientAssignmentResolutions"
