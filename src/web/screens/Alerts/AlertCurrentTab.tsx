@@ -41,6 +41,7 @@ export const AlertCurrentTab: FC<AlertRowTabProps> = ({ setAlertSelected }) => {
           renderItem={({ item }) => (
               <AlertRow 
               alertDetails={item}
+              onCardPress={() => onCardPress(item)}
               />
           )}
           />

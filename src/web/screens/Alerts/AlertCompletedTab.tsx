@@ -39,6 +39,7 @@ export const AlertCompletedTab: FC<AlertRowTabProps> = ({ setAlertSelected }) =>
             renderItem={({ item }) => (
                 <AlertRow
                 alertDetails={item}
+                onCardPress={() => onCardPress(item)}
                 />
             )}
             />
