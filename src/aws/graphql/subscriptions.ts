@@ -680,13 +680,69 @@ export const onDeleteClinicianPatientMap = /* GraphQL */ `
     }
   }
 `;
+export const onCreatePatientAssignment = /* GraphQL */ `
+  subscription OnCreatePatientAssignment($owner: String, $clinicianID: String) {
+    onCreatePatientAssignment(owner: $owner, clinicianID: $clinicianID) {
+      id
+      patientID
+      clinicianID
+      pending
+      resolution
+      patientName
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onUpdatePatientAssignment = /* GraphQL */ `
+  subscription OnUpdatePatientAssignment($owner: String, $clinicianID: String) {
+    onUpdatePatientAssignment(owner: $owner, clinicianID: $clinicianID) {
+      id
+      patientID
+      clinicianID
+      pending
+      resolution
+      patientName
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onDeletePatientAssignment = /* GraphQL */ `
+  subscription OnDeletePatientAssignment($owner: String, $clinicianID: String) {
+    onDeletePatientAssignment(owner: $owner, clinicianID: $clinicianID) {
+      id
+      patientID
+      clinicianID
+      pending
+      resolution
+      patientName
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
 export const onCreateAlert = /* GraphQL */ `
   subscription OnCreateAlert($owner: String) {
     onCreateAlert(owner: $owner) {
       id
       patientID
+      patientName
       dateTime
       summary
+      colorCode
       vitalsReportID
       vitalsReport {
         id
@@ -721,6 +777,7 @@ export const onCreateAlert = /* GraphQL */ `
         updatedAt
         owner
       }
+      pending
       completed
       owner
       _version
@@ -736,8 +793,10 @@ export const onUpdateAlert = /* GraphQL */ `
     onUpdateAlert(owner: $owner) {
       id
       patientID
+      patientName
       dateTime
       summary
+      colorCode
       vitalsReportID
       vitalsReport {
         id
@@ -772,6 +831,7 @@ export const onUpdateAlert = /* GraphQL */ `
         updatedAt
         owner
       }
+      pending
       completed
       owner
       _version
@@ -787,8 +847,10 @@ export const onDeleteAlert = /* GraphQL */ `
     onDeleteAlert(owner: $owner) {
       id
       patientID
+      patientName
       dateTime
       summary
+      colorCode
       vitalsReportID
       vitalsReport {
         id
@@ -823,6 +885,7 @@ export const onDeleteAlert = /* GraphQL */ `
         updatedAt
         owner
       }
+      pending
       completed
       owner
       _version
@@ -839,16 +902,20 @@ export const onCreateTodo = /* GraphQL */ `
       id
       clinicianID
       title
+      patientName
       notes
       lastModified
       alertID
       alert {
         id
         patientID
+        patientName
         dateTime
         summary
+        colorCode
         vitalsReportID
         symptomReportID
+        pending
         completed
         owner
         _version
@@ -873,16 +940,20 @@ export const onUpdateTodo = /* GraphQL */ `
       id
       clinicianID
       title
+      patientName
       notes
       lastModified
       alertID
       alert {
         id
         patientID
+        patientName
         dateTime
         summary
+        colorCode
         vitalsReportID
         symptomReportID
+        pending
         completed
         owner
         _version
@@ -907,16 +978,20 @@ export const onDeleteTodo = /* GraphQL */ `
       id
       clinicianID
       title
+      patientName
       notes
       lastModified
       alertID
       alert {
         id
         patientID
+        patientName
         dateTime
         summary
+        colorCode
         vitalsReportID
         symptomReportID
+        pending
         completed
         owner
         _version

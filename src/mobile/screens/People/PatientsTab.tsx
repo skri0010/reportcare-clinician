@@ -5,31 +5,27 @@ import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { ScaledSheet } from "react-native-size-matters";
 import { PatientDetailsRow } from "components/RowComponents/PatientRows/PatientDetailsRow";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
-import { ParameterGraphs } from "components/Visualizations/ParameterGraphs";
-import agentDTA from "agents_implementation/agents/data-assistant/DTA";
-import Belief from "agents_implementation/agent_framework/base/Belief";
+import agentDTA from "rc_agents/agents/data-assistant/DTA";
+import Belief from "rc_agents/framework/base/Belief";
 import {
   BeliefKeys,
   ClinicianAttributes,
   PatientAttributes,
   ProcedureAttributes,
   ProcedureConst
-} from "agents_implementation/agent_framework/AgentEnums";
-import agentAPI from "agents_implementation/agent_framework/AgentAPI";
-import agentUXSA from "agents_implementation/agents/user-specific-assistant/UXSA";
+} from "rc_agents/AgentEnums";
+import agentAPI from "rc_agents/framework/AgentAPI";
+import agentUXSA from "rc_agents/agents/user-specific-assistant/UXSA";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { setProcedureOngoing } from "ic-redux/actions/agents/actionCreator";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
 import { useNetInfo } from "@react-native-community/netinfo";
 
 export const PatientsTab: FC = () => {
-  const { patients, patientDetails, procedureOngoing } = select(
-    (state: RootState) => ({
-      patients: state.agents.patients,
-      procedureOngoing: state.agents.procedureOngoing,
-      patientDetails: state.agents.patientDetails
-    })
-  );
+  const { patients, procedureOngoing } = select((state: RootState) => ({
+    patients: state.agents.patients,
+    procedureOngoing: state.agents.procedureOngoing
+  }));
 
   const [retrieving, setRetrieving] = useState(false); // used locally to indicate ongoing retrieval of details
   const [showGraph, setShowGraph] = useState(false); // used locally for graph display
@@ -142,7 +138,7 @@ export const PatientsTab: FC = () => {
       )}
 
       {/* TODO: Move graphs to PatientsDetails screen */}
-      {showGraph && <ParameterGraphs data={patientDetails.vitalsReports} />}
+      {/* {showGraph && <ParameterGraphs data={patientDetails.vitalsReports} />} */}
 
       {(retrieving || procedureOngoing) && <LoadingIndicator />}
     </ScreenWrapper>

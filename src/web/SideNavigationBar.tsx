@@ -10,7 +10,7 @@ import { SettingScreen } from "web/screens/Setting/SettingScreen";
 import { HelpScreen } from "web/screens/Help/HelpScreen";
 import { ScreenName, SideTabsParamList, MainScreenProps } from "./screens";
 import { select, RootState } from "util/useRedux";
-import { getBottomTabBarOptions } from "util/getStyles";
+import { getSideTabBarOptions } from "util/getStyles";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { View, Text, TextStyle } from "react-native";
@@ -24,27 +24,24 @@ interface TabIconProps {
 }
 
 export const SideNavigationBar: FC<MainScreenProps> = () => {
-  const { colors } = select((state: RootState) => ({
-    colors: state.settings.colors
+  const { colors, fonts } = select((state: RootState) => ({
+    colors: state.settings.colors,
+    fonts: state.settings.fonts
   }));
 
-  const menuTitleColor = {
+  const iconTextStyle = {
+    fontSize: fonts.h7Size,
     color: colors.primaryContrastTextColor
   } as TextStyle;
 
   const iconSize = ms(15);
-  const drawerSize = ms(48);
+  const drawerSize = ms(45);
 
   const TabIcon: FC<TabIconProps> = ({ name, color, subtitle }) => {
     return (
-      <View>
-        <Icon
-          style={styles.icon}
-          name={name}
-          color={color}
-          size={ms(iconSize)}
-        />
-        <Text style={[styles.text, menuTitleColor]}> {subtitle} </Text>
+      <View style={styles.iconContainer}>
+        <Icon name={name} color={color} size={ms(iconSize)} />
+        <Text style={iconTextStyle}>{subtitle}</Text>
       </View>
     );
   };
@@ -52,11 +49,12 @@ export const SideNavigationBar: FC<MainScreenProps> = () => {
   return (
     <Drawer.Navigator
       drawerType="permanent"
-      drawerContentOptions={getBottomTabBarOptions(colors)}
+      drawerContentOptions={getSideTabBarOptions(colors)}
       drawerStyle={{
-        backgroundColor: colors.primaryBarColor,
-        width: drawerSize
+        width: drawerSize,
+        backgroundColor: colors.primaryBarColor
       }}
+      initialRouteName={ScreenName.HOME}
     >
       <Drawer.Screen
         name={ScreenName.HOME}
@@ -144,11 +142,8 @@ export const SideNavigationBar: FC<MainScreenProps> = () => {
 };
 
 const styles = ScaledSheet.create({
-  icon: {
-    alignSelf: "center"
-  },
-  text: {
-    textAlign: "center",
-    fontSize: "6@ms"
+  iconContainer: {
+    width: "100%",
+    alignItems: "center"
   }
 });

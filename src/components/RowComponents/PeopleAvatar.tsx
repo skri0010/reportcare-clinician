@@ -47,8 +47,8 @@ export const PeopleAvatar: FC<PeopleAvatarProps> = ({ iconType }) => {
 
 const styles = ScaledSheet.create({
   avatarPatient: {
-    width: "45@ms",
-    height: "45@ms",
+    width: "35@ms",
+    height: "35@ms",
     borderRadius: "50@ms",
     justifyContent: "space-evenly",
     alignItems: "center"

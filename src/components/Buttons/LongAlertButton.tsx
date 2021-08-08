@@ -1,15 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, TouchableOpacity } from "react-native";
 import { RootState, select } from "util/useRedux";
 import { getRiskLevelColor, RiskLevel } from "../../models/RiskLevel";
 import { ScaledSheet, ms } from "react-native-size-matters";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { H5, H6 } from "components/Text/index";
+import i18n from "util/language/i18n";
+import { AlertStatus } from "aws";
 
 interface LongAlertButtonProps {
   riskLevel: RiskLevel;
   alertCount?: number;
-  onPress?: () => void;
+  onPress?: (alertStatus: AlertStatus, riskLevel: RiskLevel) => void;
 }
 
 export const LongAlertButton: React.FC<LongAlertButtonProps> = ({
@@ -17,12 +19,34 @@ export const LongAlertButton: React.FC<LongAlertButtonProps> = ({
   alertCount = 0,
   onPress
 }) => {
-  const { colors, fonts } = select((state: RootState) => ({
+  const { colors, fonts, alerts } = select((state: RootState) => ({
     colors: state.settings.colors,
-    fonts: state.settings.fonts
+    fonts: state.settings.fonts,
+    alerts: state.agents.alerts
   }));
 
+  // LS-TODO: "alerts" should be used in alerts screen
+  useEffect(() => {
+    if (alerts.length > 0) {
+      // eslint-disable-next-line no-console
+      console.log(alerts);
+    }
+  }, [alerts]);
+
   const hasNotifications = alertCount > 0;
+
+  function findRiskName(risk: RiskLevel) {
+    let riskName: string = "Alerts.UnassignedRisk";
+
+    if (risk === RiskLevel.HIGH) {
+      riskName = "Alerts.HighRisk";
+    } else if (risk === RiskLevel.MEDIUM) {
+      riskName = "Alerts.MediumRisk";
+    } else if (risk === RiskLevel.LOW) {
+      riskName = "Alerts.LowRisk";
+    }
+    return i18n.t(riskName);
+  }
 
   return (
     <TouchableOpacity
@@ -39,10 +63,12 @@ export const LongAlertButton: React.FC<LongAlertButtonProps> = ({
           )
         }
       ]}
-      onPress={onPress}
+      onPress={
+        onPress ? () => onPress(AlertStatus.PENDING, riskLevel) : undefined
+      }
     >
       <H5
-        text={`${riskLevel} Risk`}
+        text={findRiskName(riskLevel)}
         style={[{ color: colors.primaryTextColor }, styles.riskText]}
       />
       {/* Floating notification count */}

@@ -76,6 +76,25 @@ export const mockPatients: PatientInfo[] = [
     updatedAt: "",
     _lastChangedAt: 1627604201979,
     _version: 1
+  },
+  {
+    __typename: "PatientInfo",
+    id: "5",
+    name: "Mohammad Abdul",
+    address: "Canberra",
+    deviceNo: "1",
+    diagnosisInfo: "none",
+    NHYAclass: "NHYA III",
+    cardiologist: "Doctor Wong",
+    hospitalName: "Canberra Hospital",
+    hospitalLocation: "Canberra",
+    targetWeight: "55",
+    targetActivity: "cardio",
+    patientID: "70",
+    createdAt: "",
+    updatedAt: "",
+    _lastChangedAt: 1627604201979,
+    _version: 1
   }
 ];
 

@@ -5,8 +5,10 @@ import {
   AlertInfo,
   Patient,
   PatientDetails,
+  PendingAlertCount,
   Todo
-} from "agents_implementation/agent_framework/model";
+} from "rc_agents/model";
+import { PatientAssignment } from "aws/API";
 
 interface AgentsState {
   procedureSuccessful: boolean;
@@ -14,8 +16,11 @@ interface AgentsState {
   online: boolean;
   patients: Patient[];
   patientDetails: PatientDetails;
-  patientRequestsSynced: boolean;
-  newAlert: AlertInfo | undefined;
+  pendingPatientAssignments: PatientAssignment[] | null;
+  patientAssignmentsSynced: boolean;
+  fetchingPendingPatientAssignments: boolean;
+  pendingAlertCount: PendingAlertCount;
+  alerts: AlertInfo[];
   newTodo: Todo | undefined;
 }
 
@@ -29,8 +34,16 @@ const initialState: AgentsState = {
     symptomsReports: [],
     vitalsReports: []
   },
-  patientRequestsSynced: false,
-  newAlert: undefined,
+  pendingPatientAssignments: null,
+  fetchingPendingPatientAssignments: false,
+  patientAssignmentsSynced: false,
+  pendingAlertCount: {
+    highRisk: 0,
+    mediumRisk: 0,
+    lowRisk: 0,
+    unassignedRisk: 0
+  },
+  alerts: [],
   newTodo: undefined
 };
 
@@ -47,13 +60,32 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
       return { ...state, patients: action.payload.patients };
     case actionNames.SET_PATIENT_DETAILS:
       return { ...state, patientDetails: action.payload.patientDetails };
-    case actionNames.SET_PATIENT_REQUESTS_SYNCED:
+    case actionNames.SET_FETCHING_PENDING_PATIENT_ASSIGNMENTS:
       return {
         ...state,
-        patientRequestsSynced: action.payload.patientRequestsSynced
+        fetchingPendingPatientAssignments:
+          action.payload.fetchingPendingPatientAssignments
       };
-    case actionNames.SET_NEW_ALERT:
-      return { ...state, newAlert: action.payload.newAlert };
+    case actionNames.SET_PENDING_PATIENT_ASSIGNMENTS:
+      return {
+        ...state,
+        pendingPatientAssignments: action.payload.pendingPatientAssignments
+      };
+    case actionNames.SET_PATIENT_ASSIGNMENTS_SYNCED:
+      return {
+        ...state,
+        patientAssignmentsSynced: action.payload.patientAssignmentsSynced
+      };
+    case actionNames.SET_PENDING_ALERT_COUNT:
+      return {
+        ...state,
+        pendingAlertCount: action.payload.pendingAlertCount
+      };
+    case actionNames.SET_ALERTS:
+      return {
+        ...state,
+        alerts: action.payload.alerts
+      };
     case actionNames.SET_NEW_TODO:
       return { ...state, newTodo: action.payload.newTodo };
     default:

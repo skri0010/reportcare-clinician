@@ -5,7 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { ms, ScaledSheet } from "react-native-size-matters";
 // eslint-disable-next-line no-restricted-imports
 import { Picker } from "@react-native-picker/picker";
-import { Role, Hospital } from "models/ClinicianEnums";
+import { Role, Hospital } from "aws";
 import { RootState, select } from "util/useRedux";
 import { AuthScreenName, AuthScreensProps } from "web/auth_screens";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
@@ -18,7 +18,7 @@ import i18n from "util/language/i18n";
 import { useToast } from "react-native-toast-notifications";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AsyncStorageKeys } from "agents_implementation/agent_framework/AgentEnums";
+import { AsyncStorageKeys } from "rc_agents/AgentEnums";
 import { AuthButton } from "components/Buttons/AuthButton";
 import { TextField } from "components/InputComponents/TextField";
 

@@ -190,11 +190,11 @@ export const schema = {
                 {
                     "type": "key",
                     "properties": {
-                        "name": "medicationInfoByPatientID",
+                        "name": "medicationInfosByPatientID",
                         "fields": [
                             "patientID"
                         ],
-                        "queryField": "listMedicationInfoByPatientID"
+                        "queryField": "listMedicationInfosByPatientID"
                     }
                 },
                 {
@@ -306,11 +306,11 @@ export const schema = {
                 {
                     "type": "key",
                     "properties": {
-                        "name": "activityInfoByPatientID",
+                        "name": "activityInfosByPatientID",
                         "fields": [
                             "patientID"
                         ],
-                        "queryField": "listActivityInfoByPatientID"
+                        "queryField": "listActivityInfosByPatientID"
                     }
                 },
                 {
@@ -421,22 +421,22 @@ export const schema = {
                 {
                     "type": "key",
                     "properties": {
-                        "name": "medCompliantByPatientID",
+                        "name": "medCompliantsByPatientID",
                         "fields": [
                             "patientID"
                         ],
-                        "queryField": "listMedCompliantByPatientID"
+                        "queryField": "listMedCompliantsByPatientID"
                     }
                 },
                 {
                     "type": "key",
                     "properties": {
-                        "name": "medCompliantByDate",
+                        "name": "medCompliantsByDate",
                         "fields": [
                             "patientID",
                             "Date"
                         ],
-                        "queryField": "listMedCompliantByDate"
+                        "queryField": "listMedCompliantsByDate"
                     }
                 },
                 {
@@ -554,22 +554,22 @@ export const schema = {
                 {
                     "type": "key",
                     "properties": {
-                        "name": "reportSymptomByPatientID",
+                        "name": "reportSymptomsByPatientID",
                         "fields": [
                             "patientID"
                         ],
-                        "queryField": "listReportSymptomByPatientID"
+                        "queryField": "listReportSymptomsByPatientID"
                     }
                 },
                 {
                     "type": "key",
                     "properties": {
-                        "name": "reportSymptomByDateTime",
+                        "name": "reportSymptomsByDateTime",
                         "fields": [
                             "patientID",
                             "DateTime"
                         ],
-                        "queryField": "listReportSymptomByDateTime"
+                        "queryField": "listReportSymptomsByDateTime"
                     }
                 },
                 {
@@ -701,22 +701,22 @@ export const schema = {
                 {
                     "type": "key",
                     "properties": {
-                        "name": "reportVitalByPatientID",
+                        "name": "reportVitalsByPatientID",
                         "fields": [
                             "patientID"
                         ],
-                        "queryField": "listReportVitalByPatientID"
+                        "queryField": "listReportVitalsByPatientID"
                     }
                 },
                 {
                     "type": "key",
                     "properties": {
-                        "name": "reportVitalByDateTime",
+                        "name": "reportVitalsByDateTime",
                         "fields": [
                             "patientID",
                             "DateTime"
                         ],
-                        "queryField": "listReportVitalByDateTime"
+                        "queryField": "listReportVitalsByDateTime"
                     }
                 },
                 {
@@ -1093,12 +1093,12 @@ export const schema = {
                 {
                     "type": "key",
                     "properties": {
-                        "name": "clinicianIDsByPatientID",
+                        "name": "clinicianMappingsByPatientID",
                         "fields": [
                             "patientID",
                             "clinicianID"
                         ],
-                        "queryField": "clinicianIDsByPatientID"
+                        "queryField": "listClinicianMappingsByPatientID"
                     }
                 },
                 {
@@ -1167,6 +1167,122 @@ export const schema = {
                 }
             ]
         },
+        "PatientAssignment": {
+            "name": "PatientAssignment",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "patientID": {
+                    "name": "patientID",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "clinicianID": {
+                    "name": "clinicianID",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "pending": {
+                    "name": "pending",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "resolution": {
+                    "name": "resolution",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "patientName": {
+                    "name": "patientName",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                }
+            },
+            "syncable": true,
+            "pluralName": "PatientAssignments",
+            "attributes": [
+                {
+                    "type": "model",
+                    "properties": {}
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "fields": [
+                            "patientID",
+                            "clinicianID"
+                        ]
+                    }
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "pendingPatientAssignments",
+                        "fields": [
+                            "clinicianID",
+                            "pending"
+                        ],
+                        "queryField": "listPendingPatientAssignments"
+                    }
+                },
+                {
+                    "type": "auth",
+                    "properties": {
+                        "rules": [
+                            {
+                                "provider": "userPools",
+                                "ownerField": "owner",
+                                "allow": "owner",
+                                "operations": [
+                                    "create",
+                                    "read"
+                                ],
+                                "identityClaim": "cognito:username"
+                            },
+                            {
+                                "provider": "userPools",
+                                "ownerField": "clinicianID",
+                                "allow": "owner",
+                                "operations": [
+                                    "read",
+                                    "update"
+                                ],
+                                "identityClaim": "cognito:username"
+                            },
+                            {
+                                "groupClaim": "cognito:groups",
+                                "provider": "userPools",
+                                "allow": "groups",
+                                "groups": [
+                                    "Admin"
+                                ],
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
         "Alert": {
             "name": "Alert",
             "fields": {
@@ -1184,6 +1300,13 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
+                "patientName": {
+                    "name": "patientName",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
                 "dateTime": {
                     "name": "dateTime",
                     "isArray": false,
@@ -1193,6 +1316,13 @@ export const schema = {
                 },
                 "summary": {
                     "name": "summary",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "colorCode": {
+                    "name": "colorCode",
                     "isArray": false,
                     "type": "String",
                     "isRequired": true,
@@ -1240,11 +1370,18 @@ export const schema = {
                         "targetName": "symptomReportID"
                     }
                 },
+                "pending": {
+                    "name": "pending",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "completed": {
                     "name": "completed",
                     "isArray": false,
-                    "type": "Boolean",
-                    "isRequired": true,
+                    "type": "String",
+                    "isRequired": false,
                     "attributes": []
                 },
                 "owner": {
@@ -1265,22 +1402,45 @@ export const schema = {
                 {
                     "type": "key",
                     "properties": {
-                        "name": "alertsByPatientID",
+                        "name": "patientAlertsByDateTime",
                         "fields": [
-                            "patientID"
+                            "patientID",
+                            "dateTime"
                         ],
-                        "queryField": "listAlertsByPatientID"
+                        "queryField": "listPatientAlertsByDateTime"
                     }
                 },
                 {
                     "type": "key",
                     "properties": {
-                        "name": "alertsByDateTime",
+                        "name": "pendingAlertsByDateTime",
                         "fields": [
-                            "patientID",
+                            "pending",
                             "dateTime"
                         ],
-                        "queryField": "listAlertsByDateTime"
+                        "queryField": "listPendingAlertsByDateTime"
+                    }
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "pendingRiskAlerts",
+                        "fields": [
+                            "pending",
+                            "colorCode"
+                        ],
+                        "queryField": "listPendingRiskAlerts"
+                    }
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "completedRiskAlerts",
+                        "fields": [
+                            "completed",
+                            "colorCode"
+                        ],
+                        "queryField": "listCompletedRiskAlerts"
                     }
                 },
                 {
@@ -1356,6 +1516,13 @@ export const schema = {
                 },
                 "title": {
                     "name": "title",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "patientName": {
+                    "name": "patientName",
                     "isArray": false,
                     "type": "String",
                     "isRequired": true,
@@ -1490,5 +1657,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "17c34895eb568a0c95540413e6f200b1"
+    "version": "613b60fa5b401c2dd643da14364472fe"
 };

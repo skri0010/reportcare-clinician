@@ -5,9 +5,10 @@ import { ScaledSheet } from "react-native-size-matters";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { mockPatients } from "mock/mockPatients";
 import { PatientRequestRow } from "components/RowComponents/PatientRows/PatientRequestRow";
-import { H3, H5 } from "components/Text";
+import { H4, H6 } from "components/Text";
 import { CardWrapper } from "./CardWrapper";
 import { FloatingShowMoreButton } from "components/Buttons/FloatingShowMoreButton";
+import i18n from "util/language/i18n";
 
 interface RequestsByMariaCardProps {
   maxHeight: number;
@@ -30,8 +31,14 @@ export const RequestsByMariaCard: FC<RequestsByMariaCardProps> = ({
     <CardWrapper maxHeight={maxHeight}>
       {/* Requests by MARIA */}
       <View style={styles.titleContainer}>
-        <H3 text="Requests by Maria" style={[styles.title, titleColor]} />
-        <H5 text="   (2 remaining)" style={[styles.details, detailsColors]} />
+        <H4
+          text={i18n.t("Home.RequestsByMaria")}
+          style={[styles.title, titleColor]}
+        />
+        <H6
+          text={`(2 ${i18n.t("Home.ItemsRemaining")})`}
+          style={[styles.details, detailsColors]}
+        />
       </View>
       {/* Patient Requests List */}
       <View style={styles.patientRequestsContainer}>
@@ -73,11 +80,11 @@ const styles = ScaledSheet.create({
     alignItems: "baseline"
   },
   title: {
-    fontWeight: "bold",
-    paddingBottom: "8@ms"
+    fontWeight: "bold"
   },
   patientRequestsContainer: {
-    flex: 1
+    flex: 1,
+    paddingTop: "15@ms"
   },
   details: {
     fontWeight: "bold"
