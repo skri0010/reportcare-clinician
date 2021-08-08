@@ -1,7 +1,6 @@
 import {
   Actionframe,
   Agent,
-  Belief,
   Activity,
   Precondition,
   ResettablePrecondition
@@ -10,8 +9,7 @@ import {
   ActionFrameIDs,
   AppAttributes,
   AsyncStorageKeys,
-  BeliefKeys,
-  CommonAttributes
+  BeliefKeys
 } from "rc_agents/AgentEnums";
 import { PatientAssignmentResolution } from "rc_agents/model";
 import { resolvePatientAssignment } from "rc_agents/agents/data-assistant/action-frames/storing-data/ResolvePatientAssignment";
@@ -19,10 +17,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { store } from "ic-redux/store";
 import { setFetchingPendingPatientAssignments } from "ic-redux/actions/agents/actionCreator";
 
-// LS-TODO: To be tested once ApprovePatientAssignment is working
-
 /**
- * Class to represent the activity for syncing local approval of patient assignments.
+ * Class to represent the activity for syncing local resolutions of patient assignments.
+ *
+ * JH-TODO:
+ * - Update once ResolvePatientAssignment is ready
+ * - Requires Communicate from DTA to NWA
  */
 class SyncPatientAssignmentResolutions extends Activity {
   /**
@@ -87,7 +87,7 @@ class SyncPatientAssignmentResolutions extends Activity {
   }
 }
 
-// Rules or preconditions for activating the SyncPatientAssignmentResolutions class
+// Preconditions
 const rule1 = new Precondition(BeliefKeys.APP, AppAttributes.ONLINE, true);
 const rule2 = new ResettablePrecondition(
   BeliefKeys.APP,
@@ -95,7 +95,7 @@ const rule2 = new ResettablePrecondition(
   true
 );
 
-// Actionframe of the SyncPatientAssignmentResolutions class
+// Actionframe
 export const af_SyncPatientAssignmentResolutions = new Actionframe(
   `AF_${ActionFrameIDs.NWA.SYNC_PATIENT_ASSIGNMENT_RESOLUTIONS}`,
   [rule1, rule2],

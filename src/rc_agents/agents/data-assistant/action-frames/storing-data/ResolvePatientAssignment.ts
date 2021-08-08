@@ -45,6 +45,7 @@ class ResolvePatientAssignment extends Activity {
    * @param {Agent} agent - context of the agent
    */
   async doActivity(agent: Agent): Promise<void> {
+    // Reset preconditions
     await super.doActivity(agent, [rule2]);
     let resolvedOnline = false;
 
@@ -70,7 +71,7 @@ class ResolvePatientAssignment extends Activity {
           });
           resolvedOnline = true;
         }
-        // Device is offline: Save locally in PatientAssignmentResolutions
+        // Device is offline: Save locally
         else {
           // Append current assignments to resolve to locally stored assignments to resolve
           const localData = await AsyncStorage.getItem(
@@ -103,9 +104,8 @@ class ResolvePatientAssignment extends Activity {
             );
           }
 
-          // JH-TODO: This may need Communicate instead
-          // Update Belief of NWA
-          agentNWA.addBelief(
+          // Trigger request to Communicate to NWA
+          agent.addBelief(
             new Belief(
               BeliefKeys.APP,
               AppAttributes.SYNC_PATIENT_ASSIGNMENT_RESOLUTIONS,
@@ -246,7 +246,7 @@ const reassignPatientAssignment: (params: {
   }
 };
 
-// Preconditions for activating the ApprovePatientAssignment class
+// Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
   ProcedureAttributes.SRD,
@@ -258,7 +258,7 @@ const rule2 = new ResettablePrecondition(
   true
 );
 
-// Action Frame for ApprovePatientAssignment class
+// Actionframe
 export const af_ResolvePatientAssignment = new Actionframe(
   `AF_${ActionFrameIDs.DTA.RESOLVE_PATIENT_ASSIGNMENT}`,
   [rule1, rule2],

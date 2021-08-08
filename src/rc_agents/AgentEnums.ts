@@ -61,9 +61,11 @@ export const ActionFrameIDs = {
     REQUEST_ALERTS_DISPLAY: "RequestAlertsDisplay",
 
     // Patient Assignments
-    REQUEST_PENDING_PATIENT_ASSIGNMENTS: "RequestPendingPatientAssignments",
     RETRIEVE_PENDING_PATIENT_ASSIGNMENTS: "RetrievePendingPatientAssignments",
-    RESOLVE_PATIENT_ASSIGNMENT: "ResolvePatientAssignment"
+    REQUEST_PENDING_PATIENT_ASSIGNMENTS: "RequestPendingPatientAssignments",
+    RESOLVE_PATIENT_ASSIGNMENT: "ResolvePatientAssignment",
+    REQUEST_SYNC_PATIENT_ASSIGNMENT_RESOLUTIONS:
+      "RequestSyncPatientAssignmentResolutions"
   },
   UXSA: {
     RETRIEVE_ROLE: "RetrieveRole",
@@ -156,6 +158,7 @@ export enum PatientAttributes {
   PENDING_PATIENT_ASSIGNMENTS_RETRIEVED = "PendingPatientAssignmentsRetrieved",
   DISPLAY_PENDING_ASSIGNMENTS_REQUESTED = "DisplayPendingAssignmentsRequested",
   PATIENT_ASSIGNMENT_RESOLUTION = "PatientAssignmentResolution",
+  PATIENT_ASSIGNMENT_RESOLVED = "PatientAssignmentResolved",
   RESOLVE_PATIENT_ASSIGNMENT = "ResolvePatientAssignment"
 }
 

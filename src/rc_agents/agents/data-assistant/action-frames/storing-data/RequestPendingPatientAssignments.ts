@@ -42,6 +42,7 @@ class RequestPendingPatientAssignments extends Communicate {
    */
   async doActivity(agent: Agent): Promise<void> {
     try {
+      // Reset preconditions
       await super.doActivity(agent, [rule3]);
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -50,7 +51,7 @@ class RequestPendingPatientAssignments extends Communicate {
   }
 }
 
-// Rules or preconditions for activating the RequestPendingPatientAssignments class
+// Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
   ProcedureAttributes.SRD,
@@ -67,7 +68,7 @@ const rule3 = new ResettablePrecondition(
   true
 );
 
-// Actionframe of the RequestPendingPatientAssignment class
+// Actionframe
 export const af_RequestPendingPatientAssignments = new Actionframe(
   `AF_${ActionFrameIDs.DTA.REQUEST_PENDING_PATIENT_ASSIGNMENTS}`,
   [rule1, rule2, rule3],

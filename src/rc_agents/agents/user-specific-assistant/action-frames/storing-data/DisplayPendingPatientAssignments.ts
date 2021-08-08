@@ -34,6 +34,7 @@ class DisplayPendingPatientAssignments extends Activity {
    * @param {Agent} agent - context of the agent
    */
   async doActivity(agent: Agent): Promise<void> {
+    // Reset preconditions
     await super.doActivity(agent, [rule2]);
 
     const pendingPatientAssignments =
@@ -63,7 +64,7 @@ class DisplayPendingPatientAssignments extends Activity {
   }
 }
 
-// Preconditions for activating the DisplayPendingPatientAssignments class
+// Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
   ProcedureAttributes.SRD,
@@ -75,7 +76,7 @@ const rule2 = new ResettablePrecondition(
   true
 );
 
-// Action Frame for DisplayPendingPatientAssignments class
+// Actionframe
 export const af_DisplayPendingPatientAssignments = new Actionframe(
   `AF_${ActionFrameIDs.UXSA.DISPLAY_PENDING_PATIENT_ASSIGNMENTS}`,
   [rule1, rule2],

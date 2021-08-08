@@ -2,14 +2,15 @@ import { AgentIDs, CommonAttributes } from "rc_agents/AgentEnums";
 import { Agent, Belief } from "rc_agents/framework";
 import { af_RetrieveEntryData } from "./action-frames/app-device-configuration/RetrieveEntryData";
 import { af_StoreEntryData } from "./action-frames/app-device-configuration/StoreEntryData";
-import { af_ResolvePatientAssignment } from "./action-frames/storing-data/ResolvePatientAssignment";
 import { af_RetrievePatientDetails } from "./action-frames/hf-outcome-trends/RetrievePatientDetails";
 import { af_RequestDetailsDisplay } from "./action-frames/hf-outcome-trends/RequestDetailsDisplay";
 import { af_RetrieveRolePatients } from "./action-frames/hf-outcome-trends/RetrieveRolePatients";
 import { af_RetrieveAlertInfos } from "./action-frames/triage-alert-hf-clinic/RetrieveAlertInfos";
 import { af_RequestAlertsDisplay } from "./action-frames/triage-alert-hf-clinic/RequestAlertsDisplay";
-import { af_RetrievePendingPatientAssignments } from "./action-frames/hf-outcome-trends/RetrievePendingPatientAssignments";
-import { af_RequestPendingPatientAssignments } from "./action-frames/hf-outcome-trends/RequestPendingPatientAssignments";
+import { af_RetrievePendingPatientAssignments } from "./action-frames/storing-data/RetrievePendingPatientAssignments";
+import { af_RequestPendingPatientAssignments } from "./action-frames/storing-data/RequestPendingPatientAssignments";
+import { af_ResolvePatientAssignment } from "./action-frames/storing-data/ResolvePatientAssignment";
+import { af_RequestSyncPatientAssignmentResolutions } from "./action-frames/storing-data/RequestSyncPatientAssignmentResolutions";
 import { af_RetrievePendingAlertCount } from "./action-frames/triage-alert-hf-clinic/RetrievePendingAlertCount";
 import { af_RequestPendingAlertCountDisplay } from "./action-frames/triage-alert-hf-clinic/RequestPendingAlertCountDisplay";
 
@@ -27,16 +28,15 @@ const agentDTA = new Agent(
     af_RetrieveEntryData,
 
     // SRD
+    af_RetrievePendingPatientAssignments,
+    af_RequestPendingPatientAssignments,
     af_ResolvePatientAssignment,
+    af_RequestSyncPatientAssignmentResolutions,
 
     // HF-OTP-I
     af_RetrievePatientDetails,
     af_RequestDetailsDisplay,
     af_RetrieveRolePatients,
-
-    // HF-OTP-II
-    af_RetrievePendingPatientAssignments,
-    af_RequestPendingPatientAssignments,
 
     // AT-CP
     af_RetrievePendingAlertCount,

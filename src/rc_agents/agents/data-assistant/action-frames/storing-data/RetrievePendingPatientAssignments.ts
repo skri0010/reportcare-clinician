@@ -139,7 +139,7 @@ class RetrievePendingPatientAssignments extends Activity {
   }
 }
 
-// Preconditions for activating the RetrievePendingPatientAssignments class
+// Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
   ProcedureAttributes.SRD,
@@ -151,7 +151,7 @@ const rule2 = new ResettablePrecondition(
   true
 );
 
-// Action Frame for RetrievePendingPatientAssignments class
+// Actionframe
 export const af_RetrievePendingPatientAssignments = new Actionframe(
   `AF_${ActionFrameIDs.DTA.RETRIEVE_PENDING_PATIENT_ASSIGNMENTS}`,
   [rule1, rule2],
