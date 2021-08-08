@@ -3,7 +3,8 @@ import {
   Activity,
   Agent,
   Belief,
-  Precondition
+  Precondition,
+  ResettablePrecondition
 } from "rc_agents/framework";
 import {
   ActionFrameIDs,
@@ -11,7 +12,6 @@ import {
   AsyncStorageKeys,
   BeliefKeys,
   ClinicianAttributes,
-  CommonAttributes,
   ProcedureAttributes,
   ProcedureConst
 } from "rc_agents/AgentEnums";
@@ -46,19 +46,7 @@ class RetrieveAlerts extends Activity {
    * @param {Agent} agent - agent executing the activity
    */
   async doActivity(agent: Agent): Promise<void> {
-    await super.doActivity(agent);
-
-    // Update beliefs to stop the procedure from repeating
-    agent.addBelief(
-      new Belief(
-        BeliefKeys.CLINICIAN,
-        ClinicianAttributes.RETRIEVE_ALERTS,
-        false
-      )
-    );
-    agent.addBelief(
-      new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
-    );
+    await super.doActivity(agent, [rule2]);
 
     try {
       const facts = agentAPI.getFacts();
@@ -251,7 +239,7 @@ const rule1 = new Precondition(
   ProcedureAttributes.AT_CP,
   ProcedureConst.ACTIVE
 );
-const rule2 = new Precondition(
+const rule2 = new ResettablePrecondition(
   BeliefKeys.CLINICIAN,
   ClinicianAttributes.RETRIEVE_ALERTS,
   true

@@ -3,14 +3,14 @@ import {
   Activity,
   Agent,
   Belief,
-  Precondition
+  Precondition,
+  ResettablePrecondition
 } from "rc_agents/framework";
 import {
   ProcedureConst,
   AsyncStorageKeys,
   BeliefKeys,
   ClinicianAttributes,
-  CommonAttributes,
   AppAttributes,
   ProcedureAttributes,
   ActionFrameIDs
@@ -35,15 +35,7 @@ class AssociateData extends Activity {
    * @param {Agent} agent - agent executing the activity
    */
   async doActivity(agent: Agent): Promise<void> {
-    super.doActivity(agent);
-
-    // Update Beliefs
-    agent.addBelief(
-      new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.HAS_ENTRY, true)
-    );
-    agent.addBelief(
-      new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
-    );
+    super.doActivity(agent, [rule2]);
 
     try {
       const [[, username], [, details]] = await AsyncStorage.multiGet([
@@ -97,7 +89,7 @@ class AssociateData extends Activity {
 
 // Rules or preconditions for activating the AssociateData class
 const rule1 = new Precondition(BeliefKeys.APP, AppAttributes.CONFIGURED, true);
-const rule2 = new Precondition(
+const rule2 = new ResettablePrecondition(
   BeliefKeys.CLINICIAN,
   ClinicianAttributes.HAS_ENTRY,
   false

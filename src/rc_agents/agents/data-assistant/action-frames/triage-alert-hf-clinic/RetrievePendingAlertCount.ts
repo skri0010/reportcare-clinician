@@ -3,7 +3,8 @@ import {
   Activity,
   Agent,
   Belief,
-  Precondition
+  Precondition,
+  ResettablePrecondition
 } from "rc_agents/framework";
 import {
   ActionFrameIDs,
@@ -11,7 +12,6 @@ import {
   AsyncStorageKeys,
   BeliefKeys,
   ClinicianAttributes,
-  CommonAttributes,
   ProcedureAttributes,
   ProcedureConst
 } from "rc_agents/AgentEnums";
@@ -36,16 +36,7 @@ class RetrievePendingAlertCount extends Activity {
    * @param {Agent} agent - context of the agent
    */
   async doActivity(agent: Agent): Promise<void> {
-    await super.doActivity(agent);
-
-    // Update Beliefs
-    agent.addBelief(
-      new Belief(
-        BeliefKeys.CLINICIAN,
-        ClinicianAttributes.RETRIEVE_PENDING_ALERT_COUNT,
-        false
-      )
-    );
+    await super.doActivity(agent, [rule2]);
 
     try {
       let results: (Alert | undefined | null)[] | undefined | null;
@@ -105,10 +96,6 @@ class RetrievePendingAlertCount extends Activity {
       // eslint-disable-next-line no-console
       console.log(error);
     }
-
-    agent.addBelief(
-      new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
-    );
   }
 }
 
@@ -118,7 +105,7 @@ const rule1 = new Precondition(
   ProcedureAttributes.AT_CP,
   ProcedureConst.ACTIVE
 );
-const rule2 = new Precondition(
+const rule2 = new ResettablePrecondition(
   BeliefKeys.CLINICIAN,
   ClinicianAttributes.RETRIEVE_PENDING_ALERT_COUNT,
   true

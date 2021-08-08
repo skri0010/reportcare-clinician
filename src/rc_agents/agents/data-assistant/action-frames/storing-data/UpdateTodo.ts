@@ -3,13 +3,13 @@ import {
   Agent,
   Activity,
   Belief,
-  Precondition
+  Precondition,
+  ResettablePrecondition
 } from "rc_agents/framework";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   ProcedureConst,
   AsyncStorageKeys,
-  CommonAttributes,
   BeliefKeys,
   ProcedureAttributes,
   AppAttributes,
@@ -40,15 +40,7 @@ class UpdateTodo extends Activity {
    * @param {Agent} agent - context of the agent
    */
   async doActivity(agent: Agent): Promise<void> {
-    await super.doActivity(agent);
-
-    // Update Beliefs
-    agent.addBelief(
-      new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.EDIT_TODO, false)
-    );
-    agent.addBelief(
-      new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
-    );
+    await super.doActivity(agent, [rule2]);
 
     try {
       // Gets Todo details to be updated
@@ -167,7 +159,7 @@ const rule1 = new Precondition(
   ProcedureAttributes.SRD,
   ProcedureConst.ACTIVE
 );
-const rule2 = new Precondition(
+const rule2 = new ResettablePrecondition(
   BeliefKeys.CLINICIAN,
   ClinicianAttributes.EDIT_TODO,
   true

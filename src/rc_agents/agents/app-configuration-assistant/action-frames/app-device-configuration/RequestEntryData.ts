@@ -45,11 +45,7 @@ class RequestEntryData extends Communicate {
   async doActivity(agent: Agent): Promise<void> {
     try {
       super.doActivity(agent);
-
-      // Update Beliefs
-      agent.addBelief(
-        new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
-      );
+      
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);

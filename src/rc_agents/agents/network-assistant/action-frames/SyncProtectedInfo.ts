@@ -2,15 +2,14 @@ import {
   Actionframe,
   Activity,
   Agent,
-  Belief,
-  Precondition
+  Precondition,
+  ResettablePrecondition
 } from "rc_agents/framework";
 import {
   ActionFrameIDs,
   AppAttributes,
   AsyncStorageKeys,
-  BeliefKeys,
-  CommonAttributes
+  BeliefKeys
 } from "rc_agents/AgentEnums";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { updateClinicianProtectedInfo } from "aws/TypedAPI/updateMutations";
@@ -33,20 +32,7 @@ class SyncProtectedInfo extends Activity {
    * @param {Agent} agent - agent executing the activity
    */
   async doActivity(agent: Agent): Promise<void> {
-    await super.doActivity(agent);
-
-    agent.addBelief(
-      new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
-    );
-
-    // Prevents the activity from being executed multiple times while data is being synced
-    agent.addBelief(
-      new Belief(
-        BeliefKeys.APP,
-        AppAttributes.PENDING_PROTECTED_INFO_SYNC,
-        false
-      )
-    );
+    await super.doActivity(agent, [rule2]);
 
     try {
       // Retrieves local clinician
@@ -91,7 +77,7 @@ class SyncProtectedInfo extends Activity {
 
 // Rules or preconditions for activating the SyncProtectedInfo class
 const rule1 = new Precondition(BeliefKeys.APP, AppAttributes.ONLINE, true);
-const rule2 = new Precondition(
+const rule2 = new ResettablePrecondition(
   BeliefKeys.APP,
   AppAttributes.PENDING_PROTECTED_INFO_SYNC,
   true

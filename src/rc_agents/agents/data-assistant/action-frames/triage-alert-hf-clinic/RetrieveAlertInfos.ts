@@ -3,7 +3,8 @@ import {
   Activity,
   Agent,
   Belief,
-  Precondition
+  Precondition,
+  ResettablePrecondition
 } from "rc_agents/framework";
 import {
   ActionFrameIDs,
@@ -11,7 +12,6 @@ import {
   AsyncStorageKeys,
   BeliefKeys,
   ClinicianAttributes,
-  CommonAttributes,
   ProcedureAttributes,
   ProcedureConst
 } from "rc_agents/AgentEnums";
@@ -48,12 +48,7 @@ class RetrieveAlertInfos extends Activity {
    * @param {Agent} agent - context of the agent
    */
   async doActivity(agent: Agent): Promise<void> {
-    await super.doActivity(agent);
-
-    // Update Beliefs
-    agent.addBelief(
-      new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.ALERTS_SORTED, false)
-    );
+    await super.doActivity(agent, [rule2]);
 
     try {
       const facts = agentAPI.getFacts();
@@ -122,11 +117,6 @@ class RetrieveAlertInfos extends Activity {
       // eslint-disable-next-line no-console
       console.log(error);
     }
-
-    // Updates belief last to prevent RequestAlertsDisplay from being triggered early
-    agent.addBelief(
-      new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
-    );
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -291,7 +281,7 @@ const rule1 = new Precondition(
   ProcedureAttributes.AT_CP,
   ProcedureConst.ACTIVE
 );
-const rule2 = new Precondition(
+const rule2 = new ResettablePrecondition(
   BeliefKeys.CLINICIAN,
   ClinicianAttributes.ALERTS_SORTED,
   true

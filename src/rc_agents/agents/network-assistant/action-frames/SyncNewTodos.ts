@@ -3,15 +3,15 @@ import {
   Activity,
   Agent,
   Belief,
-  Precondition
+  Precondition,
+  ResettablePrecondition
 } from "rc_agents/framework";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   ActionFrameIDs,
   AppAttributes,
   AsyncStorageKeys,
-  BeliefKeys,
-  CommonAttributes
+  BeliefKeys
 } from "rc_agents/AgentEnums";
 import { updateAlert } from "aws/TypedAPI/updateMutations";
 import { createTodo } from "aws/TypedAPI/createMutations";
@@ -39,16 +39,7 @@ class SyncNewTodos extends Activity {
    * @param {Agent} agent - agent executing the activity
    */
   async doActivity(agent: Agent): Promise<void> {
-    super.doActivity(agent);
-
-    agent.addBelief(
-      new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
-    );
-
-    // Prevents the activity from being executed multiple times while requests are being synced
-    agent.addBelief(
-      new Belief(BeliefKeys.APP, AppAttributes.PENDING_TODO_INSERT_SYNC, false)
-    );
+    super.doActivity(agent, [rule2]);
 
     try {
       // Gets locally stored clinicianId
@@ -123,7 +114,7 @@ class SyncNewTodos extends Activity {
 
 // Rules or preconditions for activating the SyncNewTodos class
 const rule1 = new Precondition(BeliefKeys.APP, AppAttributes.ONLINE, true);
-const rule2 = new Precondition(
+const rule2 = new ResettablePrecondition(
   BeliefKeys.APP,
   AppAttributes.PENDING_TODO_INSERT_SYNC,
   true

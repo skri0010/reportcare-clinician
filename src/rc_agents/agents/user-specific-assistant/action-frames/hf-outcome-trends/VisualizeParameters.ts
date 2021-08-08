@@ -3,12 +3,12 @@ import {
   Activity,
   Agent,
   Belief,
-  Precondition
+  Precondition,
+  ResettablePrecondition
 } from "rc_agents/framework";
 import {
   ActionFrameIDs,
   BeliefKeys,
-  CommonAttributes,
   PatientAttributes,
   ProcedureAttributes,
   ProcedureConst
@@ -36,15 +36,7 @@ class VisualizeParameters extends Activity {
    * @param {Agent} agent - context of the agent
    */
   async doActivity(agent: Agent): Promise<void> {
-    await super.doActivity(agent);
-
-    // Update Beliefs
-    agent.addBelief(
-      new Belief(BeliefKeys.PATIENT, PatientAttributes.DETAILS_RETRIEVED, false)
-    );
-    agent.addBelief(
-      new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
-    );
+    await super.doActivity(agent, [rule2]);
 
     try {
       const patientDetails: PatientDetails =
@@ -98,7 +90,7 @@ const rule1 = new Precondition(
   ProcedureAttributes.HF_OTP_II,
   ProcedureConst.ACTIVE
 );
-const rule2 = new Precondition(
+const rule2 = new ResettablePrecondition(
   BeliefKeys.PATIENT,
   PatientAttributes.DETAILS_RETRIEVED,
   true

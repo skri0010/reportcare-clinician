@@ -3,20 +3,20 @@ import {
   Activity,
   Agent,
   Belief,
-  Precondition
+  Precondition,
+  ResettablePrecondition
 } from "rc_agents/framework";
 import {
   ActionFrameIDs,
   AppAttributes,
   BeliefKeys,
-  CommonAttributes,
   PatientAttributes,
   ProcedureAttributes,
   ProcedureConst
 } from "rc_agents/AgentEnums";
 import { PatientDetails } from "rc_agents/model";
 import agentAPI from "rc_agents/framework/AgentAPI";
-import { listActivityInfos, listReportSymptoms, listReportVitals } from "aws";
+import { listActivityInfosByPatientID, listReportSymptomsByPatientID, listReportVitalsByPatientID } from "aws";
 import { ActivityInfo, ReportSymptom, ReportVitals } from "aws/API";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -34,12 +34,7 @@ class RetrievePatientDetails extends Activity {
    * @param {Agent} agent - context of the agent
    */
   async doActivity(agent: Agent): Promise<void> {
-    await super.doActivity(agent);
-
-    // Update Beliefs
-    agent.addBelief(
-      new Belief(BeliefKeys.PATIENT, PatientAttributes.RETRIEVE_DETAILS, false)
-    );
+    await super.doActivity(agent, [rule2]);
 
     try {
       // Gets patientId from facts
@@ -58,30 +53,25 @@ class RetrievePatientDetails extends Activity {
 
       if (patientId && isOnline) {
         // Device is online
-        const activityInfoQuery = await listActivityInfos({
-          filter: { patientID: { eq: patientId } }
-        });
+        const activityInfoQuery = await listActivityInfosByPatientID({patientID: patientId});
 
-        const symptomsReportsQuery = await listReportSymptoms({
-          filter: { patientID: { eq: patientId } }
-        });
+        const symptomsReportsQuery = await listReportSymptomsByPatientID({patientID: patientId});
 
-        const vitalsReportsQuery = await listReportVitals({
-          filter: { patientID: { eq: patientId } }
-        });
+        const vitalsReportsQuery = await listReportVitalsByPatientID({ patientID: patientId }
+        );
 
-        if (activityInfoQuery.data.listActivityInfos?.items) {
-          patientDetails.activityInfo = activityInfoQuery.data.listActivityInfos
+        if (activityInfoQuery.data.listActivityInfosByPatientID?.items) {
+          patientDetails.activityInfo = activityInfoQuery.data.listActivityInfosByPatientID
             .items as ActivityInfo[];
         }
-        if (symptomsReportsQuery.data.listReportSymptoms?.items) {
+        if (symptomsReportsQuery.data.listReportSymptomsByPatientID?.items) {
           patientDetails.symptomsReports = symptomsReportsQuery.data
-            .listReportSymptoms.items as ReportSymptom[];
+            .listReportSymptomsByPatientID.items as ReportSymptom[];
         }
 
-        if (vitalsReportsQuery.data.listReportVitalss?.items) {
+        if (vitalsReportsQuery.data.listReportVitalsByPatientID?.items) {
           patientDetails.vitalsReports = vitalsReportsQuery.data
-            .listReportVitalss.items as ReportVitals[];
+            .listReportVitalsByPatientID.items as ReportVitals[];
         }
 
         // Saves retrieved details locally with patientId as key
@@ -125,11 +115,6 @@ class RetrievePatientDetails extends Activity {
       // eslint-disable-next-line no-console
       console.log(error);
     }
-
-    // Updates belief last to prevent RequestDetailsDisplay from being triggered early
-    agent.addBelief(
-      new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
-    );
   }
 }
 
@@ -139,7 +124,7 @@ const rule1 = new Precondition(
   ProcedureAttributes.HF_OTP_II,
   ProcedureConst.ACTIVE
 );
-const rule2 = new Precondition(
+const rule2 = new ResettablePrecondition(
   BeliefKeys.PATIENT,
   PatientAttributes.RETRIEVE_DETAILS,
   true

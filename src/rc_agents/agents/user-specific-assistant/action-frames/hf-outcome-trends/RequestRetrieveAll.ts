@@ -42,10 +42,6 @@ class RequestRetrieveAll extends Communicate {
     try {
       await super.doActivity(agent);
 
-      // Update Beliefs
-      agent.addBelief(
-        new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
-      );
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
