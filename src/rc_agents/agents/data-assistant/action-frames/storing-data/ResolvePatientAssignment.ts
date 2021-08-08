@@ -10,6 +10,7 @@ import {
 import {
   ProcedureConst,
   AsyncStorageKeys,
+  AsyncStorageType,
   BeliefKeys,
   PatientAttributes,
   ProcedureAttributes,
@@ -27,7 +28,6 @@ import {
   getClinicianPatientMap,
   getPatientAssignment
 } from "aws";
-import agentNWA from "rc_agents/agents/network-assistant/NWA";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Auth from "@aws-amplify/auth";
 
@@ -51,7 +51,7 @@ class ResolvePatientAssignment extends Activity {
 
     try {
       // Get assignment to resolve
-      const assignment: PatientAssignmentResolution =
+      const resolution: PatientAssignmentResolution =
         agentAPI.getFacts()[BeliefKeys.PATIENT]?.[
           PatientAttributes.PATIENT_ASSIGNMENT_RESOLUTION
         ];
@@ -61,12 +61,12 @@ class ResolvePatientAssignment extends Activity {
         AsyncStorageKeys.CLINICIAN_ID
       );
 
-      if (assignment && clinicianId) {
+      if (resolution && clinicianId) {
         // Device is online
         if (agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
           // Resolve (APPROVE or REASSIGN based on assignment)
           await resolvePatientAssignment({
-            assignment: assignment,
+            resolution: resolution,
             ownClinicianId: clinicianId
           });
           resolvedOnline = true;
@@ -77,30 +77,20 @@ class ResolvePatientAssignment extends Activity {
           const localData = await AsyncStorage.getItem(
             AsyncStorageKeys.PATIENT_ASSIGNMENTS_RESOLUTIONS
           );
+          let pendingAssignments: AsyncStorageType[AsyncStorageKeys.PATIENT_ASSIGNMENTS_RESOLUTIONS];
           // Key exists in AsyncStorage
           if (localData) {
-            // Insert and store if this assignment does not exist (ie new patientID)
-            const pendingAssignments: PatientAssignmentResolution[] =
-              JSON.parse(localData);
-            const assignmentExists = pendingAssignments.find(
-              (storedAssignment) =>
-                storedAssignment.patientID === assignment.patientID
-            );
-
-            if (!assignmentExists) {
-              pendingAssignments.push(assignment);
-              await AsyncStorage.setItem(
-                AsyncStorageKeys.PATIENT_ASSIGNMENTS_RESOLUTIONS,
-                JSON.stringify(pendingAssignments)
-              );
-            }
+            // Insert/replace item
+            pendingAssignments = JSON.parse(localData);
+            pendingAssignments[resolution.patientName] = resolution;
           }
           // Key does not exist in AsyncStorage
           else {
-            // No other pending requests: create a new list
+            // Create new item
+            pendingAssignments = { [resolution.patientName]: resolution };
             await AsyncStorage.setItem(
               AsyncStorageKeys.PATIENT_ASSIGNMENTS_RESOLUTIONS,
-              JSON.stringify([assignment])
+              JSON.stringify(pendingAssignments)
             );
           }
 
@@ -147,23 +137,23 @@ class ResolvePatientAssignment extends Activity {
  * Resolve (APPROVE or REASSIGN based on assignment)
  */
 export const resolvePatientAssignment: (params: {
-  assignment: PatientAssignmentResolution;
+  resolution: PatientAssignmentResolution;
   ownClinicianId: string;
-}) => Promise<void> = async ({ assignment, ownClinicianId }) => {
+}) => Promise<void> = async ({ resolution, ownClinicianId }) => {
   // Approve patient to self
   if (
-    assignment.resolution === PatientAssignmentStatus.APPROVED &&
-    assignment.clinicianID === ownClinicianId
+    resolution.resolution === PatientAssignmentStatus.APPROVED &&
+    resolution.clinicianID === ownClinicianId
   ) {
-    await approvePatientAssignment({ assignment: assignment });
+    await approvePatientAssignment({ assignment: resolution });
   }
   // Reassign patient to another clinician
   else if (
-    assignment.resolution === PatientAssignmentStatus.REASSIGNED &&
-    assignment.clinicianID !== ownClinicianId
+    resolution.resolution === PatientAssignmentStatus.REASSIGNED &&
+    resolution.clinicianID !== ownClinicianId
   ) {
     await reassignPatientAssignment({
-      reassignment: assignment,
+      reassignment: resolution,
       ownClinicianId: ownClinicianId
     });
   }

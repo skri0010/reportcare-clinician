@@ -9,13 +9,12 @@ import {
   ActionFrameIDs,
   AppAttributes,
   AsyncStorageKeys,
+  AsyncStorageType,
   BeliefKeys
 } from "rc_agents/AgentEnums";
 import { PatientAssignmentResolution } from "rc_agents/model";
 import { resolvePatientAssignment } from "rc_agents/agents/data-assistant/action-frames/storing-data/ResolvePatientAssignment";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { store } from "ic-redux/store";
-import { setFetchingPendingPatientAssignments } from "ic-redux/actions/agents/actionCreator";
 
 /**
  * Class to represent the activity for syncing local resolutions of patient assignments.
@@ -41,7 +40,7 @@ class SyncPatientAssignmentResolutions extends Activity {
 
     try {
       // Get locally stored list of assignments to resolve
-      const assignmentListJSON = await AsyncStorage.getItem(
+      const resolutionListJSON = await AsyncStorage.getItem(
         AsyncStorageKeys.PATIENT_ASSIGNMENTS_RESOLUTIONS
       );
 
@@ -50,35 +49,31 @@ class SyncPatientAssignmentResolutions extends Activity {
         AsyncStorageKeys.CLINICIAN_ID
       );
 
-      if (assignmentListJSON && clinicianId) {
-        const remainingList: PatientAssignmentResolution[] = [];
-        const assignmentList: PatientAssignmentResolution[] =
-          JSON.parse(assignmentListJSON);
+      if (resolutionListJSON && clinicianId) {
+        const resolutionList: AsyncStorageType[AsyncStorageKeys.PATIENT_ASSIGNMENTS_RESOLUTIONS] =
+          JSON.parse(resolutionListJSON);
 
-        // JH-TODO: Assignment should have an expiry date and this loop should flush if past expiry
-        for (let i = 0; i < assignmentList.length; i++) {
+        Object.keys(resolutionList).forEach(async (key) => {
+          const resolution: PatientAssignmentResolution = resolutionList[key];
           try {
             // Resolve (APPROVE or REASSIGN based on assignment)
-            // eslint-disable-next-line no-await-in-loop
+            // This function handles conflicts as well
             await resolvePatientAssignment({
-              assignment: assignmentList[i],
+              resolution: resolution,
               ownClinicianId: clinicianId
             });
           } catch (error) {
             // eslint-disable-next-line no-console
             console.log(error);
-            // Collect failed assignments to store back into local storage
-            remainingList.push(assignmentList[i]);
           }
-        }
+          // Remove assignment from the list
+          delete resolutionList[key];
+        });
 
-        // Store failed assignments back into local storage
-        await AsyncStorage.setItem(
-          AsyncStorageKeys.PATIENT_ASSIGNMENTS_RESOLUTIONS,
-          JSON.stringify(remainingList)
+        // Reset AsyncStorage key
+        await AsyncStorage.removeItem(
+          AsyncStorageKeys.PATIENT_ASSIGNMENTS_RESOLUTIONS
         );
-        // Dispatch to store boolean to fetch updated patient assignments
-        store.dispatch(setFetchingPendingPatientAssignments(true));
       }
     } catch (error) {
       // eslint-disable-next-line no-console
