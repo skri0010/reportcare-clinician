@@ -63,14 +63,14 @@ class RetrieveAlertHistory extends Activity {
         );
         const alertInfos: AlertInfo[] = [];
 
-        if (facts[BeliefKeys.APP][AppAttributes.ONLINE]) {
+        if (facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
           // Device is online: retrieves alerts of the current patient
           const query = await listPatientAlertsByDateTime({
             patientID: patientId,
             sortDirection: ModelSortDirection.DESC
           });
 
-          if (query.data && query.data.listPatientAlertsByDateTime?.items) {
+          if (query.data.listPatientAlertsByDateTime?.items) {
             const result = query.data.listPatientAlertsByDateTime.items;
             if (result && result.length > 0) {
               await Promise.all(
@@ -108,7 +108,7 @@ class RetrieveAlertHistory extends Activity {
           }
         } else if (alertInfosJSON) {
           // Device is offline: get alert infos of current patient from local storage
-          const patientAlerts = await this.retrieveLocalPatientAlerts(
+          const patientAlerts = this.retrieveLocalPatientAlerts(
             alertInfosJSON,
             patientId
           );
@@ -148,10 +148,10 @@ class RetrieveAlertHistory extends Activity {
    * @returns a list of alert infos if any
    */
   // eslint-disable-next-line class-methods-use-this
-  async retrieveLocalPatientAlerts(
+  retrieveLocalPatientAlerts(
     alertInfosJSON: string,
     patientId: string
-  ): Promise<AlertInfo[] | null> {
+  ): AlertInfo[] | null {
     const alertInfos: LocalAlertInfos = JSON.parse(alertInfosJSON);
     const patientAlertsJSON = alertInfos[patientId];
     if (patientAlertsJSON) {

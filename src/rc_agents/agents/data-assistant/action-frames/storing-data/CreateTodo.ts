@@ -77,7 +77,7 @@ class CreateTodo extends Activity {
         if (agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
           // Inserts into Todo
           const createResponse = await createTodo(todoToInsert);
-          if (createResponse.data && createResponse.data.createTodo) {
+          if (createResponse.data?.createTodo) {
             const currentTodo = createResponse.data.createTodo;
             todoId = currentTodo.id;
 
