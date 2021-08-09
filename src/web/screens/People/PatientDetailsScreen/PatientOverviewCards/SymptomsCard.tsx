@@ -10,9 +10,11 @@ import i18n from "util/language/i18n";
 
 interface SymptomProps {
   symptoms: ReportSymptom[];
+  maxHeight: number;
+  minHeight: number;
 }
 
-export const SymptomsCard: FC<SymptomProps> = () => {
+export const SymptomsCard: FC<SymptomProps> = ({ maxHeight, minHeight }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
   }));
@@ -20,7 +22,7 @@ export const SymptomsCard: FC<SymptomProps> = () => {
   const [mockSymptoms] = useState(mockSymptomRecords);
 
   return (
-    <CardWrapper maxHeight={ms(120)}>
+    <CardWrapper maxHeight={maxHeight} minHeight={minHeight}>
       <H3
         text={i18n.t("Patient_Overview.Symptoms")}
         style={[

@@ -5,6 +5,7 @@ import { RootState, select } from "util/useRedux";
 
 interface CardWrapperProps {
   flex?: number;
+  minHeight?: number;
   maxHeight?: number;
   firstItem?: boolean;
   minWidthRequired?: boolean;
@@ -14,6 +15,7 @@ export const CardWrapper: FC<CardWrapperProps> = ({
   children,
   flex = 1,
   maxHeight,
+  minHeight,
   minWidthRequired = true,
   firstItem = false
 }) => {
@@ -31,7 +33,7 @@ export const CardWrapper: FC<CardWrapperProps> = ({
           marginTop: firstItem ? ms(0) : ms(20),
           marginHorizontal: ms(10, 0.2),
           borderRadius: ms(5),
-          minHeight: ms(100),
+          ...(minHeight ? { minHeight: minHeight } : { minHeight: ms(100) }),
           ...(minWidthRequired ? { minWidth: ms(200) } : {}),
           ...(maxHeight ? { maxHeight: maxHeight } : {}),
           shadowRadius: ms(1),

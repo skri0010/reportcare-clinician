@@ -11,9 +11,14 @@ import i18n from "util/language/i18n";
 
 interface MedicationTakenProps {
   medications: MedicationInfo[];
+  maxHeight: number;
+  minHeight: number;
 }
 
-export const MedicationTakenCard: FC<MedicationTakenProps> = () => {
+export const MedicationTakenCard: FC<MedicationTakenProps> = ({
+  maxHeight,
+  minHeight
+}) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
   }));
@@ -21,8 +26,9 @@ export const MedicationTakenCard: FC<MedicationTakenProps> = () => {
   const [mockMedications] = useState(mockMedicationRecord);
 
   return (
-    <CardWrapper maxHeight={ms(120)}>
+    <CardWrapper maxHeight={maxHeight} minHeight={minHeight}>
       <View>
+        {/* Title */}
         <H3
           text={i18n.t("Patient_Overview.Medications")}
           style={{
@@ -33,7 +39,7 @@ export const MedicationTakenCard: FC<MedicationTakenProps> = () => {
           }}
         />
       </View>
-      {/* Not sure what does the tick represent in figma would add that in after confirmation*/}
+      {/* Medication List */}
       <FlatList
         style={{ paddingLeft: ms(10) }}
         showsVerticalScrollIndicator={false}

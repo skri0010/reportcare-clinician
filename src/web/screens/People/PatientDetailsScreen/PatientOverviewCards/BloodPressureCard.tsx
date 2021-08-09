@@ -9,18 +9,20 @@ import i18n from "util/language/i18n";
 interface BloodPressureProps {
   systolic: string;
   dystolic: string;
+  minHeight: number;
 }
 
 export const BloodPressureCard: FC<BloodPressureProps> = ({
   systolic,
-  dystolic
+  dystolic,
+  minHeight
 }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
   }));
 
   return (
-    <CardWrapper maxHeight={ms(120)}>
+    <CardWrapper minHeight={minHeight}>
       <H3
         text={i18n.t("Patient_Overview.BloodPressure")}
         style={{
@@ -30,21 +32,23 @@ export const BloodPressureCard: FC<BloodPressureProps> = ({
         }}
       />
       <View style={styles.container}>
-        <View style={styles.text}>
-          <H4 text={i18n.t("Patient_Overview.Systolic")} style={null} />
-          <H1
-            text={systolic}
-            style={{ fontWeight: "bold", color: colors.primaryTextColor }}
-          />
-          <H4 text="mmHg" style={null} />
-        </View>
-        <View style={styles.text}>
-          <H4 text={i18n.t("Patient_Overview.Diastolic")} style={null} />
-          <H1
-            text={dystolic}
-            style={{ fontWeight: "bold", color: colors.primaryTextColor }}
-          />
-          <H4 text="mmHg" style={null} />
+        <View style={styles.textContainer}>
+          <View style={styles.text}>
+            <H4 text={i18n.t("Patient_Overview.Systolic")} style={null} />
+            <H1
+              text={systolic}
+              style={{ fontWeight: "bold", color: colors.primaryTextColor }}
+            />
+            <H4 text="mmHg" style={null} />
+          </View>
+          <View style={styles.text}>
+            <H4 text={i18n.t("Patient_Overview.Diastolic")} style={null} />
+            <H1
+              text={dystolic}
+              style={{ fontWeight: "bold", color: colors.primaryTextColor }}
+            />
+            <H4 text="mmHg" style={null} />
+          </View>
         </View>
       </View>
     </CardWrapper>
@@ -53,11 +57,17 @@ export const BloodPressureCard: FC<BloodPressureProps> = ({
 
 const styles = ScaledSheet.create({
   container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  textContainer: {
     display: "flex",
+    width: "80%",
     flexDirection: "row",
     justifyContent: "space-around",
-    marginTop: "15@ms",
-    marginBottom: "15@ms"
+    alignItems: "stretch",
+    top: "-4@ms"
   },
   text: {
     display: "flex",

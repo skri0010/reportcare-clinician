@@ -8,17 +8,19 @@ import i18n from "util/language/i18n";
 
 interface OxygenSaturationProps {
   oxySatValue: string;
+  minHeight: number;
 }
 
 export const OxygenSaturationCard: FC<OxygenSaturationProps> = ({
-  oxySatValue
+  oxySatValue,
+  minHeight
 }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
   }));
 
   return (
-    <CardWrapper maxHeight={ms(120)} minWidthRequired={false}>
+    <CardWrapper minHeight={minHeight} minWidthRequired={false}>
       <H3
         text={i18n.t("Patient_Overview.OxygenSaturation")}
         style={{
@@ -43,16 +45,16 @@ export const OxygenSaturationCard: FC<OxygenSaturationProps> = ({
 
 const styles = ScaledSheet.create({
   container: {
+    flex: 1,
     display: "flex",
     justifyContent: "center",
-    alignItems: "center",
-    marginTop: "15@ms",
-    marginBottom: "15@ms"
+    alignItems: "center"
   },
   text: {
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    top: "4@ms"
   }
 });

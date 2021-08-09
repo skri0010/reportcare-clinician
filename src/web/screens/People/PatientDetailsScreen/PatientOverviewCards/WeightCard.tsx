@@ -9,15 +9,20 @@ import i18n from "util/language/i18n";
 interface WeightProps {
   weight: string;
   targetWeight: string;
+  minHeight: number;
 }
 
-export const WeightCard: FC<WeightProps> = ({ weight, targetWeight }) => {
+export const WeightCard: FC<WeightProps> = ({
+  weight,
+  targetWeight,
+  minHeight
+}) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
   }));
 
   return (
-    <CardWrapper maxHeight={ms(120)} minWidthRequired={false}>
+    <CardWrapper maxHeight={minHeight} minWidthRequired={false}>
       <H3
         text={i18n.t("Patient_Overview.Weight")}
         style={{
@@ -27,34 +32,43 @@ export const WeightCard: FC<WeightProps> = ({ weight, targetWeight }) => {
         }}
       />
       <View style={styles.container}>
-        <View style={styles.text}>
-          <H1
-            text={weight}
-            style={{ fontWeight: "bold", color: colors.primaryTextColor }}
-          />
-          <H4 text="kg" style={null} />
+        <View style={styles.textContainer}>
+          <View style={styles.text}>
+            <H1
+              text={weight}
+              style={{ fontWeight: "bold", color: colors.primaryTextColor }}
+            />
+            <H4 text="kg" style={null} />
+          </View>
         </View>
+        <H4
+          text={`${i18n.t("Patient_Overview.TargetWeight")}: ${targetWeight}`}
+          style={null}
+        />
       </View>
-      <H4
-        text={`${i18n.t("Patient_Overview.TargetWeight")}: ${targetWeight}`}
-        style={null}
-      />
     </CardWrapper>
   );
 };
 
 const styles = ScaledSheet.create({
   container: {
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  textContainer: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: "15@ms"
+    paddingTop: "44@ms"
   },
   text: {
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: "10@ms"
+    marginBottom: "20@ms"
   }
 });
