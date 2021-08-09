@@ -1,9 +1,8 @@
 import React, { FC } from "react";
-import { RootState, select } from "util/useRedux";
 import { ScaledSheet } from "react-native-size-matters";
 import { H4 } from "components/Text/index";
-import { TouchableOpacity, View } from "react-native";
-import i18n from "util/language/i18n";
+import { View } from "react-native";
+import { ViewRowButton } from "./ViewRowButton";
 
 interface MedicalRecordRowProps {
   description: string;
@@ -14,20 +13,13 @@ export const MedicalRecordRow: FC<MedicalRecordRowProps> = ({
   description,
   onRowPress
 }) => {
-  const { colors } = select((state: RootState) => ({
-    colors: state.settings.colors
-  }));
-
   return (
     <View style={[styles.container]}>
-      <H4 text={description} style={null} />
+      <H4 text={description} style={[styles.textContainer]} />
 
-      <TouchableOpacity style={[styles.button]} onPress={onRowPress}>
-        <H4
-          text={i18n.t("Patient_History.ViewButton")}
-          style={[styles.buttonText, { color: colors.primaryTextColor }]}
-        />
-      </TouchableOpacity>
+      <View style={[styles.buttonContainer]}>
+        <ViewRowButton onRowPress={onRowPress} />
+      </View>
     </View>
   );
 };
@@ -47,5 +39,12 @@ const styles = ScaledSheet.create({
   },
   buttonText: {
     textAlign: "center"
+  },
+  buttonContainer: {
+    flex: 1
+  },
+  textContainer: {
+    flex: 5,
+    paddingRight: "5@ms"
   }
 });

@@ -4,9 +4,9 @@ import { H3 } from "components/Text/index";
 import { CardWrapper } from "web/screens/Home/CardWrapper";
 import { AlertHistoryRow } from "./AlertHistoryRow";
 import { mockAlertHistory, AlertHistory } from "mock/mockPatientDetails";
-import { FlatList } from "react-native";
+import { FlatList, View } from "react-native";
 import i18n from "util/language/i18n";
-import { ms } from "react-native-size-matters";
+import { ScaledSheet } from "react-native-size-matters";
 
 interface PatientAlertHistoryProps {
   patientId: string;
@@ -38,16 +38,18 @@ export const PatientAlertHistoryCard: FC<PatientAlertHistoryProps> = ({
 
   return (
     <CardWrapper maxHeight={maxHeight}>
-      <H3
-        text={i18n.t("Home.Alerts")}
-        style={[
-          {
-            fontWeight: "bold",
-            color: colors.primaryTextColor,
-            paddingBottom: ms(15)
-          }
-        ]}
-      />
+      <View style={styles.title}>
+        <H3
+          text={i18n.t("Home.Alerts")}
+          style={[
+            {
+              fontWeight: "bold",
+              color: colors.primaryTextColor
+            }
+          ]}
+        />
+      </View>
+
       <FlatList
         showsVerticalScrollIndicator={false}
         data={alertHistory}
@@ -65,3 +67,13 @@ export const PatientAlertHistoryCard: FC<PatientAlertHistoryProps> = ({
     </CardWrapper>
   );
 };
+
+const styles = ScaledSheet.create({
+  title: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingBottom: "15@ms",
+    alignItems: "center"
+  }
+});

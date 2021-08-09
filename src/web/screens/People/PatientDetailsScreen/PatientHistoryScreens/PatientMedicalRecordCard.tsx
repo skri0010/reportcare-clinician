@@ -1,6 +1,7 @@
 import React, { FC, useState } from "react";
 import { RootState, select } from "util/useRedux";
-import { ScaledSheet, ms } from "react-native-size-matters";
+import { ScaledSheet } from "react-native-size-matters";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { H3 } from "components/Text/index";
 import { CardWrapper } from "web/screens/Home/CardWrapper";
 import { mockMedicalRecord, MedicalRecords } from "mock/mockPatientDetails";
@@ -22,8 +23,9 @@ export const PatientMedicalRecordCard: FC<PatientMedicalRecordProps> = ({
   setViewMedicalModal,
   setDisplayMedicalRecord
 }) => {
-  const { colors } = select((state: RootState) => ({
-    colors: state.settings.colors
+  const { colors, fonts } = select((state: RootState) => ({
+    colors: state.settings.colors,
+    fonts: state.settings.fonts
   }));
 
   // Query database for a specific patient by patientId for alert histories here
@@ -49,13 +51,14 @@ export const PatientMedicalRecordCard: FC<PatientMedicalRecordProps> = ({
           onPress={onAddPress}
           style={[
             styles.button,
-            { backgroundColor: colors.primaryButtonColor }
+            {
+              borderColor: colors.primaryTextColor,
+              width: fonts.h1Size,
+              height: fonts.h1Size
+            }
           ]}
         >
-          <H3
-            text={i18n.t("Patient_History.AddButton")}
-            style={{ color: colors.primaryContrastTextColor }}
-          />
+          <Icon name="plus" size={fonts.h2Size} />
         </TouchableOpacity>
       </View>
 
@@ -79,11 +82,12 @@ const styles = ScaledSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingBottom: "15@ms"
+    paddingBottom: "15@ms",
+    alignItems: "center"
   },
   button: {
-    width: "70@ms",
-    borderRadius: "3@ms",
-    textAlign: "center"
+    borderRadius: "10@ms",
+    textAlign: "center",
+    borderWidth: "1@ms"
   }
 });

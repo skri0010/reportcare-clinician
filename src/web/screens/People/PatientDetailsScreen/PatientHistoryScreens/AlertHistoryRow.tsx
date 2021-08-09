@@ -1,9 +1,10 @@
 import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
-import { ms, ScaledSheet } from "react-native-size-matters";
-import { H4 } from "components/Text/index";
+import { ScaledSheet } from "react-native-size-matters";
+import { H4, H5 } from "components/Text/index";
 import { getRiskLevelColor, RiskLevel } from "models/RiskLevel";
-import { TouchableOpacity, View, Text } from "react-native";
+import { View, Text } from "react-native";
+import { ViewRowButton } from "./ViewRowButton";
 import i18n from "util/language/i18n";
 
 interface AlertHistoryRowProps {
@@ -32,17 +33,25 @@ export const AlertHistoryRow: FC<AlertHistoryRowProps> = ({
   description,
   onRowPress
 }) => {
-  const { colors, fonts } = select((state: RootState) => ({
+  const { colors } = select((state: RootState) => ({
     colors: state.settings.colors,
     fonts: state.settings.fonts
   }));
+
+  const getDescription = () => {
+    // Word limit
+    const limit = 35;
+    return description.length > limit
+      ? `${description.slice(0, limit)}...`
+      : description;
+  };
 
   return (
     <View style={[styles.container]}>
       <View style={[styles.textContainer]}>
         {/* Risk level and date */}
         <View style={[styles.contentTitle]}>
-          <H4
+          <H5
             text={`${getRiskName(risk)} `}
             style={{
               fontWeight: "bold",
@@ -52,29 +61,18 @@ export const AlertHistoryRow: FC<AlertHistoryRowProps> = ({
               )
             }}
           />
-          <H4
+          <H5
             text={`${date}:`}
             style={{ fontWeight: "bold", color: colors.primaryTextColor }}
           />
         </View>
-        <Text
-          numberOfLines={1}
-          style={{
-            color: colors.primaryTextColor,
-            fontSize: fonts.h4Size
-          }}
-        >
-          {description}
-        </Text>
-        {/* <H4 text={description} style={{ color: colors.primaryTextColor }} /> */}
+        <H4
+          text={getDescription()}
+          style={{ color: colors.primaryTextColor }}
+        />
       </View>
       <View style={[styles.buttonContainer]}>
-        <TouchableOpacity style={[styles.button]} onPress={onRowPress}>
-          <H4
-            text={i18n.t("Patient_History.ViewButton")}
-            style={[styles.buttonText, { color: colors.primaryTextColor }]}
-          />
-        </TouchableOpacity>
+        <ViewRowButton onRowPress={onRowPress} />
       </View>
     </View>
   );
@@ -96,10 +94,11 @@ const styles = ScaledSheet.create({
     borderWidth: "1@ms"
   },
   buttonContainer: {
-    flex: 2
+    flex: 1
   },
   textContainer: {
-    flex: 7
+    flex: 5,
+    paddingRight: "5@ms"
   },
   buttonText: {
     textAlign: "center"
