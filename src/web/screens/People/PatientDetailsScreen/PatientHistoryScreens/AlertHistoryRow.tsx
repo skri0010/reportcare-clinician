@@ -13,7 +13,7 @@ interface AlertHistoryRowProps {
   onRowPress: () => void;
 }
 
-function findRiskName(risk: RiskLevel) {
+function getRiskName(risk: RiskLevel) {
   let riskName: string = "Patient_History.Risk.Unassigned";
 
   if (risk === RiskLevel.HIGH) {
@@ -43,7 +43,7 @@ export const AlertHistoryRow: FC<AlertHistoryRowProps> = ({
         {/* Risk level and date */}
         <View style={[styles.contentTitle]}>
           <H4
-            text={`${findRiskName(risk)} `}
+            text={`${getRiskName(risk)} `}
             style={{
               fontWeight: "bold",
               color: getRiskLevelColor(
