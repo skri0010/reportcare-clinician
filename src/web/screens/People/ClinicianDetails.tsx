@@ -23,7 +23,7 @@ export const ClinicianDetails: FC<ClinicianDetails> = ({
                 <H3 text="Clinician Info:" style={{ fontWeight:"bold", color: colors.primaryTextColor }}/>
                 <View style={styles.rowStyle}>
                     <H4 text="Name: " style={{ fontWeight: "bold", color: colors.primaryTextColor }}/>
-                    <H4 text={generalDetails.name} style={{ color: colors.primaryTextColor }}/>
+                    <H4 text={generalDetails.name} style={{ textAlign: "center", color: colors.primaryTextColor }}/>
                 </View>
                 <View style={styles.rowStyle}>
                     <H4 text="Hospital Name: " style={{ fontWeight: "bold", color: colors.primaryTextColor }}/>
@@ -46,6 +46,6 @@ export const ClinicianDetails: FC<ClinicianDetails> = ({
 const styles = ScaledSheet.create({
     rowStyle: {
         display: "flex",
-        flexDirection: "row"
+        flexDirection: "column"
     }
 });
