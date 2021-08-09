@@ -9,12 +9,12 @@ import {
 import {
   ActionFrameIDs,
   AppAttributes,
-  AsyncStorageKeys,
   BeliefKeys,
   ClinicianAttributes,
   ProcedureAttributes,
   ProcedureConst
 } from "rc_agents/AgentEnums";
+import { AsyncStorageKeys } from "rc_agents/storage";
 import { AlertColorCode, AlertInfo } from "rc_agents/model";
 import agentAPI from "rc_agents/framework/AgentAPI";
 import {
@@ -82,10 +82,7 @@ class RetrieveAlertInfo extends Activity {
           }
         } else if (alertInfosJSON) {
           // Device is offline: get alert info from local storage
-          alertInfo = await this.retrieveLocalAlertInfo(
-            alertInfosJSON,
-            alert
-          );
+          alertInfo = await this.retrieveLocalAlertInfo(alertInfosJSON, alert);
         }
 
         if (alertInfo) {

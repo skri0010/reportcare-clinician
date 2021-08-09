@@ -9,12 +9,12 @@ import {
 import {
   ActionFrameIDs,
   AppAttributes,
-  AsyncStorageKeys,
   BeliefKeys,
   ClinicianAttributes,
   ProcedureAttributes,
   ProcedureConst
 } from "rc_agents/AgentEnums";
+import { AsyncStorageKeys } from "rc_agents/storage";
 import agentAPI from "rc_agents/framework/AgentAPI";
 import { mockCompletedAlerts, mockPendingAlerts } from "mock/mockAlerts";
 import {

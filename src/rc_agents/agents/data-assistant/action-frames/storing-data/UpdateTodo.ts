@@ -9,13 +9,13 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   ProcedureConst,
-  AsyncStorageKeys,
   BeliefKeys,
   ProcedureAttributes,
   AppAttributes,
   ActionFrameIDs,
   ClinicianAttributes
 } from "rc_agents/AgentEnums";
+import { AsyncStorageKeys } from "rc_agents/storage";
 import agentAPI from "rc_agents/framework/AgentAPI";
 import { store } from "ic-redux/store";
 import { setProcedureSuccessful } from "ic-redux/actions/agents/actionCreator";

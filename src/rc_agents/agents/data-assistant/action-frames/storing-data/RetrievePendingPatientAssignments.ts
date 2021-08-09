@@ -14,13 +14,12 @@ import {
   BeliefKeys,
   PatientAttributes,
   ProcedureAttributes,
-  ProcedureConst,
-  AsyncStorageKeys
+  ProcedureConst
 } from "rc_agents/AgentEnums";
+import { Storage } from "rc_agents/storage";
 import { PatientAssignmentStatus } from "rc_agents/model";
 import { listPendingPatientAssignments } from "aws";
 import { PatientAssignment } from "aws/API";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setFetchingPendingPatientAssignments } from "ic-redux/actions/agents/actionCreator";
 import { store } from "ic-redux/store";
 
@@ -47,9 +46,7 @@ class RetrievePendingPatientAssignments extends Activity {
     let pendingPatientAssignments: PatientAssignment[] | null | undefined;
     try {
       // Get locally stored clinicianId
-      const clinicianId = await AsyncStorage.getItem(
-        AsyncStorageKeys.CLINICIAN_ID
-      );
+      const clinicianId = await Storage.getClinicianID();
       const isOnline =
         agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE];
       // Device is online
@@ -64,22 +61,13 @@ class RetrievePendingPatientAssignments extends Activity {
           pendingPatientAssignments = query.data.listPendingPatientAssignments
             .items as PatientAssignment[];
           // Save retrieved data locally
-          await AsyncStorage.setItem(
-            AsyncStorageKeys.PENDING_PATIENT_ASSIGNMENTS,
-            JSON.stringify(pendingPatientAssignments)
-          );
+          await Storage.setPendingPatientAssignments(pendingPatientAssignments);
         }
       }
       // Device is offline: Retrieve locally stored data (if any)
       else if (clinicianId && !isOnline) {
-        const localData = await AsyncStorage.getItem(
-          AsyncStorageKeys.PENDING_PATIENT_ASSIGNMENTS
-        );
-        if (localData) {
-          pendingPatientAssignments = JSON.parse(
-            localData
-          ) as PatientAssignment[];
-        }
+        pendingPatientAssignments =
+          await Storage.getPendingPatientAssignments();
       }
 
       if (pendingPatientAssignments) {

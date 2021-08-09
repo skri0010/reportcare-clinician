@@ -8,9 +8,9 @@ import {
 import {
   ActionFrameIDs,
   AppAttributes,
-  AsyncStorageKeys,
   BeliefKeys
 } from "rc_agents/AgentEnums";
+import { AsyncStorageKeys } from "rc_agents/storage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { updateClinicianProtectedInfo } from "aws/TypedAPI/updateMutations";
 import { ClinicianInfo, UpdateClinicianProtectedInfoInput } from "aws/API";

@@ -9,14 +9,13 @@ import {
 } from "rc_agents/framework";
 import {
   ProcedureConst,
-  AsyncStorageKeys,
-  AsyncStorageType,
   BeliefKeys,
   PatientAttributes,
   ProcedureAttributes,
   AppAttributes,
   ActionFrameIDs
 } from "rc_agents/AgentEnums";
+import { Storage, AsyncStorageKeys, AsyncStorageType } from "rc_agents/storage";
 import {
   PatientAssignmentResolution,
   PatientAssignmentStatus
@@ -28,7 +27,6 @@ import {
   getClinicianPatientMap,
   getPatientAssignment
 } from "aws";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import Auth from "@aws-amplify/auth";
 
 /**
@@ -57,9 +55,7 @@ class ResolvePatientAssignment extends Activity {
         ];
 
       // Get locally stored clinicianId
-      const clinicianId = await AsyncStorage.getItem(
-        AsyncStorageKeys.CLINICIAN_ID
-      );
+      const clinicianId = await Storage.getClinicianID();
 
       if (resolution && clinicianId) {
         // Device is online
@@ -74,25 +70,21 @@ class ResolvePatientAssignment extends Activity {
         // Device is offline: Save locally
         else {
           // Append current assignments to resolve to locally stored assignments to resolve
-          const localData = await AsyncStorage.getItem(
-            AsyncStorageKeys.PATIENT_ASSIGNMENTS_RESOLUTIONS
-          );
-          let pendingAssignments: AsyncStorageType[AsyncStorageKeys.PATIENT_ASSIGNMENTS_RESOLUTIONS];
+          const data = await Storage.getPatientAssignmentResolutions();
+          let resolutionList: AsyncStorageType[AsyncStorageKeys.PATIENT_ASSIGNMENTS_RESOLUTIONS];
           // Key exists in AsyncStorage
-          if (localData) {
+          if (data) {
             // Insert/replace item
-            pendingAssignments = JSON.parse(localData);
-            pendingAssignments[resolution.patientName] = resolution;
+            resolutionList = data;
+            resolutionList[resolution.patientName] = resolution;
           }
           // Key does not exist in AsyncStorage
           else {
             // Create new item
-            pendingAssignments = { [resolution.patientName]: resolution };
-            await AsyncStorage.setItem(
-              AsyncStorageKeys.PATIENT_ASSIGNMENTS_RESOLUTIONS,
-              JSON.stringify(pendingAssignments)
-            );
+            resolutionList = { [resolution.patientName]: resolution };
           }
+          // Store updated resolutions
+          Storage.setPatientAssignmentResolutions(resolutionList);
 
           // Trigger request to Communicate to NWA
           agent.addBelief(

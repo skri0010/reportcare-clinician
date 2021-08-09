@@ -8,13 +8,11 @@ import {
 import {
   ActionFrameIDs,
   AppAttributes,
-  AsyncStorageKeys,
-  AsyncStorageType,
   BeliefKeys
 } from "rc_agents/AgentEnums";
+import { Storage, AsyncStorageKeys } from "rc_agents/storage";
 import { PatientAssignmentResolution } from "rc_agents/model";
 import { resolvePatientAssignment } from "rc_agents/agents/data-assistant/action-frames/storing-data/ResolvePatientAssignment";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 /**
  * Class to represent the activity for syncing local resolutions of patient assignments.
@@ -40,19 +38,12 @@ class SyncPatientAssignmentResolutions extends Activity {
 
     try {
       // Get locally stored list of assignments to resolve
-      const resolutionListJSON = await AsyncStorage.getItem(
-        AsyncStorageKeys.PATIENT_ASSIGNMENTS_RESOLUTIONS
-      );
+      const resolutionList = await Storage.getPatientAssignmentResolutions();
 
       // Get locally stored clinicianId
-      const clinicianId = await AsyncStorage.getItem(
-        AsyncStorageKeys.CLINICIAN_ID
-      );
+      const clinicianId = await Storage.getClinicianID();
 
-      if (resolutionListJSON && clinicianId) {
-        const resolutionList: AsyncStorageType[AsyncStorageKeys.PATIENT_ASSIGNMENTS_RESOLUTIONS] =
-          JSON.parse(resolutionListJSON);
-
+      if (resolutionList && clinicianId) {
         Object.keys(resolutionList).forEach(async (key) => {
           const resolution: PatientAssignmentResolution = resolutionList[key];
           try {
@@ -62,18 +53,19 @@ class SyncPatientAssignmentResolutions extends Activity {
               resolution: resolution,
               ownClinicianId: clinicianId
             });
+            delete resolutionList[key];
+            // Insert remaining resolutions back into storage
+            Storage.setPatientAssignmentResolutions(resolutionList);
           } catch (error) {
             // eslint-disable-next-line no-console
             console.log(error);
           }
-          // Remove assignment from the list
-          delete resolutionList[key];
         });
 
-        // Reset AsyncStorage key
-        await AsyncStorage.removeItem(
-          AsyncStorageKeys.PATIENT_ASSIGNMENTS_RESOLUTIONS
-        );
+        // Reset AsyncStorage key if none left
+        if (Object.keys(resolutionList).length === 0) {
+          Storage.removeItem(AsyncStorageKeys.PATIENT_ASSIGNMENTS_RESOLUTIONS);
+        }
       }
     } catch (error) {
       // eslint-disable-next-line no-console

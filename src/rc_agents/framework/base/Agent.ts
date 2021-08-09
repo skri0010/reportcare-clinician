@@ -13,12 +13,8 @@ import BetaNode from "./Engine/Rete/BetaNode";
 import { Fact } from "../../model";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getClinicianProtectedInfo } from "aws";
-import {
-  AppAttributes,
-  AsyncStorageKeys,
-  BeliefKeys,
-  CommonAttributes
-} from "../../AgentEnums";
+import { AppAttributes, BeliefKeys, CommonAttributes } from "../../AgentEnums";
+import { AsyncStorageKeys } from "../../storage";
 import { ClinicianInfo, ClinicianProtectedInfo } from "aws/API";
 
 /**

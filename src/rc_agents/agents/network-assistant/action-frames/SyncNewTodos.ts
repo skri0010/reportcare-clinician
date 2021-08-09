@@ -10,9 +10,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   ActionFrameIDs,
   AppAttributes,
-  AsyncStorageKeys,
   BeliefKeys
 } from "rc_agents/AgentEnums";
+import { AsyncStorageKeys } from "rc_agents/storage";
 import { updateAlert } from "aws/TypedAPI/updateMutations";
 import { createTodo } from "aws/TypedAPI/createMutations";
 import { Todo } from "rc_agents/model";

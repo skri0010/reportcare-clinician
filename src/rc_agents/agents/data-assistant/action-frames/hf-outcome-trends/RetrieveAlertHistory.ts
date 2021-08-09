@@ -9,12 +9,12 @@ import {
 import {
   ActionFrameIDs,
   AppAttributes,
-  AsyncStorageKeys,
   BeliefKeys,
   PatientAttributes,
   ProcedureAttributes,
   ProcedureConst
 } from "rc_agents/AgentEnums";
+import { AsyncStorageKeys } from "rc_agents/storage";
 import agentAPI from "rc_agents/framework/AgentAPI";
 import { listPatientAlertsByDateTime } from "aws";
 import { AlertInfo } from "rc_agents/model";
