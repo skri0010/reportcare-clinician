@@ -9,6 +9,8 @@ import {
   CreateClinicianProtectedInfoInput,
   ClinicianPatientMap,
   CreateClinicianPatientMapInput,
+  Todo,
+  CreateTodoInput,
   PatientAssignment,
   CreatePatientAssignmentInput
 } from "aws/API";
@@ -52,6 +54,18 @@ export const createClinicianPatientMap = async (
   })) as CreateClinicianPatientMapResponse;
 };
 
+interface CreateTodoResponse extends BaseResponse {
+  data: { createTodo?: Todo };
+}
+
+export const createTodo = async (
+  input: CreateTodoInput
+): Promise<CreateTodoResponse> => {
+  return (await API.graphql({
+    query: mutations.createTodo,
+    variables: { input: input }
+  })) as CreateTodoResponse;
+};
 interface CreatePatientAssignmentResponse extends BaseResponse {
   data: { createPatientAssignment?: PatientAssignment };
 }

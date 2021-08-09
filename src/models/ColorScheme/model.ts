@@ -33,6 +33,7 @@ export interface ColorScheme {
 
   // Buttons
   primaryButtonColor: string;
+  primaryDeactivatedButtonColor: string;
   primaryWarningButtonColor: string;
   primaryTodoCompleteButtonColor: string;
 
@@ -41,6 +42,8 @@ export interface ColorScheme {
 
   // Icons
   primaryIconColor: string;
+  secondaryIconColor: string;
+  acceptIconColor: string;
 
   // Others
   riskLevelBackgroundColors: IRiskLevelMap;

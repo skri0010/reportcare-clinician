@@ -11,8 +11,9 @@ export const ItemSeparator: FC = () => {
     <View
       style={{
         borderWidth: ms(0.1),
-        borderColor: colors.separatorColor,
-        backgroundColor: colors.separatorColor
+        borderColor: colors.separatorColor
+        // height: ms(1),
+        // backgroundColor: colors.separatorColor
       }}
     />
   );

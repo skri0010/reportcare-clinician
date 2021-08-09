@@ -8,6 +8,10 @@ import {
   UpdateClinicianProtectedInfoInput,
   PatientInfo,
   UpdatePatientInfoInput,
+  Alert,
+  UpdateAlertInput,
+  Todo,
+  UpdateTodoInput,
   PatientAssignment,
   UpdatePatientAssignmentInput
 } from "aws/API";
@@ -54,6 +58,31 @@ export const updatePatientInfo = async (
   })) as UpdatePatientInfoResponse;
 };
 
+interface UpdateAlertResponse extends BaseResponse {
+  data: { updateAlert?: Alert };
+}
+
+export const updateAlert = async (
+  input: UpdateAlertInput
+): Promise<UpdateAlertResponse> => {
+  return (await API.graphql({
+    query: mutations.updateAlert,
+    variables: { input: input }
+  })) as UpdateAlertResponse;
+};
+
+interface UpdateTodoResponse extends BaseResponse {
+  data: { updateTodo?: Todo };
+}
+
+export const updateTodo = async (
+  input: UpdateTodoInput
+): Promise<UpdateTodoResponse> => {
+  return (await API.graphql({
+    query: mutations.updateTodo,
+    variables: { input: input }
+  })) as UpdateTodoResponse;
+};
 interface UpdatePatientAssignmentResponse extends BaseResponse {
   data: { updatePatientAssignment?: PatientAssignment };
 }

@@ -89,7 +89,6 @@ const styles = ScaledSheet.create({
     paddingBottom: "10@ms"
   },
   contentTitle: {
-    // display: "flex",
     flexDirection: "row"
   },
   button: {
@@ -97,7 +96,6 @@ const styles = ScaledSheet.create({
     borderWidth: "1@ms"
   },
   buttonContainer: {
-    // flex: 1
     flex: 2
   },
   textContainer: {

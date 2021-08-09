@@ -40,9 +40,9 @@ type MedicationInfo
     ]
   )
   @key(
-    name: "medicationInfoByPatientID"
+    name: "medicationInfosByPatientID"
     fields: ["patientID"]
-    queryField: "listMedicationInfoByPatientID"
+    queryField: "listMedicationInfosByPatientID"
   ) {
   id: ID!
   medname: String!
@@ -60,9 +60,9 @@ type ActivityInfo
     ]
   )
   @key(
-    name: "activityInfoByPatientID"
+    name: "activityInfosByPatientID"
     fields: ["patientID"]
-    queryField: "listActivityInfoByPatientID"
+    queryField: "listActivityInfosByPatientID"
   ) {
   id: ID!
   Actname: String!
@@ -83,14 +83,14 @@ type MedCompliant
     ]
   )
   @key(
-    name: "medCompliantByPatientID"
+    name: "medCompliantsByPatientID"
     fields: ["patientID"]
-    queryField: "listMedCompliantByPatientID"
+    queryField: "listMedCompliantsByPatientID"
   )
   @key(
-    name: "medCompliantByDate"
+    name: "medCompliantsByDate"
     fields: ["patientID", "Date"]
-    queryField: "listMedCompliantByDate"
+    queryField: "listMedCompliantsByDate"
   ) {
   id: ID!
   MedId: ID!
@@ -110,14 +110,14 @@ type ReportSymptom
     ]
   )
   @key(
-    name: "reportSymptomByPatientID"
+    name: "reportSymptomsByPatientID"
     fields: ["patientID"]
-    queryField: "listReportSymptomByPatientID"
+    queryField: "listReportSymptomsByPatientID"
   )
   @key(
-    name: "reportSymptomByDateTime"
+    name: "reportSymptomsByDateTime"
     fields: ["patientID", "DateTime"]
-    queryField: "listReportSymptomByDateTime"
+    queryField: "listReportSymptomsByDateTime"
   ) {
   id: ID!
   ActId: ID!
@@ -138,14 +138,14 @@ type ReportVitals
     ]
   )
   @key(
-    name: "reportVitalByPatientID"
+    name: "reportVitalsByPatientID"
     fields: ["patientID"]
-    queryField: "listReportVitalByPatientID"
+    queryField: "listReportVitalsByPatientID"
   )
   @key(
-    name: "reportVitalByDateTime"
+    name: "reportVitalsByDateTime"
     fields: ["patientID", "DateTime"]
-    queryField: "listReportVitalByDateTime"
+    queryField: "listReportVitalsByDateTime"
   ) {
   id: ID!
   Temperature: String
@@ -275,9 +275,9 @@ type ClinicianPatientMap
   )
   @key(fields: ["clinicianID", "patientID"])
   @key(
-    name: "clinicianIDsByPatientID"
+    name: "clinicianMappingsByPatientID"
     fields: ["patientID", "clinicianID"]
-    queryField: "clinicianIDsByPatientID"
+    queryField: "listClinicianMappingsByPatientID"
   ) {
   id: ID!
   clinicianID: String!
@@ -302,15 +302,16 @@ type PatientAssignment
   )
   @key(fields: ["patientID", "clinicianID"])
   @key(
-    name: "patientAssignmentByPending"
+    name: "pendingPatientAssignments"
     fields: ["clinicianID", "pending"]
-    queryField: "listPatientAssignmentBy"
+    queryField: "listPendingPatientAssignments"
   ) {
   id: ID!
   patientID: String!
   clinicianID: String!
   pending: String
   resolution: String
+  patientName: String!
 }
 
 """
@@ -330,24 +331,37 @@ type Alert
     ]
   )
   @key(
-    name: "alertsByPatientID"
-    fields: ["patientID"]
-    queryField: "listAlertsByPatientID"
+    name: "patientAlertsByDateTime"
+    fields: ["patientID", "dateTime"]
+    queryField: "listPatientAlertsByDateTime"
   )
   @key(
-    name: "alertsByDateTime"
-    fields: ["patientID", "dateTime"]
-    queryField: "listAlertsByDateTime"
+    name: "pendingAlertsByDateTime"
+    fields: ["pending", "dateTime"]
+    queryField: "listPendingAlertsByDateTime"
+  )
+  @key(
+    name: "pendingRiskAlerts"
+    fields: ["pending", "colorCode"]
+    queryField: "listPendingRiskAlerts"
+  )
+  @key(
+    name: "completedRiskAlerts"
+    fields: ["completed", "colorCode"]
+    queryField: "listCompletedRiskAlerts"
   ) {
   id: ID!
   patientID: String!
+  patientName: String!
   dateTime: AWSDateTime!
   summary: String!
+  colorCode: String!
   vitalsReportID: ID!
   vitalsReport: ReportVitals @connection(fields: ["vitalsReportID"])
   symptomReportID: ID!
   symptomReport: ReportSymptom @connection(fields: ["symptomReportID"])
-  completed: Boolean!
+  pending: String
+  completed: String
   owner: String!
 }
 
@@ -388,6 +402,7 @@ type Todo
   id: ID!
   clinicianID: String!
   title: String!
+  patientName: String!
   notes: String!
   lastModified: AWSDateTime!
   alertID: ID

@@ -5,17 +5,17 @@ import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { ScaledSheet } from "react-native-size-matters";
 import { PatientDetailsRow } from "components/RowComponents/PatientRows/PatientDetailsRow";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
-import agentDTA from "agents_implementation/agents/data-assistant/DTA";
-import Belief from "agents_implementation/agent_framework/base/Belief";
+import agentDTA from "rc_agents/agents/data-assistant/DTA";
+import Belief from "rc_agents/framework/base/Belief";
 import {
   BeliefKeys,
   ClinicianAttributes,
   PatientAttributes,
   ProcedureAttributes,
   ProcedureConst
-} from "agents_implementation/agent_framework/AgentEnums";
-import agentAPI from "agents_implementation/agent_framework/AgentAPI";
-import agentUXSA from "agents_implementation/agents/user-specific-assistant/UXSA";
+} from "rc_agents/AgentEnums";
+import agentAPI from "rc_agents/framework/AgentAPI";
+import agentUXSA from "rc_agents/agents/user-specific-assistant/UXSA";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { setProcedureOngoing } from "ic-redux/actions/agents/actionCreator";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";

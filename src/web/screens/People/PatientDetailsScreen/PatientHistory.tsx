@@ -22,23 +22,12 @@ interface PatientHistoryProps {
     setDisplayMedicalRecord: (state: MedicalRecords) => void;
     setAddMedicalRecord: (state: boolean) => void;
   };
-  // setDisplayHistory: (state: AlertHistory) => void;
-  // setModalAlertVisible: (state: boolean) => void;
-
-  // setViewMedicalModal: (state: boolean) => void;
-  // setDisplayMedicalRecord: (state: MedicalRecords) => void;
-  // setAddMedicalRecord: (state: boolean) => void;
 }
 
 export const PatientHistory: FC<PatientHistoryProps> = ({
   patient,
   alertHistoryFunc,
   medicalRecordFunc
-  // setDisplayHistory,
-  // setModalAlertVisible,
-  // setViewMedicalModal,
-  // setDisplayMedicalRecord,
-  // setAddMedicalRecord
 }) => {
   const cardMaxHeight = Math.max(
     ms(250),

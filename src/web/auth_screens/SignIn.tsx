@@ -8,20 +8,20 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthScreenName, AuthScreensProps, AuthState } from "web/auth_screens";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { validatePassword, validateUsername } from "util/validation";
-import agentAPI from "agents_implementation/agent_framework/AgentAPI";
+import agentAPI from "rc_agents/framework/AgentAPI";
 import i18n from "util/language/i18n";
 import { useToast } from "react-native-toast-notifications";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
-import agentAPS from "agents_implementation/agents/app-configuration-assistant/APS";
-import Belief from "agents_implementation/agent_framework/base/Belief";
+import agentAPS from "rc_agents/agents/app-configuration-assistant/APS";
+import Belief from "rc_agents/framework/base/Belief";
 import {
   ProcedureConst,
-  AsyncStorageKeys,
   BeliefKeys,
   AppAttributes,
   ClinicianAttributes,
   ProcedureAttributes
-} from "agents_implementation/agent_framework/AgentEnums";
+} from "rc_agents/AgentEnums";
+import { AsyncStorageKeys } from "rc_agents/storage";
 import { useNetInfo } from "@react-native-community/netinfo";
 import { setProcedureOngoing } from "ic-redux/actions/agents/actionCreator";
 import { AuthButton } from "components/Buttons/AuthButton";

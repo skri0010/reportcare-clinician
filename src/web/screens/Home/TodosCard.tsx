@@ -65,8 +65,8 @@ const styles = ScaledSheet.create({
     paddingRight: "5@ms"
   },
   listContainer: {
-    flex: 1
-    // TO-DO jy: explore options to resolve flatlist height issue
+    flex: 1,
+    paddingTop: "15@ms"
   },
   titleContainer: {
     display: "flex",
