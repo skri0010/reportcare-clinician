@@ -20,7 +20,7 @@ export const ClinicianSection: FC<ClinicianSectionProps> = ({ title, information
     return (
         <View>
             <H3 text={title} style={{ fontWeight: "bold", marginBottom: ms(10) }}/>
-            <H4 text={information} style={{ marginBottom: ms(25) }} />
+            <H4 text={information} style={{ marginBottom: ms(25) }}/>
         </View>
     );
 };
@@ -34,21 +34,20 @@ export const ClinicianDetails: FC<ClinicianDetails> = ({
 
     return (
         <ScreenWrapper>
-            <View style={{ display: "flex", flexDirection: "column" }}>
-                <H3 text="Clinician Info:" style={{ fontWeight:"bold", color: colors.primaryTextColor }}/>
-            </View>
+            <View style={styles.container}>
             <ClinicianSection title="Clinician Name:" information={generalDetails.name}/>
             <ClinicianSection title="Hospital Name:" information={generalDetails.hospitalName}/>
             <ClinicianSection title="Role:" information={generalDetails.role}/>
             <ClinicianSection title="Email:" information={generalDetails.id}/>
+            </View>
         </ScreenWrapper>
 
     );
 };
 
 const styles = ScaledSheet.create({
-    rowStyle: {
-        display: "flex",
-        flexDirection: "column"
+    container: {
+        margin: "30@ms",
+        marginLeft: "40@ms"
     }
 });
