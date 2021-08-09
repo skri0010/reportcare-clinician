@@ -16,23 +16,25 @@ import {
   ProcedureConst
 } from "rc_agents/AgentEnums";
 
-// LS-TODO: This is previously an action frame for ALA with condition LastActivity = SortAlerts.
-
 /**
- * Class to represent the activity for requesting patient's information associated with alerts.
+ * Class to represent the activity for requesting display of information associated with an alert.
  * This happens in Procedure Triage Alert HF Clinic (AT-CP).
  */
-class RequestAlertInfos extends Communicate {
+class RequestAlertInfoDisplay extends Communicate {
   /**
-   * Constructor for the RequestAlertInfos class
+   * Constructor for the RequestAlertInfoDisplay class
    */
   constructor() {
     super(
-      ActionFrameIDs.MHA.REQUEST_ALERT_INFOS,
+      ActionFrameIDs.DTA.REQUEST_ALERT_INFO_DISPLAY,
       Performative.REQUEST,
-      // Triggers RetrieveAlertInfos action frame of DTA
-      new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.ALERTS_SORTED, true),
-      [AgentIDs.DTA]
+      // Triggers DisplayAlertInfo action frame of UXSA
+      new Belief(
+        BeliefKeys.CLINICIAN,
+        ClinicianAttributes.ALERT_INFO_RETRIEVED,
+        true
+      ),
+      [AgentIDs.UXSA]
     );
   }
 
@@ -43,7 +45,6 @@ class RequestAlertInfos extends Communicate {
   async doActivity(agent: Agent): Promise<void> {
     try {
       await super.doActivity(agent);
-
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
@@ -51,21 +52,21 @@ class RequestAlertInfos extends Communicate {
   }
 }
 
-// Rules or preconditions for activating the RequestAlertInfos class
+// Rules or preconditions for activating the RequestAlertInfoDisplay class
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
   ProcedureAttributes.AT_CP,
   ProcedureConst.ACTIVE
 );
 const rule2 = new Precondition(
-  AgentIDs.MHA,
+  AgentIDs.DTA,
   CommonAttributes.LAST_ACTIVITY,
-  ActionFrameIDs.MHA.RETRIEVE_ALERTS
+  ActionFrameIDs.DTA.RETRIEVE_ALERT_INFO
 );
 
-// Actionframe of the RequestAlertInfos class
-export const af_RequestAlertInfos = new Actionframe(
-  `AF_${ActionFrameIDs.MHA.REQUEST_ALERT_INFOS}`,
+// Actionframe of the RequestAlertInfoDisplay class
+export const af_RequestAlertInfoDisplay = new Actionframe(
+  `AF_${ActionFrameIDs.DTA.REQUEST_ALERT_INFO_DISPLAY}`,
   [rule1, rule2],
-  new RequestAlertInfos()
+  new RequestAlertInfoDisplay()
 );

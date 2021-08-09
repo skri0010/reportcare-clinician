@@ -27,7 +27,15 @@ import { RiskLevel } from "models/RiskLevel";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Alert } from "aws/API";
 
-// LS-TODO: To be tested with actual Alerts
+// LS-TODO: To be tested with actual Alerts.
+// NOTE: This is originally MHA's action frame.
+
+interface LocalAlerts {
+  [RiskLevel.HIGH]?: string;
+  [RiskLevel.MEDIUM]?: string;
+  [RiskLevel.LOW]?: string;
+  [RiskLevel.UNASSIGNED]?: string;
+}
 
 /**
  * Class to represent the activity for retrieving alerts.
@@ -38,7 +46,7 @@ class RetrieveAlerts extends Activity {
    * Constructor for the RetrieveAlerts class
    */
   constructor() {
-    super(ActionFrameIDs.MHA.RETRIEVE_ALERTS);
+    super(ActionFrameIDs.DTA.RETRIEVE_ALERTS);
   }
 
   /**
@@ -60,29 +68,17 @@ class RetrieveAlerts extends Activity {
 
       // Retrieves all alerts with a specific status and risk level
       if (alertStatus && alertRiskLevel) {
+        // Retrieves locally stored alerts
+        const alertsJSON = await AsyncStorage.getItem(AsyncStorageKeys.ALERTS);
+
         if (facts[BeliefKeys.APP][AppAttributes.ONLINE]) {
           // Device is online
 
           // Maps risk level to color code for query
-          let alertColorCode: AlertColorCode | undefined;
-          switch (alertRiskLevel) {
-            case RiskLevel.HIGH:
-              alertColorCode = AlertColorCode.HIGH;
-              break;
-            case RiskLevel.MEDIUM:
-              alertColorCode = AlertColorCode.MEDIUM;
-              break;
-            case RiskLevel.LOW:
-              alertColorCode = AlertColorCode.LOW;
-              break;
-            case RiskLevel.UNASSIGNED:
-              alertColorCode = AlertColorCode.UNASSIGNED;
-              break;
-            default:
-              break;
-          }
+          const alertColorCode: AlertColorCode =
+            mapRiskLevelToColorCode(alertRiskLevel);
 
-          let alerts: (Alert | null)[] | undefined;
+          let alerts: Alert[] | undefined;
           // Pending alerts
           if (alertStatus === AlertStatus.PENDING && alertColorCode) {
             const query = await listPendingRiskAlerts({
@@ -92,15 +88,18 @@ class RetrieveAlerts extends Activity {
             if (query.data && query.data.listPendingRiskAlerts) {
               const result = query.data.listPendingRiskAlerts.items;
               if (result && result.length > 0) {
-                alerts = result;
+                alerts = result as Alert[];
               } else {
                 // LS-TODO: To be removed
+                const mockAlerts = JSON.parse(
+                  JSON.stringify(mockPendingAlerts)
+                );
                 switch (alertColorCode) {
                   case AlertColorCode.HIGH:
-                    alerts = mockPendingAlerts.splice(0, 2);
+                    alerts = mockAlerts.splice(0, 2);
                     break;
                   case AlertColorCode.MEDIUM:
-                    alerts = mockPendingAlerts.splice(2, 1);
+                    alerts = mockAlerts.splice(2, 1);
                     break;
                   default:
                     break;
@@ -117,18 +116,21 @@ class RetrieveAlerts extends Activity {
             if (query.data && query.data.listCompletedRiskAlerts) {
               const result = query.data.listCompletedRiskAlerts.items;
               if (result && result.length > 0) {
-                alerts = result;
+                alerts = result as Alert[];
               } else {
                 // LS-TODO: To be removed
+                const mockAlerts = JSON.parse(
+                  JSON.stringify(mockCompletedAlerts)
+                );
                 switch (alertColorCode) {
                   case AlertColorCode.HIGH:
-                    alerts = mockCompletedAlerts.splice(0, 1);
+                    alerts = mockAlerts.splice(0, 1);
                     break;
                   case AlertColorCode.MEDIUM:
-                    alerts = mockCompletedAlerts.splice(1, 1);
+                    alerts = mockAlerts.splice(1, 1);
                     break;
                   case AlertColorCode.LOW:
-                    alerts = mockCompletedAlerts.splice(2, 1);
+                    alerts = mockAlerts.splice(2, 1);
                     break;
                   default:
                     break;
@@ -140,27 +142,34 @@ class RetrieveAlerts extends Activity {
           if (alerts) {
             // LS-TODO: Previously using Alerts_To_Sort key to be sorted by SortAlerts of ALA first
             // Broadcast alert to facts to be used by RetrieveAlertInfos action frame of DTA.
+            const sortedAlerts = sortAlertsByDateTime(alerts);
+
             agentAPI.addFact(
               new Belief(
                 BeliefKeys.CLINICIAN,
-                ClinicianAttributes.SORTED_ALERTS,
-                alerts
+                ClinicianAttributes.ALERTS,
+                sortedAlerts
               ),
               false
             );
+
+            // Merges newly retrieved alerts into locally stored alerts
+            await this.mergeIntoLocalAlerts(alerts, alertsJSON, alertRiskLevel);
           }
-        } else {
+        } else if (alertsJSON) {
           // Device is offline
-          const localAlertInfos = await this.retrieveLocalAlerts(
+          const localAlerts = await this.retrieveLocalAlerts(
+            alertsJSON,
             alertStatus,
             alertRiskLevel
           );
-          if (localAlertInfos) {
+          if (localAlerts) {
+            const sortedAlerts = sortAlertsByDateTime(localAlerts);
             agentAPI.addFact(
               new Belief(
                 BeliefKeys.CLINICIAN,
-                ClinicianAttributes.SORTED_ALERTS,
-                localAlertInfos
+                ClinicianAttributes.ALERTS,
+                sortedAlerts
               ),
               false
             );
@@ -191,47 +200,118 @@ class RetrieveAlerts extends Activity {
     }
   }
 
+  /**
+   * Merges retrieved alert into JSON string for local storage
+   * @param alert current alert
+   * @param alertsJSON JSON string according to risk level
+   * @param riskLevel risk level of the current alert
+   * @returns merged JSON string
+   */
+  // eslint-disable-next-line class-methods-use-this
+  async mergeIntoLocalAlerts(
+    alerts: Alert[],
+    alertsJSON: string | null,
+    riskLevel: RiskLevel
+  ): Promise<void> {
+    let localAlerts: LocalAlerts;
+
+    if (alertsJSON) {
+      localAlerts = JSON.parse(alertsJSON);
+      if (localAlerts[riskLevel]) {
+        const riskAlerts: Alert[] = JSON.parse(localAlerts[riskLevel]!);
+        // Checks and replaces existing alerts with the newly retrieved ones
+        // Otherwise new alerts are added into the list
+        alerts.forEach((alert) => {
+          const existIndex = riskAlerts.findIndex((a) => a.id === alert.id);
+          if (existIndex >= 0) {
+            riskAlerts[existIndex] = alert;
+          } else {
+            riskAlerts.push(alert);
+          }
+        });
+        localAlerts[riskLevel] = JSON.stringify(riskAlerts);
+      } else {
+        localAlerts[riskLevel] = JSON.stringify(alerts);
+      }
+    } else {
+      localAlerts = {};
+      localAlerts[riskLevel] = JSON.stringify(alerts);
+    }
+    // Stores into local storage
+    await AsyncStorage.setItem(
+      AsyncStorageKeys.ALERTS,
+      JSON.stringify(localAlerts)
+    );
+  }
+
+  /**
+   * Gets locally stored alerts with specific status and risk level.
+   * @param alertsJSON locally stored JSON string
+   * @param alertStatus alert status
+   * @param riskLevel risk level
+   * @returns a list of alerts if any
+   */
   // eslint-disable-next-line class-methods-use-this
   async retrieveLocalAlerts(
+    alertsJSON: string,
     alertStatus: AlertStatus,
     riskLevel: RiskLevel
-  ): Promise<AlertInfo[] | null> {
-    // Maps alert status to completed
-    let completed: boolean | undefined;
-    switch (alertStatus) {
-      case AlertStatus.PENDING:
-        completed = false;
-        break;
-      case AlertStatus.COMPLETED:
-        completed = true;
-        break;
-      default:
-        break;
-    }
-
-    if (completed !== undefined) {
-      const alertsStr = await AsyncStorage.getItem(AsyncStorageKeys.ALERTS);
-      if (alertsStr) {
-        const localAlerts = JSON.parse(alertsStr);
-        const localAlertInfos: AlertInfo[] = [];
-        Object.keys(localAlerts).forEach((key) => {
-          const patientAlerts: AlertInfo[] = JSON.parse(localAlerts[key]);
-          patientAlerts.forEach((alert) => {
-            if (
-              alert.completed === completed &&
-              alert.riskLevel === riskLevel
-            ) {
-              localAlertInfos.push(alert);
-            }
-          });
+  ): Promise<Alert[] | null> {
+    const alerts: LocalAlerts = JSON.parse(alertsJSON);
+    const riskAlertsJSON = alerts[riskLevel];
+    if (riskAlertsJSON) {
+      const riskAlerts: Alert[] = JSON.parse(riskAlertsJSON);
+      const alertsToReturn: Alert[] = [];
+      if (alertStatus === AlertStatus.PENDING) {
+        riskAlerts.forEach((alert) => {
+          if (alert.pending === AlertStatus.PENDING) {
+            alertsToReturn.push(alert);
+          }
         });
-        return localAlertInfos;
+      } else if (alertStatus === AlertStatus.COMPLETED) {
+        riskAlerts.forEach((alert) => {
+          if (alert.completed === AlertStatus.COMPLETED) {
+            alertsToReturn.push(alert);
+          }
+        });
+      }
+      if (alertsToReturn.length > 0) {
+        return alertsToReturn;
       }
     }
-
     return null;
   }
 }
+
+const mapRiskLevelToColorCode = (alertRiskLevel: RiskLevel): AlertColorCode => {
+  switch (alertRiskLevel) {
+    case RiskLevel.HIGH:
+      return AlertColorCode.HIGH;
+    case RiskLevel.MEDIUM:
+      return AlertColorCode.MEDIUM;
+    case RiskLevel.LOW:
+      return AlertColorCode.LOW;
+    case RiskLevel.UNASSIGNED:
+      return AlertColorCode.UNASSIGNED;
+    default:
+      return AlertColorCode.UNASSIGNED;
+  }
+};
+
+/**
+ * Sorts alerts / alert infos in descending order of datetime.
+ * @param alerts List of alerts / alert infos to be sorted
+ * @returns list of sorted alerts / alert infos
+ */
+export const sortAlertsByDateTime = (
+  alerts: Alert[] | AlertInfo[]
+): Alert[] | AlertInfo[] => {
+  return alerts.sort((a, b) => {
+    const date1 = new Date(a.dateTime);
+    const date2 = new Date(b.dateTime);
+    return date2.getTime() - date1.getTime();
+  });
+};
 
 // Rules or preconditions for activating the RetrieveAlerts class
 const rule1 = new Precondition(
@@ -247,7 +327,7 @@ const rule2 = new ResettablePrecondition(
 
 // Actionframe of the RetrieveAlerts class
 export const af_RetrieveAlerts = new Actionframe(
-  `AF_${ActionFrameIDs.MHA.RETRIEVE_ALERTS}`,
+  `AF_${ActionFrameIDs.DTA.RETRIEVE_ALERTS}`,
   [rule1, rule2],
   new RetrieveAlerts()
 );

@@ -8,7 +8,7 @@ import {
   PendingAlertCount,
   Todo
 } from "rc_agents/model";
-import { PatientAssignment } from "aws/API";
+import { Alert, PatientAssignment } from "aws/API";
 
 interface AgentsState {
   procedureSuccessful: boolean;
@@ -20,7 +20,8 @@ interface AgentsState {
   patientAssignmentsSynced: boolean;
   fetchingPendingPatientAssignments: boolean;
   pendingAlertCount: PendingAlertCount;
-  alerts: AlertInfo[];
+  alerts: Alert[];
+  alertInfo: AlertInfo | undefined;
   newTodo: Todo | undefined;
 }
 
@@ -44,6 +45,7 @@ const initialState: AgentsState = {
     unassignedRisk: 0
   },
   alerts: [],
+  alertInfo: undefined,
   newTodo: undefined
 };
 
@@ -85,6 +87,11 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
       return {
         ...state,
         alerts: action.payload.alerts
+      };
+    case actionNames.SET_ALERT_INFO:
+      return {
+        ...state,
+        alertInfo: action.payload.alertInfo
       };
     case actionNames.SET_NEW_TODO:
       return { ...state, newTodo: action.payload.newTodo };

@@ -16,7 +16,11 @@ import {
 } from "rc_agents/AgentEnums";
 import { PatientDetails } from "rc_agents/model";
 import agentAPI from "rc_agents/framework/AgentAPI";
-import { listActivityInfosByPatientID, listReportSymptomsByPatientID, listReportVitalsByPatientID } from "aws";
+import {
+  listActivityInfosByPatientID,
+  listReportSymptomsByPatientID,
+  listReportVitalsByPatientID
+} from "aws";
 import { ActivityInfo, ReportSymptom, ReportVitals } from "aws/API";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -53,16 +57,21 @@ class RetrievePatientDetails extends Activity {
 
       if (patientId && isOnline) {
         // Device is online
-        const activityInfoQuery = await listActivityInfosByPatientID({patientID: patientId});
+        const activityInfoQuery = await listActivityInfosByPatientID({
+          patientID: patientId
+        });
 
-        const symptomsReportsQuery = await listReportSymptomsByPatientID({patientID: patientId});
+        const symptomsReportsQuery = await listReportSymptomsByPatientID({
+          patientID: patientId
+        });
 
-        const vitalsReportsQuery = await listReportVitalsByPatientID({ patientID: patientId }
-        );
+        const vitalsReportsQuery = await listReportVitalsByPatientID({
+          patientID: patientId
+        });
 
         if (activityInfoQuery.data.listActivityInfosByPatientID?.items) {
-          patientDetails.activityInfo = activityInfoQuery.data.listActivityInfosByPatientID
-            .items as ActivityInfo[];
+          patientDetails.activityInfo = activityInfoQuery.data
+            .listActivityInfosByPatientID.items as ActivityInfo[];
         }
         if (symptomsReportsQuery.data.listReportSymptomsByPatientID?.items) {
           patientDetails.symptomsReports = symptomsReportsQuery.data

@@ -41,7 +41,6 @@ class RequestRetrieveAll extends Communicate {
   async doActivity(agent: Agent): Promise<void> {
     try {
       await super.doActivity(agent);
-
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);

@@ -31,7 +31,7 @@ class RequestAlertsDisplay extends Communicate {
       // Triggers DisplayAlerts action frame of UXSA
       new Belief(
         BeliefKeys.CLINICIAN,
-        ClinicianAttributes.ALERT_INFOS_RETRIEVED,
+        ClinicianAttributes.ALERTS_RETRIEVED,
         true
       ),
       [AgentIDs.UXSA]
@@ -45,7 +45,6 @@ class RequestAlertsDisplay extends Communicate {
   async doActivity(agent: Agent): Promise<void> {
     try {
       await super.doActivity(agent);
-
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
@@ -62,7 +61,7 @@ const rule1 = new Precondition(
 const rule2 = new Precondition(
   AgentIDs.DTA,
   CommonAttributes.LAST_ACTIVITY,
-  ActionFrameIDs.DTA.RETRIEVE_ALERT_INFOS
+  ActionFrameIDs.DTA.RETRIEVE_ALERTS
 );
 
 // Actionframe of the RequestAlertsDisplay class

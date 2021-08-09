@@ -45,7 +45,6 @@ class RequestEntryData extends Communicate {
   async doActivity(agent: Agent): Promise<void> {
     try {
       super.doActivity(agent);
-      
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);

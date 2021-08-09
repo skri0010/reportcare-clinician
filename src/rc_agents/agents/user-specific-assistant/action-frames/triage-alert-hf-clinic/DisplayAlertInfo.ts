@@ -15,16 +15,16 @@ import {
 } from "rc_agents/AgentEnums";
 import agentAPI from "rc_agents/framework/AgentAPI";
 import { store } from "util/useRedux";
-import { setAlerts } from "ic-redux/actions/agents/actionCreator";
-import { Alert } from "aws/API";
+import { setAlertInfo } from "ic-redux/actions/agents/actionCreator";
+import { AlertInfo } from "rc_agents/model";
 
 /**
- * Class to represent an activity for triggering the display of alerts.
+ * Class to represent an activity for triggering the display of alert info.
  * This happens in Procedure Triage Alert HF Clinic (AT-CP).
  */
-class DisplayAlerts extends Activity {
+class DisplayAlertInfo extends Activity {
   constructor() {
-    super(ActionFrameIDs.UXSA.DISPLAY_ALERTS);
+    super(ActionFrameIDs.UXSA.DISPLAY_ALERT_INFO);
   }
 
   /**
@@ -35,18 +35,22 @@ class DisplayAlerts extends Activity {
     await super.doActivity(agent, [rule2]);
 
     try {
-      const alerts: Alert[] =
-        agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.ALERTS];
+      const alertInfo: AlertInfo =
+        agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[
+          ClinicianAttributes.ALERT_INFO
+        ];
 
-      if (alerts) {
-        // LS-TODO: Irrelevant alerts should be filtered out depending on user's role
-
-        // Dispatch alerts to front end for display
-        store.dispatch(setAlerts(alerts));
+      if (alertInfo) {
+        // Dispatch alert info to front end for display
+        store.dispatch(setAlertInfo(alertInfo));
 
         // Removes alert info from facts
         agentAPI.addFact(
-          new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.ALERTS, null),
+          new Belief(
+            BeliefKeys.CLINICIAN,
+            ClinicianAttributes.ALERT_INFO,
+            null
+          ),
           false
         );
       }
@@ -68,7 +72,7 @@ class DisplayAlerts extends Activity {
   }
 }
 
-// Preconditions for activating the DisplayAlerts class
+// Preconditions for activating the DisplayAlertInfo class
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
   ProcedureAttributes.AT_CP,
@@ -76,13 +80,13 @@ const rule1 = new Precondition(
 );
 const rule2 = new ResettablePrecondition(
   BeliefKeys.CLINICIAN,
-  ClinicianAttributes.ALERTS_RETRIEVED,
+  ClinicianAttributes.ALERT_INFO_RETRIEVED,
   true
 );
 
-// Action Frame for DisplayAlerts class
-export const af_DisplayAlerts = new Actionframe(
-  `AF_${ActionFrameIDs.UXSA.DISPLAY_ALERTS}`,
+// Action Frame for DisplayAlertInfo class
+export const af_DisplayAlertInfo = new Actionframe(
+  `AF_${ActionFrameIDs.UXSA.DISPLAY_ALERT_INFO}`,
   [rule1, rule2],
-  new DisplayAlerts()
+  new DisplayAlertInfo()
 );
