@@ -11,48 +11,46 @@ import { ClinicianInfo } from "aws/models";
 import { ContactTitle } from "./ContactTitle";
 import { ClinicianDetails } from "./ClinicianDetails";
 
+export const CliniciansTab: FC<WithSideTabsProps[ScreenName.CLINICIAN]> =
+  () => {
+    const { colors } = select((state: RootState) => ({
+      colors: state.settings.colors
+    }));
 
-export const CliniciansTab: FC<WithSideTabsProps[ScreenName.CLINICIAN]> = () => {
-  const { colors } = select((state: RootState) => ({
-    colors: state.settings.colors
-  }));
+    const [filteredClinicians, setFilteredClinicians] =
+      useState<ClinicianInfo[]>(mockClinician);
 
-  const [filteredClinicians, setFilteredClinicians] = useState<ClinicianInfo[]>(mockClinician);
+    const [selectedClinician] = useState(mockClinician[0]);
 
-
-  const [selectedClinician] = useState(mockClinician[0]);
-
-
-  // JH-TODO: Replace placeholder with i18n
-  return (
-    <ScreenWrapper>
-      <View style={{ flexDirection: "row", height: "100%" }}>
-        <View style={{ flex: 1, height: Dimensions.get("window").height }}>
-          <RowSelectionWrapper
-            title="Clinician"
-            >
-            <FlatList
-              showsVerticalScrollIndicator={false}
-              style={{ flex: 1 }}
-              ItemSeparatorComponent={() => <ItemSeparator />}
-              ListHeaderComponent={() => <ItemSeparator />}
-              ListFooterComponent={() => <ItemSeparator />}
-              data = {filteredClinicians}
-              renderItem={({ item }) => (
-                <ClinicianContactRow 
-                generalDetails={item} />
-              )
-            }
+    // JH-TODO: Replace placeholder with i18n
+    return (
+      <ScreenWrapper>
+        <View style={{ flexDirection: "row", height: "100%" }}>
+          <View style={{ flex: 1, height: Dimensions.get("window").height }}>
+            <RowSelectionWrapper title="Clinician">
+              <FlatList
+                showsVerticalScrollIndicator={false}
+                style={{ flex: 1 }}
+                ItemSeparatorComponent={() => <ItemSeparator />}
+                ListHeaderComponent={() => <ItemSeparator />}
+                ListFooterComponent={() => <ItemSeparator />}
+                data={filteredClinicians}
+                renderItem={({ item }) => (
+                  <ClinicianContactRow generalDetails={item} />
+                )}
               />
             </RowSelectionWrapper>
-            </View>
-        <View style = {{ flex: 2, backgroundColor: colors.primaryWebBackgroundColor }}>
-          <ContactTitle name={selectedClinician.name} isPatient={false}/>
-          <ClinicianDetails generalDetails={selectedClinician}/>
+          </View>
+          <View
+            style={{
+              flex: 2,
+              backgroundColor: colors.primaryWebBackgroundColor
+            }}
+          >
+            <ContactTitle name={selectedClinician.name} isPatient={false} />
+            <ClinicianDetails generalDetails={selectedClinician} />
+          </View>
         </View>
-        
-        </View>
-    </ScreenWrapper>
-  );
-};
-
+      </ScreenWrapper>
+    );
+  };
