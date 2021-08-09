@@ -138,8 +138,8 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
 const styles = ScaledSheet.create({
   container: {
     flexDirection: "column",
-    margin: "30@ms",
-    marginTop: "20@ms"
+    marginHorizontal: "45@ms",
+    marginTop: "30@ms"
   },
   input: {
     borderWidth: "1@ms",

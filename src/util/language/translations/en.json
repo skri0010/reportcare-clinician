@@ -136,6 +136,8 @@
     "TitleInputPlaceholder": "What's this todo about?",
     "PatientInputPlaceholder": "What's the patient's name?",
     "NotesInputPlaceholder": "Anything notable?",
-    "NoSelection": "Select a Todo item to view its details"
+    "NoSelection": "Select a Todo item to view its details",
+    "MarkAsDone": "MARK AS DONE",
+    "UndoFromCompleted": "UNDO FROM COMPLETED"
   }
 }

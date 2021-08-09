@@ -1,11 +1,11 @@
-import React, { FC, useState, createContext } from "react";
+import React, { FC, useState, createContext, useContext } from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { TodoCurrentTab } from "./TodoCurrentTab";
 import { TodoCompletedTab } from "./TodoCompletedTab";
 import { getTopTabBarOptions } from "util/getStyles";
 import { RootState, select } from "util/useRedux";
 import { ScreenName, WithSideTabsProps } from "web/screens";
-import { View, Modal } from "react-native";
+import { View, Modal, TouchableOpacity, Text } from "react-native";
 import { RowSelectionWrapper } from "../RowSelectionTab";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
@@ -17,6 +17,7 @@ import { AddTodoScreen } from "./AddTodoScreen";
 import { NoSelectionScreen } from "../Shared/NoSelectionScreen";
 import { ITodoDetails } from "models/TodoDetails";
 import i18n from "util/language/i18n";
+import { H4, H5 } from "components/Text/index";
 
 const Tab = createMaterialTopTabNavigator();
 const Stack = createStackNavigator();
@@ -25,6 +26,7 @@ export const TodoContext = createContext({
   mainTitleContent: "",
   patientContent: "",
   notesContent: "",
+  doneStatus: false,
   createdTimeDate: "",
   modifiedTimeDate: ""
 });
@@ -42,6 +44,46 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = () => {
     colors: state.settings.colors
   }));
 
+  interface MarkAsDoneButtonProps {
+    onPress: () => void;
+  }
+
+  const MarkAsDoneButton: FC<MarkAsDoneButtonProps> = ({ onPress }) => {
+    const todoContext = useContext(TodoContext);
+    return (
+      <View
+        style={{
+          paddingRight: ms(30),
+          justifyContent: "center"
+        }}
+      >
+        <TouchableOpacity
+          style={[
+            styles.markAsSave,
+            {
+              backgroundColor: !todoContext.doneStatus
+                ? colors.primaryButtonColor
+                : "red"
+            }
+          ]}
+          onPress={onPress}
+        >
+          <H5
+            text={
+              !todoContext.doneStatus
+                ? i18n.t("Todo.MarkAsDone")
+                : i18n.t("Todo.UndoFromCompleted")
+            }
+            style={{
+              color: colors.primaryContrastTextColor,
+              alignItems: "center",
+              fontWeight: "bold"
+            }}
+          />
+        </TouchableOpacity>
+      </View>
+    );
+  };
   const [modalVisible, setModalVisible] = useState(false);
   const [addButton, setAddButton] = useState(true);
   const [todoSelected, setTodoSelected] = useState<ITodoDetails>({
@@ -78,6 +120,7 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = () => {
     mainTitleContent: todoSelected.title,
     patientContent: todoSelected.name,
     notesContent: todoSelected.description,
+    doneStatus: todoSelected.doneStatus,
     createdTimeDate: todoSelected.created,
     modifiedTimeDate: todoSelected.modified
   };
@@ -143,7 +186,10 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = () => {
                         fontWeight: "bold",
                         fontSize: ms(20),
                         paddingLeft: ms(15)
-                      }
+                      },
+                      headerRight: () => (
+                        <MarkAsDoneButton onPress={() => null} />
+                      )
                     })}
                   />
                   <Stack.Screen
@@ -207,5 +253,13 @@ const styles = ScaledSheet.create({
     justifyContent: "center",
     height: "100%",
     width: "100%"
+  },
+  markAsSave: {
+    height: "30@ms",
+    display: "flex",
+    paddingHorizontal: "10@ms",
+    alignItems: "center",
+    justifyContent: "space-evenly",
+    borderRadius: "5@ms"
   }
 });

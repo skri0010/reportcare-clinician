@@ -103,7 +103,7 @@ const styles = ScaledSheet.create({
     paddingBottom: "10@ms"
   },
   name: {
-    paddingBottom: "10@ms"
+    paddingBottom: "5@ms"
   },
   buttonContainer: {
     paddingTop: "15@ms",

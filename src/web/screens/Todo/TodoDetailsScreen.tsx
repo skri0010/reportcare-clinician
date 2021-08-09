@@ -20,7 +20,7 @@ interface editHistorySectionProps {
 
 export const TodoSection: FC<todoSectionProps> = ({ mainItem, content }) => {
   return (
-    <View>
+    <View style={{ display: "flex", flexWrap: "wrap" }}>
       <H3
         text={mainItem}
         style={{ fontWeight: "bold", marginBottom: ms(10) }}
@@ -125,8 +125,8 @@ export const TodoDetailsScreen: FC<TodoScreenProps> = ({
 
 const styles = ScaledSheet.create({
   container: {
-    margin: "30@ms",
-    marginLeft: "40@ms"
+    marginHorizontal: "55@ms",
+    marginVertical: "30@ms"
   },
   todoPatient: {
     display: "flex",
