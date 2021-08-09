@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
 import { View } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
-import { H1, H3, H4 } from "components/Text/index";
+import { H1, H3, H5 } from "components/Text/index";
 import { CardWrapper } from "web/screens/Home/CardWrapper";
 import i18n from "util/language/i18n";
 
@@ -36,7 +36,7 @@ export const OxygenSaturationCard: FC<OxygenSaturationProps> = ({
             text={oxySatValue}
             style={{ fontWeight: "bold", color: colors.primaryTextColor }}
           />
-          <H4 text="%" style={null} />
+          <H5 text="%" style={styles.label} />
         </View>
       </View>
     </CardWrapper>
@@ -55,6 +55,9 @@ const styles = ScaledSheet.create({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    top: "4@ms"
+    top: "6@ms"
+  },
+  label: {
+    opacity: 0.8
   }
 });

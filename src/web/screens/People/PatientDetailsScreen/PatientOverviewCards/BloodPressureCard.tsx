@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
 import { View } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
-import { H1, H3, H4 } from "components/Text/index";
+import { H1, H3, H5 } from "components/Text/index";
 import { CardWrapper } from "web/screens/Home/CardWrapper";
 import i18n from "util/language/i18n";
 
@@ -34,20 +34,26 @@ export const BloodPressureCard: FC<BloodPressureProps> = ({
       <View style={styles.container}>
         <View style={styles.textContainer}>
           <View style={styles.text}>
-            <H4 text={i18n.t("Patient_Overview.Systolic")} style={null} />
+            <H5
+              text={i18n.t("Patient_Overview.Systolic")}
+              style={styles.labels}
+            />
             <H1
               text={systolic}
               style={{ fontWeight: "bold", color: colors.primaryTextColor }}
             />
-            <H4 text="mmHg" style={null} />
+            <H5 text="mmHg" style={styles.labels} />
           </View>
           <View style={styles.text}>
-            <H4 text={i18n.t("Patient_Overview.Diastolic")} style={null} />
+            <H5
+              text={i18n.t("Patient_Overview.Diastolic")}
+              style={styles.labels}
+            />
             <H1
               text={dystolic}
               style={{ fontWeight: "bold", color: colors.primaryTextColor }}
             />
-            <H4 text="mmHg" style={null} />
+            <H5 text="mmHg" style={styles.labels} />
           </View>
         </View>
       </View>
@@ -66,13 +72,15 @@ const styles = ScaledSheet.create({
     width: "80%",
     flexDirection: "row",
     justifyContent: "space-around",
-    alignItems: "stretch",
-    top: "-4@ms"
+    alignItems: "stretch"
   },
   text: {
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center"
+  },
+  labels: {
+    opacity: 0.8
   }
 });

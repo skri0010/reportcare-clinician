@@ -38,7 +38,7 @@ export const WeightCard: FC<WeightProps> = ({
               text={weight}
               style={{ fontWeight: "bold", color: colors.primaryTextColor }}
             />
-            <H4 text="kg" style={null} />
+            <H4 text="kg" style={styles.label} />
           </View>
         </View>
         <H4
@@ -70,5 +70,8 @@ const styles = ScaledSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginBottom: "20@ms"
+  },
+  label: {
+    opacity: 0.8
   }
 });
