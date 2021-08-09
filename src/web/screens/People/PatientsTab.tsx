@@ -209,7 +209,9 @@ export const PatientsTab: FC = () => {
         style={styles.container}
         pointerEvents={modalVisible ? "none" : "auto"}
       >
-        <View style={{ flex: 1 }}>
+        <View
+          style={{ flex: 1, backgroundColor: colors.primaryContrastTextColor }}
+        >
           <RowSelectionWrapper
             title={i18n.t("TabTitle.Patients")}
             riskFilterTag

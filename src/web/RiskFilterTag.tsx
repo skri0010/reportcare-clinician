@@ -23,6 +23,10 @@ export const RiskFilterTag: FC<RiskFilterTagProps> = ({
 
   return (
     <TouchableHighlight
+      underlayColor={getRiskLevelColor(
+        colors.riskLevelSelectedBackgroundColors,
+        riskLevel
+      )}
       style={[
         styles.container,
         {

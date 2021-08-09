@@ -24,6 +24,8 @@ export const PatientParameter: FC<PatientParameterProps> = ({ patient }) => {
           patientId={patient.patientID}
           maxHeight={cardMaxHeight}
         />
+      </View>
+      <View style={styles.container}>
         <OxygenSaturationParameterCard
           patientId={patient.patientID}
           maxHeight={cardMaxHeight}
@@ -41,7 +43,7 @@ const styles = ScaledSheet.create({
   container: {
     display: "flex",
     flexDirection: "row",
-    flexWrap: "wrap",
-    marginBottom: "20@ms"
+    marginBottom: "10@ms",
+    paddingHorizontal: "10@ms"
   }
 });

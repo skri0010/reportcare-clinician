@@ -69,7 +69,7 @@ export const LineChartComponent: FC<LineChartProps> = ({
 
   const height =
     Platform.OS === "web"
-      ? (Dimensions.get("window").height * 3) / 9
+      ? (Dimensions.get("window").height * 3) / 6.5
       : Dimensions.get("window").height / 3;
 
   return (
@@ -100,6 +100,7 @@ const styles = ScaledSheet.create({
   titleContainer: {
     flexDirection: "row",
     alignItems: "baseline",
+    justifyContent: "center",
     marginLeft: ms(10),
     marginBottom: ms(-10)
   },

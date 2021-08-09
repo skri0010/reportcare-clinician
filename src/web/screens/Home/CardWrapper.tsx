@@ -9,6 +9,7 @@ interface CardWrapperProps {
   maxHeight?: number;
   firstItem?: boolean;
   minWidthRequired?: boolean;
+  paddingTop?: boolean;
 }
 
 export const CardWrapper: FC<CardWrapperProps> = ({
@@ -17,7 +18,8 @@ export const CardWrapper: FC<CardWrapperProps> = ({
   maxHeight,
   minHeight,
   minWidthRequired = true,
-  firstItem = false
+  firstItem = false,
+  paddingTop
 }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
@@ -34,6 +36,7 @@ export const CardWrapper: FC<CardWrapperProps> = ({
           marginHorizontal: ms(10, 0.2),
           borderRadius: ms(5),
           ...(minHeight ? { minHeight: minHeight } : { minHeight: ms(100) }),
+          ...(paddingTop ? { paddingTop: ms(20) } : {}),
           ...(minWidthRequired ? { minWidth: ms(200) } : {}),
           ...(maxHeight ? { maxHeight: maxHeight } : {}),
           shadowRadius: ms(1),
