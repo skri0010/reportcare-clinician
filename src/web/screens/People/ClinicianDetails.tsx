@@ -10,6 +10,21 @@ import { ScreenWrapper } from "../ScreenWrapper";
 interface ClinicianDetails {
     generalDetails: ClinicianInfo;
 }
+
+interface ClinicianSectionProps {
+    title: string;
+    information: string;
+}
+
+export const ClinicianSection: FC<ClinicianSectionProps> = ({ title, information }) => {
+    return (
+        <View>
+            <H3 text={title} style={{ fontWeight: "bold", marginBottom: ms(10) }}/>
+            <H4 text={information} style={{ marginBottom: ms(25) }} />
+        </View>
+    );
+};
+
 export const ClinicianDetails: FC<ClinicianDetails> = ({
     generalDetails
 }) => { 
@@ -21,23 +36,11 @@ export const ClinicianDetails: FC<ClinicianDetails> = ({
         <ScreenWrapper>
             <View style={{ display: "flex", flexDirection: "column" }}>
                 <H3 text="Clinician Info:" style={{ fontWeight:"bold", color: colors.primaryTextColor }}/>
-                <View style={styles.rowStyle}>
-                    <H4 text="Name: " style={{ fontWeight: "bold", color: colors.primaryTextColor }}/>
-                    <H4 text={generalDetails.name} style={{ textAlign: "center", color: colors.primaryTextColor }}/>
-                </View>
-                <View style={styles.rowStyle}>
-                    <H4 text="Hospital Name: " style={{ fontWeight: "bold", color: colors.primaryTextColor }}/>
-                    <H4 text={generalDetails.hospitalName} style={{ color: colors.primaryTextColor }}/>
-                </View>
-                <View style={styles.rowStyle}>
-                    <H4 text="Email: " style={{ fontWeight: "bold", color: colors.primaryTextColor }}/>
-                    <H4 text={generalDetails.id} style={{ color: colors.primaryTextColor }}/>
-                </View>
-                <View style={styles.rowStyle}>
-                    <H4 text="Role: " style={{ fontWeight: "bold", color: colors.primaryTextColor }}/>
-                    <H4 text={generalDetails.role} style={{ color: colors.primaryTextColor }}/>
-                </View>
             </View>
+            <ClinicianSection title="Clinician Name:" information={generalDetails.name}/>
+            <ClinicianSection title="Hospital Name:" information={generalDetails.hospitalName}/>
+            <ClinicianSection title="Role:" information={generalDetails.role}/>
+            <ClinicianSection title="Email:" information={generalDetails.id}/>
         </ScreenWrapper>
 
     );
