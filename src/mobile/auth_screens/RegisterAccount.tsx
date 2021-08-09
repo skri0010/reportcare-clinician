@@ -18,10 +18,9 @@ import i18n from "util/language/i18n";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useToast } from "react-native-toast-notifications";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AsyncStorageKeys } from "rc_agents/storage";
 import { AuthButton } from "components/Buttons/AuthButton";
 import { TextField } from "components/InputComponents/TextField";
+import { Storage } from "rc_agents/storage";
 
 export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
   navigation
@@ -57,14 +56,11 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
       .then(async () => {
         setRegistering(false);
         toast.show(i18n.t("Auth_Registration.CodeSent"), { type: "success" });
-        await AsyncStorage.setItem(
-          AsyncStorageKeys.SIGN_UP_DETAILS,
-          JSON.stringify({
-            name: name,
-            hospitalName: hospital,
-            role: role
-          })
-        );
+        await Storage.setSignUpDetails({
+          name: name,
+          hospitalName: hospital,
+          role: role
+        });
         navigation.navigate(AuthScreenName.CONFIRM_REGISTER, {
           username: username
         });

@@ -15,11 +15,10 @@ import {
   AppAttributes,
   ActionFrameIDs
 } from "rc_agents/AgentEnums";
-import { AsyncStorageKeys } from "rc_agents/storage";
+import { Storage } from "rc_agents/storage";
 import { Patient } from "rc_agents/model";
 import { PatientInfo } from "aws/API";
 import { RiskLevel } from "models/RiskLevel";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import agentAPI from "rc_agents/framework/AgentAPI";
 import { Role, getClinicianInfo, listPatientInfos } from "aws";
 import { store } from "util/useRedux";
@@ -119,9 +118,7 @@ class RetrieveRolePatients extends Activity {
       // Nurse: query patients from the same hospital (hospitalName).
       if (role && role === Role.NURSE) {
         // Retrieves locally stored clinicianID
-        const clinicianID = await AsyncStorage.getItem(
-          AsyncStorageKeys.CLINICIAN_ID
-        );
+        const clinicianID = await Storage.getClinicianID();
         if (clinicianID) {
           const clinicianQuery = await getClinicianInfo({
             clinicianID: clinicianID
@@ -138,10 +135,7 @@ class RetrieveRolePatients extends Activity {
                 const patients = patientQuery.data.listPatientInfos.items;
 
                 // Saves patients locally
-                await AsyncStorage.setItem(
-                  AsyncStorageKeys.PATIENTS,
-                  JSON.stringify(patients)
-                );
+                await Storage.setPatients(patients);
                 return patients;
               }
             }
@@ -161,18 +155,15 @@ class RetrieveRolePatients extends Activity {
           const patients = patientQuery.data.listPatientInfos.items;
 
           // Saves patients locally
-          await AsyncStorage.setItem(
-            AsyncStorageKeys.PATIENTS,
-            JSON.stringify(patients)
-          );
+          await Storage.setPatients(patients);
           return patients;
         }
       }
     } else {
       // Device is offline: retrieves locally stored patients if any
-      const patients = await AsyncStorage.getItem(AsyncStorageKeys.PATIENTS);
-      if (patients) {
-        return JSON.parse(patients);
+      const localPatients = await Storage.getPatients();
+      if (localPatients) {
+        return localPatients;
       }
     }
     return [];

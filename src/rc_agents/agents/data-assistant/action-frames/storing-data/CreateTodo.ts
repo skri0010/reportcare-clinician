@@ -6,7 +6,6 @@ import {
   Precondition,
   ResettablePrecondition
 } from "rc_agents/framework";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   ProcedureConst,
   BeliefKeys,
@@ -15,7 +14,7 @@ import {
   ActionFrameIDs,
   ClinicianAttributes
 } from "rc_agents/AgentEnums";
-import { AsyncStorageKeys } from "rc_agents/storage";
+import { Storage } from "rc_agents/storage";
 import agentAPI from "rc_agents/framework/AgentAPI";
 import { store } from "ic-redux/store";
 import {
@@ -24,7 +23,7 @@ import {
 } from "ic-redux/actions/agents/actionCreator";
 import agentNWA from "rc_agents/agents/network-assistant/NWA";
 import { AlertStatus, createTodo, getAlert, updateAlert } from "aws";
-import { AlertInfo, NewTodoInput, Todo } from "rc_agents/model";
+import { NewTodoInput, Todo } from "rc_agents/model";
 import { CreateTodoInput } from "aws/API";
 
 // LS-TODO: To be tested again after integrating with Alert and Todo front end
@@ -51,9 +50,7 @@ class CreateTodo extends Activity {
         agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.TODO];
 
       // Gets locally stored clinicianId
-      const clinicianId = await AsyncStorage.getItem(
-        AsyncStorageKeys.CLINICIAN_ID
-      );
+      const clinicianId = await Storage.getClinicianID();
 
       if (newTodo && clinicianId) {
         let todoId: string | undefined;
@@ -123,29 +120,29 @@ class CreateTodo extends Activity {
             todoToStore.alertId = newTodo.alert.id;
             todoToStore.patientId = newTodo.alert.patientId;
 
-            // Saves updated alert locally with patientId as nested key
-            // Gets all alerts
-            const alertsStr = await AsyncStorage.getItem(
-              AsyncStorageKeys.ALERTS
-            );
-            if (alertsStr) {
-              const alerts = JSON.parse(alertsStr);
+            // Updates local alerts
+            const localAlerts = await Storage.getAlerts();
+            if (localAlerts && newTodo.alert) {
+              const riskAlerts = localAlerts[newTodo.alert.riskLevel!];
+              if (riskAlerts) {
+                const existIndex = riskAlerts.findIndex((a) => a.id === newTodo.alert!.id);
+                if (existIndex >= 0) {
+                  riskAlerts[existIndex].completed = AlertStatus.COMPLETED;
+                }
+                await Storage.setAlerts(localAlerts);
+              }
+            }
 
-              // Gets alerts specific to current patient
-              const patientAlertsStr = alerts[newTodo.alert.patientId];
-              if (patientAlertsStr) {
-                const patientAlerts: AlertInfo[] = JSON.parse(patientAlertsStr);
-                patientAlerts.forEach((alert) => {
-                  if (alert.id === newTodo.alert!.id) {
-                    alert.completed = true;
-                  }
-                });
-                alerts[newTodo.alert.patientId] = JSON.stringify(patientAlerts);
-
-                await AsyncStorage.setItem(
-                  AsyncStorageKeys.ALERTS,
-                  JSON.stringify(alerts)
-                );
+            // Updates local alert infos
+            const localAlertInfos = await Storage.getAlertInfos();
+            if (localAlertInfos && newTodo.alert) {
+              const patientAlerts = localAlertInfos[newTodo.alert.patientId];
+              if (patientAlerts) {
+                const existIndex = patientAlerts.findIndex((a) => a.id === newTodo.alert!.id);
+                if (existIndex >= 0) {
+                  patientAlerts[existIndex].completed = true;
+                }
+                await Storage.setAlertInfos(localAlertInfos);
               }
             }
           }
@@ -154,37 +151,48 @@ class CreateTodo extends Activity {
             todoToStore.id = todoId;
           }
 
-          const localTodosStr = await AsyncStorage.getItem(
-            AsyncStorageKeys.TODOS
-          );
-          // Other Todos exist
-          if (localTodosStr) {
-            const localTodos: Todo[] = JSON.parse(localTodosStr);
-            localTodos.push(todoToStore);
-            await AsyncStorage.setItem(
-              AsyncStorageKeys.TODOS,
-              JSON.stringify(localTodos)
-            );
-          }
-          // Current Todo is the first to be stored
-          else {
-            await AsyncStorage.setItem(
-              AsyncStorageKeys.TODOS,
-              JSON.stringify([todoToStore])
-            );
+          let localTodos = await Storage.getTodos();
+          let todoExists = false;
+          if (localTodos) {
+            // A Todo for the alert already exists: update this Todo instead.
+            const existIndex = localTodos.findIndex((t) => t.alertId === todoToStore.alertId);
+            if (existIndex >= 0) {
+              const existingTodo = localTodos[existIndex];
+              // Update id otherwise syncing will treat this as a new Todo
+              todoToStore.id = existingTodo.id;
+              localTodos[existIndex] = todoToStore;
+              todoExists = true;
+            } else {
+              localTodos.push(todoToStore);
+            }
+          } else {
+            localTodos = [todoToStore];
           }
 
-          // Notifies NWA if the Todo to be stored has pendingSync set to true
           if (pendingSync) {
-            // Notifies NWA
-            agentNWA.addBelief(
-              new Belief(
-                BeliefKeys.APP,
-                AppAttributes.PENDING_TODO_INSERT_SYNC,
-                true
-              )
-            );
+            if (todoExists) {
+              // Set pending update to true
+              agentNWA.addBelief(
+                new Belief(
+                  BeliefKeys.APP,
+                  AppAttributes.PENDING_TODO_UPDATE_SYNC,
+                  true
+                )
+              );
+            } else {
+              // Set pending insert to true
+              agentNWA.addBelief(
+                new Belief(
+                  BeliefKeys.APP,
+                  AppAttributes.PENDING_TODO_INSERT_SYNC,
+                  true
+                )
+              );
+            }
           }
+
+          // Saves Todos locally
+          await Storage.setTodos(localTodos);
 
           // Dispatch new Todo to front end
           store.dispatch(setNewTodo(todoToStore));

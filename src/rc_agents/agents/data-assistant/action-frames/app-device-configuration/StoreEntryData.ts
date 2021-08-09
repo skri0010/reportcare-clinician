@@ -13,7 +13,7 @@ import {
   ProcedureAttributes,
   ActionFrameIDs
 } from "rc_agents/AgentEnums";
-import { AsyncStorageKeys } from "rc_agents/storage";
+import { AsyncStorageKeys, Storage } from "rc_agents/storage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import agentAPI from "rc_agents/framework/AgentAPI";
 import { createClinicianInfo, createClinicianProtectedInfo } from "aws";
@@ -89,7 +89,7 @@ class StoreEntryData extends Activity {
           ]);
 
           // Removes sign up details from local storage
-          await AsyncStorage.removeItem(AsyncStorageKeys.SIGN_UP_DETAILS);
+          await Storage.removeItem(AsyncStorageKeys.SIGN_UP_DETAILS);
 
           // Dispatch to front end that sign in was successful
           store.dispatch(setProcedureSuccessful(true));

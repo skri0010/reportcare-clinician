@@ -22,7 +22,7 @@ import {
   listReportVitalsByPatientID
 } from "aws";
 import { ActivityInfo, ReportSymptom, ReportVitals } from "aws/API";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Storage } from "rc_agents/storage";
 
 /**
  * Class to represent an activity for retrieving details of a specific patient.
@@ -55,54 +55,45 @@ class RetrievePatientDetails extends Activity {
         vitalsReports: []
       };
 
-      if (patientId && isOnline) {
-        // Device is online
-        const activityInfoQuery = await listActivityInfosByPatientID({
-          patientID: patientId
-        });
+      if (patientId) {
+        let localPatientDetails = await Storage.getPatientDetails();
 
-        const symptomsReportsQuery = await listReportSymptomsByPatientID({
-          patientID: patientId
-        });
-
-        const vitalsReportsQuery = await listReportVitalsByPatientID({
-          patientID: patientId
-        });
-
-        if (activityInfoQuery.data.listActivityInfosByPatientID?.items) {
-          patientDetails.activityInfo = activityInfoQuery.data
-            .listActivityInfosByPatientID.items as ActivityInfo[];
-        }
-        if (symptomsReportsQuery.data.listReportSymptomsByPatientID?.items) {
-          patientDetails.symptomsReports = symptomsReportsQuery.data
-            .listReportSymptomsByPatientID.items as ReportSymptom[];
-        }
-
-        if (vitalsReportsQuery.data.listReportVitalsByPatientID?.items) {
-          patientDetails.vitalsReports = vitalsReportsQuery.data
-            .listReportVitalsByPatientID.items as ReportVitals[];
-        }
-
-        // Saves retrieved details locally with patientId as key
-        await AsyncStorage.setItem(patientId, JSON.stringify(patientDetails));
-
-        agentAPI.addFact(
-          new Belief(
-            BeliefKeys.PATIENT,
-            PatientAttributes.DETAILS,
-            patientDetails
-          ),
-          false
-        );
-      } else if (patientId && !isOnline) {
-        // Device is offline: retrieves a locally stored patient if any
-        const localPatientStr = await AsyncStorage.getItem(patientId);
-        if (localPatientStr) {
-          const patient: PatientDetails = JSON.parse(localPatientStr);
-          patientDetails.activityInfo = patient.activityInfo;
-          patientDetails.symptomsReports = patient.symptomsReports;
-          patientDetails.vitalsReports = patient.vitalsReports;
-
+        if (isOnline) {
+          // Device is online
+          const activityInfoQuery = await listActivityInfosByPatientID({
+            patientID: patientId
+          });
+  
+          const symptomsReportsQuery = await listReportSymptomsByPatientID({
+            patientID: patientId
+          });
+  
+          const vitalsReportsQuery = await listReportVitalsByPatientID({
+            patientID: patientId
+          });
+  
+          if (activityInfoQuery.data.listActivityInfosByPatientID?.items) {
+            patientDetails.activityInfo = activityInfoQuery.data
+              .listActivityInfosByPatientID.items as ActivityInfo[];
+          }
+          if (symptomsReportsQuery.data.listReportSymptomsByPatientID?.items) {
+            patientDetails.symptomsReports = symptomsReportsQuery.data
+              .listReportSymptomsByPatientID.items as ReportSymptom[];
+          }
+  
+          if (vitalsReportsQuery.data.listReportVitalsByPatientID?.items) {
+            patientDetails.vitalsReports = vitalsReportsQuery.data
+              .listReportVitalsByPatientID.items as ReportVitals[];
+          }
+  
+          if (localPatientDetails) {
+            // Saves retrieved details locally with patientId as key
+            localPatientDetails[patientId] = patientDetails;
+          } else {
+            localPatientDetails = {};
+            localPatientDetails[patientId] = patientDetails;
+          }
+  
           agentAPI.addFact(
             new Belief(
               BeliefKeys.PATIENT,
@@ -111,6 +102,18 @@ class RetrievePatientDetails extends Activity {
             ),
             false
           );
+        } else if (!isOnline && localPatientDetails) {
+          // Device is offline: retrieves a locally stored patient if any
+          if (localPatientDetails[patientId]) {
+            agentAPI.addFact(
+              new Belief(
+                BeliefKeys.PATIENT,
+                PatientAttributes.DETAILS,
+                patientDetails
+              ),
+              false
+            );
+          }
         }
       }
 

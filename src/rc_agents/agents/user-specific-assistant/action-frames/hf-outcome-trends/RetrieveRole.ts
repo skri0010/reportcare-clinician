@@ -14,11 +14,9 @@ import {
   AppAttributes,
   ActionFrameIDs
 } from "rc_agents/AgentEnums";
-import { AsyncStorageKeys } from "rc_agents/storage";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Storage } from "rc_agents/storage";
 import { Role, getClinicianInfo } from "aws";
 import agentAPI from "rc_agents/framework/AgentAPI";
-import { ClinicianInfo } from "aws/API";
 
 /**
  * Class to represent an activity for retrieving role of user for retrieving patients.
@@ -55,17 +53,14 @@ class RetrieveRole extends Activity {
 
     try {
       // Retrieves local clinician
-      const clinicianStr = await AsyncStorage.getItem(
-        AsyncStorageKeys.CLINICIAN
-      );
+      const localClinician = await Storage.getClinician();
 
       // Checks internet connection state
       const isOnline =
         agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE];
 
-      if (clinicianStr) {
-        const localClinician: ClinicianInfo = JSON.parse(clinicianStr);
-        if (localClinician && isOnline) {
+      if (localClinician) {
+        if (isOnline) {
           // Device is online
           const query = await getClinicianInfo({
             clinicianID: localClinician.clinicianID
@@ -74,20 +69,15 @@ class RetrieveRole extends Activity {
             const clinician = query.data.getClinicianInfo;
             if (clinician && clinician.role) {
               // Updates local storage
-              await AsyncStorage.mergeItem(
-                AsyncStorageKeys.CLINICIAN,
-                JSON.stringify(clinician)
-              );
+              await Storage.setClinician(clinician);
               if (roles.includes(clinician.role)) {
                 return clinician.role;
               }
             }
           }
-        } else if (localClinician && !isOnline) {
+        } else if (localClinician.role && roles.includes(localClinician.role)) {
           // Device is offline
-          if (localClinician.role && roles.includes(localClinician.role)) {
-            return localClinician.role;
-          }
+          return localClinician.role;
         }
       }
       return null;

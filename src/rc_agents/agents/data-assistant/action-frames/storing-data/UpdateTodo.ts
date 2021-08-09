@@ -6,7 +6,6 @@ import {
   Precondition,
   ResettablePrecondition
 } from "rc_agents/framework";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   ProcedureConst,
   BeliefKeys,
@@ -15,13 +14,13 @@ import {
   ActionFrameIDs,
   ClinicianAttributes
 } from "rc_agents/AgentEnums";
-import { AsyncStorageKeys } from "rc_agents/storage";
+import { Storage } from "rc_agents/storage";
 import agentAPI from "rc_agents/framework/AgentAPI";
 import { store } from "ic-redux/store";
 import { setProcedureSuccessful } from "ic-redux/actions/agents/actionCreator";
 import agentNWA from "rc_agents/agents/network-assistant/NWA";
 import { getTodo, updateTodo } from "aws";
-import { Todo, UpdatedTodoInput } from "rc_agents/model";
+import { UpdatedTodoInput } from "rc_agents/model";
 import { UpdateTodoInput } from "aws/API";
 
 // LS-TODO: To be tested again after integrating with Alert and Todo front end
@@ -48,9 +47,7 @@ class UpdateTodo extends Activity {
         agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.TODO];
 
       // Gets locally stored clinicianId
-      const clinicianId = await AsyncStorage.getItem(
-        AsyncStorageKeys.CLINICIAN_ID
-      );
+      const clinicianId = await Storage.getClinicianID();
 
       if (updatedTodo && clinicianId) {
         let pendingSync: boolean | undefined;
@@ -90,25 +87,21 @@ class UpdateTodo extends Activity {
 
         // Updates locally saved Todo
         if (pendingSync !== undefined) {
-          const localTodosStr = await AsyncStorage.getItem(
-            AsyncStorageKeys.TODOS
-          );
-          if (localTodosStr) {
-            const localTodos: Todo[] = JSON.parse(localTodosStr);
-
-            localTodos.forEach((todo) => {
-              if (todo.id === todoToUpdate.id) {
-                todo.title = todoToUpdate.title!;
-                todo.notes = todoToUpdate.notes!;
-                todo.completed = todoToUpdate.completed!;
-                todo.lastModified = todoToUpdate.lastModified!;
-                todo.pendingSync = pendingSync!;
-              }
-            });
-            await AsyncStorage.setItem(
-              AsyncStorageKeys.TODOS,
-              JSON.stringify(localTodos)
+          const localTodos = await Storage.getTodos();
+          if (localTodos) {
+            await Promise.all(
+              localTodos.map((todo) => {
+                if (todo.id === todoToUpdate.id) {
+                  todo.title = todoToUpdate.title!;
+                  todo.notes = todoToUpdate.notes!;
+                  todo.completed = todoToUpdate.completed!;
+                  todo.lastModified = todoToUpdate.lastModified!;
+                  todo.pendingSync = pendingSync!;
+                }
+                return todo;
+              })
             );
+            await Storage.setTodos(localTodos);
           }
 
           // Notifies NWA if the Todo to be stored has pendingSync set to true

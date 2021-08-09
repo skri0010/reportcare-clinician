@@ -14,21 +14,16 @@ import {
   ProcedureAttributes,
   ProcedureConst
 } from "rc_agents/AgentEnums";
-import { AsyncStorageKeys } from "rc_agents/storage";
+import { Storage } from "rc_agents/storage";
 import agentAPI from "rc_agents/framework/AgentAPI";
 import { listPatientAlertsByDateTime } from "aws";
 import { AlertInfo } from "rc_agents/model";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ModelSortDirection } from "aws/API";
 import {
   queryAlertInfo,
   mergeIntoLocalAlertInfos
 } from "../triage-alert-hf-clinic/RetrieveAlertInfo";
 import { sortAlertsByDateTime } from "../triage-alert-hf-clinic/RetrieveAlerts";
-
-interface LocalAlertInfos {
-  [patientId: string]: string;
-}
 
 /**
  * Class to represent the activity for retrieving alert history of a patient.
@@ -58,9 +53,8 @@ class RetrieveAlertHistory extends Activity {
 
       if (patientId) {
         // Retrieves locally stored alert infos
-        let alertInfosJSON = await AsyncStorage.getItem(
-          AsyncStorageKeys.ALERT_INFOS
-        );
+        let localAlertInfos = await Storage.getAlertInfos();
+
         const alertInfos: AlertInfo[] = [];
 
         if (facts[BeliefKeys.APP][AppAttributes.ONLINE]) {
@@ -78,19 +72,16 @@ class RetrieveAlertHistory extends Activity {
                   const alertInfo = await queryAlertInfo(alert!);
                   if (alertInfo) {
                     alertInfos.push(alertInfo);
-                    alertInfosJSON = await mergeIntoLocalAlertInfos(
+                    localAlertInfos = await mergeIntoLocalAlertInfos(
                       alertInfo,
-                      alertInfosJSON
+                      localAlertInfos
                     );
                   }
                 })
               );
-              if (alertInfosJSON) {
+              if (localAlertInfos) {
                 // Saves updated JSON into local storage
-                await AsyncStorage.setItem(
-                  AsyncStorageKeys.ALERT_INFOS,
-                  alertInfosJSON
-                );
+                await Storage.setAlertInfos(localAlertInfos);
               }
             }
           }
@@ -106,12 +97,9 @@ class RetrieveAlertHistory extends Activity {
               false
             );
           }
-        } else if (alertInfosJSON) {
+        } else if (localAlertInfos) {
           // Device is offline: get alert infos of current patient from local storage
-          const patientAlerts = await this.retrieveLocalPatientAlerts(
-            alertInfosJSON,
-            patientId
-          );
+          const patientAlerts = localAlertInfos[patientId];
           if (patientAlerts) {
             const sortedPatientAlerts = sortAlertsByDateTime(patientAlerts);
             agentAPI.addFact(
@@ -139,25 +127,6 @@ class RetrieveAlertHistory extends Activity {
       // eslint-disable-next-line no-console
       console.log(error);
     }
-  }
-
-  /**
-   * Gets locally stored alert infos of a patient.
-   * @param alertInfosJSON locally stored JSON string
-   * @param patientId patient Id
-   * @returns a list of alert infos if any
-   */
-  // eslint-disable-next-line class-methods-use-this
-  async retrieveLocalPatientAlerts(
-    alertInfosJSON: string,
-    patientId: string
-  ): Promise<AlertInfo[] | null> {
-    const alertInfos: LocalAlertInfos = JSON.parse(alertInfosJSON);
-    const patientAlertsJSON = alertInfos[patientId];
-    if (patientAlertsJSON) {
-      return JSON.parse(patientAlertsJSON);
-    }
-    return null;
   }
 }
 

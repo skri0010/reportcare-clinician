@@ -14,7 +14,7 @@ import {
   ProcedureAttributes,
   ProcedureConst
 } from "rc_agents/AgentEnums";
-import { AsyncStorageKeys } from "rc_agents/storage";
+import { AsyncStorageKeys, AsyncStorageType, Storage } from "rc_agents/storage";
 import agentAPI from "rc_agents/framework/AgentAPI";
 import { mockCompletedAlerts, mockPendingAlerts } from "mock/mockAlerts";
 import {
@@ -24,18 +24,10 @@ import {
 } from "aws";
 import { AlertColorCode, AlertInfo } from "rc_agents/model";
 import { RiskLevel } from "models/RiskLevel";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Alert } from "aws/API";
 
 // LS-TODO: To be tested with actual Alerts.
 // NOTE: This is originally MHA's action frame.
-
-interface LocalAlerts {
-  [RiskLevel.HIGH]?: string;
-  [RiskLevel.MEDIUM]?: string;
-  [RiskLevel.LOW]?: string;
-  [RiskLevel.UNASSIGNED]?: string;
-}
 
 /**
  * Class to represent the activity for retrieving alerts.
@@ -69,7 +61,7 @@ class RetrieveAlerts extends Activity {
       // Retrieves all alerts with a specific status and risk level
       if (alertStatus && alertRiskLevel) {
         // Retrieves locally stored alerts
-        const alertsJSON = await AsyncStorage.getItem(AsyncStorageKeys.ALERTS);
+        const localAlerts = await Storage.getAlerts();
 
         if (facts[BeliefKeys.APP][AppAttributes.ONLINE]) {
           // Device is online
@@ -154,17 +146,17 @@ class RetrieveAlerts extends Activity {
             );
 
             // Merges newly retrieved alerts into locally stored alerts
-            await this.mergeIntoLocalAlerts(alerts, alertsJSON, alertRiskLevel);
+            await this.mergeIntoLocalAlerts(alerts, localAlerts, alertRiskLevel);
           }
-        } else if (alertsJSON) {
+        } else if (localAlerts) {
           // Device is offline
-          const localAlerts = await this.retrieveLocalAlerts(
-            alertsJSON,
+          const localRiskAlerts = await this.retrieveLocalRiskAlerts(
+            localAlerts,
             alertStatus,
             alertRiskLevel
           );
-          if (localAlerts) {
-            const sortedAlerts = sortAlertsByDateTime(localAlerts);
+          if (localRiskAlerts) {
+            const sortedAlerts = sortAlertsByDateTime(localRiskAlerts);
             agentAPI.addFact(
               new Belief(
                 BeliefKeys.CLINICIAN,
@@ -201,7 +193,7 @@ class RetrieveAlerts extends Activity {
   }
 
   /**
-   * Merges retrieved alert into JSON string for local storage
+   * Merges retrieved alert into JSON string for local storage using risk level as key.
    * @param alert current alert
    * @param alertsJSON JSON string according to risk level
    * @param riskLevel risk level of the current alert
@@ -210,15 +202,12 @@ class RetrieveAlerts extends Activity {
   // eslint-disable-next-line class-methods-use-this
   async mergeIntoLocalAlerts(
     alerts: Alert[],
-    alertsJSON: string | null,
+    localAlerts: AsyncStorageType[AsyncStorageKeys.ALERTS] | null,
     riskLevel: RiskLevel
   ): Promise<void> {
-    let localAlerts: LocalAlerts;
-
-    if (alertsJSON) {
-      localAlerts = JSON.parse(alertsJSON);
+    if (localAlerts) {
       if (localAlerts[riskLevel]) {
-        const riskAlerts: Alert[] = JSON.parse(localAlerts[riskLevel]!);
+        const riskAlerts = localAlerts[riskLevel]!;
         // Checks and replaces existing alerts with the newly retrieved ones
         // Otherwise new alerts are added into the list
         alerts.forEach((alert) => {
@@ -229,38 +218,38 @@ class RetrieveAlerts extends Activity {
             riskAlerts.push(alert);
           }
         });
-        localAlerts[riskLevel] = JSON.stringify(riskAlerts);
+        localAlerts[riskLevel] = riskAlerts;
       } else {
-        localAlerts[riskLevel] = JSON.stringify(alerts);
+        localAlerts[riskLevel] = alerts;
       }
     } else {
-      localAlerts = {};
-      localAlerts[riskLevel] = JSON.stringify(alerts);
+      localAlerts = {
+        [RiskLevel.HIGH]: [],
+        [RiskLevel.MEDIUM]: [],
+        [RiskLevel.LOW]: [],
+        [RiskLevel.UNASSIGNED]: []
+      };
+      localAlerts[riskLevel] = alerts;
     }
     // Stores into local storage
-    await AsyncStorage.setItem(
-      AsyncStorageKeys.ALERTS,
-      JSON.stringify(localAlerts)
-    );
+    await Storage.setAlerts(localAlerts);
   }
 
   /**
    * Gets locally stored alerts with specific status and risk level.
-   * @param alertsJSON locally stored JSON string
+   * @param localAlerts locally stored alerts
    * @param alertStatus alert status
    * @param riskLevel risk level
    * @returns a list of alerts if any
    */
   // eslint-disable-next-line class-methods-use-this
-  async retrieveLocalAlerts(
-    alertsJSON: string,
+  async retrieveLocalRiskAlerts(
+    localAlerts: AsyncStorageType[AsyncStorageKeys.ALERTS],
     alertStatus: AlertStatus,
     riskLevel: RiskLevel
   ): Promise<Alert[] | null> {
-    const alerts: LocalAlerts = JSON.parse(alertsJSON);
-    const riskAlertsJSON = alerts[riskLevel];
-    if (riskAlertsJSON) {
-      const riskAlerts: Alert[] = JSON.parse(riskAlertsJSON);
+    if (localAlerts[riskLevel]) {
+      const riskAlerts = localAlerts[riskLevel]!;
       const alertsToReturn: Alert[] = [];
       if (alertStatus === AlertStatus.PENDING) {
         riskAlerts.forEach((alert) => {

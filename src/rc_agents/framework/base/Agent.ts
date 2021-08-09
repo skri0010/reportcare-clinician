@@ -11,11 +11,10 @@ import AlphaNode from "./Engine/Rete/AlphaNode";
 import Node from "./Engine/Rete/Node";
 import BetaNode from "./Engine/Rete/BetaNode";
 import { Fact } from "../../model";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getClinicianProtectedInfo } from "aws";
 import { AppAttributes, BeliefKeys, CommonAttributes } from "../../AgentEnums";
-import { AsyncStorageKeys } from "../../storage";
-import { ClinicianInfo, ClinicianProtectedInfo } from "aws/API";
+import { Storage } from "../../storage";
+import { ClinicianProtectedInfo } from "aws/API";
 
 /**
  * Class representing the Agent
@@ -172,25 +171,20 @@ class Agent {
 
     try {
       // Retrieves local clinician
-      const localClinicianStr = await AsyncStorage.getItem(
-        AsyncStorageKeys.CLINICIAN
-      );
-      if (localClinicianStr) {
-        const localClinician: ClinicianInfo = JSON.parse(localClinicianStr);
-
+      const localClinician = await Storage.getClinician();
+      if (localClinician) {
         // Device is online
         if (agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
           const query = await getClinicianProtectedInfo({
             clinicianID: localClinician.clinicianID
           });
-          if (query.data) {
-            protectedInfo = query.data.getClinicianProtectedInfo;
+          if (query.data && query.data.getClinicianProtectedInfo) {
+            const result = query.data.getClinicianProtectedInfo;
+            protectedInfo = result;
 
             // Updates local storage
-            await AsyncStorage.mergeItem(
-              AsyncStorageKeys.CLINICIAN,
-              JSON.stringify(localClinician)
-            );
+            localClinician.protectedInfo = result;
+            await Storage.setClinician(localClinician);
           }
         } else {
           protectedInfo = localClinician.protectedInfo;

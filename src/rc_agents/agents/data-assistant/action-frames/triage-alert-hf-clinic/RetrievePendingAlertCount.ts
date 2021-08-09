@@ -14,13 +14,13 @@ import {
   ProcedureAttributes,
   ProcedureConst
 } from "rc_agents/AgentEnums";
-import { AsyncStorageKeys } from "rc_agents/storage";
+import { AsyncStorageKeys, AsyncStorageType, Storage } from "rc_agents/storage";
 import agentAPI from "rc_agents/framework/AgentAPI";
 import { Alert, ModelSortDirection } from "aws/API";
 import { mockPendingAlerts } from "mock/mockAlerts";
 import { AlertStatus, listPendingAlertsByDateTime } from "aws";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AlertInfo } from "rc_agents/model";
+import { AlertColorCode } from "rc_agents/model";
+import { RiskLevel } from "models/RiskLevel";
 
 /**
  * Class to represent an activity for retrieving pending alerts.
@@ -39,7 +39,8 @@ class RetrievePendingAlertCount extends Activity {
     await super.doActivity(agent, [rule2]);
 
     try {
-      let results: (Alert | undefined | null)[] | undefined | null;
+      let results: Alert[];
+      const localAlerts = await Storage.getAlerts();
 
       if (agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
         // Device is online
@@ -49,7 +50,7 @@ class RetrievePendingAlertCount extends Activity {
         });
 
         if (query.data && query.data.listPendingAlertsByDateTime) {
-          results = query.data.listPendingAlertsByDateTime.items;
+          results = query.data.listPendingAlertsByDateTime.items as Alert[];
         }
         // LS-TODO: To be removed
         results = mockPendingAlerts;
@@ -64,29 +65,33 @@ class RetrievePendingAlertCount extends Activity {
             ),
             false
           );
+          await this.mergeIntoLocalAlerts(localAlerts, results);
         }
       } else {
         // Device is offline
-        const alertsStr = await AsyncStorage.getItem(AsyncStorageKeys.ALERTS);
-        const localAlerts: AlertInfo[] = [];
-        if (alertsStr) {
-          const alerts = JSON.parse(alertsStr);
-          Object.keys(alerts).forEach((key) => {
-            const patientAlerts: AlertInfo[] = JSON.parse(alerts[key]);
-            patientAlerts.forEach((alert) => {
-              if (!alert.completed) {
-                localAlerts.push(alert);
-              }
-            });
-          });
+        const localPendingAlerts: Alert[] = [];
+        if (localAlerts) {
+          const keys = Object.values(RiskLevel);
+          await Promise.all(
+            keys.map((key) => {
+              const riskAlerts = localAlerts![key];
+              riskAlerts.map((alert) => {
+                if (alert.pending === AlertStatus.PENDING) {
+                  localPendingAlerts.push(alert);
+                }
+                return alert;
+              });
+              return key;
+            })
+          );
         }
 
-        if (localAlerts.length > 0) {
+        if (localPendingAlerts.length > 0) {
           agentAPI.addFact(
             new Belief(
               BeliefKeys.CLINICIAN,
               ClinicianAttributes.ALERTS,
-              localAlerts
+              localPendingAlerts
             ),
             false
           );
@@ -97,7 +102,72 @@ class RetrievePendingAlertCount extends Activity {
       console.log(error);
     }
   }
+
+  /**
+   * Merges retrieved pending alerts into local alerts.
+   * @param localAlerts local alerts
+   * @param alerts newly retrieved alerts
+   */
+  // eslint-disable-next-line class-methods-use-this
+  async mergeIntoLocalAlerts(
+    localAlerts: AsyncStorageType[AsyncStorageKeys.ALERTS] | null,
+    alerts: Alert[]
+  ): Promise<void> {
+    await Promise.all(
+      alerts.map((alert) => {
+        // Maps color code to risk level
+        const riskLevel = mapColorCodeToRiskLevel(alert.colorCode);
+        // Stores alerts according to risk level
+        if (localAlerts) {
+          if (localAlerts[riskLevel]) {
+            const riskAlerts = localAlerts[riskLevel]!;
+            const existIndex = riskAlerts.findIndex((a) => a.id === alert.id);
+            if (existIndex >= 0) {
+              riskAlerts[existIndex] = alert;
+            } else {
+              riskAlerts.push(alert);
+            }
+          } else {
+            localAlerts[riskLevel] = [alert];
+          }
+        } else {
+          localAlerts = {
+            [RiskLevel.HIGH]: [],
+            [RiskLevel.MEDIUM]: [],
+            [RiskLevel.LOW]: [],
+            [RiskLevel.UNASSIGNED]: []
+          };
+          localAlerts[riskLevel] = [alert];
+        }
+        return alert;
+      })
+    );
+
+    if (localAlerts) {
+      await Storage.setAlerts(localAlerts);
+    }
+  }
 }
+
+/**
+ * Maps alert's color code to risk level.
+ * @param colorCode alert's color code
+ * @returns risk level corresponding to the color code
+ */
+const mapColorCodeToRiskLevel = (colorCode: string): RiskLevel => {
+  switch (colorCode) {
+    case AlertColorCode.HIGH:
+      return RiskLevel.HIGH;
+    case AlertColorCode.MEDIUM:
+      return RiskLevel.MEDIUM;
+    case AlertColorCode.LOW:
+      return RiskLevel.LOW;
+    case AlertColorCode.UNASSIGNED:
+      return RiskLevel.UNASSIGNED;
+    default:
+      return RiskLevel.UNASSIGNED;
+  }
+};
 
 // Preconditions for activating the RetrievePendingAlertCount class
 const rule1 = new Precondition(

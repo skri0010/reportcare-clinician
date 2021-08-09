@@ -5,15 +5,13 @@ import {
   Precondition,
   ResettablePrecondition
 } from "rc_agents/framework";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   ActionFrameIDs,
   AppAttributes,
   BeliefKeys
 } from "rc_agents/AgentEnums";
-import { AsyncStorageKeys } from "rc_agents/storage";
+import { Storage } from "rc_agents/storage";
 import { updateTodo } from "aws/TypedAPI/updateMutations";
-import { Todo } from "rc_agents/model";
 import { getTodo } from "aws/TypedAPI/getQueries";
 
 // LS-TODO: To be tested after merging with Todo tab
@@ -38,47 +36,42 @@ class SyncUpdatedTodos extends Activity {
 
     try {
       // Gets locally stored clinicianId
-      const clinicianId = await AsyncStorage.getItem(
-        AsyncStorageKeys.CLINICIAN_ID
-      );
+      const clinicianId = await Storage.getClinicianID();
 
       // Gets locally stored Todos
-      const localTodosStr = await AsyncStorage.getItem(AsyncStorageKeys.TODOS);
-      if (localTodosStr && clinicianId) {
-        const localTodos: Todo[] = JSON.parse(localTodosStr);
-
+      const localTodos = await Storage.getTodos();
+      if (localTodos && clinicianId) {
         // Todo to be updated have a non-null id and pendingSync set to true
-        localTodos.forEach(async (todo) => {
-          if (todo.id && todo.pendingSync) {
-            // Gets latest Todo
-            const query = await getTodo({ id: todo.id });
-            if (query.data && query.data.getTodo) {
-              const latestTodo = query.data.getTodo;
-
-              // Updates Todo
-              const updateResponse = await updateTodo({
-                id: todo.id,
-                title: todo.title,
-                notes: todo.notes,
-                completed: todo.completed,
-                lastModified: todo.lastModified,
-                owner: clinicianId,
-                _version: latestTodo._version
-              });
-
-              if (updateResponse && updateResponse.data) {
-                // Updates current local Todo
-                todo.pendingSync = false;
+        await Promise.all(
+          localTodos.map(async (todo) => {
+            if (todo.id && todo.pendingSync) {
+              // Gets latest Todo
+              const query = await getTodo({ id: todo.id });
+              if (query.data && query.data.getTodo) {
+                const latestTodo = query.data.getTodo;
+  
+                // Updates Todo
+                const updateResponse = await updateTodo({
+                  id: todo.id,
+                  title: todo.title,
+                  notes: todo.notes,
+                  completed: todo.completed,
+                  lastModified: todo.lastModified,
+                  owner: clinicianId,
+                  _version: latestTodo._version
+                });
+  
+                if (updateResponse && updateResponse.data) {
+                  // Updates current local Todo
+                  todo.pendingSync = false;
+                }
               }
             }
-          }
-        });
+          })
+        );
 
         // Saves updated Todos locally
-        await AsyncStorage.setItem(
-          AsyncStorageKeys.TODOS,
-          JSON.stringify(localTodos)
-        );
+        await Storage.setTodos(localTodos);
       }
     } catch (error) {
       // eslint-disable-next-line no-console

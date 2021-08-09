@@ -14,7 +14,7 @@ import {
   ProcedureAttributes,
   ProcedureConst
 } from "rc_agents/AgentEnums";
-import { AsyncStorageKeys } from "rc_agents/storage";
+import { AsyncStorageKeys, AsyncStorageType, Storage } from "rc_agents/storage";
 import { AlertColorCode, AlertInfo } from "rc_agents/model";
 import agentAPI from "rc_agents/framework/AgentAPI";
 import {
@@ -27,12 +27,7 @@ import {
   AlertStatus
 } from "aws";
 import { Alert, ModelSortDirection } from "aws/API";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { RiskLevel } from "models/RiskLevel";
-
-interface LocalAlertInfos {
-  [patientId: string]: string;
-}
 
 /**
  * Class to represent an activity for retrieving patient's information associated with an alert.
@@ -60,29 +55,26 @@ class RetrieveAlertInfo extends Activity {
       if (alert) {
         let alertInfo: AlertInfo | null | undefined;
 
-        // Retrieves local alerts to save new alert locally
-        let alertInfosJSON = await AsyncStorage.getItem(
-          AsyncStorageKeys.ALERT_INFOS
-        );
+        // Retrieves local alert infos to save new alert locally
+        let localAlertInfos = await Storage.getAlertInfos();
 
         if (facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
           // Device is online: queries information associated with the alert
           const queryResult = await queryAlertInfo(alert);
           if (queryResult) {
             alertInfo = queryResult;
-            alertInfosJSON = await mergeIntoLocalAlertInfos(
+            localAlertInfos = await mergeIntoLocalAlertInfos(
               queryResult,
-              alertInfosJSON
+              localAlertInfos
             );
-            // Saves updated JSON into local storage
-            await AsyncStorage.setItem(
-              AsyncStorageKeys.ALERT_INFOS,
-              alertInfosJSON
-            );
+            if (localAlertInfos) {
+              // Saves updated JSON into local storage
+              await Storage.setAlertInfos(localAlertInfos);
+            }
           }
-        } else if (alertInfosJSON) {
+        } else if (localAlertInfos) {
           // Device is offline: get alert info from local storage
-          alertInfo = await this.retrieveLocalAlertInfo(alertInfosJSON, alert);
+          alertInfo = await this.retrieveLocalAlertInfo(localAlertInfos, alert);
         }
 
         if (alertInfo) {
@@ -110,16 +102,19 @@ class RetrieveAlertInfo extends Activity {
     }
   }
 
+  /**
+   * Retrieves locally stored alert info using requested alert's patientID as key.
+   * @param localAlertInfos all local alert infos
+   * @param alert requested alert
+   * @returns 
+   */
   // eslint-disable-next-line class-methods-use-this
   async retrieveLocalAlertInfo(
-    alertInfosJSON: string,
+    localAlertInfos: AsyncStorageType[AsyncStorageKeys.ALERT_INFOS],
     alert: Alert
   ): Promise<AlertInfo | undefined | null> {
-    const alertInfos: LocalAlertInfos = JSON.parse(alertInfosJSON);
-    if (alertInfos[alert.patientID]) {
-      const patientAlertInfos: AlertInfo[] = JSON.parse(
-        alertInfos[alert.patientID]
-      );
+    if (localAlertInfos[alert.patientID]) {
+      const patientAlertInfos = localAlertInfos[alert.patientID];
       return patientAlertInfos.find((a) => a.id === alert.id);
     }
     return null;
@@ -127,49 +122,38 @@ class RetrieveAlertInfo extends Activity {
 }
 
 /**
- * Merges current alert info into alertInfoJSON for local storage.
+ * Merges current alert info into local alert infos.
  * @param alertInfo current alert info
- * @param alertInfoJSON localAlertInfos JSON
- * @returns merged localAlertsInfos JSON
+ * @param localAlertInfos localAlertInfos 
+ * @returns merged localAlertInfos
  */
 // eslint-disable-next-line class-methods-use-this
 export const mergeIntoLocalAlertInfos = async (
   alertInfo: AlertInfo,
-  alertInfoJSON: string | null
-): Promise<string> => {
-  let localAlertInfos: LocalAlertInfos;
-
-  // Saves alert info locally using patientId as nested key
-  if (alertInfoJSON) {
-    localAlertInfos = JSON.parse(alertInfoJSON);
-    // One or more alert infos of the current patient were stored previously
+  localAlertInfos: AsyncStorageType[AsyncStorageKeys.ALERT_INFOS] | null
+): Promise<AsyncStorageType[AsyncStorageKeys.ALERT_INFOS] | null> => {
+  if (localAlertInfos) {
     if (localAlertInfos[alertInfo.patientId]) {
-      const patientAlertInfos: AlertInfo[] = JSON.parse(
-        localAlertInfos[alertInfo.patientId]
-      );
-
+      const patientAlerts = localAlertInfos[alertInfo.patientId];
       // Replaces existing alert info, otherwise inserts into the list
-      const existIndex = patientAlertInfos.findIndex(
+      const existIndex = patientAlerts.findIndex(
         (a) => a.id === alertInfo.id
       );
       if (existIndex >= 0) {
-        patientAlertInfos[existIndex] = alertInfo;
+        patientAlerts[existIndex] = alertInfo;
       } else {
-        patientAlertInfos.push(alertInfo);
+        patientAlerts.push(alertInfo);
       }
-      localAlertInfos[alertInfo.patientId] = JSON.stringify(patientAlertInfos);
-    } else {
-      // No alert info of the current patient exists
-      localAlertInfos[alertInfo.patientId] = JSON.stringify([alertInfo]);
-    }
-  }
-  // Alert info key does not exist
-  else {
-    localAlertInfos = {};
-    localAlertInfos[alertInfo.patientId] = JSON.stringify([alertInfo]);
-  }
 
-  return JSON.stringify(localAlertInfos);
+      localAlertInfos[alertInfo.patientId] = patientAlerts;
+    } else {
+      localAlertInfos[alertInfo.patientId] = [alertInfo];
+    }
+  } else {
+    localAlertInfos = {};
+    localAlertInfos[alertInfo.patientId] = [alertInfo];
+  }
+  return localAlertInfos;
 };
 
 export const queryAlertInfo = async (
