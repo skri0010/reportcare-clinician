@@ -63,15 +63,15 @@ class RetrievePatientDetails extends Activity {
           const activityInfoQuery = await listActivityInfosByPatientID({
             patientID: patientId
           });
-  
+
           const symptomsReportsQuery = await listReportSymptomsByPatientID({
             patientID: patientId
           });
-  
+
           const vitalsReportsQuery = await listReportVitalsByPatientID({
             patientID: patientId
           });
-  
+
           if (activityInfoQuery.data.listActivityInfosByPatientID?.items) {
             patientDetails.activityInfo = activityInfoQuery.data
               .listActivityInfosByPatientID.items as ActivityInfo[];
@@ -80,12 +80,12 @@ class RetrievePatientDetails extends Activity {
             patientDetails.symptomsReports = symptomsReportsQuery.data
               .listReportSymptomsByPatientID.items as ReportSymptom[];
           }
-  
+
           if (vitalsReportsQuery.data.listReportVitalsByPatientID?.items) {
             patientDetails.vitalsReports = vitalsReportsQuery.data
               .listReportVitalsByPatientID.items as ReportVitals[];
           }
-  
+
           if (localPatientDetails) {
             // Saves retrieved details locally with patientId as key
             localPatientDetails[patientId] = patientDetails;
@@ -93,7 +93,7 @@ class RetrievePatientDetails extends Activity {
             localPatientDetails = {};
             localPatientDetails[patientId] = patientDetails;
           }
-  
+
           agentAPI.addFact(
             new Belief(
               BeliefKeys.PATIENT,

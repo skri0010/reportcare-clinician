@@ -125,7 +125,9 @@ class CreateTodo extends Activity {
             if (localAlerts && newTodo.alert) {
               const riskAlerts = localAlerts[newTodo.alert.riskLevel!];
               if (riskAlerts) {
-                const existIndex = riskAlerts.findIndex((a) => a.id === newTodo.alert!.id);
+                const existIndex = riskAlerts.findIndex(
+                  (a) => a.id === newTodo.alert!.id
+                );
                 if (existIndex >= 0) {
                   riskAlerts[existIndex].completed = AlertStatus.COMPLETED;
                 }
@@ -138,7 +140,9 @@ class CreateTodo extends Activity {
             if (localAlertInfos && newTodo.alert) {
               const patientAlerts = localAlertInfos[newTodo.alert.patientId];
               if (patientAlerts) {
-                const existIndex = patientAlerts.findIndex((a) => a.id === newTodo.alert!.id);
+                const existIndex = patientAlerts.findIndex(
+                  (a) => a.id === newTodo.alert!.id
+                );
                 if (existIndex >= 0) {
                   patientAlerts[existIndex].completed = true;
                 }
@@ -155,7 +159,9 @@ class CreateTodo extends Activity {
           let todoExists = false;
           if (localTodos) {
             // A Todo for the alert already exists: update this Todo instead.
-            const existIndex = localTodos.findIndex((t) => t.alertId === todoToStore.alertId);
+            const existIndex = localTodos.findIndex(
+              (t) => t.alertId === todoToStore.alertId
+            );
             if (existIndex >= 0) {
               const existingTodo = localTodos[existIndex];
               // Update id otherwise syncing will treat this as a new Todo

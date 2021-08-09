@@ -49,7 +49,7 @@ class SyncUpdatedTodos extends Activity {
               const query = await getTodo({ id: todo.id });
               if (query.data && query.data.getTodo) {
                 const latestTodo = query.data.getTodo;
-  
+
                 // Updates Todo
                 const updateResponse = await updateTodo({
                   id: todo.id,
@@ -60,7 +60,7 @@ class SyncUpdatedTodos extends Activity {
                   owner: clinicianId,
                   _version: latestTodo._version
                 });
-  
+
                 if (updateResponse && updateResponse.data) {
                   // Updates current local Todo
                   todo.pendingSync = false;

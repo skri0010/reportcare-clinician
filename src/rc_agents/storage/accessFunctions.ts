@@ -10,7 +10,7 @@ export const removeItem = async (key: AsyncStorageKeys): Promise<void> => {
   await AsyncStorage.removeItem(key);
 };
 
-export const removeAll = async(): Promise<void> => {
+export const removeAll = async (): Promise<void> => {
   const keys = await AsyncStorage.getAllKeys();
   if (keys && keys.length > 0) {
     await AsyncStorage.multiRemove(keys);

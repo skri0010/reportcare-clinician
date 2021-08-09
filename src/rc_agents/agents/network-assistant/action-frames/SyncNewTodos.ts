@@ -63,13 +63,15 @@ class SyncNewTodos extends Activity {
               }
               // Inserts Todo
               const createResponse = await createTodo(todoToInsert);
-  
+
               if (createResponse.data && createResponse.data.createTodo) {
                 const insertedTodo = createResponse.data.createTodo;
-  
+
                 // Updates alert to completed if any
                 if (insertedTodo.alertID) {
-                  const alertQuery = await getAlert({ id: insertedTodo.alertID });
+                  const alertQuery = await getAlert({
+                    id: insertedTodo.alertID
+                  });
                   if (alertQuery.data && alertQuery.data.getAlert) {
                     const latestAlert = alertQuery.data.getAlert;
                     await updateAlert({

@@ -4,7 +4,9 @@ import { AsyncStorageKeys, AsyncStorageType } from ".";
 export const getSignUpDetails = async (): Promise<
   AsyncStorageType[AsyncStorageKeys.SIGN_UP_DETAILS] | null
 > => {
-  const localData = await AsyncStorage.getItem(AsyncStorageKeys.SIGN_UP_DETAILS);
+  const localData = await AsyncStorage.getItem(
+    AsyncStorageKeys.SIGN_UP_DETAILS
+  );
   if (localData) {
     return JSON.parse(localData);
   }
@@ -55,9 +57,7 @@ export const getPatientAssignmentResolutions = async (): Promise<
 export const getPatients = async (): Promise<
   AsyncStorageType[AsyncStorageKeys.PATIENTS] | null
 > => {
-  const localData = await AsyncStorage.getItem(
-    AsyncStorageKeys.PATIENTS
-  );
+  const localData = await AsyncStorage.getItem(AsyncStorageKeys.PATIENTS);
   if (localData) {
     return JSON.parse(localData);
   }
@@ -79,9 +79,7 @@ export const getPatientDetails = async (): Promise<
 export const getAlerts = async (): Promise<
   AsyncStorageType[AsyncStorageKeys.ALERTS] | null
 > => {
-  const localData = await AsyncStorage.getItem(
-    AsyncStorageKeys.ALERTS
-  );
+  const localData = await AsyncStorage.getItem(AsyncStorageKeys.ALERTS);
   if (localData) {
     return JSON.parse(localData);
   }
@@ -91,9 +89,7 @@ export const getAlerts = async (): Promise<
 export const getAlertInfos = async (): Promise<
   AsyncStorageType[AsyncStorageKeys.ALERT_INFOS] | null
 > => {
-  const localData = await AsyncStorage.getItem(
-    AsyncStorageKeys.ALERT_INFOS
-  );
+  const localData = await AsyncStorage.getItem(AsyncStorageKeys.ALERT_INFOS);
   if (localData) {
     return JSON.parse(localData);
   }
@@ -103,9 +99,7 @@ export const getAlertInfos = async (): Promise<
 export const getTodos = async (): Promise<
   AsyncStorageType[AsyncStorageKeys.TODOS] | null
 > => {
-  const localData = await AsyncStorage.getItem(
-    AsyncStorageKeys.TODOS
-  );
+  const localData = await AsyncStorage.getItem(AsyncStorageKeys.TODOS);
   if (localData) {
     return JSON.parse(localData);
   }

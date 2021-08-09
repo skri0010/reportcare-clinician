@@ -146,7 +146,11 @@ class RetrieveAlerts extends Activity {
             );
 
             // Merges newly retrieved alerts into locally stored alerts
-            await this.mergeIntoLocalAlerts(alerts, localAlerts, alertRiskLevel);
+            await this.mergeIntoLocalAlerts(
+              alerts,
+              localAlerts,
+              alertRiskLevel
+            );
           }
         } else if (localAlerts) {
           // Device is offline

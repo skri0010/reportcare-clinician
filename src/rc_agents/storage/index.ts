@@ -1,4 +1,9 @@
-import { AlertInfo, PatientAssignmentResolution, PatientDetails, Todo } from "rc_agents/model";
+import {
+  AlertInfo,
+  PatientAssignmentResolution,
+  PatientDetails,
+  Todo
+} from "rc_agents/model";
 import { Alert, ClinicianInfo, PatientAssignment, PatientInfo } from "aws/API";
 
 import * as accessFunctions from "./accessFunctions";

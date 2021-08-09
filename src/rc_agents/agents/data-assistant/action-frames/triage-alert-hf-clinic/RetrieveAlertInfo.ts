@@ -106,7 +106,7 @@ class RetrieveAlertInfo extends Activity {
    * Retrieves locally stored alert info using requested alert's patientID as key.
    * @param localAlertInfos all local alert infos
    * @param alert requested alert
-   * @returns 
+   * @returns
    */
   // eslint-disable-next-line class-methods-use-this
   async retrieveLocalAlertInfo(
@@ -124,7 +124,7 @@ class RetrieveAlertInfo extends Activity {
 /**
  * Merges current alert info into local alert infos.
  * @param alertInfo current alert info
- * @param localAlertInfos localAlertInfos 
+ * @param localAlertInfos localAlertInfos
  * @returns merged localAlertInfos
  */
 // eslint-disable-next-line class-methods-use-this
@@ -136,9 +136,7 @@ export const mergeIntoLocalAlertInfos = async (
     if (localAlertInfos[alertInfo.patientId]) {
       const patientAlerts = localAlertInfos[alertInfo.patientId];
       // Replaces existing alert info, otherwise inserts into the list
-      const existIndex = patientAlerts.findIndex(
-        (a) => a.id === alertInfo.id
-      );
+      const existIndex = patientAlerts.findIndex((a) => a.id === alertInfo.id);
       if (existIndex >= 0) {
         patientAlerts[existIndex] = alertInfo;
       } else {

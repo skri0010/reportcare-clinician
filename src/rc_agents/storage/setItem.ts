@@ -4,7 +4,10 @@ import { AsyncStorageKeys, AsyncStorageType } from ".";
 export const setSignUpDetails = async (
   signUpDetails: AsyncStorageType[AsyncStorageKeys.SIGN_UP_DETAILS]
 ): Promise<void> => {
-  await AsyncStorage.setItem(AsyncStorageKeys.SIGN_UP_DETAILS, JSON.stringify(signUpDetails));
+  await AsyncStorage.setItem(
+    AsyncStorageKeys.SIGN_UP_DETAILS,
+    JSON.stringify(signUpDetails)
+  );
 };
 
 export const setClinicianID = async (
@@ -16,7 +19,10 @@ export const setClinicianID = async (
 export const setClinician = async (
   clinician: AsyncStorageType[AsyncStorageKeys.CLINICIAN]
 ): Promise<void> => {
-  await AsyncStorage.setItem(AsyncStorageKeys.CLINICIAN, JSON.stringify(clinician));
+  await AsyncStorage.setItem(
+    AsyncStorageKeys.CLINICIAN,
+    JSON.stringify(clinician)
+  );
 };
 
 export const setPendingPatientAssignments = async (
@@ -58,10 +64,7 @@ export const setPatientDetails = async (
 export const setAlerts = async (
   alerts: AsyncStorageType[AsyncStorageKeys.ALERTS]
 ): Promise<void> => {
-  await AsyncStorage.setItem(
-    AsyncStorageKeys.ALERTS,
-    JSON.stringify(alerts)
-  );
+  await AsyncStorage.setItem(AsyncStorageKeys.ALERTS, JSON.stringify(alerts));
 };
 
 export const setAlertInfos = async (
@@ -76,8 +79,5 @@ export const setAlertInfos = async (
 export const setTodos = async (
   todos: AsyncStorageType[AsyncStorageKeys.TODOS]
 ): Promise<void> => {
-  await AsyncStorage.setItem(
-    AsyncStorageKeys.TODOS,
-    JSON.stringify(todos)
-  );
+  await AsyncStorage.setItem(AsyncStorageKeys.TODOS, JSON.stringify(todos));
 };
