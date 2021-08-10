@@ -26,10 +26,14 @@ const { colors } = select((state: RootState) => ({
       onPress={onCardPress}
       style= {{ opacity: 1 }}
       >
-      <View>
-          <H4 text={alertDetails.patientName} style={null}/>
-          <H4 text={alertDetails.summary} style={null}/>
-          <H4 text={alertDetails.dateTime} style={null}/>
+      <View style={{ flexDirection: "row" }}>
+          <View style = {{ paddingVertical: "3@ms", flex: 1 }}>
+            <View style={{ padding: "10@ms" }}>
+                <H4 text={alertDetails.patientName} style={{ fontWeight: "bold", paddingBottom: "10@ms" }}/>
+                <H5 text={alertDetails.summary} style={{ paddingBottom: "10@ms " }}/>
+                <H5 text={alertDetails.dateTime} style={{ paddingBottom: "10@ms" }}/>
+            </View>
+            </View>
       </View>
       </TouchableOpacity>
   );

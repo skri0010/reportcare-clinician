@@ -1,9 +1,9 @@
-import React, { FC, useState } from "react";
+import React, { FC, useState, createContext } from "react";
 import { RootState, select } from "util/useRedux";
 import { ScreenName, WithSideTabsProps } from "web/screens";
 import { View, Text } from "react-native";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
-import { ScaledSheet } from "react-native-size-matters";
+import { ms, ScaledSheet } from "react-native-size-matters";
 import { CardStyleInterpolators, createStackNavigator } from "@react-navigation/stack";
 import { RowSelectionWrapper } from "../RowSelectionTab";
 import i18n from "util/language/i18n";
@@ -14,10 +14,21 @@ import { AlertCompletedTab } from "./AlertCompletedTab";
 import { Alert } from "aws/API";
 import { NavigationContainer } from "@react-navigation/native";
 import { NoSelectionScreen } from "../Shared/NoSelectionScreen";
+import { AlertDetailsScreen } from "./AlertDetailsScreen";
 
 const Tab = createMaterialTopTabNavigator();
 const Stack = createStackNavigator();
 
+export const AlertContext = createContext({
+  patientName: "",
+  patientID: "",
+  summary: "",
+  colorCode: "",
+  vitalsReportID: "",
+  symptomReportID: "",
+  createdTimeDate: "",
+  modifiedTimeDate: ""
+});
 
 export const AlertScreen: FC<WithSideTabsProps[ScreenName.ALERTS]> = () => {
   const { colors } = select((state: RootState) => ({
@@ -67,6 +78,18 @@ export const AlertScreen: FC<WithSideTabsProps[ScreenName.ALERTS]> = () => {
       setEmptyAlert(true);
     }
   }
+
+  const initialAlert = {
+    patientName: alertSelected.patientName,
+    patientID: alertSelected.patientID,
+    vitalsReportID: alertSelected.vitalsReportID,
+    symptomReportID: alertSelected.symptomReportID,
+    summary: alertSelected.summary,
+    colorCode: alertSelected.colorCode,
+    createdTimeDate: alertSelected.createdAt,
+    modifiedTimeDate: alertSelected.updatedAt 
+  };
+
   return (
     <ScreenWrapper fixed>
       <View
@@ -78,12 +101,12 @@ export const AlertScreen: FC<WithSideTabsProps[ScreenName.ALERTS]> = () => {
           />
         <Tab.Navigator tabBarOptions={getTopTabBarOptions(colors)}>
           <Tab.Screen
-            name="Pending"
+            name="Pending Alerts"
             >
               {() => <AlertCurrentTab setAlertSelected={onRowClick}/>}
             </Tab.Screen>
             <Tab.Screen
-            name="Completed"
+            name="Completed Alerts"
             >
               {() => <AlertCompletedTab setAlertSelected={onRowClick}/>}
             </Tab.Screen>
@@ -97,7 +120,25 @@ export const AlertScreen: FC<WithSideTabsProps[ScreenName.ALERTS]> = () => {
         >
           {!isEmptyAlert ? (
             <NavigationContainer independent>
-              <Text> Chosen one! </Text>
+              <AlertContext.Provider value={initialAlert}>
+              <Stack.Navigator>
+                <Stack.Screen
+                name="ViewAlert"
+                component={AlertDetailsScreen}
+                options={() => ({
+                  title: "Alert",
+                  headerStyle: {
+                    height: ms(45)
+                  },
+                  headerTitleStyle: {
+                    fontWeight: "bold",
+                    fontSize: ms(20),
+                    paddingLeft: ms(15)
+                  }
+                })}
+                />
+              </Stack.Navigator>
+              </AlertContext.Provider>
             </NavigationContainer>
           ) : (
             <NoSelectionScreen
