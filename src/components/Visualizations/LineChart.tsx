@@ -69,7 +69,7 @@ export const LineChartComponent: FC<LineChartProps> = ({
 
   const height =
     Platform.OS === "web"
-      ? (Dimensions.get("window").height * 3) / 6.5
+      ? (Dimensions.get("window").height * 3) / 7
       : Dimensions.get("window").height / 3;
 
   return (

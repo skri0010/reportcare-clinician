@@ -1,11 +1,12 @@
 import React, { FC } from "react";
-import { ScaledSheet, ms } from "react-native-size-matters";
+import { ms } from "react-native-size-matters";
 import { ScreenWrapper } from "../../ScreenWrapper";
 import { View } from "react-native";
 import { PatientInfo } from "aws/models";
 import { RootState, select } from "util/useRedux";
-import { BasicInfoCard } from "./PatientInfoCards/BasicInfoCard";
-import { ContactInfoCard } from "./PatientInfoCards/ContactInfoCard";
+import { BasicInfoSection } from "./PatientInfoSections/BasicInfoSection";
+import { ContactInfoSection } from "./PatientInfoSections/ContactInfoSection";
+import { InfoTitleBar } from "./PatientInfoSections/InfoTitleBar";
 
 interface PatientInformationProps {
   patientInfo: PatientInfo;
@@ -17,22 +18,16 @@ export const PatientInformation: FC<PatientInformationProps> = ({
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
   }));
+
   // JQ-TODO Query for information here
   return (
     <ScreenWrapper>
-      <View style={styles.container}>
-        <BasicInfoCard />
-        <ContactInfoCard />
+      <View style={{ marginHorizontal: ms(40) }}>
+        <InfoTitleBar title="Patient_Info.BasicInfo" />
+        <BasicInfoSection />
+        <InfoTitleBar title="Patient_Info.ContactInfo" />
+        <ContactInfoSection />
       </View>
     </ScreenWrapper>
   );
 };
-
-const styles = ScaledSheet.create({
-  container: {
-    flexWrap: "wrap",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingBottom: ms(10)
-  }
-});
