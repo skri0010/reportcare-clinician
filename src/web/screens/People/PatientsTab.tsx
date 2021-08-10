@@ -212,7 +212,15 @@ export const PatientsTab: FC = () => {
           {/* Patient name and avatar header */}
           <ContactTitle name={selectedPatient.name} isPatient />
 
-          <PatientTabNavigationBar patient={selectedPatient} />
+          {/* Patient Navigation */}
+          <PatientTabNavigationBar
+            patient={selectedPatient}
+            setAddMedicalRecord={setAddMedicalRecord}
+            setDisplayHistory={setDisplayHistory}
+            setDisplayMedicalRecord={setDisplayMedicalRecord}
+            setModalAlertVisible={setModalAlertVisible}
+            setViewMedicalModal={setViewMedicalModal}
+          />
         </View>
       </View>
 

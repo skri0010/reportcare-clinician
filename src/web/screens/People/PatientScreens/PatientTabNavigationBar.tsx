@@ -9,16 +9,26 @@ import { PatientInformation } from "./PatientDetailsScreen/PatientInformation";
 import { PatientScreenName, PatientTabsParamList } from ".";
 import { PatientInfo } from "aws/models";
 import i18n from "util/language/i18n";
-import { RiskLevel } from "models/RiskLevel";
+import { AlertHistory, MedicalRecords } from "mock/mockPatientDetails";
 
 const Tab = createMaterialTopTabNavigator<PatientTabsParamList>();
 
 export interface PatientTabNavigationBarProps {
   patient: PatientInfo;
+  setDisplayHistory: (state: AlertHistory) => void;
+  setModalAlertVisible: (state: boolean) => void;
+  setViewMedicalModal: (state: boolean) => void;
+  setDisplayMedicalRecord: (state: MedicalRecords) => void;
+  setAddMedicalRecord: (state: boolean) => void;
 }
 
 export const PatientTabNavigationBar: FC<PatientTabNavigationBarProps> = ({
-  patient
+  patient,
+  setAddMedicalRecord,
+  setDisplayHistory,
+  setDisplayMedicalRecord,
+  setModalAlertVisible,
+  setViewMedicalModal
 }) => {
   const { colors, fonts } = select((state: RootState) => ({
     colors: state.settings.colors,
@@ -32,10 +42,10 @@ export const PatientTabNavigationBar: FC<PatientTabNavigationBarProps> = ({
           fontSize: fonts.h5Size
         },
         indicatorStyle: {
-          backgroundColor: colors.primaryTextColor
+          backgroundColor: colors.primaryBarColor
         },
         style: {
-          backgroundColor: colors.primaryWebBackgroundColor
+          backgroundColor: colors.primaryContrastTextColor
         }
       }}
     >
@@ -75,24 +85,24 @@ export const PatientTabNavigationBar: FC<PatientTabNavigationBarProps> = ({
           />
         )}
       </Tab.Screen>
-      {/* <Tab.Screen name={PatientScreenName.HISTORY}>
-                {(screenProps) => (
+      <Tab.Screen name={PatientScreenName.HISTORY}>
+        {(screenProps) => (
           <PatientHistory
             navigation={screenProps.navigation}
             route={screenProps.route}
             patient={patient}
-                      alertHistoryFunc={{
-            setDisplayHistory: setDisplayHistory,
-            setModalAlertVisible: setModalAlertVisible
-          }}
-          medicalRecordFunc={{
-            setViewMedicalModal: setViewMedicalModal,
-            setDisplayMedicalRecord: setDisplayMedicalRecord,
-            setAddMedicalRecord: setAddMedicalRecord
-          }}
+            alertHistoryFunc={{
+              setDisplayHistory: setDisplayHistory,
+              setModalAlertVisible: setModalAlertVisible
+            }}
+            medicalRecordFunc={{
+              setViewMedicalModal: setViewMedicalModal,
+              setDisplayMedicalRecord: setDisplayMedicalRecord,
+              setAddMedicalRecord: setAddMedicalRecord
+            }}
           />
         )}
-        </Tab.Screen> */}
+      </Tab.Screen>
       <Tab.Screen
         name={PatientScreenName.INFO}
         options={{ title: i18n.t("Patients.Info") }}
@@ -108,43 +118,3 @@ export const PatientTabNavigationBar: FC<PatientTabNavigationBarProps> = ({
     </Tab.Navigator>
   );
 };
-
-//  {/* <Tab.Navigator
-//     tabBarOptions={{
-//       indicatorStyle: {
-//         backgroundColor: colors.primaryTextColor
-//       },
-//       style: {
-//         backgroundColor: colors.primaryWebBackgroundColor
-//       }
-//     }}
-//   >
-//     <Tab.Screen name={i18n.t("Patients.Overview")}>
-//       {() => <PatientOverview patient={selectedPatient} />}
-//     </Tab.Screen>
-//     <Tab.Screen name={i18n.t("Patients.Parameters")}>
-//       {() => <PatientParameter patient={selectedPatient} />}
-//     </Tab.Screen>
-//     <Tab.Screen name={i18n.t("Patients.ICD/CRT")}>
-//       {() => <PatientIcdCrt patient={selectedPatient} />}
-//     </Tab.Screen>
-//     <Tab.Screen name={i18n.t("Patients.History")}>
-//       {() => (
-//         <PatientHistory
-//           patient={selectedPatient}
-//           alertHistoryFunc={{
-//             setDisplayHistory: setDisplayHistory,
-//             setModalAlertVisible: setModalAlertVisible
-//           }}
-//           medicalRecordFunc={{
-//             setViewMedicalModal: setViewMedicalModal,
-//             setDisplayMedicalRecord: setDisplayMedicalRecord,
-//             setAddMedicalRecord: setAddMedicalRecord
-//           }}
-//         />
-//       )}
-//     </Tab.Screen>
-//     <Tab.Screen name={i18n.t("Patients.Info")}>
-//       {() => <PatientInformation patientInfo={selectedPatient} />}
-//     </Tab.Screen>
-//   </Tab.Navigator> */}
