@@ -35,6 +35,7 @@ import { setProcedureOngoing } from "ic-redux/actions/agents/actionCreator";
 import { useNetInfo } from "@react-native-community/netinfo";
 import i18n from "util/language/i18n";
 import { PatientInformation } from "./PatientDetailsScreen/PatientInformation";
+import { PatientHistoryModal } from "./PatientDetailsScreen/PatientHistoryScreens/PatientHistoryModals";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -48,6 +49,7 @@ export const PatientsTab: FC = () => {
     })
   );
 
+  // Initial alert history details for the modal
   const initialAlertHistory = {
     id: "",
     patientId: "",
@@ -61,6 +63,7 @@ export const PatientsTab: FC = () => {
     signs: ""
   };
 
+  // Inital medical record details for the modal
   const initialMedicalRecord = {
     id: "",
     patientId: "",
@@ -68,26 +71,30 @@ export const PatientsTab: FC = () => {
     content: ""
   };
 
-  interface PopUpModalProps {
-    visible: boolean;
-    onRequestClose: () => void;
-  }
-
+  // For the display of filtered patients
   const [filteredPatients, setFilteredPatients] =
     useState<PatientInfo[]>(mockPatients);
 
+  // Patient that has been selected by the user from the list of patients
   const [selectedPatient] = useState(mockPatients[0]);
+
+  // For pointer events
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [modalVisible, setModalVisible] = useState(false);
 
+  // For past alert details modal visibility
   const [modalAlertVisible, setModalAlertVisible] = useState<boolean>(false);
+  // Feed in the alert details to be displayed in the modal
   const [displayHistory, setDisplayHistory] =
     useState<AlertHistory>(initialAlertHistory);
 
+  // For view medical record modal visibility
   const [viewMedicalModal, setViewMedicalModal] = useState<boolean>(false);
+  // Feed in the medical record details to be displayed in the modal
   const [displayMedicalRecord, setDisplayMedicalRecord] =
     useState<MedicalRecords>(initialMedicalRecord);
 
+  // For add medical record modal visibility
   const [addMedicalRecord, setAddMedicalRecord] = useState<boolean>(false);
 
   const [retrieving, setRetrieving] = useState(false); // used locally to indicate ongoing retrieval of details
@@ -95,35 +102,6 @@ export const PatientsTab: FC = () => {
 
   const dispatch = useDispatch();
   const netInfo = useNetInfo();
-
-  // Wanted to use this as reusable component for pop up modal
-  // But the slide animation during closing of modal is choppy for some reason
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const PopUpModal: FC<PopUpModalProps> = ({
-    visible,
-    onRequestClose,
-    children
-  }) => {
-    return (
-      <Modal
-        transparent
-        visible={visible}
-        animationType="slide"
-        onRequestClose={() => {
-          onRequestClose;
-        }}
-      >
-        <View
-          style={[
-            styles.modalContainer,
-            { backgroundColor: colors.overlayColor }
-          ]}
-        >
-          {children}
-        </View>
-      </Modal>
-    );
-  };
 
   // Triggers series of actions to get patients according to role.
   const getPatients = () => {
@@ -204,11 +182,11 @@ export const PatientsTab: FC = () => {
   // JH-TODO: Replace placeholder with i18n
   return (
     <ScreenWrapper fixed>
-      {/* <View style={{ flexDirection: "row", height: "100%" }}> */}
       <View
         style={styles.container}
         pointerEvents={modalVisible ? "none" : "auto"}
       >
+        {/* Left tab */}
         <View
           style={{ flex: 1, backgroundColor: colors.primaryContrastTextColor }}
         >
@@ -233,29 +211,39 @@ export const PatientsTab: FC = () => {
             keyExtractor={(item) => item.patientID}
           />
         </View>
+
+        {/* Right screen */}
         <View
           style={{ flex: 2, backgroundColor: colors.primaryWebBackgroundColor }}
         >
+          {/* Patient name and avatar header */}
           <ContactTitle name={selectedPatient.name} isPatient />
           <Tab.Navigator
             tabBarOptions={{
               indicatorStyle: {
-                backgroundColor: colors.primaryTextColor
+                backgroundColor: colors.primaryBarColor
               },
               style: {
-                backgroundColor: colors.primaryWebBackgroundColor
+                backgroundColor: colors.primaryContrastTextColor
               }
             }}
           >
+            {/* OVERVIEW tab */}
             <Tab.Screen name={i18n.t("Patients.Overview")}>
               {() => <PatientOverview patient={selectedPatient} />}
             </Tab.Screen>
+
+            {/* PARAMETERS tab */}
             <Tab.Screen name={i18n.t("Patients.Parameters")}>
               {() => <PatientParameter patient={selectedPatient} />}
             </Tab.Screen>
+
+            {/* ICD/CRT tab */}
             <Tab.Screen name={i18n.t("Patients.ICD/CRT")}>
               {() => <PatientIcdCrt patient={selectedPatient} />}
             </Tab.Screen>
+
+            {/* HISTORY tab */}
             <Tab.Screen name={i18n.t("Patients.History")}>
               {() => (
                 <PatientHistory
@@ -272,6 +260,8 @@ export const PatientsTab: FC = () => {
                 />
               )}
             </Tab.Screen>
+
+            {/* INFO tab */}
             <Tab.Screen name={i18n.t("Patients.Info")}>
               {() => <PatientInformation patientInfo={selectedPatient} />}
             </Tab.Screen>
@@ -279,65 +269,44 @@ export const PatientsTab: FC = () => {
         </View>
       </View>
 
+      {/* Container for modals */}
       <View style={styles.modalView}>
-        <Modal
-          transparent
+        {/* Modal to view past alert details of patient */}
+        <PatientHistoryModal
           visible={modalAlertVisible}
-          animationType="slide"
           onRequestClose={() => {
             setModalAlertVisible(false);
           }}
         >
-          <View
-            style={[
-              styles.modalContainer,
-              { backgroundColor: colors.overlayColor }
-            ]}
-          >
-            <AlertHistoryModal
-              name={selectedPatient.name}
-              setModalAlertVisible={setModalAlertVisible}
-              alertHistory={displayHistory}
-            />
-          </View>
-        </Modal>
-        <Modal
-          transparent
+          <AlertHistoryModal
+            name={selectedPatient.name}
+            setModalAlertVisible={setModalAlertVisible}
+            alertHistory={displayHistory}
+          />
+        </PatientHistoryModal>
+
+        {/* Modal to view specific medical records of patient */}
+        <PatientHistoryModal
           visible={viewMedicalModal}
-          animationType="slide"
           onRequestClose={() => {
             setViewMedicalModal(false);
           }}
         >
-          <View
-            style={[
-              styles.modalContainer,
-              { backgroundColor: colors.overlayColor }
-            ]}
-          >
-            <ViewMedicalRecords
-              setViewMedicalModal={setViewMedicalModal}
-              medicalRecord={displayMedicalRecord}
-            />
-          </View>
-        </Modal>
-        <Modal
-          transparent
+          <ViewMedicalRecords
+            setViewMedicalModal={setViewMedicalModal}
+            medicalRecord={displayMedicalRecord}
+          />
+        </PatientHistoryModal>
+
+        {/* Modal to add new medical records */}
+        <PatientHistoryModal
           visible={addMedicalRecord}
-          animationType="slide"
           onRequestClose={() => {
             setAddMedicalRecord(false);
           }}
         >
-          <View
-            style={[
-              styles.modalContainer,
-              { backgroundColor: colors.overlayColor }
-            ]}
-          >
-            <AddMedicalRecord setAddMedicalRecord={setAddMedicalRecord} />
-          </View>
-        </Modal>
+          <AddMedicalRecord setAddMedicalRecord={setAddMedicalRecord} />
+        </PatientHistoryModal>
       </View>
     </ScreenWrapper>
   );
