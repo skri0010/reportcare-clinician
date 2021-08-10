@@ -8,14 +8,14 @@ import { AlertContext } from "./AlertScreen";
 import { mockSymptomRecords } from "mock/mockSymptoms";
 import { mockVitals } from "mock/mockVitals";
 import { mockAlerts } from "mock/mockAlerts";
+import { AlertDetails } from "./AlertDetails";
 
 
 export const AlertDetailsScreen: FC = () => {
     const context = useContext(AlertContext);
     const findSymptoms = (vitalsReportID: string, symptomReportID: string) => {
-        console.log(vitalsReportID);
-        console.log(symptomReportID);
         // TODO: to be replaced with an API or agent call
+        // this is just to keep the symptoms dynamic
         let symptom = mockSymptomRecords[0];
         let vitals = mockVitals[0];
         for (let i=0; i<mockSymptomRecords.length; i += 1){
@@ -31,10 +31,7 @@ export const AlertDetailsScreen: FC = () => {
         }
     
         return (
-            <View>
-            <H3 text={symptom.patientID}/>
-            <H3 text={vitals.patientID}/>
-            </View>
+            <AlertDetails reportVitals={vitals} reportSymptom={symptom}/>
         );
     
     };

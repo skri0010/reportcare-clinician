@@ -17,7 +17,7 @@ interface AlertDetailsRowProps {
   detailContent: number | string;
 }
 
-const AlertDetailsRow: FC<AlertDetailsRowProps> = ({
+export const AlertDetailsRow: FC<AlertDetailsRowProps> = ({
   detailTitle,
   detailContent
 }) => {

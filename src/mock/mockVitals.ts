@@ -174,7 +174,7 @@ export const mockVitals: ReportVitals[] = [
   {
     __typename: "ReportVitals",
     patientID: "Tyler Haris",
-    BPDi: "50",
+    BPDi: "70",
     BPSys: "195",
     DateTime: "2021-04-16T09:24:55.351Z",
     Humidity: undefined,
@@ -191,7 +191,7 @@ export const mockVitals: ReportVitals[] = [
   {
     __typename: "ReportVitals",
     patientID: "Danial Williams",
-    BPDi: "50",
+    BPDi: "90",
     BPSys: "195",
     DateTime: "2021-04-16T09:24:55.351Z",
     Humidity: undefined,

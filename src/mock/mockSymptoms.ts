@@ -36,7 +36,7 @@ export const mockSymptomRecords: ReportSymptom[] = [
   {
     id: "9",
     ActId: "2",
-    Name: "Breathlessness",
+    Name: "Sleeplessness",
     Severity: "4",
     DateTime: "28-07-201",
     patientID: "Tyler Harris"
@@ -44,7 +44,7 @@ export const mockSymptomRecords: ReportSymptom[] = [
   {
     id: "10",
     ActId: "2",
-    Name: "Breathlessness",
+    Name: "Tiredness",
     Severity: "4",
     DateTime: "28-07-201",
     patientID: "Danial Williams"
