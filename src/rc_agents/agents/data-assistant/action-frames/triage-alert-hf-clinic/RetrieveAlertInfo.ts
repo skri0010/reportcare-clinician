@@ -187,7 +187,8 @@ export const queryAlertInfo = async (
       summary: alert.summary,
       vitals: alertVitals,
       symptoms: alertSymptoms,
-      completed: alert.completed === AlertStatus.COMPLETED
+      completed: alert.completed === AlertStatus.COMPLETED,
+      _version: alert._version
     };
 
     // Assigns risk level according to color code

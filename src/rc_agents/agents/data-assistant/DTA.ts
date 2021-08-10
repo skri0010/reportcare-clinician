@@ -15,6 +15,8 @@ import { af_ResolvePatientAssignment } from "./action-frames/storing-data/Resolv
 import { af_RequestSyncPatientAssignmentResolutions } from "./action-frames/storing-data/RequestSyncPatientAssignmentResolutions";
 import { af_RetrievePendingAlertCount } from "./action-frames/triage-alert-hf-clinic/RetrievePendingAlertCount";
 import { af_RequestPendingAlertCountDisplay } from "./action-frames/triage-alert-hf-clinic/RequestPendingAlertCountDisplay";
+import af_CreateTodo from "./action-frames/storing-data/CreateTodo";
+import af_UpdateTodo from "./action-frames/storing-data/UpdateTodo";
 
 // Initial Beliefs of Agent
 
@@ -29,7 +31,7 @@ const agentDTA = new Agent(
     af_StoreEntryData,
     af_RetrieveEntryData,
 
-    // SRD
+    // SRD-I
     af_RetrievePendingPatientAssignments,
     af_RequestDisplayPendingPatientAssignments,
     af_ResolvePatientAssignment,
@@ -46,7 +48,11 @@ const agentDTA = new Agent(
     af_RetrieveAlerts,
     af_RequestAlertsDisplay,
     af_RetrieveAlertInfo,
-    af_RequestAlertInfoDisplay
+    af_RequestAlertInfoDisplay,
+
+    // SRD-II
+    af_CreateTodo,
+    af_UpdateTodo
   ], // action frame
   [belief1] // beliefs
 );

@@ -27,7 +27,9 @@ import {
   ListReportSymptomsByPatientIDQuery,
   ListReportSymptomsByPatientIDQueryVariables,
   ListReportVitalsByPatientIDQuery,
-  ListReportVitalsByPatientIDQueryVariables
+  ListReportVitalsByPatientIDQueryVariables,
+  ListTodosByAlertIDQuery,
+  ListTodosByAlertIDQueryVariables
 } from "aws/API";
 
 interface ListClinicianInfosResponse extends BaseResponse {
@@ -196,4 +198,17 @@ export const listCompletedRiskAlerts = async (
     query: queries.listCompletedRiskAlerts,
     variables: variables
   })) as ListCompletedRiskAlertsResponse;
+};
+
+interface ListTodosByAlertIDResponse extends BaseResponse {
+  data: ListTodosByAlertIDQuery;
+}
+
+export const listTodosByAlertID = async (
+  variables: ListTodosByAlertIDQueryVariables
+): Promise<ListTodosByAlertIDResponse> => {
+  return (await API.graphql({
+    query: queries.listTodosByAlertID,
+    variables: variables
+  })) as ListTodosByAlertIDResponse;
 };

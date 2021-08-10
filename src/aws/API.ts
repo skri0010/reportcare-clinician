@@ -1021,6 +1021,16 @@ export type ModelTodoConnection = {
   startedAt?: number | null,
 };
 
+export type ModelIDKeyConditionInput = {
+  eq?: string | null,
+  le?: string | null,
+  lt?: string | null,
+  ge?: string | null,
+  gt?: string | null,
+  between?: Array< string | null > | null,
+  beginsWith?: string | null,
+};
+
 export type CreatePatientInfoMutationVariables = {
   input: CreatePatientInfoInput,
   condition?: ModelPatientInfoConditionInput | null,
@@ -3874,6 +3884,40 @@ export type ListTodosByLastModifiedDateQueryVariables = {
 
 export type ListTodosByLastModifiedDateQuery = {
   listTodosByLastModifiedDate?:  {
+    __typename: "ModelTodoConnection",
+    items?:  Array< {
+      __typename: "Todo",
+      id: string,
+      clinicianID: string,
+      title: string,
+      patientName: string,
+      notes: string,
+      lastModified: string,
+      alertID?: string | null,
+      completed: boolean,
+      owner: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
+export type ListTodosByAlertIDQueryVariables = {
+  clinicianID?: string | null,
+  alertID?: ModelIDKeyConditionInput | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelTodoFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListTodosByAlertIDQuery = {
+  listTodosByAlertID?:  {
     __typename: "ModelTodoConnection",
     items?:  Array< {
       __typename: "Todo",

@@ -6,7 +6,7 @@ import {
   Patient,
   PatientDetails,
   PendingAlertCount,
-  Todo
+  LocalTodo
 } from "rc_agents/model";
 import { Alert, PatientAssignment } from "aws/API";
 
@@ -22,7 +22,7 @@ interface AgentsState {
   pendingAlertCount: PendingAlertCount;
   alerts: Alert[];
   alertInfo: AlertInfo | undefined;
-  newTodo: Todo | undefined;
+  newTodo: LocalTodo | undefined;
 }
 
 const initialState: AgentsState = {

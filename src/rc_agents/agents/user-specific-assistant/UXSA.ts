@@ -22,7 +22,7 @@ const agentUXSA = new Agent(
     af_RetrieveRole,
     af_RequestRetrieveAll,
 
-    // SRD
+    // SRD-I
     af_DisplayPendingPatientAssignments,
 
     // AT-CP

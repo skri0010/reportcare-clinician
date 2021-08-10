@@ -68,7 +68,7 @@ export const ActionFrameIDs = {
     RETRIEVE_ALERT_INFO: "RetrieveAlertInfo",
     REQUEST_ALERT_INFO_DISPLAY: "RequestAlertInfoDisplay",
 
-    // SRD: Patient Assignments
+    // SRD-I: Patient Assignments
     RETRIEVE_PENDING_PATIENT_ASSIGNMENTS: "RetrievePendingPatientAssignments",
     REQUEST_DISPLAY_PENDING_PATIENT_ASSIGNMENTS:
       "RequestDisplayPendingPatientAssignments",
@@ -76,7 +76,7 @@ export const ActionFrameIDs = {
     REQUEST_SYNC_PATIENT_ASSIGNMENT_RESOLUTIONS:
       "RequestSyncPatientAssignmentResolutions",
 
-    // SRD: Todos
+    // SRD-II: Todos
     CREATE_TODO: "CreateTodo",
     UPDATE_TODO: "UpdateTodo"
   },
@@ -96,8 +96,10 @@ export const ActionFrameIDs = {
     SYNC_PROTECTED_INFO: "SyncProtectedInfo",
     SYNC_PATIENT_ASSIGNMENT_RESOLUTIONS: "SyncPatientAssignmentResolutions",
 
-    SYNC_NEW_TODOS: "SyncNewTodos",
-    SYNC_UDPATED_TODOS: "SyncUpdatedTodos"
+    // SRD-II - Todos
+    SYNC_TODOS_CREATE: "SyncTodosCreate",
+    SYNC_TODOS_UPDATE: "SyncTodosUpdate",
+    SYNC_ALERTS_UPDATE: "SyncAlertsUpdate"
   },
   MHA: {},
   ALA: {}
@@ -122,9 +124,9 @@ export enum AppAttributes {
   ONLINE = "Online",
   PENDING_PROTECTED_INFO_SYNC = "PendingProtectedInfoSync",
   SYNC_PATIENT_ASSIGNMENT_RESOLUTIONS = "SyncPatientAssignmentResolutions",
-
-  PENDING_TODO_INSERT_SYNC = "PendingTodoInsertSync",
-  PENDING_TODO_UPDATE_SYNC = "PendingTodoUpdateSync"
+  SYNC_TODOS_CREATE = "SyncTodosCreate",
+  SYNC_TODOS_UPDATE = "SyncTodosUpdate",
+  SYNC_ALERTS_UPDATE = "SyncAlertsUpdate"
 }
 
 // Attributes for PROCEDURE key
@@ -133,7 +135,8 @@ export enum ProcedureAttributes {
   HF_OTP_I = "HF-OTP-I",
   HF_OTP_II = "HF-OTP-II",
   HF_OTP_III = "HF-OTP-III",
-  SRD = "SRD",
+  SRD_I = "SRD-I",
+  SRD_II = "SRD-II",
   AT_CP = "AT-CP"
 }
 
@@ -147,7 +150,7 @@ export enum ClinicianAttributes {
   ROLE = "Role",
   RETRIEVE_ROLE = "RetrieveRole",
 
-  // SRD - Alerts
+  // AT-CP - Alerts
   RETRIEVE_PENDING_ALERT_COUNT = "RetrievePendingAlertCount",
   PENDING_ALERT_COUNT_RETRIEVED = "PendingAlertCountRetrieved",
   ALERT_STATUS = "AlertStatus",
@@ -160,9 +163,9 @@ export enum ClinicianAttributes {
   ALERT_INFO = "AlertInfo",
   ALERT_INFO_RETRIEVED = "AlertInfoRetrieved",
 
-  // SRD - Todos
-  NEW_TODO = "NewTodo",
-  EDIT_TODO = "EditTodo",
+  // SRD-II - Todos
+  CREATE_TODO = "CreateTodo",
+  UPDATE_TODO = "UpdateTodo",
   TODO = "Todo"
 }
 
@@ -175,7 +178,7 @@ export enum PatientAttributes {
   VIEW_DETAILS = "ViewDetails",
   DETAILS = "Details",
 
-  // SRD - Patient Assignments
+  // SRD-I - Patient Assignments
   PENDING_PATIENT_ASSIGNMENTS = "PendingPatientAssignments",
   RETRIEVE_PENDING_PATIENT_ASSIGNMENTS = "RetrievePendingPatientAssignments",
   PENDING_PATIENT_ASSIGNMENTS_RETRIEVED = "PendingPatientAssignmentsRetrieved",
@@ -184,7 +187,7 @@ export enum PatientAttributes {
   PATIENT_ASSIGNMENT_RESOLVED = "PatientAssignmentResolved",
   RESOLVE_PATIENT_ASSIGNMENT = "ResolvePatientAssignment",
 
-  // SRD - Alerts
+  // AT-CP - Alerts
   ALERT_PATIENT_ID = "AlertPatientId",
   RETRIEVE_ALERT_HISTORY = "RetrieveAlertHistory",
   ALERT_HISTORY = "AlertHistory"

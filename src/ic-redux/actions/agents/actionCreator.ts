@@ -3,7 +3,7 @@ import {
   Patient,
   PatientDetails,
   PendingAlertCount,
-  Todo
+  LocalTodo
 } from "rc_agents/model";
 import { actionNames } from "ic-redux/actions/actionNames";
 import { createAction } from "typesafe-actions";
@@ -81,7 +81,7 @@ export const setAlertInfo = createAction(
 
 export const setNewTodo = createAction(
   actionNames.SET_NEW_TODO,
-  (newTodo: Todo) => ({
+  (newTodo: LocalTodo) => ({
     newTodo: newTodo
   })
 )();

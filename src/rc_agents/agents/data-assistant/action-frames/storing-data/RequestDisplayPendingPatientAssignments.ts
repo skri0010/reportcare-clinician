@@ -19,7 +19,7 @@ import {
 
 /**
  * Class to represent the activity for requesting display of retrieved pending patient assignments.
- * This happens in Procedure Storing Data (SRD).
+ * This happens in Procedure Storing Data (SRD-I).
  */
 class RequestDisplayPendingPatientAssignments extends Communicate {
   constructor() {
@@ -54,7 +54,7 @@ class RequestDisplayPendingPatientAssignments extends Communicate {
 // Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.SRD,
+  ProcedureAttributes.SRD_I,
   ProcedureConst.ACTIVE
 );
 const rule2 = new Precondition(

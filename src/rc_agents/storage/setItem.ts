@@ -81,3 +81,12 @@ export const setTodos = async (
 ): Promise<void> => {
   await AsyncStorage.setItem(AsyncStorageKeys.TODOS, JSON.stringify(todos));
 };
+
+export const setAlertsSync = async (
+  alertsSync: AsyncStorageType[AsyncStorageKeys.ALERTS_SYNC]
+): Promise<void> => {
+  await AsyncStorage.setItem(
+    AsyncStorageKeys.ALERTS_SYNC,
+    JSON.stringify(alertsSync)
+  );
+};

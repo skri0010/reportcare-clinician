@@ -54,7 +54,7 @@ export const PendingPatientAssignmentsCard: FC<PendingPatientAssignmentsCardProp
       agentAPI.addFact(
         new Belief(
           BeliefKeys.PROCEDURE,
-          ProcedureAttributes.SRD,
+          ProcedureAttributes.SRD_I,
           ProcedureConst.ACTIVE
         )
       );
@@ -84,7 +84,7 @@ export const PendingPatientAssignmentsCard: FC<PendingPatientAssignmentsCardProp
       agentAPI.addFact(
         new Belief(
           BeliefKeys.PROCEDURE,
-          ProcedureAttributes.SRD,
+          ProcedureAttributes.SRD_I,
           ProcedureConst.ACTIVE
         )
       );

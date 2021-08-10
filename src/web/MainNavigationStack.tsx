@@ -69,7 +69,7 @@ export const MainNavigationStack: FC<MainNavigationStackProps> = ({
       netInfo.isInternetReachable === false
     ) {
       // Removes online broadcast from facts
-      agentAPI.addFact(new Belief(BeliefKeys.APP, AppAttributes.ONLINE, null));
+      agentAPI.addFact(new Belief(BeliefKeys.APP, AppAttributes.ONLINE, false));
       if (!warningToastShown) {
         toast.show(i18n.t("Internet_Connection.OfflineNotice"), {
           type: "warning"

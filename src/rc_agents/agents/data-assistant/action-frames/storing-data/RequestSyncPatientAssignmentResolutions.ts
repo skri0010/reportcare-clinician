@@ -20,7 +20,7 @@ import {
 
 /**
  * Class to represent the activity for requesting syncing of local patient assignment resolutions.
- * This happens in Procedure Storing Data (SRD).
+ * This happens in Procedure Storing Data (SRD-I).
  */
 class RequestSyncPatientAssignmentResolutions extends Communicate {
   constructor() {
@@ -55,7 +55,7 @@ class RequestSyncPatientAssignmentResolutions extends Communicate {
 // Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.SRD,
+  ProcedureAttributes.SRD_I,
   ProcedureConst.ACTIVE
 );
 const rule2 = new Precondition(

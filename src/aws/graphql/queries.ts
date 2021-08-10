@@ -1690,3 +1690,41 @@ export const listTodosByLastModifiedDate = /* GraphQL */ `
     }
   }
 `;
+export const listTodosByAlertID = /* GraphQL */ `
+  query ListTodosByAlertID(
+    $clinicianID: String
+    $alertID: ModelIDKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelTodoFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listTodosByAlertID(
+      clinicianID: $clinicianID
+      alertID: $alertID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        clinicianID
+        title
+        patientName
+        notes
+        lastModified
+        alertID
+        completed
+        owner
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;

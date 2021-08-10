@@ -105,3 +105,13 @@ export const getTodos = async (): Promise<
   }
   return null;
 };
+
+export const getAlertsSync = async (): Promise<
+  AsyncStorageType[AsyncStorageKeys.ALERTS_SYNC] | null
+> => {
+  const localData = await AsyncStorage.getItem(AsyncStorageKeys.ALERTS_SYNC);
+  if (localData) {
+    return JSON.parse(localData);
+  }
+  return null;
+};

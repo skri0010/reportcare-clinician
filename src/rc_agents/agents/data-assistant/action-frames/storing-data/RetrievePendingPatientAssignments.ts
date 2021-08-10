@@ -25,7 +25,7 @@ import { store } from "ic-redux/store";
 
 /**
  * Class to represent an activity for retrieving pending patient assignments.
- * This happens in Procedure Storing Data (SRD).
+ * This happens in Procedure Storing Data (SRD-I).
  */
 class RetrievePendingPatientAssignments extends Activity {
   constructor() {
@@ -105,7 +105,7 @@ class RetrievePendingPatientAssignments extends Activity {
         agentAPI.addFact(
           new Belief(
             BeliefKeys.PROCEDURE,
-            ProcedureAttributes.SRD,
+            ProcedureAttributes.SRD_I,
             ProcedureConst.ACTIVE
           )
         );
@@ -116,7 +116,7 @@ class RetrievePendingPatientAssignments extends Activity {
       agentAPI.addFact(
         new Belief(
           BeliefKeys.PROCEDURE,
-          ProcedureAttributes.SRD,
+          ProcedureAttributes.SRD_I,
           ProcedureConst.INACTIVE
         )
       );
@@ -130,7 +130,7 @@ class RetrievePendingPatientAssignments extends Activity {
 // Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.SRD,
+  ProcedureAttributes.SRD_I,
   ProcedureConst.ACTIVE
 );
 const rule2 = new ResettablePrecondition(

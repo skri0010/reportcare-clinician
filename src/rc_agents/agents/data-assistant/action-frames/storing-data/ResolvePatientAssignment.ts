@@ -31,7 +31,7 @@ import Auth from "@aws-amplify/auth";
 
 /**
  * Class to represent an activity for resolving patient assignment (APPROVE or REASSIGN) .
- * This happens in Procedure Storing Data (SRD) when clinician performs an action to resolve patient assignment.
+ * This happens in Procedure Storing Data (SRD-I) when clinician performs an action to resolve patient assignment.
  */
 class ResolvePatientAssignment extends Activity {
   constructor() {
@@ -231,7 +231,7 @@ const reassignPatientAssignment: (params: {
 // Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.SRD,
+  ProcedureAttributes.SRD_I,
   ProcedureConst.ACTIVE
 );
 const rule2 = new ResettablePrecondition(

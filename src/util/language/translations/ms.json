@@ -137,6 +137,8 @@
     "TitleInputPlaceholder": "Apakah todo ini tentang?",
     "PatientInputPlaceholder": "Siapakah nama pesakit?",
     "NotesInputPlaceholder": "Apakah yang perlu dicatatkan?",
-    "NoSelection": "Pilihkan salah satu item Todo untuk melihat butirannya"
-  }
+    "NoSelection": "Pilihkan salah satu item Todo untuk melihat butirannya",
+    "TodoCreateSuccessful": "Todo telah berjaya dicipta"
+  },
+  "UnexpectedError": "Ralat yang tidak dijangka telah berlaku"
 }

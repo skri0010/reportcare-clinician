@@ -1607,6 +1607,17 @@ export const schema = {
                     }
                 },
                 {
+                    "type": "key",
+                    "properties": {
+                        "name": "todosByAlertID",
+                        "fields": [
+                            "clinicianID",
+                            "alertID"
+                        ],
+                        "queryField": "listTodosByAlertID"
+                    }
+                },
+                {
                     "type": "auth",
                     "properties": {
                         "rules": [
@@ -1657,5 +1668,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "613b60fa5b401c2dd643da14364472fe"
+    "version": "a509ea196691e41035070df68ddac107"
 };

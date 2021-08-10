@@ -154,7 +154,7 @@ class RetrievePendingAlertCount extends Activity {
  * @param colorCode alert's color code
  * @returns risk level corresponding to the color code
  */
-const mapColorCodeToRiskLevel = (colorCode: string): RiskLevel => {
+export const mapColorCodeToRiskLevel = (colorCode: string): RiskLevel => {
   switch (colorCode) {
     case AlertColorCode.HIGH:
       return RiskLevel.HIGH;

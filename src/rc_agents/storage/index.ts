@@ -1,8 +1,8 @@
 import {
   AlertInfo,
+  LocalTodo,
   PatientAssignmentResolution,
-  PatientDetails,
-  Todo
+  PatientDetails
 } from "rc_agents/model";
 import { Alert, ClinicianInfo, PatientAssignment, PatientInfo } from "aws/API";
 
@@ -26,7 +26,8 @@ export enum AsyncStorageKeys {
   ALERT_INFOS = "AlertInfos",
   PENDING_PATIENT_ASSIGNMENTS = "PendingPatientAssignments",
   PATIENT_ASSIGNMENTS_RESOLUTIONS = "PatientAssignmentsResolutions",
-  TODOS = "Todos"
+  TODOS = "Todos",
+  ALERTS_SYNC = "AlertsSync"
 }
 
 // Types for storing data locally in AsyncStorage
@@ -52,5 +53,6 @@ export type AsyncStorageType = {
   [AsyncStorageKeys.ALERT_INFOS]: {
     [key: string]: AlertInfo[];
   };
-  [AsyncStorageKeys.TODOS]: Todo[];
+  [AsyncStorageKeys.TODOS]: LocalTodo[];
+  [AsyncStorageKeys.ALERTS_SYNC]: AlertInfo[];
 };

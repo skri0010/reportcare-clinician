@@ -67,23 +67,27 @@ export interface AlertInfo {
   medicationQuantity?: string;
   activityDuringAlert?: string;
   completed: boolean;
+  _version: number;
 }
 
-export interface NewTodoInput {
+export interface TodoCreateInput {
   title: string;
   patientName: string;
   notes: string;
   alert?: AlertInfo;
 }
 
-export interface UpdatedTodoInput {
+export interface TodoUpdateInput {
   id: string;
   title: string;
+  patientName: string;
   notes: string;
   completed: boolean;
+  createdAt: string;
+  _version: number;
 }
 
-export interface Todo {
+export interface LocalTodo {
   id?: string;
   title: string;
   patientName: string;
@@ -94,4 +98,5 @@ export interface Todo {
   createdAt: string;
   lastModified?: string;
   pendingSync: boolean;
+  _version: number;
 }
