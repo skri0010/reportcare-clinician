@@ -60,12 +60,11 @@ export const TodosCard: FC<TodosCardProps> = ({ maxHeight }) => {
 
 const styles = ScaledSheet.create({
   title: {
-    fontWeight: "bold",
-    paddingBottom: "5@ms"
+    fontWeight: "bold"
   },
   listContainer: {
-    flex: 1
-    // TO-DO jy: explore options to resolve flatlist height issue
+    flex: 1,
+    paddingTop: "15@ms"
   },
   titleContainer: {
     display: "flex",

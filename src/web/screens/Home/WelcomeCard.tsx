@@ -1,16 +1,22 @@
 import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
-import { View, TextStyle, Image, Text } from "react-native";
+import { View, TextStyle, Image } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
-import { H1, H2, H4 } from "components/Text/index";
+import { H1, H3, H5 } from "components/Text/index";
 import { CardWrapper } from "./CardWrapper";
 import i18n from "util/language/i18n";
 
 interface WelcomeCardProps {
   name: string;
+  flex?: number;
+  maxHeight: number;
 }
 
-export const WelcomeCard: FC<WelcomeCardProps> = ({ name }) => {
+export const WelcomeCard: FC<WelcomeCardProps> = ({
+  name,
+  flex = 1,
+  maxHeight
+}) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
   }));
@@ -20,28 +26,30 @@ export const WelcomeCard: FC<WelcomeCardProps> = ({ name }) => {
   } as TextStyle;
 
   return (
-    <CardWrapper firstItem>
-      <H1
-        text={i18n.t("Home.Dashboard")}
-        style={[styles.username, styles.dashboard]}
-      />
+    <CardWrapper flex={flex} maxHeight={maxHeight}>
       <View
         style={[
           styles.card,
           { backgroundColor: colors.primaryContrastTextColor }
         ]}
       >
-        <View>
-          <H2
-            text={`${i18n.t("Home.Welcome")}${name}`}
-            style={[styles.username, cardTextColor]}
-          />
-          <H4
-            style={[styles.message, cardTextColor]}
-            text={i18n.t("Home.WelcomeMsg")}
-          />
+        <View style={styles.textContainer}>
+          {/* Dashboard title */}
+          <H1 text={i18n.t("Home.Dashboard")} style={[styles.username]} />
+          <View style={styles.messageContainer}>
+            {/* Welcome title */}
+            <H3
+              text={`${i18n.t("Home.Welcome")}${name}`}
+              style={[styles.username, cardTextColor]}
+            />
+            {/* Welcome message */}
+            <H5
+              style={[styles.message, cardTextColor]}
+              text={i18n.t("Home.WelcomeMsg")}
+            />
+          </View>
         </View>
-        <View>
+        <View style={styles.logoContainer}>
           <Image
             style={styles.logo}
             source={require("assets/heart-icon.png")}
@@ -54,24 +62,27 @@ export const WelcomeCard: FC<WelcomeCardProps> = ({ name }) => {
 
 const styles = ScaledSheet.create({
   card: {
-    padding: "6@ms",
-    margin: "20@ms",
-    borderRadius: "5@ms",
-    marginBottom: "-5@ms",
-    marginTop: "15@ms",
-    display: "flex",
     flexDirection: "row",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
+    paddingRight: "10@ms"
+  },
+  textContainer: {
+    flex: 1,
+    paddingLeft: "10@ms",
+    maxWidth: "70%"
+  },
+  messageContainer: {
+    paddingVertical: "10@ms",
+    paddingLeft: "15@ms"
+  },
+  logoContainer: {
+    justifyContent: "center"
   },
   username: {
     fontWeight: "bold"
   },
   message: {
-    paddingTop: "4@ms"
-  },
-  dashboard: {
-    margin: "10@ms",
-    marginBottom: "-10@ms"
+    paddingTop: "5@ms"
   },
   logo: {
     width: "60@ms",

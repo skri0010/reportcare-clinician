@@ -5,8 +5,10 @@ import {
   AlertInfo,
   Patient,
   PatientDetails,
-  PendingAlertCount
-} from "agents_implementation/agent_framework/model";
+  PendingAlertCount,
+  Todo
+} from "rc_agents/model";
+import { Alert, PatientAssignment } from "aws/API";
 
 interface AgentsState {
   procedureSuccessful: boolean;
@@ -14,9 +16,13 @@ interface AgentsState {
   online: boolean;
   patients: Patient[];
   patientDetails: PatientDetails;
+  pendingPatientAssignments: PatientAssignment[] | null;
   patientAssignmentsSynced: boolean;
+  fetchingPendingPatientAssignments: boolean;
   pendingAlertCount: PendingAlertCount;
-  alerts: AlertInfo[];
+  alerts: Alert[];
+  alertInfo: AlertInfo | undefined;
+  newTodo: Todo | undefined;
 }
 
 const initialState: AgentsState = {
@@ -29,6 +35,8 @@ const initialState: AgentsState = {
     symptomsReports: [],
     vitalsReports: []
   },
+  pendingPatientAssignments: null,
+  fetchingPendingPatientAssignments: false,
   patientAssignmentsSynced: false,
   pendingAlertCount: {
     highRisk: 0,
@@ -36,7 +44,9 @@ const initialState: AgentsState = {
     lowRisk: 0,
     unassignedRisk: 0
   },
-  alerts: []
+  alerts: [],
+  alertInfo: undefined,
+  newTodo: undefined
 };
 
 export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
@@ -52,6 +62,17 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
       return { ...state, patients: action.payload.patients };
     case actionNames.SET_PATIENT_DETAILS:
       return { ...state, patientDetails: action.payload.patientDetails };
+    case actionNames.SET_FETCHING_PENDING_PATIENT_ASSIGNMENTS:
+      return {
+        ...state,
+        fetchingPendingPatientAssignments:
+          action.payload.fetchingPendingPatientAssignments
+      };
+    case actionNames.SET_PENDING_PATIENT_ASSIGNMENTS:
+      return {
+        ...state,
+        pendingPatientAssignments: action.payload.pendingPatientAssignments
+      };
     case actionNames.SET_PATIENT_ASSIGNMENTS_SYNCED:
       return {
         ...state,
@@ -67,6 +88,13 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
         ...state,
         alerts: action.payload.alerts
       };
+    case actionNames.SET_ALERT_INFO:
+      return {
+        ...state,
+        alertInfo: action.payload.alertInfo
+      };
+    case actionNames.SET_NEW_TODO:
+      return { ...state, newTodo: action.payload.newTodo };
     default:
       return state;
   }

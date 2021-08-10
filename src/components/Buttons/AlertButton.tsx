@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
-import Icon from "react-native-vector-icons/MaterialIcons";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { RootState } from "ic-redux/store";
 import { select } from "util/useRedux";
 import { getRiskLevelColor, RiskLevel } from "../../models/RiskLevel";
@@ -8,11 +8,13 @@ import { ScaledSheet, ms } from "react-native-size-matters";
 
 interface AlertButtonProps {
   riskLevel: RiskLevel;
+  iconSize?: number;
   alertCount?: number;
   onPress?: () => void;
 }
 
 export const AlertButton: React.FC<AlertButtonProps> = ({
+  iconSize,
   riskLevel,
   alertCount = 0,
   onPress
@@ -69,8 +71,8 @@ export const AlertButton: React.FC<AlertButtonProps> = ({
 
         {/* Button icon */}
         <Icon
-          name={hasNotifications ? "notification-important" : "check"}
-          size={ms(50)}
+          name={hasNotifications ? "alert-octagon" : "check"}
+          size={iconSize ? ms(iconSize) : ms(25)}
         />
       </TouchableOpacity>
 
@@ -83,7 +85,9 @@ export const AlertButton: React.FC<AlertButtonProps> = ({
 const styles = ScaledSheet.create({
   mainContainer: {
     flexDirection: "column",
-    alignItems: "center"
+    alignItems: "center",
+    paddingHorizontal: "8@ms",
+    paddingBottom: "10@ms"
   },
   buttonContainer: {
     justifyContent: "center",

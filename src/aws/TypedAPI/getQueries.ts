@@ -22,7 +22,9 @@ import {
   GetPatientInfoQuery,
   GetPatientInfoQueryVariables,
   GetPatientAssignmentQuery,
-  GetPatientAssignmentQueryVariables
+  GetPatientAssignmentQueryVariables,
+  GetClinicianPatientMapQuery,
+  GetClinicianPatientMapQueryVariables
 } from "aws/API";
 
 interface GetClinicianInfoResponse extends BaseResponse {
@@ -153,4 +155,17 @@ export const getPatientAssignment = async (
     query: queries.getPatientAssignment,
     variables: variables
   })) as GetPatientAssignmentResponse;
+};
+
+interface GetClinicianPatientMapResponse extends BaseResponse {
+  data: GetClinicianPatientMapQuery;
+}
+
+export const getClinicianPatientMap = async (
+  variables: GetClinicianPatientMapQueryVariables
+): Promise<GetClinicianPatientMapResponse> => {
+  return (await API.graphql({
+    query: queries.getClinicianPatientMap,
+    variables: variables
+  })) as GetClinicianPatientMapResponse;
 };

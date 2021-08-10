@@ -34,7 +34,7 @@ export const AuthButton: React.FC<AuthButtonProps> = ({
         {
           backgroundColor: active
             ? colors.primaryButtonColor
-            : colors.separatorColor
+            : colors.primaryDeactivatedButtonColor
         },
         styles.button,
         style

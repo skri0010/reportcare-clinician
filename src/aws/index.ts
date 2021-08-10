@@ -35,20 +35,6 @@ export enum Hospital {
   HB = "Hospital Bintulu"
 }
 
-export enum PatientAssignmentResolution {
-  PENDING = "PENDING",
-  APPROVED = "APPROVED",
-  REASSIGNED = "REASSIGNED"
-}
-
-export interface Assignment {
-  patientID: string;
-  clinicianID: string;
-  resolution: PatientAssignmentResolution;
-  patientName: string;
-  _version: number;
-}
-
 export enum AlertStatus {
   PENDING = "PENDING",
   COMPLETED = "COMPLETED"

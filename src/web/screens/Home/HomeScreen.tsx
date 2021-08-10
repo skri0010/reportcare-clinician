@@ -7,19 +7,22 @@ import { ms, ScaledSheet } from "react-native-size-matters";
 import { RequestsByMariaCard } from "./RequestsByMariaCard";
 import { AlertsCard } from "./AlertsCard";
 import { TodosCard } from "./TodosCard";
-import agentAPI from "agents_implementation/agent_framework/AgentAPI";
-import Belief from "agents_implementation/agent_framework/base/Belief";
+import { PendingPatientAssignmentsCard } from "./PendingPatientAssignmentsCard";
+import agentAPI from "rc_agents/framework/AgentAPI";
+import Belief from "rc_agents/framework/base/Belief";
 import {
   BeliefKeys,
   ClinicianAttributes,
   ProcedureAttributes,
   ProcedureConst
-} from "agents_implementation/agent_framework/AgentEnums";
-import agentDTA from "agents_implementation/agents/data-assistant/DTA";
+} from "rc_agents/AgentEnums";
+import agentDTA from "rc_agents/agents/data-assistant/DTA";
 
 export const HomeScreen: FC<WithSideTabsProps[ScreenName.HOME]> = () => {
   // JH-TODO Replace titles with i18n
-  const cardMaxHeight = ms(300);
+  // JH-TODO Replace welcome card name
+  const topMaxHeight = ms(150);
+  const maxHeight = ms(250);
 
   // Triggers DTA to get count of pending alerts
   const getPendingAlertCount = () => {
@@ -47,18 +50,21 @@ export const HomeScreen: FC<WithSideTabsProps[ScreenName.HOME]> = () => {
 
   return (
     <ScreenWrapper padding>
-      <WelcomeCard name="Nailah" />
-      <View style={styles.bottomContainer}>
-        <RequestsByMariaCard maxHeight={cardMaxHeight} />
-        <AlertsCard maxHeight={cardMaxHeight} />
-        <TodosCard maxHeight={cardMaxHeight} />
+      <View style={styles.container}>
+        <AlertsCard maxHeight={topMaxHeight} flex={1.2} />
+        <WelcomeCard name="Nailah" maxHeight={topMaxHeight} flex={1.8} />
+      </View>
+      <View style={styles.container}>
+        <RequestsByMariaCard maxHeight={maxHeight} />
+        <TodosCard maxHeight={maxHeight} />
+        <PendingPatientAssignmentsCard maxHeight={maxHeight} />
       </View>
     </ScreenWrapper>
   );
 };
 
 const styles = ScaledSheet.create({
-  bottomContainer: {
+  container: {
     flexWrap: "wrap",
     flexDirection: "row",
     justifyContent: "space-between"

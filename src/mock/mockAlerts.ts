@@ -1,4 +1,4 @@
-import { AlertColorCode } from "agents_implementation/agent_framework/model";
+import { AlertColorCode } from "rc_agents/model";
 import { AlertStatus } from "aws";
 import { Alert } from "aws/API";
 
@@ -101,7 +101,7 @@ export const mockCompletedAlerts: Alert[] = [
     symptomReportID: "9f1a0821-2a0c-4608-9ee6-997a43822448",
     dateTime: "2021-08-03T07:08:41.102Z",
     colorCode: AlertColorCode.LOW,
-    pending: AlertStatus.PENDING,
+    completed: AlertStatus.COMPLETED,
     owner: "siuloongtest",
     _version: 1,
     _lastChangedAt: 0,

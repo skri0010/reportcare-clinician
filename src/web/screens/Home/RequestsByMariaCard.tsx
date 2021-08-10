@@ -80,11 +80,11 @@ const styles = ScaledSheet.create({
     alignItems: "baseline"
   },
   title: {
-    fontWeight: "bold",
-    paddingBottom: "8@ms"
+    fontWeight: "bold"
   },
   patientRequestsContainer: {
-    flex: 1
+    flex: 1,
+    paddingTop: "15@ms"
   },
   details: {
     fontWeight: "bold"

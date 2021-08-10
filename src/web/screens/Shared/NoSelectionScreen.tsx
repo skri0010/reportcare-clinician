@@ -24,7 +24,7 @@ const getScreenContent: FC<ScreenName> = (screenName: ScreenName) => {
         <Icon
           name="sticky-note-2"
           size={ms(iconSize)}
-          color={colors.primaryIconColor}
+          color={colors.secondaryIconColor}
         />
       );
     case "Chat":
@@ -32,7 +32,7 @@ const getScreenContent: FC<ScreenName> = (screenName: ScreenName) => {
         <Icon
           name="message"
           size={ms(iconSize)}
-          color={colors.primaryIconColor}
+          color={colors.secondaryIconColor}
         />
       );
     default:
@@ -40,7 +40,7 @@ const getScreenContent: FC<ScreenName> = (screenName: ScreenName) => {
         <Icon
           name="error"
           size={ms(iconSize)}
-          color={colors.primaryIconColor}
+          color={colors.secondaryIconColor}
         />
       );
   }
