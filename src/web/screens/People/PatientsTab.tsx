@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from "react";
-import { View, FlatList, Modal, Text } from "react-native";
+import { View, FlatList } from "react-native";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { PatientDetailsRow } from "components/RowComponents/PatientRows/PatientDetailsRow";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
@@ -7,13 +7,8 @@ import { PatientInfo } from "aws/API";
 import { mockPatients } from "mock/mockPatients";
 import { RowSelectionWrapper } from "../RowSelectionTab";
 import { FilterTagProps } from "web/RiskFilterComponent";
-import { PatientOverview } from "./PatientScreens/PatientDetailsScreen/PatientOverview";
 import { RootState, select, useDispatch } from "util/useRedux";
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { PatientHistory } from "./PatientScreens/PatientDetailsScreen/PatientHistory";
 import { ContactTitle } from "./ContactTitle";
-import { PatientParameter } from "./PatientScreens/PatientDetailsScreen/PatientParameters";
-import { PatientIcdCrt } from "./PatientScreens/PatientDetailsScreen/PatientIcdCrt";
 import { AlertHistoryModal } from "./PatientScreens/PatientDetailsScreen/PatientHistoryScreens/AlertHistoryModal";
 import { AlertHistory, MedicalRecords } from "mock/mockPatientDetails";
 import { RiskLevel } from "models/RiskLevel";
@@ -34,11 +29,8 @@ import agentUXSA from "rc_agents/agents/user-specific-assistant/UXSA";
 import { setProcedureOngoing } from "ic-redux/actions/agents/actionCreator";
 import { useNetInfo } from "@react-native-community/netinfo";
 import i18n from "util/language/i18n";
-import { PatientInformation } from "./PatientScreens/PatientDetailsScreen/PatientInformation";
 import { PatientTabNavigationBar } from "./PatientScreens/PatientTabNavigationBar";
-import { NavigationContainer } from "@react-navigation/native";
-
-const Tab = createMaterialTopTabNavigator();
+import { PatientHistoryModal } from "./PatientDetailsScreen/PatientHistoryScreens/PatientHistoryModals";
 
 export const PatientsTab: FC = () => {
   const { colors, patients, patientDetails, procedureOngoing } = select(
@@ -50,6 +42,7 @@ export const PatientsTab: FC = () => {
     })
   );
 
+  // Initial alert history details for the modal
   const initialAlertHistory = {
     id: "",
     patientId: "",
@@ -63,6 +56,7 @@ export const PatientsTab: FC = () => {
     signs: ""
   };
 
+  // Inital medical record details for the modal
   const initialMedicalRecord = {
     id: "",
     patientId: "",
@@ -70,26 +64,30 @@ export const PatientsTab: FC = () => {
     content: ""
   };
 
-  interface PopUpModalProps {
-    visible: boolean;
-    onRequestClose: () => void;
-  }
-
+  // For the display of filtered patients
   const [filteredPatients, setFilteredPatients] =
     useState<PatientInfo[]>(mockPatients);
 
+  // Patient that has been selected by the user from the list of patients
   const [selectedPatient] = useState(mockPatients[0]);
+
+  // For pointer events
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [modalVisible, setModalVisible] = useState(false);
 
+  // For past alert details modal visibility
   const [modalAlertVisible, setModalAlertVisible] = useState<boolean>(false);
+  // Feed in the alert details to be displayed in the modal
   const [displayHistory, setDisplayHistory] =
     useState<AlertHistory>(initialAlertHistory);
 
+  // For view medical record modal visibility
   const [viewMedicalModal, setViewMedicalModal] = useState<boolean>(false);
+  // Feed in the medical record details to be displayed in the modal
   const [displayMedicalRecord, setDisplayMedicalRecord] =
     useState<MedicalRecords>(initialMedicalRecord);
 
+  // For add medical record modal visibility
   const [addMedicalRecord, setAddMedicalRecord] = useState<boolean>(false);
 
   const [retrieving, setRetrieving] = useState(false); // used locally to indicate ongoing retrieval of details
@@ -97,35 +95,6 @@ export const PatientsTab: FC = () => {
 
   const dispatch = useDispatch();
   const netInfo = useNetInfo();
-
-  // Wanted to use this as reusable component for pop up modal
-  // But the slide animation during closing of modal is choppy for some reason
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const PopUpModal: FC<PopUpModalProps> = ({
-    visible,
-    onRequestClose,
-    children
-  }) => {
-    return (
-      <Modal
-        transparent
-        visible={visible}
-        animationType="slide"
-        onRequestClose={() => {
-          onRequestClose;
-        }}
-      >
-        <View
-          style={[
-            styles.modalContainer,
-            { backgroundColor: colors.overlayColor }
-          ]}
-        >
-          {children}
-        </View>
-      </Modal>
-    );
-  };
 
   // Triggers series of actions to get patients according to role.
   const getPatients = () => {
@@ -206,11 +175,11 @@ export const PatientsTab: FC = () => {
   // JH-TODO: Replace placeholder with i18n
   return (
     <ScreenWrapper fixed>
-      {/* <View style={{ flexDirection: "row", height: "100%" }}> */}
       <View
         style={styles.container}
         pointerEvents={modalVisible ? "none" : "auto"}
       >
+        {/* Left tab */}
         <View
           style={{ flex: 1, backgroundColor: colors.primaryContrastTextColor }}
         >
@@ -235,74 +204,56 @@ export const PatientsTab: FC = () => {
             keyExtractor={(item) => item.patientID}
           />
         </View>
+
+        {/* Right screen */}
         <View
           style={{ flex: 2, backgroundColor: colors.primaryWebBackgroundColor }}
         >
+          {/* Patient name and avatar header */}
           <ContactTitle name={selectedPatient.name} isPatient />
 
           <PatientTabNavigationBar patient={selectedPatient} />
         </View>
       </View>
 
+      {/* Container for modals */}
       <View style={styles.modalView}>
-        <Modal
-          transparent
+        {/* Modal to view past alert details of patient */}
+        <PatientHistoryModal
           visible={modalAlertVisible}
-          animationType="slide"
           onRequestClose={() => {
             setModalAlertVisible(false);
           }}
         >
-          <View
-            style={[
-              styles.modalContainer,
-              { backgroundColor: colors.overlayColor }
-            ]}
-          >
-            <AlertHistoryModal
-              name={selectedPatient.name}
-              setModalAlertVisible={setModalAlertVisible}
-              alertHistory={displayHistory}
-            />
-          </View>
-        </Modal>
-        <Modal
-          transparent
+          <AlertHistoryModal
+            name={selectedPatient.name}
+            setModalAlertVisible={setModalAlertVisible}
+            alertHistory={displayHistory}
+          />
+        </PatientHistoryModal>
+
+        {/* Modal to view specific medical records of patient */}
+        <PatientHistoryModal
           visible={viewMedicalModal}
-          animationType="slide"
           onRequestClose={() => {
             setViewMedicalModal(false);
           }}
         >
-          <View
-            style={[
-              styles.modalContainer,
-              { backgroundColor: colors.overlayColor }
-            ]}
-          >
-            <ViewMedicalRecords
-              setViewMedicalModal={setViewMedicalModal}
-              medicalRecord={displayMedicalRecord}
-            />
-          </View>
-        </Modal>
-        <Modal
-          transparent
+          <ViewMedicalRecords
+            setViewMedicalModal={setViewMedicalModal}
+            medicalRecord={displayMedicalRecord}
+          />
+        </PatientHistoryModal>
+
+        {/* Modal to add new medical records */}
+        <PatientHistoryModal
           visible={addMedicalRecord}
-          animationType="slide"
           onRequestClose={() => {
             setAddMedicalRecord(false);
           }}
         >
-          <View
-            style={[
-              styles.modalContainer,
-              { backgroundColor: colors.overlayColor }
-            ]}
-          >
-            <AddMedicalRecord setAddMedicalRecord={setAddMedicalRecord} />
-          </View>
-        </Modal>
+          <AddMedicalRecord setAddMedicalRecord={setAddMedicalRecord} />
+        </PatientHistoryModal>
       </View>
     </ScreenWrapper>
   );
