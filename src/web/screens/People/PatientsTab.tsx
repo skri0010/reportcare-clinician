@@ -7,19 +7,19 @@ import { PatientInfo } from "aws/API";
 import { mockPatients } from "mock/mockPatients";
 import { RowSelectionWrapper } from "../RowSelectionTab";
 import { FilterTagProps } from "web/RiskFilterComponent";
-import { PatientOverview } from "./PatientDetailsScreen/PatientOverview";
+import { PatientOverview } from "./PatientScreens/PatientDetailsScreen/PatientOverview";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { PatientHistory } from "./PatientDetailsScreen/PatientHistory";
+import { PatientHistory } from "./PatientScreens/PatientDetailsScreen/PatientHistory";
 import { ContactTitle } from "./ContactTitle";
-import { PatientParameter } from "./PatientDetailsScreen/PatientParameters";
-import { PatientIcdCrt } from "./PatientDetailsScreen/PatientIcdCrt";
-import { AlertHistoryModal } from "./PatientDetailsScreen/PatientHistoryScreens/AlertHistoryModal";
+import { PatientParameter } from "./PatientScreens/PatientDetailsScreen/PatientParameters";
+import { PatientIcdCrt } from "./PatientScreens/PatientDetailsScreen/PatientIcdCrt";
+import { AlertHistoryModal } from "./PatientScreens/PatientDetailsScreen/PatientHistoryScreens/AlertHistoryModal";
 import { AlertHistory, MedicalRecords } from "mock/mockPatientDetails";
 import { RiskLevel } from "models/RiskLevel";
 import { ScaledSheet } from "react-native-size-matters";
-import { ViewMedicalRecords } from "./PatientDetailsScreen/PatientHistoryScreens/ViewMedicalRecord";
-import { AddMedicalRecord } from "./PatientDetailsScreen/PatientHistoryScreens/AddMedicalRecord";
+import { ViewMedicalRecords } from "./PatientScreens/PatientDetailsScreen/PatientHistoryScreens/ViewMedicalRecord";
+import { AddMedicalRecord } from "./PatientScreens/PatientDetailsScreen/PatientHistoryScreens/AddMedicalRecord";
 import agentDTA from "rc_agents/agents/data-assistant/DTA";
 import Belief from "rc_agents/framework/base/Belief";
 import {
@@ -34,7 +34,9 @@ import agentUXSA from "rc_agents/agents/user-specific-assistant/UXSA";
 import { setProcedureOngoing } from "ic-redux/actions/agents/actionCreator";
 import { useNetInfo } from "@react-native-community/netinfo";
 import i18n from "util/language/i18n";
-import { PatientInformation } from "./PatientDetailsScreen/PatientInformation";
+import { PatientInformation } from "./PatientScreens/PatientDetailsScreen/PatientInformation";
+import { PatientTabNavigationBar } from "./PatientScreens/PatientTabNavigationBar";
+import { NavigationContainer } from "@react-navigation/native";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -237,45 +239,8 @@ export const PatientsTab: FC = () => {
           style={{ flex: 2, backgroundColor: colors.primaryWebBackgroundColor }}
         >
           <ContactTitle name={selectedPatient.name} isPatient />
-          <Tab.Navigator
-            tabBarOptions={{
-              indicatorStyle: {
-                backgroundColor: colors.primaryTextColor
-              },
-              style: {
-                backgroundColor: colors.primaryWebBackgroundColor
-              }
-            }}
-          >
-            <Tab.Screen name={i18n.t("Patients.Overview")}>
-              {() => <PatientOverview patient={selectedPatient} />}
-            </Tab.Screen>
-            <Tab.Screen name={i18n.t("Patients.Parameters")}>
-              {() => <PatientParameter patient={selectedPatient} />}
-            </Tab.Screen>
-            <Tab.Screen name={i18n.t("Patients.ICD/CRT")}>
-              {() => <PatientIcdCrt patient={selectedPatient} />}
-            </Tab.Screen>
-            <Tab.Screen name={i18n.t("Patients.History")}>
-              {() => (
-                <PatientHistory
-                  patient={selectedPatient}
-                  alertHistoryFunc={{
-                    setDisplayHistory: setDisplayHistory,
-                    setModalAlertVisible: setModalAlertVisible
-                  }}
-                  medicalRecordFunc={{
-                    setViewMedicalModal: setViewMedicalModal,
-                    setDisplayMedicalRecord: setDisplayMedicalRecord,
-                    setAddMedicalRecord: setAddMedicalRecord
-                  }}
-                />
-              )}
-            </Tab.Screen>
-            <Tab.Screen name={i18n.t("Patients.Info")}>
-              {() => <PatientInformation patientInfo={selectedPatient} />}
-            </Tab.Screen>
-          </Tab.Navigator>
+
+          <PatientTabNavigationBar patient={selectedPatient} />
         </View>
       </View>
 

@@ -1,20 +1,23 @@
 import React, { FC } from "react";
 // import { RootState, select } from "util/useRedux";
 // import { View, TextStyle, FlatList } from "react-native";
-import { ms, ScaledSheet } from "react-native-size-matters";
+import { ScaledSheet } from "react-native-size-matters";
 // import { mockPatientRowDetails } from "mock/mockTodoDetails";
 // import { RiskLevel } from "models/RiskLevel";
 // import { H3, H4 } from "components/Text/index";
-import { ScreenWrapper } from "../../ScreenWrapper";
+import { ScreenWrapper } from "../../../ScreenWrapper";
 import { BloodPressureCard } from "./PatientOverviewCards/BloodPressureCard";
 import { MedicationTakenCard } from "./PatientOverviewCards/MedicationCard";
 import { OxygenSaturationCard } from "./PatientOverviewCards/OxygenSaturationCard";
 import { WeightCard } from "./PatientOverviewCards/WeightCard";
 import { SymptomsCard } from "./PatientOverviewCards/SymptomsCard";
 import { Dimensions, View } from "react-native";
-import { PatientParameterProps } from "./PatientHistory";
+import { WithPatientTabsProps } from "../withPatientTabProps";
+import { PatientScreenName } from "..";
 
-export const PatientOverview: FC<PatientParameterProps> = () => {
+export const PatientOverview: FC<
+  WithPatientTabsProps[PatientScreenName.OVERVIEW]
+> = () => {
   // Query details for overview here
   const cardHeight = Dimensions.get("window").height * 0.325;
   return (

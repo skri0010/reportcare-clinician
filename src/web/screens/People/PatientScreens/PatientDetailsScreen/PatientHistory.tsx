@@ -1,34 +1,14 @@
 import React, { FC } from "react";
 import { ms, ScaledSheet } from "react-native-size-matters";
-import { ScreenWrapper } from "../../ScreenWrapper";
+import { ScreenWrapper } from "../../../ScreenWrapper";
 import { Dimensions, View } from "react-native";
 import { PatientAlertHistoryCard } from "./PatientHistoryScreens/PatientAlertHistoryCard";
 import { PatientMedicalRecordCard } from "./PatientHistoryScreens/PatientMedicalRecordCard";
-import { PatientInfo } from "aws/models";
-import { AlertHistory, MedicalRecords } from "mock/mockPatientDetails";
+import { PatientScreenName, WithPatientTabsProps } from "..";
 
-export interface PatientParameterProps {
-  patient: PatientInfo;
-}
-
-interface PatientHistoryProps {
-  patient: PatientInfo;
-  alertHistoryFunc: {
-    setDisplayHistory: (state: AlertHistory) => void;
-    setModalAlertVisible: (state: boolean) => void;
-  };
-  medicalRecordFunc: {
-    setViewMedicalModal: (state: boolean) => void;
-    setDisplayMedicalRecord: (state: MedicalRecords) => void;
-    setAddMedicalRecord: (state: boolean) => void;
-  };
-}
-
-export const PatientHistory: FC<PatientHistoryProps> = ({
-  patient,
-  alertHistoryFunc,
-  medicalRecordFunc
-}) => {
+export const PatientHistory: FC<
+  WithPatientTabsProps[PatientScreenName.HISTORY]
+> = ({ patient, alertHistoryFunc, medicalRecordFunc }) => {
   const cardMaxHeight = Math.max(
     ms(250),
     Dimensions.get("window").height * 0.65
