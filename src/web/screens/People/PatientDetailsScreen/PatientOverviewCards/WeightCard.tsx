@@ -69,7 +69,7 @@ const styles = ScaledSheet.create({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: "20@ms"
+    marginBottom: "15@ms"
   },
   label: {
     opacity: 0.8
