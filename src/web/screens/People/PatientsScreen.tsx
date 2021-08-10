@@ -29,10 +29,11 @@ import agentUXSA from "rc_agents/agents/user-specific-assistant/UXSA";
 import { setProcedureOngoing } from "ic-redux/actions/agents/actionCreator";
 import { useNetInfo } from "@react-native-community/netinfo";
 import i18n from "util/language/i18n";
-import { PatientTabNavigationBar } from "./PatientScreens/PatientTabNavigationBar";
+import { PatientDetailsNavigationStack } from "./PatientScreens/PatientDetailsNavigationStack";
 import { PatientHistoryModal } from "./PatientDetailsScreen/PatientHistoryScreens/PatientHistoryModals";
+import { WithSideTabsProps, ScreenName } from "web/screens";
 
-export const PatientsTab: FC = () => {
+export const PatientsScreen: FC<WithSideTabsProps[ScreenName.PATIENT]> = () => {
   const { colors, patients, patientDetails, procedureOngoing } = select(
     (state: RootState) => ({
       colors: state.settings.colors,
@@ -213,7 +214,7 @@ export const PatientsTab: FC = () => {
           <ContactTitle name={selectedPatient.name} isPatient />
 
           {/* Patient Navigation */}
-          <PatientTabNavigationBar
+          <PatientDetailsNavigationStack
             patient={selectedPatient}
             setAddMedicalRecord={setAddMedicalRecord}
             setDisplayHistory={setDisplayHistory}

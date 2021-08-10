@@ -5,10 +5,10 @@ import { View } from "react-native";
 import { BasicInfoSection } from "./PatientInfoSections/BasicInfoSection";
 import { ContactInfoSection } from "./PatientInfoSections/ContactInfoSection";
 import { InfoTitleBar } from "./PatientInfoSections/InfoTitleBar";
-import { PatientScreenName, WithPatientTabsProps } from "..";
+import { WithPatientsScreenProps, PatientsScreenName } from "web/screens";
 
 export const PatientInformation: FC<
-  WithPatientTabsProps[PatientScreenName.INFO]
+  WithPatientsScreenProps[PatientsScreenName.INFO]
 > = () => {
   // JQ-TODO Query for information here
   return (

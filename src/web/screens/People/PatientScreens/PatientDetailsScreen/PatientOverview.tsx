@@ -12,11 +12,11 @@ import { OxygenSaturationCard } from "./PatientOverviewCards/OxygenSaturationCar
 import { WeightCard } from "./PatientOverviewCards/WeightCard";
 import { SymptomsCard } from "./PatientOverviewCards/SymptomsCard";
 import { Dimensions, View } from "react-native";
-import { WithPatientTabsProps } from "../withPatientTabProps";
-import { PatientScreenName } from "..";
+import { WithPatientsScreenProps } from "../../../WithPatientsScreenProps";
+import { PatientsScreenName } from "web/screens";
 
 export const PatientOverview: FC<
-  WithPatientTabsProps[PatientScreenName.OVERVIEW]
+  WithPatientsScreenProps[PatientsScreenName.OVERVIEW]
 > = () => {
   // Query details for overview here
   const cardHeight = Dimensions.get("window").height * 0.325;

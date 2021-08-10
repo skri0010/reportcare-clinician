@@ -4,11 +4,12 @@ import { ScreenWrapper } from "../../../ScreenWrapper";
 import { Dimensions, View } from "react-native";
 import { PatientAlertHistoryCard } from "./PatientHistoryScreens/PatientAlertHistoryCard";
 import { PatientMedicalRecordCard } from "./PatientHistoryScreens/PatientMedicalRecordCard";
-import { PatientScreenName, WithPatientTabsProps } from "..";
+import { WithPatientsScreenProps, PatientsScreenName } from "web/screens";
 
 export const PatientHistory: FC<
-  WithPatientTabsProps[PatientScreenName.HISTORY]
-> = ({ patient, alertHistoryFunc, medicalRecordFunc }) => {
+  WithPatientsScreenProps[PatientsScreenName.HISTORY]
+> = ({ route }) => {
+  const { patient, alertHistoryFunc, medicalRecordFunc } = route.params;
   const cardMaxHeight = Math.max(
     ms(250),
     Dimensions.get("window").height * 0.65

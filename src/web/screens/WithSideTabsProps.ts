@@ -35,7 +35,7 @@ type HomeScreenProps = {
 };
 
 // Patient
-type PatientNavigationProps = CompositeNavigationProp<
+export type PatientNavigationProps = CompositeNavigationProp<
   DrawerNavigationProp<SideTabsParamList, ScreenName.PATIENT>,
   StackNavigationProp<RootStackParamList>
 >;
