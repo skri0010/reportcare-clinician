@@ -10,19 +10,21 @@ interface WeightProps {
   weight: string;
   targetWeight: string;
   minHeight: number;
+  flex?: number;
 }
 
 export const WeightCard: FC<WeightProps> = ({
   weight,
   targetWeight,
-  minHeight
+  minHeight,
+  flex
 }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
   }));
 
   return (
-    <CardWrapper maxHeight={minHeight} minWidthRequired={false}>
+    <CardWrapper maxHeight={minHeight} minWidthRequired={false} flex={flex}>
       <H3
         text={i18n.t("Patient_Overview.Weight")}
         style={{
