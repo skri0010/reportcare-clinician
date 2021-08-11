@@ -47,6 +47,7 @@ const styles = ScaledSheet.create({
     display: "flex",
     flexDirection: "row",
     marginBottom: "10@ms",
-    paddingHorizontal: "10@ms"
+    paddingHorizontal: "10@ms",
+    flexWrap: "wrap"
   }
 });

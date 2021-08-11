@@ -10,19 +10,21 @@ interface BloodPressureProps {
   systolic: string;
   dystolic: string;
   minHeight: number;
+  flex?: number;
 }
 
 export const BloodPressureCard: FC<BloodPressureProps> = ({
   systolic,
   dystolic,
-  minHeight
+  minHeight,
+  flex
 }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
   }));
 
   return (
-    <CardWrapper minHeight={minHeight}>
+    <CardWrapper minHeight={minHeight} flex={flex}>
       <H3
         text={i18n.t("Patient_Overview.BloodPressure")}
         style={{

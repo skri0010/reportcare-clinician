@@ -23,6 +23,37 @@ export const PatientOverview: FC<
   return (
     <ScreenWrapper>
       <View style={styles.container}>
+        <BloodPressureCard
+          systolic="23"
+          dystolic="130"
+          minHeight={cardHeight}
+          flex={2}
+        />
+        <OxygenSaturationCard
+          oxySatValue="90"
+          minHeight={cardHeight}
+          flex={1}
+        />
+        <WeightCard
+          weight="60"
+          targetWeight="60"
+          minHeight={cardHeight}
+          flex={1}
+        />
+      </View>
+      <View style={styles.container}>
+        <MedicationTakenCard
+          medications={[]}
+          maxHeight={cardHeight}
+          minHeight={cardHeight}
+        />
+        <SymptomsCard
+          symptoms={[]}
+          maxHeight={cardHeight}
+          minHeight={cardHeight}
+        />
+      </View>
+      {/* <View style={styles.container}>
         <View style={styles.regular}>
           <BloodPressureCard
             systolic="23"
@@ -50,25 +81,30 @@ export const PatientOverview: FC<
             minHeight={cardHeight}
           />
         </View>
-      </View>
+      </View> */}
     </ScreenWrapper>
   );
 };
 
 const styles = ScaledSheet.create({
-  container: {
-    display: "flex",
-    flexDirection: "row",
-    flexWrap: "wrap",
-    paddingBottom: "20@ms"
-  },
+  // container: {
+  //   display: "flex",
+  //   flexDirection: "row",
+  //   flexWrap: "wrap",
+  //   paddingBottom: "20@ms"
+  // },
   regular: {
-    flexGrow: 1,
-    flexShrink: 0,
+    // flexGrow: 1,
+    // flexShrink: 0,
     flexBasis: "50%"
   },
   combined: {
-    flexBasis: "25%",
-    flexShrink: 0
+    flexBasis: "25%"
+    // flexShrink: 0
+  },
+  container: {
+    flexWrap: "wrap",
+    flexDirection: "row",
+    justifyContent: "space-between"
   }
 });

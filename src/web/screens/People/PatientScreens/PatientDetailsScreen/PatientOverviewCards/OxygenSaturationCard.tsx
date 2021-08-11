@@ -9,18 +9,20 @@ import i18n from "util/language/i18n";
 interface OxygenSaturationProps {
   oxySatValue: string;
   minHeight: number;
+  flex?: number;
 }
 
 export const OxygenSaturationCard: FC<OxygenSaturationProps> = ({
   oxySatValue,
-  minHeight
+  minHeight,
+  flex
 }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
   }));
 
   return (
-    <CardWrapper minHeight={minHeight} minWidthRequired={false}>
+    <CardWrapper minHeight={minHeight} minWidthRequired={false} flex={flex}>
       <H3
         text={i18n.t("Patient_Overview.OxygenSaturation")}
         style={{
