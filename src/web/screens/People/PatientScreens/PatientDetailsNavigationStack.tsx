@@ -3,7 +3,7 @@ import { select, RootState } from "util/useRedux";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { PatientOverview } from "./PatientDetailsScreen/PatientOverview";
 import { PatientParameter } from "./PatientDetailsScreen/PatientParameters";
-import { PatientICDCRT } from "./PatientDetailsScreen/PatientICDCRT";
+import { PatientICDCRT } from "./PatientDetailsScreen/PatientIcdCrt";
 import { PatientHistory } from "./PatientDetailsScreen/PatientHistory";
 import { PatientInformation } from "./PatientDetailsScreen/PatientInformation";
 import { PatientsScreenName, PatientsScreenParamList } from "web/screens";
@@ -40,7 +40,7 @@ export const PatientDetailsNavigationStack: FC<PatientDetailsNavigationStackProp
       <Tab.Navigator
         tabBarOptions={{
           labelStyle: {
-            fontSize: fonts.h5Size
+            fontSize: fonts.h6Size
           },
           indicatorStyle: {
             backgroundColor: colors.primaryBarColor

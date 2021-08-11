@@ -39,13 +39,15 @@ export const RiskFilterComponent: FC<RiskFilterComponentProps> = ({
   return (
     <View style={styles.container}>
       {selectedRiskLevels.map((risk) => (
-        <RiskFilterTag
-          title={risk.value}
-          riskLevel={risk.value}
-          selected={risk.selected}
-          onTagPress={setSelected}
-          key={risk.key}
-        />
+        <View style={{ flex: 1 }}>
+          <RiskFilterTag
+            title={risk.value}
+            riskLevel={risk.value}
+            selected={risk.selected}
+            onTagPress={setSelected}
+            key={risk.key}
+          />
+        </View>
       ))}
     </View>
   );
@@ -54,7 +56,7 @@ export const RiskFilterComponent: FC<RiskFilterComponentProps> = ({
 const styles = ScaledSheet.create({
   container: {
     flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: "space-between",
     padding: "10@ms"
   }
 });

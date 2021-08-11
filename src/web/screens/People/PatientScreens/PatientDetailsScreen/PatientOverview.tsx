@@ -1,10 +1,5 @@
 import React, { FC } from "react";
-// import { RootState, select } from "util/useRedux";
-// import { View, TextStyle, FlatList } from "react-native";
-import { ScaledSheet } from "react-native-size-matters";
-// import { mockPatientRowDetails } from "mock/mockTodoDetails";
-// import { RiskLevel } from "models/RiskLevel";
-// import { H3, H4 } from "components/Text/index";
+import { ms, ScaledSheet } from "react-native-size-matters";
 import { ScreenWrapper } from "../../../ScreenWrapper";
 import { BloodPressureCard } from "./PatientOverviewCards/BloodPressureCard";
 import { MedicationTakenCard } from "./PatientOverviewCards/MedicationCard";
@@ -23,25 +18,30 @@ export const PatientOverview: FC<
   return (
     <ScreenWrapper>
       <View style={styles.container}>
-        <BloodPressureCard
-          systolic="23"
-          dystolic="130"
-          minHeight={cardHeight}
-          flex={2}
-        />
-        <OxygenSaturationCard
-          oxySatValue="90"
-          minHeight={cardHeight}
-          flex={1}
-        />
-        <WeightCard
-          weight="60"
-          targetWeight="60"
-          minHeight={cardHeight}
-          flex={1}
-        />
+        <View style={{ flexGrow: 2, flexShrink: 2 }}>
+          <BloodPressureCard
+            systolic="23"
+            dystolic="130"
+            minHeight={cardHeight}
+          />
+        </View>
+        <View style={{ flexGrow: 1, flexShrink: 2 }}>
+          <View style={{ flexDirection: "row" }}>
+            <OxygenSaturationCard
+              oxySatValue="90"
+              minHeight={cardHeight}
+              flex={1}
+            />
+            <WeightCard
+              weight="60"
+              targetWeight="60"
+              minHeight={cardHeight}
+              flex={1}
+            />
+          </View>
+        </View>
       </View>
-      <View style={styles.container}>
+      <View style={[styles.container, { paddingBottom: ms(10) }]}>
         <MedicationTakenCard
           medications={[]}
           maxHeight={cardHeight}
@@ -53,55 +53,11 @@ export const PatientOverview: FC<
           minHeight={cardHeight}
         />
       </View>
-      {/* <View style={styles.container}>
-        <View style={styles.regular}>
-          <BloodPressureCard
-            systolic="23"
-            dystolic="130"
-            minHeight={cardHeight}
-          />
-        </View>
-        <View style={styles.combined}>
-          <OxygenSaturationCard oxySatValue="90" minHeight={cardHeight} />
-        </View>
-        <View style={styles.combined}>
-          <WeightCard weight="60" targetWeight="60" minHeight={cardHeight} />
-        </View>
-        <View style={styles.regular}>
-          <MedicationTakenCard
-            medications={[]}
-            maxHeight={cardHeight}
-            minHeight={cardHeight}
-          />
-        </View>
-        <View style={styles.regular}>
-          <SymptomsCard
-            symptoms={[]}
-            maxHeight={cardHeight}
-            minHeight={cardHeight}
-          />
-        </View>
-      </View> */}
     </ScreenWrapper>
   );
 };
 
 const styles = ScaledSheet.create({
-  // container: {
-  //   display: "flex",
-  //   flexDirection: "row",
-  //   flexWrap: "wrap",
-  //   paddingBottom: "20@ms"
-  // },
-  regular: {
-    // flexGrow: 1,
-    // flexShrink: 0,
-    flexBasis: "50%"
-  },
-  combined: {
-    flexBasis: "25%"
-    // flexShrink: 0
-  },
   container: {
     flexWrap: "wrap",
     flexDirection: "row",
