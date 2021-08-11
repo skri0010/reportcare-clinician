@@ -1,7 +1,7 @@
 import React, { FC, useState } from "react";
 import { RootState, select } from "util/useRedux";
 import { ms } from "react-native-size-matters";
-import { H3 } from "components/Text/index";
+import { H3, H4 } from "components/Text/index";
 import { CardWrapper } from "web/screens/Home/CardWrapper";
 import { MedicationInfo } from "aws/models";
 import { FlatList, View } from "react-native";
@@ -26,22 +26,14 @@ export const MedicationTakenCard: FC<MedicationTakenProps> = ({
   const [mockMedications] = useState(mockMedicationRecord);
 
   return (
-    <CardWrapper maxHeight={maxHeight} minHeight={minHeight}>
-      <View>
-        {/* Title */}
-        <H3
-          text={i18n.t("Patient_Overview.Medications")}
-          style={{
-            fontWeight: "bold",
-            color: colors.primaryTextColor,
-            paddingLeft: ms(5),
-            paddingBottom: ms(5)
-          }}
-        />
-      </View>
+    <CardWrapper
+      maxHeight={maxHeight}
+      minHeight={minHeight}
+      title={i18n.t("Patient_Overview.Medications")}
+    >
       {/* Medication List */}
       <FlatList
-        style={{ paddingLeft: ms(10) }}
+        style={{ paddingLeft: ms(10), paddingTop: ms(5) }}
         showsVerticalScrollIndicator={false}
         data={mockMedications}
         renderItem={({ item }) => <MedicationRow medicationInfo={item} />}

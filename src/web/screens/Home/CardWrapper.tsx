@@ -2,6 +2,7 @@ import React, { FC } from "react";
 import { View } from "react-native";
 import { ms } from "react-native-size-matters";
 import { RootState, select } from "util/useRedux";
+import { H1, H3, H4, H5 } from "components/Text/index";
 
 interface CardWrapperProps {
   flex?: number;
@@ -10,6 +11,7 @@ interface CardWrapperProps {
   firstItem?: boolean;
   minWidthRequired?: boolean;
   paddingTop?: boolean;
+  title?: string;
 }
 
 export const CardWrapper: FC<CardWrapperProps> = ({
@@ -19,7 +21,8 @@ export const CardWrapper: FC<CardWrapperProps> = ({
   minHeight,
   minWidthRequired = true,
   firstItem = false,
-  paddingTop
+  paddingTop,
+  title
 }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
@@ -44,6 +47,17 @@ export const CardWrapper: FC<CardWrapperProps> = ({
         }
       ]}
     >
+      {title ? (
+        <H4
+          text={title}
+          style={{
+            fontWeight: "bold",
+            color: colors.primaryTextColor,
+            paddingLeft: ms(5),
+            flexWrap: "wrap"
+          }}
+        />
+      ) : null}
       {children}
     </View>
   );

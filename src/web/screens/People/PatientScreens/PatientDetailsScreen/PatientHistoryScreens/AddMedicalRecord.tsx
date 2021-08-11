@@ -14,6 +14,7 @@ import i18n from "util/language/i18n";
 interface AddMedicalRecordProps {
   setAddMedicalRecord: (state: boolean) => void;
 }
+
 export const AddMedicalRecord: FC<AddMedicalRecordProps> = ({
   setAddMedicalRecord
 }) => {
@@ -48,6 +49,7 @@ export const AddMedicalRecord: FC<AddMedicalRecordProps> = ({
         { backgroundColor: colors.primaryContrastTextColor }
       ]}
     >
+      {/* Title */}
       <H3
         text={i18n.t("Patient_History.AddMedicalRecordCard.Title")}
         style={{
@@ -56,6 +58,7 @@ export const AddMedicalRecord: FC<AddMedicalRecordProps> = ({
           paddingTop: ms(25)
         }}
       />
+      {/* Title input */}
       <TextInput
         onChangeText={onChangeTitle}
         placeholder={i18n.t(
@@ -72,10 +75,12 @@ export const AddMedicalRecord: FC<AddMedicalRecordProps> = ({
           }
         ]}
       />
+      {/* Description */}
       <H3
         text={i18n.t("Patient_History.AddMedicalRecordCard.Description")}
         style={{ fontWeight: "bold", paddingVertical: ms(10) }}
       />
+      {/* Description input */}
       <TextInput
         onChangeText={onChangeRecord}
         multiline
@@ -101,6 +106,7 @@ export const AddMedicalRecord: FC<AddMedicalRecordProps> = ({
           paddingTop: ms(20)
         }}
       >
+        {/* Save button */}
         <TouchableOpacity
           style={[
             styles.saveButton,
@@ -118,6 +124,7 @@ export const AddMedicalRecord: FC<AddMedicalRecordProps> = ({
             style={{ color: colors.primaryTextColor }}
           />
         </TouchableOpacity>
+        {/* Cancel button */}
         <TouchableOpacity
           style={[
             styles.closeButton,

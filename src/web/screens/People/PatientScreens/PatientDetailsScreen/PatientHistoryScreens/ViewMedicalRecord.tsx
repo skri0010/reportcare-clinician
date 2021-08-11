@@ -8,7 +8,7 @@ import i18n from "util/language/i18n";
 
 interface ViewMedicalRecordsProps {
   medicalRecord: MedicalRecords;
-  setViewMedicalModal: (state: boolean) => void;
+  setViewMedicalModal: (state: boolean) => void; // medical record modal visibility
 }
 
 export const ViewMedicalRecords: FC<ViewMedicalRecordsProps> = ({
@@ -25,7 +25,9 @@ export const ViewMedicalRecords: FC<ViewMedicalRecordsProps> = ({
         { backgroundColor: colors.primaryContrastTextColor }
       ]}
     >
+      {/* Medical record title */}
       <H3 text={`${medicalRecord.record}`} style={styles.recordTitle} />
+      {/* Medical record description */}
       <View style={styles.descriptionContainer}>
         <H4
           text={i18n.t("Patient_History.AddMedicalRecordCard.Description")}
@@ -39,6 +41,7 @@ export const ViewMedicalRecords: FC<ViewMedicalRecordsProps> = ({
       </View>
 
       <View style={{ alignItems: "center", paddingTop: ms(20) }}>
+        {/* Close button */}
         <TouchableOpacity
           style={[
             styles.closeButton,

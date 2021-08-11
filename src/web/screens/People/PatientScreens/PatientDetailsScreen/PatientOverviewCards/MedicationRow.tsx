@@ -17,7 +17,7 @@ export const MedicationRow: FC<MedicationRowProps> = ({ medicationInfo }) => {
 
   return (
     <View style={{ flexDirection: "row", alignItems: "center" }}>
-      {/* Add a checking here to see if the patient has taken the medicine */}
+      {/* JQ-TODO Add a checking here to see if the patient has taken the medicine */}
       {/* ie {medicineTaken?(<Icon name="check" color={colors.primaryButtonColor} size={ms(15)} />):(<View style={{ paddingLeft: ms(15) }} />)} */}
       <Icon name="check" color={colors.primaryButtonColor} size={ms(15)} />
       <H4 text={`  ${medicationInfo.medname}`} style={null} />

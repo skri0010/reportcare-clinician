@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
 import { View } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
-import { H1, H3, H5 } from "components/Text/index";
+import { H1, H3, H4, H5 } from "components/Text/index";
 import { CardWrapper } from "web/screens/Home/CardWrapper";
 import i18n from "util/language/i18n";
 
@@ -24,17 +24,14 @@ export const BloodPressureCard: FC<BloodPressureProps> = ({
   }));
 
   return (
-    <CardWrapper minHeight={minHeight} flex={flex}>
-      <H3
-        text={i18n.t("Patient_Overview.BloodPressure")}
-        style={{
-          fontWeight: "bold",
-          color: colors.primaryTextColor,
-          paddingLeft: ms(5)
-        }}
-      />
+    <CardWrapper
+      minHeight={minHeight}
+      flex={flex}
+      title={i18n.t("Patient_Overview.BloodPressure")}
+    >
       <View style={styles.container}>
         <View style={styles.textContainer}>
+          {/* Systolic blood pressure */}
           <View style={styles.text}>
             <H5
               text={i18n.t("Patient_Overview.Systolic")}
@@ -46,6 +43,7 @@ export const BloodPressureCard: FC<BloodPressureProps> = ({
             />
             <H5 text="mmHg" style={styles.labels} />
           </View>
+          {/* Diastolic blood pressure */}
           <View style={styles.text}>
             <H5
               text={i18n.t("Patient_Overview.Diastolic")}

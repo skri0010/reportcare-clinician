@@ -8,7 +8,7 @@ import { AlertHistory } from "mock/mockPatientDetails";
 import i18n from "util/language/i18n";
 
 interface AlertHistoryModalProps {
-  name: string;
+  name: string; // patient name
   alertHistory: AlertHistory;
   setModalAlertVisible: (state: boolean) => void;
 }
@@ -49,19 +49,24 @@ export const AlertHistoryModal: FC<AlertHistoryModalProps> = ({
         }
       ]}
     >
+      {/* Patient name */}
       <H3 text={`${name}`} style={{ fontWeight: "bold", paddingTop: ms(20) }} />
+      {/* Alert summary */}
       <View style={{ paddingTop: ms(20) }}>
         <H4
           text={i18n.t("Patient_History.AlertSummaryCard.AlertSummary")}
           style={{ fontWeight: "bold" }}
         />
+        {/* Alert summary description */}
         <H5 text={`${alertHistory.description}`} style={null} />
       </View>
+      {/* Alert details */}
       <View style={{ paddingTop: ms(10) }}>
         <H4
           text={i18n.t("Patient_History.AlertSummaryCard.AlertDetails")}
           style={{ fontWeight: "bold" }}
         />
+        {/* Severity */}
         <View style={{ flexDirection: "row" }}>
           <H5
             text={i18n.t("Patient_History.AlertSummaryCard.Severity")}
@@ -77,23 +82,28 @@ export const AlertHistoryModal: FC<AlertHistoryModalProps> = ({
             }}
           />
         </View>
+        {/* HRV */}
         <AlertDetailsRow
           detailTitle={i18n.t("Patient_History.AlertSummaryCard.HRV")}
           detailContent={alertHistory.HRV}
         />
+        {/* BP */}
         <AlertDetailsRow
           detailTitle={i18n.t("Patient_History.AlertSummaryCard.BP")}
           detailContent={alertHistory.BP}
         />
+        {/* Symptoms */}
         <AlertDetailsRow
           detailTitle={i18n.t("Patient_History.AlertSummaryCard.Symptom")}
           detailContent={alertHistory.symptom}
         />
+        {/* Signs */}
         <AlertDetailsRow
           detailTitle={i18n.t("Patient_History.AlertSummaryCard.Signs")}
           detailContent={alertHistory.signs}
         />
       </View>
+      {/* Created datetime */}
       <View style={{ flexDirection: "row", paddingVertical: ms(20) }}>
         <H5
           text={i18n.t("Patient_History.AlertSummaryCard.CreatedOn")}
@@ -105,6 +115,7 @@ export const AlertHistoryModal: FC<AlertHistoryModalProps> = ({
         />
       </View>
       <View style={{ alignItems: "center" }}>
+        {/* Close button */}
         <TouchableOpacity
           style={[
             styles.closeButton,

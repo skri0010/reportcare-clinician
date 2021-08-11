@@ -52,6 +52,7 @@ const styles = ScaledSheet.create({
   infoSection: {
     paddingLeft: "30@ms",
     paddingTop: "10@ms",
-    paddingBottom: "20@ms"
+    paddingBottom: "20@ms",
+    flex: 1
   }
 });

@@ -22,18 +22,13 @@ export const SymptomsCard: FC<SymptomProps> = ({ maxHeight, minHeight }) => {
   const [mockSymptoms] = useState(mockSymptomRecords);
 
   return (
-    <CardWrapper maxHeight={maxHeight} minHeight={minHeight}>
-      <H3
-        text={i18n.t("Patient_Overview.Symptoms")}
-        style={[
-          styles.cardTitle,
-          {
-            color: colors.primaryTextColor
-          }
-        ]}
-      />
+    <CardWrapper
+      maxHeight={maxHeight}
+      minHeight={minHeight}
+      title={i18n.t("Patient_Overview.Symptoms")}
+    >
       <FlatList
-        style={{ paddingLeft: ms(10) }}
+        style={{ paddingLeft: ms(10), paddingTop: ms(5) }}
         showsVerticalScrollIndicator={false}
         data={mockSymptoms}
         renderItem={({ item }) => <H4 text={`  ${item.Name}`} style={null} />}

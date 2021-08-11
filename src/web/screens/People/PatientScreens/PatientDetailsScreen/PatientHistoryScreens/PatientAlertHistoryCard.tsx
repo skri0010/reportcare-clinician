@@ -12,8 +12,8 @@ interface PatientAlertHistoryProps {
   patientId: string;
   maxHeight: number;
   name: string;
-  setDisplayHistory: (state: AlertHistory) => void;
-  setModalAlertVisible: (state: boolean) => void;
+  setDisplayHistory: (state: AlertHistory) => void; // alert history details
+  setModalAlertVisible: (state: boolean) => void; // alert modal visibility
 }
 
 export const PatientAlertHistoryCard: FC<PatientAlertHistoryProps> = ({
@@ -31,6 +31,7 @@ export const PatientAlertHistoryCard: FC<PatientAlertHistoryProps> = ({
   const [alertHistory] = useState(mockAlertHistory);
   // const [displayHistory, setDisplayHistory] = useState<AlertHistory>();
 
+  // On row press, set the alert history details to be shown and set the modal to be visible
   function onRowPress(history: AlertHistory) {
     setDisplayHistory(history);
     setModalAlertVisible(true);
@@ -50,6 +51,7 @@ export const PatientAlertHistoryCard: FC<PatientAlertHistoryProps> = ({
         />
       </View>
 
+      {/* List of alert histories */}
       <FlatList
         showsVerticalScrollIndicator={false}
         data={alertHistory}

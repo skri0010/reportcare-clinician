@@ -12,9 +12,9 @@ import i18n from "util/language/i18n";
 interface PatientMedicalRecordProps {
   patientId: string;
   maxHeight: number;
-  onAddPress: () => void;
-  setViewMedicalModal: (state: boolean) => void;
-  setDisplayMedicalRecord: (state: MedicalRecords) => void;
+  onAddPress: () => void; // action to be done when add button is pressed
+  setViewMedicalModal: (state: boolean) => void; // medical record modal visibility
+  setDisplayMedicalRecord: (state: MedicalRecords) => void; // medical record details to be shown
 }
 
 export const PatientMedicalRecordCard: FC<PatientMedicalRecordProps> = ({
@@ -47,6 +47,7 @@ export const PatientMedicalRecordCard: FC<PatientMedicalRecordProps> = ({
             }
           ]}
         />
+        {/* Add button */}
         <TouchableOpacity
           onPress={onAddPress}
           style={[
@@ -62,6 +63,7 @@ export const PatientMedicalRecordCard: FC<PatientMedicalRecordProps> = ({
         </TouchableOpacity>
       </View>
 
+      {/* List of medical records */}
       <FlatList
         showsVerticalScrollIndicator={false}
         data={medicalRecords}

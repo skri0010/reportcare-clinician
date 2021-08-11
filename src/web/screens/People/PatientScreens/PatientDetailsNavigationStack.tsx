@@ -15,11 +15,11 @@ const Tab = createMaterialTopTabNavigator<PatientsScreenParamList>();
 
 export interface PatientDetailsNavigationStackProps {
   patient: PatientInfo;
-  setDisplayHistory: (state: AlertHistory) => void;
-  setModalAlertVisible: (state: boolean) => void;
-  setViewMedicalModal: (state: boolean) => void;
-  setDisplayMedicalRecord: (state: MedicalRecords) => void;
-  setAddMedicalRecord: (state: boolean) => void;
+  setDisplayHistory: (state: AlertHistory) => void; // alert history details to be shown
+  setModalAlertVisible: (state: boolean) => void; // alert modal visibility
+  setViewMedicalModal: (state: boolean) => void; // medical record modal visibility
+  setDisplayMedicalRecord: (state: MedicalRecords) => void; // medical record details to be shown
+  setAddMedicalRecord: (state: boolean) => void; // add medical record modal visibility
 }
 
 export const PatientDetailsNavigationStack: FC<PatientDetailsNavigationStackProps> =

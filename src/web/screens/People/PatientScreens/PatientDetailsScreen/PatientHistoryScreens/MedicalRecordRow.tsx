@@ -15,6 +15,7 @@ export const MedicalRecordRow: FC<MedicalRecordRowProps> = ({
 }) => {
   return (
     <View style={[styles.container]}>
+      {/* Medical record title */}
       <H4 text={description} style={[styles.textContainer]} />
 
       <View style={[styles.buttonContainer]}>

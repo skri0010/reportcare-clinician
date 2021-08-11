@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
 import { View } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
-import { H1, H3, H4 } from "components/Text/index";
+import { H1, H3, H4, H5 } from "components/Text/index";
 import { CardWrapper } from "web/screens/Home/CardWrapper";
 import i18n from "util/language/i18n";
 
@@ -24,15 +24,12 @@ export const WeightCard: FC<WeightProps> = ({
   }));
 
   return (
-    <CardWrapper maxHeight={minHeight} minWidthRequired={false} flex={flex}>
-      <H3
-        text={i18n.t("Patient_Overview.Weight")}
-        style={{
-          fontWeight: "bold",
-          color: colors.primaryTextColor,
-          paddingLeft: ms(5)
-        }}
-      />
+    <CardWrapper
+      maxHeight={minHeight}
+      minWidthRequired={false}
+      flex={flex}
+      title={i18n.t("Patient_Overview.Weight")}
+    >
       <View style={styles.container}>
         <View style={styles.textContainer}>
           <View style={styles.text}>
@@ -43,7 +40,7 @@ export const WeightCard: FC<WeightProps> = ({
             <H4 text="kg" style={styles.label} />
           </View>
         </View>
-        <H4
+        <H5
           text={`${i18n.t("Patient_Overview.TargetWeight")}: ${targetWeight}`}
           style={null}
         />

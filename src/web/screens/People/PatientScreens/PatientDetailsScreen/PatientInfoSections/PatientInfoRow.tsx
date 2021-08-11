@@ -49,7 +49,8 @@ const styles = ScaledSheet.create({
   },
   content: {
     flexDirection: "row",
-    alignItems: "center"
+    alignItems: "center",
+    flex: 1
   },
   infoTitle: { fontWeight: "600", paddingRight: "5@ms" }
 });

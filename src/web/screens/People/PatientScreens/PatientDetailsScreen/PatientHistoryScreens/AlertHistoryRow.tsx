@@ -14,6 +14,7 @@ interface AlertHistoryRowProps {
   onRowPress: () => void;
 }
 
+// get i18n translation depending on the risk level
 function getRiskName(risk: RiskLevel) {
   let riskName: string = "Patient_History.Risk.Unassigned";
 
@@ -38,6 +39,7 @@ export const AlertHistoryRow: FC<AlertHistoryRowProps> = ({
     fonts: state.settings.fonts
   }));
 
+  // Truncate descriptions that have length >35 characters and append ellipses at the end
   const getDescription = () => {
     // Word limit
     const limit = 35;
@@ -66,11 +68,13 @@ export const AlertHistoryRow: FC<AlertHistoryRowProps> = ({
             style={{ fontWeight: "bold", color: colors.primaryTextColor }}
           />
         </View>
+        {/* Description */}
         <H4
           text={getDescription()}
           style={{ color: colors.primaryTextColor }}
         />
       </View>
+      {/* View button */}
       <View style={[styles.buttonContainer]}>
         <ViewRowButton onRowPress={onRowPress} />
       </View>
