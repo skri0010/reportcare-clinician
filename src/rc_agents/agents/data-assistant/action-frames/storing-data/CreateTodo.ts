@@ -90,6 +90,7 @@ class CreateTodo extends Activity {
 
         if (todoInput.alert) {
           todoToInsert.alertID = todoInput.alert.id;
+          todoInput.alert.completed = true;
         }
 
         /**
@@ -126,9 +127,6 @@ class CreateTodo extends Activity {
 
               // Updates to indicate that Todo is successfully inserted
               pendingTodoSync = false;
-              if (todoInput.alert) {
-                todoInput.alert.completed = true;
-              }
 
               // Updates alert to completed if any
               if (insertedTodo.alertID) {
@@ -203,13 +201,14 @@ class CreateTodo extends Activity {
         }
 
         /**
-         * Constructs Todo object to be stored locally.
+         * Constructs LocalTodo object to be stored locally.
          * 1. Local Todo for syncing is recognized using the pendingSync attribute.
          * 2. Local Todo to be inserted has null id and pendingSync set to true.
          * 3. Local Todo to be updated has non-null id and pendingSync set to true.
          * 4. If Todo already exists, update local Todo with existing Todo's id, createdAt and _version values.
          * 5. If Todo has associated Alert, include alertId and patientId attributes.
          * 6. If Todo has been successfully inserted, Local Todo will have non-null id.
+         * 7. If Todo has been/ is to be updated, Local Todo will have a non-null lastModified.
          */
         if (pendingTodoSync !== undefined) {
           // Constructs Todo to be stored
@@ -458,8 +457,25 @@ export const updateLocalTodos = async (input: LocalTodo): Promise<void> => {
         // Todo does not exist
         localTodos.push(input);
       }
+    } else if (input.alertId) {
+      // When attempts to create an existing Todo offline
+      const existIndex = localTodos.findIndex(
+        (t) => t.alertId === input.alertId
+      );
+      // Existing Todo
+      if (existIndex >= 0) {
+        const currentTodo = localTodos[existIndex];
+        if (currentTodo.id) {
+          input.id = currentTodo.id;
+          input._version = currentTodo._version;
+        }
+        input.lastModified = input.createdAt;
+        input.createdAt = currentTodo.createdAt;
+        localTodos[existIndex] = input;
+      } else {
+        localTodos.push(input);
+      }
     } else {
-      // For create Todo operation
       localTodos.push(input);
     }
   } else {
