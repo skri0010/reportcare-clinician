@@ -1,0 +1,249 @@
+"""
+Official docs for authentication: https://docs.amplify.aws/cli/graphql-transformer/auth
+Official docs for keys: https://docs.amplify.aws/cli/graphql-transformer/key#key
+
+{ allow: groups, groupsField: "patientID", operations: [read] }
+- Clinicians can read records containing their patients
+- Refer to `reportcare-clinician/docs/access-control.md` for more information on @auth with ownerField and groupsField
+"""
+type PatientInfo
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groupsField: "patientID", operations: [read] }
+    ]
+  )
+  @key(name: "byPatient", fields: ["patientID"]) {
+  id: ID!
+  name: String!
+  address: String!
+  deviceNo: String!
+  diagnosisInfo: String!
+  NHYAclass: String!
+  cardiologist: String!
+  hospitalName: String!
+  hospitalLocation: String!
+  targetWeight: String!
+  targetActivity: String!
+  patientID: String!
+}
+
+type MedicationInfo
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groupsField: "patientID", operations: [read] }
+    ]
+  )
+  @key(name: "byPatient", fields: ["patientID"]) {
+  id: ID!
+  medname: String!
+  dosage: String!
+  patientID: String!
+}
+
+type ActivityInfo
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groupsField: "patientID", operations: [read] }
+    ]
+  )
+  @key(name: "byPatient", fields: ["patientID"]) {
+  id: ID!
+  Actname: String!
+  Location: String!
+  Frequency: Int!
+  Days: [String!]!
+  time: String!
+  patientID: String!
+}
+
+type MedCompliant
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groupsField: "patientID", operations: [read] }
+    ]
+  )
+  @key(name: "byPatient", fields: ["patientID"]) {
+  id: ID!
+  MedId: String!
+  Verification: Boolean!
+  Date: AWSDateTime!
+  patientID: String!
+}
+
+type ReportSymptom
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groupsField: "patientID", operations: [read] }
+    ]
+  )
+  @key(name: "byPatient", fields: ["patientID"]) {
+  id: ID!
+  ActId: String!
+  Name: String!
+  Severity: String!
+  DateTime: AWSDateTime!
+  patientID: String!
+}
+
+type ReportVitals
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groupsField: "patientID", operations: [read] }
+    ]
+  )
+  @key(name: "byPatient", fields: ["patientID"]) {
+  id: ID!
+  SymptomId: String!
+  Temperature: String
+  Humidity: String
+  Weight: String!
+  BPSys: String!
+  BPDi: String!
+  NoSteps: String!
+  OxySat: String!
+  DateTime: AWSDateTime!
+  patientID: String!
+}
+
+"""
+== Authorization ==
+1. Clinicians can create and read records
+2. Owners can read and update own records
+3. Patients can read records
+
+Notes:
+1. Contains basic information
+2. Sensitive information should be stored in ClinicianProtectedInfo
+3. One-to-one connection with ClinicianProtectedInfo
+"""
+type ClinicianInfo
+  @model
+  @auth(
+    rules: [
+      { allow: owner, operations: [read, update] }
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groups: ["Patients"], operations: [read] }
+      {
+        allow: groups
+        groups: [
+          "EPs"
+          "Nurses"
+          "HFSpecialists"
+          "MedicalOfficers"
+          "Pharmacists"
+        ]
+        operations: [create, read]
+      }
+    ]
+  )
+  @key(fields: ["clinicianID"]) {
+  id: ID!
+  name: String!
+  hospitalName: String!
+  role: String!
+  clinicianID: String!
+  protectedInfo: ClinicianProtectedInfo @connection(fields: ["clinicianID"])
+  owner: String!
+}
+
+"""
+== Authorization ==
+1. Clinicians can create records
+2. Owners can read and update own records
+3. Patients have NO CRUD authorization
+
+Contains sensitive information such as agent state
+"""
+type ClinicianProtectedInfo
+  @model
+  @auth(
+    rules: [
+      { allow: owner, operations: [read, update] }
+      { allow: groups, groups: ["Admin"] }
+      {
+        allow: groups
+        groups: [
+          "EPs"
+          "Nurses"
+          "HFSpecialists"
+          "MedicalOfficers"
+          "Pharmacists"
+        ]
+        operations: [create]
+      }
+    ]
+  )
+  @key(fields: ["clinicianID"]) {
+  id: ID!
+  facts: String!
+  APS: String!
+  DTA: String!
+  UXSA: String!
+  clinicianID: String!
+  clinicianInfo: ClinicianInfo! @connection(fields: ["clinicianID"])
+  owner: String!
+}
+
+"""
+== Authorization ==
+1. Clinicians can create records
+2. Clinicians can read records containing their patients
+3. Patients can read their OWN records
+4. Owners can read their own records
+5. NO ONE is allowed to update records
+
+== Partition key and sort key ==
+Primary index: clinicianID, patientID
+Secondary index: patientID, clinicianID
+"""
+type ClinicianPatientMap
+  @model
+  @auth(
+    rules: [
+      { allow: owner, operations: [read] }
+      { allow: owner, ownerField: "patientID", operations: [read] }
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groupsField: "patientID", operations: [read] }
+      {
+        allow: groups
+        groups: [
+          "EPs"
+          "Nurses"
+          "HFSpecialists"
+          "MedicalOfficers"
+          "Pharmacists"
+        ]
+        operations: [create]
+      }
+    ]
+  )
+  @key(fields: ["clinicianID", "patientID"])
+  @key(
+    name: "clinicianIDsByPatientID"
+    fields: ["patientID", "clinicianID"]
+    queryField: "clinicianIDsByPatientID"
+  ) {
+  id: ID!
+  clinicianID: String!
+  patientID: String!
+  clinicianInfo: ClinicianInfo! @connection(fields: ["clinicianID"])
+  owner: String!
+}

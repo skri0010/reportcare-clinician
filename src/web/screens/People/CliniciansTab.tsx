@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useState, createContext } from "react";
 import { View, Dimensions, FlatList } from "react-native";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { mockClinician } from "mock/mockClinicians";
@@ -8,14 +8,63 @@ import { ScreenName, WithSideTabsProps } from "web/screens";
 import { RowSelectionWrapper } from "../RowSelectionTab";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { ClinicianInfo } from "aws/models";
-import { ContactTitle } from "./ContactTitle";
 import { ClinicianDetails } from "./ClinicianDetails";
+import { createStackNavigator } from "@react-navigation/stack";
+import { NavigationContainer } from "@react-navigation/native";
+import { ms } from "react-native-size-matters";
+import { NoSelection } from "./NoSelection";
 
+const Stack = createStackNavigator();
+
+export const ClinicianContext = createContext({
+  id: "",
+  name: "",
+  role: "",
+  hospitalName: "",
+  clinicianID: ""
+});
 
 export const CliniciansTab: FC<WithSideTabsProps[ScreenName.CLINICIAN]> = () => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
   }));
+
+  const [clinicianSelected, setClincianSelected] = useState<ClinicianInfo>({
+    id: "",
+    name: "",
+    role: "",
+    hospitalName: "",
+    clinicianID: "",
+    owner: ""
+  });
+
+  const [isEmptyClinician, setEmptyClincian] = useState(true);
+
+  function onRowClick(item: ClinicianInfo){
+    const currentSelected = clinicianSelected;
+    const emptyClincian: ClinicianInfo = {
+      id: "",
+      name: "",
+      role: "",
+      hospitalName: "",
+      clinicianID: "",
+      owner: ""
+    };
+    if (currentSelected !== item && item !== emptyClincian) {
+      setEmptyClincian(false);
+      setClincianSelected(item);
+    } else if (item === emptyClincian) {
+      setEmptyClincian(true);
+    }
+  }
+
+  const initialClinician = {
+    id: clinicianSelected.id,
+    name: clinicianSelected.name,
+    role: clinicianSelected.role,
+    hospitalName: clinicianSelected.hospitalName,
+    clinicianID: clinicianSelected.clinicianID
+  };
 
   const [filteredClinicians, setFilteredClinicians] = useState<ClinicianInfo[]>(mockClinician);
 
@@ -40,15 +89,42 @@ export const CliniciansTab: FC<WithSideTabsProps[ScreenName.CLINICIAN]> = () => 
               data = {filteredClinicians}
               renderItem={({ item }) => (
                 <ClinicianContactRow 
-                generalDetails={item} />
+                generalDetails={item} onRowPress={() => onRowClick} />
               )
             }
               />
             </RowSelectionWrapper>
             </View>
         <View style = {{ flex: 2, backgroundColor: colors.primaryWebBackgroundColor }}>
-          <ContactTitle name={selectedClinician.name} isPatient={false}/>
-          <ClinicianDetails generalDetails={selectedClinician}/>
+          {!isEmptyClinician ? (
+            <NavigationContainer independent>
+              <ClinicianContext.Provider value={initialClinician}>
+                <Stack.Navigator>
+                  <Stack.Screen 
+                    name="View Clinician"
+                    component={ClinicianDetails}
+                    options={() => ({
+                      title: "Clinician",
+                      headerStyle: {
+                        height: ms(45)
+                      },
+                      headerTitleStyle: {
+                        fontWeight: "bold",
+                        fontSize: ms(20),
+                        paddingLeft: ms(15)
+                      }
+                    })}
+                  />
+                </Stack.Navigator>
+              </ClinicianContext.Provider>
+            </NavigationContainer>
+          ): (
+            <NoSelection
+              screenName={ScreenName.CLINICIAN}
+              subtitle="Choose Clinician to view more info"
+            />
+          )}
+          
         </View>
         
         </View>
