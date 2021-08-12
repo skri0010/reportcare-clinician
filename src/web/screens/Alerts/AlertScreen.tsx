@@ -20,6 +20,7 @@ const Tab = createMaterialTopTabNavigator();
 const Stack = createStackNavigator();
 
 export const AlertContext = createContext({
+  id: "",
   patientName: "",
   patientID: "",
   summary: "",
@@ -80,6 +81,7 @@ export const AlertScreen: FC<WithSideTabsProps[ScreenName.ALERTS]> = () => {
   }
 
   const initialAlert = {
+    id: alertSelected.id,
     patientName: alertSelected.patientName,
     patientID: alertSelected.patientID,
     vitalsReportID: alertSelected.vitalsReportID,

@@ -11,6 +11,7 @@ import { mockAlerts } from "mock/mockAlerts";
 import { AlertDetails } from "./AlertDetails";
 import { CardWrapper } from "../Home/CardWrapper";
 import i18n from "util/language/i18n";
+import { mockAlertHistory } from "mock/mockPatientDetails";
 
 
 export const AlertDetailsScreen: FC = () => {
@@ -19,25 +20,19 @@ export const AlertDetailsScreen: FC = () => {
         fonts: state.settings.fonts
       }));
     const context = useContext(AlertContext);
-    const findSymptoms = (vitalsReportID: string, symptomReportID: string) => {
+    const findSymptoms = (id: string) => {
         // TODO: to be replaced with an API or agent call
         // this is just to keep the symptoms dynamic
-        let symptom = mockSymptomRecords[0];
-        let vitals = mockVitals[0];
-        for (let i=0; i<mockSymptomRecords.length; i += 1){
-            if (mockSymptomRecords[i].id === symptomReportID){
-                symptom = mockSymptomRecords[i];
-            }
-        }
-    
-        for (let i=0; i<mockVitals.length; i += 1){
-            if (mockVitals[i].id === vitalsReportID){
-                vitals = mockVitals[i];
+        let alertHistory = mockAlertHistory[0];
+
+        for (let i=0; i<mockAlertHistory.length; i += 1){
+            if (mockAlertHistory[i].id === id){
+                alertHistory = mockAlertHistory[i];
             }
         }
     
         return (
-            <AlertDetails reportVitals={vitals} reportSymptom={symptom}/>
+            <AlertDetails alertHistory={alertHistory} />
         );
     
     };
@@ -46,10 +41,8 @@ export const AlertDetailsScreen: FC = () => {
             <View style={styles.container}>
                 <H4 text={context.patientName} style={styles.patientName}/>
                 <H3 text="Alert Summary" style={styles.headers} />
-                <H4 text={context.summary} />
-                <H3 text="Alert Details" style={styles.informationTitle} />
                 <CardWrapper>
-                {findSymptoms(context.vitalsReportID, context.symptomReportID)}
+                {findSymptoms(context.vitalsReportID)}
                 </CardWrapper>
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity

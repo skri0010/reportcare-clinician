@@ -5,27 +5,27 @@ import { H2, H3, H4, H5 } from "components/Text";
 import { RootState, select } from "util/useRedux";
 import { ScreenWrapper } from "../ScreenWrapper";
 import { AlertContext } from "./AlertScreen";
-import { mockSymptomRecords } from "mock/mockSymptoms";
-import { mockVitals } from "mock/mockVitals";
-import { mockAlerts } from "mock/mockAlerts";
-import { ReportVitals } from "aws/API";
-import { ReportSymptom } from "aws/models";
 import { AlertDetailsRow } from "../People/PatientDetailsScreen/PatientHistoryScreens/AlertHistoryModal";
+import { AlertHistory } from "mock/mockPatientDetails";
+import { RiskLevel } from "models/RiskLevel";
 
 
 export interface AlertDetailsProps {
-    reportVitals: ReportVitals,
-    reportSymptom: ReportSymptom
+    alertHistory: AlertHistory,
 }
-export const AlertDetails: FC<AlertDetailsProps> = ({ reportVitals, reportSymptom }) => {
+export const AlertDetails: FC<AlertDetailsProps> = ({ alertHistory }) => {
     const { colors } = select((state: RootState) => ({
         colors: state.settings.colors
     }));
     return (
         <View style={{ flexDirection: "column" }}>
-            <AlertDetailsRow detailTitle="BP: " detailContent={reportVitals.BPDi}/>
-            <AlertDetailsRow detailTitle="Symptom: " detailContent={reportSymptom.Name}/>
-            <AlertDetailsRow detailTitle="Severity: " detailContent={reportSymptom.Severity}/>
+            <H4 text={alertHistory.description} />
+            <H3 text="Alert Details" style={styles.informationTitle} />
+            <AlertDetailsRow detailTitle="Severity: " detailContent={alertHistory.risk}/>
+            <AlertDetailsRow detailTitle="HRV: " detailContent={alertHistory.HRV}/>
+            <AlertDetailsRow detailTitle="BP: " detailContent={alertHistory.BP}/>
+            <AlertDetailsRow detailTitle="Sypmtom: " detailContent={alertHistory.symptom}/>
+            <AlertDetailsRow detailTitle="Signs: " detailContent={alertHistory.signs}/>
         </View>
     );
 
@@ -38,5 +38,9 @@ const styles = ScaledSheet.create({
     },
     boldText: {
         fontWeight: "bold"
+    },
+    informationTitle: {
+        fontWeight: "bold",
+        paddingTop: "17@ms"
     }
 });
