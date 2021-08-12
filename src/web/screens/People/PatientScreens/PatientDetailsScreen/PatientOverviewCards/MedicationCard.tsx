@@ -1,10 +1,8 @@
 import React, { FC, useState } from "react";
-import { RootState, select } from "util/useRedux";
 import { ms } from "react-native-size-matters";
-import { H3, H4 } from "components/Text/index";
 import { CardWrapper } from "web/screens/Home/CardWrapper";
 import { MedicationInfo } from "aws/models";
-import { FlatList, View } from "react-native";
+import { FlatList } from "react-native";
 import { mockMedicationRecord } from "mock/mockMedication";
 import { MedicationRow } from "./MedicationRow";
 import i18n from "util/language/i18n";
@@ -19,10 +17,6 @@ export const MedicationTakenCard: FC<MedicationTakenProps> = ({
   maxHeight,
   minHeight
 }) => {
-  const { colors } = select((state: RootState) => ({
-    colors: state.settings.colors
-  }));
-
   const [mockMedications] = useState(mockMedicationRecord);
 
   return (

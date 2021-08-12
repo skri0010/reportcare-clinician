@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { ms, ScaledSheet } from "react-native-size-matters";
+import { ScaledSheet } from "react-native-size-matters";
 import { View } from "react-native";
 import { RootState, select } from "util/useRedux";
 import i18n from "util/language/i18n";

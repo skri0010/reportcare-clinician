@@ -23,6 +23,7 @@ export const ContactInfoSection: FC<ContactInfoSectionProps> = ({
 
   return (
     <View style={styles.infoSection}>
+      {/* Details of patient contact */}
       <PatientInfoRow
         title={i18n.t("Patient_Info.HPNumber")}
         content="012-3456789"

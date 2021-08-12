@@ -19,20 +19,24 @@ export const PatientParameter: FC<
   return (
     <ScreenWrapper>
       <View style={styles.container}>
+        {/* Systolic Blood Graph */}
         <SystolicParameterCard
           patientId={patient.patientID}
           maxHeight={cardMaxHeight}
         />
+        {/* Diastolic Blood Graph */}
         <DiastolicParameterCard
           patientId={patient.patientID}
           maxHeight={cardMaxHeight}
         />
       </View>
       <View style={styles.container}>
+        {/* Oxygen Saturation graph */}
         <OxygenSaturationParameterCard
           patientId={patient.patientID}
           maxHeight={cardMaxHeight}
         />
+        {/* Weight Graph */}
         <WeightParameterCard
           patientId={patient.patientID}
           maxHeight={cardMaxHeight}

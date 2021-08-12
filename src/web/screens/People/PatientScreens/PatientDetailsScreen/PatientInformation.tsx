@@ -14,8 +14,10 @@ export const PatientInformation: FC<
   return (
     <ScreenWrapper>
       <View style={{ marginHorizontal: ms(40) }}>
+        {/* Patient Basic informations */}
         <InfoTitleBar title="Patient_Info.BasicInfo" />
         <BasicInfoSection />
+        {/* Patient Medical Information */}
         <InfoTitleBar title="Patient_Info.ContactInfo" />
         <ContactInfoSection />
       </View>

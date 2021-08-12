@@ -19,6 +19,7 @@ export const PatientHistory: FC<
   return (
     <ScreenWrapper>
       <View style={styles.container}>
+        {/* Alert Histories */}
         <PatientAlertHistoryCard
           name={patient.name}
           patientId={patient.patientID}
@@ -26,6 +27,7 @@ export const PatientHistory: FC<
           setDisplayHistory={alertHistoryFunc.setDisplayHistory}
           setModalAlertVisible={alertHistoryFunc.setModalAlertVisible}
         />
+        {/* Medical Histories */}
         <PatientMedicalRecordCard
           patientId={patient.patientID}
           maxHeight={cardMaxHeight}

@@ -19,6 +19,7 @@ export const PatientOverview: FC<
     <ScreenWrapper>
       <View style={styles.container}>
         <View style={{ flexGrow: 2, flexShrink: 2 }}>
+          {/* Blood Pressure Card */}
           <BloodPressureCard
             systolic="23"
             dystolic="130"
@@ -26,6 +27,7 @@ export const PatientOverview: FC<
           />
         </View>
         <View style={{ flexGrow: 1, flexShrink: 2 }}>
+          {/* Oxygen Saturation card and Weigth card to share fixed space */}
           <View style={{ flexDirection: "row" }}>
             <OxygenSaturationCard
               oxySatValue="90"
@@ -42,6 +44,7 @@ export const PatientOverview: FC<
         </View>
       </View>
       <View style={[styles.container, { paddingBottom: ms(10) }]}>
+        {/* Medication and symptoms card */}
         <MedicationTakenCard
           medications={[]}
           maxHeight={cardHeight}

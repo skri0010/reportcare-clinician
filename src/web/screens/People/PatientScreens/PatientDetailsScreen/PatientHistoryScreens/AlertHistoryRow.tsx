@@ -3,7 +3,7 @@ import { RootState, select } from "util/useRedux";
 import { ScaledSheet } from "react-native-size-matters";
 import { H4, H5 } from "components/Text/index";
 import { getRiskLevelColor, RiskLevel } from "models/RiskLevel";
-import { View, Text } from "react-native";
+import { View } from "react-native";
 import { ViewRowButton } from "./ViewRowButton";
 import i18n from "util/language/i18n";
 

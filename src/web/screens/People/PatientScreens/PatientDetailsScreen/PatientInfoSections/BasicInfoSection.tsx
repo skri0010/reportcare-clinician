@@ -23,6 +23,7 @@ export const BasicInfoSection: FC<BasicInfoSectionProps> = ({ basicInfo }) => {
 
   return (
     <View style={styles.infoSection}>
+      {/* Details of patient information */}
       <PatientInfoRow
         title={i18n.t("Patient_Info.Gender")}
         content="Male"

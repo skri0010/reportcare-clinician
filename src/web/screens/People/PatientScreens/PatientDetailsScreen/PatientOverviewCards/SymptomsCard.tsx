@@ -1,7 +1,6 @@
 import React, { FC, useState } from "react";
-import { RootState, select } from "util/useRedux";
-import { ms, ScaledSheet } from "react-native-size-matters";
-import { H3, H4 } from "components/Text/index";
+import { ms } from "react-native-size-matters";
+import { H4 } from "components/Text/index";
 import { CardWrapper } from "web/screens/Home/CardWrapper";
 import { ReportSymptom } from "aws/models";
 import { FlatList } from "react-native";
@@ -15,10 +14,6 @@ interface SymptomProps {
 }
 
 export const SymptomsCard: FC<SymptomProps> = ({ maxHeight, minHeight }) => {
-  const { colors } = select((state: RootState) => ({
-    colors: state.settings.colors
-  }));
-
   const [mockSymptoms] = useState(mockSymptomRecords);
 
   return (
@@ -37,7 +32,3 @@ export const SymptomsCard: FC<SymptomProps> = ({ maxHeight, minHeight }) => {
     </CardWrapper>
   );
 };
-
-const styles = ScaledSheet.create({
-  cardTitle: { fontWeight: "bold", paddingLeft: ms(5), paddingBottom: ms(5) }
-});
