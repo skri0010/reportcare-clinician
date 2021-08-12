@@ -24,7 +24,7 @@ export const PatientOverview: FC<
           systolic="23"
           dystolic="130"
           minHeight={cardHeight}
-          flex={250}
+          flex={1000}
         />
         <View style={{ flexBasis: "50%", flexGrow: 1 }}>
           {/* Oxygen Saturation card and Weigth card to share fixed space */}
