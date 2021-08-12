@@ -279,7 +279,7 @@ abstract class AgentManagement {
             agentNWA.addBelief(
               new Belief(
                 BeliefKeys.APP,
-                AppAttributes.PENDING_PROTECTED_INFO_SYNC,
+                AppAttributes.SYNC_PROTECTED_INFO,
                 true
               )
             );

@@ -74,7 +74,7 @@ class SyncProtectedInfo extends Activity {
 const rule1 = new Precondition(BeliefKeys.APP, AppAttributes.ONLINE, true);
 const rule2 = new ResettablePrecondition(
   BeliefKeys.APP,
-  AppAttributes.PENDING_PROTECTED_INFO_SYNC,
+  AppAttributes.SYNC_PROTECTED_INFO,
   true
 );
 

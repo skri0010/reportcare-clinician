@@ -3,7 +3,7 @@ import { Agent, Belief } from "rc_agents/framework";
 import { af_RetrieveEntryData } from "./action-frames/app-device-configuration/RetrieveEntryData";
 import { af_StoreEntryData } from "./action-frames/app-device-configuration/StoreEntryData";
 import { af_RetrievePatientDetails } from "./action-frames/hf-outcome-trends/RetrievePatientDetails";
-import { af_RequestDetailsDisplay } from "./action-frames/hf-outcome-trends/RequestDetailsDisplay";
+import { af_RequestDisplayPatientDetails } from "./action-frames/hf-outcome-trends/RequestDisplayPatientDetails";
 import { af_RetrieveRolePatients } from "./action-frames/hf-outcome-trends/RetrieveRolePatients";
 import { af_RetrieveAlerts } from "./action-frames/triage-alert-hf-clinic/RetrieveAlerts";
 import { af_RequestAlertsDisplay } from "./action-frames/triage-alert-hf-clinic/RequestAlertsDisplay";
@@ -39,7 +39,7 @@ const agentDTA = new Agent(
 
     // HF-OTP-I
     af_RetrievePatientDetails,
-    af_RequestDetailsDisplay,
+    af_RequestDisplayPatientDetails,
     af_RetrieveRolePatients,
 
     // AT-CP

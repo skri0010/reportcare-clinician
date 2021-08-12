@@ -57,7 +57,7 @@ export const ActionFrameIDs = {
     // HF-OTP
     RETRIEVE_ROLE_PATIENTS: "RetrieveRolePatients",
     RETRIEVE_PATIENT_DETAILS: "RetrievePatientDetails",
-    REQUEST_DETAILS_DISPLAY: "RequestDetailsDisplay",
+    REQUEST_DISPLAY_PATIENT_DETAILS: "RequestDisplayPatientDetails",
     RETRIEVE_ALERT_HISTORY: "RetrieveAlertHistory",
 
     // AT-CP
@@ -122,7 +122,7 @@ export enum CommonAttributes {
 export enum AppAttributes {
   CONFIGURED = "Configured",
   ONLINE = "Online",
-  PENDING_PROTECTED_INFO_SYNC = "PendingProtectedInfoSync",
+  SYNC_PROTECTED_INFO = "SyncProtectedInfo",
   SYNC_PATIENT_ASSIGNMENT_RESOLUTIONS = "SyncPatientAssignmentResolutions",
   SYNC_TODOS_CREATE = "SyncTodosCreate",
   SYNC_TODOS_UPDATE = "SyncTodosUpdate",
@@ -173,8 +173,8 @@ export enum ClinicianAttributes {
 export enum PatientAttributes {
   RETRIEVE_ALL = "RetrieveAll",
   ALL = "All",
-  RETRIEVE_DETAILS = "RetrieveDetails",
-  DETAILS_RETRIEVED = "DetailsRetrieved",
+  RETRIEVE_PATIENT_DETAILS = "RetrievePatientDetails",
+  PATIENT_DETAILS_RETRIEVED = "PatientDetailsRetrieved",
   VIEW_DETAILS = "ViewDetails",
   DETAILS = "Details",
 

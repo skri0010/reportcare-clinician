@@ -20,16 +20,20 @@ import {
  * Class to represent the activity for requesting display of retrieved patient's details.
  * This happens in Procedure HF Outcome Trends (HF-OTP-II).
  */
-class RequestDetailsDisplay extends Communicate {
+class RequestDisplayPatientDetails extends Communicate {
   /**
    * Constructor for the RequestDetailsDisplay class
    */
   constructor() {
     super(
-      ActionFrameIDs.DTA.REQUEST_DETAILS_DISPLAY,
+      ActionFrameIDs.DTA.REQUEST_DISPLAY_PATIENT_DETAILS,
       Performative.REQUEST,
       // Triggers VisualizeParameters action frame of UXSA
-      new Belief(BeliefKeys.PATIENT, PatientAttributes.DETAILS_RETRIEVED, true),
+      new Belief(
+        BeliefKeys.PATIENT,
+        PatientAttributes.PATIENT_DETAILS_RETRIEVED,
+        true
+      ),
       [AgentIDs.UXSA]
     );
   }
@@ -48,7 +52,7 @@ class RequestDetailsDisplay extends Communicate {
   }
 }
 
-// Rules or preconditions for activating the RequestDetailsDisplay class
+// Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
   ProcedureAttributes.HF_OTP_II,
@@ -60,9 +64,9 @@ const rule2 = new Precondition(
   ActionFrameIDs.DTA.RETRIEVE_PATIENT_DETAILS
 );
 
-// Actionframe of the RequestDetailsDisplay class
-export const af_RequestDetailsDisplay = new Actionframe(
-  `AF_${ActionFrameIDs.DTA.REQUEST_DETAILS_DISPLAY}`,
+// Actionframe
+export const af_RequestDisplayPatientDetails = new Actionframe(
+  `AF_${ActionFrameIDs.DTA.REQUEST_DISPLAY_PATIENT_DETAILS}`,
   [rule1, rule2],
-  new RequestDetailsDisplay()
+  new RequestDisplayPatientDetails()
 );

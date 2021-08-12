@@ -147,7 +147,11 @@ export const PatientsTab: FC = () => {
     setRetrieving(true);
 
     agentDTA.addBelief(
-      new Belief(BeliefKeys.PATIENT, PatientAttributes.RETRIEVE_DETAILS, true)
+      new Belief(
+        BeliefKeys.PATIENT,
+        PatientAttributes.RETRIEVE_PATIENT_DETAILS,
+        true
+      )
     );
     agentAPI.addFact(
       new Belief(BeliefKeys.PATIENT, PatientAttributes.VIEW_DETAILS, patientId),
