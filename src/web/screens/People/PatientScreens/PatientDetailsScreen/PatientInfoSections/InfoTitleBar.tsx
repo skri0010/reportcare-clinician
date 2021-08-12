@@ -33,9 +33,9 @@ export const InfoTitleBar: FC<InfoTitleBarProps> = ({ title }) => {
 const styles = ScaledSheet.create({
   titleBarContainer: {
     width: "100%",
-    height: "30@ms",
     marginTop: "20@ms",
     justifyContent: "space-evenly",
+    paddingVertical: "5@ms",
     paddingLeft: "10@ms",
     opacity: 0.8,
     borderLeftWidth: "3@ms",
