@@ -17,29 +17,20 @@ export const PatientOverview: FC<
   const cardHeight = Dimensions.get("window").height * 0.325;
   return (
     <ScreenWrapper>
-      <View style={styles.container}>
-        <View style={{ flexGrow: 2, flexShrink: 2 }}>
-          {/* Blood Pressure Card */}
-          <BloodPressureCard
-            systolic="23"
-            dystolic="130"
-            minHeight={cardHeight}
-          />
-        </View>
-        <View style={{ flexGrow: 1, flexShrink: 2 }}>
+      <View style={[styles.container]}>
+        {/* Blood Pressure Card */}
+        {/* JY-TODO Figure out a way to solve this hacky flex */}
+        <BloodPressureCard
+          systolic="23"
+          dystolic="130"
+          minHeight={cardHeight}
+          flex={250}
+        />
+        <View style={{ flexBasis: "50%", flexGrow: 1 }}>
           {/* Oxygen Saturation card and Weigth card to share fixed space */}
           <View style={{ flexDirection: "row" }}>
-            <OxygenSaturationCard
-              oxySatValue="90"
-              minHeight={cardHeight}
-              flex={1}
-            />
-            <WeightCard
-              weight="60"
-              targetWeight="60"
-              minHeight={cardHeight}
-              flex={1}
-            />
+            <OxygenSaturationCard oxySatValue="90" minHeight={cardHeight} />
+            <WeightCard weight="60" targetWeight="60" minHeight={cardHeight} />
           </View>
         </View>
       </View>
