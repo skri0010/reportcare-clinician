@@ -69,12 +69,11 @@ export const CliniciansTab: FC<WithSideTabsProps[ScreenName.CLINICIAN]> = () => 
   const [filteredClinicians, setFilteredClinicians] = useState<ClinicianInfo[]>(mockClinician);
 
 
-  const [selectedClinician] = useState(mockClinician[0]);
-
 
   // JH-TODO: Replace placeholder with i18n
   return (
     <ScreenWrapper>
+      <ClinicianContext.Provider value={initialClinician}>
       <View style={{ flexDirection: "row", height: "100%" }}>
         <View style={{ flex: 1, height: Dimensions.get("window").height }}>
           <RowSelectionWrapper
@@ -89,7 +88,7 @@ export const CliniciansTab: FC<WithSideTabsProps[ScreenName.CLINICIAN]> = () => 
               data = {filteredClinicians}
               renderItem={({ item }) => (
                 <ClinicianContactRow 
-                generalDetails={item} onRowPress={() => onRowClick} />
+                generalDetails={item} onRowPress={() => onRowClick(item)} />
               )
             }
               />
@@ -98,7 +97,6 @@ export const CliniciansTab: FC<WithSideTabsProps[ScreenName.CLINICIAN]> = () => 
         <View style = {{ flex: 2, backgroundColor: colors.primaryWebBackgroundColor }}>
           {!isEmptyClinician ? (
             <NavigationContainer independent>
-              <ClinicianContext.Provider value={initialClinician}>
                 <Stack.Navigator>
                   <Stack.Screen 
                     name="View Clinician"
@@ -116,7 +114,6 @@ export const CliniciansTab: FC<WithSideTabsProps[ScreenName.CLINICIAN]> = () => 
                     })}
                   />
                 </Stack.Navigator>
-              </ClinicianContext.Provider>
             </NavigationContainer>
           ): (
             <NoSelection
@@ -128,6 +125,7 @@ export const CliniciansTab: FC<WithSideTabsProps[ScreenName.CLINICIAN]> = () => 
         </View>
         
         </View>
+        </ClinicianContext.Provider>
     </ScreenWrapper>
   );
 };
