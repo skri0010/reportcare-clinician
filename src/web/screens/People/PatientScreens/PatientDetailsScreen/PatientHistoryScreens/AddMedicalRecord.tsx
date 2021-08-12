@@ -61,6 +61,7 @@ export const AddMedicalRecord: FC<AddMedicalRecordProps> = ({
       {/* Title input */}
       <TextInput
         onChangeText={onChangeTitle}
+        multiline
         placeholder={i18n.t(
           "Patient_History.AddMedicalRecordCard.TitleInputPlaceholder"
         )}
@@ -69,9 +70,10 @@ export const AddMedicalRecord: FC<AddMedicalRecordProps> = ({
           textInputStyle,
           {
             width: "100%",
-            height: ms(30),
+            height: ms(40),
             fontSize: fonts.h4Size,
-            paddingVertical: ms(10)
+            paddingVertical: ms(10),
+            alignItems: "center"
           }
         ]}
       />
