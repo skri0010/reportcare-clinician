@@ -62,15 +62,12 @@ export const LineChartComponent: FC<LineChartProps> = ({
 
   const chartStyle = Platform.OS === "web" ? webChartStyle : mobileChartStyle;
 
+  // JY-TODO Change the mobile version to not use dimensions after testing
   const width =
-    Platform.OS === "web"
-      ? Dimensions.get("window").width / 4.5
-      : (Dimensions.get("window").width * 6) / 7;
+    Platform.OS === "web" ? ms(185) : (Dimensions.get("window").width * 6) / 7;
 
   const height =
-    Platform.OS === "web"
-      ? (Dimensions.get("window").height * 3) / 7
-      : Dimensions.get("window").height / 3;
+    Platform.OS === "web" ? ms(250) : Dimensions.get("window").height / 3;
 
   return (
     <View>

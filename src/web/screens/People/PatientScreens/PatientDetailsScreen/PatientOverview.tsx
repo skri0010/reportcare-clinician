@@ -14,7 +14,8 @@ export const PatientOverview: FC<
   WithPatientsScreenProps[PatientsScreenName.OVERVIEW]
 > = () => {
   // Query details for overview here
-  const cardHeight = Dimensions.get("window").height * 0.325;
+  const cardHeight = Math.max(ms(100), Dimensions.get("window").height * 0.325);
+
   return (
     <ScreenWrapper>
       <View style={[styles.container]}>

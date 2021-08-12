@@ -53,13 +53,18 @@ export const PatientMedicalRecordCard: FC<PatientMedicalRecordProps> = ({
           style={[
             styles.button,
             {
-              borderColor: colors.primaryTextColor,
+              borderColor: colors.primaryButtonColor,
               width: fonts.h1Size,
-              height: fonts.h1Size
+              height: fonts.h1Size,
+              backgroundColor: colors.primaryButtonColor
             }
           ]}
         >
-          <Icon name="plus" size={fonts.h2Size} />
+          <Icon
+            name="plus"
+            size={fonts.h2Size}
+            style={{ color: colors.primaryContrastTextColor }}
+          />
         </TouchableOpacity>
       </View>
 

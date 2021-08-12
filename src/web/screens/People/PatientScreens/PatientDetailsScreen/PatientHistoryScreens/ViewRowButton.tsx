@@ -28,7 +28,7 @@ export const ViewRowButton: FC<ViewRowButtonProps> = ({ onRowPress }) => {
 
 const styles = ScaledSheet.create({
   button: {
-    borderRadius: "10@ms",
+    borderRadius: "5@ms",
     borderWidth: "1@ms"
   },
   buttonText: {
