@@ -54,10 +54,13 @@ export const ActionFrameIDs = {
     RETRIEVE_ENTRY_DATA: "RetrieveEntryData",
     STORE_ENTRY_DATA: "StoreEntryData",
 
-    // HF-OTP
+    // HF-OTP-I: List of patients
     RETRIEVE_ROLE_PATIENTS: "RetrieveRolePatients",
+
+    // HF-OTP-II: Patient details
     RETRIEVE_PATIENT_DETAILS: "RetrievePatientDetails",
     REQUEST_DISPLAY_PATIENT_DETAILS: "RequestDisplayPatientDetails",
+
     RETRIEVE_ALERT_HISTORY: "RetrieveAlertHistory",
 
     // AT-CP
@@ -173,8 +176,11 @@ export enum ClinicianAttributes {
 export enum PatientAttributes {
   RETRIEVE_ALL = "RetrieveAll",
   ALL = "All",
+
+  // HF-OTP-II: Patient details
   RETRIEVE_PATIENT_DETAILS = "RetrievePatientDetails",
   PATIENT_DETAILS_RETRIEVED = "PatientDetailsRetrieved",
+  DISPLAY_PATIENT_DETAILS_REQUESTED = "DisplayPatientDetailsRequested",
   VIEW_DETAILS = "ViewDetails",
   DETAILS = "Details",
 
@@ -182,7 +188,6 @@ export enum PatientAttributes {
   PENDING_PATIENT_ASSIGNMENTS = "PendingPatientAssignments",
   RETRIEVE_PENDING_PATIENT_ASSIGNMENTS = "RetrievePendingPatientAssignments",
   PENDING_PATIENT_ASSIGNMENTS_RETRIEVED = "PendingPatientAssignmentsRetrieved",
-  DISPLAY_PENDING_ASSIGNMENTS_REQUESTED = "DisplayPendingAssignmentsRequested",
   PATIENT_ASSIGNMENT_RESOLUTION = "PatientAssignmentResolution",
   PATIENT_ASSIGNMENT_RESOLVED = "PatientAssignmentResolved",
   RESOLVE_PATIENT_ASSIGNMENT = "ResolvePatientAssignment",

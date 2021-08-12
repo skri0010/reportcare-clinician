@@ -3,7 +3,8 @@ import {
   Agent,
   Belief,
   Communicate,
-  Precondition
+  Precondition,
+  ResettablePrecondition
 } from "rc_agents/framework";
 import {
   ActionFrameIDs,
@@ -21,14 +22,11 @@ import {
  * This happens in Procedure HF Outcome Trends (HF-OTP-II).
  */
 class RequestDisplayPatientDetails extends Communicate {
-  /**
-   * Constructor for the RequestDetailsDisplay class
-   */
   constructor() {
+    // Triggers VisualizeParameters action frame of UXSA
     super(
       ActionFrameIDs.DTA.REQUEST_DISPLAY_PATIENT_DETAILS,
       Performative.REQUEST,
-      // Triggers VisualizeParameters action frame of UXSA
       new Belief(
         BeliefKeys.PATIENT,
         PatientAttributes.PATIENT_DETAILS_RETRIEVED,
@@ -44,7 +42,8 @@ class RequestDisplayPatientDetails extends Communicate {
    */
   async doActivity(agent: Agent): Promise<void> {
     try {
-      await super.doActivity(agent);
+      // Reset preconditions
+      await super.doActivity(agent, [rule3]);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
@@ -62,6 +61,11 @@ const rule2 = new Precondition(
   AgentIDs.DTA,
   CommonAttributes.LAST_ACTIVITY,
   ActionFrameIDs.DTA.RETRIEVE_PATIENT_DETAILS
+);
+const rule3 = new ResettablePrecondition(
+  AgentIDs.DTA,
+  PatientAttributes.PATIENT_DETAILS_RETRIEVED,
+  true
 );
 
 // Actionframe

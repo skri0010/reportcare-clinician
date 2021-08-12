@@ -82,7 +82,7 @@ const rule1 = new Precondition(
 );
 const rule2 = new ResettablePrecondition(
   BeliefKeys.PATIENT,
-  PatientAttributes.DISPLAY_PENDING_ASSIGNMENTS_REQUESTED,
+  PatientAttributes.PENDING_PATIENT_ASSIGNMENTS_RETRIEVED,
   true
 );
 

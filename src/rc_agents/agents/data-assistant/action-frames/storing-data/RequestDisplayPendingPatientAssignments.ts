@@ -29,7 +29,7 @@ class RequestDisplayPendingPatientAssignments extends Communicate {
       Performative.REQUEST,
       new Belief(
         BeliefKeys.PATIENT,
-        PatientAttributes.DISPLAY_PENDING_ASSIGNMENTS_REQUESTED,
+        PatientAttributes.PENDING_PATIENT_ASSIGNMENTS_RETRIEVED,
         true
       ),
       [AgentIDs.UXSA]
