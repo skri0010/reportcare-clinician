@@ -66,8 +66,6 @@ export const CliniciansTab: FC<WithSideTabsProps[ScreenName.CLINICIAN]> = () => 
     clinicianID: clinicianSelected.clinicianID
   };
 
-
-
   // JH-TODO: Replace placeholder with i18n
   return (
     <ScreenWrapper>
@@ -76,7 +74,7 @@ export const CliniciansTab: FC<WithSideTabsProps[ScreenName.CLINICIAN]> = () => 
         <View style={{ flex: 1, height: Dimensions.get("window").height }}>
           <RowSelectionWrapper
             title="Clinician"
-            >
+            />
             <FlatList
               showsVerticalScrollIndicator={false}
               style={{ flex: 1 }}
@@ -88,7 +86,6 @@ export const CliniciansTab: FC<WithSideTabsProps[ScreenName.CLINICIAN]> = () => 
               )
             }
               />
-            </RowSelectionWrapper>
             </View>
         <View style = {{ flex: 2, backgroundColor: colors.primaryWebBackgroundColor }}>
           {!isEmptyClinician ? (
