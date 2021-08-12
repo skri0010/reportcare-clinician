@@ -46,7 +46,8 @@ class DisplayPendingPatientAssignments extends Activity {
       // Dispatch to store boolean to store fetched pending patient assignments
       store.dispatch(setPendingPatientAssignments(pendingPatientAssignments));
 
-      // Removes pending patient assignments from facts
+      // Update Facts
+      // Remove item
       agentAPI.addFact(
         new Belief(
           BeliefKeys.PATIENT,
@@ -56,9 +57,6 @@ class DisplayPendingPatientAssignments extends Activity {
         false
       );
     }
-
-    // Dispatch to store to indicate fetching has ended
-    store.dispatch(setFetchingPendingPatientAssignments(false));
 
     // Update Facts
     // End the procedure
@@ -71,6 +69,9 @@ class DisplayPendingPatientAssignments extends Activity {
       true,
       true
     );
+
+    // Dispatch to store to indicate fetching has ended
+    store.dispatch(setFetchingPendingPatientAssignments(false));
   }
 }
 

@@ -154,7 +154,11 @@ export const PatientsTab: FC = () => {
       )
     );
     agentAPI.addFact(
-      new Belief(BeliefKeys.PATIENT, PatientAttributes.VIEW_DETAILS, patientId),
+      new Belief(
+        BeliefKeys.PATIENT,
+        PatientAttributes.PATIENT_TO_VIEW_DETAILS,
+        patientId
+      ),
       false
     );
     agentAPI.addFact(

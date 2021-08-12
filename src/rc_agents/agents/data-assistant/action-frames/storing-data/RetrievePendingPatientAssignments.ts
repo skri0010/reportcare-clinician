@@ -47,27 +47,33 @@ class RetrievePendingPatientAssignments extends Activity {
     try {
       // Get locally stored clinicianId
       const clinicianId = await Storage.getClinicianID();
+      // Get online status from facts
       const isOnline =
         agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE];
-      // Device is online
-      if (clinicianId && isOnline) {
-        // Retrieve pending patient assignments
-        const query = await listPendingPatientAssignments({
-          clinicianID: clinicianId,
-          pending: { eq: PatientAssignmentStatus.PENDING.toString() }
-        });
 
-        if (query.data.listPendingPatientAssignments?.items) {
-          pendingPatientAssignments = query.data.listPendingPatientAssignments
-            .items as PatientAssignment[];
-          // Save retrieved data locally
-          await Storage.setPendingPatientAssignments(pendingPatientAssignments);
+      if (clinicianId) {
+        // Device is online
+        if (isOnline) {
+          // Retrieve pending patient assignments
+          const query = await listPendingPatientAssignments({
+            clinicianID: clinicianId,
+            pending: { eq: PatientAssignmentStatus.PENDING.toString() }
+          });
+
+          if (query.data.listPendingPatientAssignments?.items) {
+            pendingPatientAssignments = query.data.listPendingPatientAssignments
+              .items as PatientAssignment[];
+            // Save retrieved data locally
+            await Storage.setPendingPatientAssignments(
+              pendingPatientAssignments
+            );
+          }
         }
-      }
-      // Device is offline: Retrieve locally stored data (if any)
-      else if (clinicianId && !isOnline) {
-        pendingPatientAssignments =
-          await Storage.getPendingPatientAssignments();
+        // Device is offline: Retrieve locally stored data (if any)
+        else {
+          pendingPatientAssignments =
+            await Storage.getPendingPatientAssignments();
+        }
       }
 
       if (pendingPatientAssignments) {

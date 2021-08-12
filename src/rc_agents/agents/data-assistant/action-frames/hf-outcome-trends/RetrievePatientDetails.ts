@@ -4,7 +4,8 @@ import {
   Agent,
   Belief,
   Precondition,
-  ResettablePrecondition
+  ResettablePrecondition,
+  setRetryLaterTimeout
 } from "rc_agents/framework";
 import {
   ActionFrameIDs,
@@ -21,7 +22,12 @@ import {
   listReportSymptomsByPatientID,
   listReportVitalsByPatientID
 } from "aws";
-import { ActivityInfo, ReportSymptom, ReportVitals } from "aws/API";
+import {
+  ActivityInfo,
+  PatientInfo,
+  ReportSymptom,
+  ReportVitals
+} from "aws/API";
 import { Storage } from "rc_agents/storage";
 
 /**
@@ -38,99 +44,163 @@ class RetrievePatientDetails extends Activity {
    * @param {Agent} agent - context of the agent
    */
   async doActivity(agent: Agent): Promise<void> {
+    // Reset preconditions
     await super.doActivity(agent, [rule2]);
 
+    // Dispatch to store to indicate fetching
+    // JH-TODO-NEW: Store dispatch
+
     try {
-      // Gets patientId from facts
-      const patientId =
+      // Get patient id from facts
+      const patientInfo: PatientInfo =
         agentAPI.getFacts()[BeliefKeys.PATIENT]?.[
-          PatientAttributes.VIEW_DETAILS
+          PatientAttributes.PATIENT_TO_VIEW_DETAILS
         ];
+      // Get online status from facts
       const isOnline =
         agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE];
+      // Get local patients' details
+      let localPatientsDetails = await Storage.getPatientsDetails();
 
-      const patientDetails: PatientDetails = {
-        activityInfo: [],
-        symptomsReports: [],
-        vitalsReports: []
-      };
+      if (patientInfo) {
+        const patientId = patientInfo.id;
+        const patientDetails: PatientDetails = {
+          patientInfo: patientInfo,
+          activityInfos: {},
+          symptomReports: {},
+          vitalsReports: {}
+        };
+        let patientDetailsRetrieved = false;
 
-      if (patientId) {
-        let localPatientDetails = await Storage.getPatientDetails();
-
+        // Device is online
         if (isOnline) {
-          // Device is online
+          // Query for activity infos, symptom reports and vitals reports
           const activityInfoQuery = await listActivityInfosByPatientID({
             patientID: patientId
           });
-
-          const symptomsReportsQuery = await listReportSymptomsByPatientID({
+          const symptomReportsQuery = await listReportSymptomsByPatientID({
             patientID: patientId
           });
-
           const vitalsReportsQuery = await listReportVitalsByPatientID({
             patientID: patientId
           });
 
+          // Store activity infos in patient details
           if (activityInfoQuery.data.listActivityInfosByPatientID?.items) {
-            patientDetails.activityInfo = activityInfoQuery.data
-              .listActivityInfosByPatientID.items as ActivityInfo[];
-          }
-          if (symptomsReportsQuery.data.listReportSymptomsByPatientID?.items) {
-            patientDetails.symptomsReports = symptomsReportsQuery.data
-              .listReportSymptomsByPatientID.items as ReportSymptom[];
+            const infos =
+              activityInfoQuery.data.listActivityInfosByPatientID.items;
+
+            infos.forEach((info: ActivityInfo | null) => {
+              if (info) {
+                patientDetails.activityInfos[info.id] = info;
+              }
+            });
           }
 
+          // Store symptom reports in patient details
+          if (symptomReportsQuery.data.listReportSymptomsByPatientID?.items) {
+            const symptomReports =
+              symptomReportsQuery.data.listReportSymptomsByPatientID?.items;
+
+            symptomReports.forEach((symptom: ReportSymptom | null) => {
+              if (symptom) {
+                patientDetails.symptomReports[symptom.id] = symptom;
+              }
+            });
+          }
+
+          // Store vitals reports in patient details
           if (vitalsReportsQuery.data.listReportVitalsByPatientID?.items) {
-            patientDetails.vitalsReports = vitalsReportsQuery.data
-              .listReportVitalsByPatientID.items as ReportVitals[];
+            const vitalsReports =
+              vitalsReportsQuery.data.listReportVitalsByPatientID?.items;
+
+            vitalsReports.forEach((vitals: ReportVitals | null) => {
+              if (vitals) {
+                patientDetails.vitalsReports[vitals.id] = vitals;
+              }
+            });
           }
 
-          if (localPatientDetails) {
-            // Saves retrieved details locally with patientId as key
-            localPatientDetails[patientId] = patientDetails;
-          } else {
-            localPatientDetails = {};
-            localPatientDetails[patientId] = patientDetails;
+          // Save retrieved patient details with patientId as key
+          if (!localPatientsDetails) {
+            localPatientsDetails = {};
           }
-
-          agentAPI.addFact(
-            new Belief(
-              BeliefKeys.PATIENT,
-              PatientAttributes.DETAILS,
-              patientDetails
-            ),
-            false
-          );
-        } else if (!isOnline && localPatientDetails) {
-          // Device is offline: retrieves a locally stored patient if any
-          if (localPatientDetails[patientId]) {
+          localPatientsDetails[patientId] = patientDetails;
+          patientDetailsRetrieved = true;
+        }
+        // Device is offline: Retrieve locally stored data (if any)
+        else if (!isOnline && localPatientsDetails) {
+          if (localPatientsDetails[patientId]) {
             agentAPI.addFact(
               new Belief(
                 BeliefKeys.PATIENT,
-                PatientAttributes.DETAILS,
+                PatientAttributes.PATIENT_DETAILS,
                 patientDetails
               ),
               false
             );
+            patientDetailsRetrieved = true;
           }
         }
-      }
 
-      // Update Facts
-      // Removes current attribute from facts
-      agentAPI.addFact(
-        new Belief(BeliefKeys.PATIENT, PatientAttributes.VIEW_DETAILS, null),
-        false
-      );
+        if (patientDetailsRetrieved) {
+          // Update Facts and Beliefs
+          // Store items
+          agentAPI.addFact(
+            new Belief(
+              BeliefKeys.PATIENT,
+              PatientAttributes.PATIENT_DETAILS,
+              patientDetails
+            ),
+            false
+          );
+          // Trigger request to Communicate to USXA
+          agent.addBelief(
+            new Belief(
+              BeliefKeys.PATIENT,
+              PatientAttributes.PATIENT_DETAILS_RETRIEVED,
+              true
+            )
+          );
+        }
+      }
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
+      // Set to retry later
+      setRetryLaterTimeout(() => {
+        agent.addBelief(
+          new Belief(
+            BeliefKeys.PATIENT,
+            PatientAttributes.RETRIEVE_PATIENT_DETAILS,
+            true
+          )
+        );
+        agentAPI.addFact(
+          new Belief(
+            BeliefKeys.PROCEDURE,
+            ProcedureAttributes.HF_OTP_II,
+            ProcedureConst.ACTIVE
+          )
+        );
+      });
+
+      // Update Facts
+      // End the procedure
+      agentAPI.addFact(
+        new Belief(
+          BeliefKeys.PROCEDURE,
+          ProcedureAttributes.HF_OTP_II,
+          ProcedureConst.INACTIVE
+        )
+      );
+    } finally {
+      // JH-TODO-NEW: Store dispatch
     }
   }
 }
 
-// Preconditions for activating the RetrievePatientDetails class
+// Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
   ProcedureAttributes.HF_OTP_II,
@@ -142,7 +212,7 @@ const rule2 = new ResettablePrecondition(
   true
 );
 
-// Action Frame for RetrievePatientDetails class
+// Actionframe
 export const af_RetrievePatientDetails = new Actionframe(
   `AF_${ActionFrameIDs.DTA.RETRIEVE_PATIENT_DETAILS}`,
   [rule1, rule2],

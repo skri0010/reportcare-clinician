@@ -21,7 +21,7 @@ export enum AsyncStorageKeys {
   USERNAME = "Username",
   CLINICIAN = "Clinician",
   PATIENTS = "Patients",
-  PATIENT_DETAILS = "PatientDetails",
+  PATIENTS_DETAILS = "PatientDetails",
   ALERTS = "Alerts",
   ALERT_INFOS = "AlertInfos",
   PENDING_PATIENT_ASSIGNMENTS = "PendingPatientAssignments",
@@ -41,11 +41,10 @@ export type AsyncStorageType = {
   [AsyncStorageKeys.CLINICIAN]: ClinicianInfo;
   [AsyncStorageKeys.PENDING_PATIENT_ASSIGNMENTS]: PatientAssignment[];
   [AsyncStorageKeys.PATIENT_ASSIGNMENTS_RESOLUTIONS]: {
-    [key: string]: PatientAssignmentResolution;
+    [patientId: string]: PatientAssignmentResolution;
   };
-  [AsyncStorageKeys.PATIENTS]: PatientInfo[];
-  [AsyncStorageKeys.PATIENT_DETAILS]: {
-    [key: string]: PatientDetails;
+  [AsyncStorageKeys.PATIENTS_DETAILS]: {
+    [patientId: string]: PatientDetails;
   };
   [AsyncStorageKeys.ALERTS]: {
     [key in RiskLevel]: Alert[];

@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import {
   Actionframe,
   Activity,
@@ -40,7 +42,9 @@ class VisualizeParameters extends Activity {
 
     try {
       const patientDetails: PatientDetails =
-        agentAPI.getFacts()[BeliefKeys.PATIENT]?.[PatientAttributes.DETAILS];
+        agentAPI.getFacts()[BeliefKeys.PATIENT]?.[
+          PatientAttributes.PATIENT_DETAILS
+        ];
 
       if (patientDetails) {
         // LS-TODO: Perform filtering on data according to roles
@@ -49,19 +53,24 @@ class VisualizeParameters extends Activity {
 
         // Removes patientDetails from facts
         agentAPI.addFact(
-          new Belief(BeliefKeys.PATIENT, PatientAttributes.DETAILS, null),
+          new Belief(
+            BeliefKeys.PATIENT,
+            PatientAttributes.PATIENT_DETAILS,
+            null
+          ),
           false
         );
       }
 
       // LS-TODO: To be removed - for testing purposes only
       else {
-        const mockDetails: PatientDetails = {
-          activityInfo: [],
-          symptomsReports: [],
-          vitalsReports: mockVitals
-        };
-        store.dispatch(setPatientDetails(mockDetails));
+        // JH-TODO-NEW FIXME
+        // const mockDetails: PatientDetails = {
+        //   activityInfo: {},
+        //   symptomReports: {},
+        //   vitalsReports: mockVitals
+        // };
+        // store.dispatch(setPatientDetails(mockDetails));
       }
     } catch (error) {
       // eslint-disable-next-line no-console

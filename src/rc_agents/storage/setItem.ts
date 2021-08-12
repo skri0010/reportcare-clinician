@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { PatientInfo } from "aws/API";
 import { AsyncStorageKeys, AsyncStorageType } from ".";
 
 export const setSignUpDetails = async (
@@ -43,21 +44,31 @@ export const setPatientAssignmentResolutions = async (
   );
 };
 
-export const setPatients = async (
-  patients: AsyncStorageType[AsyncStorageKeys.PATIENTS]
+// Stores as PatientsDetails
+export const setAllPatientInfo = async (
+  patients: (PatientInfo | null)[]
 ): Promise<void> => {
-  await AsyncStorage.setItem(
-    AsyncStorageKeys.PATIENTS,
-    JSON.stringify(patients)
-  );
+  const patientsDetails: AsyncStorageType[AsyncStorageKeys.PATIENTS_DETAILS] =
+    {};
+  patients.forEach((patient: PatientInfo | null) => {
+    if (patient) {
+      patientsDetails[patient.id] = {
+        patientInfo: patient,
+        activityInfos: {},
+        symptomReports: {},
+        vitalsReports: {}
+      };
+    }
+  });
+  await setPatientsDetails(patientsDetails);
 };
 
-export const setPatientDetails = async (
-  patientDetails: AsyncStorageType[AsyncStorageKeys.PATIENT_DETAILS]
+export const setPatientsDetails = async (
+  patientsDetails: AsyncStorageType[AsyncStorageKeys.PATIENTS_DETAILS]
 ): Promise<void> => {
   await AsyncStorage.setItem(
-    AsyncStorageKeys.PATIENT_DETAILS,
-    JSON.stringify(patientDetails)
+    AsyncStorageKeys.PATIENTS_DETAILS,
+    JSON.stringify(patientsDetails)
   );
 };
 

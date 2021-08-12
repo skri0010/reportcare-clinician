@@ -54,16 +54,17 @@ export const ActionFrameIDs = {
     RETRIEVE_ENTRY_DATA: "RetrieveEntryData",
     STORE_ENTRY_DATA: "StoreEntryData",
 
-    // HF-OTP-I: List of patients
-    RETRIEVE_ROLE_PATIENTS: "RetrieveRolePatients",
+    // HF-OTP-I: ClinicianInfo and all PatientInfo
+    RETRIEVE_ALL_PATIENT_INFO_BY_ROLE: "RetrieveAllPatientInfoByRole",
+    REQUEST_DISPLAY_ALL_PATIENT_INFO: "RequestDisplayAllPatientInfo",
 
-    // HF-OTP-II: Patient details
+    // HF-OTP-II: Single patient's details
     RETRIEVE_PATIENT_DETAILS: "RetrievePatientDetails",
     REQUEST_DISPLAY_PATIENT_DETAILS: "RequestDisplayPatientDetails",
 
     RETRIEVE_ALERT_HISTORY: "RetrieveAlertHistory",
 
-    // AT-CP
+    // AT-CP: Alerts
     RETRIEVE_PENDING_ALERT_COUNT: "RetrievePendingAlertCount",
     REQUEST_PENDING_ALERT_COUNT_DISPLAY: "RequestPendingAlertCountDisplay",
     RETRIEVE_ALERTS: "RetrieveAlerts",
@@ -84,11 +85,15 @@ export const ActionFrameIDs = {
     UPDATE_TODO: "UpdateTodo"
   },
   UXSA: {
-    // HF-OTP
+    // HF-OTP-I: ClinicianInfo and all PatientInfo
     RETRIEVE_ROLE: "RetrieveRole",
-    DISPLAY_PENDING_PATIENT_ASSIGNMENTS: "DisplayPendingPatientAssignments",
-    REQUEST_RETRIEVE_ALL: "RequestRetrieveAll",
+    REQUEST_RETRIEVE_ALL_PATIENT_INFO: "RequestRetrieveAllPatientInfo",
+
+    // HF-OTP-II: Single patient's details
     VISUALIZE_PARAMETERS: "VisualizeParameters",
+
+    // SRD-I: Patient Assignments
+    DISPLAY_PENDING_PATIENT_ASSIGNMENTS: "DisplayPendingPatientAssignments",
 
     // AT-CP
     DISPLAY_PENDING_ALERT_COUNT: "DisplayPendingAlertCount",
@@ -97,6 +102,8 @@ export const ActionFrameIDs = {
   },
   NWA: {
     SYNC_PROTECTED_INFO: "SyncProtectedInfo",
+
+    // SRD-I - Patient Assignments
     SYNC_PATIENT_ASSIGNMENT_RESOLUTIONS: "SyncPatientAssignmentResolutions",
 
     // SRD-II - Todos
@@ -137,7 +144,6 @@ export enum ProcedureAttributes {
   ADC = "ADC",
   HF_OTP_I = "HF-OTP-I",
   HF_OTP_II = "HF-OTP-II",
-  HF_OTP_III = "HF-OTP-III",
   SRD_I = "SRD-I",
   SRD_II = "SRD-II",
   AT_CP = "AT-CP"
@@ -150,10 +156,13 @@ export enum ClinicianAttributes {
   ENTRY_DATA = "EntryData",
   CONFIGURED = "Configured",
   RETRIEVE_ENTRY = "RetrieveEntry",
+
+  // HF-OTP-I: ClinicianInfo and all PatientInfo
   ROLE = "Role",
   RETRIEVE_ROLE = "RetrieveRole",
+  ROLE_RETRIEVED = "RoleRetrieved",
 
-  // AT-CP - Alerts
+  // AT-CP: Alerts
   RETRIEVE_PENDING_ALERT_COUNT = "RetrievePendingAlertCount",
   PENDING_ALERT_COUNT_RETRIEVED = "PendingAlertCountRetrieved",
   ALERT_STATUS = "AlertStatus",
@@ -174,17 +183,19 @@ export enum ClinicianAttributes {
 
 // Attributes for PATIENT key
 export enum PatientAttributes {
-  RETRIEVE_ALL = "RetrieveAll",
-  ALL = "All",
+  // HF-OTP-I: ClinicianInfo and all PatientInfo
+  RETRIEVE_ALL_PATIENT_INFO = "RetrieveAllPatientInfo",
+  ALL_PATIENT_INFO = "AllPatientInfo",
+  ALL_PATIENT_INFO_RETRIEVED = "AllPatientInfoRetrieved",
 
-  // HF-OTP-II: Patient details
+  // HF-OTP-II: Single patient's details
+  PATIENT_TO_VIEW_DETAILS = "ViewPatientDetailsWithPatientId",
   RETRIEVE_PATIENT_DETAILS = "RetrievePatientDetails",
   PATIENT_DETAILS_RETRIEVED = "PatientDetailsRetrieved",
   DISPLAY_PATIENT_DETAILS_REQUESTED = "DisplayPatientDetailsRequested",
-  VIEW_DETAILS = "ViewDetails",
-  DETAILS = "Details",
+  PATIENT_DETAILS = "PatientDetails",
 
-  // SRD-I - Patient Assignments
+  // SRD-I: Patient Assignments
   PENDING_PATIENT_ASSIGNMENTS = "PendingPatientAssignments",
   RETRIEVE_PENDING_PATIENT_ASSIGNMENTS = "RetrievePendingPatientAssignments",
   PENDING_PATIENT_ASSIGNMENTS_RETRIEVED = "PendingPatientAssignmentsRetrieved",
@@ -192,7 +203,7 @@ export enum PatientAttributes {
   PATIENT_ASSIGNMENT_RESOLVED = "PatientAssignmentResolved",
   RESOLVE_PATIENT_ASSIGNMENT = "ResolvePatientAssignment",
 
-  // AT-CP - Alerts
+  // AT-CP: Alerts
   ALERT_PATIENT_ID = "AlertPatientId",
   RETRIEVE_ALERT_HISTORY = "RetrieveAlertHistory",
   ALERT_HISTORY = "AlertHistory"

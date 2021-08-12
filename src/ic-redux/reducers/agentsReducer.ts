@@ -3,19 +3,18 @@ import { RootAction } from "../actions/RootAction";
 import { Reducer } from "redux";
 import {
   AlertInfo,
-  Patient,
   PatientDetails,
   PendingAlertCount,
   LocalTodo
 } from "rc_agents/model";
-import { Alert, PatientAssignment } from "aws/API";
+import { Alert, PatientAssignment, PatientInfo } from "aws/API";
 
 interface AgentsState {
   procedureSuccessful: boolean;
   procedureOngoing: boolean;
   online: boolean;
-  patients: Patient[];
-  patientDetails: PatientDetails;
+  patients: PatientInfo[];
+  patientDetails: PatientDetails | null;
   pendingPatientAssignments: PatientAssignment[] | null;
   patientAssignmentsSynced: boolean;
   fetchingPendingPatientAssignments: boolean;
@@ -30,11 +29,7 @@ const initialState: AgentsState = {
   procedureOngoing: false,
   online: false,
   patients: [],
-  patientDetails: {
-    activityInfo: [],
-    symptomsReports: [],
-    vitalsReports: []
-  },
+  patientDetails: null,
   pendingPatientAssignments: null,
   fetchingPendingPatientAssignments: false,
   patientAssignmentsSynced: false,

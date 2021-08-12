@@ -1,13 +1,12 @@
 import {
   AlertInfo,
-  Patient,
   PatientDetails,
   PendingAlertCount,
   LocalTodo
 } from "rc_agents/model";
 import { actionNames } from "ic-redux/actions/actionNames";
 import { createAction } from "typesafe-actions";
-import { Alert, PatientAssignment } from "aws/API";
+import { Alert, PatientAssignment, PatientInfo } from "aws/API";
 
 export const setProcedureOngoing = createAction(
   actionNames.SET_PROCEDURE_ONGOING,
@@ -25,7 +24,7 @@ export const setProcedureSuccessful = createAction(
 
 export const setPatients = createAction(
   actionNames.SET_PATIENTS,
-  (patients: Patient[]) => ({
+  (patients: PatientInfo[]) => ({
     patients: patients
   })
 )();

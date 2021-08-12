@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { PatientInfo } from "aws/API";
 import { AsyncStorageKeys, AsyncStorageType } from ".";
 
 export const getSignUpDetails = async (): Promise<
@@ -54,21 +55,22 @@ export const getPatientAssignmentResolutions = async (): Promise<
   return null;
 };
 
-export const getPatients = async (): Promise<
-  AsyncStorageType[AsyncStorageKeys.PATIENTS] | null
-> => {
-  const localData = await AsyncStorage.getItem(AsyncStorageKeys.PATIENTS);
+export const getAllPatientInfo = async (): Promise<PatientInfo[]> => {
+  const localData = await getPatientsDetails();
+  const patients: PatientInfo[] = [];
   if (localData) {
-    return JSON.parse(localData);
+    Object.values(localData).forEach((patientDetails) =>
+      patients?.push(patientDetails.patientInfo)
+    );
   }
-  return null;
+  return patients;
 };
 
-export const getPatientDetails = async (): Promise<
-  AsyncStorageType[AsyncStorageKeys.PATIENT_DETAILS] | null
+export const getPatientsDetails = async (): Promise<
+  AsyncStorageType[AsyncStorageKeys.PATIENTS_DETAILS] | null
 > => {
   const localData = await AsyncStorage.getItem(
-    AsyncStorageKeys.PATIENT_DETAILS
+    AsyncStorageKeys.PATIENTS_DETAILS
   );
   if (localData) {
     return JSON.parse(localData);

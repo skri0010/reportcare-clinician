@@ -1,7 +1,7 @@
 import { Agent, Belief } from "rc_agents/framework";
 import { af_VisualizeParameters } from "./action-frames/hf-outcome-trends/VisualizeParameters";
 import { af_RetrieveRole } from "./action-frames/hf-outcome-trends/RetrieveRole";
-import { af_RequestRetrieveAll } from "./action-frames/hf-outcome-trends/RequestRetrieveAll";
+import { af_RequestRetrieveAllPatientInfo } from "./action-frames/hf-outcome-trends/RequestRetrieveAllPatientInfo";
 import { af_DisplayAlerts } from "./action-frames/triage-alert-hf-clinic/DisplayAlerts";
 import { af_DisplayPendingPatientAssignments } from "./action-frames/storing-data/DisplayPendingPatientAssignments";
 import { AgentIDs, CommonAttributes } from "rc_agents/AgentEnums";
@@ -20,7 +20,7 @@ const agentUXSA = new Agent(
 
     // HF-OTP-I
     af_RetrieveRole,
-    af_RequestRetrieveAll,
+    af_RequestRetrieveAllPatientInfo,
 
     // SRD-I
     af_DisplayPendingPatientAssignments,

@@ -24,18 +24,24 @@ export enum AlertColorCode {
 }
 
 // Interfaces shared with front end
-export interface Patient {
-  details: PatientInfo;
-  userId: string;
-  age: number;
-  riskLevel: RiskLevel;
-}
 export interface PatientDetails {
-  patientInfo?: PatientInfo;
-  activityInfo: ActivityInfo[];
-  symptomsReports: ReportSymptom[];
-  vitalsReports: ReportVitals[];
+  patientInfo: PatientInfo;
+  activityInfos: LocalActivityInfos;
+  symptomReports: LocalReportSymptoms;
+  vitalsReports: LocalReportVitals;
 }
+
+export type LocalActivityInfos = {
+  [id: string]: ActivityInfo;
+};
+
+export type LocalReportSymptoms = {
+  [id: string]: ReportSymptom;
+};
+
+export type LocalReportVitals = {
+  [id: string]: ReportVitals;
+};
 
 export interface PatientAssignmentResolution {
   patientID: string;

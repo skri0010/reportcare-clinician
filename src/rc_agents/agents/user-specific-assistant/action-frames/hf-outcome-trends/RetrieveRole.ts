@@ -4,7 +4,8 @@ import {
   Agent,
   Belief,
   Precondition,
-  ResettablePrecondition
+  ResettablePrecondition,
+  setRetryLaterTimeout
 } from "rc_agents/framework";
 import {
   ProcedureConst,
@@ -34,62 +35,89 @@ class RetrieveRole extends Activity {
   async doActivity(agent: Agent): Promise<void> {
     await super.doActivity(agent, [rule2]);
 
-    const role = await this.queryRole();
-
-    // Update Facts
-    agentAPI.addFact(
-      new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.ROLE, role),
-      false
-    );
-  }
-
-  /**
-   * Queries role of clinician
-   * @returns A role in string if valid, otherwise undefined
-   */
-  // eslint-disable-next-line class-methods-use-this
-  async queryRole(): Promise<string | null> {
-    const roles: string[] = Object.values(Role);
-
+    let role: string | null = null;
     try {
-      // Retrieves local clinician
+      const roles: string[] = Object.values(Role);
+      // Get locally stored clinician info
       const localClinician = await Storage.getClinician();
-
-      // Checks internet connection state
+      // Get online status from facts
       const isOnline =
         agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE];
 
       if (localClinician) {
+        // Device is online
         if (isOnline) {
-          // Device is online
           const query = await getClinicianInfo({
             clinicianID: localClinician.clinicianID
           });
           if (query.data) {
             const clinician = query.data.getClinicianInfo;
             if (clinician && clinician.role) {
-              // Updates local storage
+              // Save retrieved data locally
               await Storage.setClinician(clinician);
               if (roles.includes(clinician.role)) {
-                return clinician.role;
+                role = clinician.role;
               }
             }
           }
-        } else if (localClinician.role && roles.includes(localClinician.role)) {
-          // Device is offline
-          return localClinician.role;
+        }
+        // Device is offline: Retrieve locally stored data (if any)
+        else if (localClinician.role && roles.includes(localClinician.role)) {
+          role = localClinician.role;
+        }
+
+        if (role) {
+          // Update Facts
+          // Store item
+          agentAPI.addFact(
+            new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.ROLE, role),
+            false
+          );
+          // Trigger request to Communicate to USXA
+          agent.addBelief(
+            new Belief(
+              BeliefKeys.CLINICIAN,
+              ClinicianAttributes.ROLE_RETRIEVED,
+              true
+            )
+          );
         }
       }
-      return null;
-    } catch (e) {
+    } catch (error) {
       // eslint-disable-next-line no-console
-      console.log(e);
-      return null;
+      console.log(error);
+      // Set to retry later
+      setRetryLaterTimeout(() => {
+        agent.addBelief(
+          new Belief(
+            BeliefKeys.CLINICIAN,
+            ClinicianAttributes.RETRIEVE_ROLE,
+            true
+          )
+        );
+        agentAPI.addFact(
+          new Belief(
+            BeliefKeys.PROCEDURE,
+            ProcedureAttributes.HF_OTP_I,
+            ProcedureConst.ACTIVE
+          )
+        );
+      });
+
+      // Update Facts
+      // End the procedure
+      agentAPI.addFact(
+        new Belief(
+          BeliefKeys.PROCEDURE,
+          ProcedureAttributes.HF_OTP_I,
+          ProcedureConst.INACTIVE
+        )
+      );
     }
   }
 }
 
-// Preconditions for activating the RetrieveRole class
+// Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
   ProcedureAttributes.HF_OTP_I,
@@ -101,7 +129,7 @@ const rule2 = new ResettablePrecondition(
   true
 );
 
-// Action Frame for RetrieveRole class
+// Actionframe
 export const af_RetrieveRole = new Actionframe(
   `AF_${ActionFrameIDs.UXSA.RETRIEVE_ROLE}`,
   [rule1, rule2],
