@@ -83,7 +83,8 @@ const styles = ScaledSheet.create({
   },
   descriptionContainer: {
     width: "100%",
-    height: "60%"
+    height: "60%",
+    flex: 1
   },
   descriptionContent: {
     height: "100%",

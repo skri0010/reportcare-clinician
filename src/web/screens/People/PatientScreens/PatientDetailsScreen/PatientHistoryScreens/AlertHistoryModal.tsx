@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { View, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity, ScrollView } from "react-native";
 import { RootState, select } from "util/useRedux";
 import { getRiskLevelColor } from "models/RiskLevel";
 import { H3, H4, H5 } from "components/Text/index";
@@ -49,71 +49,75 @@ export const AlertHistoryModal: FC<AlertHistoryModalProps> = ({
         }
       ]}
     >
-      {/* Patient name */}
-      <H3 text={`${name}`} style={{ fontWeight: "bold", paddingTop: ms(20) }} />
-      {/* Alert summary */}
-      <View style={{ paddingTop: ms(20) }}>
-        <H4
-          text={i18n.t("Patient_History.AlertSummaryCard.AlertSummary")}
-          style={{ fontWeight: "bold" }}
+      <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+        <H3
+          text={`${name}`}
+          style={{ fontWeight: "bold", paddingTop: ms(20) }}
         />
-        {/* Alert summary description */}
-        <H5 text={`${alertHistory.description}`} style={null} />
-      </View>
-      {/* Alert details */}
-      <View style={{ paddingTop: ms(10) }}>
-        <H4
-          text={i18n.t("Patient_History.AlertSummaryCard.AlertDetails")}
-          style={{ fontWeight: "bold" }}
-        />
-        {/* Severity */}
-        <View style={{ flexDirection: "row" }}>
-          <H5
-            text={i18n.t("Patient_History.AlertSummaryCard.Severity")}
+        {/* Alert summary */}
+        <View style={{ paddingTop: ms(20) }}>
+          <H4
+            text={i18n.t("Patient_History.AlertSummaryCard.AlertSummary")}
             style={{ fontWeight: "bold" }}
           />
-          <H5
-            text={`${alertHistory.risk}`}
-            style={{
-              color: getRiskLevelColor(
-                colors.riskLevelSelectedBackgroundColors,
-                alertHistory.risk
-              )
-            }}
+          {/* Alert summary description */}
+          <H5 text={`${alertHistory.description}`} style={null} />
+        </View>
+        {/* Alert details */}
+        <View style={{ paddingTop: ms(10) }}>
+          <H4
+            text={i18n.t("Patient_History.AlertSummaryCard.AlertDetails")}
+            style={{ fontWeight: "bold" }}
+          />
+          {/* Severity */}
+          <View style={{ flexDirection: "row" }}>
+            <H5
+              text={i18n.t("Patient_History.AlertSummaryCard.Severity")}
+              style={{ fontWeight: "bold" }}
+            />
+            <H5
+              text={`${alertHistory.risk}`}
+              style={{
+                color: getRiskLevelColor(
+                  colors.riskLevelSelectedBackgroundColors,
+                  alertHistory.risk
+                )
+              }}
+            />
+          </View>
+          {/* HRV */}
+          <AlertDetailsRow
+            detailTitle={i18n.t("Patient_History.AlertSummaryCard.HRV")}
+            detailContent={alertHistory.HRV}
+          />
+          {/* BP */}
+          <AlertDetailsRow
+            detailTitle={i18n.t("Patient_History.AlertSummaryCard.BP")}
+            detailContent={alertHistory.BP}
+          />
+          {/* Symptoms */}
+          <AlertDetailsRow
+            detailTitle={i18n.t("Patient_History.AlertSummaryCard.Symptom")}
+            detailContent={alertHistory.symptom}
+          />
+          {/* Signs */}
+          <AlertDetailsRow
+            detailTitle={i18n.t("Patient_History.AlertSummaryCard.Signs")}
+            detailContent={alertHistory.signs}
           />
         </View>
-        {/* HRV */}
-        <AlertDetailsRow
-          detailTitle={i18n.t("Patient_History.AlertSummaryCard.HRV")}
-          detailContent={alertHistory.HRV}
-        />
-        {/* BP */}
-        <AlertDetailsRow
-          detailTitle={i18n.t("Patient_History.AlertSummaryCard.BP")}
-          detailContent={alertHistory.BP}
-        />
-        {/* Symptoms */}
-        <AlertDetailsRow
-          detailTitle={i18n.t("Patient_History.AlertSummaryCard.Symptom")}
-          detailContent={alertHistory.symptom}
-        />
-        {/* Signs */}
-        <AlertDetailsRow
-          detailTitle={i18n.t("Patient_History.AlertSummaryCard.Signs")}
-          detailContent={alertHistory.signs}
-        />
-      </View>
-      {/* Created datetime */}
-      <View style={{ flexDirection: "row", paddingVertical: ms(20) }}>
-        <H5
-          text={i18n.t("Patient_History.AlertSummaryCard.CreatedOn")}
-          style={{ fontWeight: "bold", color: colors.secondaryTextColor }}
-        />
-        <H5
-          text={`${alertHistory.date}`}
-          style={{ color: colors.secondaryTextColor }}
-        />
-      </View>
+        {/* Created datetime */}
+        <View style={{ flexDirection: "row", paddingVertical: ms(20) }}>
+          <H5
+            text={i18n.t("Patient_History.AlertSummaryCard.CreatedOn")}
+            style={{ fontWeight: "bold", color: colors.secondaryTextColor }}
+          />
+          <H5
+            text={`${alertHistory.date}`}
+            style={{ color: colors.secondaryTextColor }}
+          />
+        </View>
+      </ScrollView>
       <View style={{ alignItems: "center" }}>
         {/* Close button */}
         <TouchableOpacity
