@@ -37,7 +37,9 @@ export const PatientHistoryModal: FC<PatientHistoryModalProps> = ({
 
 const styles = ScaledSheet.create({
   modalContainer: {
+    flexDirection: "row",
     justifyContent: "center",
+    alignItems: "center",
     height: "100%",
     width: "100%"
   }

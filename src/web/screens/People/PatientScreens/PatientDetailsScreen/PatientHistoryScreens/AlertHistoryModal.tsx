@@ -150,9 +150,9 @@ const styles = ScaledSheet.create({
   },
   container: {
     width: "30%",
+    minWidth: "250@ms",
     height: "65%",
     paddingLeft: "15@ms",
-    borderRadius: "10@ms",
-    marginHorizontal: "35%"
+    borderRadius: "10@ms"
   }
 });

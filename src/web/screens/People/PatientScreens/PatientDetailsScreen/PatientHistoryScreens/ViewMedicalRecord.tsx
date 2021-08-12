@@ -76,10 +76,10 @@ const styles = ScaledSheet.create({
   },
   container: {
     width: "50%",
+    minWidth: "250@ms",
     height: "85%",
     paddingHorizontal: "40@ms",
-    borderRadius: "10@ms",
-    marginHorizontal: "25%"
+    borderRadius: "10@ms"
   },
   descriptionContainer: {
     width: "100%",

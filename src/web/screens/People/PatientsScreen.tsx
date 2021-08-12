@@ -275,10 +275,5 @@ const styles = ScaledSheet.create({
     alignItems: "center",
     justifyContent: "center"
   },
-  rowSelection: { flex: 1 },
-  modalContainer: {
-    justifyContent: "center",
-    height: "100%",
-    width: "100%"
-  }
+  rowSelection: { flex: 1 }
 });
