@@ -98,7 +98,6 @@ export const schema = {
                 {
                     "type": "key",
                     "properties": {
-                        "name": "byPatient",
                         "fields": [
                             "patientID"
                         ]
@@ -191,10 +190,11 @@ export const schema = {
                 {
                     "type": "key",
                     "properties": {
-                        "name": "byPatient",
+                        "name": "medicationInfosByPatientID",
                         "fields": [
                             "patientID"
-                        ]
+                        ],
+                        "queryField": "listMedicationInfosByPatientID"
                     }
                 },
                 {
@@ -306,10 +306,11 @@ export const schema = {
                 {
                     "type": "key",
                     "properties": {
-                        "name": "byPatient",
+                        "name": "activityInfosByPatientID",
                         "fields": [
                             "patientID"
-                        ]
+                        ],
+                        "queryField": "listActivityInfosByPatientID"
                     }
                 },
                 {
@@ -370,9 +371,23 @@ export const schema = {
                 "MedId": {
                     "name": "MedId",
                     "isArray": false,
-                    "type": "String",
+                    "type": "ID",
                     "isRequired": true,
                     "attributes": []
+                },
+                "MedicationInfo": {
+                    "name": "MedicationInfo",
+                    "isArray": false,
+                    "type": {
+                        "model": "MedicationInfo"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "association": {
+                        "connectionType": "HAS_ONE",
+                        "associatedWith": "id",
+                        "targetName": "MedId"
+                    }
                 },
                 "Verification": {
                     "name": "Verification",
@@ -406,10 +421,22 @@ export const schema = {
                 {
                     "type": "key",
                     "properties": {
-                        "name": "byPatient",
+                        "name": "medCompliantsByPatientID",
                         "fields": [
                             "patientID"
-                        ]
+                        ],
+                        "queryField": "listMedCompliantsByPatientID"
+                    }
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "medCompliantsByDate",
+                        "fields": [
+                            "patientID",
+                            "Date"
+                        ],
+                        "queryField": "listMedCompliantsByDate"
                     }
                 },
                 {
@@ -470,9 +497,23 @@ export const schema = {
                 "ActId": {
                     "name": "ActId",
                     "isArray": false,
-                    "type": "String",
+                    "type": "ID",
                     "isRequired": true,
                     "attributes": []
+                },
+                "ActivityInfo": {
+                    "name": "ActivityInfo",
+                    "isArray": false,
+                    "type": {
+                        "model": "ActivityInfo"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "association": {
+                        "connectionType": "HAS_ONE",
+                        "associatedWith": "id",
+                        "targetName": "ActId"
+                    }
                 },
                 "Name": {
                     "name": "Name",
@@ -513,10 +554,22 @@ export const schema = {
                 {
                     "type": "key",
                     "properties": {
-                        "name": "byPatient",
+                        "name": "reportSymptomsByPatientID",
                         "fields": [
                             "patientID"
-                        ]
+                        ],
+                        "queryField": "listReportSymptomsByPatientID"
+                    }
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "reportSymptomsByDateTime",
+                        "fields": [
+                            "patientID",
+                            "DateTime"
+                        ],
+                        "queryField": "listReportSymptomsByDateTime"
                     }
                 },
                 {
@@ -571,13 +624,6 @@ export const schema = {
                     "name": "id",
                     "isArray": false,
                     "type": "ID",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "SymptomId": {
-                    "name": "SymptomId",
-                    "isArray": false,
-                    "type": "String",
                     "isRequired": true,
                     "attributes": []
                 },
@@ -655,10 +701,22 @@ export const schema = {
                 {
                     "type": "key",
                     "properties": {
-                        "name": "byPatient",
+                        "name": "reportVitalsByPatientID",
                         "fields": [
                             "patientID"
-                        ]
+                        ],
+                        "queryField": "listReportVitalsByPatientID"
+                    }
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "reportVitalsByDateTime",
+                        "fields": [
+                            "patientID",
+                            "DateTime"
+                        ],
+                        "queryField": "listReportVitalsByDateTime"
                     }
                 },
                 {
@@ -754,7 +812,7 @@ export const schema = {
                     "attributes": [],
                     "association": {
                         "connectionType": "HAS_ONE",
-                        "associatedWith": "clinicianInfo",
+                        "associatedWith": "clinicianID",
                         "targetName": "clinicianID"
                     }
                 },
@@ -879,18 +937,33 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "clinicianInfo": {
-                    "name": "clinicianInfo",
+                "NWA": {
+                    "name": "NWA",
                     "isArray": false,
-                    "type": {
-                        "model": "ClinicianInfo"
-                    },
+                    "type": "String",
                     "isRequired": true,
-                    "attributes": [],
-                    "association": {
-                        "connectionType": "BELONGS_TO",
-                        "targetName": "clinicianID"
-                    }
+                    "attributes": []
+                },
+                "ALA": {
+                    "name": "ALA",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "MHA": {
+                    "name": "MHA",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "clinicianID": {
+                    "name": "clinicianID",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
                 },
                 "owner": {
                     "name": "owner",
@@ -1020,12 +1093,12 @@ export const schema = {
                 {
                     "type": "key",
                     "properties": {
-                        "name": "clinicianIDsByPatientID",
+                        "name": "clinicianMappingsByPatientID",
                         "fields": [
                             "patientID",
                             "clinicianID"
                         ],
-                        "queryField": "clinicianIDsByPatientID"
+                        "queryField": "listClinicianMappingsByPatientID"
                     }
                 },
                 {
@@ -1093,9 +1166,496 @@ export const schema = {
                     }
                 }
             ]
+        },
+        "PatientAssignment": {
+            "name": "PatientAssignment",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "patientID": {
+                    "name": "patientID",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "clinicianID": {
+                    "name": "clinicianID",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "pending": {
+                    "name": "pending",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "resolution": {
+                    "name": "resolution",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "patientName": {
+                    "name": "patientName",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                }
+            },
+            "syncable": true,
+            "pluralName": "PatientAssignments",
+            "attributes": [
+                {
+                    "type": "model",
+                    "properties": {}
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "fields": [
+                            "patientID",
+                            "clinicianID"
+                        ]
+                    }
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "pendingPatientAssignments",
+                        "fields": [
+                            "clinicianID",
+                            "pending"
+                        ],
+                        "queryField": "listPendingPatientAssignments"
+                    }
+                },
+                {
+                    "type": "auth",
+                    "properties": {
+                        "rules": [
+                            {
+                                "provider": "userPools",
+                                "ownerField": "owner",
+                                "allow": "owner",
+                                "operations": [
+                                    "create",
+                                    "read"
+                                ],
+                                "identityClaim": "cognito:username"
+                            },
+                            {
+                                "provider": "userPools",
+                                "ownerField": "clinicianID",
+                                "allow": "owner",
+                                "operations": [
+                                    "read",
+                                    "update"
+                                ],
+                                "identityClaim": "cognito:username"
+                            },
+                            {
+                                "groupClaim": "cognito:groups",
+                                "provider": "userPools",
+                                "allow": "groups",
+                                "groups": [
+                                    "Admin"
+                                ],
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        "Alert": {
+            "name": "Alert",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "patientID": {
+                    "name": "patientID",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "patientName": {
+                    "name": "patientName",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "dateTime": {
+                    "name": "dateTime",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "summary": {
+                    "name": "summary",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "colorCode": {
+                    "name": "colorCode",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "vitalsReportID": {
+                    "name": "vitalsReportID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "vitalsReport": {
+                    "name": "vitalsReport",
+                    "isArray": false,
+                    "type": {
+                        "model": "ReportVitals"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "association": {
+                        "connectionType": "HAS_ONE",
+                        "associatedWith": "id",
+                        "targetName": "vitalsReportID"
+                    }
+                },
+                "symptomReportID": {
+                    "name": "symptomReportID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "symptomReport": {
+                    "name": "symptomReport",
+                    "isArray": false,
+                    "type": {
+                        "model": "ReportSymptom"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "association": {
+                        "connectionType": "HAS_ONE",
+                        "associatedWith": "id",
+                        "targetName": "symptomReportID"
+                    }
+                },
+                "pending": {
+                    "name": "pending",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "completed": {
+                    "name": "completed",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "owner": {
+                    "name": "owner",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                }
+            },
+            "syncable": true,
+            "pluralName": "Alerts",
+            "attributes": [
+                {
+                    "type": "model",
+                    "properties": {}
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "patientAlertsByDateTime",
+                        "fields": [
+                            "patientID",
+                            "dateTime"
+                        ],
+                        "queryField": "listPatientAlertsByDateTime"
+                    }
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "pendingAlertsByDateTime",
+                        "fields": [
+                            "pending",
+                            "dateTime"
+                        ],
+                        "queryField": "listPendingAlertsByDateTime"
+                    }
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "pendingRiskAlerts",
+                        "fields": [
+                            "pending",
+                            "colorCode"
+                        ],
+                        "queryField": "listPendingRiskAlerts"
+                    }
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "completedRiskAlerts",
+                        "fields": [
+                            "completed",
+                            "colorCode"
+                        ],
+                        "queryField": "listCompletedRiskAlerts"
+                    }
+                },
+                {
+                    "type": "auth",
+                    "properties": {
+                        "rules": [
+                            {
+                                "provider": "userPools",
+                                "ownerField": "owner",
+                                "allow": "owner",
+                                "operations": [
+                                    "read"
+                                ],
+                                "identityClaim": "cognito:username"
+                            },
+                            {
+                                "groupClaim": "cognito:groups",
+                                "provider": "userPools",
+                                "allow": "groups",
+                                "groups": [
+                                    "Admin"
+                                ],
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
+                            },
+                            {
+                                "groupClaim": "cognito:groups",
+                                "provider": "userPools",
+                                "allow": "groups",
+                                "groupsField": "patientID",
+                                "operations": [
+                                    "read",
+                                    "update"
+                                ],
+                                "groupField": "groups"
+                            },
+                            {
+                                "groupClaim": "cognito:groups",
+                                "provider": "userPools",
+                                "allow": "groups",
+                                "groups": [
+                                    "Patients"
+                                ],
+                                "operations": [
+                                    "create"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        "Todo": {
+            "name": "Todo",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "clinicianID": {
+                    "name": "clinicianID",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "title": {
+                    "name": "title",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "patientName": {
+                    "name": "patientName",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "notes": {
+                    "name": "notes",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "lastModified": {
+                    "name": "lastModified",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "alertID": {
+                    "name": "alertID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "alert": {
+                    "name": "alert",
+                    "isArray": false,
+                    "type": {
+                        "model": "Alert"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "association": {
+                        "connectionType": "HAS_ONE",
+                        "associatedWith": "id",
+                        "targetName": "alertID"
+                    }
+                },
+                "completed": {
+                    "name": "completed",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "owner": {
+                    "name": "owner",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                }
+            },
+            "syncable": true,
+            "pluralName": "Todos",
+            "attributes": [
+                {
+                    "type": "model",
+                    "properties": {}
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "todosByClinicianID",
+                        "fields": [
+                            "clinicianID"
+                        ],
+                        "queryField": "listTodosByClinicianID"
+                    }
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "todosByLastModifiedDate",
+                        "fields": [
+                            "clinicianID",
+                            "lastModified"
+                        ],
+                        "queryField": "listTodosByLastModifiedDate"
+                    }
+                },
+                {
+                    "type": "auth",
+                    "properties": {
+                        "rules": [
+                            {
+                                "provider": "userPools",
+                                "ownerField": "owner",
+                                "allow": "owner",
+                                "operations": [
+                                    "read",
+                                    "update"
+                                ],
+                                "identityClaim": "cognito:username"
+                            },
+                            {
+                                "groupClaim": "cognito:groups",
+                                "provider": "userPools",
+                                "allow": "groups",
+                                "groups": [
+                                    "Admin"
+                                ],
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
+                            },
+                            {
+                                "groupClaim": "cognito:groups",
+                                "provider": "userPools",
+                                "allow": "groups",
+                                "groups": [
+                                    "EPs",
+                                    "Nurses",
+                                    "HFSpecialists",
+                                    "MedicalOfficers",
+                                    "Pharmacists"
+                                ],
+                                "operations": [
+                                    "create"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
         }
     },
     "enums": {},
     "nonModels": {},
-    "version": "c4eb15056240832e81f4e1cf5f5620d4"
+    "version": "613b60fa5b401c2dd643da14364472fe"
 };

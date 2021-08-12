@@ -22,7 +22,7 @@ export const PatientRequestRow: React.FC<PatientRequestRowProps> = ({
   return (
     <TouchableOpacity>
       <PatientRowBase
-        title={generalDetails.name}
+        title={generalDetails.name!}
         subtitleOne={{
           label: "",
           value: request || "Missing alert information"

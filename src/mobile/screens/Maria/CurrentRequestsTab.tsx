@@ -27,7 +27,7 @@ export const CurrentRequestsTab: FC = () => {
               request="Verify titration values"
             />
           )}
-          keyExtractor={(item) => item.patientID}
+          keyExtractor={(item) => item.patientID!}
         />
       </View>
     </ScreenWrapper>

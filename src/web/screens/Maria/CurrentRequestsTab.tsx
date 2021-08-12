@@ -24,7 +24,7 @@ export const CurrentRequestsTab: FC = () => {
           renderItem={({ item }) => (
             <PatientRequestRow generalDetails={item} request="temporary" />
           )}
-          keyExtractor={(item) => item.patientID}
+          keyExtractor={(item) => item.patientID!}
         />
       </View>
     </ScreenWrapper>

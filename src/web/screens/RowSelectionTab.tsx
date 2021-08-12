@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
 import { View } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
-import { FilterTagProps, RiskFilterTab } from "../RiskFilterTab";
+import { FilterTagProps, RiskFilterComponent } from "../RiskFilterComponent";
 import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { RowSelectionHeader } from "./RowSelectionHeader";
 
@@ -21,7 +21,6 @@ export const RowSelectionWrapper: FC<RowSelectionWrapperProps> = ({
   addButton = false,
   riskFilterTag = false,
   placeholder,
-  children,
   isTodo = false,
   onPress,
   onRiskFilterClick
@@ -66,12 +65,9 @@ export const RowSelectionWrapper: FC<RowSelectionWrapperProps> = ({
       {/* Risk filter tab */}
       {riskFilterTag ? (
         <View>
-          <RiskFilterTab onTagPress={onRiskFilterClick} />
+          <RiskFilterComponent onTagPress={onRiskFilterClick} />
         </View>
       ) : null}
-
-      {/* Other components to be placed in the left side tab eg list of patients */}
-      <View style={{ flex: 1 }}>{children}</View>
     </View>
   );
 };
@@ -79,20 +75,9 @@ export const RowSelectionWrapper: FC<RowSelectionWrapperProps> = ({
 const styles = ScaledSheet.create({
   container: {
     flexDirection: "column",
-    flex: 1,
     alignContent: "stretch"
   },
   addButtonSize: {
     fontSize: "5@ms"
-  },
-  addButtonColor: {
-    color: "white"
-  },
-  iconStyle: {
-    position: "absolute",
-    right: 2,
-    top: 15,
-    bottom: 15,
-    paddingRight: 10
   }
 });

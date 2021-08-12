@@ -1,50 +1,85 @@
-import { PatientInfo } from "aws/models";
+import { PatientInfo } from "aws/API";
 
 export const mockPatients: PatientInfo[] = [
   {
+    __typename: "PatientInfo",
     id: "1",
     name: "Mohammad Zaini",
     address: "Melbourne",
     deviceNo: "1",
     diagnosisInfo: "none",
-    NHYAclass: "NHYA III",
+    NHYAclass: "3",
     cardiologist: "Doctor Wong",
     hospitalName: "Sabah Hospital",
     hospitalLocation: "Sabah",
     targetWeight: "70",
     targetActivity: "cardio",
-    patientID: "20"
+    patientID: "20",
+    createdAt: "",
+    updatedAt: "",
+    _lastChangedAt: 1627604201979,
+    _version: 1
   },
   {
+    __typename: "PatientInfo",
     id: "2",
     name: "Tyler Haris",
     address: "Barcelona",
     deviceNo: "1",
     diagnosisInfo: "none",
-    NHYAclass: "NHYA II",
+    NHYAclass: "2",
     cardiologist: "Doctor Xavi",
     hospitalName: "Barcelona",
     hospitalLocation: "Bercelona",
     targetWeight: "80",
     targetActivity: "cardio",
-    patientID: "30"
+    patientID: "30",
+    createdAt: "",
+    updatedAt: "",
+    _lastChangedAt: 1627604201979,
+    _version: 1
   },
   {
+    __typename: "PatientInfo",
     id: "3",
     name: "Danial Williams",
     address: "Sydney",
     deviceNo: "1",
     diagnosisInfo: "none",
-    NHYAclass: "NHYA III",
+    NHYAclass: "3",
     cardiologist: "Doctor Wong",
     hospitalName: "Sabah Hospital",
     hospitalLocation: "Sabah",
     targetWeight: "70",
     targetActivity: "cardio",
-    patientID: "50"
+    patientID: "50",
+    createdAt: "",
+    updatedAt: "",
+    _lastChangedAt: 1627604201979,
+    _version: 1
   },
   {
+    __typename: "PatientInfo",
     id: "4",
+    name: "Mohammad Abdul",
+    address: "Canberra",
+    deviceNo: "1",
+    diagnosisInfo: "none",
+    NHYAclass: "3",
+    cardiologist: "Doctor Wong",
+    hospitalName: "Canberra Hospital",
+    hospitalLocation: "Canberra",
+    targetWeight: "55",
+    targetActivity: "cardio",
+    patientID: "60",
+    createdAt: "",
+    updatedAt: "",
+    _lastChangedAt: 1627604201979,
+    _version: 1
+  },
+  {
+    __typename: "PatientInfo",
+    id: "5",
     name: "Mohammad Abdul",
     address: "Canberra",
     deviceNo: "1",
@@ -55,7 +90,11 @@ export const mockPatients: PatientInfo[] = [
     hospitalLocation: "Canberra",
     targetWeight: "55",
     targetActivity: "cardio",
-    patientID: "60"
+    patientID: "70",
+    createdAt: "",
+    updatedAt: "",
+    _lastChangedAt: 1627604201979,
+    _version: 1
   }
 ];
 

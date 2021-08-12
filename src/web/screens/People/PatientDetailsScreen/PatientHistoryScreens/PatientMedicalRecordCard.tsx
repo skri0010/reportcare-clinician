@@ -3,7 +3,7 @@ import { RootState, select } from "util/useRedux";
 import { ScaledSheet } from "react-native-size-matters";
 import { H3 } from "components/Text/index";
 import { CardWrapper } from "web/screens/Home/CardWrapper";
-import { mockMedicalRecord } from "mock/mockPatientDetails";
+import { mockMedicalRecord, MedicalRecords } from "mock/mockPatientDetails";
 import { FlatList, TouchableOpacity, View } from "react-native";
 import { MedicalRecordRow } from "./MedicalRecordRow";
 
@@ -11,11 +11,15 @@ interface PatientMedicalRecordProps {
   patientId: string;
   maxHeight: number;
   onAddPress: () => void;
+  setViewMedicalModal: (state: boolean) => void;
+  setDisplayMedicalRecord: (state: MedicalRecords) => void;
 }
 
 export const PatientMedicalRecordCard: FC<PatientMedicalRecordProps> = ({
   maxHeight,
-  onAddPress
+  onAddPress,
+  setViewMedicalModal,
+  setDisplayMedicalRecord
 }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
@@ -24,7 +28,10 @@ export const PatientMedicalRecordCard: FC<PatientMedicalRecordProps> = ({
   // Query database for a specific patient by patientId for alert histories here
   // For now I just mocked it
   const [medicalRecords] = useState(mockMedicalRecord);
-
+  function onRowPress(record: MedicalRecords) {
+    setViewMedicalModal(true);
+    setDisplayMedicalRecord(record);
+  }
   return (
     <CardWrapper maxHeight={maxHeight}>
       <View style={styles.title}>
@@ -47,9 +54,12 @@ export const PatientMedicalRecordCard: FC<PatientMedicalRecordProps> = ({
         showsVerticalScrollIndicator={false}
         data={medicalRecords}
         renderItem={({ item }) => (
-          <MedicalRecordRow description={item.record} onRowPress={() => null} />
+          <MedicalRecordRow
+            description={item.record}
+            onRowPress={() => onRowPress(item)}
+          />
         )}
-        keyExtractor={(alert) => alert.patientId}
+        keyExtractor={(alert) => alert.id}
       />
     </CardWrapper>
   );

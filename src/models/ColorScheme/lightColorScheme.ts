@@ -24,7 +24,7 @@ export const lightColorScheme: ColorScheme = {
   selectedBorderColor: "#000000",
 
   // Separators
-  separatorColor: "#e6e6e6",
+  separatorColor: "#363636",
 
   // Bars
   primaryBarColor: "#0d8ca8",
@@ -38,10 +38,17 @@ export const lightColorScheme: ColorScheme = {
 
   // Buttons
   primaryButtonColor: "#57c081",
+  primaryDeactivatedButtonColor: "#d1d1d1",
   primaryWarningButtonColor: "#D11C1C",
+  primaryTodoCompleteButtonColor: "#A484FF",
 
   // Avatar background
   primaryAvatarBackgroundColor: "#e0e0e0",
+
+  // Icons
+  primaryIconColor: "#000000",
+  secondaryIconColor: "#ABA9A9",
+  acceptIconColor: "#6AC574",
 
   // Others
   riskLevelBackgroundColors: riskLevelBackgroundColors,
@@ -52,5 +59,5 @@ export const lightColorScheme: ColorScheme = {
   errorColor: "#ff1e00",
 
   // Overlay
-  overlayColor: "#f5fcff88"
+  overlayColor: "#e7e8e895"
 };

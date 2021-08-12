@@ -1,8 +1,6 @@
 {
   "welcome": "Selamat Datang",
 
-  "Alerts": "Amaran",
-
   "Auth_SignIn": {
     "SignIn": "Log Masuk",
     "Username": "Nama Pengguna",
@@ -69,10 +67,11 @@
     "OnlineNotice": "Sambungan internet dikesan",
     "OfflineNotice": "Tiada sambungan internet.\nSebahagian maklumat mungkin tidak tersedia."
   },
-  "Patient_Requests": {
+  "Patient_Assignments": {
     "ApprovalSuccessful": "Kelulusan permintaan pesakit berjaya",
     "ApprovalFailed": "Gagal meluluskan permintaan pesakit",
-    "OfflineApproval": "Tiada sambungan internet.\nKelulusan akan disimpan dan disegerakkan semasa sambungan internet dikesan."
+    "OfflineApproval": "Tiada sambungan internet.\nKelulusan akan disimpan dan disegerakkan semasa sambungan internet dikesan.",
+    "NoPendingAssignments": "Setiap tugasan pesakit diselesai!"
   },
   "Parameter_Graphs": {
     "DiastolicBP": "Tekanan Darah Diastolik ",
@@ -92,5 +91,52 @@
       "Friday": "Jumaat",
       "Saturday": "Sabtu"
     }
+  },
+  "TabTitle": {
+    "Home": "Home",
+    "Patients": "Pesakit",
+    "Clinicians": "Pakar",
+    "Chat": "Perbualan",
+    "Todo": "Todo",
+    "MARIA": "MARIA",
+    "Settings": "Settings",
+    "Help": "Help"
+  },
+  "Home": {
+    "Dashboard": "Dashboard",
+    "Welcome": "Selamat Datang Dr. ",
+    "WelcomeMsg": "Menyemak kesihatan pesakit-pesakit anda, mengawasi vital mereka dan berbual dengan mereka.",
+    "RequestsByMaria": "Permintaan daripada MARIA ",
+    "Alerts": "Amaran ",
+    "Todos": "Todos ",
+    "ItemsRemaining": "lagi",
+    "ShowMoreButton": "LIHAT LEBIH"
+  },
+  "Alerts": {
+    "HighRisk": "Risiko Tinggi",
+    "MediumRisk": "Risiko Sederhana",
+    "LowRisk": "Risiko Rendah",
+    "UnassignedRisk": "Risiko belum ditetapkan"
+  },
+  "Todo": {
+    "Current": "Semasa",
+    "Completed": "Selesai",
+    "SearchBarCurrentPlaceholder": "Cari todo yang semasa",
+    "SearchBarCompletePlaceholder": "Cari todo yang selesai",
+    "ViewTodo": "Lihat Todo",
+    "EditTodo": "Edit Todo",
+    "Title": "Tajuk",
+    "Patient": "Pesakit",
+    "Notes": "Catatan",
+    "CreatedOn": "Dicipta pada: ",
+    "ModifiedOn": "Diubahsuai pada: ",
+    "ViewButton": "Lihat",
+    "EditButton": "Edit",
+    "CancelButton": "Batal",
+    "SaveButton": "Simpan",
+    "TitleInputPlaceholder": "Apakah todo ini tentang?",
+    "PatientInputPlaceholder": "Siapakah nama pesakit?",
+    "NotesInputPlaceholder": "Apakah yang perlu dicatatkan?",
+    "NoSelection": "Pilihkan salah satu item Todo untuk melihat butirannya"
   }
 }

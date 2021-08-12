@@ -3,16 +3,22 @@ import { RootState, select } from "util/useRedux";
 import { H3 } from "components/Text/index";
 import { CardWrapper } from "web/screens/Home/CardWrapper";
 import { AlertHistoryRow } from "./AlertHistoryRow";
-import { mockAlertHistory } from "mock/mockPatientDetails";
+import { mockAlertHistory, AlertHistory } from "mock/mockPatientDetails";
 import { FlatList } from "react-native";
 
 interface PatientAlertHistoryProps {
   patientId: string;
   maxHeight: number;
+  name: string;
+  setDisplayHistory: (state: AlertHistory) => void;
+  setModalAlertVisible: (state: boolean) => void;
 }
 
 export const PatientAlertHistoryCard: FC<PatientAlertHistoryProps> = ({
-  maxHeight
+  name,
+  maxHeight,
+  setDisplayHistory,
+  setModalAlertVisible
 }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
@@ -21,6 +27,12 @@ export const PatientAlertHistoryCard: FC<PatientAlertHistoryProps> = ({
   // For now I just mocked it
 
   const [alertHistory] = useState(mockAlertHistory);
+  // const [displayHistory, setDisplayHistory] = useState<AlertHistory>();
+
+  function onRowPress(history: AlertHistory) {
+    setDisplayHistory(history);
+    setModalAlertVisible(true);
+  }
 
   return (
     <CardWrapper maxHeight={maxHeight}>
@@ -36,11 +48,11 @@ export const PatientAlertHistoryCard: FC<PatientAlertHistoryProps> = ({
             risk={item.risk}
             description={item.description}
             date={item.date}
-            onRowPress={() => null}
-            key={item.patientId}
+            onRowPress={() => onRowPress(item)}
+            key={item.id}
           />
         )}
-        keyExtractor={(alert) => alert.patientId}
+        keyExtractor={(alert) => alert.id}
       />
     </CardWrapper>
   );

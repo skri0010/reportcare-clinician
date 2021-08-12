@@ -4,7 +4,7 @@ import { PatientRowBase } from "./PatientRowBase";
 import { ScaledSheet } from "react-native-size-matters";
 import { RootState, select } from "util/useRedux";
 import { H7 } from "components/Text/index";
-import { PatientInfo } from "aws/models";
+import { PatientInfo } from "aws/API";
 import { RiskLevel } from "models/RiskLevel";
 
 export interface PatientChatRowProps {
@@ -51,7 +51,7 @@ export const PatientChatRow: FC<PatientChatRowProps> = ({
       {/* TODO-JH: i18n translation */}
       {/* TODO-JH: Tick for sent */}
       <PatientRowBase
-        title={generalDetails.name}
+        title={generalDetails.name!}
         subtitleOne={{
           label: "Message",
           value: message

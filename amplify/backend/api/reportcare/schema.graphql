@@ -398,11 +398,6 @@ type Todo
     name: "todosByLastModifiedDate"
     fields: ["clinicianID", "lastModified"]
     queryField: "listTodosByLastModifiedDate"
-  ) 
-  @key(
-    name: "todosByAlertID"
-    fields: ["clinicianID", "alertID"]
-    queryField: "listTodosByAlertID"
   ) {
   id: ID!
   clinicianID: String!

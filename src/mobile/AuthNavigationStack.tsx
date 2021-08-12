@@ -7,6 +7,7 @@ import { SignIn } from "./auth_screens/SignIn";
 import { RegisterAccount } from "./auth_screens/RegisterAccount";
 import { ForgotPassword } from "./auth_screens/ForgotPassword";
 import { ConfirmRegistration } from "./auth_screens/ConfirmRegistration";
+import { getMainScreenHeaderStyle } from "util/getStyles";
 import i18n from "util/language/i18n";
 
 interface AuthNavigationStackProps {
@@ -23,14 +24,10 @@ export const AuthNavigationStack: FC<AuthNavigationStackProps> = ({
     fonts: state.settings.fonts
   }));
 
-  const screenHeaderStyle = {
-    backgroundColor: colors.primaryBarColor,
-    elevation: 0, // Remove shadow on Android
-    shadowOpacity: 0 // Remove shadow on iOS
-  };
+  const screenHeaderStyle = getMainScreenHeaderStyle(colors);
 
   const headerTitleStyle = {
-    fontSize: fonts.h2Size
+    fontSize: fonts.h3Size
   };
 
   return (

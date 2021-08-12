@@ -1,17 +1,33 @@
 import API from "@aws-amplify/api-graphql";
+// eslint-disable-next-line no-restricted-imports
 import * as queries from "aws/graphql/queries";
 import { BaseResponse } from "aws";
 import {
   ListPatientInfosQueryVariables,
   ListPatientInfosQuery,
-  ListActivityInfosQueryVariables,
-  ListActivityInfosQuery,
-  ListReportSymptomsQueryVariables,
-  ListReportSymptomsQuery,
-  ListReportVitalssQueryVariables,
-  ListReportVitalssQuery,
   ListClinicianInfosQueryVariables,
-  ListClinicianInfosQuery
+  ListClinicianInfosQuery,
+  ListMedCompliantsQuery,
+  ListMedCompliantsQueryVariables,
+  ListMedicationInfosQuery,
+  ListMedCompliantsByDateQuery,
+  ListMedCompliantsByDateQueryVariables,
+  ListPendingPatientAssignmentsQuery,
+  ListPendingPatientAssignmentsQueryVariables,
+  ListPendingAlertsByDateTimeQuery,
+  ListPendingAlertsByDateTimeQueryVariables,
+  ListPatientAlertsByDateTimeQueryVariables,
+  ListPatientAlertsByDateTimeQuery,
+  ListPendingRiskAlertsQuery,
+  ListPendingRiskAlertsQueryVariables,
+  ListCompletedRiskAlertsQuery,
+  ListCompletedRiskAlertsQueryVariables,
+  ListActivityInfosByPatientIDQueryVariables,
+  ListActivityInfosByPatientIDQuery,
+  ListReportSymptomsByPatientIDQuery,
+  ListReportSymptomsByPatientIDQueryVariables,
+  ListReportVitalsByPatientIDQuery,
+  ListReportVitalsByPatientIDQueryVariables
 } from "aws/API";
 
 interface ListClinicianInfosResponse extends BaseResponse {
@@ -40,41 +56,144 @@ export const listPatientInfos = async (
   })) as ListPatientInfosResponse;
 };
 
-interface ListActivityInfosResponse extends BaseResponse {
-  data: ListActivityInfosQuery;
+interface ListActivityInfosByPatientIDResponse extends BaseResponse {
+  data: ListActivityInfosByPatientIDQuery;
 }
 
-export const listActivityInfos = async (
-  variables: ListActivityInfosQueryVariables
-): Promise<ListActivityInfosResponse> => {
+export const listActivityInfosByPatientID = async (
+  variables: ListActivityInfosByPatientIDQueryVariables
+): Promise<ListActivityInfosByPatientIDResponse> => {
   return (await API.graphql({
-    query: queries.listActivityInfos,
+    query: queries.listActivityInfosByPatientID,
     variables: variables
-  })) as ListActivityInfosResponse;
+  })) as ListActivityInfosByPatientIDResponse;
 };
 
-interface ListReportSymptomsResponse extends BaseResponse {
-  data: ListReportSymptomsQuery;
+interface ListReportSymptomsByPatientIDResponse extends BaseResponse {
+  data: ListReportSymptomsByPatientIDQuery;
 }
 
-export const listReportSymptoms = async (
-  variables: ListReportSymptomsQueryVariables
-): Promise<ListReportSymptomsResponse> => {
+export const listReportSymptomsByPatientID = async (
+  variables: ListReportSymptomsByPatientIDQueryVariables
+): Promise<ListReportSymptomsByPatientIDResponse> => {
   return (await API.graphql({
-    query: queries.listReportSymptoms,
+    query: queries.listReportSymptomsByPatientID,
     variables: variables
-  })) as ListReportSymptomsResponse;
+  })) as ListReportSymptomsByPatientIDResponse;
 };
 
-interface ListReportVitalsQueryResponse extends BaseResponse {
-  data: ListReportVitalssQuery;
+interface ListReportVitalsByPatientIDQueryResponse extends BaseResponse {
+  data: ListReportVitalsByPatientIDQuery;
 }
 
-export const listReportVitals = async (
-  variables: ListReportVitalssQueryVariables
-): Promise<ListReportVitalsQueryResponse> => {
+export const listReportVitalsByPatientID = async (
+  variables: ListReportVitalsByPatientIDQueryVariables
+): Promise<ListReportVitalsByPatientIDQueryResponse> => {
   return (await API.graphql({
-    query: queries.listReportVitalss,
+    query: queries.listReportVitalsByPatientID,
     variables: variables
-  })) as ListReportVitalsQueryResponse;
+  })) as ListReportVitalsByPatientIDQueryResponse;
+};
+
+interface ListMedCompliantsQueryResponse extends BaseResponse {
+  data: ListMedCompliantsQuery;
+}
+
+export const listMedCompliants = async (
+  variables: ListMedCompliantsQueryVariables
+): Promise<ListMedCompliantsQueryResponse> => {
+  return (await API.graphql({
+    query: queries.listMedCompliants,
+    variables: variables
+  })) as ListMedCompliantsQueryResponse;
+};
+
+interface ListMedCompliantsByDateResponse extends BaseResponse {
+  data: ListMedCompliantsByDateQuery;
+}
+
+export const listMedCompliantsByDate = async (
+  variables: ListMedCompliantsByDateQueryVariables
+): Promise<ListMedCompliantsByDateResponse> => {
+  return (await API.graphql({
+    query: queries.listMedCompliantsByDate,
+    variables: variables
+  })) as ListMedCompliantsByDateResponse;
+};
+interface ListMedicationInfosQueryResponse extends BaseResponse {
+  data: ListMedicationInfosQuery;
+}
+
+export const listMedicationInfos = async (
+  variables: ListMedCompliantsQueryVariables
+): Promise<ListMedicationInfosQueryResponse> => {
+  return (await API.graphql({
+    query: queries.listMedicationInfos,
+    variables: variables
+  })) as ListMedicationInfosQueryResponse;
+};
+
+interface ListPendingPatientAssignmentResponse extends BaseResponse {
+  data: ListPendingPatientAssignmentsQuery;
+}
+
+export const listPendingPatientAssignments = async (
+  variables: ListPendingPatientAssignmentsQueryVariables
+): Promise<ListPendingPatientAssignmentResponse> => {
+  return (await API.graphql({
+    query: queries.listPendingPatientAssignments,
+    variables: variables
+  })) as ListPendingPatientAssignmentResponse;
+};
+
+interface ListPatientAlertsByDateTimeResponse extends BaseResponse {
+  data: ListPatientAlertsByDateTimeQuery;
+}
+
+export const listPatientAlertsByDateTime = async (
+  variables: ListPatientAlertsByDateTimeQueryVariables
+): Promise<ListPatientAlertsByDateTimeResponse> => {
+  return (await API.graphql({
+    query: queries.listPatientAlertsByDateTime,
+    variables: variables
+  })) as ListPatientAlertsByDateTimeResponse;
+};
+
+interface ListPendingAlertsByDateTimeResponse extends BaseResponse {
+  data: ListPendingAlertsByDateTimeQuery;
+}
+
+export const listPendingAlertsByDateTime = async (
+  variables: ListPendingAlertsByDateTimeQueryVariables
+): Promise<ListPendingAlertsByDateTimeResponse> => {
+  return (await API.graphql({
+    query: queries.listPendingAlertsByDateTime,
+    variables: variables
+  })) as ListPendingAlertsByDateTimeResponse;
+};
+
+interface ListPendingRiskAlertsResponse extends BaseResponse {
+  data: ListPendingRiskAlertsQuery;
+}
+
+export const listPendingRiskAlerts = async (
+  variables: ListPendingRiskAlertsQueryVariables
+): Promise<ListPendingRiskAlertsResponse> => {
+  return (await API.graphql({
+    query: queries.listPendingRiskAlerts,
+    variables: variables
+  })) as ListPendingRiskAlertsResponse;
+};
+
+interface ListCompletedRiskAlertsResponse extends BaseResponse {
+  data: ListCompletedRiskAlertsQuery;
+}
+
+export const listCompletedRiskAlerts = async (
+  variables: ListCompletedRiskAlertsQueryVariables
+): Promise<ListCompletedRiskAlertsResponse> => {
+  return (await API.graphql({
+    query: queries.listCompletedRiskAlerts,
+    variables: variables
+  })) as ListCompletedRiskAlertsResponse;
 };

@@ -1,7 +1,7 @@
 import React from "react";
 import { TouchableOpacity } from "react-native";
 import { PatientRowBase } from "./PatientRowBase";
-import { PatientInfo } from "aws/models";
+import { PatientInfo } from "aws/API";
 import { RiskLevel } from "models/RiskLevel";
 
 export interface PatientDetailsRowProps {
@@ -21,10 +21,10 @@ export const PatientDetailsRow: React.FC<PatientDetailsRowProps> = ({
     <TouchableOpacity onPress={onRowPress}>
       {/* TODO-JH: i18n translation */}
       <PatientRowBase
-        title={generalDetails.name}
+        title={generalDetails.name!}
         subtitleOne={{
           label: "Class",
-          value: patientClass
+          value: `NHYA ${patientClass}`
         }}
         subtitleTwo={{
           label: "Age",

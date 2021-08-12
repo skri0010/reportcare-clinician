@@ -12,7 +12,7 @@ import { ClinicianDetails } from "./ClinicianDetails";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { ms } from "react-native-size-matters";
-import { NoSelection } from "./NoSelection";
+import { NoSelectionScreen } from "../Shared/NoSelectionScreen";
 
 const Stack = createStackNavigator();
 
@@ -66,8 +66,6 @@ export const CliniciansTab: FC<WithSideTabsProps[ScreenName.CLINICIAN]> = () => 
     clinicianID: clinicianSelected.clinicianID
   };
 
-  const [filteredClinicians, setFilteredClinicians] = useState<ClinicianInfo[]>(mockClinician);
-
 
 
   // JH-TODO: Replace placeholder with i18n
@@ -83,9 +81,7 @@ export const CliniciansTab: FC<WithSideTabsProps[ScreenName.CLINICIAN]> = () => 
               showsVerticalScrollIndicator={false}
               style={{ flex: 1 }}
               ItemSeparatorComponent={() => <ItemSeparator />}
-              ListHeaderComponent={() => <ItemSeparator />}
-              ListFooterComponent={() => <ItemSeparator />}
-              data = {filteredClinicians}
+              data = {mockClinician}
               renderItem={({ item }) => (
                 <ClinicianContactRow 
                 generalDetails={item} onRowPress={() => onRowClick(item)} />
@@ -116,7 +112,7 @@ export const CliniciansTab: FC<WithSideTabsProps[ScreenName.CLINICIAN]> = () => 
                 </Stack.Navigator>
             </NavigationContainer>
           ): (
-            <NoSelection
+            <NoSelectionScreen
               screenName={ScreenName.CLINICIAN}
               subtitle="Choose Clinician to view more info"
             />

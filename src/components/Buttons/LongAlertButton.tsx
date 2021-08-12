@@ -5,11 +5,13 @@ import { getRiskLevelColor, RiskLevel } from "../../models/RiskLevel";
 import { ScaledSheet, ms } from "react-native-size-matters";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { H5, H6 } from "components/Text/index";
+import i18n from "util/language/i18n";
+import { AlertStatus } from "aws";
 
 interface LongAlertButtonProps {
   riskLevel: RiskLevel;
   alertCount?: number;
-  onPress?: () => void;
+  onPress?: (alertStatus: AlertStatus, riskLevel: RiskLevel) => void;
 }
 
 export const LongAlertButton: React.FC<LongAlertButtonProps> = ({
@@ -23,6 +25,19 @@ export const LongAlertButton: React.FC<LongAlertButtonProps> = ({
   }));
 
   const hasNotifications = alertCount > 0;
+
+  function findRiskName(risk: RiskLevel) {
+    let riskName: string = "Alerts.UnassignedRisk";
+
+    if (risk === RiskLevel.HIGH) {
+      riskName = "Alerts.HighRisk";
+    } else if (risk === RiskLevel.MEDIUM) {
+      riskName = "Alerts.MediumRisk";
+    } else if (risk === RiskLevel.LOW) {
+      riskName = "Alerts.LowRisk";
+    }
+    return i18n.t(riskName);
+  }
 
   return (
     <TouchableOpacity
@@ -39,10 +54,12 @@ export const LongAlertButton: React.FC<LongAlertButtonProps> = ({
           )
         }
       ]}
-      onPress={onPress}
+      onPress={
+        onPress ? () => onPress(AlertStatus.PENDING, riskLevel) : undefined
+      }
     >
       <H5
-        text={`${riskLevel} Risk`}
+        text={findRiskName(riskLevel)}
         style={[{ color: colors.primaryTextColor }, styles.riskText]}
       />
       {/* Floating notification count */}

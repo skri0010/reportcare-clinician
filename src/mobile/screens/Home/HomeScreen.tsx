@@ -40,7 +40,7 @@ export const HomeScreen: FC<WithBottomTabsProps[ScreenName.HOME]> = () => {
             request="Verify titration values"
           />
         )}
-        keyExtractor={(item) => item.patientID}
+        keyExtractor={(item) => item.patientID!}
       />
     </ScreenWrapper>
   );

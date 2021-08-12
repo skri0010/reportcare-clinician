@@ -6,14 +6,12 @@ import { AuthNavigationStack } from "./AuthNavigationStack";
 import awsconfig from "aws/aws-exports";
 import { Amplify } from "@aws-amplify/core";
 import { Auth } from "@aws-amplify/auth";
-import { LogBox, Dimensions } from "react-native";
-import { ToastProvider } from "react-native-toast-notifications";
-import { ms } from "react-native-size-matters";
-import Icon from "react-native-vector-icons/FontAwesome";
+import { LogBox } from "react-native";
 import { AuthState } from "./auth_screens";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import agentAPI from "agents_implementation/agent_framework/AgentAPI";
-import { AsyncStorageKeys } from "agents_implementation/agent_framework/const/AsyncStorageKeys";
+import agentAPI from "rc_agents/framework/AgentAPI";
+import { AsyncStorageKeys } from "rc_agents/storage";
+import { ToastProviderComponent } from "components/IndicatorComponents/ToastProvider";
 
 Amplify.configure(awsconfig);
 Auth.configure(awsconfig);
@@ -34,7 +32,7 @@ const App: FC = () => {
       await Auth.currentAuthenticatedUser();
       // In case local storage has been cleared
       const clinicianId = await AsyncStorage.getItem(
-        AsyncStorageKeys.ClinicianID
+        AsyncStorageKeys.CLINICIAN_ID
       );
       if (clinicianId) {
         agentAPI.startAgents();
@@ -53,43 +51,14 @@ const App: FC = () => {
 
   return (
     <Provider store={store}>
-      <ToastProvider
-        placement="top"
-        offset={ms(15)}
-        duration={4000}
-        successColor="#229c00"
-        successIcon={
-          <Icon
-            name="check-square"
-            color="white"
-            size={ms(20)}
-            style={{ marginLeft: ms(5), marginRight: ms(10) }}
-          />
-        }
-        dangerIcon={
-          <Icon
-            name="times-circle"
-            color="white"
-            size={ms(20)}
-            style={{ marginLeft: ms(5), marginRight: ms(10) }}
-          />
-        }
-        dangerColor="#b30c00"
-        textStyle={{ fontSize: ms(16), color: "white" }}
-        style={{
-          paddingVertical: ms(10),
-          paddingRight: ms(30),
-          borderRadius: ms(5),
-          maxWidth: (Dimensions.get("window").width * 4) / 5
-        }}
-      >
+      <ToastProviderComponent>
         {authState === AuthState.SIGNED_IN && (
           <MainNavigationStack setAuthState={setAuthState} />
         )}
         {authState === AuthState.SIGNED_OUT && (
           <AuthNavigationStack setAuthState={setAuthState} />
         )}
-      </ToastProvider>
+      </ToastProviderComponent>
     </Provider>
   );
 };

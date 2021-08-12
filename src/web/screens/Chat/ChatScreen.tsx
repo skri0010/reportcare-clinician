@@ -26,7 +26,7 @@ export const ChatScreen: FC<WithSideTabsProps[ScreenName.CHAT]> = () => {
               unreadMessageCount={2}
             />
           )}
-          keyExtractor={(item) => item.patientID}
+          keyExtractor={(item) => item.patientID!}
         />
       </View>
     </ScreenWrapper>

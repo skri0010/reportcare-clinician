@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
-import { ScaledSheet, moderateScale } from "react-native-size-matters";
+import { ScaledSheet, ms } from "react-native-size-matters";
 import { View, Text } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
@@ -23,12 +23,16 @@ export const RowSelectionHeader: FC<RowSelectionHeaderProps> = ({
     <View
       style={[styles.titleBar, { backgroundColor: colors.primaryBarColor }]}
     >
-      <Text style={styles.textStyle}>{title}</Text>
+      <Text
+        style={[styles.textStyle, { color: colors.primaryContrastTextColor }]}
+      >
+        {title}
+      </Text>
       {addButton ? (
         <Icon
           name="add"
-          color="white"
-          size={moderateScale(16)}
+          color={colors.primaryContrastTextColor}
+          size={ms(16)}
           style={styles.iconStyle}
           onPress={onPress}
         />
@@ -46,15 +50,14 @@ const styles = ScaledSheet.create({
     alignContent: "center"
   },
   textStyle: {
-    color: "white",
     fontSize: "20@ms",
     paddingLeft: "10@ms"
   },
   iconStyle: {
     position: "absolute",
-    right: 2,
-    top: 15,
-    bottom: 15,
-    paddingRight: 10
+    right: "2@ms",
+    top: "15@ms",
+    bottom: "15@ms",
+    paddingRight: "10@ms"
   }
 });
