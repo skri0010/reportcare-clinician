@@ -3,7 +3,7 @@ import { View, TouchableOpacity } from "react-native";
 import { PatientRowBase } from "./PatientRowBase";
 import MaterialCommunityIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import MaterialIcon from "react-native-vector-icons/MaterialIcons";
-import { ScaledSheet, ms } from "react-native-size-matters";
+import { ScaledSheet } from "react-native-size-matters";
 import { select, RootState } from "util/useRedux";
 
 export interface PatientAssignmentRowProps {

@@ -3,17 +3,17 @@ import {
   Activity,
   Agent,
   Belief,
-  Precondition
+  Precondition,
+  ResettablePrecondition
 } from "rc_agents/framework";
 import {
   ProcedureConst,
-  AsyncStorageKeys,
-  CommonAttributes,
   BeliefKeys,
   ClinicianAttributes,
   ProcedureAttributes,
   ActionFrameIDs
 } from "rc_agents/AgentEnums";
+import { AsyncStorageKeys } from "rc_agents/storage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import agentAPI from "rc_agents/framework/AgentAPI";
 import { createClinicianInfo, createClinicianProtectedInfo } from "aws";
@@ -37,19 +37,7 @@ class StoreEntryData extends Activity {
    * @param {Agent} agent - context of the agent
    */
   async doActivity(agent: Agent): Promise<void> {
-    await super.doActivity(agent);
-
-    // Update Beliefs
-    agent.addBelief(
-      new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
-    );
-    agent.addBelief(
-      new Belief(
-        BeliefKeys.CLINICIAN,
-        ClinicianAttributes.RETRIEVE_ENTRY,
-        false
-      )
-    );
+    await super.doActivity(agent, [rule1]);
 
     try {
       // Gets sign up details and username from facts
@@ -144,7 +132,7 @@ class StoreEntryData extends Activity {
 }
 
 // Rules or preconditions for activating the StoreEntryData class
-const rule1 = new Precondition(
+const rule1 = new ResettablePrecondition(
   BeliefKeys.CLINICIAN,
   ClinicianAttributes.RETRIEVE_ENTRY,
   true

@@ -5,8 +5,10 @@ import { af_StoreEntryData } from "./action-frames/app-device-configuration/Stor
 import { af_RetrievePatientDetails } from "./action-frames/hf-outcome-trends/RetrievePatientDetails";
 import { af_RequestDetailsDisplay } from "./action-frames/hf-outcome-trends/RequestDetailsDisplay";
 import { af_RetrieveRolePatients } from "./action-frames/hf-outcome-trends/RetrieveRolePatients";
-import { af_RetrieveAlertInfos } from "./action-frames/triage-alert-hf-clinic/RetrieveAlertInfos";
+import { af_RetrieveAlerts } from "./action-frames/triage-alert-hf-clinic/RetrieveAlerts";
 import { af_RequestAlertsDisplay } from "./action-frames/triage-alert-hf-clinic/RequestAlertsDisplay";
+import { af_RetrieveAlertInfo } from "./action-frames/triage-alert-hf-clinic/RetrieveAlertInfo";
+import { af_RequestAlertInfoDisplay } from "./action-frames/triage-alert-hf-clinic/RequestAlertInfoDisplay";
 import { af_RetrievePendingPatientAssignments } from "./action-frames/storing-data/RetrievePendingPatientAssignments";
 import { af_RequestDisplayPendingPatientAssignments } from "./action-frames/storing-data/RequestDisplayPendingPatientAssignments";
 import { af_ResolvePatientAssignment } from "./action-frames/storing-data/ResolvePatientAssignment";
@@ -41,8 +43,10 @@ const agentDTA = new Agent(
     // AT-CP
     af_RetrievePendingAlertCount,
     af_RequestPendingAlertCountDisplay,
-    af_RetrieveAlertInfos,
-    af_RequestAlertsDisplay
+    af_RetrieveAlerts,
+    af_RequestAlertsDisplay,
+    af_RetrieveAlertInfo,
+    af_RequestAlertInfoDisplay
   ], // action frame
   [belief1] // beliefs
 );

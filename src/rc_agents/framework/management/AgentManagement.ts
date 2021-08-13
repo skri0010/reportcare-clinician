@@ -9,12 +9,8 @@ import {
   ClinicianProtectedInfo,
   ClinicianInfo
 } from "aws/API";
-import {
-  AgentIDs,
-  AppAttributes,
-  AsyncStorageKeys,
-  BeliefKeys
-} from "../../AgentEnums";
+import { AgentIDs, AppAttributes, BeliefKeys } from "../../AgentEnums";
+import { AsyncStorageKeys } from "../../storage";
 
 /**
  * Base class for management of active agents.

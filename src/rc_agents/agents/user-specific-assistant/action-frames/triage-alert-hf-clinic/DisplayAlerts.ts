@@ -3,20 +3,20 @@ import {
   Activity,
   Agent,
   Belief,
-  Precondition
+  Precondition,
+  ResettablePrecondition
 } from "rc_agents/framework";
 import {
   ActionFrameIDs,
   BeliefKeys,
   ClinicianAttributes,
-  CommonAttributes,
   ProcedureAttributes,
   ProcedureConst
 } from "rc_agents/AgentEnums";
 import agentAPI from "rc_agents/framework/AgentAPI";
-import { AlertInfo } from "rc_agents/model";
 import { store } from "util/useRedux";
 import { setAlerts } from "ic-redux/actions/agents/actionCreator";
+import { Alert } from "aws/API";
 
 /**
  * Class to represent an activity for triggering the display of alerts.
@@ -32,39 +32,21 @@ class DisplayAlerts extends Activity {
    * @param {Agent} agent - context of the agent
    */
   async doActivity(agent: Agent): Promise<void> {
-    await super.doActivity(agent);
-
-    // Update Beliefs
-    agent.addBelief(
-      new Belief(
-        BeliefKeys.CLINICIAN,
-        ClinicianAttributes.ALERT_INFOS_RETRIEVED,
-        false
-      )
-    );
-    agent.addBelief(
-      new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
-    );
+    await super.doActivity(agent, [rule2]);
 
     try {
-      const alertInfos: AlertInfo[] =
-        agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[
-          ClinicianAttributes.ALERT_INFOS
-        ];
+      const alerts: Alert[] =
+        agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.ALERTS];
 
-      if (alertInfos) {
-        // LS-TODO: Irrelevant alert infos should be filtered out depending on user's role
+      if (alerts) {
+        // LS-TODO: Irrelevant alerts should be filtered out depending on user's role
 
-        // Dispatch alert infos to front end for display
-        store.dispatch(setAlerts(alertInfos));
+        // Dispatch alerts to front end for display
+        store.dispatch(setAlerts(alerts));
 
         // Removes alert info from facts
         agentAPI.addFact(
-          new Belief(
-            BeliefKeys.CLINICIAN,
-            ClinicianAttributes.ALERT_INFOS,
-            null
-          ),
+          new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.ALERTS, null),
           false
         );
       }
@@ -92,9 +74,9 @@ const rule1 = new Precondition(
   ProcedureAttributes.AT_CP,
   ProcedureConst.ACTIVE
 );
-const rule2 = new Precondition(
+const rule2 = new ResettablePrecondition(
   BeliefKeys.CLINICIAN,
-  ClinicianAttributes.ALERT_INFOS_RETRIEVED,
+  ClinicianAttributes.ALERTS_RETRIEVED,
   true
 );
 

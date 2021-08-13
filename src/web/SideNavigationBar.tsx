@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { HomeScreen } from "web/screens/Home/HomeScreen";
 import { CliniciansTab } from "web/screens/People/CliniciansTab";
-import { PatientsTab } from "web/screens/People/PatientsTab";
+import { PatientsScreen } from "web/screens/People/PatientsScreen";
 import { ChatScreen } from "web/screens/Chat/ChatScreen";
 import { TodoScreen } from "web/screens/Todo/TodoScreen";
 import { MariaScreen } from "web/screens/Maria/MariaScreen";
@@ -70,7 +70,7 @@ export const SideNavigationBar: FC<MainScreenProps> = () => {
       />
       <Drawer.Screen
         name={ScreenName.PATIENT}
-        component={PatientsTab}
+        component={PatientsScreen}
         options={{
           drawerIcon: ({ color }) => (
             <TabIcon name="account-circle" color={color} subtitle="Patients" />
