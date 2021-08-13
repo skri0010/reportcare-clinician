@@ -4,7 +4,7 @@ import { ms, ScaledSheet } from "react-native-size-matters";
 import { H4 } from "components/Text";
 import { RootState, select } from "util/useRedux";
 import { ScreenName } from "..";
-import Icon from "react-native-vector-icons/MaterialIcons";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 interface NoSelectionScreenProps {
   screenName: ScreenName;

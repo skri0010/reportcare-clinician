@@ -7,6 +7,7 @@ import { select, RootState } from "util/useRedux";
 import { ScreenWrapper } from "../ScreenWrapper";
 import { ClinicianContext } from "./CliniciansTab";
 import { ContactTitle } from "./ContactTitle";
+import i18n from "util/language/i18n";
 
 interface ClinicianDetails {
   generalDetails: ClinicianInfo;
@@ -32,26 +33,28 @@ export const ClinicianSection: FC<ClinicianSectionProps> = ({
   );
 };
 
-export const ClinicianDetails: FC<ClinicianDetails> = () => {
+export const ClinicianDetails: FC<ClinicianInfo> = (clinician: 
+  ClinicianInfo) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
   }));
 
-  const generalDetails = useContext(ClinicianContext);
+  const details = clinician;
 
   return (
     <ScreenWrapper>
+      <ContactTitle name={i18n.t("Information")} isPatient={false} />
       <View style={styles.container}>
         <ClinicianSection
           title="Clinician Name:"
-          information={generalDetails.name}
+          information={details.name}
         />
         <ClinicianSection
           title="Hospital Name:"
-          information={generalDetails.hospitalName}
+          information={details.hospitalName}
         />
-        <ClinicianSection title="Role:" information={generalDetails.role} />
-        <ClinicianSection title="Email:" information={generalDetails.id} />
+        <ClinicianSection title="Role:" information={details.role} />
+        <ClinicianSection title="Email:" information={details.id} />
       </View>
     </ScreenWrapper>
   );

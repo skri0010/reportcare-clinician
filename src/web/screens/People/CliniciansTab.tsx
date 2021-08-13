@@ -13,6 +13,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { ms } from "react-native-size-matters";
 import { NoSelectionScreen } from "../Shared/NoSelectionScreen";
+import i18n from "util/language/i18n";
 
 const Stack = createStackNavigator();
 
@@ -31,45 +32,24 @@ export const CliniciansTab: FC<WithSideTabsProps[ScreenName.CLINICIAN]> = () => 
 
   const [clinicianSelected, setClincianSelected] = useState<ClinicianInfo>({
     id: "",
-    name: "",
-    role: "",
-    hospitalName: "",
     clinicianID: "",
-    owner: ""
+    hospitalName: "",
+    role: "",
+    owner: "",
+    name: ""
   });
 
   const [isEmptyClinician, setEmptyClincian] = useState(true);
 
   function onRowClick(item: ClinicianInfo){
-    const currentSelected = clinicianSelected;
-    const emptyClincian: ClinicianInfo = {
-      id: "",
-      name: "",
-      role: "",
-      hospitalName: "",
-      clinicianID: "",
-      owner: ""
-    };
-    if (currentSelected !== item && item !== emptyClincian) {
-      setEmptyClincian(false);
-      setClincianSelected(item);
-    } else if (item === emptyClincian) {
-      setEmptyClincian(true);
-    }
+    setClincianSelected(item);
+    setEmptyClincian(false);
   }
 
-  const initialClinician = {
-    id: clinicianSelected.id,
-    name: clinicianSelected.name,
-    role: clinicianSelected.role,
-    hospitalName: clinicianSelected.hospitalName,
-    clinicianID: clinicianSelected.clinicianID
-  };
 
   // JH-TODO: Replace placeholder with i18n
   return (
     <ScreenWrapper>
-      <ClinicianContext.Provider value={initialClinician}>
       <View style={{ flexDirection: "row", height: "100%" }}>
         <View style={{ flex: 1, height: Dimensions.get("window").height }}>
           <RowSelectionWrapper
@@ -89,36 +69,18 @@ export const CliniciansTab: FC<WithSideTabsProps[ScreenName.CLINICIAN]> = () => 
             </View>
         <View style = {{ flex: 2, backgroundColor: colors.primaryWebBackgroundColor }}>
           {!isEmptyClinician ? (
-            <NavigationContainer independent>
-                <Stack.Navigator>
-                  <Stack.Screen 
-                    name="View Clinician"
-                    component={ClinicianDetails}
-                    options={() => ({
-                      title: "Clinician",
-                      headerStyle: {
-                        height: ms(45)
-                      },
-                      headerTitleStyle: {
-                        fontWeight: "bold",
-                        fontSize: ms(20),
-                        paddingLeft: ms(15)
-                      }
-                    })}
-                  />
-                </Stack.Navigator>
-            </NavigationContainer>
-          ): (
+            <ClinicianDetails clinicianID={clinicianSelected.clinicianID} name={clinicianSelected.name} id={clinicianSelected.id} 
+            hospitalName={clinicianSelected.hospitalName} role={clinicianSelected.role} owner={clinicianSelected.owner}/>
+                    
+            ): (
+            
             <NoSelectionScreen
               screenName={ScreenName.CLINICIAN}
               subtitle="Choose Clinician to view more info"
             />
           )}
-          
         </View>
-        
         </View>
-        </ClinicianContext.Provider>
     </ScreenWrapper>
   );
 };
