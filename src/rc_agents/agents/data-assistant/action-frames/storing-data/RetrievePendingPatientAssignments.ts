@@ -21,7 +21,7 @@ import { PatientAssignmentStatus } from "rc_agents/model";
 import { listPendingPatientAssignments } from "aws";
 import { PatientAssignment } from "aws/API";
 import { setFetchingPendingPatientAssignments } from "ic-redux/actions/agents/actionCreator";
-import { store } from "ic-redux/store";
+import { store } from "util/useRedux";
 
 /**
  * Class to represent an activity for retrieving pending patient assignments.
@@ -126,7 +126,6 @@ class RetrievePendingPatientAssignments extends Activity {
           ProcedureConst.INACTIVE
         )
       );
-    } finally {
       // Dispatch to store to indicate fetching has ended
       store.dispatch(setFetchingPendingPatientAssignments(false));
     }

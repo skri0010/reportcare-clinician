@@ -22,17 +22,13 @@ import {
  * The class represents the activity for requesting retrieval of all patients specific to a role.
  * This happens in Procedure HF Outcome Trends (HF-OTP-I).
  */
-class RequestRetrieveAllPatientInfo extends Communicate {
+class RequestRetrievePatients extends Communicate {
   constructor() {
     super(
-      ActionFrameIDs.UXSA.REQUEST_RETRIEVE_ALL_PATIENT_INFO,
+      ActionFrameIDs.UXSA.REQUEST_RETRIEVE_PATIENTS,
       Performative.REQUEST,
       // Trigger RetrivePatientsByRole of DTA agent
-      new Belief(
-        BeliefKeys.PATIENT,
-        PatientAttributes.RETRIEVE_ALL_PATIENT_INFO,
-        true
-      ),
+      new Belief(BeliefKeys.PATIENT, PatientAttributes.RETRIEVE_PATIENTS, true),
       [AgentIDs.DTA]
     );
   }
@@ -70,8 +66,8 @@ const rule3 = new ResettablePrecondition(
 );
 
 // Actionframe
-export const af_RequestRetrieveAllPatientInfo = new Actionframe(
-  `AF_${ActionFrameIDs.UXSA.REQUEST_RETRIEVE_ALL_PATIENT_INFO}`,
+export const af_RequestRetrievePatients = new Actionframe(
+  `AF_${ActionFrameIDs.UXSA.REQUEST_RETRIEVE_PATIENTS}`,
   [rule1, rule2],
-  new RequestRetrieveAllPatientInfo()
+  new RequestRetrievePatients()
 );

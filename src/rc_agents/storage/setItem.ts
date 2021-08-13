@@ -45,7 +45,7 @@ export const setPatientAssignmentResolutions = async (
 };
 
 // Stores as PatientsDetails
-export const setAllPatientInfo = async (
+export const setPatients = async (
   patients: (PatientInfo | null)[]
 ): Promise<void> => {
   const patientsDetails: AsyncStorageType[AsyncStorageKeys.PATIENTS_DETAILS] =

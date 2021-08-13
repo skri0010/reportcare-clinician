@@ -16,17 +16,18 @@ import {
 import agentAPI from "rc_agents/framework/AgentAPI";
 import { store } from "util/useRedux";
 import {
-  setFetchingPendingPatientAssignments,
-  setPendingPatientAssignments
+  setFetchingPatients,
+  setPatients
 } from "ic-redux/actions/agents/actionCreator";
+import { PatientInfo } from "aws/API";
 
 /**
- * Class to represent an activity for displaying pending patient assignments.
- * This happens in Procedure Storing Data (SRD-I).
+ * Class to represent an activity for displaying patients.
+ * This happens in Procedure Storing Data (HTF-OP-I).
  */
-class DisplayPendingPatientAssignments extends Activity {
+class DisplayPatients extends Activity {
   constructor() {
-    super(ActionFrameIDs.UXSA.DISPLAY_PENDING_PATIENT_ASSIGNMENTS);
+    super(ActionFrameIDs.UXSA.DISPLAY_PATIENTS);
   }
 
   /**
@@ -37,23 +38,17 @@ class DisplayPendingPatientAssignments extends Activity {
     // Reset preconditions
     await super.doActivity(agent, [rule2]);
 
-    const pendingPatientAssignments =
-      agentAPI.getFacts()[BeliefKeys.PATIENT]?.[
-        PatientAttributes.PENDING_PATIENT_ASSIGNMENTS
-      ];
+    const patients: PatientInfo[] =
+      agentAPI.getFacts()[BeliefKeys.PATIENT]?.[PatientAttributes.PATIENTS];
 
-    if (pendingPatientAssignments) {
-      // Dispatch to store retrieved pending patient assignments
-      store.dispatch(setPendingPatientAssignments(pendingPatientAssignments));
+    if (patients) {
+      // Dispatch to store retrieved patients
+      store.dispatch(setPatients(patients));
 
       // Update Facts
       // Remove item
       agentAPI.addFact(
-        new Belief(
-          BeliefKeys.PATIENT,
-          PatientAttributes.PENDING_PATIENT_ASSIGNMENTS,
-          null
-        ),
+        new Belief(BeliefKeys.PATIENT, PatientAttributes.PATIENTS, null),
         false
       );
     }
@@ -63,7 +58,7 @@ class DisplayPendingPatientAssignments extends Activity {
     agentAPI.addFact(
       new Belief(
         BeliefKeys.PROCEDURE,
-        ProcedureAttributes.SRD_I,
+        ProcedureAttributes.HF_OTP_I,
         ProcedureConst.INACTIVE
       ),
       true,
@@ -71,25 +66,25 @@ class DisplayPendingPatientAssignments extends Activity {
     );
 
     // Dispatch to store to indicate fetching has ended
-    store.dispatch(setFetchingPendingPatientAssignments(false));
+    store.dispatch(setFetchingPatients(false));
   }
 }
 
 // Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.SRD_I,
+  ProcedureAttributes.HF_OTP_I,
   ProcedureConst.ACTIVE
 );
 const rule2 = new ResettablePrecondition(
   BeliefKeys.PATIENT,
-  PatientAttributes.PENDING_PATIENT_ASSIGNMENTS_RETRIEVED,
+  PatientAttributes.PATIENTS_RETRIEVED,
   true
 );
 
 // Actionframe
-export const af_DisplayPendingPatientAssignments = new Actionframe(
-  `AF_${ActionFrameIDs.UXSA.DISPLAY_PENDING_PATIENT_ASSIGNMENTS}`,
+export const af_DisplayPatients = new Actionframe(
+  `AF_${ActionFrameIDs.UXSA.DISPLAY_PATIENTS}`,
   [rule1, rule2],
-  new DisplayPendingPatientAssignments()
+  new DisplayPatients()
 );

@@ -55,7 +55,7 @@ export const getPatientAssignmentResolutions = async (): Promise<
   return null;
 };
 
-export const getAllPatientInfo = async (): Promise<PatientInfo[]> => {
+export const getPatients = async (): Promise<PatientInfo[]> => {
   const localData = await getPatientsDetails();
   const patients: PatientInfo[] = [];
   if (localData) {

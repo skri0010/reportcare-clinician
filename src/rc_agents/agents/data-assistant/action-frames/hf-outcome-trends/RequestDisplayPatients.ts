@@ -21,15 +21,15 @@ import {
  * Class to represent the activity for requesting display of retrieved patients' info.
  * This happens in Procedure HF Outcome Trends (HF-OTP-I).
  */
-class RequestDisplayAllPatientInfo extends Communicate {
+class RequestDisplayPatients extends Communicate {
   constructor() {
-    // Triggers DisplayAllPatientInfo of UXSA agent
+    // Triggers DisplayPatients of UXSA agent
     super(
-      ActionFrameIDs.DTA.REQUEST_DISPLAY_ALL_PATIENT_INFO,
+      ActionFrameIDs.DTA.REQUEST_DISPLAY_PATIENTS,
       Performative.REQUEST,
       new Belief(
         BeliefKeys.PATIENT,
-        PatientAttributes.ALL_PATIENT_INFO_RETRIEVED,
+        PatientAttributes.PATIENTS_RETRIEVED,
         true
       ),
       [AgentIDs.UXSA]
@@ -60,17 +60,17 @@ const rule1 = new Precondition(
 const rule2 = new Precondition(
   AgentIDs.DTA,
   CommonAttributes.LAST_ACTIVITY,
-  ActionFrameIDs.DTA.RETRIEVE_ALL_PATIENT_INFO_BY_ROLE
+  ActionFrameIDs.DTA.RETRIEVE_PATIENTS_BY_ROLE
 );
 const rule3 = new ResettablePrecondition(
   AgentIDs.DTA,
-  PatientAttributes.ALL_PATIENT_INFO_RETRIEVED,
+  PatientAttributes.PATIENTS_RETRIEVED,
   true
 );
 
 // Actionframe
-export const af_RequestDisplayAllPatientInfo = new Actionframe(
-  `AF_${ActionFrameIDs.DTA.REQUEST_DISPLAY_ALL_PATIENT_INFO}`,
+export const af_RequestDisplayPatients = new Actionframe(
+  `AF_${ActionFrameIDs.DTA.REQUEST_DISPLAY_PATIENTS}`,
   [rule1, rule2],
-  new RequestDisplayAllPatientInfo()
+  new RequestDisplayPatients()
 );

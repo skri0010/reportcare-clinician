@@ -54,9 +54,9 @@ export const ActionFrameIDs = {
     RETRIEVE_ENTRY_DATA: "RetrieveEntryData",
     STORE_ENTRY_DATA: "StoreEntryData",
 
-    // HF-OTP-I: ClinicianInfo and all PatientInfo
-    RETRIEVE_ALL_PATIENT_INFO_BY_ROLE: "RetrieveAllPatientInfoByRole",
-    REQUEST_DISPLAY_ALL_PATIENT_INFO: "RequestDisplayAllPatientInfo",
+    // HF-OTP-I: ClinicianInfo and all patients (PatientInfo)
+    RETRIEVE_PATIENTS_BY_ROLE: "RetrievePatientsByRole",
+    REQUEST_DISPLAY_PATIENTS: "RequestDisplayPatients",
 
     // HF-OTP-II: Single patient's details
     RETRIEVE_PATIENT_DETAILS: "RetrievePatientDetails",
@@ -85,9 +85,10 @@ export const ActionFrameIDs = {
     UPDATE_TODO: "UpdateTodo"
   },
   UXSA: {
-    // HF-OTP-I: ClinicianInfo and all PatientInfo
+    // HF-OTP-I: ClinicianInfo and all patients (PatientInfo)
     RETRIEVE_ROLE: "RetrieveRole",
-    REQUEST_RETRIEVE_ALL_PATIENT_INFO: "RequestRetrieveAllPatientInfo",
+    REQUEST_RETRIEVE_PATIENTS: "RequestRetrievePatients",
+    DISPLAY_PATIENTS: "DisplayPatients",
 
     // HF-OTP-II: Single patient's details
     VISUALIZE_PARAMETERS: "VisualizeParameters",
@@ -157,7 +158,7 @@ export enum ClinicianAttributes {
   CONFIGURED = "Configured",
   RETRIEVE_ENTRY = "RetrieveEntry",
 
-  // HF-OTP-I: ClinicianInfo and all PatientInfo
+  // HF-OTP-I: ClinicianInfo and all patients (PatientInfo)
   ROLE = "Role",
   RETRIEVE_ROLE = "RetrieveRole",
   ROLE_RETRIEVED = "RoleRetrieved",
@@ -183,10 +184,10 @@ export enum ClinicianAttributes {
 
 // Attributes for PATIENT key
 export enum PatientAttributes {
-  // HF-OTP-I: ClinicianInfo and all PatientInfo
-  RETRIEVE_ALL_PATIENT_INFO = "RetrieveAllPatientInfo",
-  ALL_PATIENT_INFO = "AllPatientInfo",
-  ALL_PATIENT_INFO_RETRIEVED = "AllPatientInfoRetrieved",
+  // HF-OTP-I: ClinicianInfo and all patients (PatientInfo)
+  RETRIEVE_PATIENTS = "RetrievePatients",
+  PATIENTS = "Patients",
+  PATIENTS_RETRIEVED = "PatientsRetrieved",
 
   // HF-OTP-II: Single patient's details
   PATIENT_TO_VIEW_DETAILS = "ViewPatientDetailsWithPatientId",

@@ -16,7 +16,7 @@ import {
 } from "rc_agents/AgentEnums";
 import { Storage } from "rc_agents/storage";
 import agentAPI from "rc_agents/framework/AgentAPI";
-import { store } from "ic-redux/store";
+import { store } from "util/useRedux";
 import {
   setNewTodo,
   setProcedureOngoing,

@@ -110,6 +110,10 @@ module.exports = {
             name: "@react-native-picker/picker",
             message:
               "Please import the component directly (eg @react-native-picker/picker/js/Picker.web)"
+          },
+          {
+            name: "ic-redux/store",
+            message: "Please import from util/useRedux instead"
           }
         ],
         patterns: [

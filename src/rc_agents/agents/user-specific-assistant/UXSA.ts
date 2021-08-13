@@ -1,12 +1,13 @@
 import { Agent, Belief } from "rc_agents/framework";
 import { af_VisualizeParameters } from "./action-frames/hf-outcome-trends/VisualizeParameters";
 import { af_RetrieveRole } from "./action-frames/hf-outcome-trends/RetrieveRole";
-import { af_RequestRetrieveAllPatientInfo } from "./action-frames/hf-outcome-trends/RequestRetrieveAllPatientInfo";
+import { af_RequestRetrievePatients } from "./action-frames/hf-outcome-trends/RequestRetrievePatients";
 import { af_DisplayAlerts } from "./action-frames/triage-alert-hf-clinic/DisplayAlerts";
 import { af_DisplayPendingPatientAssignments } from "./action-frames/storing-data/DisplayPendingPatientAssignments";
 import { AgentIDs, CommonAttributes } from "rc_agents/AgentEnums";
 import { af_DisplayPendingAlertCount } from "./action-frames/triage-alert-hf-clinic/DisplayPendingAlertCount";
 import { af_DisplayAlertInfo } from "./action-frames/triage-alert-hf-clinic/DisplayAlertInfo";
+import { af_DisplayPatients } from "./action-frames/hf-outcome-trends/DisplayPatients";
 
 // Initial Beliefs of Agent
 const belief1 = new Belief(AgentIDs.UXSA, CommonAttributes.LAST_ACTIVITY, null);
@@ -15,12 +16,13 @@ const belief1 = new Belief(AgentIDs.UXSA, CommonAttributes.LAST_ACTIVITY, null);
 const agentUXSA = new Agent(
   AgentIDs.UXSA,
   [
-    // HF-OTP-II
-    af_VisualizeParameters,
-
     // HF-OTP-I
     af_RetrieveRole,
-    af_RequestRetrieveAllPatientInfo,
+    af_RequestRetrievePatients,
+    af_DisplayPatients,
+
+    // HF-OTP-II
+    af_VisualizeParameters,
 
     // SRD-I
     af_DisplayPendingPatientAssignments,

@@ -4,8 +4,8 @@ import { af_RetrieveEntryData } from "./action-frames/app-device-configuration/R
 import { af_StoreEntryData } from "./action-frames/app-device-configuration/StoreEntryData";
 import { af_RetrievePatientDetails } from "./action-frames/hf-outcome-trends/RetrievePatientDetails";
 import { af_RequestDisplayPatientDetails } from "./action-frames/hf-outcome-trends/RequestDisplayPatientDetails";
-import { af_RetrieveAllPatientInfoByRole } from "./action-frames/hf-outcome-trends/RetrieveAllPatientInfoByRole";
-import { af_RequestDisplayAllPatientInfo } from "./action-frames/hf-outcome-trends/RequestDisplayAllPatientInfo";
+import { af_RetrievePatientsByRole } from "./action-frames/hf-outcome-trends/RetrievePatientsByRole";
+import { af_RequestDisplayPatients } from "./action-frames/hf-outcome-trends/RequestDisplayPatients";
 import { af_RetrieveAlerts } from "./action-frames/triage-alert-hf-clinic/RetrieveAlerts";
 import { af_RequestAlertsDisplay } from "./action-frames/triage-alert-hf-clinic/RequestAlertsDisplay";
 import { af_RetrieveAlertInfo } from "./action-frames/triage-alert-hf-clinic/RetrieveAlertInfo";
@@ -39,8 +39,8 @@ const agentDTA = new Agent(
     af_RequestSyncPatientAssignmentResolutions,
 
     // HF-OTP-I
-    af_RetrieveAllPatientInfoByRole,
-    af_RequestDisplayAllPatientInfo,
+    af_RetrievePatientsByRole,
+    af_RequestDisplayPatients,
 
     // HF-OTP-II
     af_RetrievePatientDetails,

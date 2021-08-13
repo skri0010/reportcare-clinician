@@ -2,8 +2,7 @@ import React, { FC, useState } from "react";
 import { View, TouchableOpacity } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { ClinicianRowBase } from "./ClinicianRowBase";
-import { RootState } from "ic-redux/store";
-import { select } from "util/useRedux";
+import { select, RootState } from "util/useRedux";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { ClinicianInfo } from "aws/models";
 
