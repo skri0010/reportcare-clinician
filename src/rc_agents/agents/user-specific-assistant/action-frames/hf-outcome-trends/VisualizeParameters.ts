@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 import {
   Actionframe,
   Activity,
@@ -19,10 +17,9 @@ import agentAPI from "rc_agents/framework/AgentAPI";
 import { PatientDetails } from "rc_agents/model";
 import { store } from "util/useRedux";
 import {
-  setProcedureOngoing,
-  setPatientDetails
+  setPatientDetails,
+  setFetchingPatientDetails
 } from "ic-redux/actions/agents/actionCreator";
-import { mockVitals } from "mock/mockVitals";
 
 /**
  * Class to represent an activity for visualizing parameters of a specific patient.
@@ -38,43 +35,25 @@ class VisualizeParameters extends Activity {
    * @param {Agent} agent - context of the agent
    */
   async doActivity(agent: Agent): Promise<void> {
+    // Reset preconditions
     await super.doActivity(agent, [rule2]);
 
-    try {
-      const patientDetails: PatientDetails =
-        agentAPI.getFacts()[BeliefKeys.PATIENT]?.[
-          PatientAttributes.PATIENT_DETAILS
-        ];
+    const patientDetails: PatientDetails =
+      agentAPI.getFacts()[BeliefKeys.PATIENT]?.[
+        PatientAttributes.PATIENT_DETAILS
+      ];
 
-      if (patientDetails) {
-        // LS-TODO: Perform filtering on data according to roles
-        // Dispatch patient details to front end
-        store.dispatch(setPatientDetails(patientDetails));
+    if (patientDetails) {
+      // LS-TODO-NEW: Perform filtering on data according to roles
+      // Dispatch patient details to front end
+      store.dispatch(setPatientDetails(patientDetails));
 
-        // Removes patientDetails from facts
-        agentAPI.addFact(
-          new Belief(
-            BeliefKeys.PATIENT,
-            PatientAttributes.PATIENT_DETAILS,
-            null
-          ),
-          false
-        );
-      }
-
-      // LS-TODO: To be removed - for testing purposes only
-      else {
-        // JH-TODO-NEW FIXME
-        // const mockDetails: PatientDetails = {
-        //   activityInfo: {},
-        //   symptomReports: {},
-        //   vitalsReports: mockVitals
-        // };
-        // store.dispatch(setPatientDetails(mockDetails));
-      }
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.log(error);
+      // Update Facts
+      // Remove item
+      agentAPI.addFact(
+        new Belief(BeliefKeys.PATIENT, PatientAttributes.PATIENT_DETAILS, null),
+        false
+      );
     }
 
     // Stops the procedure
@@ -89,11 +68,11 @@ class VisualizeParameters extends Activity {
     );
 
     // Dispatch to front end that procedure has been completed
-    store.dispatch(setProcedureOngoing(false));
+    store.dispatch(setFetchingPatientDetails(false));
   }
 }
 
-// Preconditions for activating the VisualizeParameters class
+// Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
   ProcedureAttributes.HF_OTP_II,
@@ -105,7 +84,7 @@ const rule2 = new ResettablePrecondition(
   true
 );
 
-// Action Frame for VisualizeParameters class
+// Actionframe
 export const af_VisualizeParameters = new Actionframe(
   `AF_${ActionFrameIDs.UXSA.VISUALIZE_PARAMETERS}`,
   [rule1, rule2],

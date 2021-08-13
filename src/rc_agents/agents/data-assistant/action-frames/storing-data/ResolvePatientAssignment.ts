@@ -102,11 +102,20 @@ class ResolvePatientAssignment extends Activity {
     }
 
     if (resolvedOnline) {
+      // Update Beliefs
       // Retrieve new pending patient assignments
       agent.addBelief(
         new Belief(
           BeliefKeys.PATIENT,
           PatientAttributes.RETRIEVE_PENDING_PATIENT_ASSIGNMENTS,
+          true
+        )
+      );
+      // Retrieve new patients
+      agent.addBelief(
+        new Belief(
+          BeliefKeys.PATIENT,
+          PatientAttributes.RETRIEVE_PATIENTS,
           true
         )
       );

@@ -155,7 +155,7 @@ class RetrievePatientsByRole extends Activity {
           }
         }
       }
-      // Regardless is device is online or offline, retrieve locally
+      // Regardless if device is online or offline, retrieve locally
       const localData = await Storage.getPatients();
       if (localData) {
         returnPatients = localData;

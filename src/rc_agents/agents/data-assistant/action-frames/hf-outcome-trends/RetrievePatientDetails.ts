@@ -29,6 +29,8 @@ import {
   ReportVitals
 } from "aws/API";
 import { Storage } from "rc_agents/storage";
+import { setFetchingPatientDetails } from "ic-redux/actions/agents/actionCreator";
+import { store } from "util/useRedux";
 
 /**
  * Class to represent an activity for retrieving details of a specific patient.
@@ -48,7 +50,7 @@ class RetrievePatientDetails extends Activity {
     await super.doActivity(agent, [rule2]);
 
     // Dispatch to store to indicate fetching
-    // JH-TODO-NEW: Store dispatch
+    store.dispatch(setFetchingPatientDetails(true));
 
     try {
       // Get patient id from facts
@@ -194,8 +196,8 @@ class RetrievePatientDetails extends Activity {
           ProcedureConst.INACTIVE
         )
       );
-    } finally {
-      // JH-TODO-NEW: Store dispatch
+      // Dispatch to store to indicate fetching has ended
+      store.dispatch(setFetchingPatientDetails(false));
     }
   }
 }
