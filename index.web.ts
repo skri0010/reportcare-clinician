@@ -27,6 +27,22 @@ const iconFontStyles = `
   }
 `;
 
+// Disables error message in development when navigating between screens causing Redux to update unmounted components
+// Source: https://github.com/wix/react-native-navigation/issues/2618
+// eslint-disable-next-line no-console
+const backupConsoleError = console.error;
+// eslint-disable-next-line no-console
+console.error = function filterWarnings(message) {
+  const supressedWarnings = [
+    "Warning: Can't perform a React state update on an unmounted component. This is a no-op, but it indicates a memory leak in your application. To fix, cancel all subscriptions and asynchronous tasks in %s.%s"
+  ];
+
+  if (!supressedWarnings.some((entry) => message.includes(entry))) {
+    // @ts-ignore
+    backupConsoleError.apply(console, arguments);
+  }
+};
+
 // Create and inject stylesheet
 const style = document.createElement("style");
 const textNode = document.createTextNode(iconFontStyles);

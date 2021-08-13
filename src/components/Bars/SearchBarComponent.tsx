@@ -57,7 +57,7 @@ export const SearchBarComponent: FC<SearchBarComponentProps> = ({
 
   // JH-TODO: Replace placeholder with i18n
   return (
-    <View>
+    <View style={{ backgroundColor: colors.primaryBackgroundColor }}>
       <View style={[styles.container, searchBarContainerStyle]}>
         <TextInput
           autoCorrect={false}

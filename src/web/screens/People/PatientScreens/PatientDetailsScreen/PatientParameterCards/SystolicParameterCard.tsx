@@ -12,7 +12,7 @@ export const SystolicParameterCard: FC<SystolicCardProps> = ({ maxHeight }) => {
   const [vitals] = useState(mockVitals);
 
   return (
-    <CardWrapper maxHeight={maxHeight}>
+    <CardWrapper maxHeight={maxHeight} paddingTop>
       <SystolicPressureChart data={vitals} />
     </CardWrapper>
   );
