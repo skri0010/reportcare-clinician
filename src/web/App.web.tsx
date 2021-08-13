@@ -9,7 +9,7 @@ import { Auth } from "@aws-amplify/auth";
 import { AuthState } from "web/auth_screens";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import agentAPI from "rc_agents/framework/AgentAPI";
-import { AsyncStorageKeys } from "rc_agents/AgentEnums";
+import { AsyncStorageKeys } from "rc_agents/storage";
 import { ToastProviderComponent } from "components/IndicatorComponents/ToastProvider";
 import { expectedAgentIds } from "rc_agents/agents";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
@@ -62,10 +62,10 @@ const App: FC = () => {
         agentAPI.startAgents();
         setAuthState(AuthState.SIGNED_IN);
       } else {
-        setAuthState(AuthState.SIGNED_IN);
+        setAuthState(AuthState.SIGNED_OUT);
       }
     } catch (err) {
-      setAuthState(AuthState.SIGNED_IN);
+      setAuthState(AuthState.SIGNED_OUT);
     }
   };
 

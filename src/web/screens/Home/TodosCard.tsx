@@ -60,7 +60,9 @@ export const TodosCard: FC<TodosCardProps> = ({ maxHeight }) => {
 
 const styles = ScaledSheet.create({
   title: {
-    fontWeight: "bold"
+    fontWeight: "bold",
+    paddingBottom: "5@ms",
+    paddingRight: "5@ms"
   },
   listContainer: {
     flex: 1,

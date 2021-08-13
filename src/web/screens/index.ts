@@ -1,5 +1,7 @@
 import { StackScreenProps } from "@react-navigation/stack";
 import { NavigatorScreenParams } from "@react-navigation/native";
+import { PatientInfo } from "aws/API";
+import { AlertHistory, MedicalRecords } from "mock/mockPatientDetails";
 
 export enum ScreenName {
   MAIN = "Main",
@@ -12,6 +14,14 @@ export enum ScreenName {
   SETTING = "SETTING",
   HELP = "HELP",
   ALERTS = "Alerts"
+}
+
+export enum PatientsScreenName {
+  OVERVIEW = "Overview",
+  PARAMETERS = "Parameters",
+  ICDCRT = "ICD/CRT",
+  HISTORY = "History",
+  INFO = "Info"
 }
 
 /**
@@ -28,10 +38,10 @@ export type RootStackParamList = {
   [ScreenName.MAIN]: NavigatorScreenParams<SideTabsParamList>;
 };
 
+// Extract the params from the screen containing the nested navigator
 export type SideTabsParamList = {
-  // Extract the params from the screen containing the nested navigator
   [ScreenName.HOME]: undefined;
-  [ScreenName.PATIENT]: undefined;
+  [ScreenName.PATIENT]: NavigatorScreenParams<PatientsScreenParamList>;
   [ScreenName.CLINICIAN]: undefined;
   [ScreenName.CHAT]: undefined;
   [ScreenName.TODO]: undefined;
@@ -41,15 +51,38 @@ export type SideTabsParamList = {
   [ScreenName.ALERTS]: undefined;
 };
 
+export type PatientsScreenParamList = {
+  [PatientsScreenName.OVERVIEW]: { patient: PatientInfo };
+  [PatientsScreenName.PARAMETERS]: { patient: PatientInfo };
+  [PatientsScreenName.ICDCRT]: { patient: PatientInfo };
+  [PatientsScreenName.HISTORY]: {
+    patient: PatientInfo;
+    alertHistoryFunc: {
+      setDisplayHistory: (state: AlertHistory) => void;
+      setModalAlertVisible: (state: boolean) => void;
+    };
+    medicalRecordFunc: {
+      setViewMedicalModal: (state: boolean) => void;
+      setDisplayMedicalRecord: (state: MedicalRecords) => void;
+      setAddMedicalRecord: (state: boolean) => void;
+    };
+  };
+  [PatientsScreenName.INFO]: { patient: PatientInfo };
+};
+
 // Type checking for main screens (navigation and route)
 export type MainScreenProps = StackScreenProps<
   RootStackParamList,
   ScreenName.MAIN
 >;
 
-// Type checking for bottom tabs (navigation and route)
-export type { WithSideTabsProps } from "web/screens/WithSideTabProps";
+// Type checking for side tabs (navigation and route)
+export type { WithSideTabsProps } from "web/screens/WithSideTabsProps";
 
+// Type checking for patient screen tabs (navigation and route)
+export type { WithPatientsScreenProps } from "web/screens/WithPatientsScreenProps";
+
+// JH-TODO: Navigation FIXME
 export type TodoStackParamList = {
   ViewTodo: {
     mainTitleContent: string;

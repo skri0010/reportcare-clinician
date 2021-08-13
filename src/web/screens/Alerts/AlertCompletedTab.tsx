@@ -21,7 +21,7 @@ export const AlertCompletedTab: FC<AlertRowTabProps> = ({
   }
 
   return (
-    <ScreenWrapper style={{ backgroundColor: "white" }}>
+    <ScreenWrapper style={{ backgroundColor: colors.primaryBackgroundColor }}>
       <SearchBarComponent
         onSearchClick={() => {
           null;

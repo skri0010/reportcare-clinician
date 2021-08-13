@@ -7,19 +7,34 @@ import { ScaledSheet } from "react-native-size-matters";
 import { H4, H5 } from "components/Text/index";
 
 interface AlertRowProps {
-  alertDetails: Alert;
+    alertDetails: Alert;
+    onButtonPress?: () => void;
+    onCardPress?: () => void;
 }
 
-export const AlertRow: FC<AlertRowProps> = ({ alertDetails }) => {
-  const { colors } = select((state: RootState) => ({
+export const AlertRow: FC<AlertRowProps> = ({
+    alertDetails,
+    onButtonPress = () => null,
+    onCardPress
+}) =>  { 
+const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
   }));
 
   return (
-    <View>
-      <H4 text={alertDetails.patientName} style={null} />
-      <H4 text={alertDetails.summary} style={null} />
-      <H4 text={alertDetails.dateTime} style={null} />
-    </View>
+      <TouchableOpacity
+      onPress={onCardPress}
+      style= {{ opacity: 1 }}
+      >
+      <View style={{ flexDirection: "row" }}>
+          <View style = {{ paddingVertical: "3@ms", flex: 1 }}>
+            <View style={{ padding: "10@ms" }}>
+                <H4 text={alertDetails.patientName} style={{ fontWeight: "bold", paddingBottom: "10@ms" }}/>
+                <H5 text={alertDetails.summary} style={{ paddingBottom: "10@ms " }}/>
+                <H5 text={alertDetails.dateTime} style={{ paddingBottom: "10@ms" }}/>
+            </View>
+            </View>
+      </View>
+      </TouchableOpacity>
   );
 };

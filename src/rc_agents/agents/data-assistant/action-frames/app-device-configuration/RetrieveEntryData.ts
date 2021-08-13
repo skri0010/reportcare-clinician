@@ -3,20 +3,20 @@ import {
   Activity,
   Agent,
   Belief,
-  Precondition
+  Precondition,
+  ResettablePrecondition
 } from "rc_agents/framework";
 import {
   ProcedureConst,
-  AsyncStorageKeys,
-  CommonAttributes,
   BeliefKeys,
   ClinicianAttributes,
   ProcedureAttributes,
   AgentIDs,
   ActionFrameIDs
-} from "../../../../AgentEnums";
+} from "rc_agents/AgentEnums";
+import { AsyncStorageKeys } from "rc_agents/storage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import agentAPI from "../../../../framework/AgentAPI";
+import agentAPI from "rc_agents/framework/AgentAPI";
 import { getClinicianInfo } from "aws";
 import { store } from "util/useRedux";
 import {
@@ -38,19 +38,7 @@ class RetrieveEntryData extends Activity {
    * @param {Agent} agent - context of the agent
    */
   async doActivity(agent: Agent): Promise<void> {
-    await super.doActivity(agent);
-
-    // Update Beliefs
-    agent.addBelief(
-      new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
-    );
-    agent.addBelief(
-      new Belief(
-        BeliefKeys.CLINICIAN,
-        ClinicianAttributes.RETRIEVE_ENTRY,
-        false
-      )
-    );
+    await super.doActivity(agent, [rule1]);
 
     try {
       const clinicianUsername =
@@ -64,7 +52,7 @@ class RetrieveEntryData extends Activity {
           clinicianID: clinicianUsername
         });
 
-        if (query.data.getClinicianInfo) {
+        if (query.data?.getClinicianInfo) {
           const clinician = query.data.getClinicianInfo;
           // Merges retrieved facts into current facts
           if (
@@ -199,7 +187,7 @@ class RetrieveEntryData extends Activity {
 }
 
 // Rules or preconditions for activating the RetrieveEntryData class
-const rule1 = new Precondition(
+const rule1 = new ResettablePrecondition(
   BeliefKeys.CLINICIAN,
   ClinicianAttributes.RETRIEVE_ENTRY,
   true

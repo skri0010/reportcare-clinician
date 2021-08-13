@@ -71,6 +71,7 @@ export interface AlertInfo {
 
 export interface NewTodoInput {
   title: string;
+  patientName: string;
   notes: string;
   alert?: AlertInfo;
 }
@@ -85,6 +86,7 @@ export interface UpdatedTodoInput {
 export interface Todo {
   id?: string;
   title: string;
+  patientName: string;
   notes: string;
   completed: boolean;
   alertId?: string;
