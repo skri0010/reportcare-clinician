@@ -4,7 +4,10 @@ import { ScreenName, WithSideTabsProps } from "web/screens";
 import { View, Text } from "react-native";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { ms, ScaledSheet } from "react-native-size-matters";
-import { CardStyleInterpolators, createStackNavigator } from "@react-navigation/stack";
+import {
+  CardStyleInterpolators,
+  createStackNavigator
+} from "@react-navigation/stack";
 import { RowSelectionWrapper } from "../RowSelectionTab";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { getTopTabBarOptions } from "util/getStyles";
@@ -88,7 +91,7 @@ export const AlertScreen: FC<WithSideTabsProps[ScreenName.ALERTS]> = () => {
     summary: alertSelected.summary,
     colorCode: alertSelected.colorCode,
     createdTimeDate: alertSelected.createdAt,
-    modifiedTimeDate: alertSelected.updatedAt 
+    modifiedTimeDate: alertSelected.updatedAt
   };
 
   return (
@@ -114,23 +117,23 @@ export const AlertScreen: FC<WithSideTabsProps[ScreenName.ALERTS]> = () => {
           {!isEmptyAlert ? (
             <NavigationContainer independent>
               <AlertContext.Provider value={initialAlert}>
-              <Stack.Navigator>
-                <Stack.Screen
-                name="ViewAlert"
-                component={AlertDetailsScreen}
-                options={() => ({
-                  title: "Alert",
-                  headerStyle: {
-                    height: ms(45)
-                  },
-                  headerTitleStyle: {
-                    fontWeight: "bold",
-                    fontSize: ms(20),
-                    paddingLeft: ms(15)
-                  }
-                })}
-                />
-              </Stack.Navigator>
+                <Stack.Navigator>
+                  <Stack.Screen
+                    name="ViewAlert"
+                    component={AlertDetailsScreen}
+                    options={() => ({
+                      title: "Alert",
+                      headerStyle: {
+                        height: ms(45)
+                      },
+                      headerTitleStyle: {
+                        fontWeight: "bold",
+                        fontSize: ms(20),
+                        paddingLeft: ms(15)
+                      }
+                    })}
+                  />
+                </Stack.Navigator>
               </AlertContext.Provider>
             </NavigationContainer>
           ) : (
