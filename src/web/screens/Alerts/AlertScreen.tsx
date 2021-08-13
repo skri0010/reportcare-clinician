@@ -4,9 +4,7 @@ import { ScreenName, WithSideTabsProps } from "web/screens";
 import { View, Text } from "react-native";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { ScaledSheet } from "react-native-size-matters";
-import { CardStyleInterpolators, createStackNavigator } from "@react-navigation/stack";
 import { RowSelectionWrapper } from "../RowSelectionTab";
-import i18n from "util/language/i18n";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { getTopTabBarOptions } from "util/getStyles";
 import { AlertCurrentTab } from "./AlertCurrentTab";
@@ -16,8 +14,6 @@ import { NavigationContainer } from "@react-navigation/native";
 import { NoSelectionScreen } from "../Shared/NoSelectionScreen";
 
 const Tab = createMaterialTopTabNavigator();
-const Stack = createStackNavigator();
-
 
 export const AlertScreen: FC<WithSideTabsProps[ScreenName.ALERTS]> = () => {
   const { colors } = select((state: RootState) => ({
@@ -39,7 +35,7 @@ export const AlertScreen: FC<WithSideTabsProps[ScreenName.ALERTS]> = () => {
     createdAt: "",
     updatedAt: "",
     __typename: "Alert"
-});
+  });
   const [isEmptyAlert, setEmptyAlert] = useState(true);
 
   function onRowClick(item: Alert) {
@@ -69,31 +65,23 @@ export const AlertScreen: FC<WithSideTabsProps[ScreenName.ALERTS]> = () => {
   }
   return (
     <ScreenWrapper fixed>
-      <View
-      style={styles.container}>
+      <View style={styles.container}>
         <View style={styles.rowSelection}>
-          <RowSelectionWrapper
-          title="Alerts"
-          isTodo
-          />
-        <Tab.Navigator tabBarOptions={getTopTabBarOptions(colors)}>
-          <Tab.Screen
-            name="Pending"
-            >
-              {() => <AlertCurrentTab setAlertSelected={onRowClick}/>}
+          <RowSelectionWrapper title="Alerts" isTodo />
+          <Tab.Navigator tabBarOptions={getTopTabBarOptions(colors)}>
+            <Tab.Screen name="Pending">
+              {() => <AlertCurrentTab setAlertSelected={onRowClick} />}
             </Tab.Screen>
-            <Tab.Screen
-            name="Completed"
-            >
-              {() => <AlertCompletedTab setAlertSelected={onRowClick}/>}
+            <Tab.Screen name="Completed">
+              {() => <AlertCompletedTab setAlertSelected={onRowClick} />}
             </Tab.Screen>
-        </Tab.Navigator>
+          </Tab.Navigator>
         </View>
         <View
-        style={{
-          flex: 2, 
-          backgroundColor: colors.primaryWebBackgroundColor
-        }}
+          style={{
+            flex: 2,
+            backgroundColor: colors.primaryWebBackgroundColor
+          }}
         >
           {!isEmptyAlert ? (
             <NavigationContainer independent>
@@ -101,13 +89,13 @@ export const AlertScreen: FC<WithSideTabsProps[ScreenName.ALERTS]> = () => {
             </NavigationContainer>
           ) : (
             <NoSelectionScreen
-            screenName={ScreenName.ALERTS}
-            subtitle="Choose Alert to view more info"
+              screenName={ScreenName.ALERTS}
+              subtitle="Choose Alert to view more info"
             />
           )}
         </View>
       </View>
-      </ScreenWrapper>
+    </ScreenWrapper>
   );
 };
 

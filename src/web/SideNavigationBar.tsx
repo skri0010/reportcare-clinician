@@ -8,7 +8,7 @@ import { TodoScreen } from "web/screens/Todo/TodoScreen";
 import { MariaScreen } from "web/screens/Maria/MariaScreen";
 import { SettingScreen } from "web/screens/Setting/SettingScreen";
 import { HelpScreen } from "web/screens/Help/HelpScreen";
-import { AlertScreen } from "web/screens/Alerts/AlertScreen"
+import { AlertScreen } from "web/screens/Alerts/AlertScreen";
 import { ScreenName, SideTabsParamList, MainScreenProps } from "./screens";
 import { select, RootState } from "util/useRedux";
 import { getSideTabBarOptions } from "util/getStyles";
@@ -143,10 +143,10 @@ export const SideNavigationBar: FC<MainScreenProps> = () => {
         component={AlertScreen}
         options={{
           drawerIcon: ({ color }) => (
-            <TabIcon name="alert-octagon" color={color} subtitle="Alerts"  />
+            <TabIcon name="alert-octagon" color={color} subtitle="Alerts" />
           )
         }}
-        />
+      />
     </Drawer.Navigator>
   );
 };

@@ -7,21 +7,19 @@ import { ScaledSheet } from "react-native-size-matters";
 import { H4, H5 } from "components/Text/index";
 
 interface AlertRowProps {
-    alertDetails: Alert;
+  alertDetails: Alert;
 }
 
-export const AlertRow: FC<AlertRowProps> = ({
-    alertDetails
-}) =>  { 
-const { colors } = select((state: RootState) => ({
+export const AlertRow: FC<AlertRowProps> = ({ alertDetails }) => {
+  const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
-}));
+  }));
 
   return (
-      <View>
-          <H4 text={alertDetails.patientName} style={null}/>
-          <H4 text={alertDetails.summary} style={null}/>
-          <H4 text={alertDetails.dateTime} style={null}/>
-      </View>
+    <View>
+      <H4 text={alertDetails.patientName} style={null} />
+      <H4 text={alertDetails.summary} style={null} />
+      <H4 text={alertDetails.dateTime} style={null} />
+    </View>
   );
 };
