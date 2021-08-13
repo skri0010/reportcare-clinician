@@ -35,14 +35,14 @@ const getScreenContent: FC<ScreenName> = (screenName: ScreenName) => {
           color={colors.secondaryIconColor}
         />
       );
-      case "Clinicians":
-        return (
-          <Icon
-            name="stethoscope"
-            size={ms(iconSize)}
-            color={colors.secondaryIconColor}
-            />
-        );
+    case "Clinicians":
+      return (
+        <Icon
+          name="stethoscope"
+          size={ms(iconSize)}
+          color={colors.secondaryIconColor}
+        />
+      );
     default:
       return (
         <Icon
