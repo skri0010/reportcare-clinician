@@ -9,10 +9,12 @@ import {
 import { RootState, select } from "util/useRedux";
 import { H3 } from "components/Text/index";
 import { ScaledSheet, ms } from "react-native-size-matters";
+import i18n from "util/language/i18n";
 
 interface AddMedicalRecordProps {
   setAddMedicalRecord: (state: boolean) => void;
 }
+
 export const AddMedicalRecord: FC<AddMedicalRecordProps> = ({
   setAddMedicalRecord
 }) => {
@@ -47,36 +49,46 @@ export const AddMedicalRecord: FC<AddMedicalRecordProps> = ({
         { backgroundColor: colors.primaryContrastTextColor }
       ]}
     >
+      {/* Title */}
       <H3
-        text="Title"
+        text={i18n.t("Patient_History.AddMedicalRecordCard.Title")}
         style={{
           fontWeight: "bold",
           paddingVertical: ms(10),
           paddingTop: ms(25)
         }}
       />
+      {/* Title input */}
       <TextInput
         onChangeText={onChangeTitle}
-        placeholder="Give the medical record a name (eg Family Background)"
+        multiline
+        placeholder={i18n.t(
+          "Patient_History.AddMedicalRecordCard.TitleInputPlaceholder"
+        )}
         value={title}
         style={[
           textInputStyle,
           {
             width: "100%",
-            height: ms(30),
+            height: ms(40),
             fontSize: fonts.h4Size,
-            paddingVertical: ms(10)
+            paddingVertical: ms(10),
+            alignItems: "center"
           }
         ]}
       />
+      {/* Description */}
       <H3
-        text="Description"
+        text={i18n.t("Patient_History.AddMedicalRecordCard.Description")}
         style={{ fontWeight: "bold", paddingVertical: ms(10) }}
       />
+      {/* Description input */}
       <TextInput
         onChangeText={onChangeRecord}
         multiline
-        placeholder="What is the content of the medical record?"
+        placeholder={i18n.t(
+          "Patient_History.AddMedicalRecordCard.DescriptionInputPlaceholder"
+        )}
         value={record}
         style={[
           textInputStyle,
@@ -96,6 +108,7 @@ export const AddMedicalRecord: FC<AddMedicalRecordProps> = ({
           paddingTop: ms(20)
         }}
       >
+        {/* Save button */}
         <TouchableOpacity
           style={[
             styles.saveButton,
@@ -108,8 +121,12 @@ export const AddMedicalRecord: FC<AddMedicalRecordProps> = ({
             // Send API call to save medical record
           }}
         >
-          <H3 text="Save" style={{ color: colors.primaryTextColor }} />
+          <H3
+            text={i18n.t("Patient_History.SaveButton")}
+            style={{ color: colors.primaryTextColor }}
+          />
         </TouchableOpacity>
+        {/* Cancel button */}
         <TouchableOpacity
           style={[
             styles.closeButton,
@@ -122,7 +139,10 @@ export const AddMedicalRecord: FC<AddMedicalRecordProps> = ({
             setAddMedicalRecord(false);
           }}
         >
-          <H3 text="Cancel" style={{ color: colors.primaryTextColor }} />
+          <H3
+            text={i18n.t("Patient_History.CancelButton")}
+            style={{ color: colors.primaryTextColor }}
+          />
         </TouchableOpacity>
       </View>
     </View>

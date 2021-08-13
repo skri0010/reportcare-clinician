@@ -45,8 +45,7 @@ const styles = ScaledSheet.create({
   titleBar: {
     flexDirection: "row",
     height: "45@ms",
-    paddingTop: "5@ms",
-    paddingBottom: "5@ms",
+    paddingTop: "8@ms",
     alignContent: "center"
   },
   textStyle: {

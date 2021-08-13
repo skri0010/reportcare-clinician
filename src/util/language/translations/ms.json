@@ -106,13 +106,14 @@
     "Dashboard": "Dashboard",
     "Welcome": "Selamat Datang Dr. ",
     "WelcomeMsg": "Menyemak kesihatan pesakit-pesakit anda, mengawasi vital mereka dan berbual dengan mereka.",
-    "RequestsByMaria": "Permintaan daripada MARIA ",
-    "Alerts": "Amaran ",
-    "Todos": "Todos ",
+    "RequestsByMaria": "Permintaan daripada MARIA",
+    "Alerts": "Amaran",
+    "Todos": "Todos",
+    "PatientAssignments": "Pengagihan Pesakit",
     "ItemsRemaining": "lagi",
     "ShowMoreButton": "LIHAT LEBIH"
   },
-  "Alerts": {
+  "Alert": {
     "HighRisk": "Risiko Tinggi",
     "MediumRisk": "Risiko Sederhana",
     "LowRisk": "Risiko Rendah",
@@ -137,8 +138,74 @@
     "TitleInputPlaceholder": "Apakah todo ini tentang?",
     "PatientInputPlaceholder": "Siapakah nama pesakit?",
     "NotesInputPlaceholder": "Apakah yang perlu dicatatkan?",
-    "NoSelection": "Pilihkan salah satu item Todo untuk melihat butirannya",
-    "TodoCreateSuccessful": "Todo telah berjaya dicipta"
+    "NoSelection": "Pilihkan salah satu item Todo untuk melihat butirannya"
   },
-  "UnexpectedError": "Ralat yang tidak dijangka telah berlaku"
+  "Patients": {
+    "SearchBarPlaceholder": "Cari pesakit (contohnya John)",
+    "Overview": "Ringkasan",
+    "Parameters": "Parameter",
+    "ICD/CRT": "ICD/CRT",
+    "History": "Sejarah",
+    "Info": "Info"
+  },
+  "Patient_Overview": {
+    "BloodPressure": "Tekanan Darah",
+    "Systolic": "Sistolik",
+    "Diastolic": "Diastolik",
+    "Medications": "Ubatan diprediksi",
+    "OxygenSaturation": "Ketepuan O2",
+    "Weight": "Berat Badan",
+    "TargetWeight": "Berat Badan Sasaran",
+    "Symptoms": "Simptom"
+  },
+  "Patient_ICD/CRT": {},
+  "Patient_History": {
+    "Alert": "Amaran",
+    "Risk": {
+      "High": "Tinggi",
+      "Medium": "Sederhana",
+      "Low": "Rendah",
+      "Unassigned": "Belum tetap"
+    },
+    "ViewButton": "Lihat",
+    "MedicalRecords": "Rekod perubatan",
+    "AddButton": "Tambah",
+    "CloseButton": "Tutup",
+    "SaveButton": "Simpan",
+    "CancelButton": "Batal",
+    "AlertSummaryCard": {
+      "AlertSummary": "Ringkasan Amaran",
+      "AlertDetails": "Butiran Amaran",
+      "Severity": "Keterukan: ",
+      "HRV": "HRV: ",
+      "BP": "BP: ",
+      "Symptom": "Simptom: ",
+      "Signs": "Tanda-tanda: ",
+      "CreatedOn": "Dicipta pada: "
+    },
+    "AddMedicalRecordCard": {
+      "Title": "Tajuk",
+      "TitleInputPlaceholder": "Berikan nama kepada rekod perubatan ini (contohnya latar belakang)",
+      "Description": "Deskripsi",
+      "DescriptionInputPlaceholder": "Apakah isi-isi deskripsi ini?"
+    }
+  },
+  "Patient_Info": {
+    "Male": "Lelaki",
+    "Female": "Perempuan",
+    "Malay": "Bahasa Melayu",
+    "English": "Bahasa Inggeris",
+    "Gender": "Jantina",
+    "Age": "Umur",
+    "Location": "Lokasi",
+    "Class": "Kelas",
+    "DOB": "Tarikh Lahir",
+    "HPNumber": "Nombor Telefon",
+    "Email": "Emel",
+    "Address": "Alamat Rumah",
+    "LanguageSpoken": "Bahasa Pertuturan",
+    "EmergencyContact": "Talian Kecemasan",
+    "BasicInfo": "Informasi Asas",
+    "ContactInfo": "Informasi Hubungan"
+  }
 }

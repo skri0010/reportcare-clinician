@@ -178,7 +178,8 @@ const styles = ScaledSheet.create({
     alignItems: "baseline"
   },
   title: {
-    fontWeight: "bold"
+    fontWeight: "bold",
+    paddingRight: "5@ms"
   },
   alertsContainer: {
     flexDirection: "row",
