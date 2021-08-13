@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { HomeScreen } from "web/screens/Home/HomeScreen";
-import { CliniciansTab } from "web/screens/People/CliniciansTab";
+import { CliniciansTab } from "web/screens/People/CliniciansScreen";
 import { PatientsScreen } from "web/screens/People/PatientsScreen";
 import { ChatScreen } from "web/screens/Chat/ChatScreen";
 import { TodoScreen } from "web/screens/Todo/TodoScreen";

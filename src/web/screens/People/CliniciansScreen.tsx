@@ -43,9 +43,14 @@ export const CliniciansTab: FC<WithSideTabsProps[ScreenName.CLINICIAN]> =
 
     // JH-TODO: Replace placeholder with i18n
     return (
-      <ScreenWrapper>
+      <ScreenWrapper fixed>
         <View style={{ flexDirection: "row", height: "100%" }}>
-          <View style={{ flex: 1 }}>
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: colors.primaryContrastTextColor
+            }}
+          >
             <RowSelectionWrapper title="Clinician" />
             <FlatList
               showsVerticalScrollIndicator={false}
@@ -58,6 +63,7 @@ export const CliniciansTab: FC<WithSideTabsProps[ScreenName.CLINICIAN]> =
                   onRowPress={() => onRowClick(item)}
                 />
               )}
+              keyExtractor={(item) => item.clinicianID}
             />
           </View>
           <View
