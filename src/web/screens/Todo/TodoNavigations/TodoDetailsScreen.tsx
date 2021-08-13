@@ -1,10 +1,9 @@
-import React, { FC, useContext } from "react";
+import React, { FC } from "react";
 import { View, TouchableOpacity } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { withTodoScreenProps } from "../../TodoScreenProps";
 import { H2, H3, H4, H5 } from "components/Text";
 import { RootState, select } from "util/useRedux";
-import { TodoContext } from "../TodoScreen";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import i18n from "util/language/i18n";
 import { TodoScreenName } from "../..";
@@ -16,9 +15,10 @@ interface todoSectionProps {
 
 interface editHistorySectionProps {
   editType: string;
-  timeDate: string;
+  timeDate?: string;
 }
 
+// Todo section component (title, patient and notes)
 export const TodoSection: FC<todoSectionProps> = ({ mainItem, content }) => {
   return (
     <View style={{ display: "flex", flexWrap: "wrap" }}>
@@ -31,14 +31,22 @@ export const TodoSection: FC<todoSectionProps> = ({ mainItem, content }) => {
   );
 };
 
+// Edit history section component (created and modified datetime)
 export const EditHistorySection: FC<editHistorySectionProps> = ({
   editType,
   timeDate
 }) => {
   return (
-    <View style={{ display: "flex", flexDirection: "row" }}>
+    <View
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        flex: 1,
+        flexWrap: "wrap"
+      }}
+    >
       <H5 text={editType} style={{ fontWeight: "bold" }} />
-      <H5 text={timeDate} style={{ marginBottom: ms(10) }} />
+      <H5 text={timeDate || "Never"} style={{ marginBottom: ms(10) }} />
     </View>
   );
 };
@@ -50,7 +58,6 @@ export const TodoDetailsScreen: FC<
     colors: state.settings.colors
   }));
   const { todo } = route.params;
-  const context = useContext(TodoContext);
 
   return (
     <ScreenWrapper>
@@ -64,23 +71,31 @@ export const TodoDetailsScreen: FC<
             content={todo.patientName}
           />
           {/* View patient details button */}
-          <TouchableOpacity
-            style={[
-              styles.viewButton,
-              {
-                backgroundColor: colors.primaryContrastTextColor,
-                borderColor: colors.primaryTextColor
-              }
-            ]}
-            onPress={() => {
-              null;
+          <View
+            style={{
+              paddingLeft: ms(20),
+              alignItems: "center",
+              justifyContent: "center"
             }}
           >
-            <H5
-              text={i18n.t("Todo.ViewButton")}
-              style={{ color: colors.primaryTextColor }}
-            />
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.viewButton,
+                {
+                  backgroundColor: colors.primaryContrastTextColor,
+                  borderColor: colors.primaryTextColor
+                }
+              ]}
+              onPress={() => {
+                null;
+              }}
+            >
+              <H5
+                text={i18n.t("Todo.ViewButton")}
+                style={{ color: colors.primaryTextColor }}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
         {/* Notes */}
         <View style={{ marginTop: ms(10) }}>
@@ -93,7 +108,7 @@ export const TodoDetailsScreen: FC<
         />
         <EditHistorySection
           editType={i18n.t("Todo.ModifiedOn")}
-          timeDate={todo.updatedAt}
+          timeDate={todo.lastModified}
         />
         {/* Edit button */}
         <View style={styles.editButtonContainer}>
@@ -126,7 +141,8 @@ const styles = ScaledSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center"
+    alignItems: "center",
+    flexWrap: "wrap"
   },
   viewButton: {
     width: "70@ms",

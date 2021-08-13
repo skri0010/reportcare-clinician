@@ -4,7 +4,7 @@ import { View, TextStyle, FlatList } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { TodoRow } from "components/RowComponents/TodoRow";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
-import { mockCurrentTodoDetails } from "mock/mockTodoDetails";
+import { mockCurrentTodoDetails, mockCurrentTodo } from "mock/mockTodoDetails";
 import { RiskLevel } from "models/RiskLevel";
 import { H4 } from "components/Text/index";
 import { CardWrapper } from "./CardWrapper";
@@ -34,7 +34,7 @@ export const TodosCard: FC<TodosCardProps> = ({ maxHeight }) => {
         <FlatList
           showsVerticalScrollIndicator={false}
           ItemSeparatorComponent={() => <ItemSeparator />}
-          data={mockCurrentTodoDetails}
+          data={mockCurrentTodo}
           renderItem={({ item, index }) => {
             return index === lastPatientIndex ? (
               <>
@@ -51,7 +51,7 @@ export const TodosCard: FC<TodosCardProps> = ({ maxHeight }) => {
               <TodoRow todoDetails={item} riskLevel={RiskLevel.HIGH} />
             );
           }}
-          keyExtractor={(item) => item.id}
+          // keyExtractor={(item) => item.id}
         />
       </View>
     </CardWrapper>

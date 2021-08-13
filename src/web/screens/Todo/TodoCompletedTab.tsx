@@ -6,10 +6,10 @@ import { TodoRow } from "components/RowComponents/TodoRow";
 import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { TodoRowTabProps } from "./TodoCurrentTab";
-import { ITodoDetails } from "models/TodoDetails";
 import { RootState, select } from "util/useRedux";
-import { mockCompletedTodoDetails } from "mock/mockTodoDetails";
+import { mockCompletedTodo } from "mock/mockTodoDetails";
 import i18n from "util/language/i18n";
+import { LocalTodo } from "rc_agents/model";
 
 export const TodoCompletedTab: FC<TodoRowTabProps> = ({ setTodoSelected }) => {
   const { colors } = select((state: RootState) => ({
@@ -31,10 +31,11 @@ export const TodoCompletedTab: FC<TodoRowTabProps> = ({ setTodoSelected }) => {
   //   mockPatientRowDetails[i].doneStatus = true;
   // }
 
-  function onCardPress(item: ITodoDetails) {
+  // Set the todo item detail to be shown when the item is pressed
+  function onCardPress(item: LocalTodo) {
     setTodoSelected(item);
   }
-  // JH-TODO Replace titles with i18n
+
   return (
     <ScreenWrapper>
       <SearchBarComponent
@@ -50,7 +51,7 @@ export const TodoCompletedTab: FC<TodoRowTabProps> = ({ setTodoSelected }) => {
       <FlatList
         showsVerticalScrollIndicator={false}
         ItemSeparatorComponent={() => <ItemSeparator />}
-        data={mockCompletedTodoDetails}
+        data={mockCompletedTodo}
         renderItem={({ item }) => (
           <TodoRow
             todoDetails={item}
@@ -58,7 +59,9 @@ export const TodoCompletedTab: FC<TodoRowTabProps> = ({ setTodoSelected }) => {
             onCardPress={() => onCardPress(item)}
           />
         )}
-        keyExtractor={(item) => item.id}
+        // As the id field of LocalTodo is optional, the keyExtractor is detecting possibility where id is undefined,
+        // thus throwing some errors
+        // keyExtractor={(item) => item.id}
       />
     </ScreenWrapper>
   );

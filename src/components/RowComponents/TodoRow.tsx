@@ -3,12 +3,13 @@ import { RootState, select } from "util/useRedux";
 import { RiskLevel, getRiskLevelColor } from "models/RiskLevel";
 import { ITodoDetails } from "models/TodoDetails";
 import { View, TouchableOpacity } from "react-native";
-import { ScaledSheet } from "react-native-size-matters";
+import { ms, ScaledSheet } from "react-native-size-matters";
 import { H5, H6 } from "components/Text/index";
+import { LocalTodo } from "rc_agents/model";
 
 // Interface that determines what props the search bar accepts
 interface TodoRowProps {
-  todoDetails: ITodoDetails;
+  todoDetails: LocalTodo;
   riskLevel: RiskLevel;
   disabled?: boolean;
   reduceOpacity?: boolean;
@@ -50,8 +51,8 @@ export const TodoRow: FC<TodoRowProps> = ({
         >
           <View style={styles.texts}>
             <H5 text={todoDetails.title} style={styles.title} />
-            <H6 text={todoDetails.name} style={styles.name} />
-            <H6 text={todoDetails.description} style={null} />
+            <H6 text={todoDetails.patientName} style={styles.name} />
+            <H6 text={todoDetails.notes} style={{ paddingBottom: ms(1) }} />
           </View>
         </View>
 
@@ -78,14 +79,14 @@ export const TodoRow: FC<TodoRowProps> = ({
               styles.button,
               {
                 backgroundColor:
-                  todoDetails.doneStatus === false
+                  todoDetails.completed === false
                     ? colors.primaryButtonColor
                     : colors.primaryWarningButtonColor
               }
             ]}
           >
             <H6
-              text={todoDetails.doneStatus === false ? "DONE" : "UNDO"}
+              text={todoDetails.completed === false ? "DONE" : "UNDO"}
               style={[
                 styles.buttonText,
                 {
@@ -105,7 +106,7 @@ const styles = ScaledSheet.create({
     flexDirection: "row"
   },
   contentContainer: {
-    paddingTop: "4@ms",
+    paddingTop: "5@ms",
     paddingLeft: "5@ms",
     flex: 1
   },
@@ -122,6 +123,7 @@ const styles = ScaledSheet.create({
   },
   buttonContainer: {
     paddingRight: "20@ms",
+    paddingLeft: "10@ms",
     alignItems: "center",
     justifyContent: "center"
   },

@@ -1,4 +1,4 @@
-import React, { FC, useState, useContext } from "react";
+import React, { FC, useState } from "react";
 import {
   View,
   TouchableOpacity,
@@ -15,7 +15,6 @@ import {
 } from "./TodoNavigations/TodoDetailsScreen";
 import { H3 } from "components/Text";
 import { RootState, select } from "util/useRedux";
-import { TodoContext } from "./TodoScreen";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import i18n from "util/language/i18n";
 
@@ -31,10 +30,9 @@ export const EditTodoScreen: FC<withTodoScreenProps[TodoScreenName.EDITTODO]> =
     };
 
     const { todo } = route.params;
-    const context = useContext(TodoContext);
 
-    const [titleInput, setTitleInput] = useState<string>(todo.title);
-    const [noteInput, setNoteInput] = useState<string>(todo.notes);
+    const [titleInput, setTitleInput] = useState<string>(todo.title); // Title input
+    const [noteInput, setNoteInput] = useState<string>(todo.notes); // Notes input
 
     const onChangeTitle = (newTitle: string) => {
       setTitleInput(newTitle);
@@ -47,6 +45,7 @@ export const EditTodoScreen: FC<withTodoScreenProps[TodoScreenName.EDITTODO]> =
     return (
       <ScreenWrapper>
         <View style={styles.container}>
+          {/* Title input */}
           <H3 text={i18n.t("Todo.Title")} style={styles.detailText} />
           <TextInput
             value={titleInput}
@@ -60,10 +59,12 @@ export const EditTodoScreen: FC<withTodoScreenProps[TodoScreenName.EDITTODO]> =
             ]}
             onChangeText={onChangeTitle}
           />
+          {/* Patient name (not editable) */}
           <TodoSection
             mainItem={i18n.t("Todo.Patient")}
             content={todo.patientName}
           />
+          {/* Notes input */}
           <H3 text={i18n.t("Todo.Notes")} style={styles.detailText} />
           <TextInput
             multiline
@@ -80,29 +81,17 @@ export const EditTodoScreen: FC<withTodoScreenProps[TodoScreenName.EDITTODO]> =
             onChangeText={onChangeNotes}
           />
 
+          {/* Edit history (created and modified datetime) */}
           <EditHistorySection
             editType={i18n.t("Todo.CreatedOn")}
             timeDate={todo.createdAt}
           />
           <EditHistorySection
             editType={i18n.t("Todo.ModifiedOn")}
-            timeDate={todo.updatedAt}
+            timeDate={todo.lastModified}
           />
           <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={[
-                styles.button,
-                { backgroundColor: colors.primaryTodoCompleteButtonColor }
-              ]}
-              onPress={() => {
-                navigation.goBack();
-              }}
-            >
-              <H3
-                text={i18n.t("Todo.CancelButton")}
-                style={{ color: colors.primaryContrastTextColor }}
-              />
-            </TouchableOpacity>
+            {/* Save button */}
             <TouchableOpacity
               style={[
                 styles.button,
@@ -128,6 +117,21 @@ export const EditTodoScreen: FC<withTodoScreenProps[TodoScreenName.EDITTODO]> =
               <H3
                 text={i18n.t("Todo.SaveButton")}
                 style={{ color: colors.primaryTextColor }}
+              />
+            </TouchableOpacity>
+            {/* Cancel button */}
+            <TouchableOpacity
+              style={[
+                styles.button,
+                { backgroundColor: colors.primaryTodoCompleteButtonColor }
+              ]}
+              onPress={() => {
+                navigation.goBack();
+              }}
+            >
+              <H3
+                text={i18n.t("Todo.CancelButton")}
+                style={{ color: colors.primaryContrastTextColor }}
               />
             </TouchableOpacity>
           </View>

@@ -1,16 +1,16 @@
 import React, { FC } from "react";
 import { View, FlatList } from "react-native";
 import { TodoRow } from "components/RowComponents/TodoRow";
-import { mockCurrentTodoDetails } from "mock/mockTodoDetails";
+import { mockCurrentTodo } from "mock/mockTodoDetails";
 import { RiskLevel } from "models/RiskLevel";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
-import { ITodoDetails } from "models/TodoDetails";
 import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { RootState, select } from "util/useRedux";
 import i18n from "util/language/i18n";
+import { LocalTodo } from "rc_agents/model";
 
 export interface TodoRowTabProps {
-  setTodoSelected: (item: ITodoDetails) => void;
+  setTodoSelected: (item: LocalTodo) => void;
 }
 
 export const TodoCurrentTab: FC<TodoRowTabProps> = ({ setTodoSelected }) => {
@@ -26,7 +26,8 @@ export const TodoCurrentTab: FC<TodoRowTabProps> = ({ setTodoSelected }) => {
     colors: state.settings.colors
   }));
 
-  function onCardPress(item: ITodoDetails) {
+  // Set the todo item detail to be shown when the item is pressed
+  function onCardPress(item: LocalTodo) {
     setTodoSelected(item);
   }
 
@@ -46,7 +47,7 @@ export const TodoCurrentTab: FC<TodoRowTabProps> = ({ setTodoSelected }) => {
       <FlatList
         showsVerticalScrollIndicator={false}
         ItemSeparatorComponent={() => <ItemSeparator />}
-        data={mockCurrentTodoDetails}
+        data={mockCurrentTodo}
         renderItem={({ item }) => (
           <TodoRow
             todoDetails={item}
@@ -54,7 +55,9 @@ export const TodoCurrentTab: FC<TodoRowTabProps> = ({ setTodoSelected }) => {
             onCardPress={() => onCardPress(item)}
           />
         )}
-        keyExtractor={(item) => item.id}
+        // As the id field of LocalTodo is optional, the keyExtractor is detecting possibility where id is undefined,
+        // thus throwing some errors
+        // keyExtractor={(item) => item.id}
       />
     </View>
   );

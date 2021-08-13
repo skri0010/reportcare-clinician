@@ -95,3 +95,17 @@ export interface Todo {
   lastModified?: string;
   pendingSync: boolean;
 }
+
+export interface LocalTodo {
+  id?: string;
+  title: string;
+  patientName: string;
+  notes: string;
+  completed: boolean;
+  alertId?: string;
+  patientId?: string;
+  createdAt: string;
+  lastModified?: string;
+  pendingSync: boolean;
+  _version: number;
+}

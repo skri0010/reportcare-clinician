@@ -1,5 +1,6 @@
 import { ITodoDetails } from "models/TodoDetails";
-import { Todo } from "aws/API";
+// import { Todo } from "aws/API";
+import { LocalTodo } from "rc_agents/model";
 
 export const mockCurrentTodoDetails: ITodoDetails[] = [
   {
@@ -106,20 +107,41 @@ export const mockCompletedTodoDetails: ITodoDetails[] = [
   }
 ];
 
-export const mockCurrentTodo: Todo[] = [
+export const mockCurrentTodo: LocalTodo[] = [
   {
-    __typename: "Todo",
     id: "8616e0f6-17ce-4b5e-87c5-9300098c63b1",
-    clinicianID: "clinicianTest",
     title: "Appointment",
     patientName: "Muhammad Zaini",
     notes: "Call patient tomorrow",
     lastModified: "2021-08-10T15:40:20.008Z",
     completed: false,
-    owner: "clinicianTest",
+    pendingSync: false,
     _version: 8,
-    _lastChangedAt: 1628610023375,
-    createdAt: "2021-08-10T15:08:15.116Z",
-    updatedAt: "2021-08-10T15:40:23.353Z"
+    createdAt: "2021-08-10T15:08:15.116Z"
+  },
+  {
+    id: "8616e0f6-17ce-4b5e-87c5-9312348c63b1",
+    title: "Contact",
+    patientName: "Alice Alice",
+    notes: "Check up on patient",
+    lastModified: "2021-08-10T15:40:20.008Z",
+    completed: false,
+    pendingSync: false,
+    _version: 8,
+    createdAt: "2021-08-10T15:08:15.116Z"
+  }
+];
+
+export const mockCompletedTodo: LocalTodo[] = [
+  {
+    id: "8616e0f6-17ce-4b5e-87c5-9300098c1234",
+    title: "Appointment",
+    patientName: "Muhammad Zaini",
+    notes: "Call patient tomorrow",
+    lastModified: "2021-08-10T15:40:20.008Z",
+    completed: true,
+    pendingSync: false,
+    _version: 8,
+    createdAt: "2021-08-10T15:08:15.116Z"
   }
 ];

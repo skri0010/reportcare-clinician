@@ -3,7 +3,7 @@ import { View } from "react-native";
 import { ScreenWrapper } from "mobile/screens/ScreenWrapper";
 import { MainTitle } from "components/Text";
 import { TodoRow } from "components/RowComponents/TodoRow";
-import { mockCurrentTodoDetails } from "mock/mockTodoDetails";
+import { mockCurrentTodoDetails, mockCurrentTodo } from "mock/mockTodoDetails";
 import { RiskLevel } from "models/RiskLevel";
 
 export const TodoCurrentTab: FC = () => {
@@ -16,10 +16,7 @@ export const TodoCurrentTab: FC = () => {
       <View>
         <MainTitle title="Current Todo" />
 
-        <TodoRow
-          todoDetails={mockCurrentTodoDetails[0]}
-          riskLevel={RiskLevel.HIGH}
-        />
+        <TodoRow todoDetails={mockCurrentTodo[0]} riskLevel={RiskLevel.HIGH} />
       </View>
     </ScreenWrapper>
   );

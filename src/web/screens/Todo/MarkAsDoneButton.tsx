@@ -1,24 +1,27 @@
-import React, { FC, useContext } from "react";
-import { TodoContext } from "./TodoScreen";
+import React, { FC } from "react";
 import { View, TouchableOpacity } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import i18n from "util/language/i18n";
 import { H5 } from "components/Text/index";
 import { RootState, select } from "util/useRedux";
+import { LocalTodo } from "rc_agents/model";
 
 interface MarkAsDoneButtonProps {
+  todo: LocalTodo;
   onPress: () => void;
 }
 
-export const MarkAsDoneButton: FC<MarkAsDoneButtonProps> = ({ onPress }) => {
-  const todoContext = useContext(TodoContext);
+export const MarkAsDoneButton: FC<MarkAsDoneButtonProps> = ({
+  todo,
+  onPress
+}) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
   }));
   return (
     <View
       style={{
-        paddingRight: ms(30),
+        paddingRight: !todo.completed ? ms(52) : ms(30),
         justifyContent: "center"
       }}
     >
@@ -26,16 +29,14 @@ export const MarkAsDoneButton: FC<MarkAsDoneButtonProps> = ({ onPress }) => {
         style={[
           styles.markAsSave,
           {
-            backgroundColor: !todoContext.doneStatus
-              ? colors.primaryButtonColor
-              : "red"
+            backgroundColor: !todo.completed ? colors.primaryButtonColor : "red"
           }
         ]}
         onPress={onPress}
       >
         <H5
           text={
-            !todoContext.doneStatus
+            !todo.completed
               ? i18n.t("Todo.MarkAsDone")
               : i18n.t("Todo.UndoFromCompleted")
           }

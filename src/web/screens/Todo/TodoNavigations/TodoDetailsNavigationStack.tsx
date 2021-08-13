@@ -4,14 +4,14 @@ import { EditTodoScreen } from "../EditTodoScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 import { MarkAsDoneButton } from "../MarkAsDoneButton";
 import { TodoScreenName, TodoScreenParamList } from "web/screens";
-import { Todo } from "aws/API";
+import { LocalTodo } from "rc_agents/model";
 import i18n from "util/language/i18n";
 import { ms } from "react-native-size-matters";
 
 const Stack = createStackNavigator<TodoScreenParamList>();
 
 interface TodoDetailsNavigationStackProps {
-  todo: Todo;
+  todo: LocalTodo;
 }
 
 export const TodoDetailsNavigationStack: FC<TodoDetailsNavigationStackProps> =
@@ -31,9 +31,13 @@ export const TodoDetailsNavigationStack: FC<TodoDetailsNavigationStackProps> =
             headerTitleStyle: {
               fontWeight: "bold",
               fontSize: ms(20),
-              paddingLeft: ms(15)
+              paddingLeft: ms(15),
+              minWidth: ms(250)
             },
-            headerRight: () => <MarkAsDoneButton onPress={() => null} />
+            headerRight: () => (
+              // Mark as done button
+              <MarkAsDoneButton onPress={() => null} todo={todo} />
+            )
           })}
         />
         {/* EDIT TODO */}

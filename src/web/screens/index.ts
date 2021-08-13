@@ -1,6 +1,7 @@
 import { StackScreenProps } from "@react-navigation/stack";
 import { NavigatorScreenParams } from "@react-navigation/native";
-import { PatientInfo, Todo } from "aws/API";
+import { PatientInfo } from "aws/API";
+import { LocalTodo } from "rc_agents/model";
 import { AlertHistory, MedicalRecords } from "mock/mockPatientDetails";
 
 export enum ScreenName {
@@ -59,6 +60,7 @@ export type SideTabsParamList = {
   [ScreenName.HELP]: undefined;
 };
 
+// Patient screens params list
 export type PatientsScreenParamList = {
   [PatientsScreenName.OVERVIEW]: { patient: PatientInfo };
   [PatientsScreenName.PARAMETERS]: { patient: PatientInfo };
@@ -80,14 +82,14 @@ export type PatientsScreenParamList = {
 
 // Todo left side tab param list
 export type TodoLeftTabParamList = {
-  [TodoLeftTabName.CURRENT]: { todos: Todo[] };
-  [TodoLeftTabName.COMPLETED]: { todos: Todo[] };
+  [TodoLeftTabName.CURRENT]: { todos: LocalTodo[] };
+  [TodoLeftTabName.COMPLETED]: { todos: LocalTodo[] };
 };
 
 // Todo screen param list
 export type TodoScreenParamList = {
-  [TodoScreenName.VIEWTODO]: { todo: Todo };
-  [TodoScreenName.EDITTODO]: { todo: Todo };
+  [TodoScreenName.VIEWTODO]: { todo: LocalTodo };
+  [TodoScreenName.EDITTODO]: { todo: LocalTodo };
 };
 
 // Type checking for main screens (navigation and route)

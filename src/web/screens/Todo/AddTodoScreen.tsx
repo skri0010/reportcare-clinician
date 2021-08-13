@@ -27,10 +27,11 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
     height: ms(45)
   };
 
-  const [titleInput, setTitleInput] = useState<string>("");
-  const [patientInput, setPatientInput] = useState<string>("");
-  const [noteInput, setNoteInput] = useState<string>("");
+  const [titleInput, setTitleInput] = useState<string>(""); // Title input
+  const [patientInput, setPatientInput] = useState<string>(""); // Patient name input
+  const [noteInput, setNoteInput] = useState<string>(""); // Notes input
 
+  // Functions that allow user inputs to be shown in the text inputs
   const onChangeTitle = (newTitle: string) => {
     setTitleInput(newTitle);
   };
@@ -50,6 +51,7 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
         }
       ]}
     >
+      {/* Title input */}
       <H3 text={i18n.t("Todo.Title")} style={styles.inputTitle} />
       <TextInput
         value={titleInput}
@@ -61,6 +63,7 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
         ]}
         onChangeText={onChangeTitle}
       />
+      {/* Patient name input */}
       <H3 text={i18n.t("Todo.Patient")} style={styles.inputTitle} />
       <TextInput
         value={patientInput}
@@ -72,6 +75,7 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
         ]}
         onChangeText={onChangePatient}
       />
+      {/* Notes input */}
       <H3 text={i18n.t("Todo.Notes")} style={styles.inputTitle} />
       <TextInput
         multiline
@@ -89,7 +93,7 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
         ]}
         onChangeText={onChangeNotes}
       />
-
+      {/* Save button */}
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={[
@@ -105,6 +109,7 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
             style={{ color: colors.primaryContrastTextColor }}
           />
         </TouchableOpacity>
+        {/* Cancel button */}
         <TouchableOpacity
           style={[
             styles.button,
