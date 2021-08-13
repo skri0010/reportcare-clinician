@@ -3,13 +3,13 @@ import {
   Activity,
   Agent,
   Belief,
-  Precondition
+  Precondition,
+  ResettablePrecondition
 } from "rc_agents/framework";
 import {
   ProcedureConst,
   BeliefKeys,
   PatientAttributes,
-  CommonAttributes,
   ClinicianAttributes,
   ProcedureAttributes,
   AppAttributes,
@@ -43,15 +43,7 @@ class RetrieveRolePatients extends Activity {
    * @param {Agent} agent - context of the agent
    */
   async doActivity(agent: Agent): Promise<void> {
-    await super.doActivity(agent);
-
-    // Update Beliefs
-    agent.addBelief(
-      new Belief(BeliefKeys.PATIENT, PatientAttributes.RETRIEVE_ALL, false)
-    );
-    agent.addBelief(
-      new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
-    );
+    await super.doActivity(agent, [rule2]);
 
     try {
       const results = await this.queryPatients();
@@ -193,7 +185,7 @@ const rule1 = new Precondition(
   ProcedureAttributes.HF_OTP_I,
   ProcedureConst.ACTIVE
 );
-const rule2 = new Precondition(
+const rule2 = new ResettablePrecondition(
   BeliefKeys.PATIENT,
   PatientAttributes.RETRIEVE_ALL,
   true

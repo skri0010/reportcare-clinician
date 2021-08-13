@@ -7,7 +7,6 @@ import { AlertButton } from "components/Buttons/AlertButton";
 import { H4, H6 } from "components/Text";
 import { CardWrapper } from "./CardWrapper";
 import i18n from "util/language/i18n";
-import agentMHA from "rc_agents/agents/medical-health-assistant/MHA";
 import Belief from "rc_agents/framework/base/Belief";
 import {
   BeliefKeys,
@@ -17,6 +16,8 @@ import {
 } from "rc_agents/AgentEnums";
 import agentAPI from "rc_agents/framework/AgentAPI";
 import { AlertStatus } from "aws";
+import { agentDTA } from "rc_agents/agents";
+import { Alert } from "aws/API";
 
 interface AlertsCardProps {
   flex?: number;
@@ -43,6 +44,7 @@ export const AlertsCard: FC<AlertsCardProps> = ({ flex = 1, maxHeight }) => {
     );
   }, [pendingAlertCount]);
 
+  // Triggers the procedure of querying alerts with specific status and risk level.
   const getPendingRiskAlerts = (
     alertStatus: AlertStatus,
     riskLevel: RiskLevel
@@ -64,11 +66,33 @@ export const AlertsCard: FC<AlertsCardProps> = ({ flex = 1, maxHeight }) => {
       ),
       false
     );
-    // Triggers MHA to retrieve alerts
-    agentMHA.addBelief(
+    // Triggers DTA to retrieve alerts
+    agentDTA.addBelief(
       new Belief(
         BeliefKeys.CLINICIAN,
         ClinicianAttributes.RETRIEVE_ALERTS,
+        true
+      )
+    );
+    agentAPI.addFact(
+      new Belief(
+        BeliefKeys.PROCEDURE,
+        ProcedureAttributes.AT_CP,
+        ProcedureConst.ACTIVE
+      )
+    );
+  };
+
+  // Triggers the procedure of querying information associated with an alert.
+  const getAlertInfo = (alert: Alert) => {
+    agentAPI.addFact(
+      new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.ALERT, alert),
+      false
+    );
+    agentDTA.addBelief(
+      new Belief(
+        BeliefKeys.CLINICIAN,
+        ClinicianAttributes.RETRIEVE_ALERT_INFO,
         true
       )
     );
@@ -88,7 +112,7 @@ export const AlertsCard: FC<AlertsCardProps> = ({ flex = 1, maxHeight }) => {
       <View style={styles.titleContainer}>
         <H4 text={i18n.t("Home.Alerts")} style={[styles.title, titleColor]} />
         <H6
-          text={`(${pendingAlertCount} remaining)`}
+          text={`(${remainingAlert} remaining)`}
           style={[styles.title, detailsColors]}
         />
       </View>

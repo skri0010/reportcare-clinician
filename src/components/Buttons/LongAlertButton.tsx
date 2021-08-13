@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { View, TouchableOpacity } from "react-native";
 import { RootState, select } from "util/useRedux";
 import { getRiskLevelColor, RiskLevel } from "../../models/RiskLevel";
@@ -19,19 +19,10 @@ export const LongAlertButton: React.FC<LongAlertButtonProps> = ({
   alertCount = 0,
   onPress
 }) => {
-  const { colors, fonts, alerts } = select((state: RootState) => ({
+  const { colors, fonts } = select((state: RootState) => ({
     colors: state.settings.colors,
-    fonts: state.settings.fonts,
-    alerts: state.agents.alerts
+    fonts: state.settings.fonts
   }));
-
-  // LS-TODO: "alerts" should be used in alerts screen
-  useEffect(() => {
-    if (alerts.length > 0) {
-      // eslint-disable-next-line no-console
-      console.log(alerts);
-    }
-  }, [alerts]);
 
   const hasNotifications = alertCount > 0;
 

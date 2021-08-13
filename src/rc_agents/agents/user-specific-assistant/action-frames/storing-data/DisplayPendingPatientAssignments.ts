@@ -45,6 +45,16 @@ class DisplayPendingPatientAssignments extends Activity {
     if (pendingPatientAssignments) {
       // Dispatch to store boolean to store fetched pending patient assignments
       store.dispatch(setPendingPatientAssignments(pendingPatientAssignments));
+
+      // Removes pending patient assignments from facts
+      agentAPI.addFact(
+        new Belief(
+          BeliefKeys.PATIENT,
+          PatientAttributes.PENDING_PATIENT_ASSIGNMENTS,
+          null
+        ),
+        false
+      );
     }
 
     // Dispatch to store to indicate fetching has ended

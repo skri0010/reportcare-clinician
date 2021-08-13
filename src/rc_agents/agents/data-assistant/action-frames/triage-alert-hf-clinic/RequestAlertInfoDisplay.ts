@@ -16,24 +16,25 @@ import {
   ProcedureConst
 } from "rc_agents/AgentEnums";
 
-// LS-TODO: To be revised.
-// NOTE: This file is currently unused.
-
 /**
- * Class to represent the activity for requesting sorting of alerts.
+ * Class to represent the activity for requesting display of information associated with an alert.
  * This happens in Procedure Triage Alert HF Clinic (AT-CP).
  */
-class RequestAlertsSort extends Communicate {
+class RequestAlertInfoDisplay extends Communicate {
   /**
-   * Constructor for the RequestAlertsSort class
+   * Constructor for the RequestAlertInfoDisplay class
    */
   constructor() {
     super(
-      ActionFrameIDs.MHA.REQUEST_ALERTS_SORT,
+      ActionFrameIDs.DTA.REQUEST_ALERT_INFO_DISPLAY,
       Performative.REQUEST,
-      // Triggers SortAlerts action frame of ALA
-      new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.SORT_ALERTS, true),
-      [AgentIDs.ALA]
+      // Triggers DisplayAlertInfo action frame of UXSA
+      new Belief(
+        BeliefKeys.CLINICIAN,
+        ClinicianAttributes.ALERT_INFO_RETRIEVED,
+        true
+      ),
+      [AgentIDs.UXSA]
     );
   }
 
@@ -44,11 +45,6 @@ class RequestAlertsSort extends Communicate {
   async doActivity(agent: Agent): Promise<void> {
     try {
       await super.doActivity(agent);
-
-      // Update Beliefs
-      agent.addBelief(
-        new Belief(agent.getID(), CommonAttributes.LAST_ACTIVITY, this.getID())
-      );
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
@@ -56,21 +52,21 @@ class RequestAlertsSort extends Communicate {
   }
 }
 
-// Rules or preconditions for activating the RequestAlertsSort class
+// Rules or preconditions for activating the RequestAlertInfoDisplay class
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
   ProcedureAttributes.AT_CP,
   ProcedureConst.ACTIVE
 );
 const rule2 = new Precondition(
-  AgentIDs.MHA,
+  AgentIDs.DTA,
   CommonAttributes.LAST_ACTIVITY,
-  ActionFrameIDs.MHA.RETRIEVE_ALERTS
+  ActionFrameIDs.DTA.RETRIEVE_ALERT_INFO
 );
 
-// Actionframe of the RequestAlertsSort class
-export const af_RequestAlertsSort = new Actionframe(
-  `AF_${ActionFrameIDs.MHA.REQUEST_ALERTS_SORT}`,
+// Actionframe of the RequestAlertInfoDisplay class
+export const af_RequestAlertInfoDisplay = new Actionframe(
+  `AF_${ActionFrameIDs.DTA.REQUEST_ALERT_INFO_DISPLAY}`,
   [rule1, rule2],
-  new RequestAlertsSort()
+  new RequestAlertInfoDisplay()
 );

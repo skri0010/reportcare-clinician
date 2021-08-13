@@ -16,8 +16,10 @@ export enum AsyncStorageKeys {
   CLINICIAN = "Clinician",
   PATIENTS = "Patients",
   ALERTS = "Alerts",
+  ALERT_INFOS = "AlertInfos",
   PENDING_PATIENT_ASSIGNMENTS = "PendingPatientAssignments",
-  PATIENT_ASSIGNMENTS_RESOLUTIONS = "PatientAssignmentsResolutions"
+  PATIENT_ASSIGNMENTS_RESOLUTIONS = "PatientAssignmentsResolutions",
+  TODOS = "Todos"
 }
 
 // Types for storing data locally in AsyncStorage
