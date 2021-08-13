@@ -2,11 +2,13 @@ import {
   AlertInfo,
   PatientDetails,
   PendingAlertCount,
-  LocalTodo
+  LocalTodo,
+  RiskFilter as RiskFilters
 } from "rc_agents/model";
 import { actionNames } from "ic-redux/actions/actionNames";
 import { createAction } from "typesafe-actions";
 import { Alert, PatientAssignment, PatientInfo } from "aws/API";
+import { RiskFilterPillProps } from "web/RiskFilterPill";
 
 export const setProcedureOngoing = createAction(
   actionNames.SET_PROCEDURE_ONGOING,
@@ -96,5 +98,12 @@ export const setNewTodo = createAction(
   actionNames.SET_NEW_TODO,
   (newTodo: LocalTodo) => ({
     newTodo: newTodo
+  })
+)();
+
+export const setRiskFilters = createAction(
+  actionNames.SET_RISK_FILTERS,
+  (riskFilters: RiskFilters) => ({
+    riskFilters: riskFilters
   })
 )();

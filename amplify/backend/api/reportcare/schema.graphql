@@ -27,6 +27,7 @@ type PatientInfo
   hospitalLocation: String!
   targetWeight: String!
   targetActivity: String!
+  riskLevel: String!
   patientID: String!
 }
 

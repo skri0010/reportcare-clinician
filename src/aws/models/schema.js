@@ -80,6 +80,13 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
+                "riskLevel": {
+                    "name": "riskLevel",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
                 "patientID": {
                     "name": "patientID",
                     "isArray": false,
@@ -1563,11 +1570,18 @@ export const schema = {
                         "targetName": "alertID"
                     }
                 },
+                "pending": {
+                    "name": "pending",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "completed": {
                     "name": "completed",
                     "isArray": false,
-                    "type": "Boolean",
-                    "isRequired": true,
+                    "type": "String",
+                    "isRequired": false,
                     "attributes": []
                 },
                 "owner": {
@@ -1588,22 +1602,23 @@ export const schema = {
                 {
                     "type": "key",
                     "properties": {
-                        "name": "todosByClinicianID",
+                        "name": "pendingTodosByLastModifiedDate",
                         "fields": [
-                            "clinicianID"
+                            "pending",
+                            "lastModified"
                         ],
-                        "queryField": "listTodosByClinicianID"
+                        "queryField": "listPendingTodosByLastModifiedDate"
                     }
                 },
                 {
                     "type": "key",
                     "properties": {
-                        "name": "todosByLastModifiedDate",
+                        "name": "completedTodosByLastModifiedDate",
                         "fields": [
-                            "clinicianID",
+                            "completed",
                             "lastModified"
                         ],
-                        "queryField": "listTodosByLastModifiedDate"
+                        "queryField": "listCompletedTodosByLastModifiedDate"
                     }
                 },
                 {
@@ -1668,5 +1683,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "a509ea196691e41035070df68ddac107"
+    "version": "024811b62fe08c7bd982b6effee43314"
 };

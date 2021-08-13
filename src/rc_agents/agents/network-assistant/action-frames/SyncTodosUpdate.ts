@@ -52,7 +52,7 @@ class SyncTodosUpdate extends Activity {
             if (todo.id && todo.pendingSync) {
               // Gets latest Todo
               const query = await getTodo({ id: todo.id });
-              if (query.data?.getTodo) {
+              if (query.data.getTodo) {
                 const latestTodo = query.data.getTodo;
 
                 if (todo._version && latestTodo._version > todo._version) {

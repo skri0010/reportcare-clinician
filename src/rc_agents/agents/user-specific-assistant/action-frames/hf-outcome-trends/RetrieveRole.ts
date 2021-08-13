@@ -45,7 +45,6 @@ class RetrieveRole extends Activity {
       // Get online status from facts
       const isOnline =
         agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE];
-
       if (localClinician) {
         // Device is online
         if (isOnline) {
@@ -136,6 +135,6 @@ const rule2 = new ResettablePrecondition(
 // Actionframe
 export const af_RetrieveRole = new Actionframe(
   `AF_${ActionFrameIDs.UXSA.RETRIEVE_ROLE}`,
-  [rule1, rule2],
+  [rule1],
   new RetrieveRole()
 );

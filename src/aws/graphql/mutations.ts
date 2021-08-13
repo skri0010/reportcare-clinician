@@ -19,6 +19,7 @@ export const createPatientInfo = /* GraphQL */ `
       hospitalLocation
       targetWeight
       targetActivity
+      riskLevel
       patientID
       _version
       _deleted
@@ -46,6 +47,7 @@ export const updatePatientInfo = /* GraphQL */ `
       hospitalLocation
       targetWeight
       targetActivity
+      riskLevel
       patientID
       _version
       _deleted
@@ -73,6 +75,7 @@ export const deletePatientInfo = /* GraphQL */ `
       hospitalLocation
       targetWeight
       targetActivity
+      riskLevel
       patientID
       _version
       _deleted

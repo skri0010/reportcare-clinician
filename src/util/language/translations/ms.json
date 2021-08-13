@@ -141,6 +141,7 @@
     "NoSelection": "Pilihkan salah satu item Todo untuk melihat butirannya"
   },
   "Patients": {
+    "NoPatients": "Tiada pesakit yang dijumpai!",
     "SearchBarPlaceholder": "Cari pesakit (contohnya John)",
     "Overview": "Ringkasan",
     "Parameters": "Parameter",

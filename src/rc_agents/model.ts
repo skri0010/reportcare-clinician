@@ -23,6 +23,8 @@ export enum AlertColorCode {
   UNASSIGNED = "white"
 }
 
+export type RiskFilter = { [riskLevel in RiskLevel]: boolean };
+
 // Interfaces shared with front end
 export interface PatientDetails {
   patientInfo: PatientInfo;

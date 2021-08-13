@@ -27,6 +27,7 @@ export const syncPatientInfos = /* GraphQL */ `
         hospitalLocation
         targetWeight
         targetActivity
+        riskLevel
         patientID
         _version
         _deleted
@@ -54,6 +55,7 @@ export const getPatientInfo = /* GraphQL */ `
       hospitalLocation
       targetWeight
       targetActivity
+      riskLevel
       patientID
       _version
       _deleted
@@ -91,6 +93,7 @@ export const listPatientInfos = /* GraphQL */ `
         hospitalLocation
         targetWeight
         targetActivity
+        riskLevel
         patientID
         _version
         _deleted

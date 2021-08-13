@@ -54,7 +54,7 @@ class RequestDisplayPatients extends Communicate {
 // Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.HF_OTP_II,
+  ProcedureAttributes.HF_OTP_I,
   ProcedureConst.ACTIVE
 );
 const rule2 = new Precondition(
@@ -63,7 +63,7 @@ const rule2 = new Precondition(
   ActionFrameIDs.DTA.RETRIEVE_PATIENTS_BY_ROLE
 );
 const rule3 = new ResettablePrecondition(
-  AgentIDs.DTA,
+  BeliefKeys.PATIENT,
   PatientAttributes.PATIENTS_RETRIEVED,
   true
 );
@@ -71,6 +71,6 @@ const rule3 = new ResettablePrecondition(
 // Actionframe
 export const af_RequestDisplayPatients = new Actionframe(
   `AF_${ActionFrameIDs.DTA.REQUEST_DISPLAY_PATIENTS}`,
-  [rule1, rule2],
+  [rule1, rule2, rule3],
   new RequestDisplayPatients()
 );

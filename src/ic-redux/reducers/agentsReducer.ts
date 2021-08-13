@@ -5,9 +5,11 @@ import {
   AlertInfo,
   PatientDetails,
   PendingAlertCount,
-  LocalTodo
+  LocalTodo,
+  RiskFilter
 } from "rc_agents/model";
 import { Alert, PatientAssignment, PatientInfo } from "aws/API";
+import { RiskLevel } from "models/RiskLevel";
 
 interface AgentsState {
   procedureSuccessful: boolean;
@@ -20,6 +22,7 @@ interface AgentsState {
   fetchingPatients: boolean;
   fetchingPatientDetails: boolean;
   fetchingPendingPatientAssignments: boolean;
+  riskFilters: RiskFilter;
   pendingAlertCount: PendingAlertCount;
   alerts: Alert[];
   alertInfo: AlertInfo | undefined;
@@ -37,6 +40,12 @@ const initialState: AgentsState = {
   fetchingPatientDetails: false,
   fetchingPendingPatientAssignments: false,
   patientAssignmentsSynced: false,
+  riskFilters: {
+    [RiskLevel.HIGH]: false,
+    [RiskLevel.MEDIUM]: false,
+    [RiskLevel.LOW]: false,
+    [RiskLevel.UNASSIGNED]: false
+  },
   pendingAlertCount: {
     highRisk: 0,
     mediumRisk: 0,
@@ -101,6 +110,8 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
       };
     case actionNames.SET_NEW_TODO:
       return { ...state, newTodo: action.payload.newTodo };
+    case actionNames.SET_RISK_FILTERS:
+      return { ...state, riskFilters: action.payload.riskFilters };
     default:
       return state;
   }

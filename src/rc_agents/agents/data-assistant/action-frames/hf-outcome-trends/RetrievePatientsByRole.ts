@@ -49,26 +49,29 @@ class RetrievePatientsByRole extends Activity {
     try {
       if (role) {
         const patients = await this.queryPatients(role);
-
         // Update Facts and Beliefs
         // Remove item
         agentAPI.addFact(
           new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.ROLE, null),
           false
         );
+        // Set item
+        agentAPI.addFact(
+          new Belief(BeliefKeys.PATIENT, PatientAttributes.PATIENTS, patients)
+        );
         // Trigger Communicate to USXA
         agent.addBelief(
-          new Belief(BeliefKeys.PATIENT, PatientAttributes.PATIENTS, patients)
+          new Belief(
+            BeliefKeys.PATIENT,
+            PatientAttributes.PATIENTS_RETRIEVED,
+            true
+          )
         );
       } else {
         // Update Beliefs
-        // Trigger agent (self) to fetch role
+        // Trigger agent (self) to get role
         agent.addBelief(
-          new Belief(
-            BeliefKeys.CLINICIAN,
-            ClinicianAttributes.RETRIEVE_ROLE,
-            true
-          )
+          new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.ROLE, true)
         );
       }
     } catch (error) {
@@ -136,7 +139,10 @@ class RetrievePatientsByRole extends Activity {
               }
               break;
             }
-            case Role.EP || Role.HF_SPECIALIST || Role.MO || Role.PHARMACIST: {
+            case Role.EP:
+            case Role.HF_SPECIALIST:
+            case Role.MO:
+            case Role.PHARMACIST: {
               // Other roles
               const patientInfosQuery = await listPatientInfos({});
               if (patientInfosQuery.data.listPatientInfos?.items) {
@@ -145,13 +151,13 @@ class RetrievePatientsByRole extends Activity {
               break;
             }
             default:
-              // Unknown role
+              // eslint-disable-next-line no-console
+              console.log("Unknown role");
               break;
           }
           if (patients) {
             // Save retrieved data locally
             await Storage.setPatients(patients);
-            returnPatients = await Storage.getPatients();
           }
         }
       }

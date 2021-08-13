@@ -6,7 +6,7 @@ import { getTopTabBarOptions } from "util/getStyles";
 import { RootState, select } from "util/useRedux";
 import { ScreenName, WithSideTabsProps } from "web/screens";
 import { View, Modal } from "react-native";
-import { RowSelectionWrapper } from "../RowSelectionTab";
+import { RowSelectionTab } from "../RowSelectionTab";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { TodoDetailsScreen } from "./TodoDetailsScreen";
@@ -90,7 +90,7 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = () => {
         pointerEvents={modalVisible ? "none" : "auto"}
       >
         <View style={styles.rowSelection}>
-          <RowSelectionWrapper
+          <RowSelectionTab
             title={i18n.t("TabTitle.Todo")}
             addButton={addButton}
             onPress={() => {

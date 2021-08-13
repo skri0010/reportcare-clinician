@@ -12,3 +12,4 @@ Future improvements
 - If you need custom mutation, can copy the schema once its stable and edit
 - Deep linking
 - PWA
+- Need to record changes in patient risk levels

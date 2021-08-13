@@ -4,18 +4,16 @@ import { Text, TouchableHighlight } from "react-native";
 import { getRiskLevelColor, RiskLevel } from "models/RiskLevel";
 import { moderateScale, ScaledSheet } from "react-native-size-matters";
 
-interface RiskFilterTagProps {
-  title: string;
+export interface RiskFilterPillProps {
   riskLevel: RiskLevel;
   selected: boolean;
-  onTagPress: (key: RiskLevel) => void;
+  onPress?: (key: RiskLevel) => void;
 }
 
-export const RiskFilterTag: FC<RiskFilterTagProps> = ({
-  title,
+export const RiskFilterPill: FC<RiskFilterPillProps> = ({
   riskLevel,
   selected,
-  onTagPress
+  onPress = null
 }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
@@ -43,9 +41,13 @@ export const RiskFilterTag: FC<RiskFilterTagProps> = ({
           )
         }
       ]}
-      onPress={() => {
-        onTagPress(riskLevel);
-      }}
+      onPress={
+        onPress
+          ? () => {
+              onPress(riskLevel);
+            }
+          : undefined
+      }
     >
       <Text
         style={
@@ -54,7 +56,7 @@ export const RiskFilterTag: FC<RiskFilterTagProps> = ({
             : styles.textStyle
         }
       >
-        {title === RiskLevel.UNASSIGNED ? "None" : title}
+        {riskLevel === RiskLevel.UNASSIGNED ? "None" : riskLevel}
       </Text>
     </TouchableHighlight>
   );
@@ -62,10 +64,12 @@ export const RiskFilterTag: FC<RiskFilterTagProps> = ({
 
 const styles = ScaledSheet.create({
   container: {
+    flex: 1,
+    minWidth: "40@ms",
     justifyContent: "center",
     borderRadius: "5@ms",
     paddingVertical: "3@ms",
-    marginHorizontal: "5@ms"
+    marginHorizontal: "3@ms"
   },
   textStyle: {
     textAlign: "center"

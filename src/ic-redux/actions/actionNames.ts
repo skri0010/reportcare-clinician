@@ -26,7 +26,10 @@ export const actionNames = {
   SET_ALERT_INFO: "SET_ALERT_INFO",
 
   // Todo
-  SET_NEW_TODO: "SET_NEW_TODO"
+  SET_NEW_TODO: "SET_NEW_TODO",
+
+  // Others
+  SET_RISK_FILTERS: "SET_RISK_FILTERS"
 } as const;
 
 // DO NOT REMOVE "as const", this is necessary for TypeScript checking

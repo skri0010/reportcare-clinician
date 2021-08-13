@@ -141,6 +141,7 @@
     "NoSelection": "Select a Todo item to view its details"
   },
   "Patients": {
+    "NoPatients": "No patients found!",
     "SearchBarPlaceholder": "Search patient (eg John)",
     "Overview": "Overview",
     "Parameters": "Parameters",

@@ -88,7 +88,7 @@ export const ActionFrameIDs = {
     // HF-OTP-I: ClinicianInfo and all patients (PatientInfo)
     RETRIEVE_ROLE: "RetrieveRole",
     REQUEST_RETRIEVE_PATIENTS: "RequestRetrievePatients",
-    DISPLAY_PATIENTS: "DisplayPatients",
+    DISPLAY_PATIENTS_BY_FILTER: "DisplayPatientsByFilter",
 
     // HF-OTP-II: Single patient's details
     VISUALIZE_PARAMETERS: "VisualizeParameters",

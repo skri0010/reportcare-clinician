@@ -5,8 +5,8 @@ import { PatientDetailsRow } from "components/RowComponents/PatientRows/PatientD
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { PatientInfo } from "aws/API";
 import { mockPatients } from "mock/mockPatients";
-import { RowSelectionWrapper } from "../RowSelectionTab";
-import { FilterTagProps } from "web/RiskFilterComponent";
+import { RowSelectionTab } from "../RowSelectionTab";
+import { RiskFilterPillProps } from "web/RiskFilterPill";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { ContactTitle } from "./ContactTitle";
 import { AlertHistoryModal } from "./PatientScreens/PatientDetailsScreen/PatientHistoryScreens/AlertHistoryModal";
@@ -25,23 +25,38 @@ import {
   ProcedureConst
 } from "rc_agents/AgentEnums";
 import agentAPI from "rc_agents/framework/AgentAPI";
-import agentUXSA from "rc_agents/agents/user-specific-assistant/UXSA";
 import { setProcedureOngoing } from "ic-redux/actions/agents/actionCreator";
-import { useNetInfo } from "@react-native-community/netinfo";
 import i18n from "util/language/i18n";
 import { PatientDetailsNavigationStack } from "./PatientScreens/PatientDetailsNavigationStack";
 import { PatientHistoryModal } from "./PatientDetailsScreen/PatientHistoryScreens/PatientHistoryModals";
 import { WithSideTabsProps, ScreenName } from "web/screens";
+import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
+import { RiskFilterPillList } from "web/RiskFilterPillList";
+import { H5 } from "components/Text";
 
 export const PatientsScreen: FC<WithSideTabsProps[ScreenName.PATIENT]> = () => {
-  const { colors, patients, patientDetails, procedureOngoing } = select(
-    (state: RootState) => ({
-      colors: state.settings.colors,
-      patients: state.agents.patients,
-      procedureOngoing: state.agents.procedureOngoing,
-      patientDetails: state.agents.patientDetails
-    })
-  );
+  const { colors, patients, fetchingPatients } = select((state: RootState) => ({
+    colors: state.settings.colors,
+    patients: state.agents.patients,
+    fetchingPatients: state.agents.fetchingPatients
+  }));
+
+  /**
+   * Trigger agent to fetch patients on initial load
+   */
+  useEffect(() => {
+    agentDTA.addBelief(
+      new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.RETRIEVE_ROLE, true)
+    );
+
+    agentAPI.addFact(
+      new Belief(
+        BeliefKeys.PROCEDURE,
+        ProcedureAttributes.HF_OTP_I,
+        ProcedureConst.ACTIVE
+      )
+    );
+  }, []);
 
   // Initial alert history details for the modal
   const initialAlertHistory = {
@@ -64,10 +79,6 @@ export const PatientsScreen: FC<WithSideTabsProps[ScreenName.PATIENT]> = () => {
     record: "",
     content: ""
   };
-
-  // For the display of filtered patients
-  const [filteredPatients, setFilteredPatients] =
-    useState<PatientInfo[]>(mockPatients);
 
   // Patient that has been selected by the user from the list of patients
   const [selectedPatient] = useState(mockPatients[0]);
@@ -95,24 +106,6 @@ export const PatientsScreen: FC<WithSideTabsProps[ScreenName.PATIENT]> = () => {
   const [showGraph, setShowGraph] = useState(false); // used locally for graph display
 
   const dispatch = useDispatch();
-  const netInfo = useNetInfo();
-
-  // Triggers series of actions to get patients according to role.
-  const getPatients = () => {
-    // Start of retrieval
-    dispatch(setProcedureOngoing(true));
-
-    agentUXSA.addBelief(
-      new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.RETRIEVE_ROLE, true)
-    );
-    agentAPI.addFact(
-      new Belief(
-        BeliefKeys.PROCEDURE,
-        ProcedureAttributes.HF_OTP_I,
-        ProcedureConst.ACTIVE
-      )
-    );
-  };
 
   // Triggers series of actions to retrieve details specific to a patient.
   const getData = (patientId: string) => {
@@ -144,43 +137,17 @@ export const PatientsScreen: FC<WithSideTabsProps[ScreenName.PATIENT]> = () => {
     );
   };
 
-  // Retrieves patients after rendering
-  useEffect(() => {
-    getPatients();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // JH-TODO-NEW
+  // // Detects completion of retrieval procedure
+  // useEffect(() => {
+  //   if (retrieving && !procedureOngoing) {
+  //     setRetrieving(false);
+  //     if (!showGraph) {
+  //       setShowGraph(true);
+  //     }
+  //   }
+  // }, [procedureOngoing, retrieving, showGraph]);
 
-  // Retrieves patients when internet connection is detected
-  // In the case where there was no internet connection previously
-  useEffect(() => {
-    if (netInfo.isConnected && netInfo.isInternetReachable) {
-      getPatients();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [netInfo]);
-
-  // Detects completion of retrieval procedure
-  useEffect(() => {
-    if (retrieving && !procedureOngoing) {
-      setRetrieving(false);
-      if (!showGraph) {
-        setShowGraph(true);
-      }
-    }
-  }, [procedureOngoing, retrieving, showGraph]);
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const filterPatients = (item: FilterTagProps[]) => {
-    // Prob replaced with api call here
-    // just mocking a filter now
-    const filtered: PatientInfo[] = [];
-    for (let i = 0; i < filteredPatients.length; i += 1) {
-      filteredPatients[i].id === "1"
-        ? filtered.push(filteredPatients[i])
-        : null;
-    }
-    setFilteredPatients(filtered);
-  };
   // JH-TODO: Replace placeholder with i18n
   return (
     <ScreenWrapper fixed>
@@ -188,33 +155,51 @@ export const PatientsScreen: FC<WithSideTabsProps[ScreenName.PATIENT]> = () => {
         style={styles.container}
         pointerEvents={modalVisible ? "none" : "auto"}
       >
-        {/* Left tab */}
+        {/* Left screen: List of patients */}
         <View
           style={{ flex: 1, backgroundColor: colors.primaryContrastTextColor }}
         >
-          <RowSelectionWrapper
+          {/* Search bar and risk filter pills */}
+          <RowSelectionTab
             title={i18n.t("TabTitle.Patients")}
-            riskFilterTag
-            onRiskFilterClick={filterPatients}
             placeholder={i18n.t("Patients.SearchBarPlaceholder")}
           />
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            style={{ flex: 1 }}
-            ItemSeparatorComponent={() => <ItemSeparator />}
-            data={filteredPatients}
-            renderItem={({ item }) => (
-              <PatientDetailsRow
-                generalDetails={item}
-                patientClass={item.NHYAclass}
-                age={23}
+          <RiskFilterPillList />
+          {/* Risk filter pills and List of patients */}
+          {fetchingPatients ? (
+            // JH-TODO-NEW: Loading indicator options
+            <View style={{ flex: 1 }}>
+              <LoadingIndicator />
+            </View>
+          ) : patients && patients.length > 0 ? (
+            <>
+              <FlatList
+                showsVerticalScrollIndicator={false}
+                style={{ flex: 1 }}
+                ItemSeparatorComponent={() => <ItemSeparator />}
+                data={patients}
+                renderItem={({ item }) => (
+                  <PatientDetailsRow
+                    generalDetails={item}
+                    patientClass={item.NHYAclass}
+                    age={23}
+                  />
+                )}
+                keyExtractor={(item) => item.patientID}
               />
-            )}
-            keyExtractor={(item) => item.patientID}
-          />
+            </>
+          ) : (
+            // Display text to indicate no patients
+            <View style={styles.noPatientsContainer}>
+              <H5
+                text={i18n.t("Patients.NoPatients")}
+                style={styles.noPatientsText}
+              />
+            </View>
+          )}
         </View>
 
-        {/* Right screen */}
+        {/* Right screen: Patient details */}
         <View
           style={{ flex: 2, backgroundColor: colors.primaryWebBackgroundColor }}
         >
@@ -283,5 +268,15 @@ const styles = ScaledSheet.create({
     alignItems: "center",
     justifyContent: "center"
   },
-  rowSelection: { flex: 1 }
+  rowSelection: { flex: 1 },
+  noPatientsContainer: {
+    flex: 1,
+    paddingTop: "10@ms",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    paddingHorizontal: "30@ms"
+  },
+  noPatientsText: {
+    textAlign: "center"
+  }
 });

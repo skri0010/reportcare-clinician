@@ -111,12 +111,19 @@ class ResolvePatientAssignment extends Activity {
           true
         )
       );
-      // Retrieve new patients
+      // Trigger agent (self) to retrieve new patients
       agent.addBelief(
         new Belief(
           BeliefKeys.PATIENT,
           PatientAttributes.RETRIEVE_PATIENTS,
           true
+        )
+      );
+      agentAPI.addFact(
+        new Belief(
+          BeliefKeys.PROCEDURE,
+          ProcedureAttributes.HF_OTP_I,
+          ProcedureConst.ACTIVE
         )
       );
     }

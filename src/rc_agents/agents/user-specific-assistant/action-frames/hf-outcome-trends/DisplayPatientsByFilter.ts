@@ -20,14 +20,15 @@ import {
   setPatients
 } from "ic-redux/actions/agents/actionCreator";
 import { PatientInfo } from "aws/API";
+import { RiskLevel } from "models/RiskLevel";
 
 /**
- * Class to represent an activity for displaying patients.
+ * Class to represent an activity for displaying patients (filter if necessary).
  * This happens in Procedure Storing Data (HTF-OP-I).
  */
-class DisplayPatients extends Activity {
+class DisplayPatientsByFilter extends Activity {
   constructor() {
-    super(ActionFrameIDs.UXSA.DISPLAY_PATIENTS);
+    super(ActionFrameIDs.UXSA.DISPLAY_PATIENTS_BY_FILTER);
   }
 
   /**
@@ -42,8 +43,30 @@ class DisplayPatients extends Activity {
       agentAPI.getFacts()[BeliefKeys.PATIENT]?.[PatientAttributes.PATIENTS];
 
     if (patients) {
+      // Filter patients based on risk filters
+      const filteredPatients: PatientInfo[] = [];
+      const { riskFilters } = store.getState().agents;
+      let shouldFilter = false;
+
+      // If one of the risk filters is true, we must proceed to filter
+      Object.values(riskFilters).forEach((value) => {
+        if (value) {
+          shouldFilter = true;
+        }
+      });
+
+      // Filter patients if needed
+      if (shouldFilter) {
+        patients.forEach((patient) => {
+          // We can assert RiskLevel in this condition
+          if (riskFilters[patient.riskLevel as RiskLevel]) {
+            filteredPatients.push(patient);
+          }
+        });
+      }
+
       // Dispatch to store retrieved patients
-      store.dispatch(setPatients(patients));
+      store.dispatch(setPatients(shouldFilter ? filteredPatients : patients));
 
       // Update Facts
       // Remove item
@@ -83,8 +106,8 @@ const rule2 = new ResettablePrecondition(
 );
 
 // Actionframe
-export const af_DisplayPatients = new Actionframe(
-  `AF_${ActionFrameIDs.UXSA.DISPLAY_PATIENTS}`,
+export const af_DisplayPatientsByFilter = new Actionframe(
+  `AF_${ActionFrameIDs.UXSA.DISPLAY_PATIENTS_BY_FILTER}`,
   [rule1, rule2],
-  new DisplayPatients()
+  new DisplayPatientsByFilter()
 );
