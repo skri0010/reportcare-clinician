@@ -27,14 +27,14 @@ export const LongAlertButton: React.FC<LongAlertButtonProps> = ({
   const hasNotifications = alertCount > 0;
 
   function findRiskName(risk: RiskLevel) {
-    let riskName: string = "Alerts.UnassignedRisk";
+    let riskName: string = "Alert.UnassignedRisk";
 
     if (risk === RiskLevel.HIGH) {
-      riskName = "Alerts.HighRisk";
+      riskName = "Alert.HighRisk";
     } else if (risk === RiskLevel.MEDIUM) {
-      riskName = "Alerts.MediumRisk";
+      riskName = "Alert.MediumRisk";
     } else if (risk === RiskLevel.LOW) {
-      riskName = "Alerts.LowRisk";
+      riskName = "Alert.LowRisk";
     }
     return i18n.t(riskName);
   }

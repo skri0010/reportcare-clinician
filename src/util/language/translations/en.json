@@ -105,15 +105,15 @@
   "Home": {
     "Dashboard": "Dashboard",
     "Welcome": "Welcome Dr. ",
-    "WelcomeMsg": "Check on your patient's health, monitor their vitals and chat with them.",
-    "RequestsByMaria": "Requests by MARIA ",
-    "Alerts": "Alerts ",
-    "Todos": "Todos ",
+    "WelcomeMsg": "Check on your patient's health,\nmonitor their vitals and chat with\nthem.",
+    "RequestsByMaria": "Requests by MARIA",
+    "Alerts": "Alerts",
+    "Todos": "Todos",
     "PatientAssignments": "Patient Assignments",
     "ItemsRemaining": "remaining",
     "ShowMoreButton": "SHOW MORE"
   },
-  "Alerts": {
+  "Alert": {
     "HighRisk": "High Risk",
     "MediumRisk": "Medium Risk",
     "LowRisk": "Low Risk",
@@ -141,5 +141,73 @@
     "NoSelection": "Select a Todo item to view its details",
     "MarkAsDone": "MARK AS DONE",
     "UndoFromCompleted": "UNDO FROM COMPLETED"
+  },
+  "Patients": {
+    "SearchBarPlaceholder": "Search patient (eg John)",
+    "Overview": "Overview",
+    "Parameters": "Parameters",
+    "ICD/CRT": "ICD/CRT",
+    "History": "History",
+    "Info": "Info"
+  },
+  "Patient_Overview": {
+    "BloodPressure": "Blood Pressure",
+    "Systolic": "Systolic",
+    "Diastolic": "Diastolic",
+    "Medications": "Medications",
+    "OxygenSaturation": "O2 Saturation",
+    "Weight": "Weight",
+    "TargetWeight": "Target Weight",
+    "Symptoms": "Symptoms"
+  },
+  "Patient_ICD/CRT": {},
+  "Patient_History": {
+    "Alert": "Alert",
+    "Risk": {
+      "High": "High",
+      "Medium": "Medium",
+      "Low": "Low",
+      "Unassigned": "Unassigned"
+    },
+    "ViewButton": "View",
+    "MedicalRecords": "Medical Records",
+    "AddButton": "Add",
+    "CloseButton": "Close",
+    "SaveButton": "Save",
+    "CancelButton": "Cancel",
+    "AlertSummaryCard": {
+      "AlertSummary": "Alert Summary",
+      "AlertDetails": "Alert Details",
+      "Severity": "Severity: ",
+      "HRV": "HRV: ",
+      "BP": "BP: ",
+      "Symptom": "Symptom: ",
+      "Signs": "Signs: ",
+      "CreatedOn": "Created on: "
+    },
+    "AddMedicalRecordCard": {
+      "Title": "Title",
+      "TitleInputPlaceholder": "Give the medical record a name (eg Family Background)",
+      "Description": "Description",
+      "DescriptionInputPlaceholder": "What is the content of the medical record?"
+    }
+  },
+  "Patient_Info": {
+    "Male": "Male",
+    "Female": "Female",
+    "Malay": "Malay",
+    "English": "English",
+    "Gender": "Gender",
+    "Age": "Age",
+    "Location": "Location",
+    "Class": "Class",
+    "DOB": "Birthdate",
+    "HPNumber": "Phone number",
+    "Email": "Email",
+    "Address": "House Address",
+    "LanguageSpoken": "Language Spoken",
+    "EmergencyContact": "Emergency Contact",
+    "BasicInfo": "Basic Information",
+    "ContactInfo": "Contact Information"
   }
 }

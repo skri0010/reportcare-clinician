@@ -1,30 +1,29 @@
 import React, { FC, useState } from "react";
-import { RootState, select } from "util/useRedux";
 import { ms } from "react-native-size-matters";
-import { H3, H4 } from "components/Text/index";
+import { H4 } from "components/Text/index";
 import { CardWrapper } from "web/screens/Home/CardWrapper";
 import { ReportSymptom } from "aws/models";
 import { FlatList } from "react-native";
 import { mockSymptomRecords } from "mock/mockSymptoms";
+import i18n from "util/language/i18n";
 
 interface SymptomProps {
   symptoms: ReportSymptom[];
+  maxHeight: number;
+  minHeight: number;
 }
 
-export const SymptomsCard: FC<SymptomProps> = () => {
-  const { colors } = select((state: RootState) => ({
-    colors: state.settings.colors
-  }));
-
+export const SymptomsCard: FC<SymptomProps> = ({ maxHeight, minHeight }) => {
   const [mockSymptoms] = useState(mockSymptomRecords);
 
   return (
-    <CardWrapper maxHeight={ms(120)}>
-      <H3
-        text="Symptoms"
-        style={{ fontWeight: "bold", color: colors.primaryTextColor }}
-      />
+    <CardWrapper
+      maxHeight={maxHeight}
+      minHeight={minHeight}
+      title={i18n.t("Patient_Overview.Symptoms")}
+    >
       <FlatList
+        style={{ paddingLeft: ms(10), paddingTop: ms(5) }}
         showsVerticalScrollIndicator={false}
         data={mockSymptoms}
         renderItem={({ item }) => <H4 text={`  ${item.Name}`} style={null} />}

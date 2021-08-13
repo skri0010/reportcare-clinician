@@ -30,7 +30,7 @@ export const RowSelectionWrapper: FC<RowSelectionWrapperProps> = ({
   }));
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container]}>
       {/* Header */}
       <RowSelectionHeader
         title={title}
@@ -64,7 +64,7 @@ export const RowSelectionWrapper: FC<RowSelectionWrapperProps> = ({
 
       {/* Risk filter tab */}
       {riskFilterTag ? (
-        <View>
+        <View style={{ backgroundColor: colors.primaryContrastTextColor }}>
           <RiskFilterComponent onTagPress={onRiskFilterClick} />
         </View>
       ) : null}

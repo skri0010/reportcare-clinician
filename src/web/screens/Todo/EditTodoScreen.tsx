@@ -7,7 +7,8 @@ import {
   ViewStyle
 } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
-import { EditTodoScreenProps } from "../TodoScreenProps";
+import { TodoScreenProps } from "../TodoScreenProps";
+import { TodoScreenName } from "..";
 import { TodoSection, EditHistorySection } from "./TodoDetailsScreen";
 import { H3 } from "components/Text";
 import { RootState, select } from "util/useRedux";
@@ -15,8 +16,8 @@ import { TodoContext } from "./TodoScreen";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import i18n from "util/language/i18n";
 
-export const EditTodoScreen: FC<EditTodoScreenProps> = ({
-  // route,
+export const EditTodoScreen: FC<TodoScreenProps[TodoScreenName.EDITTODO]> = ({
+  route,
   navigation
 }) => {
   const { colors } = select((state: RootState) => ({
@@ -28,12 +29,11 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
     borderColor: colors.primaryBorderColor
   };
 
+  const { todo } = route.params;
   const context = useContext(TodoContext);
 
-  const [titleInput, setTitleInput] = useState<string>(
-    context.mainTitleContent
-  );
-  const [noteInput, setNoteInput] = useState<string>(context.notesContent);
+  const [titleInput, setTitleInput] = useState<string>(todo.title);
+  const [noteInput, setNoteInput] = useState<string>(todo.notes);
 
   const onChangeTitle = (newTitle: string) => {
     setTitleInput(newTitle);
@@ -61,7 +61,7 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
         />
         <TodoSection
           mainItem={i18n.t("Todo.Patient")}
-          content={context.patientContent}
+          content={todo.patientName}
         />
         <H3 text={i18n.t("Todo.Notes")} style={styles.detailText} />
         <TextInput
@@ -81,11 +81,11 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
 
         <EditHistorySection
           editType={i18n.t("Todo.CreatedOn")}
-          timeDate={context.createdTimeDate}
+          timeDate={todo.createdAt}
         />
         <EditHistorySection
           editType={i18n.t("Todo.ModifiedOn")}
-          timeDate={context.modifiedTimeDate}
+          timeDate={todo.updatedAt}
         />
         <View style={styles.buttonContainer}>
           <TouchableOpacity

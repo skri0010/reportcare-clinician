@@ -23,6 +23,10 @@ export const RiskFilterTag: FC<RiskFilterTagProps> = ({
 
   return (
     <TouchableHighlight
+      underlayColor={getRiskLevelColor(
+        colors.riskLevelSelectedBackgroundColors,
+        riskLevel
+      )}
       style={[
         styles.container,
         {
@@ -58,10 +62,10 @@ export const RiskFilterTag: FC<RiskFilterTagProps> = ({
 
 const styles = ScaledSheet.create({
   container: {
-    width: "45@ms",
-    height: "20@ms",
     justifyContent: "center",
-    borderRadius: "5@ms"
+    borderRadius: "5@ms",
+    paddingVertical: "3@ms",
+    marginHorizontal: "5@ms"
   },
   textStyle: {
     textAlign: "center"

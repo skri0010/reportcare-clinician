@@ -3,27 +3,22 @@ import { RootState, select } from "util/useRedux";
 import { ScaledSheet } from "react-native-size-matters";
 import { H4 } from "components/Text/index";
 import { TouchableOpacity, View } from "react-native";
+import i18n from "util/language/i18n";
 
-interface MedicalRecordRowProps {
-  description: string;
+interface ViewRowButtonProps {
   onRowPress: () => void;
 }
 
-export const MedicalRecordRow: FC<MedicalRecordRowProps> = ({
-  description,
-  onRowPress
-}) => {
+export const ViewRowButton: FC<ViewRowButtonProps> = ({ onRowPress }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
   }));
 
   return (
-    <View style={[styles.container]}>
-      <H4 text={description} style={null} />
-
+    <View>
       <TouchableOpacity style={[styles.button]} onPress={onRowPress}>
         <H4
-          text="View"
+          text={i18n.t("Patient_History.ViewButton")}
           style={[styles.buttonText, { color: colors.primaryTextColor }]}
         />
       </TouchableOpacity>
@@ -32,16 +27,9 @@ export const MedicalRecordRow: FC<MedicalRecordRowProps> = ({
 };
 
 const styles = ScaledSheet.create({
-  container: {
-    display: "flex",
-    flexDirection: "row",
-    marginTop: "10@ms",
-    justifyContent: "space-between"
-  },
   button: {
-    borderRadius: "2@ms",
-    borderWidth: "1@ms",
-    width: "70@ms"
+    borderRadius: "10@ms",
+    borderWidth: "1@ms"
   },
   buttonText: {
     textAlign: "center"

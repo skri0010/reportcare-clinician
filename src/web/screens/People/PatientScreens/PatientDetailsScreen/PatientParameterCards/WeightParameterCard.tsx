@@ -12,7 +12,7 @@ export const WeightParameterCard: FC<WeightCardProps> = ({ maxHeight }) => {
   const [vitals] = useState(mockVitals);
 
   return (
-    <CardWrapper maxHeight={maxHeight}>
+    <CardWrapper maxHeight={maxHeight} paddingTop>
       <WeightChart data={vitals} />
     </CardWrapper>
   );

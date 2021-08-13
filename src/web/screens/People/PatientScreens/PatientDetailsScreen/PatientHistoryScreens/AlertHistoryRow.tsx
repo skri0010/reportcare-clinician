@@ -1,15 +1,31 @@
 import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
 import { ScaledSheet } from "react-native-size-matters";
-import { H4 } from "components/Text/index";
+import { H4, H5 } from "components/Text/index";
 import { getRiskLevelColor, RiskLevel } from "models/RiskLevel";
-import { TouchableOpacity, View } from "react-native";
+import { View } from "react-native";
+import { ViewRowButton } from "./ViewRowButton";
+import i18n from "util/language/i18n";
 
 interface AlertHistoryRowProps {
   risk: RiskLevel;
   date: string;
   description: string;
   onRowPress: () => void;
+}
+
+// get i18n translation depending on the risk level
+function getRiskName(risk: RiskLevel) {
+  let riskName: string = "Patient_History.Risk.Unassigned";
+
+  if (risk === RiskLevel.HIGH) {
+    riskName = "Patient_History.Risk.High";
+  } else if (risk === RiskLevel.MEDIUM) {
+    riskName = "Patient_History.Risk.Medium";
+  } else if (risk === RiskLevel.LOW) {
+    riskName = "Patient_History.Risk.Low";
+  }
+  return i18n.t(riskName);
 }
 
 export const AlertHistoryRow: FC<AlertHistoryRowProps> = ({
@@ -19,16 +35,26 @@ export const AlertHistoryRow: FC<AlertHistoryRowProps> = ({
   onRowPress
 }) => {
   const { colors } = select((state: RootState) => ({
-    colors: state.settings.colors
+    colors: state.settings.colors,
+    fonts: state.settings.fonts
   }));
+
+  // Truncate descriptions that have length >35 characters and append ellipses at the end
+  const getDescription = () => {
+    // Word limit
+    const limit = 35;
+    return description.length > limit
+      ? `${description.slice(0, limit)}...`
+      : description;
+  };
 
   return (
     <View style={[styles.container]}>
       <View style={[styles.textContainer]}>
         {/* Risk level and date */}
         <View style={[styles.contentTitle]}>
-          <H4
-            text={`${risk} `}
+          <H5
+            text={`${getRiskName(risk)} `}
             style={{
               fontWeight: "bold",
               color: getRiskLevelColor(
@@ -37,20 +63,20 @@ export const AlertHistoryRow: FC<AlertHistoryRowProps> = ({
               )
             }}
           />
-          <H4
+          <H5
             text={`${date}:`}
             style={{ fontWeight: "bold", color: colors.primaryTextColor }}
           />
         </View>
-        <H4 text={description} style={{ color: colors.primaryTextColor }} />
+        {/* Description */}
+        <H4
+          text={getDescription()}
+          style={{ color: colors.primaryTextColor }}
+        />
       </View>
+      {/* View button */}
       <View style={[styles.buttonContainer]}>
-        <TouchableOpacity style={[styles.button]} onPress={onRowPress}>
-          <H4
-            text="View"
-            style={[styles.buttonText, { color: colors.primaryTextColor }]}
-          />
-        </TouchableOpacity>
+        <ViewRowButton onRowPress={onRowPress} />
       </View>
     </View>
   );
@@ -61,10 +87,10 @@ const styles = ScaledSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    marginTop: "5@ms"
+    marginTop: "5@ms",
+    paddingBottom: "10@ms"
   },
   contentTitle: {
-    display: "flex",
     flexDirection: "row"
   },
   button: {
@@ -75,7 +101,8 @@ const styles = ScaledSheet.create({
     flex: 1
   },
   textContainer: {
-    flex: 7
+    flex: 5,
+    paddingRight: "5@ms"
   },
   buttonText: {
     textAlign: "center"

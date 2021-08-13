@@ -1,4 +1,5 @@
 import { ITodoDetails } from "models/TodoDetails";
+import { Todo } from "aws/API";
 
 export const mockCurrentTodoDetails: ITodoDetails[] = [
   {
@@ -102,5 +103,23 @@ export const mockCompletedTodoDetails: ITodoDetails[] = [
     created: "15:30 10-04-2021",
     modified: "Never",
     id: "6"
+  }
+];
+
+export const mockCurrentTodo: Todo[] = [
+  {
+    __typename: "Todo",
+    id: "8616e0f6-17ce-4b5e-87c5-9300098c63b1",
+    clinicianID: "clinicianTest",
+    title: "Appointment",
+    patientName: "Muhammad Zaini",
+    notes: "Call patient tomorrow",
+    lastModified: "2021-08-10T15:40:20.008Z",
+    completed: false,
+    owner: "clinicianTest",
+    _version: 8,
+    _lastChangedAt: 1628610023375,
+    createdAt: "2021-08-10T15:08:15.116Z",
+    updatedAt: "2021-08-10T15:40:23.353Z"
   }
 ];

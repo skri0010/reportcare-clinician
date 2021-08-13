@@ -1,10 +1,12 @@
 import { H4 } from "components/Text";
 import React, { FC } from "react";
 import { View } from "react-native";
-import { ScreenWrapper } from "../../ScreenWrapper";
-import { PatientParameterProps } from "./PatientHistory";
+import { ScreenWrapper } from "../../../ScreenWrapper";
+import { WithPatientsScreenProps, PatientsScreenName } from "web/screens";
 
-export const PatientIcdCrt: FC<PatientParameterProps> = () => {
+export const PatientICDCRT: FC<
+  WithPatientsScreenProps[PatientsScreenName.ICDCRT]
+> = () => {
   return (
     <ScreenWrapper>
       <View>

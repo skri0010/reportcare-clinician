@@ -4,10 +4,11 @@ import { RootState, select } from "util/useRedux";
 import { H3, H4 } from "components/Text/index";
 import { ScaledSheet, ms } from "react-native-size-matters";
 import { MedicalRecords } from "mock/mockPatientDetails";
+import i18n from "util/language/i18n";
 
 interface ViewMedicalRecordsProps {
   medicalRecord: MedicalRecords;
-  setViewMedicalModal: (state: boolean) => void;
+  setViewMedicalModal: (state: boolean) => void; // medical record modal visibility
 }
 
 export const ViewMedicalRecords: FC<ViewMedicalRecordsProps> = ({
@@ -24,9 +25,14 @@ export const ViewMedicalRecords: FC<ViewMedicalRecordsProps> = ({
         { backgroundColor: colors.primaryContrastTextColor }
       ]}
     >
+      {/* Medical record title */}
       <H3 text={`${medicalRecord.record}`} style={styles.recordTitle} />
+      {/* Medical record description */}
       <View style={styles.descriptionContainer}>
-        <H4 text="Description" style={{ fontWeight: "bold" }} />
+        <H4
+          text={i18n.t("Patient_History.AddMedicalRecordCard.Description")}
+          style={{ fontWeight: "bold" }}
+        />
         <View style={styles.descriptionContent}>
           <ScrollView>
             <H4 text={`${medicalRecord.content}`} style={null} />
@@ -35,6 +41,7 @@ export const ViewMedicalRecords: FC<ViewMedicalRecordsProps> = ({
       </View>
 
       <View style={{ alignItems: "center", paddingTop: ms(20) }}>
+        {/* Close button */}
         <TouchableOpacity
           style={[
             styles.closeButton,
@@ -47,7 +54,10 @@ export const ViewMedicalRecords: FC<ViewMedicalRecordsProps> = ({
             setViewMedicalModal(false);
           }}
         >
-          <H3 text="Close" style={{ color: colors.primaryTextColor }} />
+          <H3
+            text={i18n.t("Patient_History.CloseButton")}
+            style={{ color: colors.primaryTextColor }}
+          />
         </TouchableOpacity>
       </View>
     </View>
@@ -66,14 +76,15 @@ const styles = ScaledSheet.create({
   },
   container: {
     width: "50%",
+    minWidth: "250@ms",
     height: "85%",
     paddingHorizontal: "40@ms",
-    borderRadius: "10@ms",
-    marginHorizontal: "25%"
+    borderRadius: "10@ms"
   },
   descriptionContainer: {
     width: "100%",
-    height: "60%"
+    height: "60%",
+    flex: 1
   },
   descriptionContent: {
     height: "100%",
