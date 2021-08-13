@@ -15,7 +15,7 @@ import { View, Modal } from "react-native";
 import { RowSelectionWrapper } from "../RowSelectionTab";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
-import { TodoDetailsScreen } from "./TodoDetailsScreen";
+import { TodoDetailsScreen } from "./TodoNavigations/TodoDetailsScreen";
 import { EditTodoScreen } from "./EditTodoScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
@@ -24,8 +24,8 @@ import { NoSelectionScreen } from "../Shared/NoSelectionScreen";
 import { ITodoDetails } from "models/TodoDetails";
 import i18n from "util/language/i18n";
 import { MarkAsDoneButton } from "./MarkAsDoneButton";
-import { TodoLeftTabNavigator } from "./TodoLeftTabNavigator";
-import { TodoDetailsNavigationStack } from "./TodoDetailsNavigationStack";
+import { TodoLeftTabNavigator } from "./TodoNavigations/TodoLeftTabNavigator";
+import { TodoDetailsNavigationStack } from "./TodoNavigations/TodoDetailsNavigationStack";
 import { mockCurrentTodo } from "mock/mockTodoDetails";
 
 const Tab = createMaterialTopTabNavigator();
@@ -127,7 +127,7 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = () => {
             }}
             isTodo
           />
-          {/* <TodoLeftTabNavigator
+          <TodoLeftTabNavigator
             tabPressCurrent={() => {
               setAddButton(checkNeedAddButton(TodoLeftTabName.CURRENT));
             }}
@@ -135,33 +135,7 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = () => {
               setAddButton(checkNeedAddButton(TodoLeftTabName.COMPLETED));
             }}
             setTodoSelected={onRowClick}
-          /> */}
-          <Tab.Navigator tabBarOptions={getTopTabBarOptions(colors)}>
-            {/* CURRENT todo tab */}
-            <Tab.Screen
-              name={TodoLeftTabName.CURRENT}
-              options={{ title: i18n.t("Todo.Current") }}
-              listeners={{
-                tabPress: () => {
-                  setAddButton(checkNeedAddButton(TodoLeftTabName.CURRENT));
-                }
-              }}
-            >
-              {() => <TodoCurrentTab setTodoSelected={onRowClick} />}
-            </Tab.Screen>
-            {/* COMPLETED todo tab */}
-            <Tab.Screen
-              name={TodoLeftTabName.COMPLETED}
-              options={{ title: i18n.t("Todo.Completed") }}
-              listeners={{
-                tabPress: () => {
-                  setAddButton(checkNeedAddButton(TodoLeftTabName.COMPLETED));
-                }
-              }}
-            >
-              {() => <TodoCompletedTab setTodoSelected={onRowClick} />}
-            </Tab.Screen>
-          </Tab.Navigator>
+          />
         </View>
 
         {/* Right screen */}

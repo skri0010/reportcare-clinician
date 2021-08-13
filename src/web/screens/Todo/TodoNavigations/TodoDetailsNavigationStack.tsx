@@ -1,13 +1,12 @@
 import React, { FC } from "react";
-import { select, RootState } from "util/useRedux";
 import { TodoDetailsScreen } from "./TodoDetailsScreen";
-import { EditTodoScreen } from "./EditTodoScreen";
+import { EditTodoScreen } from "../EditTodoScreen";
 import { createStackNavigator } from "@react-navigation/stack";
-import { MarkAsDoneButton } from "./MarkAsDoneButton";
+import { MarkAsDoneButton } from "../MarkAsDoneButton";
 import { TodoScreenName, TodoScreenParamList } from "web/screens";
 import { Todo } from "aws/API";
 import i18n from "util/language/i18n";
-import { ms, ScaledSheet } from "react-native-size-matters";
+import { ms } from "react-native-size-matters";
 
 const Stack = createStackNavigator<TodoScreenParamList>();
 

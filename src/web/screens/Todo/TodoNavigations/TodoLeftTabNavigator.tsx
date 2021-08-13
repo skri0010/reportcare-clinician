@@ -1,14 +1,14 @@
 import React, { FC } from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { TodoCurrentTab } from "./TodoCurrentTab";
-import { TodoCompletedTab } from "./TodoCompletedTab";
+import { TodoCurrentTab } from "../TodoCurrentTab";
+import { TodoCompletedTab } from "../TodoCompletedTab";
 import { getTopTabBarOptions } from "util/getStyles";
 import { RootState, select } from "util/useRedux";
 import i18n from "util/language/i18n";
-import { TodoLeftTabName } from "..";
+import { TodoLeftTabName, TodoLeftTabParamList } from "../..";
 import { ITodoDetails } from "models/TodoDetails";
 
-const Tab = createMaterialTopTabNavigator();
+const Tab = createMaterialTopTabNavigator<TodoLeftTabParamList>();
 
 interface TodoLeftTabNavigatorProps {
   tabPressCurrent: () => void; // callback when the current tab is pressed (allow add button visibility)

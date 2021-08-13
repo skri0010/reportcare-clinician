@@ -86,8 +86,8 @@ export type TodoLeftTabParamList = {
 
 // Todo screen param list
 export type TodoScreenParamList = {
-  [TodoScreenName.EDITTODO]: { todo: Todo };
   [TodoScreenName.VIEWTODO]: { todo: Todo };
+  [TodoScreenName.EDITTODO]: { todo: Todo };
 };
 
 // Type checking for main screens (navigation and route)
@@ -104,8 +104,8 @@ export type { WithPatientsScreenProps } from "web/screens/WithPatientsScreenProp
 
 // Type checking for todo screens (navigation and route)
 export type {
-  TodoLeftTabProps,
-  TodoScreenProps
+  withTodoLeftTabProps,
+  withTodoScreenProps
 } from "web/screens/TodoScreenProps";
 
 // JH-TODO: Navigation FIXME
