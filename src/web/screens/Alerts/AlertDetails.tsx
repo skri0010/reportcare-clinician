@@ -5,7 +5,6 @@ import { H2, H3, H4, H5 } from "components/Text";
 import { RootState, select } from "util/useRedux";
 import { ScreenWrapper } from "../ScreenWrapper";
 import { AlertContext } from "./AlertScreen";
-import { AlertDetailsRow } from "../People/PatientDetailsScreen/PatientHistoryScreens/AlertHistoryModal";
 import { AlertHistory } from "mock/mockPatientDetails";
 import { RiskLevel } from "models/RiskLevel";
 
@@ -13,6 +12,23 @@ import { RiskLevel } from "models/RiskLevel";
 export interface AlertDetailsProps {
     alertHistory: AlertHistory,
 }
+
+interface AlertDetailsRowProps {
+    detailTitle: string;
+    detailContent: number | string;
+  }
+
+const AlertDetailsRow: FC<AlertDetailsRowProps> = ({
+    detailTitle,
+    detailContent
+  }) => {
+    return (
+      <View style={{ flexDirection: "row" }}>
+        <H5 text={detailTitle} style={{ fontWeight: "bold" }} />
+        <H5 text={`${detailContent}`} style={null} />
+      </View>
+    );
+  };
 export const AlertDetails: FC<AlertDetailsProps> = ({ alertHistory }) => {
     const { colors } = select((state: RootState) => ({
         colors: state.settings.colors
