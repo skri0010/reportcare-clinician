@@ -17,7 +17,7 @@ export const PatientHistory: FC<
   // Query history data by patientId here or pass it into component for query
 
   return (
-    <ScreenWrapper>
+    <ScreenWrapper padding>
       <View style={styles.container}>
         {/* Alert Histories */}
         <PatientAlertHistoryCard

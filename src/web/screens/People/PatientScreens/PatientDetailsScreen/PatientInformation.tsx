@@ -12,7 +12,7 @@ export const PatientInformation: FC<
 > = () => {
   // JQ-TODO Query for information here
   return (
-    <ScreenWrapper>
+    <ScreenWrapper padding>
       <View style={{ marginHorizontal: ms(40) }}>
         {/* Patient Basic informations */}
         <InfoTitleBar title="Patient_Info.BasicInfo" />

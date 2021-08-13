@@ -17,7 +17,7 @@ export const PatientParameter: FC<
     Dimensions.get("window").height * 0.8
   );
   return (
-    <ScreenWrapper>
+    <ScreenWrapper padding>
       <View style={styles.container}>
         {/* Systolic Blood Graph */}
         <SystolicParameterCard
@@ -48,10 +48,7 @@ export const PatientParameter: FC<
 
 const styles = ScaledSheet.create({
   container: {
-    display: "flex",
     flexDirection: "row",
-    marginBottom: "10@ms",
-    paddingHorizontal: "10@ms",
     flexWrap: "wrap"
   }
 });

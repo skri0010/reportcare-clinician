@@ -8,7 +8,7 @@ export const PatientICDCRT: FC<
   WithPatientsScreenProps[PatientsScreenName.ICDCRT]
 > = () => {
   return (
-    <ScreenWrapper>
+    <ScreenWrapper padding>
       <View>
         <H4 text="To be added" style={null} />
       </View>
