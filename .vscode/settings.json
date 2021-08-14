@@ -9,5 +9,6 @@
     "amplify/backend/awscloudformation": true
   },
   "emulator.androidColdBoot": true,
-  "emulator.emulatorPathWindows": "C:\\Users\\Jeng Yue\\AppData\\Local\\Android\\Sdk\\emulator"
+  "emulator.emulatorPathWindows": "C:\\Users\\Jeng Yue\\AppData\\Local\\Android\\Sdk\\emulator",
+  "editor.formatOnSave": true
 }
