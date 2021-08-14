@@ -73,14 +73,7 @@ export const CliniciansTab: FC<WithSideTabsProps[ScreenName.CLINICIAN]> =
             }}
           >
             {!isEmptyClinician ? (
-              <ClinicianDetails
-                clinicianID={clinicianSelected.clinicianID}
-                name={clinicianSelected.name}
-                id={clinicianSelected.id}
-                hospitalName={clinicianSelected.hospitalName}
-                role={clinicianSelected.role}
-                owner={clinicianSelected.owner}
-              />
+              <ClinicianDetails clinicianDetails={clinicianSelected} />
             ) : (
               <NoSelectionScreen
                 screenName={ScreenName.CLINICIAN}

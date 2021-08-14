@@ -1,11 +1,13 @@
 import React, { FC } from "react";
-import { ScaledSheet } from "react-native-size-matters";
+import { ms, ScaledSheet } from "react-native-size-matters";
 import { View } from "react-native";
 import { ClinicianInfo } from "aws/models";
 import { ScreenWrapper } from "../ScreenWrapper";
 import { ContactTitle } from "./ContactTitle";
 import i18n from "util/language/i18n";
 import { ClinicianSection } from "./ClinicianSection";
+import { InfoTitleBar } from "./PatientScreens/PatientDetailsScreen/PatientInfoSections/InfoTitleBar";
+import { ClinicianInfoRow } from "./ClinicianInfoRow";
 
 interface ClinicianDetailsProp {
   clinicianDetails: ClinicianInfo;
@@ -16,18 +18,26 @@ export const ClinicianDetails: FC<ClinicianDetailsProp> = ({
 }) => {
   return (
     <ScreenWrapper>
-      <ContactTitle name={i18n.t("Information")} isPatient={false} />
-      <View style={styles.container}>
-        <ClinicianSection
-          title="Clinician Name:"
-          information={clinicianDetails.name}
-        />
-        <ClinicianSection
-          title="Hospital Name:"
-          information={clinicianDetails.hospitalName}
-        />
-        <ClinicianSection title="Role:" information={clinicianDetails.role} />
-        <ClinicianSection title="Email:" information={clinicianDetails.id} />
+      <ContactTitle name={i18n.t(clinicianDetails.name)} isPatient={false} />
+      <View style={{ marginHorizontal: ms(40) }}>
+        <InfoTitleBar title="General Details" />
+        <View style={styles.infoSection}>
+          <ClinicianInfoRow
+            title="Email:"
+            content={clinicianDetails.id}
+            iconType="email"
+          />
+          <ClinicianInfoRow
+            title="Role:"
+            content={clinicianDetails.role}
+            iconType="doctor"
+          />
+          <ClinicianInfoRow
+            title="Hospital Name:"
+            content={clinicianDetails.hospitalName}
+            iconType="hospital"
+          />
+        </View>
       </View>
     </ScreenWrapper>
   );
