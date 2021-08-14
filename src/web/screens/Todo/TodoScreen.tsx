@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { RootState, select } from "util/useRedux";
 import { ScreenName, WithSideTabsProps, TodoLeftTabName } from "web/screens";
@@ -8,7 +8,7 @@ import { RowSelectionWrapper } from "../RowSelectionTab";
 import { ScaledSheet } from "react-native-size-matters";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { createStackNavigator } from "@react-navigation/stack";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useRoute } from "@react-navigation/native";
 import { AddTodoScreen } from "./AddTodoScreen";
 import { NoSelectionScreen } from "../Shared/NoSelectionScreen";
 import i18n from "util/language/i18n";
@@ -25,11 +25,15 @@ function checkNeedAddButton(tabName: TodoLeftTabName) {
   return needAddButton;
 }
 
-export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = () => {
+export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = ({
+  route,
+  navigation
+}) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
   }));
 
+  // console.log(route.params);
   // Todo that has been selected by the user from the list of todos *****
   // const [selectedTodo] = useState(mockCurrentTodo[0]);
 
@@ -56,6 +60,13 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = () => {
 
   // Records if a todo item has been selected
   const [isEmptyTodo, setEmptyTodo] = useState(true);
+
+  useEffect(() => {
+    if (route.params !== undefined) {
+      setEmptyTodo(false);
+      setTodoSelected(route.params);
+    }
+  }, [route.params]);
 
   // Function to save the selected todo details to be displayed in the right screen
   // JQ-TODO To be integrated with redux store for todo item details display on the right screen
@@ -102,7 +113,10 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = () => {
           {!isEmptyTodo ? (
             <NavigationContainer independent>
               {/* Todo details navigation stack */}
-              <TodoDetailsNavigationStack todo={todoSelected} />
+              <TodoDetailsNavigationStack
+                todo={todoSelected}
+                mainNavigation={navigation}
+              />
             </NavigationContainer>
           ) : (
             // No todo selected

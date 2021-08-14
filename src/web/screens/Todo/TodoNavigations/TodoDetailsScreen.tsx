@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { FC } from "react";
 import { View, TouchableOpacity } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
@@ -6,7 +7,9 @@ import { H2, H3, H4, H5 } from "components/Text";
 import { RootState, select } from "util/useRedux";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import i18n from "util/language/i18n";
-import { TodoScreenName } from "../..";
+import { ScreenName, TodoScreenName } from "../..";
+import { useNavigation } from "@react-navigation/native";
+import { mockPatients } from "mock/mockPatients";
 
 interface todoSectionProps {
   mainItem: string;
@@ -58,6 +61,7 @@ export const TodoDetailsScreen: FC<
     colors: state.settings.colors
   }));
   const { todo } = route.params;
+  const { mainNavigation } = route.params;
 
   return (
     <ScreenWrapper>
@@ -87,7 +91,11 @@ export const TodoDetailsScreen: FC<
                 }
               ]}
               onPress={() => {
-                null;
+                if (todo.patientId !== undefined) {
+                  mainNavigation?.navigate(ScreenName.PATIENT, {
+                    patientId: todo.patientId
+                  });
+                }
               }}
             >
               <H5

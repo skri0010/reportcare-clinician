@@ -17,6 +17,7 @@ import {
   ProcedureConst
 } from "rc_agents/AgentEnums";
 import agentDTA from "rc_agents/agents/data-assistant/DTA";
+import { useNavigation } from "@react-navigation/native";
 
 export const HomeScreen: FC<WithSideTabsProps[ScreenName.HOME]> = () => {
   // JH-TODO Replace titles with i18n
@@ -47,7 +48,6 @@ export const HomeScreen: FC<WithSideTabsProps[ScreenName.HOME]> = () => {
   useEffect(() => {
     getPendingAlertCount();
   }, []);
-
   return (
     <ScreenWrapper padding>
       <View style={styles.container}>

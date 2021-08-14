@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { FC, useEffect, useState } from "react";
 import { View, FlatList } from "react-native";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
@@ -33,7 +34,9 @@ import { PatientDetailsNavigationStack } from "./PatientScreens/PatientDetailsNa
 import { PatientHistoryModal } from "./PatientDetailsScreen/PatientHistoryScreens/PatientHistoryModals";
 import { WithSideTabsProps, ScreenName } from "web/screens";
 
-export const PatientsScreen: FC<WithSideTabsProps[ScreenName.PATIENT]> = () => {
+export const PatientsScreen: FC<WithSideTabsProps[ScreenName.PATIENT]> = ({
+  route
+}) => {
   const { colors, patients, patientDetails, procedureOngoing } = select(
     (state: RootState) => ({
       colors: state.settings.colors,

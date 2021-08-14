@@ -116,6 +116,7 @@ export const mockCurrentTodo: LocalTodo[] = [
     lastModified: "2021-08-10T15:40:20.008Z",
     completed: false,
     pendingSync: false,
+    patientId: "1",
     _version: 8,
     createdAt: "2021-08-10T15:08:15.116Z"
   },

@@ -3,6 +3,7 @@ import { NavigatorScreenParams } from "@react-navigation/native";
 import { PatientInfo } from "aws/API";
 import { LocalTodo } from "rc_agents/model";
 import { AlertHistory, MedicalRecords } from "mock/mockPatientDetails";
+import { TodoNavigationProps } from "web/screens/WithSideTabsProps";
 
 export enum ScreenName {
   MAIN = "Main",
@@ -51,10 +52,12 @@ export type RootStackParamList = {
 // Extract the params from the screen containing the nested navigator
 export type SideTabsParamList = {
   [ScreenName.HOME]: undefined;
-  [ScreenName.PATIENT]: NavigatorScreenParams<PatientsScreenParamList>;
+  // [ScreenName.PATIENT]: NavigatorScreenParams<PatientsScreenParamList>;
+  [ScreenName.PATIENT]: { patientId: string };
   [ScreenName.CLINICIAN]: undefined;
   [ScreenName.CHAT]: undefined;
-  [ScreenName.TODO]: NavigatorScreenParams<TodoScreenParamList>;
+  // [ScreenName.TODO]: NavigatorScreenParams<TodoScreenParamList>;
+  [ScreenName.TODO]: LocalTodo;
   [ScreenName.MARIA]: undefined;
   [ScreenName.SETTING]: undefined;
   [ScreenName.HELP]: undefined;
@@ -88,7 +91,10 @@ export type TodoLeftTabParamList = {
 
 // Todo screen param list
 export type TodoScreenParamList = {
-  [TodoScreenName.VIEWTODO]: { todo: LocalTodo };
+  [TodoScreenName.VIEWTODO]: {
+    todo: LocalTodo;
+    mainNavigation?: TodoNavigationProps;
+  };
   [TodoScreenName.EDITTODO]: { todo: LocalTodo };
 };
 

@@ -10,6 +10,8 @@ import { H4 } from "components/Text/index";
 import { CardWrapper } from "./CardWrapper";
 import { FloatingShowMoreButton } from "components/Buttons/FloatingShowMoreButton";
 import i18n from "util/language/i18n";
+import { useNavigation } from "@react-navigation/native";
+import { ScreenName } from "web/screens";
 
 interface TodosCardProps {
   maxHeight: number;
@@ -24,6 +26,7 @@ export const TodosCard: FC<TodosCardProps> = ({ maxHeight }) => {
   // JH-TODO: Replace with actual models
   const maxPatientsShown = Math.min(mockCurrentTodoDetails.length, 10); // At 10 items, `Show More` button is displayed
   const lastPatientIndex = maxPatientsShown - 1;
+  const navigation = useNavigation();
 
   return (
     <CardWrapper maxHeight={maxHeight}>
@@ -43,12 +46,21 @@ export const TodosCard: FC<TodosCardProps> = ({ maxHeight }) => {
                   riskLevel={RiskLevel.HIGH}
                   disabled
                   reduceOpacity
+                  onCardPress={() => {
+                    navigation.navigate(ScreenName.TODO, item);
+                  }}
                 />
                 {/* Disable last row, display "Show More button" */}
                 <FloatingShowMoreButton />
               </>
             ) : (
-              <TodoRow todoDetails={item} riskLevel={RiskLevel.HIGH} />
+              <TodoRow
+                todoDetails={item}
+                riskLevel={RiskLevel.HIGH}
+                onCardPress={() => {
+                  navigation.navigate(ScreenName.TODO, item);
+                }}
+              />
             );
           }}
           // keyExtractor={(item) => item.id}

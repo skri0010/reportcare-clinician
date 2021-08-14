@@ -7,22 +7,24 @@ import { TodoScreenName, TodoScreenParamList } from "web/screens";
 import { LocalTodo } from "rc_agents/model";
 import i18n from "util/language/i18n";
 import { ms } from "react-native-size-matters";
+import { TodoNavigationProps } from "web/screens/WithSideTabsProps";
 
 const Stack = createStackNavigator<TodoScreenParamList>();
 
 interface TodoDetailsNavigationStackProps {
   todo: LocalTodo;
+  mainNavigation: TodoNavigationProps;
 }
 
 export const TodoDetailsNavigationStack: FC<TodoDetailsNavigationStackProps> =
-  ({ todo }) => {
+  ({ todo, mainNavigation }) => {
     return (
       <Stack.Navigator>
         {/* VIEW TODO */}
         <Stack.Screen
           name={TodoScreenName.VIEWTODO}
           component={TodoDetailsScreen}
-          initialParams={{ todo: todo }}
+          initialParams={{ todo: todo, mainNavigation: mainNavigation }}
           options={() => ({
             title: i18n.t("Todo.ViewTodo"),
             headerStyle: {
