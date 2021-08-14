@@ -21,6 +21,7 @@ import {
 import { PatientAssignment } from "aws/API";
 import { PatientAssignmentRow } from "components/RowComponents/PatientRows/PatientPendingAssignmentRow";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
+import { AgentTrigger } from "rc_agents/trigger";
 
 interface PendingPatientAssignmentsCardProps {
   maxHeight: number;
@@ -43,52 +44,8 @@ export const PendingPatientAssignmentsCard: FC<PendingPatientAssignmentsCardProp
 
     // Trigger agent to fetch pending assignments on initial load
     useEffect(() => {
-      agentDTA.addBelief(
-        new Belief(
-          BeliefKeys.PATIENT,
-          PatientAttributes.RETRIEVE_PENDING_PATIENT_ASSIGNMENTS,
-          true
-        )
-      );
-
-      agentAPI.addFact(
-        new Belief(
-          BeliefKeys.PROCEDURE,
-          ProcedureAttributes.SRD_I,
-          ProcedureConst.ACTIVE
-        )
-      );
+      AgentTrigger.triggerRetrievePendingAssignments();
     }, []);
-
-    // Trigger agent to resolve pending assignment
-    const resolvePatientAssignment = (
-      patientAssignmentResolution: PatientAssignmentResolution
-    ) => {
-      agentDTA.addBelief(
-        new Belief(
-          BeliefKeys.PATIENT,
-          PatientAttributes.RESOLVE_PATIENT_ASSIGNMENT,
-          true
-        )
-      );
-
-      agentAPI.addFact(
-        new Belief(
-          BeliefKeys.PATIENT,
-          PatientAttributes.PATIENT_ASSIGNMENT_RESOLUTION,
-          patientAssignmentResolution
-        ),
-        false
-      );
-
-      agentAPI.addFact(
-        new Belief(
-          BeliefKeys.PROCEDURE,
-          ProcedureAttributes.SRD_I,
-          ProcedureConst.ACTIVE
-        )
-      );
-    };
 
     // Approve patient assignment
     const approvePatientAssignment = (assignment: PatientAssignment) => {
@@ -99,11 +56,13 @@ export const PendingPatientAssignmentsCard: FC<PendingPatientAssignmentsCardProp
         patientName: assignment.patientName,
         _version: assignment._version
       };
-      resolvePatientAssignment(patientAssignmentResolution);
+      AgentTrigger.triggerResolvePendingAssignments(
+        patientAssignmentResolution
+      );
     };
 
     const reassignPatientAssignment = (assignment: PatientAssignment) => {
-      // JH-TODO: Reassign patient assignment
+      // JH-TODO-NEW: Reassign patient assignment
     };
 
     return (

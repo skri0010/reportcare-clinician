@@ -25,6 +25,7 @@ import { PatientDetailsNavigationStack } from "./PatientScreens/PatientDetailsNa
 import { PatientHistoryModal } from "./PatientDetailsScreen/PatientHistoryScreens/PatientHistoryModals";
 import { WithSideTabsProps, ScreenName } from "web/screens";
 import { PatientsListScreen } from "./PatientsListScreen";
+import { AgentTrigger } from "rc_agents/trigger";
 
 export const PatientsScreen: FC<WithSideTabsProps[ScreenName.PATIENT]> = () => {
   const { colors } = select((state: RootState) => ({
@@ -35,17 +36,7 @@ export const PatientsScreen: FC<WithSideTabsProps[ScreenName.PATIENT]> = () => {
    * Trigger agent to fetch patients on initial load
    */
   useEffect(() => {
-    agentDTA.addBelief(
-      new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.RETRIEVE_ROLE, true)
-    );
-
-    agentAPI.addFact(
-      new Belief(
-        BeliefKeys.PROCEDURE,
-        ProcedureAttributes.HF_OTP_I,
-        ProcedureConst.ACTIVE
-      )
-    );
+    AgentTrigger.triggerRetrievePatientsByRole();
   }, []);
 
   // Initial alert history details for the modal
