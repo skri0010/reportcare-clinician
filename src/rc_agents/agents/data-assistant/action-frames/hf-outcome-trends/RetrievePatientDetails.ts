@@ -65,7 +65,7 @@ class RetrievePatientDetails extends Activity {
       let localPatientsDetails = await Storage.getPatientsDetails();
 
       if (patientInfo) {
-        const patientId = patientInfo.id;
+        const patientId = patientInfo.patientID;
         const patientDetails: PatientDetails = {
           patientInfo: patientInfo,
           activityInfos: {},

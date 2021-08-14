@@ -52,7 +52,7 @@ export const RiskFilterPillList: FC = () => {
     <View style={styles.container}>
       {/* Filter by text */}
       <View style={styles.textContainer}>
-        <H6 text={i18n.t("Patients.FilterBy")} />
+        <H6 text={i18n.t("Patients.PatientsList.FilterBy")} />
       </View>
       {/* Risk filter pill list */}
       <FlatList

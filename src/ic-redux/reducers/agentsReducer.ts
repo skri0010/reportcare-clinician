@@ -15,7 +15,7 @@ interface AgentsState {
   procedureSuccessful: boolean;
   procedureOngoing: boolean;
   online: boolean;
-  patients: PatientInfo[];
+  patients: PatientInfo[] | null;
   patientDetails: PatientDetails | null;
   pendingPatientAssignments: PatientAssignment[];
   patientAssignmentsSynced: boolean;
@@ -33,7 +33,7 @@ const initialState: AgentsState = {
   procedureSuccessful: false,
   procedureOngoing: false,
   online: false,
-  patients: [],
+  patients: null,
   patientDetails: null,
   pendingPatientAssignments: [],
   fetchingPatients: false,

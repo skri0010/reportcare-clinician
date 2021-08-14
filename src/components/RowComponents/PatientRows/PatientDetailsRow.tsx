@@ -3,11 +3,12 @@ import { TouchableOpacity } from "react-native";
 import { PatientRowBase } from "./PatientRowBase";
 import { PatientInfo } from "aws/API";
 import { RiskLevel } from "models/RiskLevel";
+import i18n from "util/language/i18n";
 
 export interface PatientDetailsRowProps {
   patient: PatientInfo;
   age: number;
-  onRowPress?: () => void;
+  onRowPress?: (patient: PatientInfo) => void;
 }
 
 export const PatientDetailsRow: React.FC<PatientDetailsRowProps> = ({
@@ -18,16 +19,17 @@ export const PatientDetailsRow: React.FC<PatientDetailsRowProps> = ({
   const { name, NHYAclass, riskLevel } = patient;
 
   return (
-    <TouchableOpacity onPress={onRowPress}>
-      {/* TODO-JH: i18n translation */}
+    <TouchableOpacity
+      onPress={onRowPress ? () => onRowPress(patient) : undefined}
+    >
       <PatientRowBase
         title={name}
         subtitleOne={{
-          label: "Class",
+          label: i18n.t("Patients.PatientsList.Class"),
           value: `NHYA ${NHYAclass}`
         }}
         subtitleTwo={{
-          label: "Age",
+          label: i18n.t("Patients.PatientsList.Age"),
           value: age.toString()
         }}
         riskLevel={riskLevel as RiskLevel}

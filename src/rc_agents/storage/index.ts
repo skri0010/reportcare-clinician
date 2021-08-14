@@ -4,8 +4,7 @@ import {
   PatientAssignmentResolution,
   PatientDetails
 } from "rc_agents/model";
-import { Alert, ClinicianInfo, PatientAssignment, PatientInfo } from "aws/API";
-
+import { Alert, ClinicianInfo, PatientAssignment } from "aws/API";
 import * as accessFunctions from "./accessFunctions";
 import { RiskLevel } from "models/RiskLevel";
 

@@ -65,7 +65,8 @@
   "Internet_Connection": {
     "OnlineToSignIn": "Anda mestilah mempunyai sambungan internet untuk log masuk",
     "OnlineNotice": "Sambungan internet dikesan",
-    "OfflineNotice": "Tiada sambungan internet.\nSebahagian maklumat mungkin tidak tersedia."
+    "OfflineNotice": "Tiada sambungan internet.\nSebahagian maklumat mungkin tidak tersedia.",
+    "CouldNotRetrieve": "Gagal mengambil data."
   },
   "Patient_Assignments": {
     "ApprovalSuccessful": "Kelulusan permintaan pesakit berjaya",
@@ -141,8 +142,12 @@
     "NoSelection": "Pilihkan salah satu item Todo untuk melihat butirannya"
   },
   "Patients": {
-    "NoPatients": "Tiada pesakit yang dijumpai!",
-    "FilterBy": "Tapis berdasarkan:",
+    "PatientsList": {
+      "NoPatients": "Tiada pesakit yang dijumpai!",
+      "FilterBy": "Tapis berdasarkan:",
+      "Class": "Kelas",
+      "Age": "Umur,"
+    },
     "SearchBarPlaceholder": "Cari pesakit (contohnya John)",
     "Overview": "Ringkasan",
     "Parameters": "Parameter",

@@ -1,25 +1,45 @@
+import React, { FC, useState, useEffect } from "react";
+import { FlatList, View } from "react-native";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { PatientDetailsRow } from "components/RowComponents/PatientRows/PatientDetailsRow";
 import { H5 } from "components/Text";
-import React, { FC } from "react";
-import { FlatList, View } from "react-native";
+import { AgentTrigger } from "rc_agents/trigger";
 import { ScaledSheet } from "react-native-size-matters";
 import i18n from "util/language/i18n";
 import { RootState, select } from "util/useRedux";
 import { RiskFilterPillList } from "web/RiskFilterPillList";
 import { RowSelectionTab } from "../RowSelectionTab";
 
-interface PatientListScreenProps {
+interface PatientsListScreenProps {
   flex?: number;
 }
 
-export const PatientListScreen: FC<PatientListScreenProps> = ({ flex = 1 }) => {
+export const PatientsListScreen: FC<PatientsListScreenProps> = ({
+  flex = 1
+}) => {
   const { colors, patients, fetchingPatients } = select((state: RootState) => ({
     colors: state.settings.colors,
     patients: state.agents.patients,
     fetchingPatients: state.agents.fetchingPatients
   }));
+
+  const [noPatientsNotice, setNoPatientsNotice] = useState<string>("");
+
+  // Prepare text notice to be displayed after fetching patients
+  useEffect(() => {
+    if (fetchingPatients) {
+      if (patients) {
+        // No patients found
+        setNoPatientsNotice(i18n.t("Patients.PatientsList.NoPatients"));
+      } else {
+        // Could not fetch patients
+        setNoPatientsNotice(
+          i18n.t("Internet_Connection.FailedToRetrieveNotice")
+        );
+      }
+    }
+  }, [patients, fetchingPatients]);
 
   return (
     <View
@@ -33,29 +53,27 @@ export const PatientListScreen: FC<PatientListScreenProps> = ({ flex = 1 }) => {
       <RiskFilterPillList />
       {/* Risk filter pills and List of patients */}
       {fetchingPatients ? (
-        // JH-TODO-NEW: Loading indicator options
-        <View style={{ flex: 1 }}>
-          <LoadingIndicator />
-        </View>
+        // Show loading indicator if fetching patients
+        <LoadingIndicator flex={1} />
       ) : patients && patients.length > 0 ? (
-        <>
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            ItemSeparatorComponent={() => <ItemSeparator />}
-            data={patients}
-            renderItem={({ item }) => (
-              <PatientDetailsRow patient={item} age={23} />
-            )}
-            keyExtractor={(item) => item.patientID}
-          />
-        </>
+        // Show patients if list exists and length > 0
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          ItemSeparatorComponent={() => <ItemSeparator />}
+          data={patients}
+          renderItem={({ item }) => (
+            <PatientDetailsRow
+              patient={item}
+              age={23}
+              onRowPress={AgentTrigger.triggerRetrievePatientDetails}
+            />
+          )}
+          keyExtractor={(item) => item.patientID}
+        />
       ) : (
-        // Display text to indicate no patients
+        // Show text notice (no patients or failed to fetch patients)
         <View style={styles.noPatientsContainer}>
-          <H5
-            text={i18n.t("Patients.NoPatients")}
-            style={styles.noPatientsText}
-          />
+          <H5 text={noPatientsNotice} style={styles.noPatientsText} />
         </View>
       )}
     </View>

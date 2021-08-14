@@ -24,7 +24,7 @@ import { setProcedureOngoing } from "ic-redux/actions/agents/actionCreator";
 import { PatientDetailsNavigationStack } from "./PatientScreens/PatientDetailsNavigationStack";
 import { PatientHistoryModal } from "./PatientDetailsScreen/PatientHistoryScreens/PatientHistoryModals";
 import { WithSideTabsProps, ScreenName } from "web/screens";
-import { PatientListScreen } from "./PatientsListScreen";
+import { PatientsListScreen } from "./PatientsListScreen";
 
 export const PatientsScreen: FC<WithSideTabsProps[ScreenName.PATIENT]> = () => {
   const { colors } = select((state: RootState) => ({
@@ -145,7 +145,7 @@ export const PatientsScreen: FC<WithSideTabsProps[ScreenName.PATIENT]> = () => {
         pointerEvents={modalVisible ? "none" : "auto"}
       >
         {/* Left side: List of patients */}
-        <PatientListScreen />
+        <PatientsListScreen />
 
         {/* Right side: Patient details */}
         <View

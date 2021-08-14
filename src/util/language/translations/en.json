@@ -65,7 +65,8 @@
   "Internet_Connection": {
     "OnlineToSignIn": "You must have internet connection to sign in",
     "OnlineNotice": "Internet connection detected",
-    "OfflineNotice": "No internet connection detected.\nSome data may not be available."
+    "OfflineNotice": "No internet connection detected.\nSome data may not be available.",
+    "FailedToRetrieveNotice": "Failed to retrieve data."
   },
   "Patient_Assignments": {
     "ApprovalSuccessful": "Patient request approval successful",
@@ -141,8 +142,12 @@
     "NoSelection": "Select a Todo item to view its details"
   },
   "Patients": {
-    "NoPatients": "No patients found!",
-    "FilterBy": "Filter by:",
+    "PatientsList": {
+      "NoPatients": "No patients found!",
+      "FilterBy": "Filter by:",
+      "Class": "Class",
+      "Age": "Age"
+    },
     "SearchBarPlaceholder": "Search patient (eg John)",
     "Overview": "Overview",
     "Parameters": "Parameters",
