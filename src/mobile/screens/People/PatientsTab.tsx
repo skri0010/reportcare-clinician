@@ -126,8 +126,7 @@ export const PatientsTab: FC = () => {
         data={patients}
         renderItem={({ item }) => (
           <PatientDetailsRow
-            generalDetails={item}
-            patientClass={item.NHYAclass}
+            patient={item}
             // JH-TODO-NEW Age must be calculated
             age={0}
             onRowPress={() => getData(item.id)}

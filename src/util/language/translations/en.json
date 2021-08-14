@@ -142,6 +142,7 @@
   },
   "Patients": {
     "NoPatients": "No patients found!",
+    "FilterBy": "Filter by:",
     "SearchBarPlaceholder": "Search patient (eg John)",
     "Overview": "Overview",
     "Parameters": "Parameters",

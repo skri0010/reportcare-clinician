@@ -142,6 +142,7 @@
   },
   "Patients": {
     "NoPatients": "Tiada pesakit yang dijumpai!",
+    "FilterBy": "Tapis berdasarkan:",
     "SearchBarPlaceholder": "Cari pesakit (contohnya John)",
     "Overview": "Ringkasan",
     "Parameters": "Parameter",

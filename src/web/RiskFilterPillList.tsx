@@ -14,6 +14,8 @@ import {
   ProcedureAttributes,
   ProcedureConst
 } from "rc_agents/AgentEnums";
+import { H6 } from "components/Text";
+import i18n from "util/language/i18n";
 
 export const RiskFilterPillList: FC = () => {
   const { colors, riskFilters } = select((state: RootState) => ({
@@ -47,14 +49,17 @@ export const RiskFilterPillList: FC = () => {
   };
 
   return (
-    <View
-      style={[
-        styles.container,
-        { backgroundColor: colors.primaryBackgroundColor }
-      ]}
-    >
+    <View style={styles.container}>
+      {/* Filter by text */}
+      <View style={styles.textContainer}>
+        <H6 text={i18n.t("Patients.FilterBy")} />
+      </View>
+      {/* Risk filter pill list */}
       <FlatList
-        contentContainerStyle={styles.container}
+        contentContainerStyle={[
+          styles.listContainer,
+          { backgroundColor: colors.primaryBackgroundColor }
+        ]}
         data={Object.values(RiskLevel)}
         horizontal
         renderItem={({ item }) => (
@@ -72,10 +77,17 @@ export const RiskFilterPillList: FC = () => {
 
 const styles = ScaledSheet.create({
   container: {
-    width: "100%",
     flexDirection: "row",
-    justifyContent: "space-between",
-    paddingVertical: "3@ms",
-    paddingHorizontal: "10@ms"
+    paddingTop: "3@ms"
+  },
+  textContainer: {
+    paddingLeft: "10@ms",
+    justifyContent: "center",
+    paddingBottom: "5@ms"
+  },
+  listContainer: {
+    flex: 1,
+    flexDirection: "row",
+    paddingBottom: "5@ms"
   }
 });

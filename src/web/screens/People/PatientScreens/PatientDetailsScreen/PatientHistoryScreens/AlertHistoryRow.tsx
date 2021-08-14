@@ -39,15 +39,6 @@ export const AlertHistoryRow: FC<AlertHistoryRowProps> = ({
     fonts: state.settings.fonts
   }));
 
-  // Truncate descriptions that have length >35 characters and append ellipses at the end
-  const getDescription = () => {
-    // Word limit
-    const limit = 35;
-    return description.length > limit
-      ? `${description.slice(0, limit)}...`
-      : description;
-  };
-
   return (
     <View style={[styles.container]}>
       <View style={[styles.textContainer]}>
@@ -70,8 +61,9 @@ export const AlertHistoryRow: FC<AlertHistoryRowProps> = ({
         </View>
         {/* Description */}
         <H4
-          text={getDescription()}
+          text={description}
           style={{ color: colors.primaryTextColor }}
+          numberOfLines={2}
         />
       </View>
       {/* View button */}

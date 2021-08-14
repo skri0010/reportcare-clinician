@@ -56,7 +56,7 @@ export const RiskFilterPill: FC<RiskFilterPillProps> = ({
             : styles.textStyle
         }
       >
-        {riskLevel === RiskLevel.UNASSIGNED ? "None" : riskLevel}
+        {riskLevel}
       </Text>
     </TouchableHighlight>
   );
@@ -65,11 +65,11 @@ export const RiskFilterPill: FC<RiskFilterPillProps> = ({
 const styles = ScaledSheet.create({
   container: {
     flex: 1,
-    minWidth: "40@ms",
+    minWidth: "45@ms",
     justifyContent: "center",
     borderRadius: "5@ms",
     paddingVertical: "3@ms",
-    marginHorizontal: "3@ms"
+    marginHorizontal: "6@ms"
   },
   textStyle: {
     textAlign: "center"

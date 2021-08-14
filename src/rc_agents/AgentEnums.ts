@@ -55,6 +55,7 @@ export const ActionFrameIDs = {
     STORE_ENTRY_DATA: "StoreEntryData",
 
     // HF-OTP-I: ClinicianInfo and all patients (PatientInfo)
+    REQUEST_RETRIEVE_ROLE: "RequestRetrieveRole",
     RETRIEVE_PATIENTS_BY_ROLE: "RetrievePatientsByRole",
     REQUEST_DISPLAY_PATIENTS: "RequestDisplayPatients",
 

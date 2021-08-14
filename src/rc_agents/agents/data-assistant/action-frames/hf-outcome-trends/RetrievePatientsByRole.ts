@@ -69,7 +69,7 @@ class RetrievePatientsByRole extends Activity {
         );
       } else {
         // Update Beliefs
-        // Trigger agent (self) to get role
+        // Trigger Communicate to USXA to get role
         agent.addBelief(
           new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.ROLE, true)
         );

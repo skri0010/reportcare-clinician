@@ -1,12 +1,7 @@
 import React, { FC, useEffect, useState } from "react";
-import { View, FlatList } from "react-native";
+import { View } from "react-native";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
-import { PatientDetailsRow } from "components/RowComponents/PatientRows/PatientDetailsRow";
-import { ItemSeparator } from "components/RowComponents/ItemSeparator";
-import { PatientInfo } from "aws/API";
 import { mockPatients } from "mock/mockPatients";
-import { RowSelectionTab } from "../RowSelectionTab";
-import { RiskFilterPillProps } from "web/RiskFilterPill";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { ContactTitle } from "./ContactTitle";
 import { AlertHistoryModal } from "./PatientScreens/PatientDetailsScreen/PatientHistoryScreens/AlertHistoryModal";
@@ -26,19 +21,14 @@ import {
 } from "rc_agents/AgentEnums";
 import agentAPI from "rc_agents/framework/AgentAPI";
 import { setProcedureOngoing } from "ic-redux/actions/agents/actionCreator";
-import i18n from "util/language/i18n";
 import { PatientDetailsNavigationStack } from "./PatientScreens/PatientDetailsNavigationStack";
 import { PatientHistoryModal } from "./PatientDetailsScreen/PatientHistoryScreens/PatientHistoryModals";
 import { WithSideTabsProps, ScreenName } from "web/screens";
-import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
-import { RiskFilterPillList } from "web/RiskFilterPillList";
-import { H5 } from "components/Text";
+import { PatientListScreen } from "./PatientsListScreen";
 
 export const PatientsScreen: FC<WithSideTabsProps[ScreenName.PATIENT]> = () => {
-  const { colors, patients, fetchingPatients } = select((state: RootState) => ({
-    colors: state.settings.colors,
-    patients: state.agents.patients,
-    fetchingPatients: state.agents.fetchingPatients
+  const { colors } = select((state: RootState) => ({
+    colors: state.settings.colors
   }));
 
   /**
@@ -148,58 +138,16 @@ export const PatientsScreen: FC<WithSideTabsProps[ScreenName.PATIENT]> = () => {
   //   }
   // }, [procedureOngoing, retrieving, showGraph]);
 
-  // JH-TODO: Replace placeholder with i18n
   return (
     <ScreenWrapper fixed>
       <View
         style={styles.container}
         pointerEvents={modalVisible ? "none" : "auto"}
       >
-        {/* Left screen: List of patients */}
-        <View
-          style={{ flex: 1, backgroundColor: colors.primaryContrastTextColor }}
-        >
-          {/* Search bar and risk filter pills */}
-          <RowSelectionTab
-            title={i18n.t("TabTitle.Patients")}
-            placeholder={i18n.t("Patients.SearchBarPlaceholder")}
-          />
-          <RiskFilterPillList />
-          {/* Risk filter pills and List of patients */}
-          {fetchingPatients ? (
-            // JH-TODO-NEW: Loading indicator options
-            <View style={{ flex: 1 }}>
-              <LoadingIndicator />
-            </View>
-          ) : patients && patients.length > 0 ? (
-            <>
-              <FlatList
-                showsVerticalScrollIndicator={false}
-                style={{ flex: 1 }}
-                ItemSeparatorComponent={() => <ItemSeparator />}
-                data={patients}
-                renderItem={({ item }) => (
-                  <PatientDetailsRow
-                    generalDetails={item}
-                    patientClass={item.NHYAclass}
-                    age={23}
-                  />
-                )}
-                keyExtractor={(item) => item.patientID}
-              />
-            </>
-          ) : (
-            // Display text to indicate no patients
-            <View style={styles.noPatientsContainer}>
-              <H5
-                text={i18n.t("Patients.NoPatients")}
-                style={styles.noPatientsText}
-              />
-            </View>
-          )}
-        </View>
+        {/* Left side: List of patients */}
+        <PatientListScreen />
 
-        {/* Right screen: Patient details */}
+        {/* Right side: Patient details */}
         <View
           style={{ flex: 2, backgroundColor: colors.primaryWebBackgroundColor }}
         >
@@ -268,15 +216,5 @@ const styles = ScaledSheet.create({
     alignItems: "center",
     justifyContent: "center"
   },
-  rowSelection: { flex: 1 },
-  noPatientsContainer: {
-    flex: 1,
-    paddingTop: "10@ms",
-    justifyContent: "flex-start",
-    alignItems: "center",
-    paddingHorizontal: "30@ms"
-  },
-  noPatientsText: {
-    textAlign: "center"
-  }
+  rowSelection: { flex: 1 }
 });

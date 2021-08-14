@@ -5,35 +5,32 @@ import { PatientInfo } from "aws/API";
 import { RiskLevel } from "models/RiskLevel";
 
 export interface PatientDetailsRowProps {
-  generalDetails: PatientInfo;
-  patientClass: string;
+  patient: PatientInfo;
   age: number;
   onRowPress?: () => void;
 }
 
 export const PatientDetailsRow: React.FC<PatientDetailsRowProps> = ({
-  generalDetails,
-  patientClass,
+  patient,
   age,
   onRowPress
 }) => {
+  const { name, NHYAclass, riskLevel } = patient;
+
   return (
     <TouchableOpacity onPress={onRowPress}>
       {/* TODO-JH: i18n translation */}
       <PatientRowBase
-        title={generalDetails.name!}
+        title={name}
         subtitleOne={{
           label: "Class",
-          value: `NHYA ${patientClass}`
+          value: `NHYA ${NHYAclass}`
         }}
         subtitleTwo={{
           label: "Age",
           value: age.toString()
         }}
-        // TODO: Clarify how this is decided and stored
-        riskLevel={
-          generalDetails.id === "1" ? RiskLevel.HIGH : RiskLevel.MEDIUM
-        }
+        riskLevel={riskLevel as RiskLevel}
       />
     </TouchableOpacity>
   );
