@@ -153,7 +153,8 @@
     "Parameters": "Parameters",
     "ICD/CRT": "ICD/CRT",
     "History": "History",
-    "Info": "Info"
+    "Info": "Info",
+    "NoSelection": "Select a patient to view details"
   },
   "Patient_Overview": {
     "BloodPressure": "Blood Pressure",

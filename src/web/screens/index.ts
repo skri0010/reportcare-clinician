@@ -6,8 +6,8 @@ import { AlertHistory, MedicalRecords } from "mock/mockPatientDetails";
 export enum ScreenName {
   MAIN = "Main",
   HOME = "Home",
-  PATIENT = "Patients",
-  CLINICIAN = "Clinicians",
+  PATIENTS = "Patients",
+  CLINICIANS = "Clinicians",
   CHAT = "Chat",
   TODO = "Todo",
   MARIA = "MARIA",
@@ -40,8 +40,8 @@ export type RootStackParamList = {
 // Extract the params from the screen containing the nested navigator
 export type SideTabsParamList = {
   [ScreenName.HOME]: undefined;
-  [ScreenName.PATIENT]: NavigatorScreenParams<PatientsScreenParamList>;
-  [ScreenName.CLINICIAN]: undefined;
+  [ScreenName.PATIENTS]: NavigatorScreenParams<PatientsScreenParamList>;
+  [ScreenName.CLINICIANS]: undefined;
   [ScreenName.CHAT]: undefined;
   [ScreenName.TODO]: undefined;
   [ScreenName.MARIA]: undefined;
