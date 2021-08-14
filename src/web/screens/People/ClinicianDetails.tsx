@@ -50,11 +50,11 @@ export const ClinicianDetails: FC<ClinicianInfo> = (clinician:
           information={details.name}
         />
         <ClinicianSection
-          title="Hospital Name:"
+          title={i18n.t("Hospital Name:")}
           information={details.hospitalName}
         />
-        <ClinicianSection title="Role:" information={details.role} />
-        <ClinicianSection title="Email:" information={details.id} />
+        <ClinicianSection title={i18n.t("Role:")} information={details.role} />
+        <ClinicianSection title={i18n.t("Email:")} information={details.id} />
       </View>
     </ScreenWrapper>
   );
