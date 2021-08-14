@@ -2,39 +2,37 @@ import React, { FC } from "react";
 import { ScaledSheet } from "react-native-size-matters";
 import i18n from "util/language/i18n";
 import { View } from "react-native";
-import { RootState, select } from "util/useRedux";
 import { PatientInfoRow, InfoIcon } from "./PatientInfoRow";
 
+export interface BasicInfo {
+  gender: string;
+  age: string;
+  birthdate: string;
+  location: string;
+  class: string;
+  language: string;
+}
 interface BasicInfoSectionProps {
-  basicInfo?: {
-    gender: string;
-    age: string;
-    birthdate: string;
-    location: string;
-    class: string;
-    language: string;
-  };
+  info: BasicInfo;
 }
 
-export const BasicInfoSection: FC<BasicInfoSectionProps> = ({ basicInfo }) => {
-  const { colors } = select((state: RootState) => ({
-    colors: state.settings.colors
-  }));
-
+export const BasicInfoSection: FC<BasicInfoSectionProps> = ({ info }) => {
   return (
     <View style={styles.infoSection}>
-      {/* Details of patient information */}
+      {/* Details of patient basic information */}
       <PatientInfoRow
         title={i18n.t("Patient_Info.Gender")}
-        content="Male"
+        content={info.gender}
         iconType={InfoIcon.GENDER}
       />
+      {/* JH-TODO-NEW: Calculate age */}
       <PatientInfoRow
         title={i18n.t("Patient_Info.DOB")}
-        content="10-10-1966"
+        content={info.birthdate}
         iconType={InfoIcon.BIRTHDATE}
-        subcontent="55 years old"
+        subcontent={info.age}
       />
+      {/* JH-TODO-NEW: Update this location attribute */}
       <PatientInfoRow
         title={i18n.t("Patient_Info.Location")}
         content="Remote"
@@ -42,12 +40,12 @@ export const BasicInfoSection: FC<BasicInfoSectionProps> = ({ basicInfo }) => {
       />
       <PatientInfoRow
         title={i18n.t("Patient_Info.Class")}
-        content="NHYA III"
+        content={`NHYA ${info.class}`}
         iconType={InfoIcon.CLASS}
       />
       <PatientInfoRow
         title={i18n.t("Patient_Info.LanguageSpoken")}
-        content="English, Malay"
+        content={info.language}
         iconType={InfoIcon.LANGUAGE}
       />
     </View>

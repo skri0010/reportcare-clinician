@@ -3,8 +3,8 @@ import { RootState, select } from "util/useRedux";
 import { View } from "react-native";
 import { ms } from "react-native-size-matters";
 import { H4 } from "components/Text/index";
-import { MedicationInfo } from "aws/models";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { MedicationInfo } from "aws/API";
 
 interface MedicationRowProps {
   medicationInfo: MedicationInfo;

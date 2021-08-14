@@ -4,7 +4,7 @@ import { ms, ScaledSheet } from "react-native-size-matters";
 import { ClinicianRowBase } from "./ClinicianRowBase";
 import { select, RootState } from "util/useRedux";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import { ClinicianInfo } from "aws/models";
+import { ClinicianInfo } from "aws/API";
 
 export interface ClinicanShareRowProps {
   generalDetails: ClinicianInfo;

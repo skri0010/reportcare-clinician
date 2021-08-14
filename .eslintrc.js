@@ -123,6 +123,10 @@ module.exports = {
             group: ["aws/graphql/queries"],
             message:
               "Use exports from aws/graphql/TypedAPI files instead. If statements do not exists, create your own"
+          },
+          {
+            group: ["aws/models"],
+            message: "Use exported types from aws/API files instead."
           }
         ]
       }

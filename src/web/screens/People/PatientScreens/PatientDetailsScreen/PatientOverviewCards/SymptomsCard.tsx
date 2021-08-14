@@ -1,10 +1,9 @@
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import { ms } from "react-native-size-matters";
 import { H4 } from "components/Text/index";
 import { CardWrapper } from "web/screens/Home/CardWrapper";
-import { ReportSymptom } from "aws/models";
+import { ReportSymptom } from "aws/API";
 import { FlatList } from "react-native";
-import { mockSymptomRecords } from "mock/mockSymptoms";
 import i18n from "util/language/i18n";
 
 interface SymptomProps {
@@ -13,9 +12,12 @@ interface SymptomProps {
   minHeight: number;
 }
 
-export const SymptomsCard: FC<SymptomProps> = ({ maxHeight, minHeight }) => {
-  const [mockSymptoms] = useState(mockSymptomRecords);
-
+export const SymptomsCard: FC<SymptomProps> = ({
+  symptoms,
+  maxHeight,
+  minHeight
+}) => {
+  // JH-TODO-NEW: Message if no symptoms
   return (
     <CardWrapper
       maxHeight={maxHeight}
@@ -25,7 +27,7 @@ export const SymptomsCard: FC<SymptomProps> = ({ maxHeight, minHeight }) => {
       <FlatList
         style={{ paddingLeft: ms(10), paddingTop: ms(5) }}
         showsVerticalScrollIndicator={false}
-        data={mockSymptoms}
+        data={symptoms}
         renderItem={({ item }) => <H4 text={`  ${item.Name}`} style={null} />}
         keyExtractor={(item) => item.id}
       />

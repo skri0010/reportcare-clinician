@@ -1,26 +1,72 @@
-import React, { FC } from "react";
-import { ms } from "react-native-size-matters";
-import { ScreenWrapper } from "../../../ScreenWrapper";
+import React, { FC, useState, useEffect } from "react";
 import { View } from "react-native";
-import { BasicInfoSection } from "./PatientInfoSections/BasicInfoSection";
-import { ContactInfoSection } from "./PatientInfoSections/ContactInfoSection";
+import { ms } from "react-native-size-matters";
+import { ScreenWrapper } from "web/screens/ScreenWrapper";
+import {
+  BasicInfo,
+  BasicInfoSection
+} from "./PatientInfoSections/BasicInfoSection";
+import {
+  ContactInfo,
+  ContactInfoSection
+} from "./PatientInfoSections/ContactInfoSection";
 import { InfoTitleBar } from "./PatientInfoSections/InfoTitleBar";
 import { WithPatientsScreenProps, PatientsScreenName } from "web/screens";
+import { RootState, select } from "util/useRedux";
+import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
 
 export const PatientInformation: FC<
   WithPatientsScreenProps[PatientsScreenName.INFO]
 > = () => {
-  // JQ-TODO Query for information here
+  const { patientDetails } = select((state: RootState) => ({
+    colors: state.settings.colors,
+    patientDetails: state.agents.patientDetails
+  }));
+
+  const [basicInfo, setBasicInfo] = useState<BasicInfo>();
+  const [contactInfo, setContactInfo] = useState<ContactInfo>();
+
+  // Set basic and contact info after patient details are retrieved
+  useEffect(() => {
+    if (patientDetails) {
+      const info = patientDetails.patientInfo;
+      // Set basic info
+      const basicInfoToSet: BasicInfo = {
+        // JH-TODO-NEW: Schema is missing hardcoded values
+        gender: "???",
+        age: "???",
+        birthdate: "????",
+        location: info.hospitalLocation,
+        class: info.NHYAclass,
+        language: "???"
+      };
+      setBasicInfo(basicInfoToSet);
+
+      const contactInfoToSet: ContactInfo = {
+        phoneNumber: "???",
+        email: "???",
+        address: "???",
+        emergencyContact: "???"
+      };
+      setContactInfo(contactInfoToSet);
+    }
+  }, [patientDetails]);
+
   return (
     <ScreenWrapper padding>
-      <View style={{ marginHorizontal: ms(40) }}>
-        {/* Patient Basic informations */}
-        <InfoTitleBar title="Patient_Info.BasicInfo" />
-        <BasicInfoSection />
-        {/* Patient Medical Information */}
-        <InfoTitleBar title="Patient_Info.ContactInfo" />
-        <ContactInfoSection />
-      </View>
+      {patientDetails && basicInfo && contactInfo ? (
+        <View style={{ marginHorizontal: ms(40) }}>
+          {/* Patient Basic information */}
+          <InfoTitleBar title="Patient_Info.BasicInfo" />
+          <BasicInfoSection info={basicInfo} />
+          {/* Patient Medical Information */}
+          <InfoTitleBar title="Patient_Info.ContactInfo" />
+          <ContactInfoSection info={contactInfo} />
+        </View>
+      ) : (
+        // Show loading indicator if patient details is null
+        <LoadingIndicator />
+      )}
     </ScreenWrapper>
   );
 };
