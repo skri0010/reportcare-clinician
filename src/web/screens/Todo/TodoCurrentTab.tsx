@@ -55,9 +55,7 @@ export const TodoCurrentTab: FC<TodoRowTabProps> = ({ setTodoSelected }) => {
             onCardPress={() => onCardPress(item)}
           />
         )}
-        // As the id field of LocalTodo is optional, the keyExtractor is detecting possibility where id is undefined,
-        // thus throwing some errors
-        // keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.createdAt}
       />
     </View>
   );

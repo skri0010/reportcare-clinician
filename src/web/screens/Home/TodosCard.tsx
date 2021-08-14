@@ -63,7 +63,7 @@ export const TodosCard: FC<TodosCardProps> = ({ maxHeight }) => {
               />
             );
           }}
-          // keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.createdAt}
         />
       </View>
     </CardWrapper>
