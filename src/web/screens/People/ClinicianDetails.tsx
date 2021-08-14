@@ -8,6 +8,8 @@ import { ScreenWrapper } from "../ScreenWrapper";
 import { ClinicianContext } from "./CliniciansTab";
 import { ContactTitle } from "./ContactTitle";
 import i18n from "util/language/i18n";
+import { InfoTitleBar } from "./PatientScreens/PatientDetailsScreen/PatientInfoSections/InfoTitleBar";
+import { ClinicianInfoRow } from './ClinicianInfoRow';
 
 interface ClinicianDetails {
   generalDetails: ClinicianInfo;
@@ -43,18 +45,14 @@ export const ClinicianDetails: FC<ClinicianInfo> = (clinician:
 
   return (
     <ScreenWrapper>
-      <ContactTitle name={i18n.t("Information")} isPatient={false} />
-      <View style={styles.container}>
-        <ClinicianSection
-          title="Clinician Name:"
-          information={details.name}
-        />
-        <ClinicianSection
-          title={i18n.t("Hospital Name:")}
-          information={details.hospitalName}
-        />
-        <ClinicianSection title={i18n.t("Role:")} information={details.role} />
-        <ClinicianSection title={i18n.t("Email:")} information={details.id} />
+      <ContactTitle name={i18n.t(details.name)} isPatient={false} />
+      <View style={{ marginHorizontal: ms(40) }}>
+        <InfoTitleBar title="General Information"/>
+        <View style={styles.infoSection}>
+          <ClinicianInfoRow title={i18n.t("Email")} content={details.id} iconType="email" />
+          <ClinicianInfoRow title={i18n.t("Role")} content={details.role} iconType="doctor" />
+          <ClinicianInfoRow title={i18n.t("Hospital Name:")} content={details.hospitalName} iconType="hospital" />
+        </View>   
       </View>
     </ScreenWrapper>
   );
@@ -64,5 +62,11 @@ const styles = ScaledSheet.create({
   container: {
     margin: "30@ms",
     marginLeft: "40@ms"
+  },
+  infoSection: {
+    paddingLeft: "30@ms",
+    paddingTop: "10@ms",
+    paddingBottom: "20@ms",
+    flex: 1
   }
 });
