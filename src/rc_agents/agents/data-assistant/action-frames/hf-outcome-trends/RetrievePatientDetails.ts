@@ -31,6 +31,7 @@ import {
 import { Storage } from "rc_agents/storage";
 import { setFetchingPatientDetails } from "ic-redux/actions/agents/actionCreator";
 import { store } from "util/useRedux";
+import { setPatientsDetails } from "rc_agents/storage/setItem";
 
 /**
  * Class to represent an activity for retrieving details of a specific patient.
@@ -128,6 +129,7 @@ class RetrievePatientDetails extends Activity {
             localPatientsDetails = {};
           }
           localPatientsDetails[patientId] = patientDetails;
+          await setPatientsDetails(localPatientsDetails);
           patientDetailsRetrieved = true;
         }
         // Device is offline: Retrieve locally stored data (if any)
