@@ -47,6 +47,7 @@ export const TodosCard: FC<TodosCardProps> = ({ maxHeight }) => {
                   disabled
                   reduceOpacity
                   onCardPress={() => {
+                    // Navigate to Todo screen
                     navigation.navigate(ScreenName.TODO, item);
                   }}
                 />
@@ -58,6 +59,7 @@ export const TodosCard: FC<TodosCardProps> = ({ maxHeight }) => {
                 todoDetails={item}
                 riskLevel={RiskLevel.HIGH}
                 onCardPress={() => {
+                  // Navigate to Todo screen
                   navigation.navigate(ScreenName.TODO, item);
                 }}
               />

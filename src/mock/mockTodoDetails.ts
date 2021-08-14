@@ -129,7 +129,7 @@ export const mockCurrentTodo: LocalTodo[] = [
     completed: false,
     pendingSync: false,
     _version: 8,
-    createdAt: "2021-08-10T15:08:15.116Z"
+    createdAt: "2021-08-01T15:08:15.116Z"
   }
 ];
 

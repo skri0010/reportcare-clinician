@@ -61,6 +61,7 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = ({
   // Records if a todo item has been selected
   const [isEmptyTodo, setEmptyTodo] = useState(true);
 
+  // Render the right screen when todo item from todos card in Home screen is pressed
   useEffect(() => {
     if (route.params !== undefined) {
       setEmptyTodo(false);

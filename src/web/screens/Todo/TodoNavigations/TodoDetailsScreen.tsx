@@ -91,6 +91,7 @@ export const TodoDetailsScreen: FC<
                 }
               ]}
               onPress={() => {
+                // If there is patientID defined, navigate to the patient tab when the view button is pressed
                 if (todo.patientId !== undefined) {
                   mainNavigation?.navigate(ScreenName.PATIENT, {
                     patientId: todo.patientId
