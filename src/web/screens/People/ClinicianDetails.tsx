@@ -9,7 +9,7 @@ import { ClinicianContext } from "./CliniciansTab";
 import { ContactTitle } from "./ContactTitle";
 import i18n from "util/language/i18n";
 import { InfoTitleBar } from "./PatientScreens/PatientDetailsScreen/PatientInfoSections/InfoTitleBar";
-import { ClinicianInfoRow } from './ClinicianInfoRow';
+import { ClinicianInfoRow } from "./ClinicianInfoRow";
 
 interface ClinicianDetails {
   generalDetails: ClinicianInfo;
@@ -35,8 +35,9 @@ export const ClinicianSection: FC<ClinicianSectionProps> = ({
   );
 };
 
-export const ClinicianDetails: FC<ClinicianInfo> = (clinician: 
-  ClinicianInfo) => {
+export const ClinicianDetails: FC<ClinicianInfo> = (
+  clinician: ClinicianInfo
+) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
   }));
@@ -47,12 +48,24 @@ export const ClinicianDetails: FC<ClinicianInfo> = (clinician:
     <ScreenWrapper>
       <ContactTitle name={i18n.t(details.name)} isPatient={false} />
       <View style={{ marginHorizontal: ms(40) }}>
-        <InfoTitleBar title="General Information"/>
+        <InfoTitleBar title="General Information" />
         <View style={styles.infoSection}>
-          <ClinicianInfoRow title={i18n.t("Email")} content={details.id} iconType="email" />
-          <ClinicianInfoRow title={i18n.t("Role")} content={details.role} iconType="doctor" />
-          <ClinicianInfoRow title={i18n.t("Hospital Name:")} content={details.hospitalName} iconType="hospital" />
-        </View>   
+          <ClinicianInfoRow
+            title={i18n.t("Email")}
+            content={details.id}
+            iconType="email"
+          />
+          <ClinicianInfoRow
+            title={i18n.t("Role")}
+            content={details.role}
+            iconType="doctor"
+          />
+          <ClinicianInfoRow
+            title={i18n.t("Hospital Name:")}
+            content={details.hospitalName}
+            iconType="hospital"
+          />
+        </View>
       </View>
     </ScreenWrapper>
   );
