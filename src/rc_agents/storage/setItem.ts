@@ -1,7 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { PatientInfo } from "aws/API";
+import { PatientDetails } from "rc_agents/model";
 import { AsyncStorageKeys, AsyncStorageType } from ".";
-import { getPatientsDetails } from "./getItem";
+import { getAllPatientDetails } from "./getItem";
 
 export const setSignUpDetails = async (
   signUpDetails: AsyncStorageType[AsyncStorageKeys.SIGN_UP_DETAILS]
@@ -46,20 +47,23 @@ export const setPatientAssignmentResolutions = async (
 };
 
 /**
- * Stores as PatientsDetails
+ * Stores as AllPatientDetails
  * Performs local merging (saving only patientInfo)
  */
 export const setPatients = async (
   patients: (PatientInfo | null)[]
 ): Promise<void> => {
-  const localPatients = await getPatientsDetails();
-  const patientsDetails: AsyncStorageType[AsyncStorageKeys.PATIENTS_DETAILS] =
-    {};
+  let localPatients = await getAllPatientDetails();
+  // Initialise new local patients for the first time
+  if (!localPatients) {
+    localPatients = {};
+  }
+
   patients.forEach((patient: PatientInfo | null) => {
-    if (patient) {
+    if (patient && patient.patientID && localPatients) {
       // Patient exists locally: Merge
-      if (localPatients && localPatients[patient.patientID]) {
-        patientsDetails[patient.patientID] = {
+      if (localPatients[patient.patientID]) {
+        localPatients[patient.patientID] = {
           patientInfo: patient,
           activityInfos: localPatients[patient.patientID].activityInfos,
           symptomReports: localPatients[patient.patientID].symptomReports,
@@ -68,7 +72,7 @@ export const setPatients = async (
       }
       // Patient does not exist locally: Create
       else {
-        patientsDetails[patient.patientID] = {
+        localPatients[patient.patientID] = {
           patientInfo: patient,
           activityInfos: {},
           symptomReports: {},
@@ -77,14 +81,54 @@ export const setPatients = async (
       }
     }
   });
-  await setPatientsDetails(patientsDetails);
+  await setAllPatientDetails(localPatients);
 };
 
-export const setPatientsDetails = async (
-  patientsDetails: AsyncStorageType[AsyncStorageKeys.PATIENTS_DETAILS]
+/**
+ * Stores as AllPatientDetails
+ * Performs local merging (saving all but PatientInfo)
+ */
+export const setPatientDetails = async (
+  patientDetails: PatientDetails
+): Promise<void> => {
+  let localPatients = await getAllPatientDetails();
+  // Initialise new local patients for the first time
+  if (!localPatients) {
+    localPatients = {};
+  }
+
+  const patient = patientDetails.patientInfo;
+  if (patient && patient.patientID && localPatients) {
+    // Patient exists locally: Merge
+    if (localPatients[patient.patientID]) {
+      localPatients[patient.patientID] = {
+        patientInfo: localPatients[patient.patientID].patientInfo,
+        activityInfos: patientDetails.activityInfos,
+        symptomReports: patientDetails.symptomReports,
+        vitalsReports: patientDetails.vitalsReports
+      };
+    }
+    // Patient does not exist locally: Create
+    else {
+      localPatients[patient.patientID] = {
+        patientInfo: patient,
+        activityInfos: patientDetails.activityInfos,
+        symptomReports: patientDetails.symptomReports,
+        vitalsReports: patientDetails.vitalsReports
+      };
+    }
+  }
+  await AsyncStorage.setItem(
+    AsyncStorageKeys.ALL_PATIENT_DETAILS,
+    JSON.stringify(localPatients)
+  );
+};
+
+export const setAllPatientDetails = async (
+  patientsDetails: AsyncStorageType[AsyncStorageKeys.ALL_PATIENT_DETAILS]
 ): Promise<void> => {
   await AsyncStorage.setItem(
-    AsyncStorageKeys.PATIENTS_DETAILS,
+    AsyncStorageKeys.ALL_PATIENT_DETAILS,
     JSON.stringify(patientsDetails)
   );
 };

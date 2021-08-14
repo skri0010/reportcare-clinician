@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { PatientInfo } from "aws/API";
+import { PatientDetails } from "rc_agents/model";
 import { AsyncStorageKeys, AsyncStorageType } from ".";
 
 export const getSignUpDetails = async (): Promise<
@@ -55,10 +56,14 @@ export const getPatientAssignmentResolutions = async (): Promise<
   return null;
 };
 
-export const getPatients = async (): Promise<PatientInfo[]> => {
-  const localData = await getPatientsDetails();
-  const patients: PatientInfo[] = [];
+/**
+ * Get all patients (PatientInfo) from AllPatientDetails
+ */
+export const getPatients = async (): Promise<PatientInfo[] | null> => {
+  const localData = await getAllPatientDetails();
+  let patients: PatientInfo[] | null = null;
   if (localData) {
+    patients = [];
     Object.values(localData).forEach((patientDetails) =>
       patients?.push(patientDetails.patientInfo)
     );
@@ -66,11 +71,25 @@ export const getPatients = async (): Promise<PatientInfo[]> => {
   return patients;
 };
 
-export const getPatientsDetails = async (): Promise<
-  AsyncStorageType[AsyncStorageKeys.PATIENTS_DETAILS] | null
+/**
+ * Get a patient's details (PatientInfo) from AllPatientDetails
+ */
+export const getPatientDetails = async (
+  patientID: string
+): Promise<PatientDetails | null> => {
+  const localData = await getAllPatientDetails();
+  let patientDetails: PatientDetails | null = null;
+  if (localData && localData[patientID]) {
+    patientDetails = localData[patientID];
+  }
+  return patientDetails;
+};
+
+export const getAllPatientDetails = async (): Promise<
+  AsyncStorageType[AsyncStorageKeys.ALL_PATIENT_DETAILS] | null
 > => {
   const localData = await AsyncStorage.getItem(
-    AsyncStorageKeys.PATIENTS_DETAILS
+    AsyncStorageKeys.ALL_PATIENT_DETAILS
   );
   if (localData) {
     return JSON.parse(localData);

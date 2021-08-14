@@ -31,7 +31,6 @@ import {
 import { Storage } from "rc_agents/storage";
 import { setFetchingPatientDetails } from "ic-redux/actions/agents/actionCreator";
 import { store } from "util/useRedux";
-import { setPatientsDetails } from "rc_agents/storage/setItem";
 
 /**
  * Class to represent an activity for retrieving details of a specific patient.
@@ -62,8 +61,6 @@ class RetrievePatientDetails extends Activity {
       // Get online status from facts
       const isOnline =
         agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE];
-      // Get local patients' details
-      let localPatientsDetails = await Storage.getPatientsDetails();
 
       if (patientInfo) {
         const patientId = patientInfo.patientID;
@@ -107,7 +104,11 @@ class RetrievePatientDetails extends Activity {
 
             symptomReports.forEach((symptom: ReportSymptom | null) => {
               if (symptom) {
-                patientDetails.symptomReports[symptom.id] = symptom;
+                const dateKey = new Date(symptom.DateTime).toLocaleDateString();
+                if (!patientDetails.symptomReports[dateKey]) {
+                  patientDetails.symptomReports[dateKey] = [];
+                }
+                patientDetails.symptomReports[dateKey].push(symptom);
               }
             });
           }
@@ -119,27 +120,32 @@ class RetrievePatientDetails extends Activity {
 
             vitalsReports.forEach((vitals: ReportVitals | null) => {
               if (vitals) {
-                patientDetails.vitalsReports[vitals.id] = vitals;
+                const dateKey = new Date(vitals.DateTime).toLocaleDateString();
+                if (!patientDetails.vitalsReports[dateKey]) {
+                  patientDetails.vitalsReports[dateKey] = [];
+                }
+                patientDetails.vitalsReports[dateKey].push(vitals);
               }
             });
           }
 
-          // Save retrieved patient details with patientId as key
-          if (!localPatientsDetails) {
-            localPatientsDetails = {};
-          }
-          localPatientsDetails[patientId] = patientDetails;
-          await setPatientsDetails(localPatientsDetails);
+          // Save retrieved patient
+          await Storage.setPatientDetails(patientDetails);
           patientDetailsRetrieved = true;
         }
         // Device is offline: Retrieve locally stored data (if any)
-        else if (!isOnline && localPatientsDetails) {
-          if (localPatientsDetails[patientId]) {
+        else if (!isOnline) {
+          // Get local patients' details
+          const localPatientDetails = await Storage.getPatientDetails(
+            patientInfo.patientID
+          );
+
+          if (localPatientDetails) {
             agentAPI.addFact(
               new Belief(
                 BeliefKeys.PATIENT,
                 PatientAttributes.PATIENT_DETAILS,
-                patientDetails
+                localPatientDetails
               ),
               false
             );

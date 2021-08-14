@@ -37,12 +37,13 @@ export type LocalActivityInfos = {
   [id: string]: ActivityInfo;
 };
 
+// Indexed by date then id
 export type LocalReportSymptoms = {
-  [id: string]: ReportSymptom;
+  [date: string]: ReportSymptom[];
 };
 
 export type LocalReportVitals = {
-  [id: string]: ReportVitals;
+  [date: string]: ReportVitals[];
 };
 
 export interface PatientAssignmentResolution {
