@@ -80,7 +80,7 @@ export const SearchBarComponent: FC<SearchBarComponentProps> = ({
         <TouchableOpacity onPress={onSearchClick} style={styles.button}>
           <Icon
             name="magnify"
-            style={[searchBarTextStyle, { fontSize: fonts.h3Size }]}
+            style={[searchBarTextStyle, { fontSize: fonts.h4Size }]}
           />
         </TouchableOpacity>
       </View>

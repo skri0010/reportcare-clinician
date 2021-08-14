@@ -19,7 +19,7 @@ export const ClinicianContactRow: FC<ClinicanContactRowProps> = ({
   onWhatsAppPress
 }) => {
   return (
-    <View>
+    <View style={{ flexWrap: "wrap" }}>
       {/* TODO-JH: i18n translation */}
       {/* TODO-JH: Tick for sent */}
       <ClinicianRowBase
