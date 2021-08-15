@@ -22,22 +22,20 @@ export const AlertDetailsScreen: FC = () => {
   const findSymptoms = (id: string) => {
     // TODO: to be replaced with an API or agent call
     // this is just to keep the symptoms dynamic
-    let alertHistory = mockAlertHistory[0];
 
     for (let i = 0; i < mockAlertHistory.length; i += 1) {
       if (mockAlertHistory[i].id === id) {
-        alertHistory = mockAlertHistory[i];
+        return <AlertDetails alertHistory={mockAlertHistory[i]} />;
       }
     }
-
-    return <AlertDetails alertHistory={alertHistory} />;
+    
   };
   return (
     <ScreenWrapper>
       <View style={styles.container}>
         <H4 text={context.patientName} style={styles.patientName} />
         <H3 text="Alert Summary" style={styles.headers} />
-        <CardWrapper>{findSymptoms(context.vitalsReportID)}</CardWrapper>
+        <CardWrapper>{findSymptoms(context.id)}</CardWrapper>
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={[

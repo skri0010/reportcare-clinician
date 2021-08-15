@@ -36,7 +36,7 @@ export const AlertCompletedTab: FC<AlertRowTabProps> = ({
         showsVerticalScrollIndicator={false}
         ItemSeparatorComponent={() => <ItemSeparator />}
         data={mockCompletedAlerts}
-        renderItem={({ item }) => <AlertRow alertDetails={item} />}
+        renderItem={({ item }) => <AlertRow alertDetails={item} onCardPress={() => onCardPress(item)}/>}
       />
     </ScreenWrapper>
   );

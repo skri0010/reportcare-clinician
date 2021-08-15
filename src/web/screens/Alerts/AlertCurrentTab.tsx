@@ -38,7 +38,7 @@ export const AlertCurrentTab: FC<AlertRowTabProps> = ({ setAlertSelected }) => {
           showsVerticalScrollIndicator={false}
           ItemSeparatorComponent={() => <ItemSeparator />}
           data={mockPendingAlerts}
-          renderItem={({ item }) => <AlertRow alertDetails={item} />}
+          renderItem={({ item }) => <AlertRow alertDetails={item} onCardPress={() => onCardPress(item)} />}
         />
       </View>
     </ScreenWrapper>
