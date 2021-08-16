@@ -65,9 +65,7 @@ class DisplayPendingPatientAssignments extends Activity {
         BeliefKeys.PROCEDURE,
         ProcedureAttributes.SRD_I,
         ProcedureConst.INACTIVE
-      ),
-      true,
-      true
+      )
     );
 
     // Dispatch to store to indicate fetching has ended

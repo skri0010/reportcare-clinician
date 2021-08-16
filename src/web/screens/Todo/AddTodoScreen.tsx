@@ -69,7 +69,8 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
     const todoInput: TodoCreateInput = {
       title: titleInput,
       patientName: patientInput,
-      notes: noteInput
+      notes: noteInput,
+      completed: false
     };
 
     dispatch(setProcedureOngoing(true));
