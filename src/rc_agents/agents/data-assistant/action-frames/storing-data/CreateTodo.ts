@@ -320,7 +320,7 @@ class CreateTodo extends Activity {
   }
 }
 
-// Preconditions for activating the CreateTodo class
+// Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
   ProcedureAttributes.SRD_II,
@@ -332,7 +332,7 @@ const rule2 = new ResettablePrecondition(
   true
 );
 
-// Action Frame for CreateTodo class
+// Actionframe
 const af_CreateTodo = new Actionframe(
   `AF_${ActionFrameIDs.DTA.CREATE_TODO}`,
   [rule1, rule2],

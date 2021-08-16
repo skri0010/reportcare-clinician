@@ -15,7 +15,7 @@ import {
   ProcedureConst
 } from "rc_agents/AgentEnums";
 import agentAPI from "rc_agents/framework/AgentAPI";
-import { AlertStatus } from "aws";
+import { AlertStatus } from "rc_agents/model";
 import { agentDTA } from "rc_agents/agents";
 import { Alert } from "aws/API";
 

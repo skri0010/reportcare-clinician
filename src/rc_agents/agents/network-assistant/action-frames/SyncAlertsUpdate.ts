@@ -125,7 +125,7 @@ class SyncAlertsUpdate extends Activity {
   }
 }
 
-// Rules or preconditions for activating the SyncAlertsUpdate class
+// Preconditions
 const rule1 = new Precondition(BeliefKeys.APP, AppAttributes.ONLINE, true);
 const rule2 = new ResettablePrecondition(
   BeliefKeys.APP,
@@ -133,7 +133,7 @@ const rule2 = new ResettablePrecondition(
   true
 );
 
-// Actionframe of the SyncAlertsUpdate class
+// Actionframe
 const af_SyncAlertsUpdate = new Actionframe(
   `AF_${ActionFrameIDs.NWA.SYNC_ALERTS_UPDATE}`,
   [rule1, rule2],

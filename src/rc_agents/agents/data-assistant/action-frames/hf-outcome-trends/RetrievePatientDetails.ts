@@ -212,7 +212,9 @@ class RetrievePatientDetails extends Activity {
           BeliefKeys.PROCEDURE,
           ProcedureAttributes.HF_OTP_II,
           ProcedureConst.INACTIVE
-        )
+        ),
+        true,
+        true
       );
       // Dispatch to store to indicate fetching has ended
       store.dispatch(setFetchingPatientDetails(false));

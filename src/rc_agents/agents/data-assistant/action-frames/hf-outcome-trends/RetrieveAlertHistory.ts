@@ -117,7 +117,7 @@ class RetrieveAlertHistory extends Activity {
   }
 }
 
-// Rules or preconditions for activating the RetrieveAlertHistory class
+// Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
   ProcedureAttributes.HF_OTP_II,
@@ -129,7 +129,7 @@ const rule2 = new ResettablePrecondition(
   true
 );
 
-// Actionframe of the RetrieveAlertHistory class
+// Actionframe
 export const af_RetrieveAlertHistory = new Actionframe(
   `AF_${ActionFrameIDs.DTA.RETRIEVE_ALERT_HISTORY}`,
   [rule1, rule2],

@@ -104,7 +104,9 @@ class RetrievePatientsByRole extends Activity {
           BeliefKeys.PROCEDURE,
           ProcedureAttributes.HF_OTP_I,
           ProcedureConst.INACTIVE
-        )
+        ),
+        true,
+        true
       );
       // Dispatch to store to indicate fetching has ended
       store.dispatch(setFetchingPatients(false));
