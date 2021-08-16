@@ -3,7 +3,7 @@ import { View } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { H4 } from "components/Text";
 import { RootState, select } from "util/useRedux";
-import { ScreenName } from "..";
+import { ScreenName } from "web/screens";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 interface NoSelectionScreenProps {

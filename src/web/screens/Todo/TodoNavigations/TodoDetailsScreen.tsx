@@ -8,8 +8,6 @@ import { RootState, select } from "util/useRedux";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import i18n from "util/language/i18n";
 import { ScreenName, TodoScreenName } from "../..";
-import { useNavigation } from "@react-navigation/native";
-import { mockPatients } from "mock/mockPatients";
 
 interface todoSectionProps {
   mainItem: string;

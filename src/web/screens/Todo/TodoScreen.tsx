@@ -8,7 +8,7 @@ import { RowSelectionWrapper } from "../RowSelectionTab";
 import { ScaledSheet } from "react-native-size-matters";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { createStackNavigator } from "@react-navigation/stack";
-import { NavigationContainer, useRoute } from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 import { AddTodoScreen } from "./AddTodoScreen";
 import { NoSelectionScreen } from "../Shared/NoSelectionScreen";
 import i18n from "util/language/i18n";

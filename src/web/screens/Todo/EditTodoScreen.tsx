@@ -111,7 +111,7 @@ export const EditTodoScreen: FC<withTodoScreenProps[TodoScreenName.EDITTODO]> =
                 //   createdTimeDate: context.createdTimeDate,
                 //   modifiedTimeDate: newDate
                 // };
-                // navigation.navigate("ViewTodo", newTodo);
+                navigation.navigate(TodoScreenName.VIEWTODO, { todo: todo });
               }}
             >
               <H3
