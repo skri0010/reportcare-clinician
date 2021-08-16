@@ -45,7 +45,7 @@ class UpdateTodo extends Activity {
       // Gets Todo details to be updated
       const todoInput: TodoUpdateInput =
         facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.TODO];
-      
+
       const isOnline: boolean = facts[BeliefKeys.APP]?.[AppAttributes.ONLINE];
 
       // Gets locally stored clinicianId
@@ -53,12 +53,14 @@ class UpdateTodo extends Activity {
 
       if (todoInput && !todoInput.id) {
         // Todo was created offline and not synced: Triggers CreateTodo
-        agent.addBelief(new Belief(BeliefKeys.CLINICIAN,
-          ClinicianAttributes.CREATE_TODO,
-          true));
-      }
-
-      else if (todoInput && todoInput.id && clinicianId) {
+        agent.addBelief(
+          new Belief(
+            BeliefKeys.CLINICIAN,
+            ClinicianAttributes.CREATE_TODO,
+            true
+          )
+        );
+      } else if (todoInput && todoInput.id && clinicianId) {
         let toSync: boolean | undefined;
         let todoVersion: number | undefined;
 
@@ -134,7 +136,14 @@ class UpdateTodo extends Activity {
             );
           }
 
-          agentAPI.addFact(new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.TODO, todoToStore), false);
+          agentAPI.addFact(
+            new Belief(
+              BeliefKeys.CLINICIAN,
+              ClinicianAttributes.TODO,
+              todoToStore
+            ),
+            false
+          );
         }
         // Dispatch to front end to indicate that procedure is successful
         store.dispatch(setProcedureSuccessful(true));
@@ -146,7 +155,9 @@ class UpdateTodo extends Activity {
       store.dispatch(setProcedureSuccessful(false));
     }
 
-    agent.addBelief(new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.TODOS_UPDATED, true));
+    agent.addBelief(
+      new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.TODOS_UPDATED, true)
+    );
   }
 }
 

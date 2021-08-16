@@ -216,13 +216,15 @@ class CreateTodo extends Activity {
          * 7. If Todo has been/ is to be updated, Local Todo will have a non-null lastModified.
          */
         if (pendingTodoSync !== undefined) {
-        // Constructs Todo to be stored
+          // Constructs Todo to be stored
           const todoToStore: LocalTodo = {
             title: todoToInsert.title,
             patientName: todoToInsert.patientName,
             notes: todoToInsert.notes,
             completed: todoToInsert.completed === TodoStatus.COMPLETED,
-            createdAt: todoInput.createdAt ? todoInput.createdAt : todoToInsert.lastModified,
+            createdAt: todoInput.createdAt
+              ? todoInput.createdAt
+              : todoToInsert.lastModified,
             toSync: pendingTodoSync,
             _version: 1
           };
@@ -293,7 +295,14 @@ class CreateTodo extends Activity {
             }
           }
 
-          agentAPI.addFact(new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.TODO, todoToStore), false);
+          agentAPI.addFact(
+            new Belief(
+              BeliefKeys.CLINICIAN,
+              ClinicianAttributes.TODO,
+              todoToStore
+            ),
+            false
+          );
         }
 
         // Dispatch to front end to indicate that procedure is successful
@@ -305,7 +314,9 @@ class CreateTodo extends Activity {
       store.dispatch(setProcedureSuccessful(false));
     }
 
-    agent.addBelief(new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.TODOS_UPDATED, true));
+    agent.addBelief(
+      new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.TODOS_UPDATED, true)
+    );
   }
 }
 

@@ -329,9 +329,7 @@ export const mergeTodo = async (todo: LocalTodo): Promise<void> => {
       let existIndex: number;
       if (todo.alertId) {
         // When attempts to create an existing Todo offline
-        existIndex = localTodos.findIndex(
-          (t) => t.alertId === todo.alertId
-        );
+        existIndex = localTodos.findIndex((t) => t.alertId === todo.alertId);
       } else {
         // When attempts to update an unsynced Todo
         existIndex = localTodos.findIndex(
