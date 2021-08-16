@@ -10,14 +10,15 @@ import { H4 } from "components/Text/index";
 import { CardWrapper } from "./CardWrapper";
 import { FloatingShowMoreButton } from "components/Buttons/FloatingShowMoreButton";
 import i18n from "util/language/i18n";
-import { useNavigation } from "@react-navigation/native";
 import { ScreenName } from "web/screens";
+import { HomeNavigationProps } from "web/screens/WithSideTabsProps";
 
 interface TodosCardProps {
   maxHeight: number;
+  navigation: HomeNavigationProps;
 }
 
-export const TodosCard: FC<TodosCardProps> = ({ maxHeight }) => {
+export const TodosCard: FC<TodosCardProps> = ({ maxHeight, navigation }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
   }));
@@ -26,7 +27,6 @@ export const TodosCard: FC<TodosCardProps> = ({ maxHeight }) => {
   // JH-TODO: Replace with actual models
   const maxPatientsShown = Math.min(mockCurrentTodoDetails.length, 10); // At 10 items, `Show More` button is displayed
   const lastPatientIndex = maxPatientsShown - 1;
-  const navigation = useNavigation();
 
   return (
     <CardWrapper maxHeight={maxHeight}>

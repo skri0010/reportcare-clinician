@@ -25,14 +25,14 @@ export enum PatientsScreenName {
   INFO = "Info"
 }
 
-export enum TodoLeftTabName {
+export enum TodoListName {
   CURRENT = "Current",
   COMPLETED = "Completed"
 }
 
-export enum TodoScreenName {
-  VIEWTODO = "ViewTodo",
-  EDITTODO = "EditTodo"
+export enum TodoDetailsName {
+  VIEW_TODO = "ViewTodo",
+  EDIT_TODO = "EditTodo"
 }
 
 /**
@@ -83,19 +83,21 @@ export type PatientsScreenParamList = {
   [PatientsScreenName.INFO]: { patient: PatientInfo };
 };
 
-// Todo left side tab param list
-export type TodoLeftTabParamList = {
-  [TodoLeftTabName.CURRENT]: { todos: LocalTodo[] };
-  [TodoLeftTabName.COMPLETED]: { todos: LocalTodo[] };
+// Todo list
+export type TodoListParamList = {
+  [TodoListName.CURRENT]: {
+    todos: LocalTodo[];
+  };
+  [TodoListName.COMPLETED]: { todos: LocalTodo[] };
 };
 
-// Todo screen param list
-export type TodoScreenParamList = {
-  [TodoScreenName.VIEWTODO]: {
+// Todo details
+export type TodoDetailsParamList = {
+  [TodoDetailsName.VIEW_TODO]: {
     todo: LocalTodo;
-    mainNavigation?: TodoNavigationProps;
+    parentNavigation?: TodoNavigationProps;
   };
-  [TodoScreenName.EDITTODO]: { todo: LocalTodo };
+  [TodoDetailsName.EDIT_TODO]: { todo: LocalTodo };
 };
 
 // Type checking for main screens (navigation and route)
@@ -110,27 +112,8 @@ export type { WithSideTabsProps } from "web/screens/WithSideTabsProps";
 // Type checking for patient screen tabs (navigation and route)
 export type { WithPatientsScreenProps } from "web/screens/WithPatientsScreenProps";
 
-// Type checking for todo screens (navigation and route)
+// Type checking for todo screen tabs and details (navigation and route)
 export type {
-  withTodoLeftTabProps,
-  withTodoScreenProps
-} from "web/screens/TodoScreenProps";
-
-// JH-TODO: Navigation FIXME
-// export type TodoStackParamList = {
-//   ViewTodo: {
-//     mainTitleContent: string;
-//     patientContent: string;
-//     notesContent: string;
-//     createdTimeDate: string;
-//     modifiedTimeDate: string;
-//   };
-//   EditTodo: {
-//     mainTitleContent: string;
-//     patientContent: string;
-//     notesContent: string;
-//     createdTimeDate: string;
-//     modifiedTimeDate: string;
-//   };
-//   AddTodo: undefined;
-// };
+  WithTodosProps,
+  WithTodoDetailsProps
+} from "web/screens/WithTodoScreenProps";

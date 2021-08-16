@@ -34,17 +34,13 @@ import { PatientDetailsNavigationStack } from "./PatientScreens/PatientDetailsNa
 import { PatientHistoryModal } from "./PatientDetailsScreen/PatientHistoryScreens/PatientHistoryModals";
 import { WithSideTabsProps, ScreenName } from "web/screens";
 
-export const PatientsScreen: FC<WithSideTabsProps[ScreenName.PATIENT]> = ({
-  route
-}) => {
-  const { colors, patients, patientDetails, procedureOngoing } = select(
-    (state: RootState) => ({
-      colors: state.settings.colors,
-      patients: state.agents.patients,
-      procedureOngoing: state.agents.procedureOngoing,
-      patientDetails: state.agents.patientDetails
-    })
-  );
+export const PatientsScreen: FC<WithSideTabsProps[ScreenName.PATIENT]> = () => {
+  const { colors, procedureOngoing } = select((state: RootState) => ({
+    colors: state.settings.colors,
+    patients: state.agents.patients,
+    procedureOngoing: state.agents.procedureOngoing,
+    patientDetails: state.agents.patientDetails
+  }));
 
   // Initial alert history details for the modal
   const initialAlertHistory = {
