@@ -84,7 +84,8 @@ export const ActionFrameIDs = {
     // SRD-II: Todos
     RETRIEVE_TODOS: "RetrieveTodos",
     CREATE_TODO: "CreateTodo",
-    UPDATE_TODO: "UpdateTodo"
+    UPDATE_TODO: "UpdateTodo",
+    REQUEST_TODOS_DISPLAY: "RequestTodosDisplay"
   },
   UXSA: {
     // HF-OTP-I: ClinicianInfo and all patients (PatientInfo)
@@ -97,6 +98,9 @@ export const ActionFrameIDs = {
 
     // SRD-I: Patient Assignments
     DISPLAY_PENDING_PATIENT_ASSIGNMENTS: "DisplayPendingPatientAssignments",
+
+    // SRD-II: Todos
+    DISPLAY_TODOS: "DisplayTodos",
 
     // AT-CP
     DISPLAY_PENDING_ALERT_COUNT: "DisplayPendingAlertCount",
@@ -184,7 +188,9 @@ export enum ClinicianAttributes {
   TODO_STATUS = "TodoStatus",
   CREATE_TODO = "CreateTodo",
   UPDATE_TODO = "UpdateTodo",
-  TODO = "Todo"
+  TODO = "Todo",
+  TODOS_UPDATED = "TodosUpdated",
+  DISPLAY_TODOS = "DisplayTodos"
 }
 
 // Attributes for PATIENT key

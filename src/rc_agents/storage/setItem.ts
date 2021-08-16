@@ -325,11 +325,20 @@ export const mergeTodo = async (todo: LocalTodo): Promise<void> => {
       if (existIndex >= 0) {
         localTodos.splice(existIndex, 1);
       }
-    } else if (todo.alertId) {
-      // When attempts to create an existing Todo offline
-      const existIndex = localTodos.findIndex(
-        (t) => t.alertId === todo.alertId
-      );
+    } else {
+      let existIndex: number;
+      if (todo.alertId) {
+        // When attempts to create an existing Todo offline
+        existIndex = localTodos.findIndex(
+          (t) => t.alertId === todo.alertId
+        );
+      } else {
+        // When attempts to update an unsynced Todo
+        existIndex = localTodos.findIndex(
+          (t) => t.createdAt === todo.createdAt
+        );
+      }
+
       // Existing Todo
       if (existIndex >= 0) {
         const currentTodo = localTodos[existIndex];

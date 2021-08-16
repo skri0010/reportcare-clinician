@@ -17,13 +17,7 @@ import {
 import { Storage } from "rc_agents/storage";
 import agentAPI from "rc_agents/framework/AgentAPI";
 import { store } from "util/useRedux";
-import {
-  setCompletedTodos,
-  setPendingTodos,
-  setProcedureOngoing,
-  setProcedureSuccessful,
-  setUpdatedTodo
-} from "ic-redux/actions/agents/actionCreator";
+import { setProcedureSuccessful } from "ic-redux/actions/agents/actionCreator";
 import agentNWA from "rc_agents/agents/network-assistant/NWA";
 import { getTodo, updateTodo } from "aws";
 import { LocalTodo, TodoStatus, TodoUpdateInput } from "rc_agents/model";
@@ -51,11 +45,20 @@ class UpdateTodo extends Activity {
       // Gets Todo details to be updated
       const todoInput: TodoUpdateInput =
         facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.TODO];
+      
+      const isOnline: boolean = facts[BeliefKeys.APP]?.[AppAttributes.ONLINE];
 
       // Gets locally stored clinicianId
       const clinicianId = await Storage.getClinicianID();
 
-      if (todoInput && clinicianId) {
+      if (todoInput && !todoInput.id) {
+        // Todo was created offline and not synced: Triggers CreateTodo
+        agent.addBelief(new Belief(BeliefKeys.CLINICIAN,
+          ClinicianAttributes.CREATE_TODO,
+          true));
+      }
+
+      else if (todoInput && todoInput.id && clinicianId) {
         let toSync: boolean | undefined;
         let todoVersion: number | undefined;
 
@@ -73,9 +76,9 @@ class UpdateTodo extends Activity {
         };
 
         // Device is online
-        if (facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
+        if (isOnline) {
           // Gets latest version of current Todo
-          const query = await getTodo({ id: todoInput.id });
+          const query = await getTodo({ id: todoInput.id! });
           if (query.data?.getTodo) {
             const latestTodo = query.data.getTodo;
             /**
@@ -131,41 +134,7 @@ class UpdateTodo extends Activity {
             );
           }
 
-          // Removes previous Todo from its existing list and adds it to the front of updated list
-          const currentAgentsState = store.getState().agents;
-          const currentPendingTodos = currentAgentsState.pendingTodos;
-          const currentCompletedTodos = currentAgentsState.completedTodos;
-
-          if (todoToStore.id) {
-            // Looks for Todo in the list of current Todos and removes it from the list
-            let existIndex = currentPendingTodos.findIndex(
-              (t) => t.id === todoToStore.id
-            );
-            if (existIndex >= 0) {
-              currentPendingTodos.splice(existIndex, 1);
-            } else {
-              existIndex = currentCompletedTodos.findIndex(
-                (t) => t.id === todoToStore.id
-              );
-              if (existIndex >= 0) {
-                currentCompletedTodos.splice(existIndex, 1);
-              }
-            }
-
-            // Adds Todo to the front of the list according to TodoStatus
-            if (todoToStore.completed) {
-              currentCompletedTodos.unshift(todoToStore);
-            } else {
-              currentPendingTodos.unshift(todoToStore);
-            }
-
-            // Dispatch updated lists
-            store.dispatch(setPendingTodos(currentPendingTodos));
-            store.dispatch(setCompletedTodos(currentCompletedTodos));
-
-            // Dispatch updatedTodo to be displayed in TodoDetailsScreen
-            store.dispatch(setUpdatedTodo(todoToStore));
-          }
+          agentAPI.addFact(new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.TODO, todoToStore), false);
         }
         // Dispatch to front end to indicate that procedure is successful
         store.dispatch(setProcedureSuccessful(true));
@@ -177,25 +146,7 @@ class UpdateTodo extends Activity {
       store.dispatch(setProcedureSuccessful(false));
     }
 
-    // Update Facts
-    // Removes Todo from facts
-    agentAPI.addFact(
-      new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.TODO, null),
-      false
-    );
-    // Stops the procedure
-    agentAPI.addFact(
-      new Belief(
-        BeliefKeys.PROCEDURE,
-        ProcedureAttributes.SRD_II,
-        ProcedureConst.INACTIVE
-      ),
-      true,
-      true
-    );
-
-    // Dispatch to front end that procedure has been completed
-    store.dispatch(setProcedureOngoing(false));
+    agent.addBelief(new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.TODOS_UPDATED, true));
   }
 }
 

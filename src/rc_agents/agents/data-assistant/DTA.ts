@@ -19,6 +19,7 @@ import { af_RequestPendingAlertCountDisplay } from "./action-frames/triage-alert
 import af_CreateTodo from "./action-frames/storing-data/CreateTodo";
 import af_UpdateTodo from "./action-frames/storing-data/UpdateTodo";
 import af_RetrieveTodos from "./action-frames/storing-data/RetrieveTodos";
+import { af_RequestTodosDisplay } from "./action-frames/storing-data/RequestTodosDisplay";
 
 // Initial Beliefs of Agent
 
@@ -58,7 +59,8 @@ const agentDTA = new Agent(
     // SRD-II
     af_RetrieveTodos,
     af_CreateTodo,
-    af_UpdateTodo
+    af_UpdateTodo,
+    af_RequestTodosDisplay
   ], // action frame
   [belief1] // beliefs
 );

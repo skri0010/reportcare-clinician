@@ -114,13 +114,16 @@ export interface TodoCreateInput {
   patientName: string;
   notes: string;
   alert?: AlertInfo;
+  completed: boolean;
+  createdAt?: string;
 }
 
 export interface TodoUpdateInput {
-  id: string;
+  id?: string;
   title: string;
   patientName: string;
   notes: string;
+  alert?: AlertInfo;
   completed: boolean;
   createdAt: string;
   _version: number;

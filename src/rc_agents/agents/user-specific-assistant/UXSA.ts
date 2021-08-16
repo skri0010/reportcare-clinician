@@ -8,6 +8,7 @@ import { AgentIDs, CommonAttributes } from "rc_agents/AgentEnums";
 import { af_DisplayPendingAlertCount } from "./action-frames/triage-alert-hf-clinic/DisplayPendingAlertCount";
 import { af_DisplayAlertInfo } from "./action-frames/triage-alert-hf-clinic/DisplayAlertInfo";
 import { af_DisplayPatientsByFilter } from "./action-frames/hf-outcome-trends/DisplayPatientsByFilter";
+import { af_DisplayTodos } from "./action-frames/storing-data/DisplayTodos";
 
 // Initial Beliefs of Agent
 const belief1 = new Belief(AgentIDs.UXSA, CommonAttributes.LAST_ACTIVITY, null);
@@ -26,6 +27,9 @@ const agentUXSA = new Agent(
 
     // SRD-I
     af_DisplayPendingPatientAssignments,
+
+    // SRD-II
+    af_DisplayTodos,
 
     // AT-CP
     af_DisplayPendingAlertCount,

@@ -17,11 +17,7 @@ import {
 import { Storage } from "rc_agents/storage";
 import agentAPI from "rc_agents/framework/AgentAPI";
 import { store } from "util/useRedux";
-import {
-  setProcedureSuccessful,
-  setPendingTodos,
-  setSubmittingTodo
-} from "ic-redux/actions/agents/actionCreator";
+import { setProcedureSuccessful } from "ic-redux/actions/agents/actionCreator";
 import agentNWA from "rc_agents/agents/network-assistant/NWA";
 import {
   createTodo,
@@ -34,7 +30,8 @@ import {
   TodoCreateInput,
   LocalTodo,
   AlertStatus,
-  TodoStatus
+  TodoStatus,
+  TodoUpdateInput
 } from "rc_agents/model";
 import {
   CreateTodoInput,
@@ -65,7 +62,7 @@ class CreateTodo extends Activity {
 
     try {
       // Gets Todo from facts
-      const todoInput: TodoCreateInput =
+      const todoInput: TodoCreateInput | TodoUpdateInput =
         facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.TODO];
 
       // Gets locally stored clinicianId
@@ -85,9 +82,14 @@ class CreateTodo extends Activity {
           patientName: todoInput.patientName,
           notes: todoInput.notes,
           lastModified: new Date().toISOString(),
-          pending: TodoStatus.PENDING,
           owner: clinicianId
         };
+
+        if (todoInput.completed) {
+          todoToInsert.completed = TodoStatus.COMPLETED;
+        } else {
+          todoToInsert.pending = TodoStatus.PENDING;
+        }
 
         if (todoInput.alert) {
           todoToInsert.alertID = todoInput.alert.id;
@@ -214,13 +216,13 @@ class CreateTodo extends Activity {
          * 7. If Todo has been/ is to be updated, Local Todo will have a non-null lastModified.
          */
         if (pendingTodoSync !== undefined) {
-          // Constructs Todo to be stored
+        // Constructs Todo to be stored
           const todoToStore: LocalTodo = {
             title: todoToInsert.title,
             patientName: todoToInsert.patientName,
             notes: todoToInsert.notes,
             completed: todoToInsert.completed === TodoStatus.COMPLETED,
-            createdAt: todoToInsert.lastModified,
+            createdAt: todoInput.createdAt ? todoInput.createdAt : todoToInsert.lastModified,
             toSync: pendingTodoSync,
             _version: 1
           };
@@ -291,20 +293,7 @@ class CreateTodo extends Activity {
             }
           }
 
-          // Dispatch new Todo to front end
-          const existingTodos = store.getState().agents.pendingTodos;
-          if (todoToStore.id) {
-            // Existing Todo: remove if any is currently displayed in the front end.
-            const existIndex = existingTodos.findIndex(
-              (t) => t.id === todoToStore.id
-            );
-            if (existIndex >= 0) {
-              existingTodos.splice(existIndex, 1);
-            }
-          }
-          // Current Todo is added to the front of the list
-          existingTodos.unshift(todoToStore);
-          store.dispatch(setPendingTodos(existingTodos));
+          agentAPI.addFact(new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.TODO, todoToStore), false);
         }
 
         // Dispatch to front end to indicate that procedure is successful
@@ -316,25 +305,7 @@ class CreateTodo extends Activity {
       store.dispatch(setProcedureSuccessful(false));
     }
 
-    // Update Facts
-    // Removes new Todo from facts
-    agentAPI.addFact(
-      new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.TODO, null),
-      false
-    );
-    // Stops the procedure
-    agentAPI.addFact(
-      new Belief(
-        BeliefKeys.PROCEDURE,
-        ProcedureAttributes.SRD_II,
-        ProcedureConst.INACTIVE
-      ),
-      true,
-      true
-    );
-
-    // Dispatch to front end that procedure has been completed
-    store.dispatch(setSubmittingTodo(false));
+    agent.addBelief(new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.TODOS_UPDATED, true));
   }
 }
 
