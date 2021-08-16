@@ -139,7 +139,9 @@
     "TitleInputPlaceholder": "Apakah todo ini tentang?",
     "PatientInputPlaceholder": "Siapakah nama pesakit?",
     "NotesInputPlaceholder": "Apakah yang perlu dicatatkan?",
-    "NoSelection": "Pilihkan salah satu item Todo untuk melihat butirannya"
+    "NoSelection": "Pilihkan salah satu item Todo untuk melihat butirannya",
+    "TodoCreateSuccessful": "Todo telah berjaya dicipta",
+    "TodoUpdateSuccessful": "Todo telah berjaya dikemas kini"
   },
   "Patients": {
     "PatientsList": {
@@ -215,5 +217,6 @@
     "EmergencyContact": "Talian Kecemasan",
     "BasicInfo": "Informasi Asas",
     "ContactInfo": "Informasi Hubungan"
-  }
+  },
+  "UnexpectedError": "Ralat yang tidak disangkai telah berlaku"
 }

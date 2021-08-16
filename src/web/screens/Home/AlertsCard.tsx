@@ -15,7 +15,7 @@ import {
   ProcedureConst
 } from "rc_agents/AgentEnums";
 import agentAPI from "rc_agents/framework/AgentAPI";
-import { AlertStatus } from "aws";
+import { AlertStatus } from "rc_agents/model";
 import { agentDTA } from "rc_agents/agents";
 import { Alert } from "aws/API";
 
@@ -34,6 +34,25 @@ export const AlertsCard: FC<AlertsCardProps> = ({ flex = 1, maxHeight }) => {
   const detailsColors = { color: colors.secondaryTextColor } as TextStyle;
 
   const [remainingAlert, setRemainingAlert] = useState(0);
+
+  useEffect(() => {
+    // Triggers DTA to get count of pending alerts
+    agentDTA.addBelief(
+      new Belief(
+        BeliefKeys.CLINICIAN,
+        ClinicianAttributes.RETRIEVE_PENDING_ALERT_COUNT,
+        true
+      )
+    );
+    agentAPI.addFact(
+      new Belief(
+        BeliefKeys.PROCEDURE,
+        ProcedureAttributes.AT_CP,
+        ProcedureConst.ACTIVE
+      )
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     setRemainingAlert(

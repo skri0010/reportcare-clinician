@@ -10,28 +10,21 @@ import { ScaledSheet, ms } from "react-native-size-matters";
 import { H3 } from "components/Text";
 import { RootState, select, useDispatch } from "util/useRedux";
 import i18n from "util/language/i18n";
-import { agentDTA } from "rc_agents/agents";
-import {
-  BeliefKeys,
-  ClinicianAttributes,
-  ProcedureAttributes,
-  ProcedureConst
-} from "rc_agents/AgentEnums";
-import { agentAPI, Belief } from "rc_agents/framework";
 import { TodoCreateInput } from "rc_agents/model";
-import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
 import {
   setProcedureOngoing,
   setProcedureSuccessful
 } from "ic-redux/actions/agents/actionCreator";
 import { useToast } from "react-native-toast-notifications";
+import { triggerCreateTodo } from "rc_agents/triggers";
+import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
 
 interface AddTodoScreenProps {
   setModalVisible: (state: boolean) => void;
 }
 
 export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
-  const { colors, fonts, procedureOngoing, procedureSuccessful } = select(
+  const { colors, fonts, procedureSuccessful, procedureOngoing } = select(
     (state: RootState) => ({
       colors: state.settings.colors,
       fonts: state.settings.fonts,
@@ -49,7 +42,7 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
   const [titleInput, setTitleInput] = useState<string>("");
   const [patientInput, setPatientInput] = useState<string>("");
   const [noteInput, setNoteInput] = useState<string>("");
-  const [submittingTodo, setSubmittingTodo] = useState(false);
+  const [creating, setCreating] = useState(false); // Used locally for detecting ongoing procedure
 
   const onChangeTitle = (newTitle: string) => {
     setTitleInput(newTitle);
@@ -64,35 +57,24 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
   const dispatch = useDispatch();
   const toast = useToast();
 
-  // Triggers the start of procedure SRD-II to insert Todo
+  // Triggers CreateTodo procedure
   const createTodo = () => {
     const todoInput: TodoCreateInput = {
       title: titleInput,
       patientName: patientInput,
-      notes: noteInput
+      notes: noteInput,
+      completed: false
     };
 
     dispatch(setProcedureOngoing(true));
-    setSubmittingTodo(true);
-    agentAPI.addFact(
-      new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.TODO, todoInput),
-      false
-    );
-    agentDTA.addBelief(
-      new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.CREATE_TODO, true)
-    );
-    agentAPI.addFact(
-      new Belief(
-        BeliefKeys.PROCEDURE,
-        ProcedureAttributes.SRD_II,
-        ProcedureConst.ACTIVE
-      )
-    );
+    setCreating(true);
+    triggerCreateTodo(todoInput);
   };
 
+  // Detects completion of CreateTodo procedure and shows the appropriate toast.
   useEffect(() => {
-    if (submittingTodo && !procedureOngoing) {
-      setSubmittingTodo(false);
+    if (creating && !procedureOngoing) {
+      setCreating(false);
       setModalVisible(false);
 
       if (procedureSuccessful) {
@@ -106,10 +88,10 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
     }
   }, [
     dispatch,
-    procedureOngoing,
+    creating,
     procedureSuccessful,
     setModalVisible,
-    submittingTodo,
+    procedureOngoing,
     toast
   ]);
 
@@ -194,7 +176,9 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
           />
         </TouchableOpacity>
       </View>
-      {submittingTodo && <LoadingIndicator />}
+
+      {/* Loading Indicator while Todo is being created */}
+      {creating && <LoadingIndicator />}
     </View>
   );
 };

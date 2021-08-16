@@ -8,7 +8,12 @@ import {
 } from "rc_agents/AgentEnums";
 import { agentDTA } from "rc_agents/agents";
 import { agentAPI, Belief } from "rc_agents/framework";
-import { PatientAssignmentResolution } from "rc_agents/model";
+import {
+  PatientAssignmentResolution,
+  TodoCreateInput,
+  TodoStatus,
+  TodoUpdateInput
+} from "rc_agents/model";
 
 // HF-OTP-I
 // Triggers RetrievePatientsByRole of DTA
@@ -101,6 +106,60 @@ export const triggerResolvePendingAssignments = (
     new Belief(
       BeliefKeys.PROCEDURE,
       ProcedureAttributes.SRD_I,
+      ProcedureConst.ACTIVE
+    )
+  );
+};
+
+// SRD-II: Triggers RetrieveTodos of DTA
+export const triggerRetrieveTodos = (status: TodoStatus): void => {
+  agentAPI.addFact(
+    new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.TODO_STATUS, status),
+    false
+  );
+  agentDTA.addBelief(
+    new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.RETRIEVE_TODOS, true)
+  );
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PROCEDURE,
+      ProcedureAttributes.SRD_II,
+      ProcedureConst.ACTIVE
+    )
+  );
+};
+
+// SRD-II: Triggers CreateTodo of DTA
+export const triggerCreateTodo = (input: TodoCreateInput): void => {
+  agentAPI.addFact(
+    new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.TODO, input),
+    false
+  );
+  agentDTA.addBelief(
+    new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.CREATE_TODO, true)
+  );
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PROCEDURE,
+      ProcedureAttributes.SRD_II,
+      ProcedureConst.ACTIVE
+    )
+  );
+};
+
+// SRD-II: Triggers UpdateTodo of DTA
+export const triggerUpdateTodo = (input: TodoUpdateInput): void => {
+  agentAPI.addFact(
+    new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.TODO, input),
+    false
+  );
+  agentDTA.addBelief(
+    new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.UPDATE_TODO, true)
+  );
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PROCEDURE,
+      ProcedureAttributes.SRD_II,
       ProcedureConst.ACTIVE
     )
   );

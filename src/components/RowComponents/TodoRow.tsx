@@ -1,14 +1,14 @@
 import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
 import { RiskLevel, getRiskLevelColor } from "models/RiskLevel";
-import { ITodoDetails } from "models/TodoDetails";
 import { View, Button, TouchableOpacity } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { H4, H5 } from "components/Text/index";
+import { LocalTodo } from "rc_agents/model";
 
 // Interface that determines what props the search bar accepts
 interface TodoRowProps {
-  todoDetails: ITodoDetails;
+  todoDetails: LocalTodo;
   riskLevel: RiskLevel;
   disabled?: boolean;
   reduceOpacity?: boolean;
@@ -50,8 +50,8 @@ export const TodoRow: FC<TodoRowProps> = ({
         >
           <View style={styles.texts}>
             <H4 text={todoDetails.title} style={styles.title} />
-            <H5 text={todoDetails.name} style={styles.name} />
-            <H5 text={todoDetails.description} style={null} />
+            <H5 text={todoDetails.patientName} style={styles.name} />
+            <H5 text={todoDetails.notes} style={null} />
           </View>
         </View>
 
@@ -73,10 +73,10 @@ export const TodoRow: FC<TodoRowProps> = ({
           }
           {/* JH-TODO: Remove hardcoded colors */}
           <Button
-            title={todoDetails.doneStatus === false ? "DONE" : "UNDO"}
+            title={!todoDetails.completed ? "DONE" : "UNDO"}
             onPress={onButtonPress}
             color={
-              todoDetails.doneStatus === false
+              !todoDetails.completed
                 ? colors.primaryButtonColor
                 : colors.primaryWarningButtonColor
             }

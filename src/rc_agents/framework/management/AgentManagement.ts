@@ -131,7 +131,7 @@ abstract class AgentManagement {
       const value = fact.getValue();
       const attribute = fact.getAttribute();
 
-      if (value === null && key in this.facts && attribute in this.facts[key]) {
+      if (value === null && key in this.facts) {
         // Clears intermediate attributes and values of actions from current facts
         delete this.facts[key][attribute];
       } else {

@@ -99,7 +99,9 @@ export const TodoDetailsScreen: FC<TodoScreenProps> = ({
         />
         <EditHistorySection
           editType={i18n.t("Todo.ModifiedOn")}
-          timeDate={context.modifiedTimeDate}
+          timeDate={
+            context.modifiedTimeDate ? context.modifiedTimeDate : "Never"
+          }
         />
         {/* Edit button */}
         <View style={styles.editButtonContainer}>

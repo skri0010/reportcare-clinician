@@ -10,15 +10,15 @@ import { ms, ScaledSheet } from "react-native-size-matters";
 import { EditTodoScreenProps } from "../TodoScreenProps";
 import { TodoSection, EditHistorySection } from "./TodoDetailsScreen";
 import { H3 } from "components/Text";
-import { RootState, select } from "util/useRedux";
+import { RootState, select, useDispatch } from "util/useRedux";
 import { TodoContext } from "./TodoScreen";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import i18n from "util/language/i18n";
+import { LocalTodo, TodoUpdateInput } from "rc_agents/model";
+import { setProcedureOngoing } from "ic-redux/actions/agents/actionCreator";
+import { triggerUpdateTodo } from "rc_agents/triggers";
 
-export const EditTodoScreen: FC<EditTodoScreenProps> = ({
-  // route,
-  navigation
-}) => {
+export const EditTodoScreen: FC<EditTodoScreenProps> = ({ navigation }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
   }));
@@ -29,18 +29,25 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
   };
 
   const context = useContext(TodoContext);
+  const dispatch = useDispatch();
 
   const [titleInput, setTitleInput] = useState<string>(
     context.mainTitleContent
   );
   const [noteInput, setNoteInput] = useState<string>(context.notesContent);
 
-  const onChangeTitle = (newTitle: string) => {
-    setTitleInput(newTitle);
-  };
-
-  const onChangeNotes = (newNote: string) => {
-    setNoteInput(newNote);
+  const onSave = (item: LocalTodo) => {
+    dispatch(setProcedureOngoing(true));
+    const todoToUpdate: TodoUpdateInput = {
+      id: item.id ? item.id : undefined,
+      title: item.title,
+      patientName: item.patientName,
+      notes: item.notes,
+      _version: item._version,
+      completed: item.completed,
+      createdAt: item.createdAt
+    };
+    triggerUpdateTodo(todoToUpdate);
   };
 
   return (
@@ -57,7 +64,7 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
               paddingLeft: ms(10)
             }
           ]}
-          onChangeText={onChangeTitle}
+          onChangeText={setTitleInput}
         />
         <TodoSection
           mainItem={i18n.t("Todo.Patient")}
@@ -76,7 +83,7 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
               paddingTop: ms(5)
             }
           ]}
-          onChangeText={onChangeNotes}
+          onChangeText={setNoteInput}
         />
 
         <EditHistorySection
@@ -111,18 +118,7 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
                 borderWidth: ms(1)
               }
             ]}
-            onPress={() => {
-              // JY/JQ-TODO Make API call to pass new Todo item into db
-              // const newDate = new Date().toLocaleString();
-              // const newTodo = {
-              //   mainTitleContent: titleInput,
-              //   patientContent: context.patientContent,
-              //   notesContent: noteInput,
-              //   createdTimeDate: context.createdTimeDate,
-              //   modifiedTimeDate: newDate
-              // };
-              // navigation.navigate("ViewTodo", newTodo);
-            }}
+            onPress={() => null}
           >
             <H3
               text={i18n.t("Todo.SaveButton")}
