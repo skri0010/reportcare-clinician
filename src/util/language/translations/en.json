@@ -136,12 +136,15 @@
     "EditButton": "Edit",
     "CancelButton": "Cancel",
     "SaveButton": "Save",
+    "Never": "Never",
     "TitleInputPlaceholder": "What's this todo about?",
     "PatientInputPlaceholder": "What's the patient's name?",
     "NotesInputPlaceholder": "Anything notable?",
     "NoSelection": "Select a Todo item to view its details",
     "TodoCreateSuccessful": "Todo has been successfully created",
-    "TodoUpdateSuccessful": "Todo has been successfully updated"
+    "TodoUpdateSuccessful": "Todo has been successfully updated",
+    "MarkAsDone": "MARK AS DONE",
+    "UndoFromCompleted": "UNDO FROM COMPLETED"
   },
   "Patients": {
     "PatientsList": {

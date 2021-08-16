@@ -9,6 +9,8 @@ import { H4 } from "components/Text/index";
 import { CardWrapper } from "./CardWrapper";
 import { FloatingShowMoreButton } from "components/Buttons/FloatingShowMoreButton";
 import i18n from "util/language/i18n";
+import { useNavigation } from "@react-navigation/native";
+import { ScreenName } from "web/screens";
 import { agentAPI, Belief } from "rc_agents/framework";
 import {
   BeliefKeys,
@@ -36,6 +38,7 @@ export const TodosCard: FC<TodosCardProps> = ({ maxHeight }) => {
   const titleColor = { color: colors.primaryTextColor } as TextStyle;
 
   const [lastPatientIndex, setLastPatientIndex] = useState(-1);
+  const navigation = useNavigation();
 
   useEffect(() => {
     agentAPI.addFact(
@@ -87,6 +90,10 @@ export const TodosCard: FC<TodosCardProps> = ({ maxHeight }) => {
                   }
                   disabled
                   reduceOpacity
+                  onCardPress={() => {
+                    // Navigate to Todo screen
+                    navigation.navigate(ScreenName.TODO, item);
+                  }}
                 />
                 {/* Disable last row, display "Show More button" */}
                 <FloatingShowMoreButton />
@@ -97,6 +104,10 @@ export const TodosCard: FC<TodosCardProps> = ({ maxHeight }) => {
                 riskLevel={
                   item.riskLevel ? item.riskLevel : RiskLevel.UNASSIGNED
                 }
+                onCardPress={() => {
+                  // Navigate to Todo screen
+                  navigation.navigate(ScreenName.TODO, item);
+                }}
               />
             );
           }}

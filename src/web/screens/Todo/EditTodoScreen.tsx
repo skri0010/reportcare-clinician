@@ -1,4 +1,4 @@
-import React, { FC, useState, useContext } from "react";
+import React, { FC, useState } from "react";
 import {
   View,
   TouchableOpacity,
@@ -7,135 +7,162 @@ import {
   ViewStyle
 } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
-import { EditTodoScreenProps } from "../TodoScreenProps";
-import { TodoSection, EditHistorySection } from "./TodoDetailsScreen";
+import { withTodoScreenProps } from "../TodoScreenProps";
+import { TodoScreenName } from "../index";
+import {
+  TodoSection,
+  EditHistorySection
+} from "./TodoNavigations/TodoDetailsScreen";
 import { H3 } from "components/Text";
 import { RootState, select, useDispatch } from "util/useRedux";
-import { TodoContext } from "./TodoScreen";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import i18n from "util/language/i18n";
 import { LocalTodo, TodoUpdateInput } from "rc_agents/model";
 import { setProcedureOngoing } from "ic-redux/actions/agents/actionCreator";
 import { triggerUpdateTodo } from "rc_agents/triggers";
 
-export const EditTodoScreen: FC<EditTodoScreenProps> = ({ navigation }) => {
-  const { colors } = select((state: RootState) => ({
-    colors: state.settings.colors
-  }));
+export const EditTodoScreen: FC<withTodoScreenProps[TodoScreenName.EDITTODO]> =
+  ({ route, navigation }) => {
+    const { colors } = select((state: RootState) => ({
+      colors: state.settings.colors
+    }));
 
-  const inputBarColor: StyleProp<ViewStyle> = {
-    backgroundColor: colors.primaryContrastTextColor,
-    borderColor: colors.primaryBorderColor
-  };
-
-  const context = useContext(TodoContext);
-  const dispatch = useDispatch();
-
-  const [titleInput, setTitleInput] = useState<string>(
-    context.mainTitleContent
-  );
-  const [noteInput, setNoteInput] = useState<string>(context.notesContent);
-
-  const onSave = (item: LocalTodo) => {
-    dispatch(setProcedureOngoing(true));
-    const todoToUpdate: TodoUpdateInput = {
-      id: item.id ? item.id : undefined,
-      title: item.title,
-      patientName: item.patientName,
-      notes: item.notes,
-      _version: item._version,
-      completed: item.completed,
-      createdAt: item.createdAt
+    const inputBarColor: StyleProp<ViewStyle> = {
+      backgroundColor: colors.primaryContrastTextColor,
+      borderColor: colors.primaryBorderColor
     };
-    triggerUpdateTodo(todoToUpdate);
-  };
 
-  return (
-    <ScreenWrapper>
-      <View style={styles.container}>
-        <H3 text={i18n.t("Todo.Title")} style={styles.detailText} />
-        <TextInput
-          value={titleInput}
-          style={[
-            styles.input,
-            inputBarColor,
-            {
-              height: ms(30),
-              paddingLeft: ms(10)
-            }
-          ]}
-          onChangeText={setTitleInput}
-        />
-        <TodoSection
-          mainItem={i18n.t("Todo.Patient")}
-          content={context.patientContent}
-        />
-        <H3 text={i18n.t("Todo.Notes")} style={styles.detailText} />
-        <TextInput
-          multiline
-          value={noteInput}
-          style={[
-            styles.input,
-            inputBarColor,
-            {
-              height: ms(100),
-              paddingLeft: ms(10),
-              paddingTop: ms(5)
-            }
-          ]}
-          onChangeText={setNoteInput}
-        />
+    const { todo } = route.params;
+    const dispatch = useDispatch();
 
-        <EditHistorySection
-          editType={i18n.t("Todo.CreatedOn")}
-          timeDate={context.createdTimeDate}
-        />
-        <EditHistorySection
-          editType={i18n.t("Todo.ModifiedOn")}
-          timeDate={context.modifiedTimeDate}
-        />
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
+    const [titleInput, setTitleInput] = useState<string>(todo.title); // Title input
+    const [noteInput, setNoteInput] = useState<string>(todo.notes); // Notes input
+
+    const onChangeTitle = (newTitle: string) => {
+      setTitleInput(newTitle);
+    };
+
+    const onChangeNotes = (newNote: string) => {
+      setNoteInput(newNote);
+    };
+
+    const onSave = (item: LocalTodo) => {
+      dispatch(setProcedureOngoing(true));
+      const todoToUpdate: TodoUpdateInput = {
+        id: item.id ? item.id : undefined,
+        title: item.title,
+        patientName: item.patientName,
+        notes: item.notes,
+        _version: item._version,
+        completed: item.completed,
+        createdAt: item.createdAt
+      };
+      triggerUpdateTodo(todoToUpdate);
+    };
+
+    return (
+      <ScreenWrapper>
+        <View style={styles.container}>
+          {/* Title input */}
+          <H3 text={i18n.t("Todo.Title")} style={styles.detailText} />
+          <TextInput
+            value={titleInput}
             style={[
-              styles.button,
-              { backgroundColor: colors.primaryTodoCompleteButtonColor }
-            ]}
-            onPress={() => {
-              navigation.goBack();
-            }}
-          >
-            <H3
-              text={i18n.t("Todo.CancelButton")}
-              style={{ color: colors.primaryContrastTextColor }}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.button,
+              styles.input,
+              inputBarColor,
               {
-                backgroundColor: colors.primaryContrastTextColor,
-                borderColor: colors.primaryTextColor,
-                borderWidth: ms(1)
+                height: ms(30),
+                paddingLeft: ms(10)
               }
             ]}
-            onPress={() => null}
-          >
-            <H3
-              text={i18n.t("Todo.SaveButton")}
-              style={{ color: colors.primaryTextColor }}
-            />
-          </TouchableOpacity>
+            onChangeText={onChangeTitle}
+          />
+          {/* Patient name (not editable) */}
+          <TodoSection
+            mainItem={i18n.t("Todo.Patient")}
+            content={todo.patientName}
+          />
+          {/* Notes input */}
+          <H3 text={i18n.t("Todo.Notes")} style={styles.detailText} />
+          <TextInput
+            multiline
+            value={noteInput}
+            style={[
+              styles.input,
+              inputBarColor,
+              {
+                height: ms(100),
+                paddingLeft: ms(10),
+                paddingTop: ms(5)
+              }
+            ]}
+            onChangeText={onChangeNotes}
+          />
+
+          {/* Edit history (created and modified datetime) */}
+          <EditHistorySection
+            editType={i18n.t("Todo.CreatedOn")}
+            timeDate={todo.createdAt}
+          />
+          <EditHistorySection
+            editType={i18n.t("Todo.ModifiedOn")}
+            timeDate={todo.lastModified}
+          />
+          <View style={styles.buttonContainer}>
+            {/* Save button */}
+            <TouchableOpacity
+              style={[
+                styles.button,
+                {
+                  backgroundColor: colors.primaryContrastTextColor,
+                  borderColor: colors.primaryTextColor,
+                  borderWidth: ms(1)
+                }
+              ]}
+              onPress={() => {
+                // JY/JQ-TODO Make API call to pass new Todo item into db
+                // const newDate = new Date().toLocaleString();
+                // const newTodo = {
+                //   mainTitleContent: titleInput,
+                //   patientContent: context.patientContent,
+                //   notesContent: noteInput,
+                //   createdTimeDate: context.createdTimeDate,
+                //   modifiedTimeDate: newDate
+                // };
+                navigation.navigate(TodoScreenName.VIEWTODO, { todo: todo });
+              }}
+            >
+              <H3
+                text={i18n.t("Todo.SaveButton")}
+                style={{ color: colors.primaryTextColor }}
+              />
+            </TouchableOpacity>
+            {/* Cancel button */}
+            <TouchableOpacity
+              style={[
+                styles.button,
+                { backgroundColor: colors.primaryTodoCompleteButtonColor }
+              ]}
+              onPress={() => {
+                navigation.goBack();
+              }}
+            >
+              <H3
+                text={i18n.t("Todo.CancelButton")}
+                style={{ color: colors.primaryContrastTextColor }}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
-    </ScreenWrapper>
-  );
-};
+      </ScreenWrapper>
+    );
+  };
 
 const styles = ScaledSheet.create({
   container: {
     flexDirection: "column",
-    margin: "30@ms",
-    marginTop: "20@ms"
+    marginHorizontal: "45@ms",
+    marginTop: "30@ms"
   },
   input: {
     borderWidth: "1@ms",

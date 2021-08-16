@@ -1,21 +1,16 @@
-import React, { FC, useState, createContext, useEffect } from "react";
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { TodoCurrentTab } from "./TodoCurrentTab";
-import { TodoCompletedTab } from "./TodoCompletedTab";
-import { getTopTabBarOptions } from "util/getStyles";
+import React, { FC, useState, useEffect } from "react";
 import { RootState, select, useDispatch } from "util/useRedux";
-import { ScreenName, WithSideTabsProps } from "web/screens";
+import { ScreenName, WithSideTabsProps, TodoLeftTabName } from "web/screens";
 import { View, Modal } from "react-native";
 import { RowSelectionTab } from "../RowSelectionTab";
-import { ms, ScaledSheet } from "react-native-size-matters";
+import { ScaledSheet } from "react-native-size-matters";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
-import { TodoDetailsScreen } from "./TodoDetailsScreen";
-import { EditTodoScreen } from "./EditTodoScreen";
-import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { AddTodoScreen } from "./AddTodoScreen";
 import { NoSelectionScreen } from "../Shared/NoSelectionScreen";
 import i18n from "util/language/i18n";
+import { TodoLeftTabNavigator } from "./TodoNavigations/TodoLeftTabNavigator";
+import { TodoDetailsNavigationStack } from "./TodoNavigations/TodoDetailsNavigationStack";
 import { LocalTodo } from "rc_agents/model";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
 import { useToast } from "react-native-toast-notifications";
@@ -24,72 +19,77 @@ import {
   setSubmittingTodo
 } from "ic-redux/actions/agents/actionCreator";
 
-const Tab = createMaterialTopTabNavigator();
-const Stack = createStackNavigator();
-
-export const TodoContext = createContext({
-  mainTitleContent: "",
-  patientContent: "",
-  notesContent: "",
-  createdTimeDate: "",
-  modifiedTimeDate: ""
-});
-
-function checkNeedAddButton(tabName: string) {
+// Determines if the add button is needed in the header of left tab
+function checkNeedAddButton(tabName: TodoLeftTabName) {
   let needAddButton = true;
-  if (tabName === "Completed") {
+  if (tabName === TodoLeftTabName.COMPLETED) {
     needAddButton = false;
   }
   return needAddButton;
 }
 
-export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = () => {
-  const { colors, procedureOngoing, procedureSuccessful, updatedTodo, submittingTodo } = select(
-    (state: RootState) => ({
-      colors: state.settings.colors,
-      // Used to detect completion of updateTodo procedure
-      procedureOngoing: state.agents.procedureOngoing,
-      procedureSuccessful: state.agents.procedureSuccessful,
-      updatedTodo: state.agents.updatedTodo,
-      submittingTodo: state.agents.submittingTodo
-    })
-  );
+export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = ({
+  route,
+  navigation
+}) => {
+  const {
+    colors,
+    procedureOngoing,
+    procedureSuccessful,
+    updatedTodo,
+    submittingTodo
+  } = select((state: RootState) => ({
+    colors: state.settings.colors,
+    // Used to detect completion of updateTodo procedure
+    procedureOngoing: state.agents.procedureOngoing,
+    procedureSuccessful: state.agents.procedureSuccessful,
+    updatedTodo: state.agents.updatedTodo,
+    submittingTodo: state.agents.submittingTodo
+  }));
 
+  // console.log(route.params);
+  // Todo that has been selected by the user from the list of todos *****
+  // const [selectedTodo] = useState(mockCurrentTodo[0]);
+
+  // For pointer events
   const [modalVisible, setModalVisible] = useState(false);
+
+  // For add button visibility in the header of left tab
   const [addButton, setAddButton] = useState(true);
+
+  // Selected todo details
   const [todoSelected, setTodoSelected] = useState<LocalTodo>({
+    id: "",
     title: "",
     patientName: "",
     notes: "",
     completed: false,
+    alertId: "",
+    patientId: "",
     createdAt: "",
-    id: "",
+    lastModified: "",
     toSync: false,
-    _version: 1
+    _version: -1
   });
-  const [isEmptyTodo, setEmptyTodo] = useState(true);
 
+  // Records if a todo item has been selected
+  const [isEmptyTodo, setEmptyTodo] = useState(true);
   const toast = useToast();
   const dispatch = useDispatch();
 
-  function onRowClick(item: LocalTodo) {
-    const currentSelected = todoSelected;
-    const emptyTodo: LocalTodo = {
-      title: "",
-      patientName: "",
-      notes: "",
-      completed: false,
-      createdAt: "",
-      id: "",
-      toSync: false,
-      _version: 1
-    };
-    if (currentSelected !== item && item !== emptyTodo) {
+  // Render the right screen when todo item from todos card in Home screen is pressed
+  useEffect(() => {
+    if (route.params !== undefined) {
       setEmptyTodo(false);
-      setTodoSelected(item);
-    } else if (item === emptyTodo) {
-      setEmptyTodo(true);
+      setTodoSelected(route.params);
     }
+  }, [route.params]);
+
+  // Function to save the selected todo details to be displayed in the right screen
+  // JQ-TODO To be integrated with redux store for todo item details display on the right screen
+  function onRowClick(item: LocalTodo) {
+    setEmptyTodo(false);
+    setTodoSelected(item);
   }
 
   // Compares dispatched updatedTodo with current Todo displayed in the TodoDetailsScreen
@@ -117,23 +117,13 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, procedureOngoing, procedureSuccessful, toast, submittingTodo]);
 
-  const initialTodo = {
-    mainTitleContent: todoSelected.title,
-    patientContent: todoSelected.patientName,
-    notesContent: todoSelected.notes,
-    createdTimeDate: todoSelected.createdAt,
-    modifiedTimeDate: todoSelected.lastModified
-      ? todoSelected.lastModified
-      : "Never"
-  };
-
   return (
-    // JH-TODO: Replace names with i18n
     <ScreenWrapper fixed>
       <View
         style={styles.container}
         pointerEvents={modalVisible || submittingTodo ? "none" : "auto"}
       >
+        {/* Left tab */}
         <View style={styles.rowSelection}>
           <RowSelectionTab
             title={i18n.t("TabTitle.Todo")}
@@ -143,29 +133,19 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = () => {
             }}
             isTodo
           />
-          <Tab.Navigator tabBarOptions={getTopTabBarOptions(colors)}>
-            <Tab.Screen
-              name={i18n.t("Todo.Current")}
-              listeners={{
-                tabPress: () => {
-                  setAddButton(checkNeedAddButton("Todo"));
-                }
-              }}
-            >
-              {() => <TodoCurrentTab setTodoSelected={onRowClick} />}
-            </Tab.Screen>
-            <Tab.Screen
-              name={i18n.t("Todo.Completed")}
-              listeners={{
-                tabPress: () => {
-                  setAddButton(checkNeedAddButton("Completed"));
-                }
-              }}
-            >
-              {() => <TodoCompletedTab setTodoSelected={onRowClick} />}
-            </Tab.Screen>
-          </Tab.Navigator>
+          {/* Left tab navigator */}
+          <TodoLeftTabNavigator
+            tabPressCurrent={() => {
+              setAddButton(checkNeedAddButton(TodoLeftTabName.CURRENT));
+            }}
+            tabPressCompleted={() => {
+              setAddButton(checkNeedAddButton(TodoLeftTabName.COMPLETED));
+            }}
+            setTodoSelected={onRowClick}
+          />
         </View>
+
+        {/* Right screen */}
         <View
           style={{
             flex: 2,
@@ -174,41 +154,14 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = () => {
         >
           {!isEmptyTodo ? (
             <NavigationContainer independent>
-              <TodoContext.Provider value={initialTodo}>
-                <Stack.Navigator>
-                  <Stack.Screen
-                    name="ViewTodo"
-                    component={TodoDetailsScreen}
-                    options={() => ({
-                      title: i18n.t("Todo.ViewTodo"),
-                      headerStyle: {
-                        height: ms(45)
-                      },
-                      headerTitleStyle: {
-                        fontWeight: "bold",
-                        fontSize: ms(20),
-                        paddingLeft: ms(15)
-                      }
-                    })}
-                  />
-                  <Stack.Screen
-                    name="EditTodo"
-                    component={EditTodoScreen}
-                    options={{
-                      title: i18n.t("Todo.EditTodo"),
-                      headerStyle: {
-                        height: ms(45)
-                      },
-                      headerTitleStyle: {
-                        fontWeight: "bold",
-                        fontSize: ms(20)
-                      }
-                    }}
-                  />
-                </Stack.Navigator>
-              </TodoContext.Provider>
+              {/* Todo details navigation stack */}
+              <TodoDetailsNavigationStack
+                todo={todoSelected}
+                mainNavigation={navigation}
+              />
             </NavigationContainer>
           ) : (
+            // No todo selected
             <NoSelectionScreen
               screenName={ScreenName.TODO}
               subtitle={i18n.t("Todo.NoSelection")}
@@ -217,6 +170,7 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = () => {
         </View>
       </View>
 
+      {/* ADD TODO modal */}
       <View style={styles.modalView}>
         <Modal
           transparent
@@ -232,6 +186,7 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = () => {
               { backgroundColor: colors.overlayColor }
             ]}
           >
+            {/* Add todo modal */}
             <AddTodoScreen setModalVisible={setModalVisible} />
           </View>
         </Modal>

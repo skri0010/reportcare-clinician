@@ -1,27 +1,58 @@
-import { TodoStackParamList } from "web/screens";
+import {
+  TodoScreenParamList,
+  TodoScreenName,
+  TodoLeftTabName,
+  TodoLeftTabParamList
+} from "web/screens";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { RouteProp } from "@react-navigation/native";
+import { MaterialTopTabNavigationProp } from "@react-navigation/material-top-tabs";
+import { TodoNavigationProps } from "./WithSideTabsProps";
+import { RouteProp, CompositeNavigationProp } from "@react-navigation/native";
 
-// View Todo screen
-type TodoScreenNavigationProp = StackNavigationProp<
-  TodoStackParamList,
-  "ViewTodo"
->;
-type TodoScreenRouteProp = RouteProp<TodoStackParamList, "ViewTodo">;
-
-export type TodoScreenProps = {
-  route: TodoScreenRouteProp;
-  navigation: TodoScreenNavigationProp;
+// Todo left tab props
+export type withTodoLeftTabProps = {
+  [TodoLeftTabName.CURRENT]: TodoCurrentTabProps;
+  [TodoLeftTabName.COMPLETED]: TodoCompletedTabProps;
 };
 
-// Edit Todo screen
-type EditTodoScreenNavigationProp = StackNavigationProp<
-  TodoStackParamList,
-  "EditTodo"
->;
-type EditTodoScreenRouteProp = RouteProp<TodoStackParamList, "EditTodo">;
+// Todo right screen props
+export type withTodoScreenProps = {
+  [TodoScreenName.VIEWTODO]: ViewTodoScreenProps;
+  [TodoScreenName.EDITTODO]: EditTodoScreenProps;
+};
 
-export type EditTodoScreenProps = {
-  route: EditTodoScreenRouteProp;
-  navigation: EditTodoScreenNavigationProp;
+// TODO left tab props
+type TodoCurrentNavigationProps = CompositeNavigationProp<
+  MaterialTopTabNavigationProp<TodoLeftTabParamList, TodoLeftTabName.CURRENT>,
+  TodoNavigationProps
+>;
+
+// Todo current tab props
+type TodoCurrentTabProps = {
+  navigation: TodoCurrentNavigationProps;
+  route: RouteProp<TodoLeftTabParamList, TodoLeftTabName.CURRENT>;
+};
+
+type TodoCompletedNavigationProps = CompositeNavigationProp<
+  MaterialTopTabNavigationProp<TodoLeftTabParamList, TodoLeftTabName.COMPLETED>,
+  TodoNavigationProps
+>;
+
+// Completed TODO list
+type TodoCompletedTabProps = {
+  navigation: TodoCompletedNavigationProps;
+  route: RouteProp<TodoLeftTabParamList, TodoLeftTabName.COMPLETED>;
+};
+
+//TODO right screen
+// View todo screen props
+type ViewTodoScreenProps = {
+  navigation: StackNavigationProp<TodoScreenParamList, TodoScreenName.VIEWTODO>;
+  route: RouteProp<TodoScreenParamList, TodoScreenName.VIEWTODO>;
+};
+
+// Edit todo screen props
+type EditTodoScreenProps = {
+  navigation: StackNavigationProp<TodoScreenParamList, TodoScreenName.EDITTODO>;
+  route: RouteProp<TodoScreenParamList, TodoScreenName.EDITTODO>;
 };

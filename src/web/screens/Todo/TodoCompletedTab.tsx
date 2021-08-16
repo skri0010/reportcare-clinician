@@ -10,7 +10,10 @@ import { RootState, select, useDispatch } from "util/useRedux";
 import i18n from "util/language/i18n";
 import { LocalTodo, TodoStatus, TodoUpdateInput } from "rc_agents/model";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
-import { setProcedureOngoing, setSubmittingTodo } from "ic-redux/actions/agents/actionCreator";
+import {
+  setProcedureOngoing,
+  setSubmittingTodo
+} from "ic-redux/actions/agents/actionCreator";
 import { triggerRetrieveTodos, triggerUpdateTodo } from "rc_agents/triggers";
 
 export const TodoCompletedTab: FC<TodoRowTabProps> = ({ setTodoSelected }) => {
@@ -24,6 +27,7 @@ export const TodoCompletedTab: FC<TodoRowTabProps> = ({ setTodoSelected }) => {
 
   const dispatch = useDispatch();
 
+  // Set the todo item detail to be shown when the item is pressed
   function onCardPress(item: LocalTodo) {
     setTodoSelected(item);
   }
@@ -49,8 +53,6 @@ export const TodoCompletedTab: FC<TodoRowTabProps> = ({ setTodoSelected }) => {
   useEffect(() => {
     triggerRetrieveTodos(TodoStatus.COMPLETED);
   }, []);
-
-  // JH-TODO Replace titles with i18n
   return (
     <ScreenWrapper>
       <SearchBarComponent

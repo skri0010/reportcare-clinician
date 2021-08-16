@@ -1,12 +1,13 @@
-import React, { FC, useContext } from "react";
+/* eslint-disable no-console */
+import React, { FC } from "react";
 import { View, TouchableOpacity } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
-import { TodoScreenProps } from "../TodoScreenProps";
+import { withTodoScreenProps } from "../../TodoScreenProps";
 import { H2, H3, H4, H5 } from "components/Text";
 import { RootState, select } from "util/useRedux";
-import { TodoContext } from "./TodoScreen";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import i18n from "util/language/i18n";
+import { ScreenName, TodoScreenName } from "../..";
 
 interface todoSectionProps {
   mainItem: string;
@@ -15,12 +16,13 @@ interface todoSectionProps {
 
 interface editHistorySectionProps {
   editType: string;
-  timeDate: string;
+  timeDate?: string;
 }
 
+// Todo section component (title, patient and notes)
 export const TodoSection: FC<todoSectionProps> = ({ mainItem, content }) => {
   return (
-    <View>
+    <View style={{ display: "flex", flexWrap: "wrap" }}>
       <H3
         text={mainItem}
         style={{ fontWeight: "bold", marginBottom: ms(10) }}
@@ -30,77 +32,94 @@ export const TodoSection: FC<todoSectionProps> = ({ mainItem, content }) => {
   );
 };
 
+// Edit history section component (created and modified datetime)
 export const EditHistorySection: FC<editHistorySectionProps> = ({
   editType,
   timeDate
 }) => {
   return (
-    <View style={{ display: "flex", flexDirection: "row" }}>
+    <View
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        flex: 1,
+        flexWrap: "wrap"
+      }}
+    >
       <H5 text={editType} style={{ fontWeight: "bold" }} />
-      <H5 text={timeDate} style={{ marginBottom: ms(10) }} />
+      <H5
+        text={timeDate || i18n.t("Todo.Never")}
+        style={{ marginBottom: ms(10) }}
+      />
     </View>
   );
 };
 
-export const TodoDetailsScreen: FC<TodoScreenProps> = ({
-  route,
-  navigation
-}) => {
+export const TodoDetailsScreen: FC<
+  withTodoScreenProps[TodoScreenName.VIEWTODO]
+> = ({ route, navigation }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
   }));
-  const todoParam = route.params;
-  const context = useContext(TodoContext);
+  const { todo } = route.params;
+  const { mainNavigation } = route.params;
 
   return (
     <ScreenWrapper>
       <View style={styles.container}>
         {/* Title */}
-        <TodoSection
-          mainItem={i18n.t("Todo.Title")}
-          content={context.mainTitleContent}
-        />
+        <TodoSection mainItem={i18n.t("Todo.Title")} content={todo.title} />
         {/* Patient */}
         <View style={styles.todoPatient}>
           <TodoSection
             mainItem={i18n.t("Todo.Patient")}
-            content={context.patientContent}
+            content={todo.patientName}
           />
           {/* View patient details button */}
-          <TouchableOpacity
-            style={[
-              styles.viewButton,
-              {
-                backgroundColor: colors.primaryContrastTextColor,
-                borderColor: colors.primaryTextColor
-              }
-            ]}
-            onPress={() => {
-              null;
+          <View
+            style={{
+              paddingLeft: ms(20),
+              alignItems: "center",
+              justifyContent: "center"
             }}
           >
-            <H5
-              text={i18n.t("Todo.ViewButton")}
-              style={{ color: colors.primaryTextColor }}
-            />
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.viewButton,
+                {
+                  backgroundColor: colors.primaryContrastTextColor,
+                  borderColor: colors.primaryTextColor
+                }
+              ]}
+              onPress={() => {
+                // If there is patientID defined, navigate to the patient tab when the view button is pressed
+                if (todo.patientId !== undefined) {
+                  mainNavigation?.navigate(ScreenName.PATIENTS, {
+                    patientId: todo.patientId
+                  });
+                }
+              }}
+            >
+              <H5
+                text={i18n.t("Todo.ViewButton")}
+                style={{ color: colors.primaryTextColor }}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
         {/* Notes */}
         <View style={{ marginTop: ms(10) }}>
-          <TodoSection
-            mainItem={i18n.t("Todo.Notes")}
-            content={context.notesContent}
-          />
+          <TodoSection mainItem={i18n.t("Todo.Notes")} content={todo.notes} />
         </View>
         {/* Edit history */}
         <EditHistorySection
           editType={i18n.t("Todo.CreatedOn")}
-          timeDate={context.createdTimeDate}
+          timeDate={todo.createdAt}
         />
         <EditHistorySection
           editType={i18n.t("Todo.ModifiedOn")}
           timeDate={
-            context.modifiedTimeDate ? context.modifiedTimeDate : "Never"
+            todo.lastModified ? todo.lastModified : i18n.t("Todo.Never")
           }
         />
         {/* Edit button */}
@@ -111,7 +130,7 @@ export const TodoDetailsScreen: FC<TodoScreenProps> = ({
               { backgroundColor: colors.primaryTodoCompleteButtonColor }
             ]}
             onPress={() => {
-              navigation.navigate("EditTodo", todoParam);
+              navigation.navigate(TodoScreenName.EDITTODO, { todo: todo });
             }}
           >
             <H2
@@ -127,14 +146,15 @@ export const TodoDetailsScreen: FC<TodoScreenProps> = ({
 
 const styles = ScaledSheet.create({
   container: {
-    margin: "30@ms",
-    marginLeft: "40@ms"
+    marginHorizontal: "55@ms",
+    marginVertical: "30@ms"
   },
   todoPatient: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center"
+    alignItems: "center",
+    flexWrap: "wrap"
   },
   viewButton: {
     width: "70@ms",

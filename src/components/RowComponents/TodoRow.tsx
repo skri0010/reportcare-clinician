@@ -1,9 +1,9 @@
 import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
 import { RiskLevel, getRiskLevelColor } from "models/RiskLevel";
-import { View, Button, TouchableOpacity } from "react-native";
-import { ScaledSheet } from "react-native-size-matters";
-import { H4, H5 } from "components/Text/index";
+import { View, TouchableOpacity } from "react-native";
+import { ms, ScaledSheet } from "react-native-size-matters";
+import { H5, H6 } from "components/Text/index";
 import { LocalTodo } from "rc_agents/model";
 
 // Interface that determines what props the search bar accepts
@@ -49,9 +49,9 @@ export const TodoRow: FC<TodoRowProps> = ({
           ]}
         >
           <View style={styles.texts}>
-            <H4 text={todoDetails.title} style={styles.title} />
-            <H5 text={todoDetails.patientName} style={styles.name} />
-            <H5 text={todoDetails.notes} style={null} />
+            <H5 text={todoDetails.title} style={styles.title} />
+            <H6 text={todoDetails.patientName} style={styles.name} />
+            <H6 text={todoDetails.notes} style={{ paddingBottom: ms(1) }} />
           </View>
         </View>
 
@@ -72,15 +72,28 @@ export const TodoRow: FC<TodoRowProps> = ({
             // https://www.codevscolor.com/react-native-rounded-corner-button
           }
           {/* JH-TODO: Remove hardcoded colors */}
-          <Button
-            title={!todoDetails.completed ? "DONE" : "UNDO"}
+          <TouchableOpacity
             onPress={onButtonPress}
-            color={
-              !todoDetails.completed
-                ? colors.primaryButtonColor
-                : colors.primaryWarningButtonColor
-            }
-          />
+            style={[
+              styles.button,
+              {
+                backgroundColor:
+                  todoDetails.completed === false
+                    ? colors.primaryButtonColor
+                    : colors.primaryWarningButtonColor
+              }
+            ]}
+          >
+            <H6
+              text={todoDetails.completed === false ? "DONE" : "UNDO"}
+              style={[
+                styles.buttonText,
+                {
+                  color: colors.primaryContrastTextColor
+                }
+              ]}
+            />
+          </TouchableOpacity>
         </View>
       </View>
     </TouchableOpacity>
@@ -92,21 +105,31 @@ const styles = ScaledSheet.create({
     flexDirection: "row"
   },
   contentContainer: {
-    paddingVertical: "3@ms",
+    paddingTop: "5@ms",
+    paddingLeft: "5@ms",
     flex: 1
   },
   texts: {
-    padding: "10@ms"
+    paddingLeft: "7@ms",
+    paddingBottom: "5@ms"
   },
   title: {
     fontWeight: "bold",
-    paddingBottom: "10@ms"
+    paddingBottom: "3@ms"
   },
   name: {
-    paddingBottom: "10@ms"
+    paddingBottom: "3@ms"
   },
   buttonContainer: {
-    paddingTop: "15@ms",
-    paddingRight: "20@ms"
-  }
+    paddingRight: "20@ms",
+    paddingLeft: "10@ms",
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  button: {
+    borderRadius: "5@ms",
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  buttonText: { fontWeight: "bold", padding: "5@ms" }
 });

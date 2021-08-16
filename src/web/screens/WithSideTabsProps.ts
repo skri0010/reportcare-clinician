@@ -2,6 +2,7 @@ import { ScreenName, RootStackParamList, SideTabsParamList } from "web/screens";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { RouteProp, CompositeNavigationProp } from "@react-navigation/native";
+import { LocalTodo } from "rc_agents/model";
 
 /**
  * Screen props consists of { navigation, route }
@@ -68,7 +69,7 @@ type ChatScreenProps = {
 };
 
 // Todo
-type TodoNavigationProps = CompositeNavigationProp<
+export type TodoNavigationProps = CompositeNavigationProp<
   DrawerNavigationProp<SideTabsParamList, ScreenName.TODO>,
   StackNavigationProp<RootStackParamList>
 >;

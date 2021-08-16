@@ -136,12 +136,15 @@
     "EditButton": "Edit",
     "CancelButton": "Batal",
     "SaveButton": "Simpan",
+    "Never": "Belum pernah",
     "TitleInputPlaceholder": "Apakah todo ini tentang?",
     "PatientInputPlaceholder": "Siapakah nama pesakit?",
     "NotesInputPlaceholder": "Apakah yang perlu dicatatkan?",
     "NoSelection": "Pilihkan salah satu item Todo untuk melihat butirannya",
     "TodoCreateSuccessful": "Todo telah berjaya dicipta",
-    "TodoUpdateSuccessful": "Todo telah berjaya dikemas kini"
+    "TodoUpdateSuccessful": "Todo telah berjaya dikemas kini",
+    "MarkAsDone": "TANDA SEBAGAI SELESAI",
+    "UndoFromCompleted": "PINDAH DARI SELESAI"
   },
   "Patients": {
     "PatientsList": {
