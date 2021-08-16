@@ -927,6 +927,7 @@ export const onCreateTodo = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      pending
       completed
       owner
       _version
@@ -965,6 +966,7 @@ export const onUpdateTodo = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      pending
       completed
       owner
       _version
@@ -1003,6 +1005,7 @@ export const onDeleteTodo = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      pending
       completed
       owner
       _version

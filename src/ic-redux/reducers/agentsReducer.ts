@@ -26,7 +26,11 @@ interface AgentsState {
   pendingAlertCount: PendingAlertCount;
   alerts: Alert[];
   alertInfo: AlertInfo | undefined;
-  newTodo: LocalTodo | undefined;
+  fetchingTodos: boolean;
+  pendingTodos: LocalTodo[];
+  completedTodos: LocalTodo[];
+  submittingTodo: boolean;
+  updatedTodo: LocalTodo | undefined;
 }
 
 const initialState: AgentsState = {
@@ -54,7 +58,11 @@ const initialState: AgentsState = {
   },
   alerts: [],
   alertInfo: undefined,
-  newTodo: undefined
+  fetchingTodos: false,
+  pendingTodos: [],
+  completedTodos: [],
+  submittingTodo: false,
+  updatedTodo: undefined
 };
 
 export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
@@ -108,10 +116,18 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
         ...state,
         alertInfo: action.payload.alertInfo
       };
-    case actionNames.SET_NEW_TODO:
-      return { ...state, newTodo: action.payload.newTodo };
     case actionNames.SET_RISK_FILTERS:
       return { ...state, riskFilters: action.payload.riskFilters };
+    case actionNames.SET_FETCHING_TODOS:
+      return { ...state, fetchingTodos: action.payload.fetchingTodos };
+    case actionNames.SET_PENDING_TODOS:
+      return { ...state, pendingTodos: action.payload.pendingTodos };
+    case actionNames.SET_COMPLETED_TODOS:
+      return { ...state, completedTodos: action.payload.completedTodos };
+    case actionNames.SET_SUBMITTING_TODO:
+      return { ...state, submittingTodo: action.payload.submittingTodo };
+    case actionNames.SET_UPDATED_TODO:
+      return { ...state, updatedTodo: action.payload.updatedTodo };
     default:
       return state;
   }

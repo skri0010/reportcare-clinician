@@ -19,10 +19,7 @@ import agentAPI from "rc_agents/framework/AgentAPI";
 import { listPatientAlertsByDateTime } from "aws";
 import { AlertInfo } from "rc_agents/model";
 import { ModelSortDirection } from "aws/API";
-import {
-  queryAlertInfo,
-  mergeIntoLocalAlertInfos
-} from "../triage-alert-hf-clinic/RetrieveAlertInfo";
+import { queryAlertInfo } from "../triage-alert-hf-clinic/RetrieveAlertInfo";
 import { sortAlertsByDateTime } from "../triage-alert-hf-clinic/RetrieveAlerts";
 
 /**
@@ -52,9 +49,6 @@ class RetrieveAlertHistory extends Activity {
         facts[BeliefKeys.PATIENT]?.[PatientAttributes.ALERT_PATIENT_ID];
 
       if (patientId) {
-        // Retrieves locally stored alert infos
-        let localAlertInfos = await Storage.getAlertInfos();
-
         const alertInfos: AlertInfo[] = [];
 
         if (facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
@@ -72,17 +66,10 @@ class RetrieveAlertHistory extends Activity {
                   const alertInfo = await queryAlertInfo(alert!);
                   if (alertInfo) {
                     alertInfos.push(alertInfo);
-                    localAlertInfos = await mergeIntoLocalAlertInfos(
-                      alertInfo,
-                      localAlertInfos
-                    );
+                    await Storage.setAlertInfo(alertInfo);
                   }
                 })
               );
-              if (localAlertInfos) {
-                // Saves updated JSON into local storage
-                await Storage.setAlertInfos(localAlertInfos);
-              }
             }
           }
 
@@ -97,9 +84,9 @@ class RetrieveAlertHistory extends Activity {
               false
             );
           }
-        } else if (localAlertInfos) {
+        } else {
           // Device is offline: get alert infos of current patient from local storage
-          const patientAlerts = localAlertInfos[patientId];
+          const patientAlerts = await Storage.getPatientAlertInfos(patientId);
           if (patientAlerts) {
             const sortedPatientAlerts = sortAlertsByDateTime(patientAlerts);
             agentAPI.addFact(

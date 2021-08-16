@@ -708,7 +708,8 @@ export type CreateTodoInput = {
   notes: string,
   lastModified: string,
   alertID?: string | null,
-  completed: boolean,
+  pending?: string | null,
+  completed?: string | null,
   owner: string,
   _version?: number | null,
 };
@@ -720,7 +721,8 @@ export type ModelTodoConditionInput = {
   notes?: ModelStringInput | null,
   lastModified?: ModelStringInput | null,
   alertID?: ModelIDInput | null,
-  completed?: ModelBooleanInput | null,
+  pending?: ModelStringInput | null,
+  completed?: ModelStringInput | null,
   and?: Array< ModelTodoConditionInput | null > | null,
   or?: Array< ModelTodoConditionInput | null > | null,
   not?: ModelTodoConditionInput | null,
@@ -736,7 +738,8 @@ export type Todo = {
   lastModified: string,
   alertID?: string | null,
   alert?: Alert | null,
-  completed: boolean,
+  pending?: string | null,
+  completed?: string | null,
   owner: string,
   _version: number,
   _deleted?: boolean | null,
@@ -753,7 +756,8 @@ export type UpdateTodoInput = {
   notes?: string | null,
   lastModified?: string | null,
   alertID?: string | null,
-  completed?: boolean | null,
+  pending?: string | null,
+  completed?: string | null,
   owner?: string | null,
   _version?: number | null,
 };
@@ -1012,7 +1016,8 @@ export type ModelTodoFilterInput = {
   notes?: ModelStringInput | null,
   lastModified?: ModelStringInput | null,
   alertID?: ModelIDInput | null,
-  completed?: ModelBooleanInput | null,
+  pending?: ModelStringInput | null,
+  completed?: ModelStringInput | null,
   owner?: ModelStringInput | null,
   and?: Array< ModelTodoFilterInput | null > | null,
   or?: Array< ModelTodoFilterInput | null > | null,
@@ -2150,7 +2155,8 @@ export type CreateTodoMutation = {
       createdAt: string,
       updatedAt: string,
     } | null,
-    completed: boolean,
+    pending?: string | null,
+    completed?: string | null,
     owner: string,
     _version: number,
     _deleted?: boolean | null,
@@ -2194,7 +2200,8 @@ export type UpdateTodoMutation = {
       createdAt: string,
       updatedAt: string,
     } | null,
-    completed: boolean,
+    pending?: string | null,
+    completed?: string | null,
     owner: string,
     _version: number,
     _deleted?: boolean | null,
@@ -2238,7 +2245,8 @@ export type DeleteTodoMutation = {
       createdAt: string,
       updatedAt: string,
     } | null,
-    completed: boolean,
+    pending?: string | null,
+    completed?: string | null,
     owner: string,
     _version: number,
     _deleted?: boolean | null,
@@ -3303,7 +3311,8 @@ export type SyncTodosQuery = {
       notes: string,
       lastModified: string,
       alertID?: string | null,
-      completed: boolean,
+      pending?: string | null,
+      completed?: string | null,
       owner: string,
       _version: number,
       _deleted?: boolean | null,
@@ -3349,7 +3358,8 @@ export type GetTodoQuery = {
       createdAt: string,
       updatedAt: string,
     } | null,
-    completed: boolean,
+    pending?: string | null,
+    completed?: string | null,
     owner: string,
     _version: number,
     _deleted?: boolean | null,
@@ -3377,7 +3387,8 @@ export type ListTodosQuery = {
       notes: string,
       lastModified: string,
       alertID?: string | null,
-      completed: boolean,
+      pending?: string | null,
+      completed?: string | null,
       owner: string,
       _version: number,
       _deleted?: boolean | null,
@@ -3851,16 +3862,17 @@ export type ListCompletedRiskAlertsQuery = {
   } | null,
 };
 
-export type ListTodosByClinicianIDQueryVariables = {
-  clinicianID?: string | null,
+export type ListPendingTodosByLastModifiedDateQueryVariables = {
+  pending?: string | null,
+  lastModified?: ModelStringKeyConditionInput | null,
   sortDirection?: ModelSortDirection | null,
   filter?: ModelTodoFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
 };
 
-export type ListTodosByClinicianIDQuery = {
-  listTodosByClinicianID?:  {
+export type ListPendingTodosByLastModifiedDateQuery = {
+  listPendingTodosByLastModifiedDate?:  {
     __typename: "ModelTodoConnection",
     items?:  Array< {
       __typename: "Todo",
@@ -3871,7 +3883,8 @@ export type ListTodosByClinicianIDQuery = {
       notes: string,
       lastModified: string,
       alertID?: string | null,
-      completed: boolean,
+      pending?: string | null,
+      completed?: string | null,
       owner: string,
       _version: number,
       _deleted?: boolean | null,
@@ -3884,8 +3897,8 @@ export type ListTodosByClinicianIDQuery = {
   } | null,
 };
 
-export type ListTodosByLastModifiedDateQueryVariables = {
-  clinicianID?: string | null,
+export type ListCompletedTodosByLastModifiedDateQueryVariables = {
+  completed?: string | null,
   lastModified?: ModelStringKeyConditionInput | null,
   sortDirection?: ModelSortDirection | null,
   filter?: ModelTodoFilterInput | null,
@@ -3893,8 +3906,8 @@ export type ListTodosByLastModifiedDateQueryVariables = {
   nextToken?: string | null,
 };
 
-export type ListTodosByLastModifiedDateQuery = {
-  listTodosByLastModifiedDate?:  {
+export type ListCompletedTodosByLastModifiedDateQuery = {
+  listCompletedTodosByLastModifiedDate?:  {
     __typename: "ModelTodoConnection",
     items?:  Array< {
       __typename: "Todo",
@@ -3905,7 +3918,8 @@ export type ListTodosByLastModifiedDateQuery = {
       notes: string,
       lastModified: string,
       alertID?: string | null,
-      completed: boolean,
+      pending?: string | null,
+      completed?: string | null,
       owner: string,
       _version: number,
       _deleted?: boolean | null,
@@ -3939,7 +3953,8 @@ export type ListTodosByAlertIDQuery = {
       notes: string,
       lastModified: string,
       alertID?: string | null,
-      completed: boolean,
+      pending?: string | null,
+      completed?: string | null,
       owner: string,
       _version: number,
       _deleted?: boolean | null,
@@ -5038,7 +5053,8 @@ export type OnCreateTodoSubscription = {
       createdAt: string,
       updatedAt: string,
     } | null,
-    completed: boolean,
+    pending?: string | null,
+    completed?: string | null,
     owner: string,
     _version: number,
     _deleted?: boolean | null,
@@ -5081,7 +5097,8 @@ export type OnUpdateTodoSubscription = {
       createdAt: string,
       updatedAt: string,
     } | null,
-    completed: boolean,
+    pending?: string | null,
+    completed?: string | null,
     owner: string,
     _version: number,
     _deleted?: boolean | null,
@@ -5124,7 +5141,8 @@ export type OnDeleteTodoSubscription = {
       createdAt: string,
       updatedAt: string,
     } | null,
-    completed: boolean,
+    pending?: string | null,
+    completed?: string | null,
     owner: string,
     _version: number,
     _deleted?: boolean | null,

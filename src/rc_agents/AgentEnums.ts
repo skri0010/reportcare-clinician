@@ -82,6 +82,7 @@ export const ActionFrameIDs = {
       "RequestSyncPatientAssignmentResolutions",
 
     // SRD-II: Todos
+    RETRIEVE_TODOS: "RetrieveTodos",
     CREATE_TODO: "CreateTodo",
     UPDATE_TODO: "UpdateTodo"
   },
@@ -178,6 +179,9 @@ export enum ClinicianAttributes {
   ALERT_INFO_RETRIEVED = "AlertInfoRetrieved",
 
   // SRD-II - Todos
+  RETRIEVE_TODOS = "RetrieveTodos",
+  TODOS = "Todos",
+  TODO_STATUS = "TodoStatus",
   CREATE_TODO = "CreateTodo",
   UPDATE_TODO = "UpdateTodo",
   TODO = "Todo"

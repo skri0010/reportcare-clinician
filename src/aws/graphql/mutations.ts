@@ -1029,6 +1029,7 @@ export const createTodo = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      pending
       completed
       owner
       _version
@@ -1070,6 +1071,7 @@ export const updateTodo = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      pending
       completed
       owner
       _version
@@ -1111,6 +1113,7 @@ export const deleteTodo = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      pending
       completed
       owner
       _version

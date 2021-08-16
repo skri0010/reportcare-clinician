@@ -14,15 +14,11 @@ import {
   ProcedureAttributes,
   ProcedureConst
 } from "rc_agents/AgentEnums";
-import { AsyncStorageKeys, AsyncStorageType, Storage } from "rc_agents/storage";
+import { Storage } from "rc_agents/storage";
 import agentAPI from "rc_agents/framework/AgentAPI";
 import { mockCompletedAlerts, mockPendingAlerts } from "mock/mockAlerts";
-import {
-  AlertStatus,
-  listCompletedRiskAlerts,
-  listPendingRiskAlerts
-} from "aws";
-import { AlertColorCode, AlertInfo } from "rc_agents/model";
+import { listCompletedRiskAlerts, listPendingRiskAlerts } from "aws";
+import { AlertColorCode, AlertInfo, AlertStatus } from "rc_agents/model";
 import { RiskLevel } from "models/RiskLevel";
 import { Alert } from "aws/API";
 
@@ -60,9 +56,6 @@ class RetrieveAlerts extends Activity {
 
       // Retrieves all alerts with a specific status and risk level
       if (alertStatus && alertRiskLevel) {
-        // Retrieves locally stored alerts
-        const localAlerts = await Storage.getAlerts();
-
         if (facts[BeliefKeys.APP][AppAttributes.ONLINE]) {
           // Device is online
 
@@ -146,18 +139,13 @@ class RetrieveAlerts extends Activity {
             );
 
             // Merges newly retrieved alerts into locally stored alerts
-            await this.mergeIntoLocalAlerts(
-              alerts,
-              localAlerts,
-              alertRiskLevel
-            );
+            await Storage.setMultipleAlerts(alerts);
           }
-        } else if (localAlerts) {
+        } else {
           // Device is offline
-          const localRiskAlerts = await this.retrieveLocalRiskAlerts(
-            localAlerts,
-            alertStatus,
-            alertRiskLevel
+          const localRiskAlerts = await Storage.getRiskOrStatusAlerts(
+            alertRiskLevel,
+            alertStatus
           );
           if (localRiskAlerts) {
             const sortedAlerts = sortAlertsByDateTime(localRiskAlerts);
@@ -194,85 +182,6 @@ class RetrieveAlerts extends Activity {
       // eslint-disable-next-line no-console
       console.log(error);
     }
-  }
-
-  /**
-   * Merges retrieved alert into JSON string for local storage using risk level as key.
-   * @param alert current alert
-   * @param alertsJSON JSON string according to risk level
-   * @param riskLevel risk level of the current alert
-   * @returns merged JSON string
-   */
-  // eslint-disable-next-line class-methods-use-this
-  async mergeIntoLocalAlerts(
-    alerts: Alert[],
-    localAlerts: AsyncStorageType[AsyncStorageKeys.ALERTS] | null,
-    riskLevel: RiskLevel
-  ): Promise<void> {
-    if (localAlerts) {
-      if (localAlerts[riskLevel]) {
-        const riskAlerts = localAlerts[riskLevel]!;
-        // Checks and replaces existing alerts with the newly retrieved ones
-        // Otherwise new alerts are added into the list
-        alerts.forEach((alert) => {
-          const existIndex = riskAlerts.findIndex((a) => a.id === alert.id);
-          if (existIndex >= 0) {
-            riskAlerts[existIndex] = alert;
-          } else {
-            riskAlerts.push(alert);
-          }
-        });
-        localAlerts[riskLevel] = riskAlerts;
-      } else {
-        localAlerts[riskLevel] = alerts;
-      }
-    } else {
-      localAlerts = {
-        [RiskLevel.HIGH]: [],
-        [RiskLevel.MEDIUM]: [],
-        [RiskLevel.LOW]: [],
-        [RiskLevel.UNASSIGNED]: []
-      };
-      localAlerts[riskLevel] = alerts;
-    }
-    // Stores into local storage
-    await Storage.setAlerts(localAlerts);
-  }
-
-  /**
-   * Gets locally stored alerts with specific status and risk level.
-   * @param localAlerts locally stored alerts
-   * @param alertStatus alert status
-   * @param riskLevel risk level
-   * @returns a list of alerts if any
-   */
-  // eslint-disable-next-line class-methods-use-this
-  async retrieveLocalRiskAlerts(
-    localAlerts: AsyncStorageType[AsyncStorageKeys.ALERTS],
-    alertStatus: AlertStatus,
-    riskLevel: RiskLevel
-  ): Promise<Alert[] | null> {
-    if (localAlerts[riskLevel]) {
-      const riskAlerts = localAlerts[riskLevel]!;
-      const alertsToReturn: Alert[] = [];
-      if (alertStatus === AlertStatus.PENDING) {
-        riskAlerts.forEach((alert) => {
-          if (alert.pending === AlertStatus.PENDING) {
-            alertsToReturn.push(alert);
-          }
-        });
-      } else if (alertStatus === AlertStatus.COMPLETED) {
-        riskAlerts.forEach((alert) => {
-          if (alert.completed === AlertStatus.COMPLETED) {
-            alertsToReturn.push(alert);
-          }
-        });
-      }
-      if (alertsToReturn.length > 0) {
-        return alertsToReturn;
-      }
-    }
-    return null;
   }
 }
 

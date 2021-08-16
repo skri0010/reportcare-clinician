@@ -14,10 +14,11 @@ import {
 } from "rc_agents/AgentEnums";
 import { AsyncStorageKeys, Storage } from "rc_agents/storage";
 import { getAlert } from "aws/TypedAPI/getQueries";
-import { updateLocalAlertAndAlertInfo } from "rc_agents/agents/data-assistant/action-frames/storing-data/CreateTodo";
-import { AlertStatus, updateAlert } from "aws";
+import { updateAlert } from "aws";
 import { UpdateAlertInput } from "aws/API";
 import { agentNWA } from "rc_agents/agents";
+import { AlertStatus } from "rc_agents/model";
+import { mergeAlert, mergeAlertInfo } from "rc_agents/storage/setItem";
 
 // LS-TODO: To be tested once integrated with Alert.
 
@@ -51,16 +52,17 @@ class SyncAlertsUpdate extends Activity {
         const successfulIds: string[] = [];
 
         await Promise.all(
-          alerts.map(async (alert) => {
+          Object.values(alerts).map(async (alert) => {
             // Queries current alert
             const alertQuery = await getAlert({ id: alert.id });
-            if (alertQuery.data?.getAlert) {
+            if (alertQuery.data.getAlert) {
               const latestAlert = alertQuery.data.getAlert;
 
               // Latest Alert has higher version than local alert
               if (latestAlert._version > alert._version) {
                 // Replace local alert and alert info with information from latest alert
-                await updateLocalAlertAndAlertInfo(latestAlert);
+                await mergeAlert(latestAlert);
+                await mergeAlertInfo(latestAlert);
               } else {
                 // This alert will be used for local merging later on
                 latestAlert.pending = null;
@@ -68,15 +70,15 @@ class SyncAlertsUpdate extends Activity {
 
                 // Constructs alert object to be updated
                 const alertToUpdate: UpdateAlertInput = {
-                  id: latestAlert?.id,
+                  id: latestAlert.id,
                   completed: latestAlert.completed,
                   pending: latestAlert.pending,
-                  _version: latestAlert?._version
+                  _version: latestAlert._version
                 };
                 const updateResponse = await updateAlert(alertToUpdate);
 
                 // Updates to indicate that alert is successfully updated
-                if (updateResponse.data?.updateAlert) {
+                if (updateResponse.data.updateAlert) {
                   latestAlert._version =
                     updateResponse.data.updateAlert._version;
                 } else {
@@ -85,23 +87,21 @@ class SyncAlertsUpdate extends Activity {
 
                 // Updates locally stored alert and alert info
                 // Input is of type Alert
-                await updateLocalAlertAndAlertInfo(latestAlert);
+                await mergeAlert(latestAlert);
+                await mergeAlertInfo(latestAlert);
               }
             }
           })
         );
 
         // Removes entry if all alerts are synced
-        if (successfulIds.length === alerts.length) {
+        if (successfulIds.length === Object.values(alerts).length) {
           await Storage.removeItem(AsyncStorageKeys.ALERTS_SYNC);
         } else {
           // Removes successfully synced alerts
           await Promise.all(
             successfulIds.map((id) => {
-              const index = alerts.findIndex((a) => a.id === id);
-              if (index >= 0) {
-                alerts.splice(index, 1);
-              }
+              delete alerts[id];
               return id;
             })
           );

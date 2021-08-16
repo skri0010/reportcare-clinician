@@ -18,14 +18,16 @@ import { Storage } from "rc_agents/storage";
 import agentAPI from "rc_agents/framework/AgentAPI";
 import { store } from "util/useRedux";
 import {
+  setCompletedTodos,
+  setPendingTodos,
   setProcedureOngoing,
-  setProcedureSuccessful
+  setProcedureSuccessful,
+  setUpdatedTodo
 } from "ic-redux/actions/agents/actionCreator";
 import agentNWA from "rc_agents/agents/network-assistant/NWA";
 import { getTodo, updateTodo } from "aws";
-import { LocalTodo, TodoUpdateInput } from "rc_agents/model";
-import { UpdateTodoInput, Todo } from "aws/API";
-import { updateLocalTodos } from "./CreateTodo";
+import { LocalTodo, TodoStatus, TodoUpdateInput } from "rc_agents/model";
+import { UpdateTodoInput } from "aws/API";
 
 /**
  * Class to represent an activity for updating a clinician's Todo.
@@ -54,7 +56,7 @@ class UpdateTodo extends Activity {
       const clinicianId = await Storage.getClinicianID();
 
       if (todoInput && clinicianId) {
-        let pendingSync: boolean | undefined;
+        let toSync: boolean | undefined;
         let todoVersion: number | undefined;
 
         // Constructs UpdateTodoInput to be updated
@@ -63,7 +65,8 @@ class UpdateTodo extends Activity {
           title: todoInput.title,
           patientName: todoInput.patientName,
           notes: todoInput.notes,
-          completed: todoInput.completed,
+          completed: todoInput.completed ? TodoStatus.COMPLETED : null,
+          pending: todoInput.completed ? null : TodoStatus.PENDING,
           lastModified: new Date().toISOString(),
           owner: clinicianId,
           _version: todoInput._version
@@ -83,15 +86,15 @@ class UpdateTodo extends Activity {
               latestTodo?._version &&
               latestTodo._version > todoInput._version
             ) {
-              await mergeLocalTodo(latestTodo);
+              await Storage.mergeTodoConflict(latestTodo);
             } else {
               // Updates Todo
               const updateQuery = await updateTodo(todoToUpdate);
 
               // Saves Todo locally
-              if (updateQuery.data?.updateTodo) {
+              if (updateQuery.data.updateTodo) {
                 // Updates to indicate that Todo is successfully updated
-                pendingSync = false;
+                toSync = false;
                 todoVersion = updateQuery.data.updateTodo._version;
               }
             }
@@ -99,11 +102,11 @@ class UpdateTodo extends Activity {
         }
         // Device is offline: saves Todo locally
         else {
-          pendingSync = true;
+          toSync = true;
         }
 
         // Updates locally saved Todo
-        if (pendingSync !== undefined) {
+        if (toSync !== undefined) {
           // Constructs Todo to be stored
           const todoToStore: LocalTodo = {
             id: todoInput.id,
@@ -113,19 +116,55 @@ class UpdateTodo extends Activity {
             completed: todoInput.completed,
             createdAt: todoInput.createdAt,
             lastModified: todoToUpdate.lastModified!,
-            pendingSync: pendingSync,
+            toSync: toSync,
             _version: todoVersion || todoInput._version
           };
 
           // Updates Todo in local storage
-          await updateLocalTodos(todoToStore);
+          await Storage.mergeTodo(todoToStore);
 
-          // Notifies NWA if the Todo to be stored has pendingSync set to true
-          if (pendingSync) {
+          // Notifies NWA if the Todo to be stored has toSync set to true
+          if (toSync) {
             // Notifies NWA
             agentNWA.addBelief(
               new Belief(BeliefKeys.APP, AppAttributes.SYNC_TODOS_UPDATE, true)
             );
+          }
+
+          // Removes previous Todo from its existing list and adds it to the front of updated list
+          const currentAgentsState = store.getState().agents;
+          const currentPendingTodos = currentAgentsState.pendingTodos;
+          const currentCompletedTodos = currentAgentsState.completedTodos;
+
+          if (todoToStore.id) {
+            // Looks for Todo in the list of current Todos and removes it from the list
+            let existIndex = currentPendingTodos.findIndex(
+              (t) => t.id === todoToStore.id
+            );
+            if (existIndex >= 0) {
+              currentPendingTodos.splice(existIndex, 1);
+            } else {
+              existIndex = currentCompletedTodos.findIndex(
+                (t) => t.id === todoToStore.id
+              );
+              if (existIndex >= 0) {
+                currentCompletedTodos.splice(existIndex, 1);
+              }
+            }
+
+            // Adds Todo to the front of the list according to TodoStatus
+            if (todoToStore.completed) {
+              currentCompletedTodos.unshift(todoToStore);
+            } else {
+              currentPendingTodos.unshift(todoToStore);
+            }
+
+            // Dispatch updated lists
+            store.dispatch(setPendingTodos(currentPendingTodos));
+            store.dispatch(setCompletedTodos(currentCompletedTodos));
+
+            // Dispatch updatedTodo to be displayed in TodoDetailsScreen
+            store.dispatch(setUpdatedTodo(todoToStore));
           }
         }
         // Dispatch to front end to indicate that procedure is successful
@@ -159,51 +198,6 @@ class UpdateTodo extends Activity {
     store.dispatch(setProcedureOngoing(false));
   }
 }
-
-/**
- * Merges local Todo with input Todo
- * Used when version conflict occurs
- * @param todo input Todo
- */
-const mergeLocalTodo = async (todo: Todo): Promise<void> => {
-  let localTodos = await Storage.getTodos();
-
-  // Constructs Todo to be stored
-  const todoToStore: LocalTodo = {
-    id: todo.id,
-    title: todo.title,
-    patientName: todo.patientName,
-    notes: todo.notes,
-    createdAt: todo.createdAt,
-    lastModified: todo.lastModified,
-    _version: todo._version,
-    completed: todo.completed,
-    pendingSync: false
-  };
-
-  // If there is Alert associated with the Todo
-  if (todo.alertID) {
-    todoToStore.alertId = todo.alertID;
-  } else if (todo.alert) {
-    todoToStore.patientId = todo.alert.patientID;
-  }
-
-  if (localTodos) {
-    // Replaces local Todo with current one if exists, otherwise add into the list
-    const existIndex = localTodos.findIndex((t) => t.id === todo.id);
-    if (existIndex >= 0) {
-      localTodos[existIndex] = todoToStore;
-    } else {
-      localTodos.push(todoToStore);
-    }
-  } else {
-    localTodos = [todoToStore];
-  }
-
-  if (localTodos) {
-    await Storage.setTodos(localTodos);
-  }
-};
 
 // Preconditions for activating the UpdateTodo class
 const rule1 = new Precondition(

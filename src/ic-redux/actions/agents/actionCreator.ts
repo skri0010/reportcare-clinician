@@ -94,10 +94,38 @@ export const setAlertInfo = createAction(
   })
 )();
 
-export const setNewTodo = createAction(
-  actionNames.SET_NEW_TODO,
-  (newTodo: LocalTodo) => ({
-    newTodo: newTodo
+export const setFetchingTodos = createAction(
+  actionNames.SET_FETCHING_TODOS,
+  (fetchingTodos: boolean) => ({
+    fetchingTodos: fetchingTodos
+  })
+)();
+
+export const setPendingTodos = createAction(
+  actionNames.SET_PENDING_TODOS,
+  (pendingTodos: LocalTodo[]) => ({
+    pendingTodos: pendingTodos
+  })
+)();
+
+export const setCompletedTodos = createAction(
+  actionNames.SET_COMPLETED_TODOS,
+  (completedTodos: LocalTodo[]) => ({
+    completedTodos: completedTodos
+  })
+)();
+
+export const setSubmittingTodo = createAction(
+  actionNames.SET_SUBMITTING_TODO,
+  (submittingTodo: boolean) => ({
+    submittingTodo: submittingTodo
+  })
+)();
+
+export const setUpdatedTodo = createAction(
+  actionNames.SET_UPDATED_TODO,
+  (updatedTodo: LocalTodo) => ({
+    updatedTodo: updatedTodo
   })
 )();
 

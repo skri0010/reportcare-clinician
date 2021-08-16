@@ -18,29 +18,30 @@ import { Storage } from "rc_agents/storage";
 import agentAPI from "rc_agents/framework/AgentAPI";
 import { store } from "util/useRedux";
 import {
-  setNewTodo,
-  setProcedureOngoing,
-  setProcedureSuccessful
+  setProcedureSuccessful,
+  setPendingTodos,
+  setSubmittingTodo
 } from "ic-redux/actions/agents/actionCreator";
 import agentNWA from "rc_agents/agents/network-assistant/NWA";
 import {
-  AlertStatus,
   createTodo,
   getAlert,
   listTodosByAlertID,
   updateAlert,
   updateTodo
 } from "aws";
-import { TodoCreateInput, LocalTodo, AlertInfo } from "rc_agents/model";
 import {
-  Alert,
+  TodoCreateInput,
+  LocalTodo,
+  AlertStatus,
+  TodoStatus
+} from "rc_agents/model";
+import {
   CreateTodoInput,
   Todo,
   UpdateAlertInput,
   UpdateTodoInput
 } from "aws/API";
-import { RiskLevel } from "models/RiskLevel";
-import { mapColorCodeToRiskLevel } from "../triage-alert-hf-clinic/RetrievePendingAlertCount";
 
 // LS-TODO: To be tested with creating Todo associated with an Alert.
 
@@ -84,7 +85,7 @@ class CreateTodo extends Activity {
           patientName: todoInput.patientName,
           notes: todoInput.notes,
           lastModified: new Date().toISOString(),
-          completed: false,
+          pending: TodoStatus.PENDING,
           owner: clinicianId
         };
 
@@ -120,7 +121,7 @@ class CreateTodo extends Activity {
           if (!alertTodoExists) {
             // Inserts Todo
             const createResponse = await createTodo(todoToInsert);
-            if (createResponse.data?.createTodo) {
+            if (createResponse.data.createTodo) {
               // Gets newly inserted Todo to update local Todo id
               const insertedTodo = createResponse.data.createTodo;
               todoId = insertedTodo.id;
@@ -132,7 +133,7 @@ class CreateTodo extends Activity {
               if (insertedTodo.alertID) {
                 // Queries latest alert
                 const alertQuery = await getAlert({ id: insertedTodo.alertID });
-                if (alertQuery.data?.getAlert) {
+                if (alertQuery.data.getAlert) {
                   const latestAlert = alertQuery.data.getAlert;
 
                   // Latest Alert has higher version than local alert
@@ -141,7 +142,8 @@ class CreateTodo extends Activity {
                     latestAlert._version > todoInput.alert?._version
                   ) {
                     // Replace local alert and alert info with information from latest alert
-                    await updateLocalAlertAndAlertInfo(latestAlert);
+                    await Storage.mergeAlert(latestAlert);
+                    await Storage.mergeAlertInfo(latestAlert);
                   } else {
                     // This alert will be used for local merging later on
                     latestAlert.pending = null;
@@ -149,15 +151,15 @@ class CreateTodo extends Activity {
 
                     // Constructs alert object to be updated
                     const alertToUpdate: UpdateAlertInput = {
-                      id: latestAlert?.id,
+                      id: latestAlert.id,
                       completed: latestAlert.completed,
                       pending: latestAlert.pending,
-                      _version: latestAlert?._version
+                      _version: latestAlert._version
                     };
                     const updateResponse = await updateAlert(alertToUpdate);
 
                     // Updates to indicate that alert is successfully updated
-                    if (updateResponse.data?.updateAlert) {
+                    if (updateResponse.data.updateAlert) {
                       pendingAlertSync = false;
                       latestAlert._version =
                         updateResponse.data.updateAlert._version;
@@ -168,7 +170,8 @@ class CreateTodo extends Activity {
 
                     // Updates locally stored alert and alert info
                     // Input is of type Alert
-                    await updateLocalAlertAndAlertInfo(latestAlert);
+                    await Storage.mergeAlert(latestAlert);
+                    await Storage.mergeAlertInfo(latestAlert);
                   }
                 }
               }
@@ -182,7 +185,7 @@ class CreateTodo extends Activity {
               _version: existingTodo._version
             };
             const updateResponse = await updateTodo(todoToUpdate);
-            if (updateResponse.data?.updateTodo) {
+            if (updateResponse.data.updateTodo) {
               pendingTodoSync = false;
               const updatedTodo = updateResponse.data.updateTodo;
               existingTodo._version = updatedTodo._version;
@@ -202,9 +205,9 @@ class CreateTodo extends Activity {
 
         /**
          * Constructs LocalTodo object to be stored locally.
-         * 1. Local Todo for syncing is recognized using the pendingSync attribute.
-         * 2. Local Todo to be inserted has null id and pendingSync set to true.
-         * 3. Local Todo to be updated has non-null id and pendingSync set to true.
+         * 1. Local Todo for syncing is recognized using the toSync attribute.
+         * 2. Local Todo to be inserted has null id and toSync set to true.
+         * 3. Local Todo to be updated has non-null id and toSync set to true.
          * 4. If Todo already exists, update local Todo with existing Todo's id, createdAt and _version values.
          * 5. If Todo has associated Alert, include alertId and patientId attributes.
          * 6. If Todo has been successfully inserted, Local Todo will have non-null id.
@@ -216,9 +219,9 @@ class CreateTodo extends Activity {
             title: todoToInsert.title,
             patientName: todoToInsert.patientName,
             notes: todoToInsert.notes,
-            completed: todoToInsert.completed,
+            completed: todoToInsert.completed === TodoStatus.COMPLETED,
             createdAt: todoToInsert.lastModified,
-            pendingSync: pendingTodoSync,
+            toSync: pendingTodoSync,
             _version: 1
           };
 
@@ -226,16 +229,18 @@ class CreateTodo extends Activity {
           if (todoInput.alert) {
             todoToStore.alertId = todoInput.alert.id;
             todoToStore.patientId = todoInput.alert.patientId;
+            todoToStore.riskLevel = todoInput.alert.riskLevel;
 
             // Offline: local alert and alert info haven't been updated yet
             if (pendingTodoSync) {
               // Input is of type AlertInfo
-              await updateLocalAlertAndAlertInfo(todoInput.alert);
+              await Storage.mergeAlert(todoInput.alert);
+              await Storage.mergeAlertInfo(todoInput.alert);
             }
 
             // Merge alert into local storage list to be synced
             if (pendingAlertSync) {
-              await mergeIntoLocalAlertsSync(todoInput.alert);
+              await Storage.setAlertSync(todoInput.alert);
               // Notifies NWA
               agentNWA.addBelief(
                 new Belief(
@@ -261,7 +266,7 @@ class CreateTodo extends Activity {
           }
 
           // Updates local Todos
-          await updateLocalTodos(todoToStore);
+          await Storage.mergeTodo(todoToStore);
 
           // Notifies NWA to sync update or create Todo
           if (pendingTodoSync) {
@@ -287,7 +292,19 @@ class CreateTodo extends Activity {
           }
 
           // Dispatch new Todo to front end
-          store.dispatch(setNewTodo(todoToStore));
+          const existingTodos = store.getState().agents.pendingTodos;
+          if (todoToStore.id) {
+            // Existing Todo: remove if any is currently displayed in the front end.
+            const existIndex = existingTodos.findIndex(
+              (t) => t.id === todoToStore.id
+            );
+            if (existIndex >= 0) {
+              existingTodos.splice(existIndex, 1);
+            }
+          }
+          // Current Todo is added to the front of the list
+          existingTodos.unshift(todoToStore);
+          store.dispatch(setPendingTodos(existingTodos));
         }
 
         // Dispatch to front end to indicate that procedure is successful
@@ -317,176 +334,9 @@ class CreateTodo extends Activity {
     );
 
     // Dispatch to front end that procedure has been completed
-    store.dispatch(setProcedureOngoing(false));
+    store.dispatch(setSubmittingTodo(false));
   }
 }
-
-/**
- * Merge current alert into the list of alerts awaiting updates.
- * @param alert alert to be merged
- */
-export const mergeIntoLocalAlertsSync = async (
-  alertInfo: AlertInfo
-): Promise<void> => {
-  let localAlertsSync = await Storage.getAlertsSync();
-  if (localAlertsSync) {
-    const existIndex = localAlertsSync.findIndex((a) => a.id === alertInfo.id);
-    if (existIndex >= 0) {
-      localAlertsSync[existIndex] = alertInfo;
-    }
-  } else {
-    localAlertsSync = [alertInfo];
-  }
-  if (localAlertsSync) {
-    await Storage.setAlertsSync(localAlertsSync);
-  }
-};
-
-/**
- * Updates local Alert and AlertInfo.
- * @param alert either an Alert or AlertInfo.
- */
-export const updateLocalAlertAndAlertInfo = async (
-  alert: Alert | AlertInfo
-): Promise<void> => {
-  // 1. Updates local alerts
-  let localAlerts = await Storage.getAlerts();
-
-  // Gets risk level of the current alert
-  let riskLevel: RiskLevel | undefined;
-  if ((alert as Alert).colorCode) {
-    riskLevel = mapColorCodeToRiskLevel((alert as Alert).colorCode);
-  } else if ((alert as AlertInfo).riskLevel) {
-    riskLevel = (alert as AlertInfo).riskLevel!;
-  }
-
-  if (localAlerts && riskLevel) {
-    // Risk level found: update alert if exists, otherwise add into the list
-    const riskAlerts = localAlerts[riskLevel];
-    const existIndex = riskAlerts.findIndex((a) => a.id === alert.id);
-    if (existIndex >= 0) {
-      // Updates existing alert
-      if ((alert as Alert).colorCode) {
-        // Input is of type Alert
-        riskAlerts[existIndex] = alert as Alert;
-      } else if ((alert as AlertInfo).riskLevel) {
-        const currentAlert = riskAlerts[existIndex];
-        // Input is of type AlertInfo
-        if ((alert as AlertInfo).completed) {
-          currentAlert.completed = AlertStatus.COMPLETED;
-          currentAlert.pending = null;
-        } else {
-          currentAlert.completed = null;
-          currentAlert.pending = AlertStatus.PENDING;
-        }
-      }
-    } else if ((alert as Alert).colorCode) {
-      // Adds alert into the list if it is type Alert
-      riskAlerts.push(alert as Alert);
-    }
-  } else if (riskLevel && (alert as Alert).colorCode) {
-    // Alert is not found: add alert into list according to risk level.
-    localAlerts = {
-      [RiskLevel.HIGH]: [],
-      [RiskLevel.MEDIUM]: [],
-      [RiskLevel.LOW]: [],
-      [RiskLevel.UNASSIGNED]: []
-    };
-    localAlerts[riskLevel] = [alert as Alert];
-  }
-
-  // Saves updated local alerts
-  if (localAlerts) {
-    await Storage.setAlerts(localAlerts);
-  }
-
-  // 2. Updates local alert infos
-  let localAlertInfos = await Storage.getAlertInfos();
-  // Gets patientId of current alert
-  let patientId: string | undefined;
-  if ((alert as AlertInfo).patientId) {
-    patientId = (alert as AlertInfo).patientId;
-  } else if ((alert as Alert).patientID) {
-    patientId = (alert as Alert).patientID;
-  }
-
-  if (localAlertInfos && patientId) {
-    const patientAlerts = localAlertInfos[patientId];
-    // Updates local alert info if exists, otherwise add into the list
-    if (patientAlerts) {
-      const existIndex = patientAlerts.findIndex((a) => a.id === alert.id);
-      if (existIndex >= 0) {
-        if ((alert as Alert).patientID) {
-          // Input is of type Alert
-          patientAlerts[existIndex].completed =
-            (alert as Alert).completed === AlertStatus.COMPLETED;
-        } else if ((alert as AlertInfo).patientId) {
-          // Input is of type AlertInfo
-          patientAlerts[existIndex] = alert as AlertInfo;
-        }
-      } else if ((alert as AlertInfo).patientId) {
-        // Adds into the list if it is type AlertInfo
-        patientAlerts.push(alert as AlertInfo);
-      }
-    }
-  } else if (patientId && (alert as AlertInfo).patientId) {
-    // Alert info is not found: add alert info into list according to patientId.
-    localAlertInfos = {};
-    localAlertInfos[patientId] = [alert as AlertInfo];
-  }
-
-  if (localAlertInfos) {
-    await Storage.setAlertInfos(localAlertInfos);
-  }
-};
-
-/**
- * Inserts input Todo into local storage if it does not exist, otherwise update it.
- * @param input
- */
-export const updateLocalTodos = async (input: LocalTodo): Promise<void> => {
-  let localTodos = await Storage.getTodos();
-  if (localTodos) {
-    // For update Todo operation
-    if (input.id) {
-      const existIndex = localTodos.findIndex((t) => t.id === input.id);
-      // Todo exists
-      if (existIndex >= 0) {
-        localTodos[existIndex] = input;
-      } else {
-        // Todo does not exist
-        localTodos.push(input);
-      }
-    } else if (input.alertId) {
-      // When attempts to create an existing Todo offline
-      const existIndex = localTodos.findIndex(
-        (t) => t.alertId === input.alertId
-      );
-      // Existing Todo
-      if (existIndex >= 0) {
-        const currentTodo = localTodos[existIndex];
-        if (currentTodo.id) {
-          input.id = currentTodo.id;
-          input._version = currentTodo._version;
-        }
-        input.lastModified = input.createdAt;
-        input.createdAt = currentTodo.createdAt;
-        localTodos[existIndex] = input;
-      } else {
-        localTodos.push(input);
-      }
-    } else {
-      localTodos.push(input);
-    }
-  } else {
-    localTodos = [input];
-  }
-
-  // Saves updated local Todos
-  if (localTodos) {
-    await Storage.setTodos(localTodos);
-  }
-};
 
 // Preconditions for activating the CreateTodo class
 const rule1 = new Precondition(
