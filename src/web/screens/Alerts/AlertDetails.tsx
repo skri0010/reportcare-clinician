@@ -1,5 +1,5 @@
 import React, { FC, useContext } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, Dimensions } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { H2, H3, H4, H5 } from "components/Text";
 import { RootState, select } from "util/useRedux";
@@ -7,6 +7,10 @@ import { ScreenWrapper } from "../ScreenWrapper";
 import { AlertContext } from "./AlertScreen";
 import { AlertHistory } from "mock/mockPatientDetails";
 import { RiskLevel } from "models/RiskLevel";
+import { BloodPressureCard } from "./AlertDetailsCards/BloodPressureCard";
+import { HRVCard } from "./AlertDetailsCards/HRVCard";
+import { SymptomCard } from "./AlertDetailsCards/SymptomCard";
+import { SummaryCard } from "./AlertDetailsCards/SummaryCard";
 
 export interface AlertDetailsProps {
   alertHistory: AlertHistory;
@@ -32,24 +36,35 @@ export const AlertDetails: FC<AlertDetailsProps> = ({ alertHistory }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
   }));
+
+  const cardHeight = Math.max(ms(100), Dimensions.get("window").height * 0.25);
+
   return (
     <View style={{ flexDirection: "column" }}>
-      <H4 text={alertHistory.description} />
-      <H3 text="Alert Details" style={styles.informationTitle} />
-      <AlertDetailsRow
-        detailTitle="Severity: "
-        detailContent={alertHistory.risk}
+      <SummaryCard
+        summary={alertHistory.description}
+        risk={alertHistory.risk}
+        maxHeight={cardHeight}
+        minHeight={cardHeight}
       />
-      <AlertDetailsRow detailTitle="HRV: " detailContent={alertHistory.HRV} />
-      <AlertDetailsRow detailTitle="BP: " detailContent={alertHistory.BP} />
-      <AlertDetailsRow
-        detailTitle="Sypmtom: "
-        detailContent={alertHistory.symptom}
+      <SymptomCard
+        symptom={alertHistory.symptom}
+        signs={alertHistory.signs}
+        maxHeight={cardHeight}
+        minHeight={cardHeight}
       />
-      <AlertDetailsRow
-        detailTitle="Signs: "
-        detailContent={alertHistory.signs}
-      />
+      <View style={{ flexDirection: "row", flex: 1 }}>
+        <BloodPressureCard
+          bloodPressure={alertHistory.BP}
+          maxHeight={cardHeight}
+          minHeight={cardHeight}
+        />
+        <HRVCard
+          HRV={alertHistory.HRV}
+          maxHeight={cardHeight}
+          minHeight={cardHeight}
+        />
+      </View>
     </View>
   );
 };

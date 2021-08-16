@@ -28,14 +28,11 @@ export const AlertDetailsScreen: FC = () => {
         return <AlertDetails alertHistory={mockAlertHistory[i]} />;
       }
     }
-    
   };
   return (
     <ScreenWrapper>
       <View style={styles.container}>
-        <H4 text={context.patientName} style={styles.patientName} />
-        <H3 text="Alert Summary" style={styles.headers} />
-        <CardWrapper>{findSymptoms(context.id)}</CardWrapper>
+        {findSymptoms(context.id)}
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={[
@@ -63,8 +60,7 @@ const styles = ScaledSheet.create({
     marginLeft: "40ms"
   },
   patientName: {
-    fontWeight: "bold",
-    paddingBottom: "20@ms"
+    paddingBottom: "10@ms"
   },
   headers: {
     fontWeight: "bold",

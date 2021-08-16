@@ -122,7 +122,7 @@ export const AlertScreen: FC<WithSideTabsProps[ScreenName.ALERTS]> = () => {
                     name="ViewAlert"
                     component={AlertDetailsScreen}
                     options={() => ({
-                      title: "Alert",
+                      title: initialAlert.patientName,
                       headerStyle: {
                         height: ms(45)
                       },
