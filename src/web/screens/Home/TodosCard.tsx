@@ -11,16 +11,9 @@ import { FloatingShowMoreButton } from "components/Buttons/FloatingShowMoreButto
 import i18n from "util/language/i18n";
 import { useNavigation } from "@react-navigation/native";
 import { ScreenName } from "web/screens";
-import { agentAPI, Belief } from "rc_agents/framework";
-import {
-  BeliefKeys,
-  ClinicianAttributes,
-  ProcedureAttributes,
-  ProcedureConst
-} from "rc_agents/AgentEnums";
 import { TodoStatus } from "rc_agents/model";
-import { agentDTA } from "rc_agents/agents";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
+import { AgentTrigger } from "rc_agents/trigger";
 
 interface TodosCardProps {
   maxHeight: number;
@@ -41,24 +34,7 @@ export const TodosCard: FC<TodosCardProps> = ({ maxHeight }) => {
   const navigation = useNavigation();
 
   useEffect(() => {
-    agentAPI.addFact(
-      new Belief(
-        BeliefKeys.CLINICIAN,
-        ClinicianAttributes.TODO_STATUS,
-        TodoStatus.PENDING
-      ),
-      false
-    );
-    agentDTA.addBelief(
-      new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.RETRIEVE_TODOS, true)
-    );
-    agentAPI.addFact(
-      new Belief(
-        BeliefKeys.PROCEDURE,
-        ProcedureAttributes.SRD_II,
-        ProcedureConst.ACTIVE
-      )
-    );
+    AgentTrigger.triggerRetrieveTodos(TodoStatus.PENDING);
   }, []);
 
   useEffect(() => {

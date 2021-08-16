@@ -4,7 +4,7 @@ import { TodoRow } from "components/RowComponents/TodoRow";
 import { RiskLevel } from "models/RiskLevel";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { SearchBarComponent } from "components/Bars/SearchBarComponent";
-import { RootState, select, useDispatch } from "util/useRedux";
+import { RootState, select, store } from "util/useRedux";
 import i18n from "util/language/i18n";
 import { LocalTodo, TodoStatus, TodoUpdateInput } from "rc_agents/model";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
@@ -12,11 +12,30 @@ import {
   setProcedureOngoing,
   setSubmittingTodo
 } from "ic-redux/actions/agents/actionCreator";
-import { triggerRetrieveTodos, triggerUpdateTodo } from "rc_agents/triggers";
+import { AgentTrigger } from "rc_agents/trigger";
 
 export interface TodoRowTabProps {
   setTodoSelected: (item: LocalTodo) => void;
 }
+
+// Triggers DTA to update Todo to Completed
+export const onDonePress = (item: LocalTodo): void => {
+  store.dispatch(setProcedureOngoing(true));
+  store.dispatch(setSubmittingTodo(true));
+
+  // Creates Todo object for updating
+  const todoToUpdate: TodoUpdateInput = {
+    id: item.id ? item.id : undefined,
+    title: item.title,
+    patientName: item.patientName,
+    notes: item.notes,
+    _version: item._version,
+    completed: true,
+    createdAt: item.createdAt
+  };
+
+  AgentTrigger.triggerUpdateTodo(todoToUpdate);
+};
 
 export const TodoCurrentTab: FC<TodoRowTabProps> = ({ setTodoSelected }) => {
   const { colors, pendingTodos, fetchingTodos } = select(
@@ -27,35 +46,14 @@ export const TodoCurrentTab: FC<TodoRowTabProps> = ({ setTodoSelected }) => {
     })
   );
 
-  const dispatch = useDispatch();
-
   // Set the todo item detail to be shown when the item is pressed
   function onCardPress(item: LocalTodo) {
     setTodoSelected(item);
   }
 
-  // Triggers DTA to update Todo to Completed
-  const onDonePress = (item: LocalTodo): void => {
-    dispatch(setProcedureOngoing(true));
-    dispatch(setSubmittingTodo(true));
-
-    // Creates Todo object for updating
-    const todoToUpdate: TodoUpdateInput = {
-      id: item.id ? item.id : undefined,
-      title: item.title,
-      patientName: item.patientName,
-      notes: item.notes,
-      _version: item._version,
-      completed: true,
-      createdAt: item.createdAt
-    };
-
-    triggerUpdateTodo(todoToUpdate);
-  };
-
   // Triggers retrieval of pending Todos
   useEffect(() => {
-    triggerRetrieveTodos(TodoStatus.PENDING);
+    AgentTrigger.triggerRetrieveTodos(TodoStatus.PENDING);
   }, []);
 
   return (

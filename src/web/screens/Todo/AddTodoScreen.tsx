@@ -16,8 +16,8 @@ import {
   setProcedureSuccessful
 } from "ic-redux/actions/agents/actionCreator";
 import { useToast } from "react-native-toast-notifications";
-import { triggerCreateTodo } from "rc_agents/triggers";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
+import { AgentTrigger } from "rc_agents/trigger";
 
 interface AddTodoScreenProps {
   setModalVisible: (state: boolean) => void;
@@ -69,7 +69,7 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
 
     dispatch(setProcedureOngoing(true));
     setCreating(true);
-    triggerCreateTodo(todoInput);
+    AgentTrigger.triggerCreateTodo(todoInput);
   };
 
   // Detects completion of CreateTodo procedure and shows the appropriate toast.

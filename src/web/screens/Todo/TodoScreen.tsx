@@ -16,7 +16,8 @@ import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicato
 import { useToast } from "react-native-toast-notifications";
 import {
   setProcedureSuccessful,
-  setSubmittingTodo
+  setSubmittingTodo,
+  setUpdatedTodo
 } from "ic-redux/actions/agents/actionCreator";
 
 // Determines if the add button is needed in the header of left tab
@@ -97,6 +98,7 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = ({
     // Updates the TodoDetailsScreen with the newly updated Todo
     if (updatedTodo && updatedTodo.id === todoSelected.id) {
       onRowClick(updatedTodo);
+      dispatch(setUpdatedTodo(undefined));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updatedTodo]);

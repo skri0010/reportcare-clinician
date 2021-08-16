@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useState, useEffect } from "react";
 import {
   View,
   TouchableOpacity,
@@ -18,13 +18,18 @@ import { RootState, select, useDispatch } from "util/useRedux";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import i18n from "util/language/i18n";
 import { LocalTodo, TodoUpdateInput } from "rc_agents/model";
-import { setProcedureOngoing } from "ic-redux/actions/agents/actionCreator";
-import { triggerUpdateTodo } from "rc_agents/triggers";
+import {
+  setProcedureOngoing,
+  setSubmittingTodo,
+  setUpdatedTodo
+} from "ic-redux/actions/agents/actionCreator";
+import { AgentTrigger } from "rc_agents/trigger";
 
 export const EditTodoScreen: FC<withTodoScreenProps[TodoScreenName.EDITTODO]> =
   ({ route, navigation }) => {
-    const { colors } = select((state: RootState) => ({
-      colors: state.settings.colors
+    const { colors, updatedTodo } = select((state: RootState) => ({
+      colors: state.settings.colors,
+      updatedTodo: state.agents.updatedTodo
     }));
 
     const inputBarColor: StyleProp<ViewStyle> = {
@@ -48,17 +53,25 @@ export const EditTodoScreen: FC<withTodoScreenProps[TodoScreenName.EDITTODO]> =
 
     const onSave = (item: LocalTodo) => {
       dispatch(setProcedureOngoing(true));
+      dispatch(setSubmittingTodo(true));
       const todoToUpdate: TodoUpdateInput = {
         id: item.id ? item.id : undefined,
-        title: item.title,
+        title: titleInput,
         patientName: item.patientName,
-        notes: item.notes,
+        notes: noteInput,
         _version: item._version,
         completed: item.completed,
         createdAt: item.createdAt
       };
-      triggerUpdateTodo(todoToUpdate);
+      AgentTrigger.triggerUpdateTodo(todoToUpdate);
     };
+
+    useEffect(() => {
+      if (updatedTodo) {
+        navigation.navigate(TodoScreenName.VIEWTODO, { todo: updatedTodo });
+        dispatch(setUpdatedTodo(undefined));
+      }
+    }, [dispatch, navigation, updatedTodo]);
 
     return (
       <ScreenWrapper>
@@ -120,16 +133,7 @@ export const EditTodoScreen: FC<withTodoScreenProps[TodoScreenName.EDITTODO]> =
                 }
               ]}
               onPress={() => {
-                // JY/JQ-TODO Make API call to pass new Todo item into db
-                // const newDate = new Date().toLocaleString();
-                // const newTodo = {
-                //   mainTitleContent: titleInput,
-                //   patientContent: context.patientContent,
-                //   notesContent: noteInput,
-                //   createdTimeDate: context.createdTimeDate,
-                //   modifiedTimeDate: newDate
-                // };
-                navigation.navigate(TodoScreenName.VIEWTODO, { todo: todo });
+                onSave(todo);
               }}
             >
               <H3
