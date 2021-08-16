@@ -64,9 +64,11 @@ export const getPatients = async (): Promise<PatientInfo[] | null> => {
   let patients: PatientInfo[] | null = null;
   if (localData) {
     patients = [];
-    Object.values(localData).forEach((patientDetails) =>
-      patients?.push(patientDetails.patientInfo)
-    );
+    Object.values(localData).forEach((patientDetails) => {
+      if (patientDetails) {
+        patients?.push(patientDetails.patientInfo);
+      }
+    });
   }
   return patients;
 };
@@ -79,8 +81,9 @@ export const getPatientDetails = async (
 ): Promise<PatientDetails | null> => {
   const localData = await getAllPatientDetails();
   let patientDetails: PatientDetails | null = null;
-  if (localData && localData[patientID]) {
-    patientDetails = localData[patientID];
+  const localPatientDetails = localData?.[patientID];
+  if (localPatientDetails) {
+    patientDetails = localPatientDetails;
   }
   return patientDetails;
 };

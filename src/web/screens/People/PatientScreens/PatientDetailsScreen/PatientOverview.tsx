@@ -12,6 +12,7 @@ import { PatientsScreenName } from "web/screens";
 import { RootState, select } from "util/useRedux";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
 import { ReportSymptom, ReportVitals } from "aws/API";
+import i18n from "util/language/i18n";
 
 export const PatientOverview: FC<
   WithPatientsScreenProps[PatientsScreenName.OVERVIEW]
@@ -30,26 +31,30 @@ export const PatientOverview: FC<
       // TODO: This code needs to be modified for changing days
       const date = new Date().toLocaleDateString();
 
-      // Take the latest vitals report
+      // Take the latest vitals report and update vitals on date
       const vitalsReportsOnDate = patientDetails.vitalsReports[date];
-      const datetimeList = vitalsReportsOnDate.map((report) =>
-        Date.parse(report.DateTime)
-      );
-      const latestDatetime = Math.max(...datetimeList);
-      const latestVitalsReport: ReportVitals | undefined =
-        vitalsReportsOnDate.find(
-          (item) => item.DateTime === new Date(latestDatetime).toISOString()
+      if (vitalsReportsOnDate) {
+        const datetimeList = vitalsReportsOnDate.map((report) =>
+          Date.parse(report.DateTime)
         );
-      if (latestVitalsReport) {
-        setVitals(latestVitalsReport);
+        const latestDatetime = Math.max(...datetimeList);
+        const latestVitalsReport: ReportVitals | undefined =
+          vitalsReportsOnDate.find(
+            (item) => item.DateTime === new Date(latestDatetime).toISOString()
+          );
+        if (latestVitalsReport) {
+          setVitals(latestVitalsReport);
+        }
       }
-
+      // Update symptoms on date
       const symptomsOnDate = patientDetails.symptomReports[date];
-      setSymptoms(symptomsOnDate);
+      if (symptomsOnDate) {
+        setSymptoms(symptomsOnDate);
+      }
     }
   }, [patientDetails]);
 
-  const unknown = "?";
+  const noRecord = i18n.t("Patient_Overview.NoRecord");
 
   return (
     <ScreenWrapper padding>
@@ -58,18 +63,18 @@ export const PatientOverview: FC<
           <View style={[styles.container]}>
             {/* Blood Pressure Card */}
             <BloodPressureCard
-              systolic={vitals?.BPDi || unknown}
-              dystolic={vitals?.BPSys || unknown}
+              systolic={vitals?.BPDi || noRecord}
+              dystolic={vitals?.BPSys || noRecord}
               minHeight={cardHeight}
               flex={2}
             />
             {/* Oxygen Saturation card and Weigth card to share fixed space */}
             <OxygenSaturationCard
-              oxySatValue={vitals?.OxySat || unknown}
+              oxySatValue={vitals?.OxySat || noRecord}
               minHeight={cardHeight}
             />
             <WeightCard
-              weight={vitals?.Weight || unknown}
+              weight={vitals?.Weight || noRecord}
               targetWeight={patientDetails.patientInfo.targetWeight}
               minHeight={cardHeight}
             />

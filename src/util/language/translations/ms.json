@@ -164,7 +164,9 @@
     "OxygenSaturation": "Ketepuan O2",
     "Weight": "Berat Badan",
     "TargetWeight": "Berat Badan Sasaran",
-    "Symptoms": "Simptom"
+    "Symptoms": "Simptom",
+    "NoRecord": "-",
+    "NoSymptoms": "No symptoms recorded"
   },
   "Patient_ICD/CRT": {},
   "Patient_History": {

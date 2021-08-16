@@ -164,7 +164,9 @@
     "OxygenSaturation": "O2 Saturation",
     "Weight": "Weight",
     "TargetWeight": "Target Weight",
-    "Symptoms": "Symptoms"
+    "Symptoms": "Symptoms",
+    "NoRecord": "-",
+    "NoSymptoms": "No symptoms recorded"
   },
   "Patient_ICD/CRT": {},
   "Patient_History": {
