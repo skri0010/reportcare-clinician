@@ -14,9 +14,10 @@ export const PatientOverview: FC<
   WithPatientsScreenProps[PatientsScreenName.OVERVIEW]
 > = () => {
   // Query details for overview here
-  const cardHeight = Dimensions.get("window").height * 0.325;
+  const cardHeight = Math.max(ms(100), Dimensions.get("window").height * 0.325);
+
   return (
-    <ScreenWrapper>
+    <ScreenWrapper padding>
       <View style={[styles.container]}>
         {/* Blood Pressure Card */}
         {/* JY-TODO Figure out a way to solve this hacky flex */}

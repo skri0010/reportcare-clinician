@@ -74,7 +74,6 @@ export const RowSelectionWrapper: FC<RowSelectionWrapperProps> = ({
 
 const styles = ScaledSheet.create({
   container: {
-    flexDirection: "column",
     alignContent: "stretch"
   },
   addButtonSize: {

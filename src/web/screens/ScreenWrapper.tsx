@@ -24,7 +24,7 @@ export const ScreenWrapper: FC<ScreenWrapperProps> = ({
   const backgroundStyle = {
     flex: 1,
     backgroundColor: colors.primaryWebBackgroundColor,
-    paddingVertical: ms(padding ? 20 : 0),
+    paddingVertical: ms(padding ? 10 : 0),
     paddingHorizontal: ms(padding ? 20 : 0)
   } as StyleProp<ViewStyle>;
 
