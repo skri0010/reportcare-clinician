@@ -1,11 +1,11 @@
 import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
 import { RiskLevel, getRiskLevelColor } from "models/RiskLevel";
-import { ITodoDetails } from "models/TodoDetails";
 import { View, TouchableOpacity } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { H5, H6 } from "components/Text/index";
 import { LocalTodo } from "rc_agents/model";
+import { RowButton } from "components/Buttons/RowButton";
 
 // Interface that determines what props the search bar accepts
 interface TodoRowProps {
@@ -68,33 +68,15 @@ export const TodoRow: FC<TodoRowProps> = ({
             }
           ]}
         >
-          {
-            // If buttons are deemed to not have "curved enough borders", might hvae to consider using touchable opacity
-            // https://www.codevscolor.com/react-native-rounded-corner-button
-          }
-          {/* JH-TODO: Remove hardcoded colors */}
-          <TouchableOpacity
-            onPress={onButtonPress}
-            style={[
-              styles.button,
-              {
-                backgroundColor:
-                  todoDetails.completed === false
-                    ? colors.primaryButtonColor
-                    : colors.primaryWarningButtonColor
-              }
-            ]}
-          >
-            <H6
-              text={todoDetails.completed === false ? "DONE" : "UNDO"}
-              style={[
-                styles.buttonText,
-                {
-                  color: colors.primaryContrastTextColor
-                }
-              ]}
-            />
-          </TouchableOpacity>
+          <RowButton
+            onRowPress={onButtonPress}
+            title={todoDetails.completed === false ? "Todo.Done" : "Todo.Undo"}
+            backgroundColor={
+              todoDetails.completed === false
+                ? colors.primaryButtonColor
+                : colors.primaryWarningButtonColor
+            }
+          />
         </View>
       </View>
     </TouchableOpacity>

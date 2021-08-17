@@ -140,7 +140,9 @@
     "NotesInputPlaceholder": "Anything notable?",
     "NoSelection": "Select a Todo item to view its details",
     "MarkAsDone": "MARK AS DONE",
-    "UndoFromCompleted": "UNDO FROM COMPLETED"
+    "UndoFromCompleted": "UNDO FROM COMPLETED",
+    "Done": "DONE",
+    "Undo": "UNDO"
   },
   "Patients": {
     "SearchBarPlaceholder": "Search patient (eg John)",

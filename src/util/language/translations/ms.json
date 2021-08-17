@@ -140,7 +140,9 @@
     "NotesInputPlaceholder": "Apakah yang perlu dicatatkan?",
     "NoSelection": "Pilihkan salah satu item Todo untuk melihat butirannya",
     "MarkAsDone": "TANDA SEBAGAI SELESAI",
-    "UndoFromCompleted": "PINDAH DARI SELESAI"
+    "UndoFromCompleted": "PINDAH DARI SELESAI",
+    "Done": "SIAP",
+    "Undo": "UNDO"
   },
   "Patients": {
     "SearchBarPlaceholder": "Cari pesakit (contohnya John)",
