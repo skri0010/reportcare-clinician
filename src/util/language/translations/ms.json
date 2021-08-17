@@ -5,7 +5,7 @@
     "SignIn": "Log Masuk",
     "Username": "Nama Pengguna",
     "UsernamePlaceholder": "Masukkan nama pengguna",
-    "UsernameError": "Panjang nama pengguna mestilah 3 hingga 16 aksara",
+    "UsernameError": "Nama pengguna mestilah berhuruf kecil dan 3 hingga 16 aksara",
     "Password": "Kata Laluan",
     "PasswordPlaceholder": "Masukkan kata laluan",
     "PasswordError": "Kata laluan mestilah tidak kurang daripada 8 aksara dengan sekurang-kurangnya 1 huruf besar dan nombor",
