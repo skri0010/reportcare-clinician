@@ -80,8 +80,8 @@ class UpdateTodo extends Activity {
         // Device is online
         if (isOnline) {
           // Gets latest version of current Todo
-          const query = await getTodo({ id: todoInput.id! });
-          if (query.data?.getTodo) {
+          const query = await getTodo({ id: todoInput.id });
+          if (query.data.getTodo) {
             const latestTodo = query.data.getTodo;
             /**
              * Conflict resolution when latest Todo in database has higher version:

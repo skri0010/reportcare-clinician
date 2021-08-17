@@ -85,7 +85,7 @@ export const ActionFrameIDs = {
     RETRIEVE_TODOS: "RetrieveTodos",
     CREATE_TODO: "CreateTodo",
     UPDATE_TODO: "UpdateTodo",
-    REQUEST_TODOS_DISPLAY: "RequestTodosDisplay"
+    REQUEST_DISPLAY_TODOS: "RequestDisplayTodos"
   },
   UXSA: {
     // HF-OTP-I: ClinicianInfo and all patients (PatientInfo)
