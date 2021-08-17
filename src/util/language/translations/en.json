@@ -5,7 +5,7 @@
     "SignIn": "Sign In",
     "Username": "Username",
     "UsernamePlaceholder": "Enter username",
-    "UsernameError": "Username must be 3 to 16 characters long",
+    "UsernameError": "Username must be lower case and be 3 to 16 characters long",
     "Password": "Password",
     "PasswordPlaceholder": "Enter password",
     "PasswordError": "Password must be at least 8 characters long with at least 1 uppercase letter and number",
