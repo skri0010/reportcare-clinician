@@ -16,7 +16,8 @@ import {
   ActionFrameIDs
 } from "rc_agents/AgentEnums";
 import { Storage } from "rc_agents/storage";
-import { Role, getClinicianInfo } from "aws";
+import { getClinicianInfo } from "aws";
+import { Role } from "rc_agents/model";
 import agentAPI from "rc_agents/framework/AgentAPI";
 import { setFetchingPatients } from "ic-redux/actions/agents/actionCreator";
 import { store } from "util/useRedux";
@@ -112,7 +113,9 @@ class RetrieveRole extends Activity {
           BeliefKeys.PROCEDURE,
           ProcedureAttributes.HF_OTP_I,
           ProcedureConst.INACTIVE
-        )
+        ),
+        true,
+        true
       );
       // Dispatch to store to indicate fetching has ended
       store.dispatch(setFetchingPatients(false));

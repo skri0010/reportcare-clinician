@@ -232,37 +232,49 @@ abstract class AgentManagement {
             case AgentIDs.APS: {
               const updatedBeliefs = JSON.stringify(agent.getBeliefs());
               updatedProtectedInfo[AgentIDs.APS] = updatedBeliefs;
-              localClinician.protectedInfo![AgentIDs.APS] = updatedBeliefs;
+              if (localClinician.protectedInfo) {
+                localClinician.protectedInfo[AgentIDs.APS] = updatedBeliefs;
+              }
               break;
             }
             case AgentIDs.DTA: {
               const updatedBeliefs = JSON.stringify(agent.getBeliefs());
               updatedProtectedInfo[AgentIDs.DTA] = updatedBeliefs;
-              localClinician.protectedInfo![AgentIDs.DTA] = updatedBeliefs;
+              if (localClinician.protectedInfo) {
+                localClinician.protectedInfo[AgentIDs.DTA] = updatedBeliefs;
+              }
               break;
             }
             case AgentIDs.UXSA: {
               const updatedBeliefs = JSON.stringify(agent.getBeliefs());
               updatedProtectedInfo[AgentIDs.UXSA] = updatedBeliefs;
-              localClinician.protectedInfo![AgentIDs.UXSA] = updatedBeliefs;
+              if (localClinician.protectedInfo) {
+                localClinician.protectedInfo[AgentIDs.UXSA] = updatedBeliefs;
+              }
               break;
             }
             case AgentIDs.NWA: {
               const updatedBeliefs = JSON.stringify(agent.getBeliefs());
               updatedProtectedInfo[AgentIDs.NWA] = updatedBeliefs;
-              localClinician.protectedInfo![AgentIDs.NWA] = updatedBeliefs;
+              if (localClinician.protectedInfo) {
+                localClinician.protectedInfo[AgentIDs.NWA] = updatedBeliefs;
+              }
               break;
             }
             case AgentIDs.ALA: {
               const updatedBeliefs = JSON.stringify(agent.getBeliefs());
               updatedProtectedInfo[AgentIDs.ALA] = updatedBeliefs;
-              localClinician.protectedInfo![AgentIDs.ALA] = updatedBeliefs;
+              if (localClinician.protectedInfo) {
+                localClinician.protectedInfo[AgentIDs.ALA] = updatedBeliefs;
+              }
               break;
             }
             case AgentIDs.MHA: {
               const updatedBeliefs = JSON.stringify(agent.getBeliefs());
               updatedProtectedInfo[AgentIDs.MHA] = updatedBeliefs;
-              localClinician.protectedInfo![AgentIDs.MHA] = updatedBeliefs;
+              if (localClinician.protectedInfo) {
+                localClinician.protectedInfo[AgentIDs.MHA] = updatedBeliefs;
+              }
               break;
             }
             default: {

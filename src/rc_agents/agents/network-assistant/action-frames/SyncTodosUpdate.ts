@@ -16,6 +16,7 @@ import { Storage } from "rc_agents/storage";
 import { updateTodo } from "aws/TypedAPI/updateMutations";
 import { getTodo } from "aws/TypedAPI/getQueries";
 import { agentNWA } from "rc_agents/agents";
+import { TodoStatus } from "rc_agents/model";
 
 /**
  * Class to represent the activity for syncing local update of Todos.
@@ -46,10 +47,10 @@ class SyncTodosUpdate extends Activity {
         // Indicator of whether all pending updates have been synced
         let updateSuccessful = true;
 
-        // Todo to be updated have a non-null id and pendingSync set to true
+        // Todo to be updated have a non-null id and toSync set to true
         await Promise.all(
           localTodos.map(async (todo) => {
-            if (todo.id && todo.pendingSync) {
+            if (todo.id && todo.toSync) {
               // Gets latest Todo
               const query = await getTodo({ id: todo.id });
               if (query.data.getTodo) {
@@ -63,10 +64,11 @@ class SyncTodosUpdate extends Activity {
                   todo.title = latestTodo.title;
                   todo.patientName = latestTodo.patientName;
                   todo.notes = latestTodo.notes;
-                  todo.completed = latestTodo.completed;
+                  todo.completed =
+                    latestTodo.completed === TodoStatus.COMPLETED;
                   todo.lastModified = latestTodo.lastModified;
                   todo._version = latestTodo._version;
-                  todo.pendingSync = false;
+                  todo.toSync = false;
                 } else {
                   // Updates Todo
                   const updateResponse = await updateTodo({
@@ -74,15 +76,16 @@ class SyncTodosUpdate extends Activity {
                     title: todo.title,
                     patientName: todo.patientName,
                     notes: todo.notes,
-                    completed: todo.completed,
+                    pending: todo.completed ? null : TodoStatus.PENDING,
+                    completed: todo.completed ? TodoStatus.COMPLETED : null,
                     lastModified: todo.lastModified,
                     owner: clinicianId,
                     _version: latestTodo._version
                   });
 
-                  if (updateResponse.data?.updateTodo) {
+                  if (updateResponse.data.updateTodo) {
                     // Updates current local Todo
-                    todo.pendingSync = false;
+                    todo.toSync = false;
                     todo._version = updateResponse.data.updateTodo._version;
                   } else {
                     updateSuccessful = false;
@@ -111,7 +114,7 @@ class SyncTodosUpdate extends Activity {
   }
 }
 
-// Rules or preconditions for activating the SyncTodosUpdate class
+// Preconditions
 const rule1 = new Precondition(BeliefKeys.APP, AppAttributes.ONLINE, true);
 const rule2 = new ResettablePrecondition(
   BeliefKeys.APP,
@@ -119,7 +122,7 @@ const rule2 = new ResettablePrecondition(
   true
 );
 
-// Actionframe of the SyncTodosUpdate class
+// Actionframe
 const af_SyncTodosUpdate = new Actionframe(
   `AF_${ActionFrameIDs.NWA.SYNC_TODOS_UPDATE}`,
   [rule1, rule2],

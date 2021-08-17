@@ -10,10 +10,35 @@ export interface Fact {
   [k: string]: { [k: string]: any };
 }
 
+// Role selection during clinician sign up
+// Note: Role values must be compatible with the custom:hospital_role values for Cognito user groups
+export enum Role {
+  EP = "EP",
+  MO = "MedicalOfficer",
+  HF_SPECIALIST = "HFSpecialist",
+  NURSE = "Nurse",
+  PHARMACIST = "Pharmacist"
+}
+
+// Hospital selection during clinician sign up
+export enum Hospital {
+  PHKL = "Pantai Hospital Kuala Lumpur",
+  GKL = "Gleneagles Kuala Lumpur",
+  HEQ = "Hospital Queen Elizabeth",
+  HQEII = "Hospital Queen Elizabeth II",
+  HB = "Hospital Bintulu"
+}
+
 export enum PatientAssignmentStatus {
   PENDING = "PENDING",
   APPROVED = "APPROVED",
   REASSIGNED = "REASSIGNED"
+}
+
+export enum AlertStatus {
+  PENDING = "PENDING",
+  COMPLETED = "COMPLETED",
+  NONE = "NONE"
 }
 
 export enum AlertColorCode {
@@ -24,6 +49,11 @@ export enum AlertColorCode {
 }
 
 export type RiskFilter = { [riskLevel in RiskLevel]: boolean };
+
+export enum TodoStatus {
+  PENDING = "PENDING",
+  COMPLETED = "COMPLETED"
+}
 
 // Interfaces shared with front end
 export interface PatientDetails {
@@ -65,7 +95,7 @@ export interface AlertInfo {
   id: string;
   patientId: string;
   patientName: string;
-  riskLevel?: RiskLevel;
+  riskLevel: RiskLevel;
   NHYAClass?: string;
   diagnosis?: string;
   dateTime: string;
@@ -84,13 +114,16 @@ export interface TodoCreateInput {
   patientName: string;
   notes: string;
   alert?: AlertInfo;
+  completed: boolean;
+  createdAt?: string;
 }
 
 export interface TodoUpdateInput {
-  id: string;
+  id?: string;
   title: string;
   patientName: string;
   notes: string;
+  alert?: AlertInfo;
   completed: boolean;
   createdAt: string;
   _version: number;
@@ -104,8 +137,9 @@ export interface LocalTodo {
   completed: boolean;
   alertId?: string;
   patientId?: string;
+  riskLevel?: RiskLevel;
   createdAt: string;
   lastModified?: string;
-  pendingSync: boolean;
+  toSync: boolean;
   _version: number;
 }

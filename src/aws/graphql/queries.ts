@@ -1028,6 +1028,7 @@ export const syncTodos = /* GraphQL */ `
         notes
         lastModified
         alertID
+        pending
         completed
         owner
         _version
@@ -1069,6 +1070,7 @@ export const getTodo = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      pending
       completed
       owner
       _version
@@ -1094,6 +1096,7 @@ export const listTodos = /* GraphQL */ `
         notes
         lastModified
         alertID
+        pending
         completed
         owner
         _version
@@ -1619,53 +1622,17 @@ export const listCompletedRiskAlerts = /* GraphQL */ `
     }
   }
 `;
-export const listTodosByClinicianID = /* GraphQL */ `
-  query ListTodosByClinicianID(
-    $clinicianID: String
-    $sortDirection: ModelSortDirection
-    $filter: ModelTodoFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listTodosByClinicianID(
-      clinicianID: $clinicianID
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        clinicianID
-        title
-        patientName
-        notes
-        lastModified
-        alertID
-        completed
-        owner
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-      }
-      nextToken
-      startedAt
-    }
-  }
-`;
-export const listTodosByLastModifiedDate = /* GraphQL */ `
-  query ListTodosByLastModifiedDate(
-    $clinicianID: String
+export const listPendingTodosByLastModifiedDate = /* GraphQL */ `
+  query ListPendingTodosByLastModifiedDate(
+    $pending: String
     $lastModified: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
     $filter: ModelTodoFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listTodosByLastModifiedDate(
-      clinicianID: $clinicianID
+    listPendingTodosByLastModifiedDate(
+      pending: $pending
       lastModified: $lastModified
       sortDirection: $sortDirection
       filter: $filter
@@ -1680,6 +1647,46 @@ export const listTodosByLastModifiedDate = /* GraphQL */ `
         notes
         lastModified
         alertID
+        pending
+        completed
+        owner
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const listCompletedTodosByLastModifiedDate = /* GraphQL */ `
+  query ListCompletedTodosByLastModifiedDate(
+    $completed: String
+    $lastModified: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelTodoFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCompletedTodosByLastModifiedDate(
+      completed: $completed
+      lastModified: $lastModified
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        clinicianID
+        title
+        patientName
+        notes
+        lastModified
+        alertID
+        pending
         completed
         owner
         _version
@@ -1718,6 +1725,7 @@ export const listTodosByAlertID = /* GraphQL */ `
         notes
         lastModified
         alertID
+        pending
         completed
         owner
         _version

@@ -391,14 +391,14 @@ type Todo
     ]
   )
   @key(
-    name: "todosByClinicianID"
-    fields: ["clinicianID"]
-    queryField: "listTodosByClinicianID"
+    name: "pendingTodosByLastModifiedDate"
+    fields: ["pending", "lastModified"]
+    queryField: "listPendingTodosByLastModifiedDate"
   )
   @key(
-    name: "todosByLastModifiedDate"
-    fields: ["clinicianID", "lastModified"]
-    queryField: "listTodosByLastModifiedDate"
+    name: "completedTodosByLastModifiedDate"
+    fields: ["completed", "lastModified"]
+    queryField: "listCompletedTodosByLastModifiedDate"
   )
   @key(
     name: "todosByAlertID"
@@ -413,6 +413,7 @@ type Todo
   lastModified: AWSDateTime!
   alertID: ID
   alert: Alert @connection(fields: ["alertID"])
-  completed: Boolean!
+  pending: String
+  completed: String
   owner: String!
 }

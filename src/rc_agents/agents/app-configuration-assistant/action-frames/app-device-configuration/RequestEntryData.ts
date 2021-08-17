@@ -52,7 +52,7 @@ class RequestEntryData extends Communicate {
   }
 }
 
-// Rules or preconditions for activating the RequestEntryData class
+// Preconditions
 const rule1 = new Precondition(
   AgentIDs.APS,
   CommonAttributes.LAST_ACTIVITY,
@@ -64,7 +64,7 @@ const rule2 = new Precondition(
   ProcedureConst.ACTIVE
 );
 
-// Actionframe of the RequestEntryData class
+// Actionframe
 export const af_RequestEntryData = new Actionframe(
   `AF_${ActionFrameIDs.APS.REQUEST_ENTRY_DATA}`,
   [rule1, rule2],

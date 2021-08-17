@@ -19,7 +19,8 @@ import {
 import { Storage } from "rc_agents/storage";
 import { PatientInfo } from "aws/API";
 import agentAPI from "rc_agents/framework/AgentAPI";
-import { Role, listPatientInfos } from "aws";
+import { listPatientInfos } from "aws";
+import { Role } from "rc_agents/model";
 import { store } from "util/useRedux";
 import { setFetchingPatients } from "ic-redux/actions/agents/actionCreator";
 
@@ -57,7 +58,8 @@ class RetrievePatientsByRole extends Activity {
         );
         // Set item
         agentAPI.addFact(
-          new Belief(BeliefKeys.PATIENT, PatientAttributes.PATIENTS, patients)
+          new Belief(BeliefKeys.PATIENT, PatientAttributes.PATIENTS, patients),
+          false
         );
         // Trigger Communicate to USXA
         agent.addBelief(
@@ -102,7 +104,9 @@ class RetrievePatientsByRole extends Activity {
           BeliefKeys.PROCEDURE,
           ProcedureAttributes.HF_OTP_I,
           ProcedureConst.INACTIVE
-        )
+        ),
+        true,
+        true
       );
       // Dispatch to store to indicate fetching has ended
       store.dispatch(setFetchingPatients(false));

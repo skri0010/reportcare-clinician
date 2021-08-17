@@ -18,6 +18,7 @@ import { createTodo } from "aws/TypedAPI/createMutations";
 import { CreateTodoInput, Todo, UpdateTodoInput } from "aws/API";
 import { listTodosByAlertID } from "aws";
 import agentNWA from "../NWA";
+import { TodoStatus } from "rc_agents/model";
 
 /**
  * Class to represent the activity for syncing local creation of new Todos.
@@ -49,10 +50,10 @@ class SyncTodosCreate extends Activity {
         let createSuccessful = false;
         let updateSuccessful = false;
 
-        // Todo to be inserted have null id and pendingSync set to true
+        // Todo to be inserted have null id and toSync set to true
         await Promise.all(
           localTodos.map(async (todo) => {
-            if (!todo.id && todo.pendingSync) {
+            if (!todo.id && todo.toSync) {
               let alertTodoExists = false;
               let existingTodo: Todo | undefined;
               if (todo.alertId) {
@@ -77,20 +78,26 @@ class SyncTodosCreate extends Activity {
                   title: todo.title,
                   patientName: todo.patientName,
                   notes: todo.notes,
-                  completed: todo.completed,
                   lastModified: todo.createdAt,
                   owner: clinicianId
                 };
+
+                if (todo.completed) {
+                  todoToInsert.completed = TodoStatus.COMPLETED;
+                } else {
+                  todoToInsert.pending = TodoStatus.PENDING;
+                }
+
                 if (todo.alertId) {
                   todoToInsert.alertID = todo.alertId;
                 }
                 // Inserts Todo
                 const createResponse = await createTodo(todoToInsert);
 
-                if (createResponse.data?.createTodo) {
+                if (createResponse.data.createTodo) {
                   // Updates current local Todo
                   todo.id = createResponse.data.createTodo.id;
-                  todo.pendingSync = false;
+                  todo.toSync = false;
 
                   // Alert update will be handled by SyncAlertsUpdate action frame.
                 } else {
@@ -109,7 +116,8 @@ class SyncTodosCreate extends Activity {
                   title: todo.title,
                   patientName: todo.patientName,
                   notes: todo.notes,
-                  completed: todo.completed,
+                  pending: todo.completed ? null : TodoStatus.PENDING,
+                  completed: todo.completed ? TodoStatus.COMPLETED : null,
                   lastModified: todo.createdAt,
                   owner: clinicianId,
                   _version: todo._version
@@ -118,9 +126,9 @@ class SyncTodosCreate extends Activity {
                 todo.createdAt = existingTodo.createdAt;
 
                 const updateResponse = await updateTodo(todoToUpdate);
-                if (updateResponse.data?.updateTodo) {
+                if (updateResponse.data.updateTodo) {
                   const updatedTodo = updateResponse.data.updateTodo;
-                  todo.pendingSync = false;
+                  todo.toSync = false;
                   todo._version = updatedTodo._version;
                 } else {
                   updateSuccessful = false;
@@ -165,7 +173,7 @@ class SyncTodosCreate extends Activity {
   }
 }
 
-// Rules or preconditions for activating the SyncTodosCreate class
+// Preconditions
 const rule1 = new Precondition(BeliefKeys.APP, AppAttributes.ONLINE, true);
 const rule2 = new ResettablePrecondition(
   BeliefKeys.APP,
@@ -173,7 +181,7 @@ const rule2 = new ResettablePrecondition(
   true
 );
 
-// Actionframe of the SyncTodosCreate class
+// Actionframe
 const af_SyncTodosCreate = new Actionframe(
   `AF_${ActionFrameIDs.NWA.SYNC_TODOS_CREATE}`,
   [rule1, rule2],

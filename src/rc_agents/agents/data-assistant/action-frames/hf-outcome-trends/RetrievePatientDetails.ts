@@ -53,7 +53,7 @@ class RetrievePatientDetails extends Activity {
     store.dispatch(setFetchingPatientDetails(true));
 
     try {
-      // Get patient id from facts
+      // Get patient info from facts
       const patientInfo: PatientInfo =
         agentAPI.getFacts()[BeliefKeys.PATIENT]?.[
           PatientAttributes.PATIENT_TO_VIEW_DETAILS
@@ -181,6 +181,16 @@ class RetrievePatientDetails extends Activity {
             )
           );
         }
+
+        // Removes patientInfo from facts
+        agentAPI.addFact(
+          new Belief(
+            BeliefKeys.PATIENT,
+            PatientAttributes.PATIENT_TO_VIEW_DETAILS,
+            null
+          ),
+          false
+        );
       }
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -210,7 +220,9 @@ class RetrievePatientDetails extends Activity {
           BeliefKeys.PROCEDURE,
           ProcedureAttributes.HF_OTP_II,
           ProcedureConst.INACTIVE
-        )
+        ),
+        true,
+        true
       );
       // Dispatch to store to indicate fetching has ended
       store.dispatch(setFetchingPatientDetails(false));
