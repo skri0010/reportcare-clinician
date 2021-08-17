@@ -8,7 +8,8 @@ export interface ContactInfo {
   phoneNumber: string;
   email: string;
   address: string;
-  emergencyContact: string;
+  emergencyContactNumber: string;
+  emergencyContactName: string;
 }
 
 interface ContactInfoSectionProps {
@@ -36,8 +37,9 @@ export const ContactInfoSection: FC<ContactInfoSectionProps> = ({ info }) => {
       />
       <PatientInfoRow
         title={i18n.t("Patient_Info.EmergencyContact")}
-        content={info.emergencyContact}
+        content={info.emergencyContactNumber}
         iconType={InfoIcon.EMERGENCY}
+        subcontent={info.emergencyContactName}
       />
     </View>
   );

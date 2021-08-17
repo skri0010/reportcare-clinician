@@ -127,8 +127,6 @@ export const PatientsTab: FC = () => {
         renderItem={({ item }) => (
           <PatientDetailsRow
             patient={item}
-            // JH-TODO-NEW Age must be calculated
-            age={0}
             onRowPress={() => getData(item.id)}
           />
         )}

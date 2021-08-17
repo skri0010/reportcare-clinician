@@ -69,6 +69,7 @@ export const PatientsScreen: FC<WithSideTabsProps[ScreenName.PATIENTS]> =
       content: ""
     };
 
+    // JH-TODO-NEW: Remove
     // Patient that has been selected by the user from the list of patients
     const [selectedPatient] = useState(mockPatients[0]);
 
@@ -159,11 +160,14 @@ export const PatientsScreen: FC<WithSideTabsProps[ScreenName.PATIENTS]> =
             ) : patientDetails ? (
               <>
                 {/* Patient name and avatar header */}
-                <ContactTitle name={selectedPatient.name} isPatient />
+                <ContactTitle
+                  name={patientDetails.patientInfo.name}
+                  isPatient
+                />
 
                 {/* Patient Navigation */}
                 <PatientDetailsNavigationStack
-                  patient={selectedPatient}
+                  patient={patientDetails.patientInfo}
                   setAddMedicalRecord={setAddMedicalRecord}
                   setDisplayHistory={setDisplayHistory}
                   setDisplayMedicalRecord={setDisplayMedicalRecord}

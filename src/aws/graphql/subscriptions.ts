@@ -17,6 +17,13 @@ export const onCreatePatientInfo = /* GraphQL */ `
       targetWeight
       targetActivity
       riskLevel
+      gender
+      birthDate
+      language
+      phoneNumber
+      email
+      emergencyContactName
+      emergencyContactNumber
       patientID
       _version
       _deleted
@@ -42,6 +49,13 @@ export const onUpdatePatientInfo = /* GraphQL */ `
       targetWeight
       targetActivity
       riskLevel
+      gender
+      birthDate
+      language
+      phoneNumber
+      email
+      emergencyContactName
+      emergencyContactNumber
       patientID
       _version
       _deleted
@@ -67,6 +81,13 @@ export const onDeletePatientInfo = /* GraphQL */ `
       targetWeight
       targetActivity
       riskLevel
+      gender
+      birthDate
+      language
+      phoneNumber
+      email
+      emergencyContactName
+      emergencyContactNumber
       patientID
       _version
       _deleted
