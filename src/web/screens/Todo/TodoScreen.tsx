@@ -1,6 +1,7 @@
-import React, { FC, useState, useEffect } from "react";
+/* eslint-disable no-console */
+import React, { FC, useEffect, useState } from "react";
 import { RootState, select, useDispatch } from "util/useRedux";
-import { ScreenName, WithSideTabsProps, TodoLeftTabName } from "web/screens";
+import { ScreenName, WithSideTabsProps, TodoListName } from "web/screens";
 import { View, Modal } from "react-native";
 import { RowSelectionTab } from "../RowSelectionTab";
 import { ScaledSheet } from "react-native-size-matters";
@@ -9,7 +10,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { AddTodoScreen } from "./AddTodoScreen";
 import { NoSelectionScreen } from "../Shared/NoSelectionScreen";
 import i18n from "util/language/i18n";
-import { TodoLeftTabNavigator } from "./TodoNavigations/TodoLeftTabNavigator";
+import { TodoListNavigationStack } from "./TodoNavigations/TodoListNavigationStack";
 import { TodoDetailsNavigationStack } from "./TodoNavigations/TodoDetailsNavigationStack";
 import { LocalTodo } from "rc_agents/model";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
@@ -21,9 +22,9 @@ import {
 } from "ic-redux/actions/agents/actionCreator";
 
 // Determines if the add button is needed in the header of left tab
-function checkNeedAddButton(tabName: TodoLeftTabName) {
+function checkNeedAddButton(tabName: TodoListName) {
   let needAddButton = true;
-  if (tabName === TodoLeftTabName.COMPLETED) {
+  if (tabName === TodoListName.COMPLETED) {
     needAddButton = false;
   }
   return needAddButton;
@@ -136,12 +137,12 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = ({
             isTodo
           />
           {/* Left tab navigator */}
-          <TodoLeftTabNavigator
+          <TodoListNavigationStack
             tabPressCurrent={() => {
-              setAddButton(checkNeedAddButton(TodoLeftTabName.CURRENT));
+              setAddButton(checkNeedAddButton(TodoListName.CURRENT));
             }}
             tabPressCompleted={() => {
-              setAddButton(checkNeedAddButton(TodoLeftTabName.COMPLETED));
+              setAddButton(checkNeedAddButton(TodoListName.COMPLETED));
             }}
             setTodoSelected={onRowClick}
           />
@@ -159,7 +160,7 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = ({
               {/* Todo details navigation stack */}
               <TodoDetailsNavigationStack
                 todo={todoSelected}
-                mainNavigation={navigation}
+                navigation={navigation}
               />
             </NavigationContainer>
           ) : (

@@ -2,25 +2,25 @@
 import React, { FC } from "react";
 import { View, TouchableOpacity } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
-import { withTodoScreenProps } from "../../TodoScreenProps";
+import { WithTodoDetailsProps } from "web/screens/WithTodoScreenProps";
 import { H2, H3, H4, H5 } from "components/Text";
 import { RootState, select } from "util/useRedux";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import i18n from "util/language/i18n";
-import { ScreenName, TodoScreenName } from "../..";
+import { ScreenName, TodoDetailsName } from "web/screens";
 
-interface todoSectionProps {
+interface TodoSectionProps {
   mainItem: string;
   content: string;
 }
 
-interface editHistorySectionProps {
+interface EditHistorySectionProps {
   editType: string;
   timeDate?: string;
 }
 
 // Todo section component (title, patient and notes)
-export const TodoSection: FC<todoSectionProps> = ({ mainItem, content }) => {
+export const TodoSection: FC<TodoSectionProps> = ({ mainItem, content }) => {
   return (
     <View style={{ display: "flex", flexWrap: "wrap" }}>
       <H3
@@ -33,7 +33,7 @@ export const TodoSection: FC<todoSectionProps> = ({ mainItem, content }) => {
 };
 
 // Edit history section component (created and modified datetime)
-export const EditHistorySection: FC<editHistorySectionProps> = ({
+export const EditHistorySection: FC<EditHistorySectionProps> = ({
   editType,
   timeDate
 }) => {
@@ -56,14 +56,13 @@ export const EditHistorySection: FC<editHistorySectionProps> = ({
 };
 
 export const TodoDetailsScreen: FC<
-  withTodoScreenProps[TodoScreenName.VIEWTODO]
+  WithTodoDetailsProps[TodoDetailsName.VIEW_TODO]
 > = ({ route, navigation }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
   }));
   const { todo } = route.params;
-  const { mainNavigation } = route.params;
-
+  const { parentNavigation } = route.params;
   return (
     <ScreenWrapper>
       <View style={styles.container}>
@@ -93,8 +92,8 @@ export const TodoDetailsScreen: FC<
               ]}
               onPress={() => {
                 // If there is patientID defined, navigate to the patient tab when the view button is pressed
-                if (todo.patientId !== undefined) {
-                  mainNavigation?.navigate(ScreenName.PATIENTS, {
+                if (todo.patientId !== undefined && parentNavigation) {
+                  parentNavigation.navigate(ScreenName.PATIENTS, {
                     patientId: todo.patientId
                   });
                 }
@@ -130,7 +129,7 @@ export const TodoDetailsScreen: FC<
               { backgroundColor: colors.primaryTodoCompleteButtonColor }
             ]}
             onPress={() => {
-              navigation.navigate(TodoScreenName.EDITTODO, { todo: todo });
+              navigation.navigate(TodoDetailsName.EDIT_TODO, { todo: todo });
             }}
           >
             <H2

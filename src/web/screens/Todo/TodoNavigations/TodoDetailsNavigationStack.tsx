@@ -3,7 +3,7 @@ import { TodoDetailsScreen } from "./TodoDetailsScreen";
 import { EditTodoScreen } from "../EditTodoScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 import { MarkAsDoneButton } from "../MarkAsDoneButton";
-import { TodoScreenName, TodoScreenParamList } from "web/screens";
+import { TodoDetailsName, TodoDetailsParamList } from "web/screens";
 import { LocalTodo } from "rc_agents/model";
 import i18n from "util/language/i18n";
 import { ms } from "react-native-size-matters";
@@ -11,15 +11,15 @@ import { TodoNavigationProps } from "web/screens/WithSideTabsProps";
 import { onDonePress } from "../TodoCurrentTab";
 import { onUndoPress } from "../TodoCompletedTab";
 
-const Stack = createStackNavigator<TodoScreenParamList>();
+const Stack = createStackNavigator<TodoDetailsParamList>();
 
 interface TodoDetailsNavigationStackProps {
   todo: LocalTodo;
-  mainNavigation: TodoNavigationProps;
+  navigation: TodoNavigationProps;
 }
 
 export const TodoDetailsNavigationStack: FC<TodoDetailsNavigationStackProps> =
-  ({ todo, mainNavigation }) => {
+  ({ todo, navigation }) => {
     const onButtonPress = () => {
       if (todo.completed) {
         onUndoPress(todo);
@@ -32,9 +32,9 @@ export const TodoDetailsNavigationStack: FC<TodoDetailsNavigationStackProps> =
       <Stack.Navigator>
         {/* VIEW TODO */}
         <Stack.Screen
-          name={TodoScreenName.VIEWTODO}
+          name={TodoDetailsName.VIEW_TODO}
           component={TodoDetailsScreen}
-          initialParams={{ todo: todo, mainNavigation: mainNavigation }}
+          initialParams={{ todo: todo, parentNavigation: navigation }}
           options={() => ({
             title: i18n.t("Todo.ViewTodo"),
             headerStyle: {
@@ -54,7 +54,7 @@ export const TodoDetailsNavigationStack: FC<TodoDetailsNavigationStackProps> =
         />
         {/* EDIT TODO */}
         <Stack.Screen
-          name={TodoScreenName.EDITTODO}
+          name={TodoDetailsName.EDIT_TODO}
           component={EditTodoScreen}
           initialParams={{ todo: todo }}
           options={{

@@ -9,7 +9,9 @@ import { AlertsCard } from "./AlertsCard";
 import { TodosCard } from "./TodosCard";
 import { PendingPatientAssignmentsCard } from "./PendingPatientAssignmentsCard";
 
-export const HomeScreen: FC<WithSideTabsProps[ScreenName.HOME]> = () => {
+export const HomeScreen: FC<WithSideTabsProps[ScreenName.HOME]> = ({
+  navigation
+}) => {
   // JH-TODO Replace titles with i18n
   // JH-TODO Replace welcome card name
   const topMaxHeight = ms(150);
@@ -23,7 +25,7 @@ export const HomeScreen: FC<WithSideTabsProps[ScreenName.HOME]> = () => {
       </View>
       <View style={styles.container}>
         <RequestsByMariaCard maxHeight={maxHeight} />
-        <TodosCard maxHeight={maxHeight} />
+        <TodosCard maxHeight={maxHeight} navigation={navigation} />
         <PendingPatientAssignmentsCard maxHeight={maxHeight} />
       </View>
     </ScreenWrapper>

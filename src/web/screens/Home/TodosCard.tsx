@@ -9,17 +9,18 @@ import { H4 } from "components/Text/index";
 import { CardWrapper } from "./CardWrapper";
 import { FloatingShowMoreButton } from "components/Buttons/FloatingShowMoreButton";
 import i18n from "util/language/i18n";
-import { useNavigation } from "@react-navigation/native";
 import { ScreenName } from "web/screens";
 import { TodoStatus } from "rc_agents/model";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
 import { AgentTrigger } from "rc_agents/trigger";
+import { HomeNavigationProps } from "web/screens/WithSideTabsProps";
 
 interface TodosCardProps {
   maxHeight: number;
+  navigation: HomeNavigationProps;
 }
 
-export const TodosCard: FC<TodosCardProps> = ({ maxHeight }) => {
+export const TodosCard: FC<TodosCardProps> = ({ maxHeight, navigation }) => {
   const { colors, pendingTodos, fetchingTodos } = select(
     (state: RootState) => ({
       colors: state.settings.colors,
@@ -31,7 +32,6 @@ export const TodosCard: FC<TodosCardProps> = ({ maxHeight }) => {
   const titleColor = { color: colors.primaryTextColor } as TextStyle;
 
   const [lastPatientIndex, setLastPatientIndex] = useState(-1);
-  const navigation = useNavigation();
 
   useEffect(() => {
     AgentTrigger.triggerRetrieveTodos(TodoStatus.PENDING);
