@@ -173,7 +173,7 @@ class SyncTodosCreate extends Activity {
   }
 }
 
-// Rules or preconditions for activating the SyncTodosCreate class
+// Preconditions
 const rule1 = new Precondition(BeliefKeys.APP, AppAttributes.ONLINE, true);
 const rule2 = new ResettablePrecondition(
   BeliefKeys.APP,
@@ -181,7 +181,7 @@ const rule2 = new ResettablePrecondition(
   true
 );
 
-// Actionframe of the SyncTodosCreate class
+// Actionframe
 const af_SyncTodosCreate = new Actionframe(
   `AF_${ActionFrameIDs.NWA.SYNC_TODOS_CREATE}`,
   [rule1, rule2],

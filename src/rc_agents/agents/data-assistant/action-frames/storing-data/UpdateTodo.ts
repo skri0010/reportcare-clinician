@@ -80,8 +80,8 @@ class UpdateTodo extends Activity {
         // Device is online
         if (isOnline) {
           // Gets latest version of current Todo
-          const query = await getTodo({ id: todoInput.id! });
-          if (query.data?.getTodo) {
+          const query = await getTodo({ id: todoInput.id });
+          if (query.data.getTodo) {
             const latestTodo = query.data.getTodo;
             /**
              * Conflict resolution when latest Todo in database has higher version:
@@ -161,7 +161,7 @@ class UpdateTodo extends Activity {
   }
 }
 
-// Preconditions for activating the UpdateTodo class
+// Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
   ProcedureAttributes.SRD_II,
@@ -173,7 +173,7 @@ const rule2 = new ResettablePrecondition(
   true
 );
 
-// Action Frame for UpdateTodo class
+// Actionframe
 const af_UpdateTodo = new Actionframe(
   `AF_${ActionFrameIDs.DTA.UPDATE_TODO}`,
   [rule1, rule2],

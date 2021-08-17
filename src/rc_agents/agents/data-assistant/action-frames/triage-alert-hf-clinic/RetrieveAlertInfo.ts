@@ -187,7 +187,7 @@ export const queryAlertInfo = async (
   return null;
 };
 
-// Preconditions for activating the RetrieveAlertInfo class
+// Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
   ProcedureAttributes.AT_CP,
@@ -199,7 +199,7 @@ const rule2 = new ResettablePrecondition(
   true
 );
 
-// Action Frame for RetrieveAlertInfo class
+// Actionframe
 export const af_RetrieveAlertInfo = new Actionframe(
   `AF_${ActionFrameIDs.DTA.RETRIEVE_ALERT_INFO}`,
   [rule1, rule2],

@@ -46,52 +46,67 @@ class DisplayTodos extends Activity {
     if (updatedTodo) {
       // Removes previous Todo from its existing list and adds it to the front of updated list
       const currentAgentsState = store.getState().agents;
-      const currentPendingTodos = currentAgentsState.pendingTodos;
-      const currentCompletedTodos = currentAgentsState.completedTodos;
+      let currentPendingTodos = currentAgentsState.pendingTodos;
+      let currentCompletedTodos = currentAgentsState.completedTodos;
 
       // Looks for Todo in the list of current Todos and removes it from the list
       if (updatedTodo.id) {
         // Synced Todo with Id
-        let existIndex = currentPendingTodos.findIndex(
-          (t) => t.id === updatedTodo.id
-        );
-        if (existIndex >= 0) {
-          currentPendingTodos.splice(existIndex, 1);
-        } else {
-          existIndex = currentCompletedTodos.findIndex(
+        if (currentPendingTodos) {
+          let existIndex = currentPendingTodos.findIndex(
             (t) => t.id === updatedTodo.id
           );
           if (existIndex >= 0) {
-            currentCompletedTodos.splice(existIndex, 1);
+            currentPendingTodos.splice(existIndex, 1);
+          } else if (currentCompletedTodos) {
+            existIndex = currentCompletedTodos.findIndex(
+              (t) => t.id === updatedTodo.id
+            );
+            if (existIndex >= 0) {
+              currentCompletedTodos.splice(existIndex, 1);
+            }
           }
         }
       } else if (updatedTodo.createdAt) {
         // Unsynced Todo without Id
-        let existIndex = currentPendingTodos.findIndex(
-          (t) => t.createdAt === updatedTodo.createdAt
-        );
-        if (existIndex >= 0) {
-          currentPendingTodos.splice(existIndex, 1);
-        } else {
-          existIndex = currentCompletedTodos.findIndex(
+        if (currentPendingTodos) {
+          let existIndex = currentPendingTodos.findIndex(
             (t) => t.createdAt === updatedTodo.createdAt
           );
           if (existIndex >= 0) {
-            currentCompletedTodos.splice(existIndex, 1);
+            currentPendingTodos.splice(existIndex, 1);
+          } else if (currentCompletedTodos) {
+            existIndex = currentCompletedTodos.findIndex(
+              (t) => t.createdAt === updatedTodo.createdAt
+            );
+            if (existIndex >= 0) {
+              currentCompletedTodos.splice(existIndex, 1);
+            }
           }
         }
       }
 
       // Adds Todo to the front of the list according to TodoStatus
       if (updatedTodo.completed) {
+        if (!currentCompletedTodos) {
+          currentCompletedTodos = [];
+        }
         currentCompletedTodos.unshift(updatedTodo);
       } else {
+        if (!currentPendingTodos) {
+          currentPendingTodos = [];
+        }
         currentPendingTodos.unshift(updatedTodo);
       }
 
       // Dispatch updated lists
-      store.dispatch(setPendingTodos(currentPendingTodos));
-      store.dispatch(setCompletedTodos(currentCompletedTodos));
+      if (currentPendingTodos) {
+        store.dispatch(setPendingTodos(currentPendingTodos));
+      }
+
+      if (currentCompletedTodos) {
+        store.dispatch(setCompletedTodos(currentCompletedTodos));
+      }
 
       // Dispatch updatedTodo to be displayed in TodoDetailsScreen
       store.dispatch(setUpdatedTodo(updatedTodo));

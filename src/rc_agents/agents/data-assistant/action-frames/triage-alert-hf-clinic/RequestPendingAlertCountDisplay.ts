@@ -52,7 +52,7 @@ class RequestPendingAlertCountDisplay extends Communicate {
   }
 }
 
-// Rules or preconditions for activating the RequestPendingAlertCountDisplay class
+// Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
   ProcedureAttributes.AT_CP,
@@ -64,7 +64,7 @@ const rule2 = new Precondition(
   ActionFrameIDs.DTA.RETRIEVE_PENDING_ALERT_COUNT
 );
 
-// Actionframe of the RequestPendingAlertCountDisplay class
+// Actionframe
 export const af_RequestPendingAlertCountDisplay = new Actionframe(
   `AF_${ActionFrameIDs.DTA.REQUEST_PENDING_ALERT_COUNT_DISPLAY}`,
   [rule1, rule2],

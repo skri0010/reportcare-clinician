@@ -60,6 +60,7 @@ class RetrieveTodos extends Activity {
 
       if (todoStatus && clinicianId) {
         if (facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
+          // Device is online
           let todos: Todo[] | undefined;
           if (todoStatus === TodoStatus.PENDING) {
             const query = await listPendingTodosByLastModifiedDate({
@@ -87,32 +88,35 @@ class RetrieveTodos extends Activity {
             }
           }
           if (todos) {
+            // Maps retrieved Todos to LocalTodos for dispatching and local storage
             const todosToDispatch: LocalTodo[] = [];
-            await Promise.all(
-              todos.map((todo) => {
-                const currentTodo: LocalTodo = {
-                  id: todo.id,
-                  title: todo.title,
-                  patientName: todo.patientName,
-                  notes: todo.notes,
-                  completed: todo.completed === TodoStatus.COMPLETED,
-                  createdAt: todo.createdAt,
-                  lastModified: todo.lastModified,
-                  toSync: false,
-                  _version: todo._version
-                };
-                if (todo.alert) {
-                  currentTodo.alertId = todo.alert.id;
-                  currentTodo.patientId = todo.alert.patientID;
-                  currentTodo.riskLevel = mapColorCodeToRiskLevel(
-                    todo.alert.colorCode
-                  );
-                }
-                todosToDispatch.push(currentTodo);
-                return todo;
-              })
-            );
+            todos.map((todo) => {
+              const currentTodo: LocalTodo = {
+                id: todo.id,
+                title: todo.title,
+                patientName: todo.patientName,
+                notes: todo.notes,
+                completed: todo.completed === TodoStatus.COMPLETED,
+                createdAt: todo.createdAt,
+                lastModified: todo.lastModified,
+                toSync: false,
+                _version: todo._version
+              };
+              if (todo.alert) {
+                currentTodo.alertId = todo.alert.id;
+                currentTodo.patientId = todo.alert.patientID;
+                currentTodo.riskLevel = mapColorCodeToRiskLevel(
+                  todo.alert.colorCode
+                );
+              }
+              todosToDispatch.push(currentTodo);
+              return todo;
+            });
+
+            // Saves mapped Todos to local storage
             await Storage.setMultipleTodos(todosToDispatch);
+
+            // Dispatches Todos according to status
             if (todoStatus === TodoStatus.PENDING) {
               store.dispatch(setPendingTodos(todosToDispatch));
             } else {
@@ -120,6 +124,7 @@ class RetrieveTodos extends Activity {
             }
           }
         } else if (todoStatus === TodoStatus.PENDING) {
+          // Device is offline: get local pending Todos
           const todosToDispatch = await Storage.getPendingTodos();
           if (todosToDispatch) {
             store.dispatch(
@@ -127,6 +132,7 @@ class RetrieveTodos extends Activity {
             );
           }
         } else if (todoStatus === TodoStatus.COMPLETED) {
+          // Device is offline: get local completed Todos
           const todosToDispatch = await Storage.getCompletedTodos();
           if (todosToDispatch) {
             store.dispatch(
@@ -172,7 +178,7 @@ const sortTodosByLastModifiedDate = (todos: LocalTodo[]): LocalTodo[] => {
   });
 };
 
-// Preconditions for activating the RetrieveTodos class
+// Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
   ProcedureAttributes.SRD_II,
@@ -184,7 +190,7 @@ const rule2 = new ResettablePrecondition(
   true
 );
 
-// Action Frame for RetrieveTodos class
+// Actionframe
 const af_RetrieveTodos = new Actionframe(
   `AF_${ActionFrameIDs.DTA.RETRIEVE_TODOS}`,
   [rule1, rule2],

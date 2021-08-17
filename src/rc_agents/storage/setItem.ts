@@ -78,23 +78,12 @@ export const setPatients = async (
   patients.forEach((patient: PatientInfo | null) => {
     if (patient && patient.patientID && localPatients) {
       // Patient exists locally: Merge
-      if (localPatients[patient.patientID]) {
-        localPatients[patient.patientID] = {
-          patientInfo: patient,
-          activityInfos: localPatients[patient.patientID].activityInfos,
-          symptomReports: localPatients[patient.patientID].symptomReports,
-          vitalsReports: localPatients[patient.patientID].vitalsReports
-        };
-      }
-      // Patient does not exist locally: Create
-      else {
-        localPatients[patient.patientID] = {
-          patientInfo: patient,
-          activityInfos: {},
-          symptomReports: {},
-          vitalsReports: {}
-        };
-      }
+      localPatients[patient.patientID] = {
+        patientInfo: patient,
+        activityInfos: localPatients[patient.patientID]?.activityInfos || {},
+        symptomReports: localPatients[patient.patientID]?.symptomReports || {},
+        vitalsReports: localPatients[patient.patientID]?.vitalsReports || {}
+      };
     }
   });
   await setAllPatientDetails(localPatients);
@@ -116,23 +105,12 @@ export const setPatientDetails = async (
   const patient = patientDetails.patientInfo;
   if (patient && patient.patientID && localPatients) {
     // Patient exists locally: Merge
-    if (localPatients[patient.patientID]) {
-      localPatients[patient.patientID] = {
-        patientInfo: localPatients[patient.patientID].patientInfo,
-        activityInfos: patientDetails.activityInfos,
-        symptomReports: patientDetails.symptomReports,
-        vitalsReports: patientDetails.vitalsReports
-      };
-    }
-    // Patient does not exist locally: Create
-    else {
-      localPatients[patient.patientID] = {
-        patientInfo: patient,
-        activityInfos: patientDetails.activityInfos,
-        symptomReports: patientDetails.symptomReports,
-        vitalsReports: patientDetails.vitalsReports
-      };
-    }
+    localPatients[patient.patientID] = {
+      patientInfo: localPatients[patient.patientID]?.patientInfo || patient,
+      activityInfos: patientDetails.activityInfos,
+      symptomReports: patientDetails.symptomReports,
+      vitalsReports: patientDetails.vitalsReports
+    };
   }
   await AsyncStorage.setItem(
     AsyncStorageKeys.ALL_PATIENT_DETAILS,

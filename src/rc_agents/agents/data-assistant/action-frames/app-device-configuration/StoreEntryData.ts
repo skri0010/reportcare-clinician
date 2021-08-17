@@ -131,7 +131,7 @@ class StoreEntryData extends Activity {
   }
 }
 
-// Rules or preconditions for activating the StoreEntryData class
+// Preconditions
 const rule1 = new ResettablePrecondition(
   BeliefKeys.CLINICIAN,
   ClinicianAttributes.RETRIEVE_ENTRY,
@@ -148,7 +148,7 @@ const rule3 = new Precondition(
   ProcedureConst.ACTIVE
 );
 
-// Action Frame for StoreEntryData class
+// Actionframe
 export const af_StoreEntryData = new Actionframe(
   `AF_${ActionFrameIDs.DTA.STORE_ENTRY_DATA}`,
   [rule1, rule2, rule3],

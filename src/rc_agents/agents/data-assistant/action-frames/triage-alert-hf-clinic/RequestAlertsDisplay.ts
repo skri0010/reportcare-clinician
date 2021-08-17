@@ -52,7 +52,7 @@ class RequestAlertsDisplay extends Communicate {
   }
 }
 
-// Rules or preconditions for activating the RequestAlertsDisplay class
+// Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
   ProcedureAttributes.AT_CP,
@@ -64,7 +64,7 @@ const rule2 = new Precondition(
   ActionFrameIDs.DTA.RETRIEVE_ALERTS
 );
 
-// Actionframe of the RequestAlertsDisplay class
+// Actionframe
 export const af_RequestAlertsDisplay = new Actionframe(
   `AF_${ActionFrameIDs.DTA.REQUEST_ALERTS_DISPLAY}`,
   [rule1, rule2],

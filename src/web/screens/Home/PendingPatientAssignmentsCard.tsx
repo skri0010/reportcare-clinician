@@ -22,6 +22,7 @@ import { PatientAssignment } from "aws/API";
 import { PatientAssignmentRow } from "components/RowComponents/PatientRows/PatientPendingAssignmentRow";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
 import { AgentTrigger } from "rc_agents/trigger";
+import { EmptyListIndicator } from "components/IndicatorComponents/EmptyListIndicator";
 
 interface PendingPatientAssignmentsCardProps {
   maxHeight: number;
@@ -103,12 +104,9 @@ export const PendingPatientAssignmentsCard: FC<PendingPatientAssignmentsCardProp
             </View>
           ) : (
             // Display text to indicate no pending assignments
-            <View style={styles.noPendingTextContainer}>
-              <H5
-                text={i18n.t("Patient_Assignments.NoPendingAssignments")}
-                style={styles.noPendingText}
-              />
-            </View>
+            <EmptyListIndicator
+              text={i18n.t("Patient_Assignments.NoPendingAssignments")}
+            />
           )
         ) : null}
       </CardWrapper>
@@ -130,14 +128,5 @@ const styles = ScaledSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "baseline"
-  },
-  noPendingTextContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: "30@ms"
-  },
-  noPendingText: {
-    textAlign: "center"
   }
 });

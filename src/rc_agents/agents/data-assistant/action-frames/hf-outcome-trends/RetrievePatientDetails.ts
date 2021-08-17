@@ -105,10 +105,14 @@ class RetrievePatientDetails extends Activity {
             symptomReports.forEach((symptom: ReportSymptom | null) => {
               if (symptom) {
                 const dateKey = new Date(symptom.DateTime).toLocaleDateString();
-                if (!patientDetails.symptomReports[dateKey]) {
-                  patientDetails.symptomReports[dateKey] = [];
+                const localSymptomsReports =
+                  patientDetails.symptomReports[dateKey];
+                if (localSymptomsReports) {
+                  localSymptomsReports.push(symptom);
+                  patientDetails.symptomReports[dateKey] = localSymptomsReports;
+                } else {
+                  patientDetails.symptomReports[dateKey] = [symptom];
                 }
-                patientDetails.symptomReports[dateKey].push(symptom);
               }
             });
           }
@@ -121,10 +125,14 @@ class RetrievePatientDetails extends Activity {
             vitalsReports.forEach((vitals: ReportVitals | null) => {
               if (vitals) {
                 const dateKey = new Date(vitals.DateTime).toLocaleDateString();
-                if (!patientDetails.vitalsReports[dateKey]) {
-                  patientDetails.vitalsReports[dateKey] = [];
+                const localVitalsReports =
+                  patientDetails.vitalsReports[dateKey];
+                if (localVitalsReports) {
+                  localVitalsReports.push(vitals);
+                  patientDetails.vitalsReports[dateKey] = localVitalsReports;
+                } else {
+                  patientDetails.vitalsReports[dateKey] = [vitals];
                 }
-                patientDetails.vitalsReports[dateKey].push(vitals);
               }
             });
           }
@@ -212,7 +220,9 @@ class RetrievePatientDetails extends Activity {
           BeliefKeys.PROCEDURE,
           ProcedureAttributes.HF_OTP_II,
           ProcedureConst.INACTIVE
-        )
+        ),
+        true,
+        true
       );
       // Dispatch to store to indicate fetching has ended
       store.dispatch(setFetchingPatientDetails(false));

@@ -186,7 +186,7 @@ class RetrieveEntryData extends Activity {
   }
 }
 
-// Rules or preconditions for activating the RetrieveEntryData class
+// Preconditions
 const rule1 = new ResettablePrecondition(
   BeliefKeys.CLINICIAN,
   ClinicianAttributes.RETRIEVE_ENTRY,
@@ -203,7 +203,7 @@ const rule3 = new Precondition(
   ProcedureConst.ACTIVE
 );
 
-// Action Frame for RetrieveEntryData class
+// Actionframe
 export const af_RetrieveEntryData = new Actionframe(
   `AF_${ActionFrameIDs.DTA.RETRIEVE_ENTRY_DATA}`,
   [rule1, rule2, rule3],

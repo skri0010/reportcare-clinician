@@ -20,11 +20,11 @@ import {
  * Class to represent the activity for requesting display of Todos.
  * This happens in Procedure Storing Data (SRD-II).
  */
-class RequestTodosDisplay extends Communicate {
+class RequestDisplayTodos extends Communicate {
   // Constructor
   constructor() {
     super(
-      ActionFrameIDs.DTA.REQUEST_TODOS_DISPLAY,
+      ActionFrameIDs.DTA.REQUEST_DISPLAY_TODOS,
       Performative.REQUEST,
       // Triggers DisplayTodos action frame of UXSA
       new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.DISPLAY_TODOS, true),
@@ -59,8 +59,8 @@ const rule2 = new ResettablePrecondition(
 );
 
 // Actionframe
-export const af_RequestTodosDisplay = new Actionframe(
-  `AF_${ActionFrameIDs.DTA.REQUEST_TODOS_DISPLAY}`,
+export const af_RequestDisplayTodos = new Actionframe(
+  `AF_${ActionFrameIDs.DTA.REQUEST_DISPLAY_TODOS}`,
   [rule1, rule2],
-  new RequestTodosDisplay()
+  new RequestDisplayTodos()
 );

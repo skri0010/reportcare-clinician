@@ -40,10 +40,10 @@ export type AsyncStorageType = {
   [AsyncStorageKeys.CLINICIAN]: ClinicianInfo;
   [AsyncStorageKeys.PENDING_PATIENT_ASSIGNMENTS]: PatientAssignment[];
   [AsyncStorageKeys.PATIENT_ASSIGNMENTS_RESOLUTIONS]: {
-    [patientId: string]: PatientAssignmentResolution;
+    [patientId: string]: PatientAssignmentResolution | undefined;
   };
   [AsyncStorageKeys.ALL_PATIENT_DETAILS]: {
-    [patientId: string]: PatientDetails;
+    [patientId: string]: PatientDetails | undefined;
   };
   [AsyncStorageKeys.ALERTS]: {
     [key in RiskLevel]: { [key: string]: Alert };
