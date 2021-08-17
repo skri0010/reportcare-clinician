@@ -87,7 +87,7 @@ class AssociateData extends Activity {
   }
 }
 
-// Rules or preconditions for activating the AssociateData class
+// Preconditions
 const rule1 = new Precondition(BeliefKeys.APP, AppAttributes.CONFIGURED, true);
 const rule2 = new ResettablePrecondition(
   BeliefKeys.CLINICIAN,
@@ -100,7 +100,7 @@ const rule3 = new Precondition(
   ProcedureConst.ACTIVE
 );
 
-// Actionframe of the AssociateData class
+// Actionframe
 export const af_AssociateData = new Actionframe(
   `AF_${ActionFrameIDs.APS.ASSOCIATE_DATA}`,
   [rule1, rule2, rule3],

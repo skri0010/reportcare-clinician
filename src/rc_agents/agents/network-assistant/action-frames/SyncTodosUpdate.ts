@@ -114,7 +114,7 @@ class SyncTodosUpdate extends Activity {
   }
 }
 
-// Rules or preconditions for activating the SyncTodosUpdate class
+// Preconditions
 const rule1 = new Precondition(BeliefKeys.APP, AppAttributes.ONLINE, true);
 const rule2 = new ResettablePrecondition(
   BeliefKeys.APP,
@@ -122,7 +122,7 @@ const rule2 = new ResettablePrecondition(
   true
 );
 
-// Actionframe of the SyncTodosUpdate class
+// Actionframe
 const af_SyncTodosUpdate = new Actionframe(
   `AF_${ActionFrameIDs.NWA.SYNC_TODOS_UPDATE}`,
   [rule1, rule2],

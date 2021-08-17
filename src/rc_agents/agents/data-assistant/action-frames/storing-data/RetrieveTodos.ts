@@ -178,7 +178,7 @@ const sortTodosByLastModifiedDate = (todos: LocalTodo[]): LocalTodo[] => {
   });
 };
 
-// Preconditions for activating the RetrieveTodos class
+// Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
   ProcedureAttributes.SRD_II,
@@ -190,7 +190,7 @@ const rule2 = new ResettablePrecondition(
   true
 );
 
-// Action Frame for RetrieveTodos class
+// Actionframe
 const af_RetrieveTodos = new Actionframe(
   `AF_${ActionFrameIDs.DTA.RETRIEVE_TODOS}`,
   [rule1, rule2],

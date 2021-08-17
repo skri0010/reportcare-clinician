@@ -215,7 +215,7 @@ export const sortAlertsByDateTime = (
   });
 };
 
-// Rules or preconditions for activating the RetrieveAlerts class
+// Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
   ProcedureAttributes.AT_CP,
@@ -227,7 +227,7 @@ const rule2 = new ResettablePrecondition(
   true
 );
 
-// Actionframe of the RetrieveAlerts class
+// Actionframe
 export const af_RetrieveAlerts = new Actionframe(
   `AF_${ActionFrameIDs.DTA.RETRIEVE_ALERTS}`,
   [rule1, rule2],

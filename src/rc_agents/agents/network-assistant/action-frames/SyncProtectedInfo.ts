@@ -70,7 +70,7 @@ class SyncProtectedInfo extends Activity {
   }
 }
 
-// Rules or preconditions for activating the SyncProtectedInfo class
+// Preconditions
 const rule1 = new Precondition(BeliefKeys.APP, AppAttributes.ONLINE, true);
 const rule2 = new ResettablePrecondition(
   BeliefKeys.APP,
@@ -78,7 +78,7 @@ const rule2 = new ResettablePrecondition(
   true
 );
 
-// Actionframe of the SyncProtectedInfo class
+// Actionframe
 export const af_SyncProtectedInfo = new Actionframe(
   `AF_${ActionFrameIDs.NWA.SYNC_PROTECTED_INFO}`,
   [rule1, rule2],

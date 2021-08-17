@@ -110,7 +110,7 @@ export const mapColorCodeToRiskLevel = (colorCode: string): RiskLevel => {
   }
 };
 
-// Preconditions for activating the RetrievePendingAlertCount class
+// Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
   ProcedureAttributes.AT_CP,
@@ -122,7 +122,7 @@ const rule2 = new ResettablePrecondition(
   true
 );
 
-// Action Frame for RetrievePendingAlertCount class
+// Actionframe
 export const af_RetrievePendingAlertCount = new Actionframe(
   `AF_${ActionFrameIDs.DTA.RETRIEVE_PENDING_ALERT_COUNT}`,
   [rule1, rule2],
