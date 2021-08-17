@@ -70,7 +70,7 @@ export const TodoCompletedTab: FC<TodoRowTabProps> = ({ setTodoSelected }) => {
         renderItem={({ item }) => (
           <TodoRow
             todoDetails={item}
-            riskLevel={RiskLevel.LOW}
+            riskLevel={item.riskLevel ? item.riskLevel : RiskLevel.UNASSIGNED}
             onCardPress={() => onCardPress(item)}
             onButtonPress={() => onUndoPress(item)}
           />

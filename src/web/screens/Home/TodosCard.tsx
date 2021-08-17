@@ -38,7 +38,7 @@ export const TodosCard: FC<TodosCardProps> = ({ maxHeight, navigation }) => {
   }, []);
 
   useEffect(() => {
-    if (pendingTodos.length > 10) {
+    if (pendingTodos && pendingTodos.length > 10) {
       // At 10 items, `Show More` button is displayed
       setLastPatientIndex(9);
     }
