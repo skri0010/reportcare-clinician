@@ -61,7 +61,10 @@ buck-out/
 # Web
 dist
 
-#amplify
+# Sandbox
+sandbox
+
+#amplify-do-not-edit-begin
 amplify/\#current-cloud-backend
 amplify/.config/local-*
 amplify/logs
@@ -80,6 +83,4 @@ amplify-build-config.json
 amplify-gradle-config.json
 amplifytools.xcconfig
 .secret-*
-
-# Sandbox
-sandbox
+#amplify-do-not-edit-end

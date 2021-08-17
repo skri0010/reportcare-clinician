@@ -1,4 +1,5 @@
 import { PatientInfo } from "aws/API";
+import { RiskLevel } from "models/RiskLevel";
 
 export const mockPatients: PatientInfo[] = [
   {
@@ -17,6 +18,7 @@ export const mockPatients: PatientInfo[] = [
     patientID: "20",
     createdAt: "",
     updatedAt: "",
+    riskLevel: RiskLevel.UNASSIGNED,
     _lastChangedAt: 1627604201979,
     _version: 1
   },
@@ -36,6 +38,7 @@ export const mockPatients: PatientInfo[] = [
     patientID: "30",
     createdAt: "",
     updatedAt: "",
+    riskLevel: RiskLevel.LOW,
     _lastChangedAt: 1627604201979,
     _version: 1
   },
@@ -55,6 +58,7 @@ export const mockPatients: PatientInfo[] = [
     patientID: "50",
     createdAt: "",
     updatedAt: "",
+    riskLevel: RiskLevel.MEDIUM,
     _lastChangedAt: 1627604201979,
     _version: 1
   },
@@ -74,6 +78,7 @@ export const mockPatients: PatientInfo[] = [
     patientID: "60",
     createdAt: "",
     updatedAt: "",
+    riskLevel: RiskLevel.HIGH,
     _lastChangedAt: 1627604201979,
     _version: 1
   },
@@ -93,6 +98,7 @@ export const mockPatients: PatientInfo[] = [
     patientID: "70",
     createdAt: "",
     updatedAt: "",
+    riskLevel: RiskLevel.UNASSIGNED,
     _lastChangedAt: 1627604201979,
     _version: 1
   }

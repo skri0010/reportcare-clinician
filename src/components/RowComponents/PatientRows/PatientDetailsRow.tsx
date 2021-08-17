@@ -3,37 +3,36 @@ import { TouchableOpacity } from "react-native";
 import { PatientRowBase } from "./PatientRowBase";
 import { PatientInfo } from "aws/API";
 import { RiskLevel } from "models/RiskLevel";
+import i18n from "util/language/i18n";
 
 export interface PatientDetailsRowProps {
-  generalDetails: PatientInfo;
-  patientClass: string;
+  patient: PatientInfo;
   age: number;
-  onRowPress?: () => void;
+  onRowPress?: (patient: PatientInfo) => void;
 }
 
 export const PatientDetailsRow: React.FC<PatientDetailsRowProps> = ({
-  generalDetails,
-  patientClass,
+  patient,
   age,
   onRowPress
 }) => {
+  const { name, NHYAclass, riskLevel } = patient;
+
   return (
-    <TouchableOpacity onPress={onRowPress}>
-      {/* TODO-JH: i18n translation */}
+    <TouchableOpacity
+      onPress={onRowPress ? () => onRowPress(patient) : undefined}
+    >
       <PatientRowBase
-        title={generalDetails.name!}
+        title={name}
         subtitleOne={{
-          label: "Class",
-          value: `NHYA ${patientClass}`
+          label: i18n.t("Patients.PatientsList.Class"),
+          value: `NHYA ${NHYAclass}`
         }}
         subtitleTwo={{
-          label: "Age",
+          label: i18n.t("Patients.PatientsList.Age"),
           value: age.toString()
         }}
-        // TODO: Clarify how this is decided and stored
-        riskLevel={
-          generalDetails.id === "1" ? RiskLevel.HIGH : RiskLevel.MEDIUM
-        }
+        riskLevel={riskLevel as RiskLevel}
       />
     </TouchableOpacity>
   );

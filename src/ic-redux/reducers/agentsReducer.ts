@@ -3,41 +3,53 @@ import { RootAction } from "../actions/RootAction";
 import { Reducer } from "redux";
 import {
   AlertInfo,
-  Patient,
   PatientDetails,
   PendingAlertCount,
-  Todo
+  LocalTodo,
+  RiskFilter
 } from "rc_agents/model";
-import { Alert, PatientAssignment } from "aws/API";
+import { Alert, PatientAssignment, PatientInfo } from "aws/API";
+import { RiskLevel } from "models/RiskLevel";
 
 interface AgentsState {
   procedureSuccessful: boolean;
   procedureOngoing: boolean;
   online: boolean;
-  patients: Patient[];
-  patientDetails: PatientDetails;
-  pendingPatientAssignments: PatientAssignment[] | null;
+  patients: PatientInfo[] | null;
+  patientDetails: PatientDetails | null;
+  pendingPatientAssignments: PatientAssignment[];
   patientAssignmentsSynced: boolean;
+  fetchingPatients: boolean;
+  fetchingPatientDetails: boolean;
   fetchingPendingPatientAssignments: boolean;
+  riskFilters: RiskFilter;
   pendingAlertCount: PendingAlertCount;
   alerts: Alert[];
   alertInfo: AlertInfo | undefined;
-  newTodo: Todo | undefined;
+  fetchingTodos: boolean;
+  pendingTodos: LocalTodo[] | undefined;
+  completedTodos: LocalTodo[] | undefined;
+  submittingTodo: boolean;
+  updatedTodo: LocalTodo | undefined;
 }
 
 const initialState: AgentsState = {
   procedureSuccessful: false,
   procedureOngoing: false,
   online: false,
-  patients: [],
-  patientDetails: {
-    activityInfo: [],
-    symptomsReports: [],
-    vitalsReports: []
-  },
-  pendingPatientAssignments: null,
+  patients: null,
+  patientDetails: null,
+  pendingPatientAssignments: [],
+  fetchingPatients: false,
+  fetchingPatientDetails: false,
   fetchingPendingPatientAssignments: false,
   patientAssignmentsSynced: false,
+  riskFilters: {
+    [RiskLevel.HIGH]: false,
+    [RiskLevel.MEDIUM]: false,
+    [RiskLevel.LOW]: false,
+    [RiskLevel.UNASSIGNED]: false
+  },
   pendingAlertCount: {
     highRisk: 0,
     mediumRisk: 0,
@@ -46,7 +58,11 @@ const initialState: AgentsState = {
   },
   alerts: [],
   alertInfo: undefined,
-  newTodo: undefined
+  fetchingTodos: false,
+  pendingTodos: undefined,
+  completedTodos: undefined,
+  submittingTodo: false,
+  updatedTodo: undefined
 };
 
 export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
@@ -62,6 +78,13 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
       return { ...state, patients: action.payload.patients };
     case actionNames.SET_PATIENT_DETAILS:
       return { ...state, patientDetails: action.payload.patientDetails };
+    case actionNames.SET_FETCHING_PATIENTS:
+      return { ...state, fetchingPatients: action.payload.fetchingPatients };
+    case actionNames.SET_FETCHING_PATIENT_DETAILS:
+      return {
+        ...state,
+        fetchingPatientDetails: action.payload.fetchingPatientDetails
+      };
     case actionNames.SET_FETCHING_PENDING_PATIENT_ASSIGNMENTS:
       return {
         ...state,
@@ -93,8 +116,18 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
         ...state,
         alertInfo: action.payload.alertInfo
       };
-    case actionNames.SET_NEW_TODO:
-      return { ...state, newTodo: action.payload.newTodo };
+    case actionNames.SET_RISK_FILTERS:
+      return { ...state, riskFilters: action.payload.riskFilters };
+    case actionNames.SET_FETCHING_TODOS:
+      return { ...state, fetchingTodos: action.payload.fetchingTodos };
+    case actionNames.SET_PENDING_TODOS:
+      return { ...state, pendingTodos: action.payload.pendingTodos };
+    case actionNames.SET_COMPLETED_TODOS:
+      return { ...state, completedTodos: action.payload.completedTodos };
+    case actionNames.SET_SUBMITTING_TODO:
+      return { ...state, submittingTodo: action.payload.submittingTodo };
+    case actionNames.SET_UPDATED_TODO:
+      return { ...state, updatedTodo: action.payload.updatedTodo };
     default:
       return state;
   }

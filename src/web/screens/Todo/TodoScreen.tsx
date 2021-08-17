@@ -1,9 +1,9 @@
 /* eslint-disable no-console */
 import React, { FC, useEffect, useState } from "react";
-import { RootState, select } from "util/useRedux";
+import { RootState, select, useDispatch } from "util/useRedux";
 import { ScreenName, WithSideTabsProps, TodoListName } from "web/screens";
 import { View, Modal } from "react-native";
-import { RowSelectionWrapper } from "../RowSelectionTab";
+import { RowSelectionTab } from "../RowSelectionTab";
 import { ScaledSheet } from "react-native-size-matters";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { NavigationContainer } from "@react-navigation/native";
@@ -13,6 +13,13 @@ import i18n from "util/language/i18n";
 import { TodoListNavigationStack } from "./TodoNavigations/TodoListNavigationStack";
 import { TodoDetailsNavigationStack } from "./TodoNavigations/TodoDetailsNavigationStack";
 import { LocalTodo } from "rc_agents/model";
+import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
+import { useToast } from "react-native-toast-notifications";
+import {
+  setProcedureSuccessful,
+  setSubmittingTodo,
+  setUpdatedTodo
+} from "ic-redux/actions/agents/actionCreator";
 
 // Determines if the add button is needed in the header of left tab
 function checkNeedAddButton(tabName: TodoListName) {
@@ -27,8 +34,19 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = ({
   route,
   navigation
 }) => {
-  const { colors } = select((state: RootState) => ({
-    colors: state.settings.colors
+  const {
+    colors,
+    procedureOngoing,
+    procedureSuccessful,
+    updatedTodo,
+    submittingTodo
+  } = select((state: RootState) => ({
+    colors: state.settings.colors,
+    // Used to detect completion of updateTodo procedure
+    procedureOngoing: state.agents.procedureOngoing,
+    procedureSuccessful: state.agents.procedureSuccessful,
+    updatedTodo: state.agents.updatedTodo,
+    submittingTodo: state.agents.submittingTodo
   }));
 
   // console.log(route.params);
@@ -52,12 +70,14 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = ({
     patientId: "",
     createdAt: "",
     lastModified: "",
-    pendingSync: false,
+    toSync: false,
     _version: -1
   });
 
   // Records if a todo item has been selected
   const [isEmptyTodo, setEmptyTodo] = useState(true);
+  const toast = useToast();
+  const dispatch = useDispatch();
 
   // Render the right screen when todo item from todos card in Home screen is pressed
   useEffect(() => {
@@ -74,15 +94,41 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = ({
     setTodoSelected(item);
   }
 
+  // Compares dispatched updatedTodo with current Todo displayed in the TodoDetailsScreen
+  useEffect(() => {
+    // Updates the TodoDetailsScreen with the newly updated Todo
+    if (updatedTodo && updatedTodo.id === todoSelected.id) {
+      onRowClick(updatedTodo);
+      dispatch(setUpdatedTodo(undefined));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [updatedTodo]);
+
+  // Detects completion of UpdateTodo procedure and shows the appropriate toast.
+  useEffect(() => {
+    if (submittingTodo && !procedureOngoing) {
+      dispatch(setSubmittingTodo(false));
+      if (procedureSuccessful) {
+        // Operation successful
+        toast.show(i18n.t("Todo.TodoUpdateSuccessful"), { type: "success" });
+        dispatch(setProcedureSuccessful(false));
+      } else {
+        // Operation failed
+        toast.show(i18n.t("UnexpectedError"), { type: "danger" });
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, procedureOngoing, procedureSuccessful, toast, submittingTodo]);
+
   return (
     <ScreenWrapper fixed>
       <View
         style={styles.container}
-        pointerEvents={modalVisible ? "none" : "auto"}
+        pointerEvents={modalVisible || submittingTodo ? "none" : "auto"}
       >
         {/* Left tab */}
         <View style={styles.rowSelection}>
-          <RowSelectionWrapper
+          <RowSelectionTab
             title={i18n.t("TabTitle.Todo")}
             addButton={addButton}
             onPress={() => {
@@ -148,6 +194,9 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = ({
           </View>
         </Modal>
       </View>
+
+      {/* Loading Indicator overlays the entire screen when Todo is being updated */}
+      {submittingTodo && <LoadingIndicator />}
     </ScreenWrapper>
   );
 };

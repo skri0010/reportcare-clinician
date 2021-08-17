@@ -115,7 +115,7 @@ export const mockCurrentTodo: LocalTodo[] = [
     notes: "Call patient tomorrow",
     lastModified: "2021-08-10T15:40:20.008Z",
     completed: false,
-    pendingSync: false,
+    toSync: false,
     patientId: "1",
     _version: 8,
     createdAt: "2021-08-10T15:08:15.116Z"
@@ -127,7 +127,7 @@ export const mockCurrentTodo: LocalTodo[] = [
     notes: "Check up on patient",
     lastModified: "2021-08-10T15:40:20.008Z",
     completed: false,
-    pendingSync: false,
+    toSync: false,
     _version: 8,
     createdAt: "2021-08-01T15:08:15.116Z"
   }
@@ -141,7 +141,7 @@ export const mockCompletedTodo: LocalTodo[] = [
     notes: "Call patient tomorrow",
     lastModified: "2021-08-10T15:40:20.008Z",
     completed: true,
-    pendingSync: false,
+    toSync: false,
     _version: 8,
     createdAt: "2021-08-10T15:08:15.116Z"
   }

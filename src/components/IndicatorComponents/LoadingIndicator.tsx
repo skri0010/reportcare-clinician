@@ -3,13 +3,25 @@ import { ActivityIndicator, View } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { RootState, select } from "util/useRedux";
 
-export const LoadingIndicator: FC = () => {
+interface LoadingIndicatorProps {
+  flex?: number;
+}
+
+export const LoadingIndicator: FC<LoadingIndicatorProps> = ({ flex }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
   }));
 
+  const flexStyle = flex ? { flex: flex } : {};
+
   return (
-    <View style={[styles.overlay, { backgroundColor: colors.overlayColor }]}>
+    <View
+      style={[
+        styles.overlay,
+        { backgroundColor: colors.overlayColor },
+        flexStyle
+      ]}
+    >
       <ActivityIndicator
         animating
         color={colors.primaryBarColor}

@@ -1,13 +1,14 @@
 import {
   AlertInfo,
-  Patient,
   PatientDetails,
   PendingAlertCount,
-  Todo
+  LocalTodo,
+  RiskFilter as RiskFilters
 } from "rc_agents/model";
 import { actionNames } from "ic-redux/actions/actionNames";
 import { createAction } from "typesafe-actions";
-import { Alert, PatientAssignment } from "aws/API";
+import { Alert, PatientAssignment, PatientInfo } from "aws/API";
+import { RiskFilterPillProps } from "web/RiskFilterPill";
 
 export const setProcedureOngoing = createAction(
   actionNames.SET_PROCEDURE_ONGOING,
@@ -25,7 +26,7 @@ export const setProcedureSuccessful = createAction(
 
 export const setPatients = createAction(
   actionNames.SET_PATIENTS,
-  (patients: Patient[]) => ({
+  (patients: PatientInfo[]) => ({
     patients: patients
   })
 )();
@@ -34,6 +35,20 @@ export const setPatientDetails = createAction(
   actionNames.SET_PATIENT_DETAILS,
   (patientDetails: PatientDetails) => ({
     patientDetails: patientDetails
+  })
+)();
+
+export const setFetchingPatients = createAction(
+  actionNames.SET_FETCHING_PATIENTS,
+  (fetchingPatients: boolean) => ({
+    fetchingPatients: fetchingPatients
+  })
+)();
+
+export const setFetchingPatientDetails = createAction(
+  actionNames.SET_FETCHING_PATIENT_DETAILS,
+  (fetchingPatientDetails: boolean) => ({
+    fetchingPatientDetails: fetchingPatientDetails
   })
 )();
 
@@ -79,9 +94,44 @@ export const setAlertInfo = createAction(
   })
 )();
 
-export const setNewTodo = createAction(
-  actionNames.SET_NEW_TODO,
-  (newTodo: Todo) => ({
-    newTodo: newTodo
+export const setFetchingTodos = createAction(
+  actionNames.SET_FETCHING_TODOS,
+  (fetchingTodos: boolean) => ({
+    fetchingTodos: fetchingTodos
+  })
+)();
+
+export const setPendingTodos = createAction(
+  actionNames.SET_PENDING_TODOS,
+  (pendingTodos: LocalTodo[]) => ({
+    pendingTodos: pendingTodos
+  })
+)();
+
+export const setCompletedTodos = createAction(
+  actionNames.SET_COMPLETED_TODOS,
+  (completedTodos: LocalTodo[]) => ({
+    completedTodos: completedTodos
+  })
+)();
+
+export const setSubmittingTodo = createAction(
+  actionNames.SET_SUBMITTING_TODO,
+  (submittingTodo: boolean) => ({
+    submittingTodo: submittingTodo
+  })
+)();
+
+export const setUpdatedTodo = createAction(
+  actionNames.SET_UPDATED_TODO,
+  (updatedTodo: LocalTodo | undefined) => ({
+    updatedTodo: updatedTodo
+  })
+)();
+
+export const setRiskFilters = createAction(
+  actionNames.SET_RISK_FILTERS,
+  (riskFilters: RiskFilters) => ({
+    riskFilters: riskFilters
   })
 )();

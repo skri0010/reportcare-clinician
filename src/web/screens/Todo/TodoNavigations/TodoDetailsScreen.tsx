@@ -47,7 +47,10 @@ export const EditHistorySection: FC<EditHistorySectionProps> = ({
       }}
     >
       <H5 text={editType} style={{ fontWeight: "bold" }} />
-      <H5 text={timeDate || "Never"} style={{ marginBottom: ms(10) }} />
+      <H5
+        text={timeDate || i18n.t("Todo.Never")}
+        style={{ marginBottom: ms(10) }}
+      />
     </View>
   );
 };
@@ -90,7 +93,7 @@ export const TodoDetailsScreen: FC<
               onPress={() => {
                 // If there is patientID defined, navigate to the patient tab when the view button is pressed
                 if (todo.patientId !== undefined && parentNavigation) {
-                  parentNavigation.navigate(ScreenName.PATIENT, {
+                  parentNavigation.navigate(ScreenName.PATIENTS, {
                     patientId: todo.patientId
                   });
                 }
@@ -114,7 +117,9 @@ export const TodoDetailsScreen: FC<
         />
         <EditHistorySection
           editType={i18n.t("Todo.ModifiedOn")}
-          timeDate={todo.lastModified}
+          timeDate={
+            todo.lastModified ? todo.lastModified : i18n.t("Todo.Never")
+          }
         />
         {/* Edit button */}
         <View style={styles.editButtonContainer}>

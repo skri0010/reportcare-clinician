@@ -110,9 +110,7 @@ class DisplayPendingAlertCount extends Activity {
         BeliefKeys.PROCEDURE,
         ProcedureAttributes.AT_CP,
         ProcedureConst.INACTIVE
-      ),
-      true,
-      true
+      )
     );
   }
 }

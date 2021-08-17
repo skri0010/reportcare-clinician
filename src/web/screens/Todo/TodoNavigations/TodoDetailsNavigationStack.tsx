@@ -8,6 +8,8 @@ import { LocalTodo } from "rc_agents/model";
 import i18n from "util/language/i18n";
 import { ms } from "react-native-size-matters";
 import { TodoNavigationProps } from "web/screens/WithSideTabsProps";
+import { onDonePress } from "../TodoCurrentTab";
+import { onUndoPress } from "../TodoCompletedTab";
 
 const Stack = createStackNavigator<TodoDetailsParamList>();
 
@@ -18,6 +20,14 @@ interface TodoDetailsNavigationStackProps {
 
 export const TodoDetailsNavigationStack: FC<TodoDetailsNavigationStackProps> =
   ({ todo, navigation }) => {
+    const onButtonPress = () => {
+      if (todo.completed) {
+        onUndoPress(todo);
+      } else {
+        onDonePress(todo);
+      }
+    };
+
     return (
       <Stack.Navigator>
         {/* VIEW TODO */}
@@ -38,7 +48,7 @@ export const TodoDetailsNavigationStack: FC<TodoDetailsNavigationStackProps> =
             },
             headerRight: () => (
               // Mark as done button
-              <MarkAsDoneButton onPress={() => null} todo={todo} />
+              <MarkAsDoneButton onPress={onButtonPress} todo={todo} />
             )
           })}
         />

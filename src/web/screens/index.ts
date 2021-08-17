@@ -8,8 +8,8 @@ import { TodoNavigationProps } from "web/screens/WithSideTabsProps";
 export enum ScreenName {
   MAIN = "Main",
   HOME = "Home",
-  PATIENT = "Patients",
-  CLINICIAN = "Clinicians",
+  PATIENTS = "Patients",
+  CLINICIANS = "Clinicians",
   CHAT = "Chat",
   TODO = "Todo",
   MARIA = "MARIA",
@@ -53,8 +53,8 @@ export type RootStackParamList = {
 export type SideTabsParamList = {
   [ScreenName.HOME]: undefined;
   // [ScreenName.PATIENT]: NavigatorScreenParams<PatientsScreenParamList>;
-  [ScreenName.PATIENT]: { patientId: string };
-  [ScreenName.CLINICIAN]: undefined;
+  [ScreenName.PATIENTS]: { patientId: string };
+  [ScreenName.CLINICIANS]: undefined;
   [ScreenName.CHAT]: undefined;
   // [ScreenName.TODO]: NavigatorScreenParams<TodoScreenParamList>;
   [ScreenName.TODO]: LocalTodo;

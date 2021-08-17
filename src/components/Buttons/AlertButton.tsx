@@ -1,8 +1,7 @@
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { RootState } from "ic-redux/store";
-import { select } from "util/useRedux";
+import { select, RootState } from "util/useRedux";
 import { getRiskLevelColor, RiskLevel } from "../../models/RiskLevel";
 import { ScaledSheet, ms } from "react-native-size-matters";
 

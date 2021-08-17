@@ -1,5 +1,5 @@
 import React, { useState, FC } from "react";
-import { RootState } from "ic-redux/store";
+import { select, RootState } from "util/useRedux";
 import {
   StyleProp,
   View,
@@ -8,7 +8,6 @@ import {
   TouchableOpacity,
   Platform
 } from "react-native";
-import { select } from "util/useRedux";
 import { ScaledSheet, ms } from "react-native-size-matters";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 

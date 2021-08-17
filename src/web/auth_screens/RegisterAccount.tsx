@@ -5,7 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { ms, ScaledSheet } from "react-native-size-matters";
 // eslint-disable-next-line no-restricted-imports
 import { Picker } from "@react-native-picker/picker";
-import { Role, Hospital } from "aws";
+import { Role, Hospital } from "rc_agents/model";
 import { RootState, select } from "util/useRedux";
 import { AuthScreenName, AuthScreensProps } from "web/auth_screens";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
@@ -17,10 +17,9 @@ import {
 import i18n from "util/language/i18n";
 import { useToast } from "react-native-toast-notifications";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AsyncStorageKeys } from "rc_agents/storage";
 import { AuthButton } from "components/Buttons/AuthButton";
 import { TextField } from "components/InputComponents/TextField";
+import { Storage } from "rc_agents/storage";
 
 export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
   navigation
@@ -56,14 +55,11 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
       .then(async () => {
         setRegistering(false);
         toast.show(i18n.t("Auth_Registration.CodeSent"), { type: "success" });
-        await AsyncStorage.setItem(
-          AsyncStorageKeys.SIGN_UP_DETAILS,
-          JSON.stringify({
-            name: name,
-            hospitalName: hospital,
-            role: role
-          })
-        );
+        await Storage.setSignUpDetails({
+          name: name,
+          hospitalName: hospital,
+          role: role
+        });
         navigation.navigate(AuthScreenName.CONFIRM_REGISTER, {
           username: username
         });

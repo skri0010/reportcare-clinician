@@ -31,7 +31,7 @@ import Auth from "@aws-amplify/auth";
 
 /**
  * Class to represent an activity for resolving patient assignment (APPROVE or REASSIGN) .
- * This happens in Procedure Storing Data (SRD) when clinician performs an action to resolve patient assignment.
+ * This happens in Procedure Storing Data (SRD-I) when clinician performs an action to resolve patient assignment.
  */
 class ResolvePatientAssignment extends Activity {
   constructor() {
@@ -102,12 +102,28 @@ class ResolvePatientAssignment extends Activity {
     }
 
     if (resolvedOnline) {
+      // Update Beliefs
       // Retrieve new pending patient assignments
       agent.addBelief(
         new Belief(
           BeliefKeys.PATIENT,
           PatientAttributes.RETRIEVE_PENDING_PATIENT_ASSIGNMENTS,
           true
+        )
+      );
+      // Trigger agent (self) to retrieve new patients
+      agent.addBelief(
+        new Belief(
+          BeliefKeys.PATIENT,
+          PatientAttributes.RETRIEVE_PATIENTS,
+          true
+        )
+      );
+      agentAPI.addFact(
+        new Belief(
+          BeliefKeys.PROCEDURE,
+          ProcedureAttributes.HF_OTP_I,
+          ProcedureConst.ACTIVE
         )
       );
     }
@@ -231,7 +247,7 @@ const reassignPatientAssignment: (params: {
 // Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.SRD,
+  ProcedureAttributes.SRD_I,
   ProcedureConst.ACTIVE
 );
 const rule2 = new ResettablePrecondition(

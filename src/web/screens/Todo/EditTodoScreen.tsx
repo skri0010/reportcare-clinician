@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useState, useEffect } from "react";
 import {
   View,
   TouchableOpacity,
@@ -14,15 +14,23 @@ import {
   EditHistorySection
 } from "./TodoNavigations/TodoDetailsScreen";
 import { H3 } from "components/Text";
-import { RootState, select } from "util/useRedux";
+import { RootState, select, useDispatch } from "util/useRedux";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import i18n from "util/language/i18n";
+import { LocalTodo, TodoUpdateInput } from "rc_agents/model";
+import {
+  setProcedureOngoing,
+  setSubmittingTodo,
+  setUpdatedTodo
+} from "ic-redux/actions/agents/actionCreator";
+import { AgentTrigger } from "rc_agents/trigger";
 
 export const EditTodoScreen: FC<
   WithTodoDetailsProps[TodoDetailsName.EDIT_TODO]
 > = ({ route, navigation }) => {
-  const { colors } = select((state: RootState) => ({
-    colors: state.settings.colors
+  const { colors, updatedTodo } = select((state: RootState) => ({
+    colors: state.settings.colors,
+    updatedTodo: state.agents.updatedTodo
   }));
 
   const inputBarColor: StyleProp<ViewStyle> = {
@@ -31,17 +39,32 @@ export const EditTodoScreen: FC<
   };
 
   const { todo } = route.params;
+  const dispatch = useDispatch();
 
   const [titleInput, setTitleInput] = useState<string>(todo.title); // Title input
   const [noteInput, setNoteInput] = useState<string>(todo.notes); // Notes input
 
-  const onChangeTitle = (newTitle: string) => {
-    setTitleInput(newTitle);
+  const onSave = (item: LocalTodo) => {
+    dispatch(setProcedureOngoing(true));
+    dispatch(setSubmittingTodo(true));
+    const todoToUpdate: TodoUpdateInput = {
+      id: item.id ? item.id : undefined,
+      title: titleInput,
+      patientName: item.patientName,
+      notes: noteInput,
+      _version: item._version,
+      completed: item.completed,
+      createdAt: item.createdAt
+    };
+    AgentTrigger.triggerUpdateTodo(todoToUpdate);
   };
 
-  const onChangeNotes = (newNote: string) => {
-    setNoteInput(newNote);
-  };
+  useEffect(() => {
+    if (updatedTodo) {
+      navigation.navigate(TodoDetailsName.VIEW_TODO, { todo: updatedTodo });
+      dispatch(setUpdatedTodo(undefined));
+    }
+  }, [dispatch, navigation, updatedTodo]);
 
   return (
     <ScreenWrapper>
@@ -58,7 +81,7 @@ export const EditTodoScreen: FC<
               paddingLeft: ms(10)
             }
           ]}
-          onChangeText={onChangeTitle}
+          onChangeText={setTitleInput}
         />
         {/* Patient name (not editable) */}
         <TodoSection
@@ -79,7 +102,7 @@ export const EditTodoScreen: FC<
               paddingTop: ms(5)
             }
           ]}
-          onChangeText={onChangeNotes}
+          onChangeText={setNoteInput}
         />
 
         {/* Edit history (created and modified datetime) */}
@@ -103,16 +126,7 @@ export const EditTodoScreen: FC<
               }
             ]}
             onPress={() => {
-              // JY/JQ-TODO Make API call to pass new Todo item into db
-              // const newDate = new Date().toLocaleString();
-              // const newTodo = {
-              //   mainTitleContent: titleInput,
-              //   patientContent: context.patientContent,
-              //   notesContent: noteInput,
-              //   createdTimeDate: context.createdTimeDate,
-              //   modifiedTimeDate: newDate
-              // };
-              navigation.navigate(TodoDetailsName.VIEW_TODO, { todo: todo });
+              onSave(todo);
             }}
           >
             <H3
