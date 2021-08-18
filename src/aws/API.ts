@@ -14,6 +14,7 @@ export type CreatePatientInfoInput = {
   hospitalLocation: string,
   targetWeight: string,
   targetActivity: string,
+  riskLevel: string,
   patientID: string,
   _version?: number | null,
 };
@@ -29,6 +30,7 @@ export type ModelPatientInfoConditionInput = {
   hospitalLocation?: ModelStringInput | null,
   targetWeight?: ModelStringInput | null,
   targetActivity?: ModelStringInput | null,
+  riskLevel?: ModelStringInput | null,
   and?: Array< ModelPatientInfoConditionInput | null > | null,
   or?: Array< ModelPatientInfoConditionInput | null > | null,
   not?: ModelPatientInfoConditionInput | null,
@@ -87,6 +89,7 @@ export type PatientInfo = {
   hospitalLocation: string,
   targetWeight: string,
   targetActivity: string,
+  riskLevel: string,
   patientID: string,
   _version: number,
   _deleted?: boolean | null,
@@ -108,6 +111,7 @@ export type UpdatePatientInfoInput = {
   hospitalLocation?: string | null,
   targetWeight?: string | null,
   targetActivity?: string | null,
+  riskLevel?: string | null,
   patientID: string,
   _version?: number | null,
 };
@@ -704,7 +708,8 @@ export type CreateTodoInput = {
   notes: string,
   lastModified: string,
   alertID?: string | null,
-  completed: boolean,
+  pending?: string | null,
+  completed?: string | null,
   owner: string,
   _version?: number | null,
 };
@@ -716,7 +721,8 @@ export type ModelTodoConditionInput = {
   notes?: ModelStringInput | null,
   lastModified?: ModelStringInput | null,
   alertID?: ModelIDInput | null,
-  completed?: ModelBooleanInput | null,
+  pending?: ModelStringInput | null,
+  completed?: ModelStringInput | null,
   and?: Array< ModelTodoConditionInput | null > | null,
   or?: Array< ModelTodoConditionInput | null > | null,
   not?: ModelTodoConditionInput | null,
@@ -732,7 +738,8 @@ export type Todo = {
   lastModified: string,
   alertID?: string | null,
   alert?: Alert | null,
-  completed: boolean,
+  pending?: string | null,
+  completed?: string | null,
   owner: string,
   _version: number,
   _deleted?: boolean | null,
@@ -749,7 +756,8 @@ export type UpdateTodoInput = {
   notes?: string | null,
   lastModified?: string | null,
   alertID?: string | null,
-  completed?: boolean | null,
+  pending?: string | null,
+  completed?: string | null,
   owner?: string | null,
   _version?: number | null,
 };
@@ -771,6 +779,7 @@ export type ModelPatientInfoFilterInput = {
   hospitalLocation?: ModelStringInput | null,
   targetWeight?: ModelStringInput | null,
   targetActivity?: ModelStringInput | null,
+  riskLevel?: ModelStringInput | null,
   patientID?: ModelStringInput | null,
   and?: Array< ModelPatientInfoFilterInput | null > | null,
   or?: Array< ModelPatientInfoFilterInput | null > | null,
@@ -1007,7 +1016,8 @@ export type ModelTodoFilterInput = {
   notes?: ModelStringInput | null,
   lastModified?: ModelStringInput | null,
   alertID?: ModelIDInput | null,
-  completed?: ModelBooleanInput | null,
+  pending?: ModelStringInput | null,
+  completed?: ModelStringInput | null,
   owner?: ModelStringInput | null,
   and?: Array< ModelTodoFilterInput | null > | null,
   or?: Array< ModelTodoFilterInput | null > | null,
@@ -1019,6 +1029,16 @@ export type ModelTodoConnection = {
   items?:  Array<Todo | null > | null,
   nextToken?: string | null,
   startedAt?: number | null,
+};
+
+export type ModelIDKeyConditionInput = {
+  eq?: string | null,
+  le?: string | null,
+  lt?: string | null,
+  ge?: string | null,
+  gt?: string | null,
+  between?: Array< string | null > | null,
+  beginsWith?: string | null,
 };
 
 export type CreatePatientInfoMutationVariables = {
@@ -1040,6 +1060,7 @@ export type CreatePatientInfoMutation = {
     hospitalLocation: string,
     targetWeight: string,
     targetActivity: string,
+    riskLevel: string,
     patientID: string,
     _version: number,
     _deleted?: boolean | null,
@@ -1069,6 +1090,7 @@ export type UpdatePatientInfoMutation = {
     hospitalLocation: string,
     targetWeight: string,
     targetActivity: string,
+    riskLevel: string,
     patientID: string,
     _version: number,
     _deleted?: boolean | null,
@@ -1098,6 +1120,7 @@ export type DeletePatientInfoMutation = {
     hospitalLocation: string,
     targetWeight: string,
     targetActivity: string,
+    riskLevel: string,
     patientID: string,
     _version: number,
     _deleted?: boolean | null,
@@ -2132,7 +2155,8 @@ export type CreateTodoMutation = {
       createdAt: string,
       updatedAt: string,
     } | null,
-    completed: boolean,
+    pending?: string | null,
+    completed?: string | null,
     owner: string,
     _version: number,
     _deleted?: boolean | null,
@@ -2176,7 +2200,8 @@ export type UpdateTodoMutation = {
       createdAt: string,
       updatedAt: string,
     } | null,
-    completed: boolean,
+    pending?: string | null,
+    completed?: string | null,
     owner: string,
     _version: number,
     _deleted?: boolean | null,
@@ -2220,7 +2245,8 @@ export type DeleteTodoMutation = {
       createdAt: string,
       updatedAt: string,
     } | null,
-    completed: boolean,
+    pending?: string | null,
+    completed?: string | null,
     owner: string,
     _version: number,
     _deleted?: boolean | null,
@@ -2253,6 +2279,7 @@ export type SyncPatientInfosQuery = {
       hospitalLocation: string,
       targetWeight: string,
       targetActivity: string,
+      riskLevel: string,
       patientID: string,
       _version: number,
       _deleted?: boolean | null,
@@ -2284,6 +2311,7 @@ export type GetPatientInfoQuery = {
     hospitalLocation: string,
     targetWeight: string,
     targetActivity: string,
+    riskLevel: string,
     patientID: string,
     _version: number,
     _deleted?: boolean | null,
@@ -2318,6 +2346,7 @@ export type ListPatientInfosQuery = {
       hospitalLocation: string,
       targetWeight: string,
       targetActivity: string,
+      riskLevel: string,
       patientID: string,
       _version: number,
       _deleted?: boolean | null,
@@ -3282,7 +3311,8 @@ export type SyncTodosQuery = {
       notes: string,
       lastModified: string,
       alertID?: string | null,
-      completed: boolean,
+      pending?: string | null,
+      completed?: string | null,
       owner: string,
       _version: number,
       _deleted?: boolean | null,
@@ -3328,7 +3358,8 @@ export type GetTodoQuery = {
       createdAt: string,
       updatedAt: string,
     } | null,
-    completed: boolean,
+    pending?: string | null,
+    completed?: string | null,
     owner: string,
     _version: number,
     _deleted?: boolean | null,
@@ -3356,7 +3387,8 @@ export type ListTodosQuery = {
       notes: string,
       lastModified: string,
       alertID?: string | null,
-      completed: boolean,
+      pending?: string | null,
+      completed?: string | null,
       owner: string,
       _version: number,
       _deleted?: boolean | null,
@@ -3830,16 +3862,17 @@ export type ListCompletedRiskAlertsQuery = {
   } | null,
 };
 
-export type ListTodosByClinicianIDQueryVariables = {
-  clinicianID?: string | null,
+export type ListPendingTodosByLastModifiedDateQueryVariables = {
+  pending?: string | null,
+  lastModified?: ModelStringKeyConditionInput | null,
   sortDirection?: ModelSortDirection | null,
   filter?: ModelTodoFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
 };
 
-export type ListTodosByClinicianIDQuery = {
-  listTodosByClinicianID?:  {
+export type ListPendingTodosByLastModifiedDateQuery = {
+  listPendingTodosByLastModifiedDate?:  {
     __typename: "ModelTodoConnection",
     items?:  Array< {
       __typename: "Todo",
@@ -3850,7 +3883,8 @@ export type ListTodosByClinicianIDQuery = {
       notes: string,
       lastModified: string,
       alertID?: string | null,
-      completed: boolean,
+      pending?: string | null,
+      completed?: string | null,
       owner: string,
       _version: number,
       _deleted?: boolean | null,
@@ -3863,8 +3897,8 @@ export type ListTodosByClinicianIDQuery = {
   } | null,
 };
 
-export type ListTodosByLastModifiedDateQueryVariables = {
-  clinicianID?: string | null,
+export type ListCompletedTodosByLastModifiedDateQueryVariables = {
+  completed?: string | null,
   lastModified?: ModelStringKeyConditionInput | null,
   sortDirection?: ModelSortDirection | null,
   filter?: ModelTodoFilterInput | null,
@@ -3872,8 +3906,8 @@ export type ListTodosByLastModifiedDateQueryVariables = {
   nextToken?: string | null,
 };
 
-export type ListTodosByLastModifiedDateQuery = {
-  listTodosByLastModifiedDate?:  {
+export type ListCompletedTodosByLastModifiedDateQuery = {
+  listCompletedTodosByLastModifiedDate?:  {
     __typename: "ModelTodoConnection",
     items?:  Array< {
       __typename: "Todo",
@@ -3884,7 +3918,43 @@ export type ListTodosByLastModifiedDateQuery = {
       notes: string,
       lastModified: string,
       alertID?: string | null,
-      completed: boolean,
+      pending?: string | null,
+      completed?: string | null,
+      owner: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
+export type ListTodosByAlertIDQueryVariables = {
+  clinicianID?: string | null,
+  alertID?: ModelIDKeyConditionInput | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelTodoFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListTodosByAlertIDQuery = {
+  listTodosByAlertID?:  {
+    __typename: "ModelTodoConnection",
+    items?:  Array< {
+      __typename: "Todo",
+      id: string,
+      clinicianID: string,
+      title: string,
+      patientName: string,
+      notes: string,
+      lastModified: string,
+      alertID?: string | null,
+      pending?: string | null,
+      completed?: string | null,
       owner: string,
       _version: number,
       _deleted?: boolean | null,
@@ -3915,6 +3985,7 @@ export type OnCreatePatientInfoSubscription = {
     hospitalLocation: string,
     targetWeight: string,
     targetActivity: string,
+    riskLevel: string,
     patientID: string,
     _version: number,
     _deleted?: boolean | null,
@@ -3943,6 +4014,7 @@ export type OnUpdatePatientInfoSubscription = {
     hospitalLocation: string,
     targetWeight: string,
     targetActivity: string,
+    riskLevel: string,
     patientID: string,
     _version: number,
     _deleted?: boolean | null,
@@ -3971,6 +4043,7 @@ export type OnDeletePatientInfoSubscription = {
     hospitalLocation: string,
     targetWeight: string,
     targetActivity: string,
+    riskLevel: string,
     patientID: string,
     _version: number,
     _deleted?: boolean | null,
@@ -4980,7 +5053,8 @@ export type OnCreateTodoSubscription = {
       createdAt: string,
       updatedAt: string,
     } | null,
-    completed: boolean,
+    pending?: string | null,
+    completed?: string | null,
     owner: string,
     _version: number,
     _deleted?: boolean | null,
@@ -5023,7 +5097,8 @@ export type OnUpdateTodoSubscription = {
       createdAt: string,
       updatedAt: string,
     } | null,
-    completed: boolean,
+    pending?: string | null,
+    completed?: string | null,
     owner: string,
     _version: number,
     _deleted?: boolean | null,
@@ -5066,7 +5141,8 @@ export type OnDeleteTodoSubscription = {
       createdAt: string,
       updatedAt: string,
     } | null,
-    completed: boolean,
+    pending?: string | null,
+    completed?: string | null,
     owner: string,
     _version: number,
     _deleted?: boolean | null,

@@ -14,8 +14,8 @@ import { RouteProp, CompositeNavigationProp } from "@react-navigation/native";
  */
 export type WithSideTabsProps = {
   [ScreenName.HOME]: HomeScreenProps;
-  [ScreenName.PATIENT]: PatientScreenProps;
-  [ScreenName.CLINICIAN]: ClinicianScreenProps;
+  [ScreenName.PATIENTS]: PatientScreenProps;
+  [ScreenName.CLINICIANS]: ClinicianScreenProps;
   [ScreenName.CHAT]: ChatScreenProps;
   [ScreenName.TODO]: TodoScreenProps;
   [ScreenName.MARIA]: MARIAScreenProps;
@@ -36,24 +36,24 @@ type HomeScreenProps = {
 
 // Patient
 export type PatientNavigationProps = CompositeNavigationProp<
-  DrawerNavigationProp<SideTabsParamList, ScreenName.PATIENT>,
+  DrawerNavigationProp<SideTabsParamList, ScreenName.PATIENTS>,
   StackNavigationProp<RootStackParamList>
 >;
 
 type PatientScreenProps = {
   navigation: PatientNavigationProps;
-  route: RouteProp<SideTabsParamList, ScreenName.PATIENT>;
+  route: RouteProp<SideTabsParamList, ScreenName.PATIENTS>;
 };
 
 // Clinician
 type ClinicianNavigationProps = CompositeNavigationProp<
-  DrawerNavigationProp<SideTabsParamList, ScreenName.CLINICIAN>,
+  DrawerNavigationProp<SideTabsParamList, ScreenName.CLINICIANS>,
   StackNavigationProp<RootStackParamList>
 >;
 
 type ClinicianScreenProps = {
   navigation: ClinicianNavigationProps;
-  route: RouteProp<SideTabsParamList, ScreenName.CLINICIAN>;
+  route: RouteProp<SideTabsParamList, ScreenName.CLINICIANS>;
 };
 
 // Chat

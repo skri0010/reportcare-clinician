@@ -1,28 +1,17 @@
-import { ClinicianInfo } from "aws/models";
+import { ClinicianInfo } from "aws/API";
 
 export const mockClinician: ClinicianInfo[] = [
   {
+    __typename: "ClinicianInfo",
     id: "samuel@gmail.com",
     name: "Dr Samuel",
     role: "EP",
     hospitalName: "Sabah Hospital",
     clinicianID: "20",
-    owner: "?"
-  },
-  {
-    id: "jennny@gmail.com",
-    name: "Jenny Lin",
-    role: "Nurse",
-    hospitalName: "Queen Elizabeth II",
-    clinicianID: "11",
-    owner: "?"
-  },
-  {
-    id: "alisia@gmail.com",
-    name: "Dr Alisia",
-    role: "Pharmacist",
-    hospitalName: "Queen Elizabeth II",
-    clinicianID: "12",
-    owner: "?"
+    owner: "?",
+    createdAt: "",
+    updatedAt: "",
+    _lastChangedAt: 1627604201979,
+    _version: 1
   }
 ];

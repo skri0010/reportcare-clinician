@@ -11,6 +11,7 @@ interface TextProps {
   text: string;
   style?: RNTextStyle;
   translate?: boolean; // translates text by default (@see BaseText)
+  numberOfLines?: number | undefined; // max number of lines before replacing with ...
 }
 
 /**
@@ -19,7 +20,12 @@ interface TextProps {
  * - custom font size (from H1, H2, H3, H4,...)
  * - translated text
  */
-const BaseText: FC<TextProps> = ({ text, style, translate = true }) => {
+const BaseText: FC<TextProps> = ({
+  text,
+  style,
+  translate = true,
+  numberOfLines = undefined
+}) => {
   const { t } = useTranslation();
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
@@ -33,10 +39,20 @@ const BaseText: FC<TextProps> = ({ text, style, translate = true }) => {
 
   const displayedText = translate ? t(text) : text;
 
-  return <Text style={combinedStyle}>{displayedText}</Text>;
+  return (
+    <Text numberOfLines={numberOfLines} style={combinedStyle}>
+      {displayedText}
+    </Text>
+  );
 };
 
-export const H1: FC<TextProps> = ({ text, style, translate }) => {
+// H1 Text
+export const H1: FC<TextProps> = ({
+  text,
+  style,
+  translate,
+  numberOfLines
+}) => {
   const { fonts } = select((state: RootState) => ({
     fonts: state.settings.fonts
   }));
@@ -47,10 +63,23 @@ export const H1: FC<TextProps> = ({ text, style, translate }) => {
 
   const combinedStyle = [defaultStyle, style];
 
-  return <BaseText style={combinedStyle} text={text} translate={translate} />;
+  return (
+    <BaseText
+      style={combinedStyle}
+      text={text}
+      translate={translate}
+      numberOfLines={numberOfLines}
+    />
+  );
 };
 
-export const H2: FC<TextProps> = ({ text, style, translate }) => {
+// H2 Text
+export const H2: FC<TextProps> = ({
+  text,
+  style,
+  translate,
+  numberOfLines
+}) => {
   const { fonts } = select((state: RootState) => ({
     fonts: state.settings.fonts
   }));
@@ -61,10 +90,23 @@ export const H2: FC<TextProps> = ({ text, style, translate }) => {
 
   const combinedStyle = [defaultStyle, style];
 
-  return <BaseText style={combinedStyle} text={text} translate={translate} />;
+  return (
+    <BaseText
+      style={combinedStyle}
+      text={text}
+      translate={translate}
+      numberOfLines={numberOfLines}
+    />
+  );
 };
 
-export const H3: FC<TextProps> = ({ text, style, translate }) => {
+// H3 Text
+export const H3: FC<TextProps> = ({
+  text,
+  style,
+  translate,
+  numberOfLines
+}) => {
   const { fonts } = select((state: RootState) => ({
     fonts: state.settings.fonts
   }));
@@ -75,10 +117,23 @@ export const H3: FC<TextProps> = ({ text, style, translate }) => {
 
   const combinedStyle = [defaultStyle, style];
 
-  return <BaseText style={combinedStyle} text={text} translate={translate} />;
+  return (
+    <BaseText
+      style={combinedStyle}
+      text={text}
+      translate={translate}
+      numberOfLines={numberOfLines}
+    />
+  );
 };
 
-export const H4: FC<TextProps> = ({ text, style, translate }) => {
+// H4 Text
+export const H4: FC<TextProps> = ({
+  text,
+  style,
+  translate,
+  numberOfLines
+}) => {
   const { fonts } = select((state: RootState) => ({
     fonts: state.settings.fonts
   }));
@@ -89,10 +144,23 @@ export const H4: FC<TextProps> = ({ text, style, translate }) => {
 
   const combinedStyle = [defaultStyle, style];
 
-  return <BaseText style={combinedStyle} text={text} translate={translate} />;
+  return (
+    <BaseText
+      style={combinedStyle}
+      text={text}
+      translate={translate}
+      numberOfLines={numberOfLines}
+    />
+  );
 };
 
-export const H5: FC<TextProps> = ({ text, style, translate }) => {
+// H5 Text
+export const H5: FC<TextProps> = ({
+  text,
+  style,
+  translate,
+  numberOfLines
+}) => {
   const { fonts } = select((state: RootState) => ({
     fonts: state.settings.fonts
   }));
@@ -103,10 +171,23 @@ export const H5: FC<TextProps> = ({ text, style, translate }) => {
 
   const combinedStyle = [defaultStyle, style];
 
-  return <BaseText style={combinedStyle} text={text} translate={translate} />;
+  return (
+    <BaseText
+      style={combinedStyle}
+      text={text}
+      translate={translate}
+      numberOfLines={numberOfLines}
+    />
+  );
 };
 
-export const H6: FC<TextProps> = ({ text, style, translate }) => {
+// H6 Text
+export const H6: FC<TextProps> = ({
+  text,
+  style,
+  translate,
+  numberOfLines
+}) => {
   const { fonts } = select((state: RootState) => ({
     fonts: state.settings.fonts
   }));
@@ -117,10 +198,23 @@ export const H6: FC<TextProps> = ({ text, style, translate }) => {
 
   const combinedStyle = [defaultStyle, style];
 
-  return <BaseText style={combinedStyle} text={text} translate={translate} />;
+  return (
+    <BaseText
+      style={combinedStyle}
+      text={text}
+      translate={translate}
+      numberOfLines={numberOfLines}
+    />
+  );
 };
 
-export const H7: FC<TextProps> = ({ text, style, translate }) => {
+// H7 Text
+export const H7: FC<TextProps> = ({
+  text,
+  style,
+  translate,
+  numberOfLines
+}) => {
   const { fonts } = select((state: RootState) => ({
     fonts: state.settings.fonts
   }));
@@ -131,5 +225,12 @@ export const H7: FC<TextProps> = ({ text, style, translate }) => {
 
   const combinedStyle = [defaultStyle, style];
 
-  return <BaseText style={combinedStyle} text={text} translate={translate} />;
+  return (
+    <BaseText
+      style={combinedStyle}
+      text={text}
+      translate={translate}
+      numberOfLines={numberOfLines}
+    />
+  );
 };

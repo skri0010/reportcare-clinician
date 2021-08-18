@@ -5,7 +5,7 @@
     "SignIn": "Log Masuk",
     "Username": "Nama Pengguna",
     "UsernamePlaceholder": "Masukkan nama pengguna",
-    "UsernameError": "Panjang nama pengguna mestilah 3 hingga 16 aksara",
+    "UsernameError": "Nama pengguna mestilah berhuruf kecil dan 3 hingga 16 aksara",
     "Password": "Kata Laluan",
     "PasswordPlaceholder": "Masukkan kata laluan",
     "PasswordError": "Kata laluan mestilah tidak kurang daripada 8 aksara dengan sekurang-kurangnya 1 huruf besar dan nombor",
@@ -65,7 +65,8 @@
   "Internet_Connection": {
     "OnlineToSignIn": "Anda mestilah mempunyai sambungan internet untuk log masuk",
     "OnlineNotice": "Sambungan internet dikesan",
-    "OfflineNotice": "Tiada sambungan internet.\nSebahagian maklumat mungkin tidak tersedia."
+    "OfflineNotice": "Tiada sambungan internet.\nSebahagian maklumat mungkin tidak tersedia.",
+    "CouldNotRetrieve": "Gagal mengambil data."
   },
   "Patient_Assignments": {
     "ApprovalSuccessful": "Kelulusan permintaan pesakit berjaya",
@@ -141,12 +142,19 @@
     "NoSelection": "Pilihkan salah satu item Todo untuk melihat butirannya"
   },
   "Patients": {
+    "PatientsList": {
+      "NoPatients": "Tiada pesakit yang dijumpai!",
+      "FilterBy": "Tapis berdasarkan:",
+      "Class": "Kelas",
+      "Age": "Umur,"
+    },
     "SearchBarPlaceholder": "Cari pesakit (contohnya John)",
     "Overview": "Ringkasan",
     "Parameters": "Parameter",
     "ICD/CRT": "ICD/CRT",
     "History": "Sejarah",
-    "Info": "Info"
+    "Info": "Info",
+    "NoSelection": "Pilihkan salah satu pesakit untuk mendapat informasi lanjut"
   },
   "Patient_Overview": {
     "BloodPressure": "Tekanan Darah",
@@ -156,7 +164,9 @@
     "OxygenSaturation": "Ketepuan O2",
     "Weight": "Berat Badan",
     "TargetWeight": "Berat Badan Sasaran",
-    "Symptoms": "Simptom"
+    "Symptoms": "Simptom",
+    "NoRecord": "-",
+    "NoSymptoms": "No symptoms recorded"
   },
   "Patient_ICD/CRT": {},
   "Patient_History": {

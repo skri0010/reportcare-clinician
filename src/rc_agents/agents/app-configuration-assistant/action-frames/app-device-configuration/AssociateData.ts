@@ -14,7 +14,7 @@ import {
   ProcedureAttributes,
   ActionFrameIDs
 } from "rc_agents/AgentEnums";
-import { AsyncStorageKeys } from "rc_agents/storage";
+import { AsyncStorageKeys, Storage } from "rc_agents/storage";
 import agentAPI from "rc_agents/framework/AgentAPI";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -44,7 +44,7 @@ class AssociateData extends Activity {
       ]);
       if (username) {
         // Adds username as facts to be used by DTA later on
-        await AsyncStorage.removeItem(AsyncStorageKeys.USERNAME);
+        await Storage.removeItem(AsyncStorageKeys.USERNAME);
         agentAPI.addFact(
           new Belief(
             BeliefKeys.CLINICIAN,
@@ -87,7 +87,7 @@ class AssociateData extends Activity {
   }
 }
 
-// Rules or preconditions for activating the AssociateData class
+// Preconditions
 const rule1 = new Precondition(BeliefKeys.APP, AppAttributes.CONFIGURED, true);
 const rule2 = new ResettablePrecondition(
   BeliefKeys.CLINICIAN,
@@ -100,7 +100,7 @@ const rule3 = new Precondition(
   ProcedureConst.ACTIVE
 );
 
-// Actionframe of the AssociateData class
+// Actionframe
 export const af_AssociateData = new Actionframe(
   `AF_${ActionFrameIDs.APS.ASSOCIATE_DATA}`,
   [rule1, rule2, rule3],

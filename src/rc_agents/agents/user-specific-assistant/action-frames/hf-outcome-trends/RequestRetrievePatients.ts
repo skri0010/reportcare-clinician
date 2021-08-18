@@ -3,12 +3,14 @@ import {
   Agent,
   Communicate,
   Belief,
-  Precondition
+  Precondition,
+  ResettablePrecondition
 } from "rc_agents/framework";
 import {
   ActionFrameIDs,
   AgentIDs,
   BeliefKeys,
+  ClinicianAttributes,
   CommonAttributes,
   PatientAttributes,
   Performative,
@@ -20,16 +22,13 @@ import {
  * The class represents the activity for requesting retrieval of all patients specific to a role.
  * This happens in Procedure HF Outcome Trends (HF-OTP-I).
  */
-class RequestRetrieveAll extends Communicate {
-  /**
-   * Constructor for the RequestRetrieveAll class
-   */
+class RequestRetrievePatients extends Communicate {
   constructor() {
     super(
-      ActionFrameIDs.UXSA.REQUEST_RETRIEVE_ALL,
+      ActionFrameIDs.UXSA.REQUEST_RETRIEVE_PATIENTS,
       Performative.REQUEST,
-      // Triggers RetrieveRolePatients action frame of DTA
-      new Belief(BeliefKeys.PATIENT, PatientAttributes.RETRIEVE_ALL, true),
+      // Trigger RetrivePatientsByRole of DTA agent
+      new Belief(BeliefKeys.PATIENT, PatientAttributes.RETRIEVE_PATIENTS, true),
       [AgentIDs.DTA]
     );
   }
@@ -40,7 +39,8 @@ class RequestRetrieveAll extends Communicate {
    */
   async doActivity(agent: Agent): Promise<void> {
     try {
-      await super.doActivity(agent);
+      // Reset preconditions
+      await super.doActivity(agent, [rule3]);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
@@ -48,7 +48,7 @@ class RequestRetrieveAll extends Communicate {
   }
 }
 
-// Rules or preconditions for activating the RequestRetrieveAll class
+// Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
   ProcedureAttributes.HF_OTP_I,
@@ -59,10 +59,15 @@ const rule2 = new Precondition(
   CommonAttributes.LAST_ACTIVITY,
   ActionFrameIDs.UXSA.RETRIEVE_ROLE
 );
+const rule3 = new ResettablePrecondition(
+  BeliefKeys.CLINICIAN,
+  ClinicianAttributes.ROLE_RETRIEVED,
+  true
+);
 
-// Actionframe of the RequestRetrieveAll class
-export const af_RequestRetrieveAll = new Actionframe(
-  `AF_${ActionFrameIDs.UXSA.REQUEST_RETRIEVE_ALL}`,
+// Actionframe
+export const af_RequestRetrievePatients = new Actionframe(
+  `AF_${ActionFrameIDs.UXSA.REQUEST_RETRIEVE_PATIENTS}`,
   [rule1, rule2],
-  new RequestRetrieveAll()
+  new RequestRetrievePatients()
 );
