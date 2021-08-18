@@ -64,7 +64,6 @@ export const PatientsListScreen: FC<PatientsListScreenProps> = ({
           renderItem={({ item }) => (
             <PatientDetailsRow
               patient={item}
-              age={23}
               onRowPress={AgentTrigger.triggerRetrievePatientDetails}
             />
           )}
