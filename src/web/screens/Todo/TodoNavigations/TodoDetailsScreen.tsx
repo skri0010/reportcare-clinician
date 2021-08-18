@@ -8,6 +8,7 @@ import { RootState, select } from "util/useRedux";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import i18n from "util/language/i18n";
 import { ScreenName, TodoDetailsName } from "web/screens";
+import moment from "moment";
 
 interface TodoSectionProps {
   mainItem: string;
@@ -18,6 +19,11 @@ interface EditHistorySectionProps {
   editType: string;
   timeDate?: string;
 }
+
+const getLocalDateTime = (datetime: string) => {
+  const localDateTime = moment.utc(datetime).local();
+  return localDateTime.format("HH:mm DD-MM-YYYY");
+};
 
 // Todo section component (title, patient and notes)
 export const TodoSection: FC<TodoSectionProps> = ({ mainItem, content }) => {
@@ -48,7 +54,7 @@ export const EditHistorySection: FC<EditHistorySectionProps> = ({
     >
       <H5 text={editType} style={{ fontWeight: "bold" }} />
       <H5
-        text={timeDate || i18n.t("Todo.Never")}
+        text={timeDate ? getLocalDateTime(timeDate) : i18n.t("Todo.Never")}
         style={{ marginBottom: ms(10) }}
       />
     </View>
@@ -117,9 +123,7 @@ export const TodoDetailsScreen: FC<
         />
         <EditHistorySection
           editType={i18n.t("Todo.ModifiedOn")}
-          timeDate={
-            todo.lastModified ? todo.lastModified : i18n.t("Todo.Never")
-          }
+          timeDate={todo.lastModified}
         />
         {/* Edit button */}
         <View style={styles.editButtonContainer}>
