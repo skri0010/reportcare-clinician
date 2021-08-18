@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { View } from "react-native";
-import { ClinicianInfo } from "aws/models";
+import { ClinicianInfo } from "aws/API";
 import { ScreenWrapper } from "../ScreenWrapper";
 import { ContactTitle } from "./ContactTitle";
 import i18n from "util/language/i18n";

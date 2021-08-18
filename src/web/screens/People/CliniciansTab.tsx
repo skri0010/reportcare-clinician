@@ -5,9 +5,9 @@ import { mockClinician } from "mock/mockClinicians";
 import { ClinicianContactRow } from "components/RowComponents/ClinicianRow/ClinicianContactRow";
 import { RootState, select } from "util/useRedux";
 import { ScreenName, WithSideTabsProps } from "web/screens";
-import { RowSelectionWrapper } from "../RowSelectionTab";
+import { RowSelectionTab } from "../RowSelectionTab";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
-import { ClinicianInfo } from "aws/models";
+import { ClinicianInfo } from "aws/API";
 import { ClinicianDetails } from "./ClinicianDetails";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
@@ -25,19 +25,24 @@ export const ClinicianContext = createContext({
   clinicianID: ""
 });
 
-export const CliniciansTab: FC<WithSideTabsProps[ScreenName.CLINICIAN]> =
+export const CliniciansTab: FC<WithSideTabsProps[ScreenName.CLINICIANS]> =
   () => {
     const { colors } = select((state: RootState) => ({
       colors: state.settings.colors
     }));
 
     const [clinicianSelected, setClincianSelected] = useState<ClinicianInfo>({
+      __typename: "ClinicianInfo",
       id: "",
       clinicianID: "",
       hospitalName: "",
       role: "",
       owner: "",
-      name: ""
+      name: "",
+      createdAt: "",
+      updatedAt: "",
+      _lastChangedAt: 1627604201979,
+      _version: 1
     });
 
     const [isEmptyClinician, setEmptyClincian] = useState(true);
@@ -52,7 +57,7 @@ export const CliniciansTab: FC<WithSideTabsProps[ScreenName.CLINICIAN]> =
       <ScreenWrapper>
         <View style={{ flexDirection: "row", height: "100%" }}>
           <View style={{ flex: 1, height: Dimensions.get("window").height }}>
-            <RowSelectionWrapper title="Clinician" />
+            <RowSelectionTab title="Clinician" />
             <FlatList
               showsVerticalScrollIndicator={false}
               style={{ flex: 1 }}
@@ -76,7 +81,7 @@ export const CliniciansTab: FC<WithSideTabsProps[ScreenName.CLINICIAN]> =
               <ClinicianDetails clinicianDetails={clinicianSelected} />
             ) : (
               <NoSelectionScreen
-                screenName={ScreenName.CLINICIAN}
+                screenName={ScreenName.CLINICIANS}
                 subtitle="Choose Clinician to view more info"
               />
             )}
