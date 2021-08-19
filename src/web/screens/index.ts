@@ -1,7 +1,9 @@
 import { StackScreenProps } from "@react-navigation/stack";
 import { NavigatorScreenParams } from "@react-navigation/native";
 import { PatientInfo } from "aws/API";
+import { LocalTodo } from "rc_agents/model";
 import { AlertHistory, MedicalRecords } from "mock/mockPatientDetails";
+import { TodoNavigationProps } from "web/screens/WithSideTabsProps";
 
 export enum ScreenName {
   MAIN = "Main",
@@ -23,6 +25,16 @@ export enum PatientsScreenName {
   INFO = "Info"
 }
 
+export enum TodoListName {
+  CURRENT = "Current",
+  COMPLETED = "Completed"
+}
+
+export enum TodoDetailsName {
+  VIEW_TODO = "ViewTodo",
+  EDIT_TODO = "EditTodo"
+}
+
 /**
  * Reference: https://reactnavigation.org/docs/typescript/
  *
@@ -40,15 +52,18 @@ export type RootStackParamList = {
 // Extract the params from the screen containing the nested navigator
 export type SideTabsParamList = {
   [ScreenName.HOME]: undefined;
-  [ScreenName.PATIENTS]: NavigatorScreenParams<PatientsScreenParamList>;
+  // [ScreenName.PATIENT]: NavigatorScreenParams<PatientsScreenParamList>;
+  [ScreenName.PATIENTS]: { patientId: string };
   [ScreenName.CLINICIANS]: undefined;
   [ScreenName.CHAT]: undefined;
-  [ScreenName.TODO]: undefined;
+  // [ScreenName.TODO]: NavigatorScreenParams<TodoScreenParamList>;
+  [ScreenName.TODO]: LocalTodo;
   [ScreenName.MARIA]: undefined;
   [ScreenName.SETTING]: undefined;
   [ScreenName.HELP]: undefined;
 };
 
+// Patient screens params list
 export type PatientsScreenParamList = {
   [PatientsScreenName.OVERVIEW]: { patient: PatientInfo };
   [PatientsScreenName.PARAMETERS]: { patient: PatientInfo };
@@ -68,6 +83,23 @@ export type PatientsScreenParamList = {
   [PatientsScreenName.INFO]: { patient: PatientInfo };
 };
 
+// Todo list
+export type TodoListParamList = {
+  [TodoListName.CURRENT]: {
+    todos: LocalTodo[];
+  };
+  [TodoListName.COMPLETED]: { todos: LocalTodo[] };
+};
+
+// Todo details
+export type TodoDetailsParamList = {
+  [TodoDetailsName.VIEW_TODO]: {
+    todo: LocalTodo;
+    parentNavigation?: TodoNavigationProps;
+  };
+  [TodoDetailsName.EDIT_TODO]: { todo: LocalTodo };
+};
+
 // Type checking for main screens (navigation and route)
 export type MainScreenProps = StackScreenProps<
   RootStackParamList,
@@ -80,21 +112,8 @@ export type { WithSideTabsProps } from "web/screens/WithSideTabsProps";
 // Type checking for patient screen tabs (navigation and route)
 export type { WithPatientsScreenProps } from "web/screens/WithPatientsScreenProps";
 
-// JH-TODO: Navigation FIXME
-export type TodoStackParamList = {
-  ViewTodo: {
-    mainTitleContent: string;
-    patientContent: string;
-    notesContent: string;
-    createdTimeDate: string;
-    modifiedTimeDate: string;
-  };
-  EditTodo: {
-    mainTitleContent: string;
-    patientContent: string;
-    notesContent: string;
-    createdTimeDate: string;
-    modifiedTimeDate: string;
-  };
-  AddTodo: undefined;
-};
+// Type checking for todo screen tabs and details (navigation and route)
+export type {
+  WithTodosProps,
+  WithTodoDetailsProps
+} from "web/screens/WithTodoScreenProps";

@@ -136,10 +136,17 @@
     "EditButton": "Edit",
     "CancelButton": "Cancel",
     "SaveButton": "Save",
+    "Never": "Never",
     "TitleInputPlaceholder": "What's this todo about?",
     "PatientInputPlaceholder": "What's the patient's name?",
     "NotesInputPlaceholder": "Anything notable?",
-    "NoSelection": "Select a Todo item to view its details"
+    "NoSelection": "Select a Todo item to view its details",
+    "TodoCreateSuccessful": "Todo has been successfully created",
+    "TodoUpdateSuccessful": "Todo has been successfully updated",
+    "MarkAsDone": "MARK AS DONE",
+    "UndoFromCompleted": "UNDO FROM COMPLETED",
+    "Done": "DONE",
+    "Undo": "UNDO"
   },
   "Patients": {
     "PatientsList": {
@@ -218,5 +225,6 @@
     "BasicInfo": "Basic Information",
     "ContactInfo": "Contact Information",
     "Years": "years"
-  }
+  },
+  "UnexpectedError": "An unexpected error has occured"
 }

@@ -1,34 +1,60 @@
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 import { View, FlatList } from "react-native";
 import { TodoRow } from "components/RowComponents/TodoRow";
-import { mockCurrentTodoDetails } from "mock/mockTodoDetails";
 import { RiskLevel } from "models/RiskLevel";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
-import { ITodoDetails } from "models/TodoDetails";
 import { SearchBarComponent } from "components/Bars/SearchBarComponent";
-import { RootState, select } from "util/useRedux";
+import { RootState, select, store } from "util/useRedux";
 import i18n from "util/language/i18n";
+import { LocalTodo, TodoStatus, TodoUpdateInput } from "rc_agents/model";
+import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
+import {
+  setProcedureOngoing,
+  setSubmittingTodo
+} from "ic-redux/actions/agents/actionCreator";
+import { AgentTrigger } from "rc_agents/trigger";
 
 export interface TodoRowTabProps {
-  setTodoSelected: (item: ITodoDetails) => void;
+  setTodoSelected: (item: LocalTodo) => void;
 }
 
+// Triggers DTA to update Todo to Completed
+export const onDonePress = (item: LocalTodo): void => {
+  store.dispatch(setProcedureOngoing(true));
+  store.dispatch(setSubmittingTodo(true));
+
+  // Creates Todo object for updating
+  const todoToUpdate: TodoUpdateInput = {
+    id: item.id ? item.id : undefined,
+    title: item.title,
+    patientName: item.patientName,
+    notes: item.notes,
+    _version: item._version,
+    completed: true,
+    createdAt: item.createdAt
+  };
+
+  AgentTrigger.triggerUpdateTodo(todoToUpdate);
+};
+
 export const TodoCurrentTab: FC<TodoRowTabProps> = ({ setTodoSelected }) => {
-  // JH-TODO Replace titles with i18n
-  // JH-TODO Remove mock data
+  const { colors, pendingTodos, fetchingTodos } = select(
+    (state: RootState) => ({
+      colors: state.settings.colors,
+      pendingTodos: state.agents.pendingTodos,
+      fetchingTodos: state.agents.fetchingTodos
+    })
+  );
 
-  // JY-TODO Function for changing status to completed
-  // function onDonePress(item: ITodoDetails) {
-  //   // api call
-  // }
-
-  const { colors } = select((state: RootState) => ({
-    colors: state.settings.colors
-  }));
-
-  function onCardPress(item: ITodoDetails) {
+  // Set the todo item detail to be shown when the item is pressed
+  function onCardPress(item: LocalTodo) {
     setTodoSelected(item);
   }
+
+  // Triggers retrieval of pending Todos
+  useEffect(() => {
+    AgentTrigger.triggerRetrieveTodos(TodoStatus.PENDING);
+  }, []);
 
   return (
     <View style={{ flex: 1 }}>
@@ -46,16 +72,20 @@ export const TodoCurrentTab: FC<TodoRowTabProps> = ({ setTodoSelected }) => {
       <FlatList
         showsVerticalScrollIndicator={false}
         ItemSeparatorComponent={() => <ItemSeparator />}
-        data={mockCurrentTodoDetails}
+        data={pendingTodos}
         renderItem={({ item }) => (
           <TodoRow
             todoDetails={item}
-            riskLevel={RiskLevel.HIGH}
+            riskLevel={item.riskLevel ? item.riskLevel : RiskLevel.UNASSIGNED}
             onCardPress={() => onCardPress(item)}
+            onButtonPress={() => onDonePress(item)}
           />
         )}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.createdAt}
+        pointerEvents={fetchingTodos ? "none" : "auto"}
       />
+      {/* Loading Indicator while Todos are still being fetched */}
+      {fetchingTodos && <LoadingIndicator />}
     </View>
   );
 };

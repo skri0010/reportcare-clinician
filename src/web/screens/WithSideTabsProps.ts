@@ -19,12 +19,12 @@ export type WithSideTabsProps = {
   [ScreenName.CHAT]: ChatScreenProps;
   [ScreenName.TODO]: TodoScreenProps;
   [ScreenName.MARIA]: MARIAScreenProps;
-  [ScreenName.SETTING]: SETTINGScreenProps;
-  [ScreenName.HELP]: HELPScreenProps;
+  [ScreenName.SETTING]: SettingsScreenProps;
+  [ScreenName.HELP]: HelpScreenProps;
 };
 
 // Home
-type HomeNavigationProps = CompositeNavigationProp<
+export type HomeNavigationProps = CompositeNavigationProp<
   DrawerNavigationProp<SideTabsParamList, ScreenName.HOME>,
   StackNavigationProp<RootStackParamList>
 >;
@@ -68,7 +68,7 @@ type ChatScreenProps = {
 };
 
 // Todo
-type TodoNavigationProps = CompositeNavigationProp<
+export type TodoNavigationProps = CompositeNavigationProp<
   DrawerNavigationProp<SideTabsParamList, ScreenName.TODO>,
   StackNavigationProp<RootStackParamList>
 >;
@@ -89,24 +89,24 @@ type MARIAScreenProps = {
   route: RouteProp<SideTabsParamList, ScreenName.MARIA>;
 };
 
-// SETTING
-type SETTINGNavigationProps = CompositeNavigationProp<
+// Setting
+type SettingsNavigationProps = CompositeNavigationProp<
   DrawerNavigationProp<SideTabsParamList, ScreenName.SETTING>,
   StackNavigationProp<RootStackParamList>
 >;
 
-type SETTINGScreenProps = {
-  navigation: SETTINGNavigationProps;
+type SettingsScreenProps = {
+  navigation: SettingsNavigationProps;
   route: RouteProp<SideTabsParamList, ScreenName.SETTING>;
 };
 
-// HELP
-type HELPNavigationProps = CompositeNavigationProp<
+// Help
+type HelpNavigationProps = CompositeNavigationProp<
   DrawerNavigationProp<SideTabsParamList, ScreenName.HELP>,
   StackNavigationProp<RootStackParamList>
 >;
 
-type HELPScreenProps = {
-  navigation: HELPNavigationProps;
+type HelpScreenProps = {
+  navigation: HelpNavigationProps;
   route: RouteProp<SideTabsParamList, ScreenName.HELP>;
 };
