@@ -14,10 +14,11 @@ import { agentDTA } from "rc_agents/agents";
 import {
   BeliefKeys,
   ClinicianAttributes,
-  ProcedureAttributes,
-  ProcedureConst
-} from "rc_agents/AgentEnums";
-import { agentAPI, Belief } from "rc_agents/framework";
+  ProcedureAttributes
+} from "rc_agents/clinician_framework";
+import { Belief } from "rc_agents/framework";
+import { ProcedureConst } from "rc_agents/framework/Enums";
+import agentAPI from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import { TodoCreateInput } from "rc_agents/model";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
 import {

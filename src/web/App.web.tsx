@@ -7,11 +7,11 @@ import awsconfig from "aws/aws-exports";
 import { Amplify } from "@aws-amplify/core";
 import { Auth } from "@aws-amplify/auth";
 import { AuthState } from "web/auth_screens";
-import agentAPI from "rc_agents/framework/AgentAPI";
+import agentAPI from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import { Storage } from "rc_agents/storage";
 import { ToastProviderComponent } from "components/IndicatorComponents/ToastProvider";
-import { expectedAgentIds } from "rc_agents/agents";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
+import { AgentIDs } from "rc_agents/clinician_framework";
 
 Amplify.configure(awsconfig);
 Auth.configure(awsconfig);
@@ -24,13 +24,16 @@ const App: FC = () => {
   const checkAgentsInitialized = useCallback(() => {
     const agentIDMap: { [id: string]: boolean } = {};
     // Map expected agent ids to false
-    expectedAgentIds.forEach((id: string) => {
+    Object.values(AgentIDs).forEach((id: string) => {
       agentIDMap[id] = false;
     });
     // Update agent id map
-    agentAPI.getAgents().forEach((agent) => {
-      agentIDMap[agent.getID()] = agent.getInitialized();
-    });
+    const registeredAgents = agentAPI.getAgents();
+    if (registeredAgents) {
+      registeredAgents.forEach((agent) => {
+        agentIDMap[agent.getID()] = agent.getInitialized();
+      });
+    }
     // Ensure all values are true, ie all agents initialized
     const agentsInitialized = !Object.values(agentIDMap).includes(false);
     // Display app if all agents are initialized
@@ -56,7 +59,6 @@ const App: FC = () => {
       // In case local storage has been cleared
       const clinicianId = await Storage.getClinicianID();
       if (clinicianId) {
-        agentAPI.startAgents();
         setAuthState(AuthState.SIGNED_IN);
       } else {
         setAuthState(AuthState.SIGNED_OUT);

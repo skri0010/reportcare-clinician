@@ -7,15 +7,17 @@ import {
   ResettablePrecondition
 } from "rc_agents/framework";
 import {
+  ProcedureConst,
+  Performative,
+  CommonAttributes
+} from "rc_agents/framework/Enums";
+import {
   ActionFrameIDs,
   AgentIDs,
   BeliefKeys,
-  CommonAttributes,
   PatientAttributes,
-  Performative,
-  ProcedureAttributes,
-  ProcedureConst
-} from "rc_agents/AgentEnums";
+  ProcedureAttributes
+} from "rc_agents/clinician_framework";
 
 /**
  * Class to represent the activity for requesting display of retrieved pending patient assignments.

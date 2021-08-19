@@ -4,21 +4,21 @@ import {
   Agent,
   Belief,
   Precondition,
-  ResettablePrecondition,
-  setRetryLaterTimeout
+  ResettablePrecondition
 } from "rc_agents/framework";
+import { ProcedureConst } from "rc_agents/framework/Enums";
+import agentAPI from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
-  ProcedureConst,
+  setRetryLaterTimeout,
   BeliefKeys,
   ClinicianAttributes,
   ProcedureAttributes,
   AppAttributes,
   ActionFrameIDs
-} from "rc_agents/AgentEnums";
+} from "rc_agents/clinician_framework";
 import { Storage } from "rc_agents/storage";
 import { getClinicianInfo } from "aws";
 import { Role } from "rc_agents/model";
-import agentAPI from "rc_agents/framework/AgentAPI";
 import { setFetchingPatients } from "ic-redux/actions/agents/actionCreator";
 import { store } from "util/useRedux";
 

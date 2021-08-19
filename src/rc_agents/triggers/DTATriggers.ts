@@ -3,11 +3,12 @@ import {
   BeliefKeys,
   ClinicianAttributes,
   PatientAttributes,
-  ProcedureAttributes,
-  ProcedureConst
-} from "rc_agents/AgentEnums";
+  ProcedureAttributes
+} from "rc_agents/clinician_framework";
 import { agentDTA } from "rc_agents/agents";
-import { agentAPI, Belief } from "rc_agents/framework";
+import { Belief } from "rc_agents/framework";
+import { ProcedureConst } from "rc_agents/framework/Enums";
+import agentAPI from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import { PatientAssignmentResolution } from "rc_agents/model";
 
 // HF-OTP-I

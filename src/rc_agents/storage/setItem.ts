@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Alert, PatientInfo, Todo } from "aws/API";
 import { RiskLevel } from "models/RiskLevel";
+// eslint-disable-next-line no-restricted-imports
 import { mapColorCodeToRiskLevel } from "rc_agents/agents/data-assistant/action-frames/triage-alert-hf-clinic/RetrievePendingAlertCount";
 import {
   AlertInfo,

@@ -1,4 +1,5 @@
-import { AgentIDs, CommonAttributes } from "rc_agents/AgentEnums";
+import { AgentIDs } from "rc_agents/clinician_framework";
+import { CommonAttributes } from "rc_agents/framework/Enums";
 import { Agent, Belief } from "rc_agents/framework";
 import { af_RetrieveEntryData } from "./action-frames/app-device-configuration/RetrieveEntryData";
 import { af_StoreEntryData } from "./action-frames/app-device-configuration/StoreEntryData";

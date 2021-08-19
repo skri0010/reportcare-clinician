@@ -3,38 +3,33 @@ import { DeviceEventEmitter } from "react-native";
 import Belief from "./Belief";
 import Actionframe from "./Actionframe";
 import Message from "../communication/Message";
-import agentAPI from "../AgentAPI";
+import agentAPI from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import Engine from "./Engine/Engine";
 import ActivityNode from "./Engine/Rete/ActivityNode";
 import ObjNode from "./Engine/Rete/ObjNode";
 import AlphaNode from "./Engine/Rete/AlphaNode";
 import Node from "./Engine/Rete/Node";
 import BetaNode from "./Engine/Rete/BetaNode";
-import { Fact } from "../../model";
-import { getClinicianProtectedInfo } from "aws";
-import { AppAttributes, BeliefKeys, CommonAttributes } from "../../AgentEnums";
-import { Storage } from "../../storage";
-import { ClinicianProtectedInfo } from "aws/API";
+import { Fact } from "../index";
+import { CommonAttributes } from "../Enums";
 
 /**
  * Class representing the Agent
  */
-class Agent {
-  private id: string;
+abstract class Agent {
+  protected id: string;
 
-  private beliefs: Fact;
+  protected beliefs: Fact;
 
-  private actionFrames: Actionframe[];
+  protected actionFrames: Actionframe[];
 
-  private messageQueue: Message[];
+  protected messageQueue: Message[];
 
-  private availableActions: ActivityNode[] = [];
+  protected availableActions: ActivityNode[] = [];
 
-  private working: boolean;
+  protected working: boolean;
 
-  private initialized: boolean;
-
-  private engine!: Engine;
+  protected engine!: Engine;
 
   /**
    * Constructor of the Agent
@@ -49,21 +44,12 @@ class Agent {
     this.messageQueue = [];
     this.availableActions = [];
     this.working = false;
-    this.initialized = false;
 
     DeviceEventEmitter.addListener(this.id, (message: Message) =>
       this.onMessage(message)
     );
     DeviceEventEmitter.addListener("env", (fact: Belief) => this.onEvent(fact));
     this.initAgent(beliefs, this.actionFrames);
-  }
-
-  /**
-   * Called to trigger the initialization of agent.
-   */
-  // eslint-disable-next-line class-methods-use-this
-  start(): void {
-    // Do nothing
   }
 
   /**
@@ -92,13 +78,6 @@ class Agent {
    */
   getAvailableActions(): unknown {
     return this.availableActions;
-  }
-
-  /**
-   * Get agent initialized boolean
-   */
-  getInitialized(): boolean {
-    return this.initialized;
   }
 
   /**
@@ -137,16 +116,7 @@ class Agent {
     this.engine = new Engine(actionFrames);
 
     // Register Agent in the system
-    // Note: agentManager might be undefined on first attempt, set to retry every 0.5s
-    const timer = setInterval(() => {
-      try {
-        agentAPI.registerAgent(this);
-        this.setInitialized(true);
-        clearInterval(timer);
-      } catch (e) {
-        console.log(`${this.id} ${e}`);
-      }
-    }, 500);
+    agentAPI.registerAgent(this);
 
     // Set Beliefs
     this.setBeliefs(beliefs);
@@ -155,87 +125,10 @@ class Agent {
   }
 
   /**
-   * Set agent initialized boolean
-   */
-  setInitialized(initialized: boolean): void {
-    this.initialized = initialized;
-  }
-
-  /**
    * Set beliefs of the agent
    * @param {Belief[]} beliefs - Initial beliefs of the agent
    */
-  async setBeliefs(beliefs: Belief[]): Promise<void> {
-    let beliefsSet = false;
-    let protectedInfo: ClinicianProtectedInfo | null | undefined;
-
-    try {
-      // Retrieves local clinician
-      const localClinician = await Storage.getClinician();
-      if (localClinician) {
-        // Device is online
-        if (agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
-          const query = await getClinicianProtectedInfo({
-            clinicianID: localClinician.clinicianID
-          });
-          if (query.data && query.data.getClinicianProtectedInfo) {
-            const result = query.data.getClinicianProtectedInfo;
-            protectedInfo = result;
-
-            // Updates local storage
-            localClinician.protectedInfo = result;
-            await Storage.setClinician(localClinician);
-          }
-        } else {
-          protectedInfo = localClinician.protectedInfo;
-        }
-      }
-
-      // Initializes agent's beliefs using the retrieved states in protected info
-      if (protectedInfo && this.id in protectedInfo) {
-        const beliefJSON = protectedInfo[this.id as keyof typeof protectedInfo];
-        if (beliefJSON) {
-          const parsedBelief = JSON.parse(beliefJSON.toString());
-          if (Object.entries(parsedBelief).length > 0) {
-            this.beliefs = parsedBelief;
-            beliefsSet = true;
-          }
-        }
-      }
-
-      if (!beliefsSet) {
-        for (let i = 0; i < beliefs.length; i += 1) {
-          this.addBelief(beliefs[i]);
-        }
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  /**
-   * Merge incoming beliefs into current beliefs.
-   * This happen when an existing user signs in.
-   * @param {Belief} beliefs
-   */
-  mergeBeliefs(beliefs: Belief): void {
-    Object.entries(beliefs).forEach(([key, innerObj]) => {
-      // Non existing keys
-      if (!(key in this.beliefs)) {
-        this.beliefs[key] = innerObj;
-      } else {
-        // Replace current LastActivity if it is null
-        Object.entries(innerObj).forEach(([attribute, value]) => {
-          if (
-            attribute === CommonAttributes.LAST_ACTIVITY &&
-            !this.beliefs[key][attribute]
-          ) {
-            this.beliefs[key][attribute] = value;
-          }
-        });
-      }
-    });
-  }
+  abstract setBeliefs(beliefs: Belief[]): Promise<void>;
 
   /**
    * Check message if the message is received
@@ -297,6 +190,8 @@ class Agent {
       const activityNode = this.availableActions.shift()!;
       const activity = activityNode.getActivity();
       await activity.doActivity(this);
+
+      // Updates last activity in the current state of belief
       this.addBelief(
         new Belief(
           this.getID(),

@@ -6,16 +6,16 @@ import {
   Precondition,
   ResettablePrecondition
 } from "rc_agents/framework";
+import { ProcedureConst } from "rc_agents/framework/Enums";
+import agentAPI from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
-  ProcedureConst,
   BeliefKeys,
   ProcedureAttributes,
   AppAttributes,
   ActionFrameIDs,
   ClinicianAttributes
-} from "rc_agents/AgentEnums";
+} from "rc_agents/clinician_framework";
 import { Storage } from "rc_agents/storage";
-import agentAPI from "rc_agents/framework/AgentAPI";
 import { store } from "util/useRedux";
 import {
   setPendingTodos,

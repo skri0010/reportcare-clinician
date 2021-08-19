@@ -6,16 +6,16 @@ import {
   Precondition,
   ResettablePrecondition
 } from "rc_agents/framework";
+import { ProcedureConst } from "rc_agents/framework/Enums";
+import agentAPI from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
   ActionFrameIDs,
   AppAttributes,
   BeliefKeys,
   ClinicianAttributes,
-  ProcedureAttributes,
-  ProcedureConst
-} from "rc_agents/AgentEnums";
+  ProcedureAttributes
+} from "rc_agents/clinician_framework";
 import { Storage } from "rc_agents/storage";
-import agentAPI from "rc_agents/framework/AgentAPI";
 import { Alert, ModelSortDirection } from "aws/API";
 import { mockPendingAlerts } from "mock/mockAlerts";
 import { listPendingAlertsByDateTime } from "aws";

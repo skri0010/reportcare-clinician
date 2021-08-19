@@ -1,5 +1,6 @@
 import { Agent, Belief } from "rc_agents/framework";
-import { AgentIDs, CommonAttributes } from "rc_agents/AgentEnums";
+import { AgentIDs } from "rc_agents/clinician_framework";
+import { CommonAttributes } from "rc_agents/framework/Enums";
 import { af_SyncProtectedInfo } from "./action-frames/SyncProtectedInfo";
 import { af_SyncPatientAssignmentResolutions } from "./action-frames/SyncPatientAssignmentResolutions";
 import af_SyncTodosCreate from "./action-frames/SyncTodosCreate";

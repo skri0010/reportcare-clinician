@@ -1,4 +1,4 @@
-import { CompOperator } from "rc_agents/AgentEnums";
+import { CompOperator } from "../Enums";
 import Precondition from "./Precondition";
 
 /**

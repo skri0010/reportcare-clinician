@@ -8,15 +8,15 @@ import { RequestsByMariaCard } from "./RequestsByMariaCard";
 import { AlertsCard } from "./AlertsCard";
 import { TodosCard } from "./TodosCard";
 import { PendingPatientAssignmentsCard } from "./PendingPatientAssignmentsCard";
-import agentAPI from "rc_agents/framework/AgentAPI";
-import Belief from "rc_agents/framework/base/Belief";
+import { Belief } from "rc_agents/framework";
+import { ProcedureConst } from "rc_agents/framework/Enums";
+import agentAPI from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
   BeliefKeys,
   ClinicianAttributes,
-  ProcedureAttributes,
-  ProcedureConst
-} from "rc_agents/AgentEnums";
-import agentDTA from "rc_agents/agents/data-assistant/DTA";
+  ProcedureAttributes
+} from "rc_agents/clinician_framework";
+import { agentDTA } from "rc_agents/agents";
 
 export const HomeScreen: FC<WithSideTabsProps[ScreenName.HOME]> = () => {
   // JH-TODO Replace titles with i18n

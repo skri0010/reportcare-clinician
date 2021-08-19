@@ -4,14 +4,14 @@ import {
   Agent,
   Belief,
   Precondition,
-  ResettablePrecondition,
-  setRetryLaterTimeout
+  ResettablePrecondition
 } from "rc_agents/framework";
 import {
+  setRetryLaterTimeout,
   ActionFrameIDs,
   AppAttributes,
   BeliefKeys
-} from "rc_agents/AgentEnums";
+} from "rc_agents/clinician_framework";
 import { Storage } from "rc_agents/storage";
 import { updateTodo } from "aws/TypedAPI/updateMutations";
 import { getTodo } from "aws/TypedAPI/getQueries";
