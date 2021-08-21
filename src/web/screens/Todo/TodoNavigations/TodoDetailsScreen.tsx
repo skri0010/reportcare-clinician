@@ -2,7 +2,7 @@
 import React, { FC } from "react";
 import { View, TouchableOpacity } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
-import { WithTodoDetailsProps } from "web/screens/WithTodoScreenProps";
+import { TodoDetailsScreenProps } from "web/screens/TodoScreenProps";
 import { H2, H3, H4, H5 } from "components/Text";
 import { RootState, select } from "util/useRedux";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
@@ -62,7 +62,7 @@ export const EditHistorySection: FC<EditHistorySectionProps> = ({
 };
 
 export const TodoDetailsScreen: FC<
-  WithTodoDetailsProps[TodoDetailsName.VIEW_TODO]
+  TodoDetailsScreenProps[TodoDetailsName.VIEW_TODO]
 > = ({ route, navigation }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors

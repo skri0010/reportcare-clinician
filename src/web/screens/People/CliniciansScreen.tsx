@@ -6,7 +6,7 @@ import { mockClinician } from "mock/mockClinicians";
 import { ClinicianContactRow } from "components/RowComponents/ClinicianRow/ClinicianContactRow";
 import { ClinicianShareRow } from "components/RowComponents/ClinicianRow/ClinicianShareRow";
 
-export const CliniciansTab: FC = () => {
+export const CliniciansScreen: FC = () => {
   // JH-TODO: Replace placeholder with i18n
   return (
     <ScreenWrapper>

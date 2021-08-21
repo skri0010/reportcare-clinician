@@ -27,7 +27,7 @@ export const RowSelectionTab: FC<RowSelectionTabProps> = ({
   return (
     <View style={[styles.container]}>
       {/* Header */}
-      <RowSelectionHeader
+      {/* <RowSelectionHeader
         title={title}
         addButton={addButton}
         onPress={
@@ -37,7 +37,7 @@ export const RowSelectionTab: FC<RowSelectionTabProps> = ({
                 null;
               }
         }
-      />
+      /> */}
 
       {/* Search bar */}
       {!isTodo ? (

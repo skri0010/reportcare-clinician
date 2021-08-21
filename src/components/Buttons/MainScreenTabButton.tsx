@@ -22,7 +22,7 @@ export const MainScreenTabButton: FC<MainScreenTabButtonProps> = ({
     colors: state.settings.colors
   }));
 
-  const tabIconSize = ms(25);
+  const tabIconSize = ms(22);
   return (
     <View style={styles.tabIconContainer}>
       <Icon
@@ -41,6 +41,7 @@ export const MainScreenTabButton: FC<MainScreenTabButtonProps> = ({
 const styles = ScaledSheet.create({
   tabIconContainer: {
     width: "100%",
-    alignItems: "center"
+    alignItems: "center",
+    justifyContent: "center"
   }
 });

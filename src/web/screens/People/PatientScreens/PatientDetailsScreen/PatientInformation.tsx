@@ -11,13 +11,13 @@ import {
   ContactInfoSection
 } from "./PatientInfoSections/ContactInfoSection";
 import { InfoTitleBar } from "./PatientInfoSections/InfoTitleBar";
-import { WithPatientsScreenProps, PatientsScreenName } from "web/screens";
+import { PatientsScreenProps, PatientsScreenName } from "web/screens";
 import { RootState, select } from "util/useRedux";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
 import { getAge } from "util/utilityFunctions";
 
 export const PatientInformation: FC<
-  WithPatientsScreenProps[PatientsScreenName.INFO]
+  PatientsScreenProps[PatientsScreenName.INFO]
 > = () => {
   const { patientDetails } = select((state: RootState) => ({
     colors: state.settings.colors,

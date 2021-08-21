@@ -1,7 +1,8 @@
 import { PatientInfo } from "aws/API";
 import { LocalTodo } from "rc_agents/model";
 import { AlertHistory, MedicalRecords } from "mock/mockPatientDetails";
-import { TodoNavigationProps } from "web/screens/MainScreenProps";
+import { TodoScreenNavigation } from "web/screens/MainScreenProps";
+import { NavigatorScreenParams } from "@react-navigation/native";
 
 export enum ScreenName {
   MAIN = "Main",
@@ -11,8 +12,7 @@ export enum ScreenName {
   CHAT = "Chat",
   TODO = "Todo",
   MARIA = "MARIA",
-  SETTING = "SETTING",
-  HELP = "HELP"
+  SETTINGS = "Settings"
 }
 
 export enum PatientsScreenName {
@@ -48,15 +48,14 @@ export enum TodoDetailsName {
 // Extract the params from the screen containing the nested navigator
 export type MainScreenParamList = {
   [ScreenName.HOME]: undefined;
-  // [ScreenName.PATIENT]: NavigatorScreenParams<PatientsScreenParamList>;
+  // [ScreenName.PATIENTS]: NavigatorScreenParams<PatientsScreenParamList>;
   [ScreenName.PATIENTS]: { patientId: string };
   [ScreenName.CLINICIANS]: undefined;
   [ScreenName.CHAT]: undefined;
   // [ScreenName.TODO]: NavigatorScreenParams<TodoScreenParamList>;
   [ScreenName.TODO]: LocalTodo;
   [ScreenName.MARIA]: undefined;
-  [ScreenName.SETTING]: undefined;
-  [ScreenName.HELP]: undefined;
+  [ScreenName.SETTINGS]: undefined;
 };
 
 // Patient screens params list
@@ -91,7 +90,7 @@ export type TodoListParamList = {
 export type TodoDetailsParamList = {
   [TodoDetailsName.VIEW_TODO]: {
     todo: LocalTodo;
-    parentNavigation?: TodoNavigationProps;
+    parentNavigation?: TodoScreenNavigation;
   };
   [TodoDetailsName.EDIT_TODO]: { todo: LocalTodo };
 };
@@ -100,10 +99,10 @@ export type TodoDetailsParamList = {
 export type { MainScreenProps } from "web/screens/MainScreenProps";
 
 // Type checking for patient screen tabs (navigation and route)
-export type { WithPatientsScreenProps } from "web/screens/WithPatientsScreenProps";
+export type { PatientsScreenProps } from "web/screens/PatientsScreenProps";
 
 // Type checking for todo screen tabs and details (navigation and route)
 export type {
-  WithTodosProps,
-  WithTodoDetailsProps
-} from "web/screens/WithTodoScreenProps";
+  TodoScreenProps as WithTodosProps,
+  TodoDetailsScreenProps as WithTodoDetailsProps
+} from "web/screens/TodoScreenProps";

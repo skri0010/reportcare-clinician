@@ -28,7 +28,7 @@ export const lightColorScheme: ColorScheme = {
 
   // Bars
   primaryBarColor: "#0d8ca8",
-  secondaryBarColor: "#ffffff",
+  secondaryBarColor: "#0b849e",
 
   // Indicators
   primaryIndicatorColor: "#ffffff",
@@ -49,6 +49,7 @@ export const lightColorScheme: ColorScheme = {
   primaryIconColor: "#000000",
   secondaryIconColor: "#ABA9A9",
   primaryContrastIconColor: "#FFFFFF",
+  selectedIconColor: "#00ffff",
   acceptIconColor: "#6AC574",
 
   // Others

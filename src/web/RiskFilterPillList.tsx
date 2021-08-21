@@ -50,10 +50,6 @@ export const RiskFilterPillList: FC = () => {
 
   return (
     <View style={styles.container}>
-      {/* Filter by text */}
-      <View style={styles.textContainer}>
-        <H6 text={i18n.t("Patients.PatientsList.FilterBy")} />
-      </View>
       {/* Risk filter pill list */}
       <FlatList
         contentContainerStyle={[
@@ -78,7 +74,7 @@ export const RiskFilterPillList: FC = () => {
 const styles = ScaledSheet.create({
   container: {
     flexDirection: "row",
-    paddingTop: "3@ms"
+    paddingVertical: "5@ms"
   },
   textContainer: {
     paddingLeft: "10@ms",
@@ -86,8 +82,8 @@ const styles = ScaledSheet.create({
     paddingBottom: "5@ms"
   },
   listContainer: {
-    flex: 1,
     flexDirection: "row",
-    paddingBottom: "5@ms"
+    paddingBottom: "5@ms",
+    paddingLeft: "5@ms"
   }
 });

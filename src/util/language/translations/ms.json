@@ -151,7 +151,6 @@
   "Patients": {
     "PatientsList": {
       "NoPatients": "Tiada pesakit yang dijumpai!",
-      "FilterBy": "Tapis berdasarkan:",
       "Class": "Kelas",
       "Age": "Umur,"
     },

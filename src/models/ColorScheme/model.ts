@@ -44,6 +44,7 @@ export interface ColorScheme {
   primaryIconColor: string;
   secondaryIconColor: string;
   primaryContrastIconColor: string;
+  selectedIconColor: string;
   acceptIconColor: string;
 
   // Others

@@ -2,15 +2,8 @@ import { ScreenName, MainScreenParamList } from "web/screens";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { RouteProp } from "@react-navigation/native";
 
-/**
- * Screen props consists of { navigation, route }
- *
- * For nested navigators, it must be combined with nested navigation props
- * - navigation is used for navigation.navigate() type checking
- * - navigated parameters can be accessed via route.params
- *
- * Usage of CompositeNavigationProp allows navigation to RootStack screens
- */
+// Navigation and route props for main screens
+
 export type MainScreenProps = {
   [ScreenName.HOME]: HomeScreenProps;
   [ScreenName.PATIENTS]: PatientScreenProps;
@@ -18,18 +11,16 @@ export type MainScreenProps = {
   [ScreenName.CHAT]: ChatScreenProps;
   [ScreenName.TODO]: TodoScreenProps;
   [ScreenName.MARIA]: MARIAScreenProps;
-  [ScreenName.SETTING]: SettingsScreenProps;
+  [ScreenName.SETTINGS]: SettingsScreenProps;
 };
 
-// Properties for main screens
-
 type HomeScreenProps = {
-  navigation: DrawerNavigationProp<MainScreenParamList, ScreenName.HOME>;
+  navigation: HomeScreenNavigation;
   route: RouteProp<MainScreenParamList, ScreenName.HOME>;
 };
 
 type PatientScreenProps = {
-  navigation: DrawerNavigationProp<MainScreenParamList, ScreenName.PATIENTS>;
+  navigation: PatientsScreenNavigation;
   route: RouteProp<MainScreenParamList, ScreenName.PATIENTS>;
 };
 
@@ -44,7 +35,7 @@ type ChatScreenProps = {
 };
 
 type TodoScreenProps = {
-  navigation: DrawerNavigationProp<MainScreenParamList, ScreenName.TODO>;
+  navigation: TodoScreenNavigation;
   route: RouteProp<MainScreenParamList, ScreenName.TODO>;
 };
 
@@ -54,6 +45,23 @@ type MARIAScreenProps = {
 };
 
 type SettingsScreenProps = {
-  navigation: DrawerNavigationProp<MainScreenParamList, ScreenName.SETTING>;
-  route: RouteProp<MainScreenParamList, ScreenName.SETTING>;
+  navigation: DrawerNavigationProp<MainScreenParamList, ScreenName.SETTINGS>;
+  route: RouteProp<MainScreenParamList, ScreenName.SETTINGS>;
 };
+
+// Navigation declared to be used in this module as well as exported
+
+export type HomeScreenNavigation = DrawerNavigationProp<
+  MainScreenParamList,
+  ScreenName.HOME
+>;
+
+export type PatientsScreenNavigation = DrawerNavigationProp<
+  MainScreenParamList,
+  ScreenName.PATIENTS
+>;
+
+export type TodoScreenNavigation = DrawerNavigationProp<
+  MainScreenParamList,
+  ScreenName.TODO
+>;

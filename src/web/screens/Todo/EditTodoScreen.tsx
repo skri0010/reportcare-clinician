@@ -7,7 +7,7 @@ import {
   ViewStyle
 } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
-import { WithTodoDetailsProps } from "../WithTodoScreenProps";
+import { TodoDetailsScreenProps } from "../TodoScreenProps";
 import { TodoDetailsName } from "../index";
 import {
   TodoSection,
@@ -26,7 +26,7 @@ import {
 import { AgentTrigger } from "rc_agents/trigger";
 
 export const EditTodoScreen: FC<
-  WithTodoDetailsProps[TodoDetailsName.EDIT_TODO]
+  TodoDetailsScreenProps[TodoDetailsName.EDIT_TODO]
 > = ({ route, navigation }) => {
   const { colors, updatedTodo } = select((state: RootState) => ({
     colors: state.settings.colors,

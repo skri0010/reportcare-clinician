@@ -7,7 +7,7 @@ import { OxygenSaturationCard } from "./PatientOverviewCards/OxygenSaturationCar
 import { WeightCard } from "./PatientOverviewCards/WeightCard";
 import { SymptomsCard } from "./PatientOverviewCards/SymptomsCard";
 import { Dimensions, View } from "react-native";
-import { WithPatientsScreenProps } from "../../../WithPatientsScreenProps";
+import { PatientsScreenProps } from "../../../PatientsScreenProps";
 import { PatientsScreenName } from "web/screens";
 import { RootState, select } from "util/useRedux";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
@@ -15,7 +15,7 @@ import { ReportSymptom, ReportVitals } from "aws/API";
 import i18n from "util/language/i18n";
 
 export const PatientOverview: FC<
-  WithPatientsScreenProps[PatientsScreenName.OVERVIEW]
+  PatientsScreenProps[PatientsScreenName.OVERVIEW]
 > = () => {
   const { patientDetails } = select((state: RootState) => ({
     colors: state.settings.colors,

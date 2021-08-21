@@ -4,12 +4,12 @@ import {
   DrawerNavigationOptions
 } from "@react-navigation/drawer";
 import { HomeScreen } from "web/screens/Home/HomeScreen";
-import { CliniciansTab } from "web/screens/People/CliniciansTab";
+import { CliniciansScreen } from "web/screens/People/CliniciansScreen";
 import { PatientsScreen } from "web/screens/People/PatientsScreen";
 import { ChatScreen } from "web/screens/Chat/ChatScreen";
 import { TodoScreen } from "web/screens/Todo/TodoScreen";
 import { MariaScreen } from "web/screens/Maria/MariaScreen";
-import { SettingScreen } from "web/screens/Setting/SettingScreen";
+import { SettingsScreen } from "web/screens/Setting/SettingsScreen";
 import { MainScreenTabButton } from "components/Buttons/MainScreenTabButton";
 import { ScreenName, MainScreenParamList } from "web/screens";
 import { select, RootState } from "util/useRedux";
@@ -77,66 +77,66 @@ export const DrawerNavigation: FC<DrawerNavigationProps> = ({ signOut }) => {
           })
         }}
       />
-      {/* <Drawer.Screen
+      <Drawer.Screen
         name={ScreenName.PATIENTS}
         component={PatientsScreen}
         options={{
-          drawerIcon: ({ color }) => (
-            <TabIcon name="account-circle" color={color} subtitle="Patients" />
-          ),
-          drawerLabel: () => null
+          ...buildScreenOptions({
+            iconName: "account-circle",
+            iconLabel: i18n.t("ScreenName.Patients")
+          })
         }}
       />
       <Drawer.Screen
         name={ScreenName.CLINICIANS}
-        component={CliniciansTab}
+        component={CliniciansScreen}
         options={{
-          drawerIcon: ({ color }) => (
-            <TabIcon name="stethoscope" color={color} subtitle="Clinicians" />
-          ),
-          drawerLabel: () => null
+          ...buildScreenOptions({
+            iconName: "stethoscope",
+            iconLabel: i18n.t("ScreenName.Clinicians")
+          })
         }}
       />
       <Drawer.Screen
         name={ScreenName.CHAT}
         component={ChatScreen}
         options={{
-          drawerIcon: ({ color }) => (
-            <TabIcon name="chat" color={color} subtitle="Chat" />
-          ),
-          drawerLabel: () => null
+          ...buildScreenOptions({
+            iconName: "chat",
+            iconLabel: i18n.t("ScreenName.Chat")
+          })
         }}
       />
       <Drawer.Screen
         name={ScreenName.TODO}
         component={TodoScreen}
         options={{
-          drawerIcon: ({ color }) => (
-            <TabIcon name="note-text" color={color} subtitle="Todo" />
-          ),
-          drawerLabel: () => null
+          ...buildScreenOptions({
+            iconName: "note-text",
+            iconLabel: i18n.t("ScreenName.Todo")
+          })
         }}
       />
       <Drawer.Screen
         name={ScreenName.MARIA}
         component={MariaScreen}
         options={{
-          drawerIcon: ({ color }) => (
-            <TabIcon name="face-agent" color={color} subtitle="MARIA" />
-          ),
-          drawerLabel: () => null
+          ...buildScreenOptions({
+            iconName: "face-agent",
+            iconLabel: i18n.t("ScreenName.MARIA")
+          })
         }}
       />
       <Drawer.Screen
-        name={ScreenName.SETTING}
-        component={SettingScreen}
+        name={ScreenName.SETTINGS}
+        component={SettingsScreen}
         options={{
-          drawerIcon: ({ color }) => (
-            <TabIcon name="cog" color={color} subtitle="Settings" />
-          ),
-          drawerLabel: () => null
+          ...buildScreenOptions({
+            iconName: "cog",
+            iconLabel: i18n.t("ScreenName.Settings")
+          })
         }}
-      /> */}
+      />
     </Drawer.Navigator>
   );
 };

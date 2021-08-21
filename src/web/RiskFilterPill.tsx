@@ -2,17 +2,19 @@ import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
 import { Text, TouchableHighlight } from "react-native";
 import { getRiskLevelColor, RiskLevel } from "models/RiskLevel";
-import { moderateScale, ScaledSheet } from "react-native-size-matters";
+import { moderateScale, ms, ScaledSheet } from "react-native-size-matters";
 
 export interface RiskFilterPillProps {
   riskLevel: RiskLevel;
   selected: boolean;
+  leftPadding?: boolean;
   onPress?: (key: RiskLevel) => void;
 }
 
 export const RiskFilterPill: FC<RiskFilterPillProps> = ({
   riskLevel,
   selected,
+  leftPadding = false,
   onPress = null
 }) => {
   const { colors } = select((state: RootState) => ({
@@ -39,7 +41,8 @@ export const RiskFilterPill: FC<RiskFilterPillProps> = ({
             colors.riskLevelBorderColors,
             riskLevel
           )
-        }
+        },
+        leftPadding ? { marginLeft: ms(20) } : {}
       ]}
       onPress={
         onPress

@@ -151,7 +151,6 @@
   "Patients": {
     "PatientsList": {
       "NoPatients": "No patients found!",
-      "FilterBy": "Filter by:",
       "Class": "Class",
       "Age": "Age"
     },

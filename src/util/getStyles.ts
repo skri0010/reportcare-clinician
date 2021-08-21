@@ -47,10 +47,12 @@ export const getBottomTabBarOptions: (
 // JH-TODO-NAV: Remove export
 // Style for main screen header
 export const getMainScreenHeaderStyle: (
-  colors: ColorScheme
-) => StyleProp<ViewStyle> = (colors) => {
+  colors: ColorScheme,
+  height?: number
+) => StyleProp<ViewStyle> = (colors, height = ms(40)) => {
   return {
-    backgroundColor: colors.primaryBarColor,
+    backgroundColor: colors.secondaryBarColor,
+    height: height,
     elevation: 0, // Remove shadow on Android
     shadowOpacity: 0, // Remove shadow on iOS
     borderBottomWidth: 0
@@ -64,7 +66,7 @@ const getMainScreenHeaderTitleStyle: (
 ) => TextStyle = (colors, fonts) => {
   return {
     color: colors.primaryContrastTextColor,
-    fontSize: fonts.h4Size
+    fontSize: fonts.h2Size
   };
 };
 
@@ -74,13 +76,15 @@ export const getDrawerScreenOptions: (input: {
   fonts: FontScheme;
   drawerWidth?: number;
 }) => DrawerNavigationOptions = ({ colors, fonts, drawerWidth = ms(60) }) => {
-  const headerStyle = getMainScreenHeaderStyle(colors);
+  const headerHeight = ms(40);
+  const headerStyle = getMainScreenHeaderStyle(colors, headerHeight);
   const headerTitleStyle = getMainScreenHeaderTitleStyle(colors, fonts);
 
   return {
-    headerLeft: () => null, // Hide drawer icon,
+    headerLeft: () => null,
     headerStyle: headerStyle,
     headerTitleStyle: headerTitleStyle,
+    headerTitleAlign: "center",
     drawerStyle: {
       width: drawerWidth,
       borderRightWidth: 0, // Remove white line between drawer and header,
@@ -88,7 +92,15 @@ export const getDrawerScreenOptions: (input: {
       elevation: 0, // Remove shadow on Android
       shadowOpacity: 0 // Remove shadow on iOS
     },
-    drawerActiveTintColor: colors.selectedTextColor,
+    drawerLabel: () => null,
+    drawerLabelStyle: { flex: 0 },
+    drawerItemStyle: {
+      height: drawerWidth * 0.8,
+      justifyContent: "center"
+    }, // Icon and label style
+    drawerContentContainerStyle: { paddingTop: headerHeight },
+    drawerActiveTintColor: colors.selectedIconColor,
+    drawerInactiveTintColor: colors.primaryContrastIconColor,
     drawerType: "permanent"
   };
 };

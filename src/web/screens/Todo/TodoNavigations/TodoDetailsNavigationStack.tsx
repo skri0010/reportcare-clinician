@@ -7,7 +7,7 @@ import { TodoDetailsName, TodoDetailsParamList } from "web/screens";
 import { LocalTodo } from "rc_agents/model";
 import i18n from "util/language/i18n";
 import { ms } from "react-native-size-matters";
-import { TodoNavigationProps } from "web/screens/MainScreenProps";
+import { TodoScreenNavigation } from "web/screens/MainScreenProps";
 import { onDonePress } from "../TodoCurrentTab";
 import { onUndoPress } from "../TodoCompletedTab";
 
@@ -15,7 +15,7 @@ const Stack = createStackNavigator<TodoDetailsParamList>();
 
 interface TodoDetailsNavigationStackProps {
   todo: LocalTodo;
-  navigation: TodoNavigationProps;
+  navigation: TodoScreenNavigation;
 }
 
 export const TodoDetailsNavigationStack: FC<TodoDetailsNavigationStackProps> =

@@ -6,10 +6,10 @@ import { WeightParameterCard } from "./PatientParameterCards/WeightParameterCard
 import { DiastolicParameterCard } from "./PatientParameterCards/DiastolicParameterCard";
 import { OxygenSaturationParameterCard } from "./PatientParameterCards/OxygenSaturationParameterCard";
 import { SystolicParameterCard } from "./PatientParameterCards/SystolicParameterCard";
-import { WithPatientsScreenProps, PatientsScreenName } from "web/screens";
+import { PatientsScreenProps, PatientsScreenName } from "web/screens";
 
 export const PatientParameter: FC<
-  WithPatientsScreenProps[PatientsScreenName.PARAMETERS]
+  PatientsScreenProps[PatientsScreenName.PARAMETERS]
 > = ({ route }) => {
   const { patient } = route.params;
   const cardMaxHeight = Math.max(
