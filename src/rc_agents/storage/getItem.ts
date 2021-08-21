@@ -16,6 +16,13 @@ export const getSignUpDetails = async (): Promise<
   return null;
 };
 
+export const getUsername = async (): Promise<
+  AsyncStorageType[AsyncStorageKeys.USERNAME] | null
+> => {
+  const localData = await AsyncStorage.getItem(AsyncStorageKeys.USERNAME);
+  return localData;
+};
+
 export const getClinicianID = async (): Promise<
   AsyncStorageType[AsyncStorageKeys.CLINICIAN_ID] | null
 > => {

@@ -14,8 +14,7 @@ import {
   ProcedureAttributes,
   ActionFrameIDs
 } from "rc_agents/clinician_framework";
-import { AsyncStorageKeys, Storage } from "rc_agents/storage";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AsyncStorageKeys, AsyncStorageType, Storage } from "rc_agents/storage";
 import { createClinicianInfo, createClinicianProtectedInfo } from "aws";
 import { store } from "util/useRedux";
 import {
@@ -41,22 +40,19 @@ class StoreEntryData extends Activity {
 
     try {
       // Gets sign up details and username from facts
-      const data =
+      const data: AsyncStorageType[AsyncStorageKeys.SIGN_UP_DETAILS] =
         agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[
           ClinicianAttributes.ENTRY_DATA
         ];
-      const clinicianUsername =
-        agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[
-          ClinicianAttributes.USERNAME
-        ];
 
-      if (data && clinicianUsername) {
+      if (data) {
+        const clinicianID = data.username;
         // Create new ClinicianInfo
         const response = await createClinicianInfo({
-          owner: clinicianUsername,
+          owner: clinicianID,
           name: data.name,
           hospitalName: data.hospitalName,
-          clinicianID: clinicianUsername,
+          clinicianID: clinicianID,
           role: data.role
         });
 
@@ -65,8 +61,8 @@ class StoreEntryData extends Activity {
           // Create new ClinicianProtectedInfo data
           const createProtectedInfoResponse =
             await createClinicianProtectedInfo({
-              owner: clinicianUsername,
-              clinicianID: clinicianUsername,
+              owner: clinicianID,
+              clinicianID: clinicianID,
               facts: "",
               APS: "",
               DTA: "",
@@ -83,13 +79,12 @@ class StoreEntryData extends Activity {
           }
 
           // Stores clinicianID and clinician locally
-          await AsyncStorage.multiSet([
-            [AsyncStorageKeys.CLINICIAN_ID, newClinicianInfo.clinicianID!],
-            [AsyncStorageKeys.CLINICIAN, JSON.stringify(newClinicianInfo)]
-          ]);
+          await Storage.setClinicianID(newClinicianInfo.clinicianID);
+          await Storage.setClinician(newClinicianInfo);
 
-          // Removes sign up details from local storage
+          // Removes sign up details and username from local storage
           await Storage.removeItem(AsyncStorageKeys.SIGN_UP_DETAILS);
+          await Storage.removeItem(AsyncStorageKeys.USERNAME);
 
           // Dispatch to front end that sign in was successful
           store.dispatch(setProcedureSuccessful(true));
@@ -104,11 +99,6 @@ class StoreEntryData extends Activity {
     // Removes sign up details from facts
     agentAPI.addFact(
       new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.ENTRY_DATA, null),
-      false
-    );
-    // Removes username from facts
-    agentAPI.addFact(
-      new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.USERNAME, null),
       false
     );
     // Stops the procedure

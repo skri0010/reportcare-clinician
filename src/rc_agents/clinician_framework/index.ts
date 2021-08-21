@@ -122,8 +122,8 @@ export enum ProcedureAttributes {
   HF_OTP_II = "HF-OTP-II",
   SRD_I = "SRD-I",
   SRD_II = "SRD-II",
-  AT_CP_I = "AT-CP_I",
-  AT_CP_II = "AT-CP_II"
+  AT_CP_I = "AT-CP-I",
+  AT_CP_II = "AT-CP-II"
 }
 
 // Attributes for CLINICIAN key

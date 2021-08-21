@@ -15,8 +15,7 @@ import {
   AgentIDs,
   ActionFrameIDs
 } from "rc_agents/clinician_framework";
-import { AsyncStorageKeys } from "rc_agents/storage";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AsyncStorageKeys, Storage } from "rc_agents/storage";
 import { getClinicianInfo } from "aws";
 import { store } from "util/useRedux";
 import {
@@ -148,20 +147,11 @@ class RetrieveEntryData extends Activity {
           }
 
           // Stores clinicianID and clinician locally
-          await AsyncStorage.multiSet([
-            [AsyncStorageKeys.CLINICIAN_ID, clinician.clinicianID],
-            [AsyncStorageKeys.CLINICIAN, JSON.stringify(clinician)]
-          ]);
+          await Storage.setClinicianID(clinician.clinicianID);
+          await Storage.setClinician(clinician);
 
-          // Removes username from facts
-          agentAPI.addFact(
-            new Belief(
-              BeliefKeys.CLINICIAN,
-              ClinicianAttributes.USERNAME,
-              null
-            ),
-            false
-          );
+          // Removes username from local storage
+          await Storage.removeItem(AsyncStorageKeys.USERNAME);
 
           // Dispatch to front end that sign in was successful
           store.dispatch(setProcedureSuccessful(true));
@@ -173,6 +163,11 @@ class RetrieveEntryData extends Activity {
     }
 
     // Update Facts
+    // Removes username from facts
+    agentAPI.addFact(
+      new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.USERNAME, null),
+      false
+    );
     // Stops the procedure
     agentAPI.addFact(
       new Belief(

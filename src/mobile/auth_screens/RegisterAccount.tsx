@@ -57,6 +57,7 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
         setRegistering(false);
         toast.show(i18n.t("Auth_Registration.CodeSent"), { type: "success" });
         await Storage.setSignUpDetails({
+          username: username,
           name: name,
           hospitalName: hospital,
           role: role

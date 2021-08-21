@@ -30,6 +30,12 @@ export const setSignUpDetails = async (
   );
 };
 
+export const setUsername = async (
+  username: AsyncStorageType[AsyncStorageKeys.USERNAME]
+): Promise<void> => {
+  await AsyncStorage.setItem(AsyncStorageKeys.USERNAME, username);
+};
+
 export const setClinicianID = async (
   clinicianID: AsyncStorageType[AsyncStorageKeys.CLINICIAN_ID]
 ): Promise<void> => {

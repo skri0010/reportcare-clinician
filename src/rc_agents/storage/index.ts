@@ -32,10 +32,12 @@ export enum AsyncStorageKeys {
 // Types for storing data locally in AsyncStorage
 export type AsyncStorageType = {
   [AsyncStorageKeys.SIGN_UP_DETAILS]: {
+    username: string;
     name: string;
     hospitalName: string;
     role: string;
   };
+  [AsyncStorageKeys.USERNAME]: string;
   [AsyncStorageKeys.CLINICIAN_ID]: string;
   [AsyncStorageKeys.CLINICIAN]: ClinicianInfo;
   [AsyncStorageKeys.PENDING_PATIENT_ASSIGNMENTS]: PatientAssignment[];

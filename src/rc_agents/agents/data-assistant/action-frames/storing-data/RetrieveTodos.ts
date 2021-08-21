@@ -162,9 +162,7 @@ class RetrieveTodos extends Activity {
         BeliefKeys.PROCEDURE,
         ProcedureAttributes.SRD_II,
         ProcedureConst.INACTIVE
-      ),
-      true,
-      true
+      )
     );
 
     // Dispatch to front end that procedure has been completed

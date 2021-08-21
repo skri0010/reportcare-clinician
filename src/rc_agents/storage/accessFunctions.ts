@@ -10,9 +10,16 @@ export const removeItem = async (key: AsyncStorageKeys): Promise<void> => {
   await AsyncStorage.removeItem(key);
 };
 
+/**
+ * Upon sign out, remove all locally stored items except for sign up details if it exists
+ */
 export const removeAll = async (): Promise<void> => {
   const keys = await AsyncStorage.getAllKeys();
   if (keys && keys.length > 0) {
+    const index = keys.findIndex((k) => k === AsyncStorageKeys.SIGN_UP_DETAILS);
+    if (index >= 0) {
+      keys.splice(index, 1);
+    }
     await AsyncStorage.multiRemove(keys);
   }
 };
