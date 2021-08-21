@@ -1,10 +1,11 @@
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { ScreenWrapper } from "../../../ScreenWrapper";
 import { Dimensions, View } from "react-native";
 import { PatientAlertHistoryCard } from "./PatientHistoryScreens/PatientAlertHistoryCard";
 import { PatientMedicalRecordCard } from "./PatientHistoryScreens/PatientMedicalRecordCard";
 import { WithPatientsScreenProps, PatientsScreenName } from "web/screens";
+import { AgentTrigger } from "rc_agents/trigger";
 
 export const PatientHistory: FC<
   WithPatientsScreenProps[PatientsScreenName.HISTORY]
@@ -15,6 +16,10 @@ export const PatientHistory: FC<
     Dimensions.get("window").height * 0.65
   );
   // Query history data by patientId here or pass it into component for query
+
+  useEffect(() => {
+    AgentTrigger.triggerGetHistoricalAlerts(patient.id);
+  });
 
   return (
     <ScreenWrapper padding>

@@ -26,6 +26,7 @@ interface AgentsState {
   pendingAlertCount: PendingAlertCount;
   alerts: Alert[];
   alertInfo: AlertInfo | undefined;
+  alertHistory: AlertInfo[] | undefined;
   fetchingTodos: boolean;
   pendingTodos: LocalTodo[] | undefined;
   completedTodos: LocalTodo[] | undefined;
@@ -58,6 +59,7 @@ const initialState: AgentsState = {
   },
   alerts: [],
   alertInfo: undefined,
+  alertHistory: undefined,
   fetchingTodos: false,
   pendingTodos: undefined,
   completedTodos: undefined,
@@ -85,6 +87,8 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
         ...state,
         fetchingPatientDetails: action.payload.fetchingPatientDetails
       };
+    case actionNames.SET_ALERT_HISTORY:
+      return { ...state, alertHistory: action.payload.alertHistory };
     case actionNames.SET_FETCHING_PENDING_PATIENT_ASSIGNMENTS:
       return {
         ...state,

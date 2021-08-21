@@ -100,6 +100,15 @@ class RetrieveAlertHistory extends Activity {
           }
         }
 
+        // Trigger request to dispatch alert history to UXSA for frontend display
+        agent.addBelief(
+          new Belief(
+            BeliefKeys.PATIENT,
+            PatientAttributes.PATIENT_ALERT_HISTORY_RETRIEVED,
+            true
+          )
+        );
+
         // Removes patientId from facts
         agentAPI.addFact(
           new Belief(

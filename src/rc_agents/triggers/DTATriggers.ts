@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { PatientInfo } from "aws/API";
 import {
   BeliefKeys,
@@ -160,6 +161,35 @@ export const triggerUpdateTodo = (input: TodoUpdateInput): void => {
     new Belief(
       BeliefKeys.PROCEDURE,
       ProcedureAttributes.SRD_II,
+      ProcedureConst.ACTIVE
+    )
+  );
+};
+
+// HF-OTP-II Triggers retrieval of historical alerts according to patient ID
+export const triggerGetHistoricalAlerts = (patientId: string): void => {
+  // Add patient ID as fact
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PATIENT,
+      PatientAttributes.ALERT_PATIENT_ID,
+      patientId
+    ),
+    false
+  );
+  // Set preconditions
+  agentDTA.addBelief(
+    new Belief(
+      BeliefKeys.PATIENT,
+      PatientAttributes.RETRIEVE_ALERT_HISTORY,
+      true
+    )
+  );
+
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PROCEDURE,
+      ProcedureAttributes.HF_OTP_II,
       ProcedureConst.ACTIVE
     )
   );
