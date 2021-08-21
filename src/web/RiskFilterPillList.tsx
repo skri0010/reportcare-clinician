@@ -4,7 +4,10 @@ import { RiskFilterPill } from "./RiskFilterPill";
 import { View, FlatList } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { select, RootState, store } from "util/useRedux";
-import { setRiskFilters } from "ic-redux/actions/agents/actionCreator";
+import {
+  setAlertRiskFilters,
+  setPatientRiskFilters
+} from "ic-redux/actions/agents/actionCreator";
 import { RiskFilter } from "rc_agents/model";
 import { agentDTA } from "rc_agents/agents";
 import { agentAPI, Belief } from "rc_agents/framework";
@@ -17,10 +20,20 @@ import {
 import { H6 } from "components/Text";
 import i18n from "util/language/i18n";
 
-export const RiskFilterPillList: FC = () => {
+interface RiskFilterPillListProps {
+  patientScreen?: boolean;
+  alertScreen?: boolean;
+}
+
+export const RiskFilterPillList: FC<RiskFilterPillListProps> = ({
+  patientScreen = false,
+  alertScreen = false
+}) => {
   const { colors, riskFilters } = select((state: RootState) => ({
     colors: state.settings.colors,
-    riskFilters: state.agents.riskFilters
+    riskFilters: alertScreen
+      ? state.agents.alertRiskFilters
+      : state.agents.patientRiskFilters
   }));
 
   // Function to toggle selected risk filters
@@ -32,20 +45,28 @@ export const RiskFilterPillList: FC = () => {
       [RiskLevel.UNASSIGNED]: riskFilters.Unassigned
     };
     tempRiskFilters[riskLevel] = !tempRiskFilters[riskLevel];
-    // Update risk filters
-    store.dispatch(setRiskFilters(tempRiskFilters));
-    // Trigger agents to retrieve filtered patients
-    agentDTA.addBelief(
-      new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.RETRIEVE_ROLE, true)
-    );
-
-    agentAPI.addFact(
-      new Belief(
-        BeliefKeys.PROCEDURE,
-        ProcedureAttributes.HF_OTP_I,
-        ProcedureConst.ACTIVE
-      )
-    );
+    // Update risk filters based on which Screen user is on
+    if (patientScreen) {
+      store.dispatch(setPatientRiskFilters(tempRiskFilters));
+      // Trigger agents to retrieve filtered patients
+      agentDTA.addBelief(
+        new Belief(
+          BeliefKeys.CLINICIAN,
+          ClinicianAttributes.RETRIEVE_ROLE,
+          true
+        )
+      );
+      agentAPI.addFact(
+        new Belief(
+          BeliefKeys.PROCEDURE,
+          ProcedureAttributes.HF_OTP_I,
+          ProcedureConst.ACTIVE
+        )
+      );
+    } else {
+      // Trigger agents to get filtered alerts
+      store.dispatch(setAlertRiskFilters(tempRiskFilters));
+    }
   };
 
   return (

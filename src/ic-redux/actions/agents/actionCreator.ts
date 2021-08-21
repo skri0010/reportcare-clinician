@@ -129,9 +129,16 @@ export const setUpdatedTodo = createAction(
   })
 )();
 
-export const setRiskFilters = createAction(
-  actionNames.SET_RISK_FILTERS,
+export const setPatientRiskFilters = createAction(
+  actionNames.SET_PATIENT_RISK_FILTERS,
   (riskFilters: RiskFilters) => ({
-    riskFilters: riskFilters
+    patientRiskFilters: riskFilters
+  })
+)();
+
+export const setAlertRiskFilters = createAction(
+  actionNames.SET_ALERT_RISK_FILTERS,
+  (riskFilters: RiskFilters) => ({
+    alertRiskFilters: riskFilters
   })
 )();

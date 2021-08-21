@@ -16,11 +16,9 @@ import {
 } from "rc_agents/AgentEnums";
 import { Storage } from "rc_agents/storage";
 import agentAPI from "rc_agents/framework/AgentAPI";
-import { mockCompletedAlerts, mockPendingAlerts } from "mock/mockAlerts";
-import { listCompletedRiskAlerts, listPendingRiskAlerts } from "aws";
-import { AlertColorCode, AlertInfo, AlertStatus } from "rc_agents/model";
-import { RiskLevel } from "models/RiskLevel";
-import { Alert } from "aws/API";
+import { listCompletedRiskAlerts, listPendingAlertsByDateTime } from "aws";
+import { AlertInfo, AlertStatus } from "rc_agents/model";
+import { Alert, ModelSortDirection } from "aws/API";
 
 // LS-TODO: To be tested with actual Alerts.
 // NOTE: This is originally MHA's action frame.
@@ -51,75 +49,33 @@ class RetrieveAlerts extends Activity {
       const alertStatus: AlertStatus =
         facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.ALERT_STATUS];
 
-      const alertRiskLevel: RiskLevel =
-        facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.ALERT_RISK_LEVEL];
-
-      // Retrieves all alerts with a specific status and risk level
-      if (alertStatus && alertRiskLevel) {
+      if (alertStatus) {
         if (facts[BeliefKeys.APP][AppAttributes.ONLINE]) {
           // Device is online
-
-          // Maps risk level to color code for query
-          const alertColorCode: AlertColorCode =
-            mapRiskLevelToColorCode(alertRiskLevel);
-
           let alerts: Alert[] | undefined;
           // Pending alerts
-          if (alertStatus === AlertStatus.PENDING && alertColorCode) {
-            const query = await listPendingRiskAlerts({
+          // Changed to get all alert sorted by date time
+          if (alertStatus === AlertStatus.PENDING) {
+            const query = await listPendingAlertsByDateTime({
               pending: AlertStatus.PENDING,
-              colorCode: { eq: alertColorCode }
+              sortDirection: ModelSortDirection.DESC
             });
-            if (query.data && query.data.listPendingRiskAlerts) {
-              const result = query.data.listPendingRiskAlerts.items;
+            if (query.data && query.data.listPendingAlertsByDateTime) {
+              const result = query.data.listPendingAlertsByDateTime.items;
               if (result && result.length > 0) {
                 alerts = result as Alert[];
-              } else {
-                // LS-TODO: To be removed
-                const mockAlerts = JSON.parse(
-                  JSON.stringify(mockPendingAlerts)
-                );
-                switch (alertColorCode) {
-                  case AlertColorCode.HIGH:
-                    alerts = mockAlerts.splice(0, 2);
-                    break;
-                  case AlertColorCode.MEDIUM:
-                    alerts = mockAlerts.splice(2, 1);
-                    break;
-                  default:
-                    break;
-                }
               }
             }
           }
           // Completed alerts
-          else if (alertStatus === AlertStatus.COMPLETED && alertColorCode) {
+          else if (alertStatus === AlertStatus.COMPLETED) {
             const query = await listCompletedRiskAlerts({
-              completed: AlertStatus.COMPLETED,
-              colorCode: { eq: alertColorCode }
+              completed: AlertStatus.COMPLETED
             });
             if (query.data && query.data.listCompletedRiskAlerts) {
               const result = query.data.listCompletedRiskAlerts.items;
               if (result && result.length > 0) {
                 alerts = result as Alert[];
-              } else {
-                // LS-TODO: To be removed
-                const mockAlerts = JSON.parse(
-                  JSON.stringify(mockCompletedAlerts)
-                );
-                switch (alertColorCode) {
-                  case AlertColorCode.HIGH:
-                    alerts = mockAlerts.splice(0, 1);
-                    break;
-                  case AlertColorCode.MEDIUM:
-                    alerts = mockAlerts.splice(1, 1);
-                    break;
-                  case AlertColorCode.LOW:
-                    alerts = mockAlerts.splice(2, 1);
-                    break;
-                  default:
-                    break;
-                }
               }
             }
           }
@@ -127,6 +83,7 @@ class RetrieveAlerts extends Activity {
           if (alerts) {
             // LS-TODO: Previously using Alerts_To_Sort key to be sorted by SortAlerts of ALA first
             // Broadcast alert to facts to be used by RetrieveAlertInfos action frame of DTA.
+            // Can be removed if there is a similar function for getting completed alerts by dateTime
             const sortedAlerts = sortAlertsByDateTime(alerts);
 
             agentAPI.addFact(
@@ -144,11 +101,13 @@ class RetrieveAlerts extends Activity {
         } else {
           // Device is offline
           const localRiskAlerts = await Storage.getRiskOrStatusAlerts(
-            alertRiskLevel,
+            // probably can be removed
+            undefined,
             alertStatus
           );
           if (localRiskAlerts) {
             const sortedAlerts = sortAlertsByDateTime(localRiskAlerts);
+            // this triggers requestAlertsDisplay most likely
             agentAPI.addFact(
               new Belief(
                 BeliefKeys.CLINICIAN,
@@ -184,21 +143,6 @@ class RetrieveAlerts extends Activity {
     }
   }
 }
-
-const mapRiskLevelToColorCode = (alertRiskLevel: RiskLevel): AlertColorCode => {
-  switch (alertRiskLevel) {
-    case RiskLevel.HIGH:
-      return AlertColorCode.HIGH;
-    case RiskLevel.MEDIUM:
-      return AlertColorCode.MEDIUM;
-    case RiskLevel.LOW:
-      return AlertColorCode.LOW;
-    case RiskLevel.UNASSIGNED:
-      return AlertColorCode.UNASSIGNED;
-    default:
-      return AlertColorCode.UNASSIGNED;
-  }
-};
 
 /**
  * Sorts alerts / alert infos in descending order of datetime.

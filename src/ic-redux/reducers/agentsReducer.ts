@@ -22,7 +22,8 @@ interface AgentsState {
   fetchingPatients: boolean;
   fetchingPatientDetails: boolean;
   fetchingPendingPatientAssignments: boolean;
-  riskFilters: RiskFilter;
+  patientRiskFilters: RiskFilter;
+  alertRiskFilters: RiskFilter;
   pendingAlertCount: PendingAlertCount;
   alerts: Alert[];
   alertInfo: AlertInfo | undefined;
@@ -44,7 +45,13 @@ const initialState: AgentsState = {
   fetchingPatientDetails: false,
   fetchingPendingPatientAssignments: false,
   patientAssignmentsSynced: false,
-  riskFilters: {
+  patientRiskFilters: {
+    [RiskLevel.HIGH]: false,
+    [RiskLevel.MEDIUM]: false,
+    [RiskLevel.LOW]: false,
+    [RiskLevel.UNASSIGNED]: false
+  },
+  alertRiskFilters: {
     [RiskLevel.HIGH]: false,
     [RiskLevel.MEDIUM]: false,
     [RiskLevel.LOW]: false,
@@ -116,8 +123,13 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
         ...state,
         alertInfo: action.payload.alertInfo
       };
-    case actionNames.SET_RISK_FILTERS:
-      return { ...state, riskFilters: action.payload.riskFilters };
+    case actionNames.SET_PATIENT_RISK_FILTERS:
+      return {
+        ...state,
+        patientRiskFilters: action.payload.patientRiskFilters
+      };
+    case actionNames.SET_ALERT_RISK_FILTERS:
+      return { ...state, alertRiskFilters: action.payload.alertRiskFilters };
     case actionNames.SET_FETCHING_TODOS:
       return { ...state, fetchingTodos: action.payload.fetchingTodos };
     case actionNames.SET_PENDING_TODOS:
