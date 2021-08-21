@@ -3,9 +3,9 @@ import { AgentIDs } from "rc_agents/clinician_framework";
 import { CommonAttributes } from "rc_agents/framework/Enums";
 import { af_SyncProtectedInfo } from "./action-frames/SyncProtectedInfo";
 import { af_SyncPatientAssignmentResolutions } from "./action-frames/SyncPatientAssignmentResolutions";
-import af_SyncTodosCreate from "./action-frames/SyncTodosCreate";
-import af_SyncTodosUpdate from "./action-frames/SyncTodosUpdate";
-import af_SyncAlertsUpdate from "./action-frames/SyncAlertsUpdate";
+import af_SyncCreateTodos from "./action-frames/SyncCreateTodos";
+import af_SyncUpdateTodos from "./action-frames/SyncUpdateTodos";
+import af_SyncUpdateAlerts from "./action-frames/SyncUpdateAlerts";
 
 // Initial Beliefs of Agent
 const belief1 = new Belief(AgentIDs.NWA, CommonAttributes.LAST_ACTIVITY, null);
@@ -16,10 +16,9 @@ const agentNWA = new Agent(
   [
     af_SyncProtectedInfo,
     af_SyncPatientAssignmentResolutions,
-
-    af_SyncTodosCreate,
-    af_SyncTodosUpdate,
-    af_SyncAlertsUpdate
+    af_SyncCreateTodos,
+    af_SyncUpdateTodos,
+    af_SyncUpdateAlerts
   ], // action frame
   [belief1] // beliefs
 );

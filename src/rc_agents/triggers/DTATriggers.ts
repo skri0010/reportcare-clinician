@@ -11,9 +11,8 @@ import { Belief } from "rc_agents/framework";
 import agentAPI from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
   PatientAssignmentResolution,
-  TodoCreateInput,
-  TodoStatus,
-  TodoUpdateInput
+  TodoInput,
+  TodoStatus
 } from "rc_agents/model";
 
 // HF-OTP-I
@@ -131,7 +130,7 @@ export const triggerRetrieveTodos = (status: TodoStatus): void => {
 };
 
 // SRD-II: Triggers CreateTodo of DTA
-export const triggerCreateTodo = (input: TodoCreateInput): void => {
+export const triggerCreateTodo = (input: TodoInput): void => {
   agentAPI.addFact(
     new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.TODO, input),
     false
@@ -149,7 +148,7 @@ export const triggerCreateTodo = (input: TodoCreateInput): void => {
 };
 
 // SRD-II: Triggers UpdateTodo of DTA
-export const triggerUpdateTodo = (input: TodoUpdateInput): void => {
+export const triggerUpdateTodo = (input: TodoInput): void => {
   agentAPI.addFact(
     new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.TODO, input),
     false

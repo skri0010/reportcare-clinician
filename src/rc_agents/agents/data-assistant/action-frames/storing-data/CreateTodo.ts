@@ -19,26 +19,9 @@ import { Storage } from "rc_agents/storage";
 import { store } from "util/useRedux";
 import { setProcedureSuccessful } from "ic-redux/actions/agents/actionCreator";
 import { agentNWA } from "rc_agents/agents";
-import {
-  createTodo,
-  getAlert,
-  listTodosByAlertID,
-  updateAlert,
-  updateTodo
-} from "aws";
-import {
-  TodoCreateInput,
-  LocalTodo,
-  AlertStatus,
-  TodoStatus,
-  TodoUpdateInput
-} from "rc_agents/model";
-import {
-  CreateTodoInput,
-  Todo,
-  UpdateAlertInput,
-  UpdateTodoInput
-} from "aws/API";
+import { createTodo, listTodosByAlertID } from "aws";
+import { AlertInfo, LocalTodo, TodoInput, TodoStatus } from "rc_agents/model";
+import { CreateTodoInput } from "aws/API";
 
 // LS-TODO: To be tested with creating Todo associated with an Alert.
 
@@ -62,18 +45,15 @@ class CreateTodo extends Activity {
 
     try {
       // Gets Todo from facts
-      const todoInput: TodoCreateInput | TodoUpdateInput =
+      const todoInput: TodoInput =
         facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.TODO];
 
       // Gets locally stored clinicianId
       const clinicianId = await Storage.getClinicianID();
 
       if (todoInput && clinicianId) {
-        let todoId: string | undefined;
-        let pendingTodoSync: boolean | undefined;
-        let pendingAlertSync = false;
+        let toSync: boolean | undefined;
         let alertTodoExists = false;
-        let existingTodo: Todo | undefined;
 
         // Constructs CreateTodoInput to be inserted
         const todoToInsert: CreateTodoInput = {
@@ -81,42 +61,115 @@ class CreateTodo extends Activity {
           title: todoInput.title,
           patientName: todoInput.patientName,
           notes: todoInput.notes,
-          lastModified: new Date().toISOString(),
+          lastModified: todoInput.lastModified
+            ? todoInput.lastModified
+            : todoInput.createdAt,
           owner: clinicianId
         };
 
+        // Updates Todo's status
         if (todoInput.completed) {
           todoToInsert.completed = TodoStatus.COMPLETED;
         } else {
           todoToInsert.pending = TodoStatus.PENDING;
         }
 
-        if (todoInput.alert) {
-          todoToInsert.alertID = todoInput.alert.id;
-          todoInput.alert.completed = true;
+        // Triggers associated Alert to be updated if any
+        if (todoInput.alert || todoInput.alertId) {
+          let alertToUpdate: AlertInfo | undefined;
+
+          // Create Todo for the first time
+          if (todoInput.alert) {
+            alertToUpdate = todoInput.alert;
+            // Removes alert to prevent it from being stored into local storage later on
+            delete todoInput.alert;
+          }
+          // When attempts to update an unsynced Todo
+          else if (todoInput.alertId && todoInput.patientId) {
+            // Query current AlertInfo from local storage
+            const alertInfo = await Storage.getSingleAlertInfo(
+              todoInput.alertId,
+              todoInput.patientId
+            );
+            if (alertInfo) {
+              alertToUpdate = alertInfo;
+            }
+          }
+
+          if (alertToUpdate) {
+            todoToInsert.alertID = alertToUpdate.id;
+            alertToUpdate.completed = true;
+
+            // Adds AlertInfo to facts to be updated
+            agentAPI.addFact(
+              new Belief(
+                BeliefKeys.CLINICIAN,
+                ClinicianAttributes.ALERT,
+                alertToUpdate
+              ),
+              false
+            );
+            // Triggers to update alert
+            agent.addBelief(
+              new Belief(
+                BeliefKeys.CLINICIAN,
+                ClinicianAttributes.UPDATE_ALERT,
+                true
+              )
+            );
+            agentAPI.addFact(
+              new Belief(
+                BeliefKeys.PROCEDURE,
+                ProcedureAttributes.AT_CP_II,
+                ProcedureConst.ACTIVE
+              )
+            );
+          }
         }
 
         /**
          * Device is online:
          * 1. Query existing Todo with the same Alert
-         * 2. If Todo already exists, update Todo instead.
+         * 2. If Todo already exists, triggers UpdateTodo.
          * 3. If Todo does not exist, insert Todo.
-         * 4. If Todo is successfully updated, set pendingTodoSync to false, otherwise set to true.
-         * 4. If Todo is inserted, set pendingTodoSync to false, update Alert to completed.
-         * 5. If failed to update Alert, set pendingAlertSync to true, store locally in AlertsSync list.
+         * 4. If Todo is successfully inserted, set toSync to false, otherwise set to true.
          */
         if (facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
-          if (todoInput.alert) {
+          if (todoInput.alertId) {
             // Queries existing Todo with the same Alert
             const query = await listTodosByAlertID({
               clinicianID: clinicianId,
-              alertID: { eq: todoInput.alert.id }
+              alertID: { eq: todoInput.alertId }
             });
             if (query.data.listTodosByAlertID?.items) {
               const results = query.data.listTodosByAlertID?.items;
               if (results && results.length > 0) {
                 alertTodoExists = true;
-                existingTodo = results[0]!;
+                const existingTodo = results[0]!;
+
+                // Updates input to be used for updating Todo
+                todoInput.id = existingTodo.id;
+                todoInput._version = existingTodo._version;
+                todoInput.lastModified = existingTodo.createdAt;
+                todoInput.createdAt = existingTodo.createdAt;
+
+                agentAPI.addFact(
+                  new Belief(
+                    BeliefKeys.CLINICIAN,
+                    ClinicianAttributes.TODO,
+                    todoInput
+                  ),
+                  false
+                );
+
+                // Triggers UpdateTodo
+                agent.addBelief(
+                  new Belief(
+                    BeliefKeys.CLINICIAN,
+                    ClinicianAttributes.UPDATE_TODO,
+                    true
+                  )
+                );
               }
             }
           }
@@ -126,175 +179,36 @@ class CreateTodo extends Activity {
             if (createResponse.data.createTodo) {
               // Gets newly inserted Todo to update local Todo id
               const insertedTodo = createResponse.data.createTodo;
-              todoId = insertedTodo.id;
+              todoInput.id = insertedTodo.id;
 
               // Updates to indicate that Todo is successfully inserted
-              pendingTodoSync = false;
-
-              // Updates alert to completed if any
-              if (insertedTodo.alertID) {
-                // Queries latest alert
-                const alertQuery = await getAlert({ id: insertedTodo.alertID });
-                if (alertQuery.data.getAlert) {
-                  const latestAlert = alertQuery.data.getAlert;
-
-                  // Latest Alert has higher version than local alert
-                  if (
-                    todoInput.alert?._version &&
-                    latestAlert._version > todoInput.alert?._version
-                  ) {
-                    // Replace local alert and alert info with information from latest alert
-                    await Storage.mergeAlert(latestAlert);
-                    await Storage.mergeAlertInfo(latestAlert);
-                  } else {
-                    // This alert will be used for local merging later on
-                    latestAlert.pending = null;
-                    latestAlert.completed = AlertStatus.COMPLETED;
-
-                    // Constructs alert object to be updated
-                    const alertToUpdate: UpdateAlertInput = {
-                      id: latestAlert.id,
-                      completed: latestAlert.completed,
-                      pending: latestAlert.pending,
-                      _version: latestAlert._version
-                    };
-                    const updateResponse = await updateAlert(alertToUpdate);
-
-                    // Updates to indicate that alert is successfully updated
-                    if (updateResponse.data.updateAlert) {
-                      pendingAlertSync = false;
-                      latestAlert._version =
-                        updateResponse.data.updateAlert._version;
-                    } else {
-                      // Failed to update alert
-                      pendingAlertSync = true;
-                    }
-
-                    // Updates locally stored alert and alert info
-                    // Input is of type Alert
-                    await Storage.mergeAlert(latestAlert);
-                    await Storage.mergeAlertInfo(latestAlert);
-                  }
-                }
-              }
-            }
-          } else if (alertTodoExists && existingTodo) {
-            // Updates Todo
-            // No conflict resolution required since existingTodo is the latest Todo
-            const todoToUpdate: UpdateTodoInput = {
-              ...todoToInsert,
-              id: existingTodo.id,
-              _version: existingTodo._version
-            };
-            const updateResponse = await updateTodo(todoToUpdate);
-            if (updateResponse.data.updateTodo) {
-              pendingTodoSync = false;
-              const updatedTodo = updateResponse.data.updateTodo;
-              existingTodo._version = updatedTodo._version;
-              existingTodo.lastModified = updatedTodo.lastModified;
-            } else {
-              pendingTodoSync = true;
+              toSync = false;
             }
           }
         } else {
-          /**
-           * Device is offline:
-           * Both Todo and Alert require syncing.
-           */
-          pendingTodoSync = true;
-          pendingAlertSync = true;
+          // Device is offline: Todo requires syncing
+          toSync = true;
         }
 
-        /**
-         * Constructs LocalTodo object to be stored locally.
-         * 1. Local Todo for syncing is recognized using the toSync attribute.
-         * 2. Local Todo to be inserted has null id and toSync set to true.
-         * 3. Local Todo to be updated has non-null id and toSync set to true.
-         * 4. If Todo already exists, update local Todo with existing Todo's id, createdAt and _version values.
-         * 5. If Todo has associated Alert, include alertId and patientId attributes.
-         * 6. If Todo has been successfully inserted, Local Todo will have non-null id.
-         * 7. If Todo has been/ is to be updated, Local Todo will have a non-null lastModified.
-         */
-        if (pendingTodoSync !== undefined) {
-          // Constructs Todo to be stored
+        // Constructs LocalTodo object to be stored locally
+        if (toSync !== undefined) {
           const todoToStore: LocalTodo = {
-            title: todoToInsert.title,
-            patientName: todoToInsert.patientName,
-            notes: todoToInsert.notes,
-            completed: todoToInsert.completed === TodoStatus.COMPLETED,
-            createdAt: todoInput.createdAt
-              ? todoInput.createdAt
-              : todoToInsert.lastModified,
-            toSync: pendingTodoSync,
-            _version: 1
+            ...todoInput,
+            toSync: toSync
           };
 
-          // Todo is associated with an Alert
-          if (todoInput.alert) {
-            todoToStore.alertId = todoInput.alert.id;
-            todoToStore.patientId = todoInput.alert.patientId;
-            todoToStore.riskLevel = todoInput.alert.riskLevel;
-
-            // Offline: local alert and alert info haven't been updated yet
-            if (pendingTodoSync) {
-              // Input is of type AlertInfo
-              await Storage.mergeAlert(todoInput.alert);
-              await Storage.mergeAlertInfo(todoInput.alert);
-            }
-
-            // Merge alert into local storage list to be synced
-            if (pendingAlertSync) {
-              await Storage.setAlertSync(todoInput.alert);
-              // Notifies NWA
-              agentNWA.addBelief(
-                new Belief(
-                  BeliefKeys.APP,
-                  AppAttributes.SYNC_ALERTS_UPDATE,
-                  true
-                )
-              );
-            }
-          }
-
-          // Existing Todo for the same Alert already exists
-          if (alertTodoExists && existingTodo) {
-            todoToStore.id = existingTodo.id;
-            todoToStore.createdAt = existingTodo.createdAt;
-            todoToStore.lastModified = todoToInsert.lastModified;
-            todoToStore._version = existingTodo._version;
-          }
-
-          // Todo has been successfully inserted
-          if (!pendingTodoSync && todoId) {
-            todoToStore.id = todoId;
-          }
-
           // Updates local Todos
-          await Storage.mergeTodo(todoToStore);
+          await Storage.setTodo(todoToStore);
 
           // Notifies NWA to sync update or create Todo
-          if (pendingTodoSync) {
-            if (alertTodoExists) {
-              // Offline and Todo already exists: set pending update to true
-              agentNWA.addBelief(
-                new Belief(
-                  BeliefKeys.APP,
-                  AppAttributes.SYNC_TODOS_UPDATE,
-                  true
-                )
-              );
-            } else {
-              // Offline and Todo does not exist: set pending insert to true
-              agentNWA.addBelief(
-                new Belief(
-                  BeliefKeys.APP,
-                  AppAttributes.SYNC_TODOS_CREATE,
-                  true
-                )
-              );
-            }
+          if (toSync) {
+            // Offline and Todo does not exist: set pending insert to true
+            agentNWA.addBelief(
+              new Belief(BeliefKeys.APP, AppAttributes.SYNC_CREATE_TODOS, true)
+            );
           }
 
+          // Adds LocalTodo to facts to be dispatched by UXSA
           agentAPI.addFact(
             new Belief(
               BeliefKeys.CLINICIAN,
@@ -307,16 +221,20 @@ class CreateTodo extends Activity {
 
         // Dispatch to front end to indicate that procedure is successful
         store.dispatch(setProcedureSuccessful(true));
+
+        agent.addBelief(
+          new Belief(
+            BeliefKeys.CLINICIAN,
+            ClinicianAttributes.TODOS_UPDATED,
+            true
+          )
+        );
       }
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
       store.dispatch(setProcedureSuccessful(false));
     }
-
-    agent.addBelief(
-      new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.TODOS_UPDATED, true)
-    );
   }
 }
 

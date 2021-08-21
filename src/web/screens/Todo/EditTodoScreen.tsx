@@ -17,7 +17,7 @@ import { H3 } from "components/Text";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import i18n from "util/language/i18n";
-import { LocalTodo, TodoUpdateInput } from "rc_agents/model";
+import { LocalTodo, TodoInput } from "rc_agents/model";
 import {
   setProcedureOngoing,
   setSubmittingTodo,
@@ -47,14 +47,12 @@ export const EditTodoScreen: FC<
   const onSave = (item: LocalTodo) => {
     dispatch(setProcedureOngoing(true));
     dispatch(setSubmittingTodo(true));
-    const todoToUpdate: TodoUpdateInput = {
-      id: item.id ? item.id : undefined,
+
+    const todoToUpdate: TodoInput = {
+      ...item,
       title: titleInput,
-      patientName: item.patientName,
       notes: noteInput,
-      _version: item._version,
-      completed: item.completed,
-      createdAt: item.createdAt
+      lastModified: new Date().toISOString()
     };
     AgentTrigger.triggerUpdateTodo(todoToUpdate);
   };

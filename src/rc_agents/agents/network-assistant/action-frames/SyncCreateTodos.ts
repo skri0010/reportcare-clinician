@@ -10,22 +10,23 @@ import {
   setRetryLaterTimeout,
   ActionFrameIDs,
   AppAttributes,
-  BeliefKeys
+  BeliefKeys,
+  ClinicianAttributes
 } from "rc_agents/clinician_framework";
 import { Storage } from "rc_agents/storage";
-import { updateTodo } from "aws/TypedAPI/updateMutations";
 import { createTodo } from "aws/TypedAPI/createMutations";
-import { CreateTodoInput, Todo, UpdateTodoInput } from "aws/API";
+import { CreateTodoInput } from "aws/API";
 import { listTodosByAlertID } from "aws";
 import { agentNWA } from "rc_agents/agents";
 import { TodoStatus } from "rc_agents/model";
+import agentAPI from "rc_agents/clinician_framework/ClinicianAgentAPI";
 
 /**
  * Class to represent the activity for syncing local creation of new Todos.
  */
-class SyncTodosCreate extends Activity {
+class SyncCreateTodos extends Activity {
   /**
-   * Constructor for the SyncTodosCreate class
+   * Constructor for the SyncCreateTodos class
    */
   constructor() {
     super(ActionFrameIDs.NWA.SYNC_CREATE_TODOS);
@@ -47,15 +48,14 @@ class SyncTodosCreate extends Activity {
 
       if (localTodos && clinicianId) {
         // Indicators of whether all pending Todos have been synced
-        let createSuccessful = false;
-        let updateSuccessful = false;
+        let createSuccessful = true;
 
         // Todo to be inserted have null id and toSync set to true
         await Promise.all(
           localTodos.map(async (todo) => {
             if (!todo.id && todo.toSync) {
               let alertTodoExists = false;
-              let existingTodo: Todo | undefined;
+
               if (todo.alertId) {
                 // Queries existing Todo with the same Alert
                 const query = await listTodosByAlertID({
@@ -66,7 +66,32 @@ class SyncTodosCreate extends Activity {
                   const results = query.data.listTodosByAlertID?.items;
                   if (results && results.length > 0) {
                     alertTodoExists = true;
-                    existingTodo = results[0]!;
+                    const existingTodo = results[0]!;
+
+                    // Updates input to be used for updating Todo
+                    todo.id = existingTodo.id;
+                    todo._version = existingTodo._version;
+                    todo.lastModified = existingTodo.createdAt;
+                    todo.createdAt = existingTodo.createdAt;
+
+                    // Triggers UpdateTodo
+                    agentAPI.addFact(
+                      new Belief(
+                        BeliefKeys.CLINICIAN,
+                        ClinicianAttributes.TODO,
+                        todo
+                      ),
+                      false
+                    );
+
+                    // Triggers UpdateTodo
+                    agent.addBelief(
+                      new Belief(
+                        BeliefKeys.CLINICIAN,
+                        ClinicianAttributes.UPDATE_TODO,
+                        true
+                      )
+                    );
                   }
                 }
               }
@@ -103,36 +128,6 @@ class SyncTodosCreate extends Activity {
                 } else {
                   createSuccessful = false;
                 }
-              } else if (alertTodoExists && existingTodo) {
-                // Todo for the same Alert exists: update this Todo
-
-                // Updates attributes of local Todo
-                todo.id = existingTodo.id;
-                todo._version = existingTodo._version;
-
-                // Constructs object for updating
-                const todoToUpdate: UpdateTodoInput = {
-                  id: todo.id,
-                  title: todo.title,
-                  patientName: todo.patientName,
-                  notes: todo.notes,
-                  pending: todo.completed ? null : TodoStatus.PENDING,
-                  completed: todo.completed ? TodoStatus.COMPLETED : null,
-                  lastModified: todo.createdAt,
-                  owner: clinicianId,
-                  _version: todo._version
-                };
-
-                todo.createdAt = existingTodo.createdAt;
-
-                const updateResponse = await updateTodo(todoToUpdate);
-                if (updateResponse.data.updateTodo) {
-                  const updatedTodo = updateResponse.data.updateTodo;
-                  todo.toSync = false;
-                  todo._version = updatedTodo._version;
-                } else {
-                  updateSuccessful = false;
-                }
               }
             }
             return todo;
@@ -149,14 +144,6 @@ class SyncTodosCreate extends Activity {
           setRetryLaterTimeout(() => {
             agentNWA.addBelief(
               new Belief(BeliefKeys.APP, AppAttributes.SYNC_CREATE_TODOS, true)
-            );
-          });
-        }
-
-        if (!updateSuccessful) {
-          setRetryLaterTimeout(() => {
-            agentNWA.addBelief(
-              new Belief(BeliefKeys.APP, AppAttributes.SYNC_UPDATE_TODOS, true)
             );
           });
         }
@@ -182,10 +169,10 @@ const rule2 = new ResettablePrecondition(
 );
 
 // Actionframe
-const af_SyncTodosCreate = new Actionframe(
+const af_SyncCreateTodos = new Actionframe(
   `AF_${ActionFrameIDs.NWA.SYNC_CREATE_TODOS}`,
   [rule1, rule2],
-  new SyncTodosCreate()
+  new SyncCreateTodos()
 );
 
-export default af_SyncTodosCreate;
+export default af_SyncCreateTodos;

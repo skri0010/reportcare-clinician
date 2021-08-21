@@ -47,7 +47,7 @@ export const AlertsCard: FC<AlertsCardProps> = ({ flex = 1, maxHeight }) => {
     agentAPI.addFact(
       new Belief(
         BeliefKeys.PROCEDURE,
-        ProcedureAttributes.AT_CP,
+        ProcedureAttributes.AT_CP_I,
         ProcedureConst.ACTIVE
       )
     );
@@ -96,7 +96,7 @@ export const AlertsCard: FC<AlertsCardProps> = ({ flex = 1, maxHeight }) => {
     agentAPI.addFact(
       new Belief(
         BeliefKeys.PROCEDURE,
-        ProcedureAttributes.AT_CP,
+        ProcedureAttributes.AT_CP_I,
         ProcedureConst.ACTIVE
       )
     );
@@ -118,7 +118,7 @@ export const AlertsCard: FC<AlertsCardProps> = ({ flex = 1, maxHeight }) => {
     agentAPI.addFact(
       new Belief(
         BeliefKeys.PROCEDURE,
-        ProcedureAttributes.AT_CP,
+        ProcedureAttributes.AT_CP_II,
         ProcedureConst.ACTIVE
       )
     );

@@ -10,7 +10,7 @@ import { ScaledSheet, ms } from "react-native-size-matters";
 import { H3 } from "components/Text";
 import { RootState, select, useDispatch } from "util/useRedux";
 import i18n from "util/language/i18n";
-import { TodoCreateInput } from "rc_agents/model";
+import { TodoInput } from "rc_agents/model";
 import {
   setProcedureOngoing,
   setProcedureSuccessful
@@ -60,11 +60,13 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
 
   // Triggers CreateTodo procedure
   const createTodo = () => {
-    const todoInput: TodoCreateInput = {
+    const todoInput: TodoInput = {
       title: titleInput,
       patientName: patientInput,
       notes: noteInput,
-      completed: false
+      completed: false,
+      createdAt: new Date().toISOString(),
+      _version: 1
     };
 
     dispatch(setProcedureOngoing(true));
@@ -90,9 +92,9 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
   }, [
     dispatch,
     creating,
+    procedureOngoing,
     procedureSuccessful,
     setModalVisible,
-    procedureOngoing,
     toast
   ]);
 
