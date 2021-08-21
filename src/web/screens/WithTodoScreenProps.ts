@@ -5,7 +5,7 @@ import {
   TodoListParamList
 } from "web/screens";
 import { MaterialTopTabNavigationProp } from "@react-navigation/material-top-tabs";
-import { TodoNavigationProps } from "./WithSideTabsProps";
+import { TodoNavigationProps } from "./MainScreenProps";
 import { RouteProp, CompositeNavigationProp } from "@react-navigation/native";
 
 // Todos

@@ -4,12 +4,12 @@ import React, { FC } from "react";
 // import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 // import { getTopTabBarOptions } from "util/getStyles";
 // import { RootState, select } from "util/useRedux";
-import { ScreenName, WithSideTabsProps } from "web/screens";
+import { ScreenName, MainScreenProps } from "web/screens";
 import { View, Text } from "react-native";
 
 // const Tab = createMaterialTopTabNavigator();
 
-export const MariaScreen: FC<WithSideTabsProps[ScreenName.MARIA]> = () => {
+export const MariaScreen: FC<MainScreenProps[ScreenName.MARIA]> = () => {
   // const { colors } = select((state: RootState) => ({
   //   colors: state.settings.colors
   // }));

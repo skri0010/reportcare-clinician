@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import React, { FC, useEffect, useState } from "react";
 import { RootState, select, useDispatch } from "util/useRedux";
-import { ScreenName, WithSideTabsProps, TodoListName } from "web/screens";
+import { ScreenName, MainScreenProps, TodoListName } from "web/screens";
 import { View, Modal } from "react-native";
 import { RowSelectionTab } from "../RowSelectionTab";
 import { ScaledSheet } from "react-native-size-matters";
@@ -30,7 +30,7 @@ function checkNeedAddButton(tabName: TodoListName) {
   return needAddButton;
 }
 
-export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = ({
+export const TodoScreen: FC<MainScreenProps[ScreenName.TODO]> = ({
   route,
   navigation
 }) => {
@@ -129,7 +129,7 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = ({
         {/* Left tab */}
         <View style={styles.rowSelection}>
           <RowSelectionTab
-            title={i18n.t("TabTitle.Todo")}
+            title={i18n.t("ScreenName.Todo")}
             addButton={addButton}
             onPress={() => {
               setModalVisible(true);

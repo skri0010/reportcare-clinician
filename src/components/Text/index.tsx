@@ -1,7 +1,6 @@
 import React, { FC } from "react";
 import { Text, StyleProp, TextStyle } from "react-native";
 import { select, RootState } from "util/useRedux";
-import { useTranslation } from "react-i18next";
 
 export { MainTitle } from "./MainTitle";
 
@@ -23,10 +22,8 @@ interface TextProps {
 const BaseText: FC<TextProps> = ({
   text,
   style,
-  translate = true,
   numberOfLines = undefined
 }) => {
-  const { t } = useTranslation();
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
   }));
@@ -37,11 +34,9 @@ const BaseText: FC<TextProps> = ({
 
   const combinedStyle = [defaultStyle, style];
 
-  const displayedText = translate ? t(text) : text;
-
   return (
     <Text numberOfLines={numberOfLines} style={combinedStyle}>
-      {displayedText}
+      {text}
     </Text>
   );
 };

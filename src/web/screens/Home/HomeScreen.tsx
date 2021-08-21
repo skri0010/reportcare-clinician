@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { View } from "react-native";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
-import { ScreenName, WithSideTabsProps } from "web/screens";
+import { ScreenName, MainScreenProps } from "web/screens";
 import { WelcomeCard } from "./WelcomeCard";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { RequestsByMariaCard } from "./RequestsByMariaCard";
@@ -9,7 +9,7 @@ import { AlertsCard } from "./AlertsCard";
 import { TodosCard } from "./TodosCard";
 import { PendingPatientAssignmentsCard } from "./PendingPatientAssignmentsCard";
 
-export const HomeScreen: FC<WithSideTabsProps[ScreenName.HOME]> = ({
+export const HomeScreen: FC<MainScreenProps[ScreenName.HOME]> = ({
   navigation
 }) => {
   // JH-TODO Replace titles with i18n

@@ -1,12 +1,7 @@
 import React, { FC, useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
-import { SideNavigationBar } from "./SideNavigationBar";
-import { ScreenName, RootStackParamList } from "./screens";
-import { RootState, select } from "util/useRedux";
-import { ms } from "react-native-size-matters";
+import { DrawerNavigation } from "./DrawerNavigation";
 import { Auth } from "@aws-amplify/auth";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useToast } from "react-native-toast-notifications";
 import i18n from "util/language/i18n";
 import { AuthState } from "./auth_screens";
@@ -14,22 +9,15 @@ import { useNetInfo } from "@react-native-community/netinfo";
 import agentAPI from "rc_agents/framework/AgentAPI";
 import Belief from "rc_agents/framework/base/Belief";
 import { AppAttributes, BeliefKeys } from "rc_agents/AgentEnums";
-import { getMainScreenHeaderStyle } from "util/getStyles";
 import { Storage } from "rc_agents/storage";
 
 interface MainNavigationStackProps {
   setAuthState: (state: string) => void;
 }
 
-const Stack = createStackNavigator<RootStackParamList>();
-
 export const MainNavigationStack: FC<MainNavigationStackProps> = ({
   setAuthState
 }) => {
-  const { colors } = select((state: RootState) => ({
-    colors: state.settings.colors
-  }));
-
   const toast = useToast();
   const netInfo = useNetInfo();
 
@@ -37,8 +25,7 @@ export const MainNavigationStack: FC<MainNavigationStackProps> = ({
   const [successToastShown, setSuccessToast] = useState(false);
   const [warningToastShown, setWarningToast] = useState(false);
 
-  const screenHeaderStyle = getMainScreenHeaderStyle(colors);
-
+  // Sign out function
   const signOut = async (): Promise<void> => {
     await Auth.signOut().then(async () => {
       await Storage.removeAll();
@@ -88,26 +75,7 @@ export const MainNavigationStack: FC<MainNavigationStackProps> = ({
 
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        {/* Main Tabs */}
-        <Stack.Screen
-          name={ScreenName.MAIN}
-          component={SideNavigationBar}
-          options={{
-            headerTitle: () => null,
-            headerStyle: screenHeaderStyle,
-            headerRight: () => (
-              <Icon
-                name="logout"
-                color={colors.primaryContrastTextColor}
-                size={ms(20)}
-                style={{ paddingEnd: ms(10) }}
-                onPress={signOut}
-              />
-            )
-          }}
-        />
-      </Stack.Navigator>
+      <DrawerNavigation signOut={signOut} />
     </NavigationContainer>
   );
 };

@@ -1,5 +1,8 @@
 import React, { FC } from "react";
-import { createDrawerNavigator } from "@react-navigation/drawer";
+import {
+  createDrawerNavigator,
+  DrawerNavigationOptions
+} from "@react-navigation/drawer";
 import { HomeScreen } from "web/screens/Home/HomeScreen";
 import { CliniciansTab } from "web/screens/People/CliniciansTab";
 import { PatientsScreen } from "web/screens/People/PatientsScreen";
@@ -7,67 +10,74 @@ import { ChatScreen } from "web/screens/Chat/ChatScreen";
 import { TodoScreen } from "web/screens/Todo/TodoScreen";
 import { MariaScreen } from "web/screens/Maria/MariaScreen";
 import { SettingScreen } from "web/screens/Setting/SettingScreen";
-import { HelpScreen } from "web/screens/Help/HelpScreen";
-import { ScreenName, SideTabsParamList, MainScreenProps } from "./screens";
+import { MainScreenTabButton } from "components/Buttons/MainScreenTabButton";
+import { ScreenName, MainScreenParamList } from "web/screens";
 import { select, RootState } from "util/useRedux";
-import { getSideTabBarOptions } from "util/getStyles";
+import { getDrawerScreenOptions } from "util/getStyles";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { ms, ScaledSheet } from "react-native-size-matters";
-import { View, Text, TextStyle } from "react-native";
+import { ms } from "react-native-size-matters";
+import i18n from "util/language/i18n";
 
-const Drawer = createDrawerNavigator<SideTabsParamList>();
-
-interface TabIconProps {
-  name: string;
-  color: string;
-  subtitle: string;
+interface DrawerNavigationProps {
+  signOut: () => void;
 }
 
-export const SideNavigationBar: FC<MainScreenProps> = () => {
+const Drawer = createDrawerNavigator<MainScreenParamList>();
+
+export const DrawerNavigation: FC<DrawerNavigationProps> = ({ signOut }) => {
   const { colors, fonts } = select((state: RootState) => ({
     colors: state.settings.colors,
     fonts: state.settings.fonts
   }));
 
-  const iconTextStyle = {
-    fontSize: fonts.h7Size,
-    color: colors.primaryContrastTextColor
-  } as TextStyle;
+  // Helper methods for screen options
+  const screenOptions = getDrawerScreenOptions({
+    colors: colors,
+    fonts: fonts
+  });
+  const buildScreenOptions: (input: {
+    iconName: string;
+    iconLabel: string;
+  }) => DrawerNavigationOptions = ({ iconName, iconLabel }) => ({
+    ...screenOptions,
+    headerRight: () => <SignOutButton />, // Display sign out button
+    drawerIcon: ({ color }) => (
+      <MainScreenTabButton
+        name={iconName}
+        subtitle={iconLabel}
+        iconColor={color}
+        textColor={color}
+      />
+    )
+  });
 
-  const iconSize = ms(15);
-  const drawerSize = ms(45);
-
-  const TabIcon: FC<TabIconProps> = ({ name, color, subtitle }) => {
+  const headerButtonSize = ms(20);
+  // Sign out button
+  const SignOutButton: FC = () => {
     return (
-      <View style={styles.iconContainer}>
-        <Icon name={name} color={color} size={ms(iconSize)} />
-        <Text style={iconTextStyle}>{subtitle}</Text>
-      </View>
+      <Icon
+        name="logout"
+        color={colors.primaryContrastTextColor}
+        size={headerButtonSize}
+        style={{ paddingRight: headerButtonSize }}
+        onPress={signOut}
+      />
     );
   };
 
   return (
-    <Drawer.Navigator
-      drawerType="permanent"
-      drawerContentOptions={getSideTabBarOptions(colors)}
-      drawerStyle={{
-        width: drawerSize,
-        backgroundColor: colors.primaryBarColor
-      }}
-      initialRouteName={ScreenName.PATIENTS}
-    >
+    <Drawer.Navigator initialRouteName={ScreenName.HOME} defaultStatus="open">
       <Drawer.Screen
         name={ScreenName.HOME}
         component={HomeScreen}
         options={{
-          drawerIcon: ({ color }) => (
-            <TabIcon name="home" color={color} subtitle="Home" />
-          ),
-          drawerLabel: () => null,
-          headerTitleAlign: "center"
+          ...buildScreenOptions({
+            iconName: "home",
+            iconLabel: i18n.t("ScreenName.Home")
+          })
         }}
       />
-      <Drawer.Screen
+      {/* <Drawer.Screen
         name={ScreenName.PATIENTS}
         component={PatientsScreen}
         options={{
@@ -126,24 +136,7 @@ export const SideNavigationBar: FC<MainScreenProps> = () => {
           ),
           drawerLabel: () => null
         }}
-      />
-      <Drawer.Screen
-        name={ScreenName.HELP}
-        component={HelpScreen}
-        options={{
-          drawerIcon: ({ color }) => (
-            <TabIcon name="help-circle-outline" color={color} subtitle="Help" />
-          ),
-          drawerLabel: () => null
-        }}
-      />
+      /> */}
     </Drawer.Navigator>
   );
 };
-
-const styles = ScaledSheet.create({
-  iconContainer: {
-    width: "100%",
-    alignItems: "center"
-  }
-});

@@ -13,7 +13,7 @@ import { ScreenName } from "web/screens";
 import { TodoStatus } from "rc_agents/model";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
 import { AgentTrigger } from "rc_agents/trigger";
-import { HomeNavigationProps } from "web/screens/WithSideTabsProps";
+import { HomeNavigationProps } from "web/screens/MainScreenProps";
 
 interface TodosCardProps {
   maxHeight: number;

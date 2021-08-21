@@ -4,9 +4,9 @@ import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { PatientChatRow } from "components/RowComponents/PatientRows/PatientChatRow";
 import { mockPatients } from "mock/mockPatients";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
-import { ScreenName, WithSideTabsProps } from "web/screens";
+import { ScreenName, MainScreenProps } from "web/screens";
 
-export const ChatScreen: FC<WithSideTabsProps[ScreenName.CHAT]> = () => {
+export const ChatScreen: FC<MainScreenProps[ScreenName.CHAT]> = () => {
   // JH-TODO Add search button later
   // JH-TODO Flatlist
   // JH-TODO Remove mock data

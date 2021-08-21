@@ -1,9 +1,7 @@
-import { StackScreenProps } from "@react-navigation/stack";
-import { NavigatorScreenParams } from "@react-navigation/native";
 import { PatientInfo } from "aws/API";
 import { LocalTodo } from "rc_agents/model";
 import { AlertHistory, MedicalRecords } from "mock/mockPatientDetails";
-import { TodoNavigationProps } from "web/screens/WithSideTabsProps";
+import { TodoNavigationProps } from "web/screens/MainScreenProps";
 
 export enum ScreenName {
   MAIN = "Main",
@@ -36,6 +34,7 @@ export enum TodoDetailsName {
 }
 
 /**
+ * JH-TODO-NAV: Update
  * Reference: https://reactnavigation.org/docs/typescript/
  *
  * NavigatorScreenParams allows us to use navigator.navigate(
@@ -45,12 +44,9 @@ export enum TodoDetailsName {
  *  }
  * )
  */
-export type RootStackParamList = {
-  [ScreenName.MAIN]: NavigatorScreenParams<SideTabsParamList>;
-};
 
 // Extract the params from the screen containing the nested navigator
-export type SideTabsParamList = {
+export type MainScreenParamList = {
   [ScreenName.HOME]: undefined;
   // [ScreenName.PATIENT]: NavigatorScreenParams<PatientsScreenParamList>;
   [ScreenName.PATIENTS]: { patientId: string };
@@ -101,13 +97,7 @@ export type TodoDetailsParamList = {
 };
 
 // Type checking for main screens (navigation and route)
-export type MainScreenProps = StackScreenProps<
-  RootStackParamList,
-  ScreenName.MAIN
->;
-
-// Type checking for side tabs (navigation and route)
-export type { WithSideTabsProps } from "web/screens/WithSideTabsProps";
+export type { MainScreenProps } from "web/screens/MainScreenProps";
 
 // Type checking for patient screen tabs (navigation and route)
 export type { WithPatientsScreenProps } from "web/screens/WithPatientsScreenProps";

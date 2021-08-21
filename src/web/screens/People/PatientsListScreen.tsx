@@ -47,7 +47,7 @@ export const PatientsListScreen: FC<PatientsListScreenProps> = ({
     >
       {/* Search bar and risk filter pills */}
       <RowSelectionTab
-        title={i18n.t("TabTitle.Patients")}
+        title={i18n.t("ScreenName.Patients")}
         placeholder={i18n.t("Patients.SearchBarPlaceholder")}
       />
       <RiskFilterPillList />

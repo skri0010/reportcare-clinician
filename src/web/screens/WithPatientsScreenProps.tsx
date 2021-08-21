@@ -1,7 +1,7 @@
 import { PatientsScreenName, PatientsScreenParamList } from ".";
 import { MaterialTopTabNavigationProp } from "@react-navigation/material-top-tabs";
 import { RouteProp, CompositeNavigationProp } from "@react-navigation/native";
-import { PatientNavigationProps } from "web/screens/WithSideTabsProps";
+import { PatientNavigationProps } from "web/screens/MainScreenProps";
 
 /**
  * Screen props consists of { navigation, route }
