@@ -12,8 +12,8 @@ import { ScaledSheet } from "react-native-size-matters";
 import { ViewMedicalRecords } from "./PatientScreens/PatientDetailsScreen/PatientHistoryScreens/ViewMedicalRecord";
 import { AddMedicalRecord } from "./PatientScreens/PatientDetailsScreen/PatientHistoryScreens/AddMedicalRecord";
 import { agentDTA } from "rc_agents/agents";
-import { Belief } from "rc_agents/framework";
-import { ProcedureConst } from "rc_agents/framework/Enums";
+import { Belief } from "agents-framework";
+import { ProcedureConst } from "agents-framework/Enums";
 import agentAPI from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
   BeliefKeys,

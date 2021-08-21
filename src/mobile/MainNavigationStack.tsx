@@ -11,7 +11,7 @@ import { useToast } from "react-native-toast-notifications";
 import i18n from "util/language/i18n";
 import { AuthState } from "./auth_screens";
 import { AppAttributes, BeliefKeys } from "rc_agents/clinician_framework";
-import { Belief } from "rc_agents/framework";
+import { Belief } from "agents-framework";
 import agentAPI from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import { getMainScreenHeaderStyle } from "util/getStyles";
 import { useNetInfo } from "@react-native-community/netinfo";

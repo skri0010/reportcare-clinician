@@ -12,8 +12,8 @@ import i18n from "util/language/i18n";
 import { useToast } from "react-native-toast-notifications";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
 import { agentAPS } from "rc_agents/agents";
-import { Belief } from "rc_agents/framework";
-import { ProcedureConst } from "rc_agents/framework/Enums";
+import { Belief } from "agents-framework";
+import { ProcedureConst } from "agents-framework/Enums";
 import {
   BeliefKeys,
   AppAttributes,

@@ -1,4 +1,4 @@
-import Belief from "../framework/base/Belief";
+import { Belief } from "agents-framework";
 import { getClinicianProtectedInfo, updateClinicianProtectedInfo } from "aws";
 import {
   UpdateClinicianProtectedInfoInput,
@@ -6,7 +6,7 @@ import {
 } from "aws/API";
 import { AgentIDs, AppAttributes, BeliefKeys } from "./index";
 import { Storage } from "../storage";
-import AgentManagement from "../framework/management/AgentManagement";
+import AgentManagement from "agents-framework/management/AgentManagement";
 import ClinicianAgent from "./ClinicianAgent";
 
 /**

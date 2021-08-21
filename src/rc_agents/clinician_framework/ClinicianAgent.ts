@@ -1,11 +1,11 @@
-import { Belief, Actionframe, Engine } from "rc_agents/framework";
-import agentAPI from "rc_agents/clinician_framework/ClinicianAgentAPI";
-import Agent from "rc_agents/framework/base/Agent";
+import { Agent, Belief, Actionframe, Engine } from "agents-framework";
 import { getClinicianProtectedInfo } from "aws";
 import { AppAttributes, BeliefKeys } from "./index";
-import { CommonAttributes } from "../framework/Enums";
+import { CommonAttributes } from "agents-framework/Enums";
 import { Storage } from "../storage";
 import { ClinicianProtectedInfo } from "aws/API";
+// eslint-disable-next-line no-restricted-imports
+import AgentAPI from "agents-framework/AgentAPI";
 
 /**
  * Class representing the Agent
@@ -13,8 +13,13 @@ import { ClinicianProtectedInfo } from "aws/API";
 class ClinicianAgent extends Agent {
   private initialized: boolean;
 
-  constructor(id: string, actionFrames: Actionframe[], beliefs: Belief[]) {
-    super(id, actionFrames, beliefs);
+  constructor(
+    id: string,
+    actionFrames: Actionframe[],
+    beliefs: Belief[],
+    agentAPI: AgentAPI
+  ) {
+    super(id, actionFrames, beliefs, agentAPI);
     this.initialized = false;
   }
 
@@ -48,7 +53,7 @@ class ClinicianAgent extends Agent {
     // Note: agentManager might be undefined on first attempt, set to retry every 0.5s
     const timer = setInterval(() => {
       try {
-        agentAPI.registerAgent(this);
+        this.agentAPI.registerAgent(this);
         this.setInitialized(true);
         clearInterval(timer);
       } catch (e) {
@@ -76,7 +81,7 @@ class ClinicianAgent extends Agent {
       const localClinician = await Storage.getClinician();
       if (localClinician) {
         // Device is online
-        if (agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
+        if (this.agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
           const query = await getClinicianProtectedInfo({
             clinicianID: localClinician.clinicianID
           });

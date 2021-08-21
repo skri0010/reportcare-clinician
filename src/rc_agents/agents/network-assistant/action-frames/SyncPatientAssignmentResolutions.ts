@@ -4,7 +4,7 @@ import {
   Activity,
   Precondition,
   ResettablePrecondition
-} from "rc_agents/framework";
+} from "agents-framework";
 import {
   ActionFrameIDs,
   AppAttributes,

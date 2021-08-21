@@ -12,8 +12,8 @@ import {
 } from "mobile/auth_screens";
 import { ScreenWrapper } from "mobile/screens/ScreenWrapper";
 import { validatePassword, validateUsername } from "util/validation";
-import { Belief } from "rc_agents/framework";
-import { ProcedureConst } from "rc_agents/framework/Enums";
+import { Belief } from "agents-framework";
+import { ProcedureConst } from "agents-framework/Enums";
 import agentAPI from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import i18n from "util/language/i18n";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";

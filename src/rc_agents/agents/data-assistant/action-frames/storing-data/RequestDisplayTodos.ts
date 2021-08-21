@@ -5,8 +5,8 @@ import {
   Belief,
   Precondition,
   ResettablePrecondition
-} from "rc_agents/framework";
-import { ProcedureConst, Performative } from "rc_agents/framework/Enums";
+} from "agents-framework";
+import { ProcedureConst, Performative } from "agents-framework/Enums";
 import {
   ActionFrameIDs,
   AgentIDs,

@@ -5,7 +5,7 @@ import {
   Belief,
   Precondition,
   ResettablePrecondition
-} from "rc_agents/framework";
+} from "agents-framework";
 import {
   setRetryLaterTimeout,
   ActionFrameIDs,

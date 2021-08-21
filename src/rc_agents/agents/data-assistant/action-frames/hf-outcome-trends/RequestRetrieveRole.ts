@@ -1,16 +1,16 @@
 import {
-  Actionframe,
   Agent,
+  Actionframe,
   Belief,
   Communicate,
   Precondition,
   ResettablePrecondition
-} from "rc_agents/framework";
+} from "agents-framework";
 import {
   ProcedureConst,
   Performative,
   CommonAttributes
-} from "rc_agents/framework/Enums";
+} from "agents-framework/Enums";
 import {
   ActionFrameIDs,
   AgentIDs,
