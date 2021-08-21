@@ -14,7 +14,8 @@ export enum ScreenName {
   TODO = "Todo",
   MARIA = "MARIA",
   SETTING = "SETTING",
-  HELP = "HELP"
+  HELP = "HELP",
+  ALERTS = "Alerts"
 }
 
 export enum PatientsScreenName {
@@ -61,6 +62,7 @@ export type SideTabsParamList = {
   [ScreenName.MARIA]: undefined;
   [ScreenName.SETTING]: undefined;
   [ScreenName.HELP]: undefined;
+  [ScreenName.ALERTS]: undefined;
 };
 
 // Patient screens params list
