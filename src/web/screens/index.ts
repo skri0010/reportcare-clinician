@@ -1,5 +1,5 @@
 import { PatientInfo } from "aws/API";
-import { LocalTodo } from "rc_agents/model";
+import { LocalTodo, PatientDetails } from "rc_agents/model";
 import { AlertHistory, MedicalRecords } from "mock/mockPatientDetails";
 import { TodoScreenNavigation } from "web/screens/MainScreenProps";
 import { NavigatorScreenParams } from "@react-navigation/native";
@@ -15,7 +15,7 @@ export enum ScreenName {
   SETTINGS = "Settings"
 }
 
-export enum PatientsScreenName {
+export enum PatientDetailsTabName {
   OVERVIEW = "Overview",
   PARAMETERS = "Parameters",
   ICDCRT = "ICD/CRT",
@@ -45,40 +45,30 @@ export enum TodoDetailsName {
  * )
  */
 
-// Extract the params from the screen containing the nested navigator
+// Main screen parameters
 export type MainScreenParamList = {
   [ScreenName.HOME]: undefined;
-  // [ScreenName.PATIENTS]: NavigatorScreenParams<PatientsScreenParamList>;
-  [ScreenName.PATIENTS]: { patientId: string };
+  [ScreenName.PATIENTS]: {
+    displayPatientId?: string;
+    selectedTab?: PatientDetailsTabName;
+  };
   [ScreenName.CLINICIANS]: undefined;
   [ScreenName.CHAT]: undefined;
-  // [ScreenName.TODO]: NavigatorScreenParams<TodoScreenParamList>;
-  [ScreenName.TODO]: LocalTodo;
+  [ScreenName.TODO]: LocalTodo | undefined;
   [ScreenName.MARIA]: undefined;
   [ScreenName.SETTINGS]: undefined;
 };
 
-// Patient screens params list
-export type PatientsScreenParamList = {
-  [PatientsScreenName.OVERVIEW]: { patient: PatientInfo };
-  [PatientsScreenName.PARAMETERS]: { patient: PatientInfo };
-  [PatientsScreenName.ICDCRT]: { patient: PatientInfo };
-  [PatientsScreenName.HISTORY]: {
-    patient: PatientInfo;
-    alertHistoryFunc: {
-      setDisplayHistory: (state: AlertHistory) => void;
-      setModalAlertVisible: (state: boolean) => void;
-    };
-    medicalRecordFunc: {
-      setViewMedicalModal: (state: boolean) => void;
-      setDisplayMedicalRecord: (state: MedicalRecords) => void;
-      setAddMedicalRecord: (state: boolean) => void;
-    };
-  };
-  [PatientsScreenName.INFO]: { patient: PatientInfo };
+// Patient details tab parameters
+export type PatientDetailsTabParamList = {
+  [PatientDetailsTabName.OVERVIEW]: undefined;
+  [PatientDetailsTabName.PARAMETERS]: undefined;
+  [PatientDetailsTabName.ICDCRT]: undefined;
+  [PatientDetailsTabName.HISTORY]: undefined;
+  [PatientDetailsTabName.INFO]: undefined;
 };
 
-// Todo list
+// Todo list parameters
 export type TodoListParamList = {
   [TodoListName.CURRENT]: {
     todos: LocalTodo[];
@@ -86,7 +76,7 @@ export type TodoListParamList = {
   [TodoListName.COMPLETED]: { todos: LocalTodo[] };
 };
 
-// Todo details
+// Todo details parameters
 export type TodoDetailsParamList = {
   [TodoDetailsName.VIEW_TODO]: {
     todo: LocalTodo;
@@ -99,7 +89,7 @@ export type TodoDetailsParamList = {
 export type { MainScreenProps } from "web/screens/MainScreenProps";
 
 // Type checking for patient screen tabs (navigation and route)
-export type { PatientsScreenProps } from "web/screens/PatientsScreenProps";
+export * as PatientDetailsTabProps from "web/screens/PatientDetailsTabProps";
 
 // Type checking for todo screen tabs and details (navigation and route)
 export type {

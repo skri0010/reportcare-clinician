@@ -24,8 +24,9 @@ interface TabIconProps {
 }
 
 export const BottomNavigationBar: FC<MainScreenProps> = () => {
-  const { colors } = select((state: RootState) => ({
-    colors: state.settings.colors
+  const { colors, fonts } = select((state: RootState) => ({
+    colors: state.settings.colors,
+    fonts: state.settings.fonts
   }));
 
   const TabIcon: FC<TabIconProps> = ({ name, color, size }) => {
@@ -33,7 +34,9 @@ export const BottomNavigationBar: FC<MainScreenProps> = () => {
   };
 
   return (
-    <Tab.Navigator tabBarOptions={getBottomTabBarOptions(colors)}>
+    <Tab.Navigator
+      screenOptions={getBottomTabBarOptions({ colors: colors, fonts: fonts })}
+    >
       <Tab.Screen
         name={ScreenName.HOME}
         component={HomeScreen}

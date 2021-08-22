@@ -12,10 +12,12 @@ import { RiskFilterPillList } from "web/RiskFilterPillList";
 import { RowSelectionTab } from "../RowSelectionTab";
 
 interface PatientsListScreenProps {
+  displayPatientId?: string;
   flex?: number;
 }
 
 export const PatientsListScreen: FC<PatientsListScreenProps> = ({
+  displayPatientId,
   flex = 1
 }) => {
   const { colors, patients, fetchingPatients } = select((state: RootState) => ({
@@ -64,6 +66,7 @@ export const PatientsListScreen: FC<PatientsListScreenProps> = ({
           renderItem={({ item }) => (
             <PatientDetailsRow
               patient={item}
+              selected={displayPatientId === item.patientID}
               onRowPress={AgentTrigger.triggerRetrievePatientDetails}
             />
           )}

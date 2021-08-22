@@ -6,39 +6,43 @@ import { WeightParameterCard } from "./PatientParameterCards/WeightParameterCard
 import { DiastolicParameterCard } from "./PatientParameterCards/DiastolicParameterCard";
 import { OxygenSaturationParameterCard } from "./PatientParameterCards/OxygenSaturationParameterCard";
 import { SystolicParameterCard } from "./PatientParameterCards/SystolicParameterCard";
-import { PatientsScreenProps, PatientsScreenName } from "web/screens";
+import { PatientDetailsTabProps } from "web/screens";
+import { PatientDetails } from "rc_agents/model";
 
-export const PatientParameter: FC<
-  PatientsScreenProps[PatientsScreenName.PARAMETERS]
-> = ({ route }) => {
-  const { patient } = route.params;
+interface PatientParametersProps
+  extends PatientDetailsTabProps.ParametersTabProps {
+  details: PatientDetails;
+}
+
+export const PatientParameters: FC<PatientParametersProps> = ({ details }) => {
   const cardMaxHeight = Math.max(
     ms(200),
     Dimensions.get("window").height * 0.8
   );
+
   return (
     <ScreenWrapper padding>
       <View style={styles.container}>
         {/* Systolic Blood Graph */}
         <SystolicParameterCard
-          patientId={patient.patientID}
+          patientId={details.patientInfo.patientID}
           maxHeight={cardMaxHeight}
         />
         {/* Diastolic Blood Graph */}
         <DiastolicParameterCard
-          patientId={patient.patientID}
+          patientId={details.patientInfo.patientID}
           maxHeight={cardMaxHeight}
         />
       </View>
       <View style={styles.container}>
         {/* Oxygen Saturation graph */}
         <OxygenSaturationParameterCard
-          patientId={patient.patientID}
+          patientId={details.patientInfo.patientID}
           maxHeight={cardMaxHeight}
         />
         {/* Weight Graph */}
         <WeightParameterCard
-          patientId={patient.patientID}
+          patientId={details.patientInfo.patientID}
           maxHeight={cardMaxHeight}
         />
       </View>

@@ -21,11 +21,14 @@ export const TodoListNavigationStack: FC<TodoListNavigationStackProps> = ({
   tabPressCompleted,
   setTodoSelected
 }) => {
-  const { colors } = select((state: RootState) => ({
-    colors: state.settings.colors
+  const { colors, fonts } = select((state: RootState) => ({
+    colors: state.settings.colors,
+    fonts: state.settings.fonts
   }));
   return (
-    <Tab.Navigator tabBarOptions={getTopTabBarOptions(colors)}>
+    <Tab.Navigator
+      screenOptions={getTopTabBarOptions({ colors: colors, fonts: fonts })}
+    >
       {/* CURRENT todo tab */}
       <Tab.Screen
         name={TodoListName.CURRENT}

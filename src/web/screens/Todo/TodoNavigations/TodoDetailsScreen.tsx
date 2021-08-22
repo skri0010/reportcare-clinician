@@ -100,7 +100,7 @@ export const TodoDetailsScreen: FC<
                 // If there is patientID defined, navigate to the patient tab when the view button is pressed
                 if (todo.patientId !== undefined && parentNavigation) {
                   parentNavigation.navigate(ScreenName.PATIENTS, {
-                    patientId: todo.patientId
+                    displayPatientId: todo.patientId
                   });
                 }
               }}

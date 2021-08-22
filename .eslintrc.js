@@ -120,7 +120,7 @@ module.exports = {
         ],
         patterns: [
           {
-            group: ["aws/graphql/queries"],
+            group: ["aws/graphql/queries", "aws/graphql/mutations"],
             message:
               "Use exports from aws/graphql/TypedAPI files instead. If statements do not exists, create your own"
           },

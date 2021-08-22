@@ -33,7 +33,7 @@ export const setPatients = createAction(
 
 export const setPatientDetails = createAction(
   actionNames.SET_PATIENT_DETAILS,
-  (patientDetails: PatientDetails) => ({
+  (patientDetails: PatientDetails | null) => ({
     patientDetails: patientDetails
   })
 )();

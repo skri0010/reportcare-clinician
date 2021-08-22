@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useCallback } from "react";
 import {
   createDrawerNavigator,
   DrawerNavigationOptions
@@ -30,17 +30,36 @@ export const DrawerNavigation: FC<DrawerNavigationProps> = ({ signOut }) => {
     fonts: state.settings.fonts
   }));
 
-  // Helper methods for screen options
-  const screenOptions = getDrawerScreenOptions({
-    colors: colors,
-    fonts: fonts
-  });
-  const buildScreenOptions: (input: {
+  // Options for all screen
+  const buildScreenOptions: () => DrawerNavigationOptions = useCallback(() => {
+    // Sign out button
+    const SignOutButton: FC = () => {
+      const headerButtonSize = ms(20);
+      return (
+        <Icon
+          name="logout"
+          color={colors.primaryContrastTextColor}
+          size={headerButtonSize}
+          style={{ paddingRight: headerButtonSize }}
+          onPress={signOut}
+        />
+      );
+    };
+
+    return {
+      ...getDrawerScreenOptions({
+        colors: colors,
+        fonts: fonts
+      }),
+      headerRight: () => <SignOutButton /> // Display sign out button
+    };
+  }, [colors, fonts, signOut]);
+
+  // Options for individual screens
+  const buildOptions: (input: {
     iconName: string;
     iconLabel: string;
   }) => DrawerNavigationOptions = ({ iconName, iconLabel }) => ({
-    ...screenOptions,
-    headerRight: () => <SignOutButton />, // Display sign out button
     drawerIcon: ({ color }) => (
       <MainScreenTabButton
         name={iconName}
@@ -51,27 +70,28 @@ export const DrawerNavigation: FC<DrawerNavigationProps> = ({ signOut }) => {
     )
   });
 
-  const headerButtonSize = ms(20);
-  // Sign out button
-  const SignOutButton: FC = () => {
-    return (
-      <Icon
-        name="logout"
-        color={colors.primaryContrastTextColor}
-        size={headerButtonSize}
-        style={{ paddingRight: headerButtonSize }}
-        onPress={signOut}
-      />
-    );
+  // Type check params list. Required because initialParams is insufficient due to Partial<>
+  const initialParamsList: MainScreenParamList = {
+    [ScreenName.HOME]: undefined,
+    [ScreenName.PATIENTS]: {},
+    [ScreenName.CLINICIANS]: undefined,
+    [ScreenName.CHAT]: undefined,
+    [ScreenName.TODO]: undefined,
+    [ScreenName.MARIA]: undefined,
+    [ScreenName.SETTINGS]: undefined
   };
 
   return (
-    <Drawer.Navigator initialRouteName={ScreenName.HOME} defaultStatus="open">
+    <Drawer.Navigator
+      initialRouteName={ScreenName.HOME}
+      screenOptions={buildScreenOptions}
+      defaultStatus="open"
+    >
       <Drawer.Screen
         name={ScreenName.HOME}
         component={HomeScreen}
         options={{
-          ...buildScreenOptions({
+          ...buildOptions({
             iconName: "home",
             iconLabel: i18n.t("ScreenName.Home")
           })
@@ -81,17 +101,18 @@ export const DrawerNavigation: FC<DrawerNavigationProps> = ({ signOut }) => {
         name={ScreenName.PATIENTS}
         component={PatientsScreen}
         options={{
-          ...buildScreenOptions({
+          ...buildOptions({
             iconName: "account-circle",
             iconLabel: i18n.t("ScreenName.Patients")
           })
         }}
+        initialParams={initialParamsList[ScreenName.PATIENTS]}
       />
       <Drawer.Screen
         name={ScreenName.CLINICIANS}
         component={CliniciansScreen}
         options={{
-          ...buildScreenOptions({
+          ...buildOptions({
             iconName: "stethoscope",
             iconLabel: i18n.t("ScreenName.Clinicians")
           })
@@ -101,7 +122,7 @@ export const DrawerNavigation: FC<DrawerNavigationProps> = ({ signOut }) => {
         name={ScreenName.CHAT}
         component={ChatScreen}
         options={{
-          ...buildScreenOptions({
+          ...buildOptions({
             iconName: "chat",
             iconLabel: i18n.t("ScreenName.Chat")
           })
@@ -111,17 +132,18 @@ export const DrawerNavigation: FC<DrawerNavigationProps> = ({ signOut }) => {
         name={ScreenName.TODO}
         component={TodoScreen}
         options={{
-          ...buildScreenOptions({
+          ...buildOptions({
             iconName: "note-text",
             iconLabel: i18n.t("ScreenName.Todo")
           })
         }}
+        initialParams={{}}
       />
       <Drawer.Screen
         name={ScreenName.MARIA}
         component={MariaScreen}
         options={{
-          ...buildScreenOptions({
+          ...buildOptions({
             iconName: "face-agent",
             iconLabel: i18n.t("ScreenName.MARIA")
           })
@@ -131,7 +153,7 @@ export const DrawerNavigation: FC<DrawerNavigationProps> = ({ signOut }) => {
         name={ScreenName.SETTINGS}
         component={SettingsScreen}
         options={{
-          ...buildScreenOptions({
+          ...buildOptions({
             iconName: "cog",
             iconLabel: i18n.t("ScreenName.Settings")
           })

@@ -1,7 +1,11 @@
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 import { View } from "react-native";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
-import { ScreenName, MainScreenProps } from "web/screens";
+import {
+  ScreenName,
+  MainScreenProps,
+  PatientDetailsTabName
+} from "web/screens";
 import { WelcomeCard } from "./WelcomeCard";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { RequestsByMariaCard } from "./RequestsByMariaCard";

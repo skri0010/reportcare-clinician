@@ -7,98 +7,88 @@ import { OxygenSaturationCard } from "./PatientOverviewCards/OxygenSaturationCar
 import { WeightCard } from "./PatientOverviewCards/WeightCard";
 import { SymptomsCard } from "./PatientOverviewCards/SymptomsCard";
 import { Dimensions, View } from "react-native";
-import { PatientsScreenProps } from "../../../PatientsScreenProps";
-import { PatientsScreenName } from "web/screens";
-import { RootState, select } from "util/useRedux";
-import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
 import { ReportSymptom, ReportVitals } from "aws/API";
 import i18n from "util/language/i18n";
+import { PatientDetailsTabProps } from "web/screens";
+import { PatientDetails } from "rc_agents/model";
 
-export const PatientOverview: FC<
-  PatientsScreenProps[PatientsScreenName.OVERVIEW]
-> = () => {
-  const { patientDetails } = select((state: RootState) => ({
-    colors: state.settings.colors,
-    patientDetails: state.agents.patientDetails
-  }));
+interface PatientOverviewProps extends PatientDetailsTabProps.OverviewTabProps {
+  details: PatientDetails;
+}
+
+export const PatientOverview: FC<PatientOverviewProps> = ({ details }) => {
   const cardHeight = Math.max(ms(100), Dimensions.get("window").height * 0.325);
 
   const [vitals, setVitals] = useState<ReportVitals | null>(null);
   const [symptoms, setSymptoms] = useState<ReportSymptom[]>([]);
 
   useEffect(() => {
-    if (patientDetails) {
-      // TODO: This code needs to be modified for changing days
-      const date = new Date().toLocaleDateString();
+    // TODO: This code needs to be modified for changing days
+    const date = new Date().toLocaleDateString();
 
-      // Take the latest vitals report and update vitals on date
-      const vitalsReportsOnDate = patientDetails.vitalsReports[date];
-      if (vitalsReportsOnDate) {
-        const datetimeList = vitalsReportsOnDate.map((report) =>
-          Date.parse(report.DateTime)
+    // Take the latest vitals report and update vitals on date
+    const vitalsReportsOnDate = details.vitalsReports[date];
+    if (vitalsReportsOnDate) {
+      const datetimeList = vitalsReportsOnDate.map((report) =>
+        Date.parse(report.DateTime)
+      );
+      const latestDatetime = Math.max(...datetimeList);
+      const latestVitalsReport: ReportVitals | undefined =
+        vitalsReportsOnDate.find(
+          (item) => item.DateTime === new Date(latestDatetime).toISOString()
         );
-        const latestDatetime = Math.max(...datetimeList);
-        const latestVitalsReport: ReportVitals | undefined =
-          vitalsReportsOnDate.find(
-            (item) => item.DateTime === new Date(latestDatetime).toISOString()
-          );
-        if (latestVitalsReport) {
-          setVitals(latestVitalsReport);
-        }
-      }
-      // Update symptoms on date
-      const symptomsOnDate = patientDetails.symptomReports[date];
-      if (symptomsOnDate) {
-        setSymptoms(symptomsOnDate);
+      if (latestVitalsReport) {
+        setVitals(latestVitalsReport);
       }
     }
-  }, [patientDetails]);
+    // Update symptoms on date
+    const symptomsOnDate = details.symptomReports[date];
+    if (symptomsOnDate) {
+      setSymptoms(symptomsOnDate);
+    }
+  }, [details]);
 
   const noRecord = i18n.t("Patient_Overview.NoRecord");
 
   return (
     <ScreenWrapper padding>
-      {patientDetails ? (
-        <>
-          <View style={[styles.container]}>
-            {/* Blood Pressure Card */}
-            <BloodPressureCard
-              systolic={vitals?.BPDi || noRecord}
-              dystolic={vitals?.BPSys || noRecord}
-              minHeight={cardHeight}
-              flex={2}
-            />
-            {/* Oxygen Saturation card and Weigth card to share fixed space */}
-            <OxygenSaturationCard
-              oxySatValue={vitals?.OxySat || noRecord}
-              minHeight={cardHeight}
-            />
-            <WeightCard
-              weight={vitals?.Weight || noRecord}
-              targetWeight={patientDetails.patientInfo.targetWeight}
-              minHeight={cardHeight}
-            />
-          </View>
+      <>
+        <View style={[styles.container]}>
+          {/* Blood Pressure Card */}
+          <BloodPressureCard
+            systolic={vitals?.BPDi || noRecord}
+            dystolic={vitals?.BPSys || noRecord}
+            minHeight={cardHeight}
+            flex={2}
+          />
+          {/* Oxygen Saturation card and Weigth card to share fixed space */}
+          <OxygenSaturationCard
+            oxySatValue={vitals?.OxySat || noRecord}
+            minHeight={cardHeight}
+          />
+          <WeightCard
+            weight={vitals?.Weight || noRecord}
+            targetWeight={details.patientInfo.targetWeight}
+            minHeight={cardHeight}
+          />
+        </View>
 
-          <View style={[styles.container, { paddingBottom: ms(10) }]}>
-            {/* Medication and symptoms card */}
-            {/* JH-TODO-NEW: Current data type does not support this */}
-            <MedicationTakenCard
-              medications={[]}
-              maxHeight={cardHeight}
-              minHeight={cardHeight}
-            />
-            <SymptomsCard
-              symptoms={symptoms}
-              maxHeight={cardHeight}
-              minHeight={cardHeight}
-            />
-          </View>
-        </>
-      ) : (
-        // Show loading indicator if patient details is null
-        <LoadingIndicator />
-      )}
+        <View style={[styles.container, { paddingBottom: ms(10) }]}>
+          {/* Medication and symptoms card */}
+          {/* JH-TODO-NEW: Current data type does not support this */}
+          <MedicationTakenCard
+            medications={[]}
+            maxHeight={cardHeight}
+            minHeight={cardHeight}
+          />
+          <SymptomsCard
+            symptoms={symptoms}
+            maxHeight={cardHeight}
+            minHeight={cardHeight}
+          />
+        </View>
+      </>
+      )
     </ScreenWrapper>
   );
 };

@@ -2,15 +2,19 @@ import { H4 } from "components/Text";
 import React, { FC } from "react";
 import { View } from "react-native";
 import { ScreenWrapper } from "../../../ScreenWrapper";
-import { PatientsScreenProps, PatientsScreenName } from "web/screens";
+import { PatientDetailsTabProps } from "web/screens";
+import { PatientDetails } from "rc_agents/model";
 
-export const PatientICDCRT: FC<PatientsScreenProps[PatientsScreenName.ICDCRT]> =
-  () => {
-    return (
-      <ScreenWrapper padding>
-        <View>
-          <H4 text="To be added" style={null} />
-        </View>
-      </ScreenWrapper>
-    );
-  };
+interface PatientICDCRTProps extends PatientDetailsTabProps.ICDCRTTabProps {
+  details: PatientDetails;
+}
+
+export const PatientICDCRT: FC<PatientICDCRTProps> = () => {
+  return (
+    <ScreenWrapper padding>
+      <View>
+        <H4 text="To be added" style={null} />
+      </View>
+    </ScreenWrapper>
+  );
+};

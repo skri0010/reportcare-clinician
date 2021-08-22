@@ -20,8 +20,11 @@ import {
   ProcedureConst
 } from "rc_agents/AgentEnums";
 import agentAPI from "rc_agents/framework/AgentAPI";
-import { setProcedureOngoing } from "ic-redux/actions/agents/actionCreator";
-import { PatientDetailsNavigationStack } from "./PatientScreens/PatientDetailsNavigationStack";
+import {
+  setPatientDetails,
+  setProcedureOngoing
+} from "ic-redux/actions/agents/actionCreator";
+import { PatientDetailsNavigationStack } from "./PatientScreens/PatientDetailsTabNavigation";
 import { PatientHistoryModal } from "./PatientDetailsScreen/PatientHistoryScreens/PatientHistoryModals";
 import { MainScreenProps, ScreenName } from "web/screens";
 import { PatientsListScreen } from "./PatientsListScreen";
@@ -30,21 +33,51 @@ import { NoSelectionScreen } from "../Shared/NoSelectionScreen";
 import i18n from "util/language/i18n";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
 
-export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = () => {
-  const { colors, patientDetails, fetchingPatientDetails } = select(
+export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
+  route
+}) => {
+  const { displayPatientId, selectedTab } = route.params;
+  const { colors, patients, patientDetails, fetchingPatientDetails } = select(
     (state: RootState) => ({
       colors: state.settings.colors,
+      patients: state.agents.patients,
       patientDetails: state.agents.patientDetails,
       fetchingPatientDetails: state.agents.fetchingPatientDetails
     })
   );
 
-  /**
-   * Trigger agent to fetch patients on initial load
-   */
+  const dispatch = useDispatch();
+
+  // Trigger agent to fetch patients on initial load
   useEffect(() => {
     AgentTrigger.triggerRetrievePatientsByRole();
   }, []);
+
+  // Triggers agent to fetch patient details if this screen was navigated with displayPatientId parameter
+  useEffect(() => {
+    // Patient id and patients available. Check if patient exists
+    if (displayPatientId && patients) {
+      const patient = patients.find(
+        (item) => item.patientID === displayPatientId
+      );
+      // Patient exists
+      if (patient) {
+        // Different patient details is being displayed
+        // OR patient details has not been displayed yet
+        if (
+          (patientDetails &&
+            patientDetails.patientInfo.patientID !== patient.patientID) ||
+          !patientDetails
+        ) {
+          AgentTrigger.triggerRetrievePatientDetails(patient);
+        }
+      }
+      // Patient does not exist
+      else {
+        dispatch(setPatientDetails(null));
+      }
+    }
+  }, [displayPatientId, patientDetails, patients, dispatch]);
 
   // Initial alert history details for the modal
   const initialAlertHistory = {
@@ -93,8 +126,6 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = () => {
 
   const [retrieving, setRetrieving] = useState(false); // used locally to indicate ongoing retrieval of details
   const [showGraph, setShowGraph] = useState(false); // used locally for graph display
-
-  const dispatch = useDispatch();
 
   // Triggers series of actions to retrieve details specific to a patient.
   const getData = (patientId: string) => {
@@ -163,7 +194,8 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = () => {
 
               {/* Patient Navigation */}
               <PatientDetailsNavigationStack
-                patient={patientDetails.patientInfo}
+                details={patientDetails}
+                selectedTab={selectedTab}
                 setAddMedicalRecord={setAddMedicalRecord}
                 setDisplayHistory={setDisplayHistory}
                 setDisplayMedicalRecord={setDisplayMedicalRecord}

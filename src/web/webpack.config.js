@@ -69,7 +69,10 @@ const babelLoaderConfiguration = {
       cacheDirectory: true,
       presets: ["module:metro-react-native-babel-preset"],
       // Re-write paths to import only the modules needed by the app
-      plugins: ["react-native-web"]
+      plugins: [
+        "react-native-web",
+        "@babel/plugin-proposal-export-namespace-from"
+      ]
     }
   }
 };

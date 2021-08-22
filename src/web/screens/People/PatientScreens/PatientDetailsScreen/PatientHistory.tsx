@@ -4,32 +4,48 @@ import { ScreenWrapper } from "../../../ScreenWrapper";
 import { Dimensions, View } from "react-native";
 import { PatientAlertHistoryCard } from "./PatientHistoryScreens/PatientAlertHistoryCard";
 import { PatientMedicalRecordCard } from "./PatientHistoryScreens/PatientMedicalRecordCard";
-import { PatientsScreenProps, PatientsScreenName } from "web/screens";
+import { AlertHistory, MedicalRecords } from "mock/mockPatientDetails";
+import { PatientDetailsTabProps } from "web/screens";
+import { PatientInfo } from "aws/API";
 
-export const PatientHistory: FC<
-  PatientsScreenProps[PatientsScreenName.HISTORY]
-> = ({ route }) => {
-  const { patient, alertHistoryFunc, medicalRecordFunc } = route.params;
+interface PatientHistoryProps extends PatientDetailsTabProps.HistoryTabProps {
+  info: PatientInfo;
+  alertHistoryFunc: {
+    setDisplayHistory: (state: AlertHistory) => void;
+    setModalAlertVisible: (state: boolean) => void;
+  };
+  medicalRecordFunc: {
+    setViewMedicalModal: (state: boolean) => void;
+    setDisplayMedicalRecord: (state: MedicalRecords) => void;
+    setAddMedicalRecord: (state: boolean) => void;
+  };
+}
+
+export const PatientHistory: FC<PatientHistoryProps> = ({
+  info,
+  alertHistoryFunc,
+  medicalRecordFunc
+}) => {
   const cardMaxHeight = Math.max(
     ms(250),
     Dimensions.get("window").height * 0.65
   );
-  // Query history data by patientId here or pass it into component for query
 
+  // Query history data by patientId here or pass it into component for query
   return (
     <ScreenWrapper padding>
       <View style={styles.container}>
         {/* Alert Histories */}
         <PatientAlertHistoryCard
-          name={patient.name}
-          patientId={patient.patientID}
+          name={info.name}
+          patientId={info.patientID}
           maxHeight={cardMaxHeight}
           setDisplayHistory={alertHistoryFunc.setDisplayHistory}
           setModalAlertVisible={alertHistoryFunc.setModalAlertVisible}
         />
         {/* Medical Histories */}
         <PatientMedicalRecordCard
-          patientId={patient.patientID}
+          patientId={info.patientID}
           maxHeight={cardMaxHeight}
           onAddPress={() => medicalRecordFunc.setAddMedicalRecord(true)}
           setViewMedicalModal={medicalRecordFunc.setViewMedicalModal}
