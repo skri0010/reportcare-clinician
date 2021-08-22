@@ -7,7 +7,7 @@ import { Picker } from "@react-native-picker/picker";
 import { Role, Hospital } from "rc_agents/model";
 import { RootState, select } from "util/useRedux";
 import { AuthScreenName, AuthScreensProps } from "mobile/auth_screens";
-import { ScreenWrapper } from "mobile/screens/ScreenWrapper";
+import { MobileScreenWrapper } from "mobile/screens/MobileScreenWrapper";
 import {
   validateEmail,
   validatePassword,
@@ -142,7 +142,7 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
   ];
 
   return (
-    <ScreenWrapper>
+    <MobileScreenWrapper>
       <SafeAreaView
         style={styles.safeAreaContainer}
         pointerEvents={registering ? "none" : "auto"}
@@ -247,7 +247,7 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
         </KeyboardAwareScrollView>
       </SafeAreaView>
       {registering && <LoadingIndicator />}
-    </ScreenWrapper>
+    </MobileScreenWrapper>
   );
 };
 

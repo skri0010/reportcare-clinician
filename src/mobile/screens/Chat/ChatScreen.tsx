@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { View, FlatList } from "react-native";
-import { ScreenWrapper } from "mobile/screens/ScreenWrapper";
+import { MobileScreenWrapper } from "mobile/screens/MobileScreenWrapper";
 import { PatientChatRow } from "components/rowComponents/PatientRows/PatientChatRow";
 import { mockPatients } from "mock/mockPatients";
 import { ItemSeparator } from "components/rowComponents/ItemSeparator";
@@ -12,7 +12,7 @@ export const ChatScreen: FC<WithBottomTabsProps[ScreenName.CHAT]> = () => {
   // JH-TODO Remove mock data
 
   return (
-    <ScreenWrapper>
+    <MobileScreenWrapper>
       <View>
         <FlatList
           ItemSeparatorComponent={() => <ItemSeparator />}
@@ -30,6 +30,6 @@ export const ChatScreen: FC<WithBottomTabsProps[ScreenName.CHAT]> = () => {
           keyExtractor={(item) => item.patientID!}
         />
       </View>
-    </ScreenWrapper>
+    </MobileScreenWrapper>
   );
 };

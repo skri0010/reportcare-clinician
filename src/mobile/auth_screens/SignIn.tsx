@@ -10,7 +10,7 @@ import {
   AuthScreensProps,
   AuthState
 } from "mobile/auth_screens";
-import { ScreenWrapper } from "mobile/screens/ScreenWrapper";
+import { MobileScreenWrapper } from "mobile/screens/MobileScreenWrapper";
 import { validatePassword, validateUsername } from "util/validation";
 import agentAPI from "rc_agents/framework/AgentAPI";
 import i18n from "util/language/i18n";
@@ -200,7 +200,7 @@ export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
   ];
 
   return (
-    <ScreenWrapper>
+    <MobileScreenWrapper>
       <SafeAreaView
         style={styles.safeAreaContainer}
         pointerEvents={signingIn ? "none" : "auto"}
@@ -294,7 +294,7 @@ export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
         </KeyboardAwareScrollView>
       </SafeAreaView>
       {(signingIn || connecting) && <LoadingIndicator />}
-    </ScreenWrapper>
+    </MobileScreenWrapper>
   );
 };
 

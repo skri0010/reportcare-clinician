@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { View } from "react-native";
 import { SearchBarComponent } from "components/bars/SearchBarComponent";
-import { ScreenWrapper } from "mobile/screens/ScreenWrapper";
+import { MobileScreenWrapper } from "mobile/screens/MobileScreenWrapper";
 import { mockClinician } from "mock/mockClinicians";
 import { ClinicianContactRow } from "components/rowComponents/ClinicianRow/ClinicianContactRow";
 import { ClinicianShareRow } from "components/rowComponents/ClinicianRow/ClinicianShareRow";
@@ -9,7 +9,7 @@ import { ClinicianShareRow } from "components/rowComponents/ClinicianRow/Clinici
 export const CliniciansTab: FC = () => {
   // JH-TODO: Replace placeholder with i18n
   return (
-    <ScreenWrapper>
+    <MobileScreenWrapper>
       <View>
         <SearchBarComponent
           onUserInput={() => {
@@ -24,6 +24,6 @@ export const CliniciansTab: FC = () => {
         <ClinicianContactRow generalDetails={mockClinician[0]} />
         <ClinicianShareRow generalDetails={mockClinician[0]} checked />
       </View>
-    </ScreenWrapper>
+    </MobileScreenWrapper>
   );
 };

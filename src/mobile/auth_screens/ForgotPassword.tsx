@@ -4,7 +4,7 @@ import { Auth } from "@aws-amplify/auth";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { AuthScreenName, AuthScreensProps } from "mobile/auth_screens";
-import { ScreenWrapper } from "mobile/screens/ScreenWrapper";
+import { MobileScreenWrapper } from "mobile/screens/MobileScreenWrapper";
 import {
   validateCode,
   validatePassword,
@@ -80,7 +80,7 @@ export const ForgotPassword: FC<AuthScreensProps[AuthScreenName.FORGOT_PW]> = ({
   }, [username, code, newPassword, codeSent]);
 
   return (
-    <ScreenWrapper>
+    <MobileScreenWrapper>
       <SafeAreaView
         style={styles.safeAreaContainer}
         pointerEvents={loading ? "none" : "auto"}
@@ -148,7 +148,7 @@ export const ForgotPassword: FC<AuthScreensProps[AuthScreenName.FORGOT_PW]> = ({
         />
       </SafeAreaView>
       {loading && <LoadingIndicator />}
-    </ScreenWrapper>
+    </MobileScreenWrapper>
   );
 };
 

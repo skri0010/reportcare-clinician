@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from "react";
 import { View, FlatList, Button } from "react-native";
-import { ScreenWrapper } from "mobile/screens/ScreenWrapper";
+import { MobileScreenWrapper } from "mobile/screens/MobileScreenWrapper";
 import { SearchBarComponent } from "components/bars/SearchBarComponent";
 import { ScaledSheet } from "react-native-size-matters";
 import { PatientDetailsRow } from "components/rowComponents/PatientRows/PatientDetailsRow";
@@ -107,7 +107,7 @@ export const PatientsTab: FC = () => {
 
   // JH-TODO: Replace placeholder with i18n
   return (
-    <ScreenWrapper>
+    <MobileScreenWrapper>
       <View style={[styles.searchBarWrapper]}>
         <SearchBarComponent
           onUserInput={() => {
@@ -147,7 +147,7 @@ export const PatientsTab: FC = () => {
       {/* {showGraph && <ParameterGraphs data={patientDetails.vitalsReports} />} */}
 
       {(retrieving || procedureOngoing) && <LoadingIndicator />}
-    </ScreenWrapper>
+    </MobileScreenWrapper>
   );
 };
 

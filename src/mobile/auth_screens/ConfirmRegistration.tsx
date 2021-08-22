@@ -3,7 +3,7 @@ import { Auth } from "@aws-amplify/auth";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { AuthScreenName, AuthScreensProps } from "mobile/auth_screens";
-import { ScreenWrapper } from "mobile/screens/ScreenWrapper";
+import { MobileScreenWrapper } from "mobile/screens/MobileScreenWrapper";
 import { validateCode, validateUsername } from "util/validation";
 import i18n from "util/language/i18n";
 import { useToast } from "react-native-toast-notifications";
@@ -62,7 +62,7 @@ export const ConfirmRegistration: FC<
   }, [username, code]);
 
   return (
-    <ScreenWrapper>
+    <MobileScreenWrapper>
       <SafeAreaView
         style={styles.safeAreaContainer}
         pointerEvents={confirming ? "none" : "auto"}
@@ -96,7 +96,7 @@ export const ConfirmRegistration: FC<
         />
       </SafeAreaView>
       {confirming && <LoadingIndicator />}
-    </ScreenWrapper>
+    </MobileScreenWrapper>
   );
 };
 

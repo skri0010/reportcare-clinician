@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { View, FlatList } from "react-native";
-import { ScreenWrapper } from "mobile/screens/ScreenWrapper";
+import { MobileScreenWrapper } from "mobile/screens/MobileScreenWrapper";
 import { AlertButton } from "components/buttons/AlertButton";
 import { RiskLevel } from "models/RiskLevel";
 import { MainTitle } from "components/text";
@@ -12,7 +12,7 @@ import { ScreenName, WithBottomTabsProps } from "mobile/screens";
 export const HomeScreen: FC<WithBottomTabsProps[ScreenName.HOME]> = () => {
   // JH-TODO Replace titles with i18n
   return (
-    <ScreenWrapper>
+    <MobileScreenWrapper>
       {/* Alerts */}
       <MainTitle title="Alerts" details="(2 remaining)" />
 
@@ -42,6 +42,6 @@ export const HomeScreen: FC<WithBottomTabsProps[ScreenName.HOME]> = () => {
         )}
         keyExtractor={(item) => item.patientID!}
       />
-    </ScreenWrapper>
+    </MobileScreenWrapper>
   );
 };

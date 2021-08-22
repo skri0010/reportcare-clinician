@@ -15,6 +15,7 @@ import {
 import { AgentTrigger } from "rc_agents/trigger";
 import { TodoListTabsProps } from "web/navigation/types";
 import { TodoRowTabProps } from "web/navigation/navigators/TodoListTabNavigator";
+import { ScreenWrapper } from "web/screens/ScreenWrapper";
 
 interface TodoCurrentTabProps
   extends TodoRowTabProps,
@@ -61,7 +62,10 @@ export const TodoCurrentTab: FC<TodoCurrentTabProps> = ({
   }, []);
 
   return (
-    <View style={{ flex: 1 }}>
+    <ScreenWrapper
+      style={{ backgroundColor: colors.secondaryWebBackgroundColor }}
+    >
+      {/* Search bar */}
       <SearchBarComponent
         onUserInput={() => {
           null;
@@ -72,6 +76,7 @@ export const TodoCurrentTab: FC<TodoCurrentTabProps> = ({
         containerStyle={{ backgroundColor: colors.primaryContrastTextColor }}
         placeholder={i18n.t("Todo.SearchBarCurrentPlaceholder")}
       />
+      {/* List of current todos */}
       <FlatList
         showsVerticalScrollIndicator={false}
         ItemSeparatorComponent={() => <ItemSeparator />}
@@ -89,6 +94,6 @@ export const TodoCurrentTab: FC<TodoCurrentTabProps> = ({
       />
       {/* Loading Indicator while todos are still being fetched */}
       {fetchingPendingTodos && <LoadingIndicator />}
-    </View>
+    </ScreenWrapper>
   );
 };

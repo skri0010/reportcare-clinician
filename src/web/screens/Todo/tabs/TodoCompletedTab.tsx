@@ -59,7 +59,10 @@ export const TodoCompletedTab: FC<TodoCompleteTabProps> = ({
     AgentTrigger.triggerRetrieveTodos(TodoStatus.COMPLETED);
   }, []);
   return (
-    <ScreenWrapper>
+    <ScreenWrapper
+      style={{ backgroundColor: colors.secondaryWebBackgroundColor }}
+    >
+      {/* Search bar */}
       <SearchBarComponent
         onUserInput={() => {
           null;
@@ -70,6 +73,7 @@ export const TodoCompletedTab: FC<TodoCompleteTabProps> = ({
         containerStyle={{ backgroundColor: colors.primaryContrastTextColor }}
         placeholder={i18n.t("Todo.SearchBarCompletePlaceholder")}
       />
+      {/* List of completed todos */}
       <FlatList
         showsVerticalScrollIndicator={false}
         ItemSeparatorComponent={() => <ItemSeparator />}
