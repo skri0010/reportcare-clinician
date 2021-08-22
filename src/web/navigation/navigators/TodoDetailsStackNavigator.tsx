@@ -15,15 +15,18 @@ import { onUndoPress } from "web/screens/Todo/tabs/TodoCompletedTab";
 import { TodoDetailsStackProps } from "../types";
 import { getStackOptions } from "util/getStyles";
 import { RootState, select } from "util/useRedux";
+import { TodoScreenNavigation } from "web/navigation/types/MainScreenProps";
 
 const Stack = createStackNavigator<TodoDetailsStackParamList>();
 interface TodoDetailsNavigationStackProps {
   todo: LocalTodo;
+  parentNavigation: TodoScreenNavigation;
   selectedScreen?: TodoDetailsStackScreenName;
 }
 
 export const TodoDetailsStackNavigator: FC<TodoDetailsNavigationStackProps> = ({
   todo,
+  parentNavigation,
   selectedScreen: selectedTab
 }) => {
   const { colors, fonts } = select((state: RootState) => ({
@@ -58,13 +61,16 @@ export const TodoDetailsStackNavigator: FC<TodoDetailsNavigationStackProps> = ({
         options={() => ({
           title: i18n.t("Todo.ViewTodo"),
           headerRight: () => (
-            // Mark as done button
-            <MarkAsDoneButton onPress={onButtonPress} todo={todo} />
+            <MarkAsDoneButton onPress={onButtonPress} todo={todo} /> // Mark as done button
           )
         })}
       >
         {(props: TodoDetailsStackProps.ViewTodoProps) => (
-          <ViewTodoScreen {...props} todo={todo} />
+          <ViewTodoScreen
+            {...props}
+            todo={todo}
+            parentNavigation={parentNavigation}
+          />
         )}
       </Stack.Screen>
       {/* Edit todo screen */}

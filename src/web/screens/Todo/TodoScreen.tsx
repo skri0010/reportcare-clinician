@@ -73,7 +73,7 @@ export const TodoScreen: FC<MainScreenProps[ScreenName.TODO]> = ({
     notes: "",
     completed: false,
     alertId: "",
-    patientId: "",
+    patientId: "testsiuloong",
     createdAt: "",
     lastModified: "",
     toSync: false,
@@ -164,6 +164,7 @@ export const TodoScreen: FC<MainScreenProps[ScreenName.TODO]> = ({
               {/* Todo details */}
               <TodoDetailsStackNavigator
                 todo={todoSelected}
+                parentNavigation={navigation}
                 selectedScreen={selectedStackScreen}
               />
             </NavigationContainer>

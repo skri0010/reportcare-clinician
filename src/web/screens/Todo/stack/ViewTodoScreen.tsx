@@ -10,9 +10,11 @@ import i18n from "util/language/i18n";
 import { ScreenName, TodoDetailsStackScreenName } from "web/navigation";
 import { getLocalDateTime } from "util/utilityFunctions";
 import { LocalTodo } from "rc_agents/model";
+import { TodoScreenNavigation } from "web/navigation/types/MainScreenProps";
 
 interface ViewTodoScreenProps extends TodoDetailsStackProps.ViewTodoProps {
   todo: LocalTodo;
+  parentNavigation: TodoScreenNavigation;
 }
 
 interface TodoSectionProps {
@@ -27,7 +29,8 @@ interface EditHistorySectionProps {
 
 export const ViewTodoScreen: FC<ViewTodoScreenProps> = ({
   todo,
-  navigation
+  navigation,
+  parentNavigation
 }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
@@ -61,8 +64,8 @@ export const ViewTodoScreen: FC<ViewTodoScreenProps> = ({
               ]}
               onPress={() => {
                 // If there is patientID defined, navigate to the patient tab when the view button is pressed
-                if (todo.patientId !== undefined) {
-                  navigation.navigate(ScreenName.PATIENTS, {
+                if (todo.patientId) {
+                  parentNavigation.navigate(ScreenName.PATIENTS, {
                     displayPatientId: todo.patientId
                   });
                 }
