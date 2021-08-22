@@ -49,7 +49,6 @@ const compileNodeModules = [
   "react-native-ratings",
   "react-native-vector-icons",
   "react-native-chart-kit",
-  "@react-native-picker/picker",
   "react-native-web"
 ].map((moduleName) => path.resolve(appDirectory, `node_modules/${moduleName}`));
 
