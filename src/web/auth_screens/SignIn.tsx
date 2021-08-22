@@ -8,19 +8,19 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthScreenName, AuthScreensProps, AuthState } from "web/auth_screens";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { validatePassword, validateUsername } from "util/validation";
-import agentAPI from "rc_agents/framework/AgentAPI";
 import i18n from "util/language/i18n";
 import { useToast } from "react-native-toast-notifications";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
-import agentAPS from "rc_agents/agents/app-configuration-assistant/APS";
-import Belief from "rc_agents/framework/base/Belief";
+import { agentAPS } from "rc_agents/agents";
+import { Belief } from "rc_agents/framework";
+import { ProcedureConst } from "rc_agents/framework/Enums";
 import {
-  ProcedureConst,
   BeliefKeys,
   AppAttributes,
   ClinicianAttributes,
   ProcedureAttributes
-} from "rc_agents/AgentEnums";
+} from "rc_agents/clinician_framework";
+import agentAPI from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import { AsyncStorageKeys } from "rc_agents/storage";
 import { useNetInfo } from "@react-native-community/netinfo";
 import { setProcedureOngoing } from "ic-redux/actions/agents/actionCreator";
@@ -72,9 +72,6 @@ export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
     })
       .then(async () => {
         await AsyncStorage.setItem(AsyncStorageKeys.USERNAME, username);
-
-        // Triggers initialization of agents
-        agentAPI.startAgents();
 
         // Triggers APS to retrieve existing entry or create new entry
         setTimeout(() => {

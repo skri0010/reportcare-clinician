@@ -7,13 +7,14 @@ import { select, RootState, store } from "util/useRedux";
 import { setRiskFilters } from "ic-redux/actions/agents/actionCreator";
 import { RiskFilter } from "rc_agents/model";
 import { agentDTA } from "rc_agents/agents";
-import { agentAPI, Belief } from "rc_agents/framework";
+import { Belief } from "rc_agents/framework";
+import { ProcedureConst } from "rc_agents/framework/Enums";
+import agentAPI from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
   BeliefKeys,
   ClinicianAttributes,
-  ProcedureAttributes,
-  ProcedureConst
-} from "rc_agents/AgentEnums";
+  ProcedureAttributes
+} from "rc_agents/clinician_framework";
 import { H6 } from "components/Text";
 import i18n from "util/language/i18n";
 

@@ -1,4 +1,4 @@
-import { CompOperator } from "../../AgentEnums";
+import { CompOperator } from "../Enums";
 
 /**
  * Class representing the rule or precondition

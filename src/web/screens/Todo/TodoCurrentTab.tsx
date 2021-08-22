@@ -6,7 +6,7 @@ import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { RootState, select, store } from "util/useRedux";
 import i18n from "util/language/i18n";
-import { LocalTodo, TodoStatus, TodoUpdateInput } from "rc_agents/model";
+import { LocalTodo, TodoStatus, TodoInput } from "rc_agents/model";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
 import {
   setProcedureOngoing,
@@ -24,14 +24,10 @@ export const onDonePress = (item: LocalTodo): void => {
   store.dispatch(setSubmittingTodo(true));
 
   // Creates Todo object for updating
-  const todoToUpdate: TodoUpdateInput = {
-    id: item.id ? item.id : undefined,
-    title: item.title,
-    patientName: item.patientName,
-    notes: item.notes,
-    _version: item._version,
+  const todoToUpdate: TodoInput = {
+    ...item,
     completed: true,
-    createdAt: item.createdAt
+    lastModified: new Date().toISOString()
   };
 
   AgentTrigger.triggerUpdateTodo(todoToUpdate);

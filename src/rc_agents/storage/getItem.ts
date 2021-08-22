@@ -189,12 +189,13 @@ export const getRiskOrStatusAlerts = async (
  * @returns AlertInfo corresponding to the input Alert if any, otherwise null
  */
 export const getSingleAlertInfo = async (
-  alert: Alert
+  alertId: string,
+  patientId: string
 ): Promise<AlertInfo | null> => {
   const localData = await getAlertInfos();
-  if (localData && localData[alert.patientID]) {
-    const patientAlertInfos = localData[alert.patientID];
-    return patientAlertInfos[alert.id];
+  if (localData && localData[patientId]) {
+    const patientAlertInfos = localData[patientId];
+    return patientAlertInfos[alertId];
   }
   return null;
 };

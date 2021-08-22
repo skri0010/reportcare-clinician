@@ -1,4 +1,4 @@
-import agentAPI from "../AgentAPI";
+import agentAPI from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import Message from "../communication/Message";
 import messageChannel from "../communication/MessageChannel";
 import Activity from "./Activity";
@@ -38,16 +38,18 @@ class Broadcast extends Activity {
     super.doActivity(agent, reset);
     const sender = agent.getID();
     const receivers = agentAPI.getAgents();
-    for (let i = 0; i < receivers.length; i += 1) {
-      if (sender !== receivers[i].getID()) {
-        messageChannel.addMessage(
-          new Message(
-            this.performative,
-            sender,
-            receivers[i].getID(),
-            this.content
-          )
-        );
+    if (receivers) {
+      for (let i = 0; i < receivers.length; i += 1) {
+        if (sender !== receivers[i].getID()) {
+          messageChannel.addMessage(
+            new Message(
+              this.performative,
+              sender,
+              receivers[i].getID(),
+              this.content
+            )
+          );
+        }
       }
     }
   }

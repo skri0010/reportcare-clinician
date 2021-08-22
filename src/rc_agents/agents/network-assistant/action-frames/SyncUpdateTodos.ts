@@ -110,6 +110,11 @@ class SyncTodosUpdate extends Activity {
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
+      setRetryLaterTimeout(() => {
+        agentNWA.addBelief(
+          new Belief(BeliefKeys.APP, AppAttributes.SYNC_UPDATE_TODOS, true)
+        );
+      });
     }
   }
 }

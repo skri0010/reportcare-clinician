@@ -1,23 +1,16 @@
-import { Platform } from "react-native";
 import Belief from "./base/Belief";
 import AgentManagement from "./management/AgentManagement";
-import WebAgentManagement from "./management/WebAgentManagement";
-import MobileAgentManagement from "./management/MobileAgentManagement";
-import { Fact } from "../model";
+import { Fact } from "./index";
 import Agent from "./base/Agent";
 
 /**
  * Class representing an end point for the agent system
  */
 class AgentAPI {
-  private system: AgentManagement;
+  protected system: AgentManagement;
 
-  constructor() {
-    if (Platform.OS === "web") {
-      this.system = new WebAgentManagement();
-    } else {
-      this.system = new MobileAgentManagement();
-    }
+  constructor(agentManagement: AgentManagement) {
+    this.system = agentManagement;
   }
 
   /**
@@ -31,38 +24,17 @@ class AgentAPI {
   /**
    * Get all the registered agents
    */
-  getAgents(): Agent[] {
+  getAgents(): Agent[] | undefined {
     return this.system.getAgents();
-  }
-
-  /**
-   * Start all the agents
-   */
-  startAgents(): void {
-    return this.system.startAgents();
   }
 
   /**
    * Add fact to the system
    * @param {Belief} fact - fact to be inserted
    * @param {Boolean} broadcast - whether to broadcast or not
-   * @param {Boolean} updateDb - whether the local beliefs and facts should be written to database
    */
-  addFact(
-    fact: Belief,
-    broadcast: boolean = true,
-    updateDb: boolean = false
-  ): void {
-    this.system.addFact(fact, broadcast, updateDb);
-  }
-
-  /**
-   * Merge incoming facts into current facts.
-   * This happen when an existing user signs in.
-   * @param {Belief} facts
-   */
-  mergeFacts(facts: Belief): void {
-    this.system.mergeFacts(facts);
+  addFact(fact: Belief, broadcast: boolean = true): void {
+    this.system.addFact(fact, broadcast);
   }
 
   /**
@@ -73,6 +45,4 @@ class AgentAPI {
   }
 }
 
-const agentAPI = new AgentAPI();
-
-export default agentAPI;
+export default AgentAPI;

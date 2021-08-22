@@ -6,17 +6,17 @@ import {
   Precondition,
   ResettablePrecondition
 } from "rc_agents/framework";
+import { ProcedureConst } from "rc_agents/framework/Enums";
+import agentAPI from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
-  ProcedureConst,
   BeliefKeys,
   ClinicianAttributes,
   ProcedureAttributes,
   AgentIDs,
   ActionFrameIDs
-} from "rc_agents/AgentEnums";
+} from "rc_agents/clinician_framework";
 import { AsyncStorageKeys } from "rc_agents/storage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import agentAPI from "rc_agents/framework/AgentAPI";
 import { getClinicianInfo } from "aws";
 import { store } from "util/useRedux";
 import {
@@ -64,85 +64,88 @@ class RetrieveEntryData extends Activity {
           }
 
           // Merges retrieved beliefs of each agent into current beliefs
-          agentAPI.getAgents().forEach((existingAgent) => {
-            switch (existingAgent.getID()) {
-              case AgentIDs.APS: {
-                if (
-                  clinician.protectedInfo?.APS &&
-                  Object.entries(JSON.parse(clinician.protectedInfo?.APS))
-                    .length > 0
-                ) {
-                  existingAgent.mergeBeliefs(
-                    JSON.parse(clinician.protectedInfo?.APS)
-                  );
+          const registeredAgents = agentAPI.getAgents();
+          if (registeredAgents) {
+            registeredAgents.forEach((existingAgent) => {
+              switch (existingAgent.getID()) {
+                case AgentIDs.APS: {
+                  if (
+                    clinician.protectedInfo?.APS &&
+                    Object.entries(JSON.parse(clinician.protectedInfo?.APS))
+                      .length > 0
+                  ) {
+                    existingAgent.mergeBeliefs(
+                      JSON.parse(clinician.protectedInfo?.APS)
+                    );
+                  }
+                  break;
                 }
-                break;
-              }
-              case AgentIDs.DTA: {
-                if (
-                  clinician.protectedInfo?.DTA &&
-                  Object.entries(JSON.parse(clinician.protectedInfo?.DTA))
-                    .length > 0
-                ) {
-                  existingAgent.mergeBeliefs(
-                    JSON.parse(clinician.protectedInfo?.DTA)
-                  );
+                case AgentIDs.DTA: {
+                  if (
+                    clinician.protectedInfo?.DTA &&
+                    Object.entries(JSON.parse(clinician.protectedInfo?.DTA))
+                      .length > 0
+                  ) {
+                    existingAgent.mergeBeliefs(
+                      JSON.parse(clinician.protectedInfo?.DTA)
+                    );
+                  }
+                  break;
                 }
-                break;
-              }
-              case AgentIDs.UXSA: {
-                if (
-                  clinician.protectedInfo?.UXSA &&
-                  Object.entries(JSON.parse(clinician.protectedInfo?.UXSA))
-                    .length > 0
-                ) {
-                  existingAgent.mergeBeliefs(
-                    JSON.parse(clinician.protectedInfo?.UXSA)
-                  );
+                case AgentIDs.UXSA: {
+                  if (
+                    clinician.protectedInfo?.UXSA &&
+                    Object.entries(JSON.parse(clinician.protectedInfo?.UXSA))
+                      .length > 0
+                  ) {
+                    existingAgent.mergeBeliefs(
+                      JSON.parse(clinician.protectedInfo?.UXSA)
+                    );
+                  }
+                  break;
                 }
-                break;
-              }
-              case AgentIDs.NWA: {
-                if (
-                  clinician.protectedInfo?.NWA &&
-                  Object.entries(JSON.parse(clinician.protectedInfo?.NWA))
-                    .length > 0
-                ) {
-                  existingAgent.mergeBeliefs(
-                    JSON.parse(clinician.protectedInfo?.NWA)
-                  );
+                case AgentIDs.NWA: {
+                  if (
+                    clinician.protectedInfo?.NWA &&
+                    Object.entries(JSON.parse(clinician.protectedInfo?.NWA))
+                      .length > 0
+                  ) {
+                    existingAgent.mergeBeliefs(
+                      JSON.parse(clinician.protectedInfo?.NWA)
+                    );
+                  }
+                  break;
                 }
-                break;
-              }
-              case AgentIDs.ALA: {
-                if (
-                  clinician.protectedInfo?.ALA &&
-                  Object.entries(JSON.parse(clinician.protectedInfo?.ALA))
-                    .length > 0
-                ) {
-                  existingAgent.mergeBeliefs(
-                    JSON.parse(clinician.protectedInfo?.ALA)
-                  );
+                case AgentIDs.ALA: {
+                  if (
+                    clinician.protectedInfo?.ALA &&
+                    Object.entries(JSON.parse(clinician.protectedInfo?.ALA))
+                      .length > 0
+                  ) {
+                    existingAgent.mergeBeliefs(
+                      JSON.parse(clinician.protectedInfo?.ALA)
+                    );
+                  }
+                  break;
                 }
-                break;
-              }
-              case AgentIDs.MHA: {
-                if (
-                  clinician.protectedInfo?.MHA &&
-                  Object.entries(JSON.parse(clinician.protectedInfo?.MHA))
-                    .length > 0
-                ) {
-                  existingAgent.mergeBeliefs(
-                    JSON.parse(clinician.protectedInfo?.MHA)
-                  );
+                case AgentIDs.MHA: {
+                  if (
+                    clinician.protectedInfo?.MHA &&
+                    Object.entries(JSON.parse(clinician.protectedInfo?.MHA))
+                      .length > 0
+                  ) {
+                    existingAgent.mergeBeliefs(
+                      JSON.parse(clinician.protectedInfo?.MHA)
+                    );
+                  }
+                  break;
                 }
-                break;
+                default: {
+                  break;
+                }
               }
-              default: {
-                break;
-              }
-            }
-          });
+            });
+          }
 
           // Stores clinicianID and clinician locally
           await AsyncStorage.multiSet([

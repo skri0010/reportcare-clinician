@@ -1,38 +1,7 @@
-// Constant values for the state of activity
-export enum ActivityStatus {
-  INACTIVE = "inactive",
-  RUNNING = "running",
-  COMPLETE = "complete"
-}
-
-// Constant values for the state of action frames
-export enum AframeStatus {
-  INACTIVE = "inactive",
-  RUNNING = "running",
-  COMPLETE = "complete"
-}
-
-// Constant values for the comparison operators
-export enum CompOperator {
-  EQUAL = "equal",
-  NOT_EQUAL = "not-equal",
-  LESS_THAN = "less-than",
-  GREATER_THAN = "greater-than",
-  LESS_THAN_EQUAL = "less-than-equal",
-  GREATER_THAN_EQUAL = "greater-than-equal"
-}
-
-// Constant values for the performative of the message
-export enum Performative {
-  REQUEST = "request",
-  INFORM = "inform"
-}
-
-// Constant values for the procedure
-export enum ProcedureConst {
-  ACTIVE = "active",
-  INACTIVE = "inactive"
-}
+export const setRetryLaterTimeout = (func: () => void): void => {
+  const delay = 15000;
+  setTimeout(func, delay);
+};
 
 // IDs of agents
 export enum AgentIDs {
@@ -65,13 +34,16 @@ export const ActionFrameIDs = {
 
     RETRIEVE_ALERT_HISTORY: "RetrieveAlertHistory",
 
-    // AT-CP: Alerts
+    // AT-CP-I: Alerts
     RETRIEVE_PENDING_ALERT_COUNT: "RetrievePendingAlertCount",
     REQUEST_PENDING_ALERT_COUNT_DISPLAY: "RequestPendingAlertCountDisplay",
     RETRIEVE_ALERTS: "RetrieveAlerts",
     REQUEST_ALERTS_DISPLAY: "RequestAlertsDisplay",
+
+    // AT-CP-II: Single Alert's details (AlertInfo)
     RETRIEVE_ALERT_INFO: "RetrieveAlertInfo",
     REQUEST_ALERT_INFO_DISPLAY: "RequestAlertInfoDisplay",
+    UPDATE_ALERT: "UpdateAlert",
 
     // SRD-I: Patient Assignments
     RETRIEVE_PENDING_PATIENT_ASSIGNMENTS: "RetrievePendingPatientAssignments",
@@ -114,9 +86,11 @@ export const ActionFrameIDs = {
     SYNC_PATIENT_ASSIGNMENT_RESOLUTIONS: "SyncPatientAssignmentResolutions",
 
     // SRD-II - Todos
-    SYNC_TODOS_CREATE: "SyncTodosCreate",
-    SYNC_TODOS_UPDATE: "SyncTodosUpdate",
-    SYNC_ALERTS_UPDATE: "SyncAlertsUpdate"
+    SYNC_CREATE_TODOS: "SyncCreateTodos",
+    SYNC_UPDATE_TODOS: "SyncUpdateTodos",
+
+    // AT-CP-II - Alert's Details
+    SYNC_UPDATE_ALERTS: "SyncUpdateAlerts"
   },
   MHA: {},
   ALA: {}
@@ -130,20 +104,15 @@ export enum BeliefKeys {
   PATIENT = "Patient"
 }
 
-// Attributes commonly shared by agents
-export enum CommonAttributes {
-  LAST_ACTIVITY = "LastActivity"
-}
-
 // Attributes for APP key
 export enum AppAttributes {
   CONFIGURED = "Configured",
   ONLINE = "Online",
   SYNC_PROTECTED_INFO = "SyncProtectedInfo",
   SYNC_PATIENT_ASSIGNMENT_RESOLUTIONS = "SyncPatientAssignmentResolutions",
-  SYNC_TODOS_CREATE = "SyncTodosCreate",
-  SYNC_TODOS_UPDATE = "SyncTodosUpdate",
-  SYNC_ALERTS_UPDATE = "SyncAlertsUpdate"
+  SYNC_CREATE_TODOS = "SyncCreateTodos",
+  SYNC_UPDATE_TODOS = "SyncUpdateTodos",
+  SYNC_UPDATE_ALERTS = "SyncUpdateAlerts"
 }
 
 // Attributes for PROCEDURE key
@@ -153,7 +122,8 @@ export enum ProcedureAttributes {
   HF_OTP_II = "HF-OTP-II",
   SRD_I = "SRD-I",
   SRD_II = "SRD-II",
-  AT_CP = "AT-CP"
+  AT_CP_I = "AT-CP_I",
+  AT_CP_II = "AT-CP_II"
 }
 
 // Attributes for CLINICIAN key
@@ -181,6 +151,7 @@ export enum ClinicianAttributes {
   RETRIEVE_ALERT_INFO = "RetrieveAlertInfo",
   ALERT_INFO = "AlertInfo",
   ALERT_INFO_RETRIEVED = "AlertInfoRetrieved",
+  UPDATE_ALERT = "UpdateAlert",
 
   // SRD-II - Todos
   RETRIEVE_TODOS = "RetrieveTodos",

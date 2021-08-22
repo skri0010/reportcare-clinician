@@ -6,17 +6,17 @@ import {
   Precondition,
   ResettablePrecondition
 } from "rc_agents/framework";
+import { ProcedureConst } from "rc_agents/framework/Enums";
+import agentAPI from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
   ActionFrameIDs,
   AppAttributes,
   BeliefKeys,
   ClinicianAttributes,
-  ProcedureAttributes,
-  ProcedureConst
-} from "rc_agents/AgentEnums";
+  ProcedureAttributes
+} from "rc_agents/clinician_framework";
 import { Storage } from "rc_agents/storage";
 import { AlertInfo, AlertStatus } from "rc_agents/model";
-import agentAPI from "rc_agents/framework/AgentAPI";
 import {
   listMedCompliantsByDate,
   getMedicationInfo,
@@ -63,7 +63,10 @@ class RetrieveAlertInfo extends Activity {
           }
         } else {
           // Device is offline: get alert info from local storage
-          alertInfo = await Storage.getSingleAlertInfo(alert);
+          alertInfo = await Storage.getSingleAlertInfo(
+            alert.id,
+            alert.patientID
+          );
         }
 
         if (alertInfo) {
@@ -190,7 +193,7 @@ export const queryAlertInfo = async (
 // Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.AT_CP,
+  ProcedureAttributes.AT_CP_II,
   ProcedureConst.ACTIVE
 );
 const rule2 = new ResettablePrecondition(

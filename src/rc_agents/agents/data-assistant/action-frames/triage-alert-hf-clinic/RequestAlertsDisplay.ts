@@ -6,15 +6,17 @@ import {
   Precondition
 } from "rc_agents/framework";
 import {
+  ProcedureConst,
+  Performative,
+  CommonAttributes
+} from "rc_agents/framework/Enums";
+import {
   ActionFrameIDs,
   AgentIDs,
   BeliefKeys,
   ClinicianAttributes,
-  CommonAttributes,
-  Performative,
-  ProcedureAttributes,
-  ProcedureConst
-} from "rc_agents/AgentEnums";
+  ProcedureAttributes
+} from "rc_agents/clinician_framework";
 
 /**
  * Class to represent the activity for requesting display of alerts.
@@ -55,7 +57,7 @@ class RequestAlertsDisplay extends Communicate {
 // Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.AT_CP,
+  ProcedureAttributes.AT_CP_I,
   ProcedureConst.ACTIVE
 );
 const rule2 = new Precondition(

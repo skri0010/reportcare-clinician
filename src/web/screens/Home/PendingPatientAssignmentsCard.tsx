@@ -3,17 +3,9 @@ import { RootState, select } from "util/useRedux";
 import { View, TextStyle, FlatList } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
-import { H4, H5 } from "components/Text/index";
+import { H4 } from "components/Text/index";
 import { CardWrapper } from "./CardWrapper";
 import i18n from "util/language/i18n";
-import { agentAPI, Belief } from "rc_agents/framework";
-import {
-  BeliefKeys,
-  PatientAttributes,
-  ProcedureAttributes,
-  ProcedureConst
-} from "rc_agents/AgentEnums";
-import { agentDTA } from "rc_agents/agents";
 import {
   PatientAssignmentStatus,
   PatientAssignmentResolution

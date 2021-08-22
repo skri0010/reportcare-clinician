@@ -6,15 +6,14 @@ import {
   Precondition,
   ResettablePrecondition
 } from "rc_agents/framework";
+import { ProcedureConst, Performative } from "rc_agents/framework/Enums";
 import {
   ActionFrameIDs,
   AgentIDs,
   BeliefKeys,
   ClinicianAttributes,
-  Performative,
-  ProcedureAttributes,
-  ProcedureConst
-} from "rc_agents/AgentEnums";
+  ProcedureAttributes
+} from "rc_agents/clinician_framework";
 
 /**
  * Class to represent the activity for requesting display of Todos.
