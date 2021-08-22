@@ -56,7 +56,7 @@ export const EditHistorySection: FC<EditHistorySectionProps> = ({
   );
 };
 
-export const TodoDetailsScreen: FC<TodoDetailsStackProps.ViewTodoProps> = ({
+export const ViewTodoScreen: FC<TodoDetailsStackProps.ViewTodoProps> = ({
   route,
   navigation
 }) => {

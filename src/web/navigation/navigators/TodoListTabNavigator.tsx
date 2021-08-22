@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { TodoCurrentTab } from "web/screens/Todo/TodoCurrentTab";
-import { TodoCompletedTab } from "web/screens/Todo/TodoCompletedTab";
+import { TodoCurrentTab } from "web/screens/Todo/tabs/TodoCurrentTab";
+import { TodoCompletedTab } from "web/screens/Todo/tabs/TodoCompletedTab";
 import { getTopTabBarOptions } from "util/getStyles";
 import { RootState, select } from "util/useRedux";
 import i18n from "util/language/i18n";

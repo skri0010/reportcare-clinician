@@ -7,7 +7,7 @@ import { View, Modal } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { NavigationContainer } from "@react-navigation/native";
-import { AddTodoScreen } from "./AddTodoScreen";
+import { AddTodoScreen } from "./modals/AddTodoScreen";
 import { NoSelectionScreen } from "../Shared/NoSelectionScreen";
 import i18n from "util/language/i18n";
 import { TodoDetailsStackNavigator } from "../../navigation/navigators/TodoDetailsStackNavigator";
@@ -158,7 +158,7 @@ export const TodoScreen: FC<MainScreenProps[ScreenName.TODO]> = ({
         >
           {fetchingTodoDetails ? (
             <LoadingIndicator flex={1} />
-          ) : todoDetails ? (
+          ) : todoSelected ? (
             <NavigationContainer independent>
               {/* Todo details */}
               <TodoDetailsStackNavigator

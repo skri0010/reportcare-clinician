@@ -1,8 +1,8 @@
 import React, { FC } from "react";
-import { TodoDetailsScreen } from "../../screens/Todo/TodoDetailsScreen";
-import { EditTodoScreen } from "../../screens/Todo/EditTodoScreen";
+import { ViewTodoScreen } from "web/screens/Todo/stack/ViewTodoScreen";
+import { EditTodoScreen } from "web/screens/Todo/stack/EditTodoScreen";
 import { createStackNavigator } from "@react-navigation/stack";
-import { MarkAsDoneButton } from "../../screens/Todo/MarkAsDoneButton";
+import { MarkAsDoneButton } from "components/buttons/MarkAsDoneButton";
 import {
   TodoDetailsStackScreenName,
   TodoDetailsStackParamList
@@ -11,8 +11,8 @@ import { LocalTodo } from "rc_agents/model";
 import i18n from "util/language/i18n";
 import { ms } from "react-native-size-matters";
 import { TodoScreenNavigation } from "web/navigation/types/MainScreenProps";
-import { onDonePress } from "../../screens/Todo/TodoCurrentTab";
-import { onUndoPress } from "../../screens/Todo/TodoCompletedTab";
+import { onDonePress } from "web/screens/Todo/tabs/TodoCurrentTab";
+import { onUndoPress } from "web/screens/Todo/tabs/TodoCompletedTab";
 
 const Stack = createStackNavigator<TodoDetailsStackParamList>();
 
@@ -35,10 +35,10 @@ export const TodoDetailsStackNavigator: FC<TodoDetailsNavigationStackProps> = ({
 
   return (
     <Stack.Navigator>
-      {/* VIEW TODO */}
+      {/* View todo screen */}
       <Stack.Screen
         name={TodoDetailsStackScreenName.VIEW_TODO}
-        component={TodoDetailsScreen}
+        component={ViewTodoScreen}
         initialParams={{ todo: todo, parentNavigation: navigation }}
         options={() => ({
           title: i18n.t("Todo.ViewTodo"),
@@ -57,7 +57,7 @@ export const TodoDetailsStackNavigator: FC<TodoDetailsNavigationStackProps> = ({
           )
         })}
       />
-      {/* EDIT TODO */}
+      {/* Edit todo screen */}
       <Stack.Screen
         name={TodoDetailsStackScreenName.EDIT_TODO}
         component={EditTodoScreen}
