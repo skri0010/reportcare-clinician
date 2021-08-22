@@ -27,7 +27,10 @@ export const PatientsList: FC<PatientsListScreen> = ({
 
   return (
     <View
-      style={{ flex: flex, backgroundColor: colors.primaryContrastTextColor }}
+      style={{
+        flex: flex,
+        backgroundColor: colors.primaryContrastTextColor
+      }}
     >
       {/* Search bar*/}
       <SearchBarComponent

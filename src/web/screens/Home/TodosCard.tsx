@@ -7,7 +7,7 @@ import { ItemSeparator } from "components/rowComponents/ItemSeparator";
 import { RiskLevel } from "models/RiskLevel";
 import { H4 } from "components/text/index";
 import { CardWrapper } from "./CardWrapper";
-import { FloatingShowMoreButton } from "components/buttons/FloatingShowMoreButton";
+import { FloatingBottomButton } from "components/buttons/FloatingShowMoreButton";
 import i18n from "util/language/i18n";
 import { ScreenName } from "web/navigation";
 import { TodoStatus } from "rc_agents/model";
@@ -72,7 +72,7 @@ export const TodosCard: FC<TodosCardProps> = ({ maxHeight, navigation }) => {
                   }}
                 />
                 {/* Disable last row, display "Show More button" */}
-                <FloatingShowMoreButton />
+                <FloatingBottomButton />
               </>
             ) : (
               <TodoRow

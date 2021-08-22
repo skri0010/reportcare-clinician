@@ -5,7 +5,15 @@ import { ScaledSheet } from "react-native-size-matters";
 import { select, RootState } from "util/useRedux";
 import i18n from "util/language/i18n";
 
-export const FloatingShowMoreButton: FC = () => {
+interface FloatingBottomButtonProps {
+  title?: string;
+  onPress?: () => void;
+}
+
+export const FloatingBottomButton: FC<FloatingBottomButtonProps> = ({
+  title,
+  onPress
+}) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
   }));
@@ -13,11 +21,11 @@ export const FloatingShowMoreButton: FC = () => {
   return (
     <View style={styles.buttonContainer}>
       <TouchableOpacity
-        onPress={() => null}
+        onPress={onPress}
         style={[{ backgroundColor: colors.primaryButtonColor }, styles.button]}
       >
         <H6
-          text={i18n.t("Home.ShowMoreButton")}
+          text={title || i18n.t("Home.ShowMoreButton")}
           style={[
             { color: colors.primaryContrastTextColor },
             styles.buttonText

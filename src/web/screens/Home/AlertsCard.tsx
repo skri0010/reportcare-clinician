@@ -18,6 +18,7 @@ import agentAPI from "rc_agents/framework/AgentAPI";
 import { AlertStatus } from "rc_agents/model";
 import { agentDTA } from "rc_agents/agents";
 import { Alert } from "aws/API";
+import { isMobile } from "util/device";
 
 interface AlertsCardProps {
   flex?: number;
@@ -124,7 +125,7 @@ export const AlertsCard: FC<AlertsCardProps> = ({ flex = 1, maxHeight }) => {
     );
   };
 
-  const iconSize = ms(15);
+  const iconSize = isMobile ? ms(30) : ms(15); // Larger icon size for mobile
 
   return (
     <CardWrapper flex={flex} maxHeight={maxHeight}>

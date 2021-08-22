@@ -33,6 +33,7 @@ import { AgentTrigger } from "rc_agents/trigger";
 import { NoSelectionScreen } from "../Shared/NoSelectionScreen";
 import i18n from "util/language/i18n";
 import { LoadingIndicator } from "components/indicators/LoadingIndicator";
+import { AdaptiveTwoScreenWrapper } from "web/screens/AdaptiveTwoScreenWrapper";
 
 export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
   route
@@ -176,41 +177,47 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
         style={styles.container}
         pointerEvents={modalVisible ? "none" : "auto"}
       >
-        {/* Left side: List of patients */}
-        <PatientsList />
+        <AdaptiveTwoScreenWrapper
+          // Left side: Patients list
+          LeftComponent={<PatientsList />}
+          // Right side: Patient details
+          RightComponent={
+            <View
+              style={{
+                flex: 2,
+                backgroundColor: colors.primaryWebBackgroundColor
+              }}
+            >
+              {fetchingPatientDetails ? (
+                <LoadingIndicator flex={1} />
+              ) : patientDetails ? (
+                <>
+                  {/* Patient name and avatar header */}
+                  <ContactTitle
+                    name={patientDetails.patientInfo.name}
+                    isPatient
+                  />
 
-        {/* Right side: Patient details */}
-        <View
-          style={{
-            flex: 2,
-            backgroundColor: colors.primaryWebBackgroundColor
-          }}
-        >
-          {fetchingPatientDetails ? (
-            <LoadingIndicator flex={1} />
-          ) : patientDetails ? (
-            <>
-              {/* Patient name and avatar header */}
-              <ContactTitle name={patientDetails.patientInfo.name} isPatient />
-
-              {/* Patient details */}
-              <PatientDetailsTabNavigator
-                details={patientDetails}
-                selectedTab={selectedTab}
-                setAddMedicalRecord={setAddMedicalRecord}
-                setDisplayHistory={setDisplayHistory}
-                setDisplayMedicalRecord={setDisplayMedicalRecord}
-                setModalAlertVisible={setModalAlertVisible}
-                setViewMedicalModal={setViewMedicalModal}
-              />
-            </>
-          ) : (
-            <NoSelectionScreen
-              screenName={ScreenName.PATIENTS}
-              subtitle={i18n.t("Patients.NoSelection")}
-            />
-          )}
-        </View>
+                  {/* Patient details */}
+                  <PatientDetailsTabNavigator
+                    details={patientDetails}
+                    selectedTab={selectedTab}
+                    setAddMedicalRecord={setAddMedicalRecord}
+                    setDisplayHistory={setDisplayHistory}
+                    setDisplayMedicalRecord={setDisplayMedicalRecord}
+                    setModalAlertVisible={setModalAlertVisible}
+                    setViewMedicalModal={setViewMedicalModal}
+                  />
+                </>
+              ) : (
+                <NoSelectionScreen
+                  screenName={ScreenName.PATIENTS}
+                  subtitle={i18n.t("Patients.NoSelection")}
+                />
+              )}
+            </View>
+          }
+        />
       </View>
 
       {/* Container for modals */}
