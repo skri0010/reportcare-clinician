@@ -3,8 +3,8 @@ import { TodoScreenNavigation } from "web/navigation/types/MainScreenProps";
 import {
   ScreenName,
   PatientDetailsTabName,
-  TodoListName,
-  TodoDetailsName
+  TodoListTabName,
+  TodoDetailsStackScreenName
 } from "web/navigation";
 
 // Main screen parameters
@@ -17,7 +17,11 @@ export type MainScreenParamList = {
   };
   [ScreenName.CLINICIANS]: undefined;
   [ScreenName.CHAT]: undefined;
-  [ScreenName.TODO]: LocalTodo | undefined;
+  [ScreenName.TODO]: {
+    todoToShow?: LocalTodo;
+    selectedListTab?: TodoListTabName;
+    selectedStackScreen?: TodoDetailsStackScreenName;
+  };
   [ScreenName.MARIA]: undefined;
   [ScreenName.SETTINGS]: undefined;
 };
@@ -33,17 +37,17 @@ export type PatientDetailsTabParamList = {
 // Todo list parameters
 
 export type TodoListTabParamList = {
-  [TodoListName.CURRENT]: {
+  [TodoListTabName.CURRENT]: {
     todos: LocalTodo[];
   };
-  [TodoListName.COMPLETED]: { todos: LocalTodo[] };
+  [TodoListTabName.COMPLETED]: { todos: LocalTodo[] };
 };
 // Todo details parameters
 
 export type TodoDetailsStackParamList = {
-  [TodoDetailsName.VIEW_TODO]: {
+  [TodoDetailsStackScreenName.VIEW_TODO]: {
     todo: LocalTodo;
     parentNavigation?: TodoScreenNavigation;
   };
-  [TodoDetailsName.EDIT_TODO]: { todo: LocalTodo };
+  [TodoDetailsStackScreenName.EDIT_TODO]: { todo: LocalTodo };
 };

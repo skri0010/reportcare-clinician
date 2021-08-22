@@ -8,11 +8,8 @@ import {
 } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { TodoDetailsStackProps } from "web/navigation/types";
-import { TodoDetailsName } from "web/navigation";
-import {
-  TodoSection,
-  EditHistorySection
-} from "./TodoNavigations/TodoDetailsScreen";
+import { TodoDetailsStackScreenName } from "web/navigation";
+import { TodoSection, EditHistorySection } from "./TodoDetailsScreen";
 import { H3 } from "components/text";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
@@ -25,7 +22,7 @@ import {
 } from "ic-redux/actions/agents/actionCreator";
 import { AgentTrigger } from "rc_agents/trigger";
 
-export const EditTodoScreen: FC<TodoDetailsStackProps.EditTodoScreenProps> = ({
+export const EditTodoScreen: FC<TodoDetailsStackProps.EditTodoProps> = ({
   route,
   navigation
 }) => {
@@ -62,7 +59,9 @@ export const EditTodoScreen: FC<TodoDetailsStackProps.EditTodoScreenProps> = ({
 
   useEffect(() => {
     if (updatedTodo) {
-      navigation.navigate(TodoDetailsName.VIEW_TODO, { todo: updatedTodo });
+      navigation.navigate(TodoDetailsStackScreenName.VIEW_TODO, {
+        todo: updatedTodo
+      });
       dispatch(setUpdatedTodo(undefined));
     }
   }, [dispatch, navigation, updatedTodo]);

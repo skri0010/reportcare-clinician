@@ -5,7 +5,7 @@ import { TodoCompletedTab } from "web/screens/Todo/TodoCompletedTab";
 import { getTopTabBarOptions } from "util/getStyles";
 import { RootState, select } from "util/useRedux";
 import i18n from "util/language/i18n";
-import { TodoListName, TodoListTabParamList } from "web/navigation";
+import { TodoListTabName, TodoListTabParamList } from "web/navigation";
 import { LocalTodo } from "rc_agents/model";
 
 const Tab = createMaterialTopTabNavigator<TodoListTabParamList>();
@@ -29,9 +29,8 @@ export const TodoListTabNavigator: FC<TodoListNavigationStackProps> = ({
     <Tab.Navigator
       screenOptions={getTopTabBarOptions({ colors: colors, fonts: fonts })}
     >
-      {/* CURRENT todo tab */}
       <Tab.Screen
-        name={TodoListName.CURRENT}
+        name={TodoListTabName.CURRENT}
         options={{ title: i18n.t("Todo.Current") }}
         listeners={{
           tabPress: tabPressCurrent
@@ -39,9 +38,8 @@ export const TodoListTabNavigator: FC<TodoListNavigationStackProps> = ({
       >
         {() => <TodoCurrentTab setTodoSelected={setTodoSelected} />}
       </Tab.Screen>
-      {/* COMPLETED todo tab */}
       <Tab.Screen
-        name={TodoListName.COMPLETED}
+        name={TodoListTabName.COMPLETED}
         options={{ title: i18n.t("Todo.Completed") }}
         listeners={{
           tabPress: tabPressCompleted

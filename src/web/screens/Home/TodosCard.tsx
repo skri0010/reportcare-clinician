@@ -21,11 +21,11 @@ interface TodosCardProps {
 }
 
 export const TodosCard: FC<TodosCardProps> = ({ maxHeight, navigation }) => {
-  const { colors, pendingTodos, fetchingTodos } = select(
+  const { colors, pendingTodos, fetchingPendingTodos } = select(
     (state: RootState) => ({
       colors: state.settings.colors,
       pendingTodos: state.agents.pendingTodos,
-      fetchingTodos: state.agents.fetchingTodos
+      fetchingPendingTodos: state.agents.fetchingPendingTodos
     })
   );
 
@@ -50,7 +50,7 @@ export const TodosCard: FC<TodosCardProps> = ({ maxHeight, navigation }) => {
         <H4 text={i18n.t("Home.Todos")} style={[styles.title, titleColor]} />
       </View>
       {/* Loading indicator */}
-      {fetchingTodos && <LoadingIndicator />}
+      {fetchingPendingTodos && <LoadingIndicator />}
       <View style={styles.listContainer}>
         <FlatList
           showsVerticalScrollIndicator={false}
@@ -68,7 +68,7 @@ export const TodosCard: FC<TodosCardProps> = ({ maxHeight, navigation }) => {
                   reduceOpacity
                   onCardPress={() => {
                     // Navigate to Todo screen
-                    navigation.navigate(ScreenName.TODO, item);
+                    navigation.navigate(ScreenName.TODO, { todoToShow: item });
                   }}
                 />
                 {/* Disable last row, display "Show More button" */}
@@ -82,7 +82,7 @@ export const TodosCard: FC<TodosCardProps> = ({ maxHeight, navigation }) => {
                 }
                 onCardPress={() => {
                   // Navigate to Todo screen
-                  navigation.navigate(ScreenName.TODO, item);
+                  navigation.navigate(ScreenName.TODO, { todoToShow: item });
                 }}
               />
             );

@@ -38,11 +38,11 @@ export const onDonePress = (item: LocalTodo): void => {
 };
 
 export const TodoCurrentTab: FC<TodoRowTabProps> = ({ setTodoSelected }) => {
-  const { colors, pendingTodos, fetchingTodos } = select(
+  const { colors, pendingTodos, fetchingPendingTodos } = select(
     (state: RootState) => ({
       colors: state.settings.colors,
       pendingTodos: state.agents.pendingTodos,
-      fetchingTodos: state.agents.fetchingTodos
+      fetchingPendingTodos: state.agents.fetchingPendingTodos
     })
   );
 
@@ -82,10 +82,10 @@ export const TodoCurrentTab: FC<TodoRowTabProps> = ({ setTodoSelected }) => {
           />
         )}
         keyExtractor={(item) => item.createdAt}
-        pointerEvents={fetchingTodos ? "none" : "auto"}
+        pointerEvents={fetchingPendingTodos ? "none" : "auto"}
       />
       {/* Loading Indicator while Todos are still being fetched */}
-      {fetchingTodos && <LoadingIndicator />}
+      {fetchingPendingTodos && <LoadingIndicator />}
     </View>
   );
 };

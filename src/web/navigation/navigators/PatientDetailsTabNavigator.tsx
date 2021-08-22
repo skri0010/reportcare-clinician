@@ -19,7 +19,7 @@ import { getTopTabBarOptions } from "util/getStyles";
 
 const Tab = createMaterialTopTabNavigator<PatientDetailsTabParamList>();
 
-export interface PatientDetailsNavigationStackProps {
+export interface PatientDetailsTabNavigatorProps {
   details: PatientDetails;
   selectedTab?: PatientDetailsTabName;
   setDisplayHistory: (state: AlertHistory) => void; // alert history details to be shown
@@ -29,7 +29,7 @@ export interface PatientDetailsNavigationStackProps {
   setAddMedicalRecord: (state: boolean) => void; // add medical record modal visibility
 }
 
-export const PatientDetailsNavigationStack: FC<PatientDetailsNavigationStackProps> =
+export const PatientDetailsTabNavigator: FC<PatientDetailsTabNavigatorProps> =
   ({
     details,
     selectedTab,

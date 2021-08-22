@@ -9,14 +9,14 @@ import { ScaledSheet } from "react-native-size-matters";
 import i18n from "util/language/i18n";
 import { RootState, select } from "util/useRedux";
 import { RiskFilterPillList } from "components/buttons/RiskFilterPillList";
-import { RowSelectionTab } from "../RowSelectionTab";
+import { SearchBarComponent } from "components/bars/SearchBarComponent";
 
-interface PatientsListScreenProps {
+interface PatientsListScreen {
   displayPatientId?: string;
   flex?: number;
 }
 
-export const PatientsListScreen: FC<PatientsListScreenProps> = ({
+export const PatientsList: FC<PatientsListScreen> = ({
   displayPatientId,
   flex = 1
 }) => {
@@ -47,11 +47,17 @@ export const PatientsListScreen: FC<PatientsListScreenProps> = ({
     <View
       style={{ flex: flex, backgroundColor: colors.primaryContrastTextColor }}
     >
-      {/* Search bar and risk filter pills */}
-      <RowSelectionTab
-        title={i18n.t("ScreenName.Patients")}
+      {/* Search bar*/}
+      <SearchBarComponent
+        onUserInput={() => {
+          null;
+        }}
+        containerStyle={{
+          backgroundColor: colors.primaryContrastTextColor
+        }}
         placeholder={i18n.t("Patients.SearchBarPlaceholder")}
       />
+      {/* Risk filter pills */}
       <RiskFilterPillList />
       {/* Risk filter pills and List of patients */}
       {fetchingPatients ? (

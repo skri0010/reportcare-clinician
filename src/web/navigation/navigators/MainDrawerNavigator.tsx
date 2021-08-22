@@ -76,7 +76,7 @@ export const MainDrawerNavigator: FC<DrawerNavigationProps> = ({ signOut }) => {
     [ScreenName.PATIENTS]: {},
     [ScreenName.CLINICIANS]: undefined,
     [ScreenName.CHAT]: undefined,
-    [ScreenName.TODO]: undefined,
+    [ScreenName.TODO]: {},
     [ScreenName.MARIA]: undefined,
     [ScreenName.SETTINGS]: undefined
   };
@@ -137,7 +137,7 @@ export const MainDrawerNavigator: FC<DrawerNavigationProps> = ({ signOut }) => {
             iconLabel: i18n.t("ScreenName.Todo")
           })
         }}
-        initialParams={{}}
+        initialParams={initialParamsList[ScreenName.TODO]}
       />
       <Drawer.Screen
         name={ScreenName.MARIA}

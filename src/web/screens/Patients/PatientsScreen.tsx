@@ -24,11 +24,11 @@ import {
   setPatientDetails,
   setProcedureOngoing
 } from "ic-redux/actions/agents/actionCreator";
-import { PatientDetailsNavigationStack } from "../../navigation/navigators/PatientDetailsTabNavigator";
+import { PatientDetailsTabNavigator } from "web/navigation/navigators/PatientDetailsTabNavigator";
 import { PatientHistoryModal } from "web/screens/Patients/PatientHistoryScreens/PatientHistoryModals";
 import { MainScreenProps } from "web/navigation/types";
 import { ScreenName } from "web/navigation";
-import { PatientsListScreen } from "./PatientsListScreen";
+import { PatientsList } from "./PatientsList";
 import { AgentTrigger } from "rc_agents/trigger";
 import { NoSelectionScreen } from "../Shared/NoSelectionScreen";
 import i18n from "util/language/i18n";
@@ -177,7 +177,7 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
         pointerEvents={modalVisible ? "none" : "auto"}
       >
         {/* Left side: List of patients */}
-        <PatientsListScreen />
+        <PatientsList />
 
         {/* Right side: Patient details */}
         <View
@@ -193,8 +193,8 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
               {/* Patient name and avatar header */}
               <ContactTitle name={patientDetails.patientInfo.name} isPatient />
 
-              {/* Patient Navigation */}
-              <PatientDetailsNavigationStack
+              {/* Patient details */}
+              <PatientDetailsTabNavigator
                 details={patientDetails}
                 selectedTab={selectedTab}
                 setAddMedicalRecord={setAddMedicalRecord}

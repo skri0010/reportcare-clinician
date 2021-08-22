@@ -17,12 +17,12 @@ export enum PatientDetailsTabName {
   INFO = "Info"
 }
 
-export enum TodoListName {
+export enum TodoListTabName {
   CURRENT = "Current",
   COMPLETED = "Completed"
 }
 
-export enum TodoDetailsName {
+export enum TodoDetailsStackScreenName {
   VIEW_TODO = "ViewTodo",
   EDIT_TODO = "EditTodo"
 }

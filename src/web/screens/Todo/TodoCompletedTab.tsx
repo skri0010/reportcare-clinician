@@ -35,11 +35,11 @@ export const onUndoPress = (item: LocalTodo): void => {
 };
 
 export const TodoCompletedTab: FC<TodoRowTabProps> = ({ setTodoSelected }) => {
-  const { colors, completedTodos, fetchingTodos } = select(
+  const { colors, completedTodos, fetchingCompletedTodos } = select(
     (state: RootState) => ({
       colors: state.settings.colors,
       completedTodos: state.agents.completedTodos,
-      fetchingTodos: state.agents.fetchingTodos
+      fetchingCompletedTodos: state.agents.fetchingCompletedTodos
     })
   );
 
@@ -76,11 +76,11 @@ export const TodoCompletedTab: FC<TodoRowTabProps> = ({ setTodoSelected }) => {
           />
         )}
         keyExtractor={(item) => item.createdAt}
-        pointerEvents={fetchingTodos ? "none" : "auto"}
+        pointerEvents={fetchingCompletedTodos ? "none" : "auto"}
       />
 
       {/* Loading Indicator while Todos are still being fetched */}
-      {fetchingTodos && <LoadingIndicator />}
+      {fetchingCompletedTodos && <LoadingIndicator />}
     </ScreenWrapper>
   );
 };
