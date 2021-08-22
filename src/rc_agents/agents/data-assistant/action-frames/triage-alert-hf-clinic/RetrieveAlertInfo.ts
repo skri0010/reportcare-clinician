@@ -14,8 +14,8 @@ import {
   ProcedureAttributes,
   ProcedureConst
 } from "rc_agents/AgentEnums";
-import { AsyncStorageKeys } from "rc_agents/storage";
-import { AlertColorCode, AlertInfo } from "rc_agents/model";
+import { Storage } from "rc_agents/storage";
+import { AlertInfo, AlertStatus } from "rc_agents/model";
 import agentAPI from "rc_agents/framework/AgentAPI";
 import {
   listMedCompliantsByDate,
@@ -23,16 +23,10 @@ import {
   getActivityInfo,
   getReportVitals,
   getReportSymptom,
-  getPatientInfo,
-  AlertStatus
+  getPatientInfo
 } from "aws";
 import { Alert, ModelSortDirection } from "aws/API";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { RiskLevel } from "models/RiskLevel";
-
-interface LocalAlertInfos {
-  [patientId: string]: string;
-}
+import { mapColorCodeToRiskLevel } from "./RetrievePendingAlertCount";
 
 /**
  * Class to represent an activity for retrieving patient's information associated with an alert.
@@ -60,29 +54,16 @@ class RetrieveAlertInfo extends Activity {
       if (alert) {
         let alertInfo: AlertInfo | null | undefined;
 
-        // Retrieves local alerts to save new alert locally
-        let alertInfosJSON = await AsyncStorage.getItem(
-          AsyncStorageKeys.ALERT_INFOS
-        );
-
         if (facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
           // Device is online: queries information associated with the alert
           const queryResult = await queryAlertInfo(alert);
           if (queryResult) {
             alertInfo = queryResult;
-            alertInfosJSON = await mergeIntoLocalAlertInfos(
-              queryResult,
-              alertInfosJSON
-            );
-            // Saves updated JSON into local storage
-            await AsyncStorage.setItem(
-              AsyncStorageKeys.ALERT_INFOS,
-              alertInfosJSON
-            );
+            await Storage.setAlertInfo(queryResult);
           }
-        } else if (alertInfosJSON) {
+        } else {
           // Device is offline: get alert info from local storage
-          alertInfo = await this.retrieveLocalAlertInfo(alertInfosJSON, alert);
+          alertInfo = await Storage.getSingleAlertInfo(alert);
         }
 
         if (alertInfo) {
@@ -109,68 +90,7 @@ class RetrieveAlertInfo extends Activity {
       console.log(error);
     }
   }
-
-  // eslint-disable-next-line class-methods-use-this
-  async retrieveLocalAlertInfo(
-    alertInfosJSON: string,
-    alert: Alert
-  ): Promise<AlertInfo | undefined | null> {
-    const alertInfos: LocalAlertInfos = JSON.parse(alertInfosJSON);
-    if (alertInfos[alert.patientID]) {
-      const patientAlertInfos: AlertInfo[] = JSON.parse(
-        alertInfos[alert.patientID]
-      );
-      return patientAlertInfos.find((a) => a.id === alert.id);
-    }
-    return null;
-  }
 }
-
-/**
- * Merges current alert info into alertInfoJSON for local storage.
- * @param alertInfo current alert info
- * @param alertInfoJSON localAlertInfos JSON
- * @returns merged localAlertsInfos JSON
- */
-// eslint-disable-next-line class-methods-use-this
-export const mergeIntoLocalAlertInfos = async (
-  alertInfo: AlertInfo,
-  alertInfoJSON: string | null
-): Promise<string> => {
-  let localAlertInfos: LocalAlertInfos;
-
-  // Saves alert info locally using patientId as nested key
-  if (alertInfoJSON) {
-    localAlertInfos = JSON.parse(alertInfoJSON);
-    // One or more alert infos of the current patient were stored previously
-    if (localAlertInfos[alertInfo.patientId]) {
-      const patientAlertInfos: AlertInfo[] = JSON.parse(
-        localAlertInfos[alertInfo.patientId]
-      );
-
-      // Replaces existing alert info, otherwise inserts into the list
-      const existIndex = patientAlertInfos.findIndex(
-        (a) => a.id === alertInfo.id
-      );
-      if (existIndex >= 0) {
-        patientAlertInfos[existIndex] = alertInfo;
-      } else {
-        patientAlertInfos.push(alertInfo);
-      }
-      localAlertInfos[alertInfo.patientId] = JSON.stringify(patientAlertInfos);
-    } else {
-      // No alert info of the current patient exists
-      localAlertInfos[alertInfo.patientId] = JSON.stringify([alertInfo]);
-    }
-  }
-  // Alert info key does not exist
-  else {
-    localAlertInfos = {};
-    localAlertInfos[alertInfo.patientId] = JSON.stringify([alertInfo]);
-  }
-
-  return JSON.stringify(localAlertInfos);
-};
 
 export const queryAlertInfo = async (
   alert: Alert
@@ -205,27 +125,10 @@ export const queryAlertInfo = async (
       summary: alert.summary,
       vitals: alertVitals,
       symptoms: alertSymptoms,
-      completed: alert.completed === AlertStatus.COMPLETED
+      completed: alert.completed === AlertStatus.COMPLETED,
+      riskLevel: mapColorCodeToRiskLevel(alert.colorCode),
+      _version: alert._version
     };
-
-    // Assigns risk level according to color code
-    switch (alert.colorCode) {
-      case AlertColorCode.HIGH:
-        alertInfo.riskLevel = RiskLevel.HIGH;
-        break;
-      case AlertColorCode.MEDIUM:
-        alertInfo.riskLevel = RiskLevel.MEDIUM;
-        break;
-      case AlertColorCode.LOW:
-        alertInfo.riskLevel = RiskLevel.LOW;
-        break;
-      case AlertColorCode.UNASSIGNED:
-        alertInfo.riskLevel = RiskLevel.UNASSIGNED;
-        break;
-      default:
-        alertInfo.riskLevel = RiskLevel.UNASSIGNED;
-        break;
-    }
 
     // Queries patientInfo to get diagnosis and NHYA class
     const patientInfoQuery = await getPatientInfo({
@@ -284,7 +187,7 @@ export const queryAlertInfo = async (
   return null;
 };
 
-// Preconditions for activating the RetrieveAlertInfo class
+// Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
   ProcedureAttributes.AT_CP,
@@ -296,7 +199,7 @@ const rule2 = new ResettablePrecondition(
   true
 );
 
-// Action Frame for RetrieveAlertInfo class
+// Actionframe
 export const af_RetrieveAlertInfo = new Actionframe(
   `AF_${ActionFrameIDs.DTA.RETRIEVE_ALERT_INFO}`,
   [rule1, rule2],

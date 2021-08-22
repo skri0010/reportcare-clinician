@@ -8,7 +8,7 @@ import {
   CardStyleInterpolators,
   createStackNavigator
 } from "@react-navigation/stack";
-import { RowSelectionWrapper } from "../RowSelectionTab";
+import { RowSelectionTab } from "web/screens/RowSelectionTab";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { getTopTabBarOptions } from "util/getStyles";
 import { AlertCurrentTab } from "./AlertCurrentTab";
@@ -98,7 +98,7 @@ export const AlertScreen: FC<WithSideTabsProps[ScreenName.ALERTS]> = () => {
     <ScreenWrapper fixed>
       <View style={styles.container}>
         <View style={styles.rowSelection}>
-          <RowSelectionWrapper title="Alerts" isTodo />
+          <RowSelectionTab title="Alerts" isTodo />
           <Tab.Navigator tabBarOptions={getTopTabBarOptions(colors)}>
             <Tab.Screen name="Pending">
               {() => <AlertCurrentTab setAlertSelected={onRowClick} />}

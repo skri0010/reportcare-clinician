@@ -3,7 +3,8 @@ import {
   Agent,
   Belief,
   Communicate,
-  Precondition
+  Precondition,
+  ResettablePrecondition
 } from "rc_agents/framework";
 import {
   ActionFrameIDs,
@@ -20,16 +21,17 @@ import {
  * Class to represent the activity for requesting display of retrieved patient's details.
  * This happens in Procedure HF Outcome Trends (HF-OTP-II).
  */
-class RequestDetailsDisplay extends Communicate {
-  /**
-   * Constructor for the RequestDetailsDisplay class
-   */
+class RequestDisplayPatientDetails extends Communicate {
   constructor() {
+    // Triggers VisualizeParameters action frame of UXSA
     super(
-      ActionFrameIDs.DTA.REQUEST_DETAILS_DISPLAY,
+      ActionFrameIDs.DTA.REQUEST_DISPLAY_PATIENT_DETAILS,
       Performative.REQUEST,
-      // Triggers VisualizeParameters action frame of UXSA
-      new Belief(BeliefKeys.PATIENT, PatientAttributes.DETAILS_RETRIEVED, true),
+      new Belief(
+        BeliefKeys.PATIENT,
+        PatientAttributes.PATIENT_DETAILS_RETRIEVED,
+        true
+      ),
       [AgentIDs.UXSA]
     );
   }
@@ -40,7 +42,8 @@ class RequestDetailsDisplay extends Communicate {
    */
   async doActivity(agent: Agent): Promise<void> {
     try {
-      await super.doActivity(agent);
+      // Reset preconditions
+      await super.doActivity(agent, [rule3]);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
@@ -48,7 +51,7 @@ class RequestDetailsDisplay extends Communicate {
   }
 }
 
-// Rules or preconditions for activating the RequestDetailsDisplay class
+// Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
   ProcedureAttributes.HF_OTP_II,
@@ -59,10 +62,15 @@ const rule2 = new Precondition(
   CommonAttributes.LAST_ACTIVITY,
   ActionFrameIDs.DTA.RETRIEVE_PATIENT_DETAILS
 );
+const rule3 = new ResettablePrecondition(
+  AgentIDs.DTA,
+  PatientAttributes.PATIENT_DETAILS_RETRIEVED,
+  true
+);
 
-// Actionframe of the RequestDetailsDisplay class
-export const af_RequestDetailsDisplay = new Actionframe(
-  `AF_${ActionFrameIDs.DTA.REQUEST_DETAILS_DISPLAY}`,
+// Actionframe
+export const af_RequestDisplayPatientDetails = new Actionframe(
+  `AF_${ActionFrameIDs.DTA.REQUEST_DISPLAY_PATIENT_DETAILS}`,
   [rule1, rule2],
-  new RequestDetailsDisplay()
+  new RequestDisplayPatientDetails()
 );

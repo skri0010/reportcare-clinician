@@ -14,7 +14,7 @@ import {
   ProcedureConst
 } from "rc_agents/AgentEnums";
 import agentAPI from "rc_agents/framework/AgentAPI";
-import { store } from "ic-redux/store";
+import { store } from "util/useRedux";
 import {
   setFetchingPendingPatientAssignments,
   setPendingPatientAssignments
@@ -22,7 +22,7 @@ import {
 
 /**
  * Class to represent an activity for displaying pending patient assignments.
- * This happens in Procedure Storing Data (SRD).
+ * This happens in Procedure Storing Data (SRD-I).
  */
 class DisplayPendingPatientAssignments extends Activity {
   constructor() {
@@ -43,10 +43,11 @@ class DisplayPendingPatientAssignments extends Activity {
       ];
 
     if (pendingPatientAssignments) {
-      // Dispatch to store boolean to store fetched pending patient assignments
+      // Dispatch to store retrieved pending patient assignments
       store.dispatch(setPendingPatientAssignments(pendingPatientAssignments));
 
-      // Removes pending patient assignments from facts
+      // Update Facts
+      // Remove item
       agentAPI.addFact(
         new Belief(
           BeliefKeys.PATIENT,
@@ -57,32 +58,30 @@ class DisplayPendingPatientAssignments extends Activity {
       );
     }
 
-    // Dispatch to store to indicate fetching has ended
-    store.dispatch(setFetchingPendingPatientAssignments(false));
-
     // Update Facts
     // End the procedure
     agentAPI.addFact(
       new Belief(
         BeliefKeys.PROCEDURE,
-        ProcedureAttributes.SRD,
+        ProcedureAttributes.SRD_I,
         ProcedureConst.INACTIVE
-      ),
-      true,
-      true
+      )
     );
+
+    // Dispatch to store to indicate fetching has ended
+    store.dispatch(setFetchingPendingPatientAssignments(false));
   }
 }
 
 // Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.SRD,
+  ProcedureAttributes.SRD_I,
   ProcedureConst.ACTIVE
 );
 const rule2 = new ResettablePrecondition(
   BeliefKeys.PATIENT,
-  PatientAttributes.DISPLAY_PENDING_ASSIGNMENTS_REQUESTED,
+  PatientAttributes.PENDING_PATIENT_ASSIGNMENTS_RETRIEVED,
   true
 );
 

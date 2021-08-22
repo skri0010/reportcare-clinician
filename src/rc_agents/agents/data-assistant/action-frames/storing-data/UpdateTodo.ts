@@ -6,7 +6,6 @@ import {
   Precondition,
   ResettablePrecondition
 } from "rc_agents/framework";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   ProcedureConst,
   BeliefKeys,
@@ -15,20 +14,18 @@ import {
   ActionFrameIDs,
   ClinicianAttributes
 } from "rc_agents/AgentEnums";
-import { AsyncStorageKeys } from "rc_agents/storage";
+import { Storage } from "rc_agents/storage";
 import agentAPI from "rc_agents/framework/AgentAPI";
-import { store } from "ic-redux/store";
+import { store } from "util/useRedux";
 import { setProcedureSuccessful } from "ic-redux/actions/agents/actionCreator";
 import agentNWA from "rc_agents/agents/network-assistant/NWA";
 import { getTodo, updateTodo } from "aws";
-import { Todo, UpdatedTodoInput } from "rc_agents/model";
+import { LocalTodo, TodoStatus, TodoUpdateInput } from "rc_agents/model";
 import { UpdateTodoInput } from "aws/API";
-
-// LS-TODO: To be tested again after integrating with Alert and Todo front end
 
 /**
  * Class to represent an activity for updating a clinician's Todo.
- * This happens in Procedure Storing Data (SRD) when a clinician edits an existing Todo.
+ * This happens in Procedure Storing Data (SRD-II) when a clinician updates an existing Todo.
  */
 class UpdateTodo extends Activity {
   constructor() {
@@ -42,130 +39,141 @@ class UpdateTodo extends Activity {
   async doActivity(agent: Agent): Promise<void> {
     await super.doActivity(agent, [rule2]);
 
+    const facts = agentAPI.getFacts();
+
     try {
       // Gets Todo details to be updated
-      const updatedTodo: UpdatedTodoInput =
-        agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.TODO];
+      const todoInput: TodoUpdateInput =
+        facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.TODO];
+
+      const isOnline: boolean = facts[BeliefKeys.APP]?.[AppAttributes.ONLINE];
 
       // Gets locally stored clinicianId
-      const clinicianId = await AsyncStorage.getItem(
-        AsyncStorageKeys.CLINICIAN_ID
-      );
+      const clinicianId = await Storage.getClinicianID();
 
-      if (updatedTodo && clinicianId) {
-        let pendingSync: boolean | undefined;
+      if (todoInput && !todoInput.id) {
+        // Todo was created offline and not synced: Triggers CreateTodo
+        agent.addBelief(
+          new Belief(
+            BeliefKeys.CLINICIAN,
+            ClinicianAttributes.CREATE_TODO,
+            true
+          )
+        );
+      } else if (todoInput && todoInput.id && clinicianId) {
+        let toSync: boolean | undefined;
+        let todoVersion: number | undefined;
 
+        // Constructs UpdateTodoInput to be updated
         const todoToUpdate: UpdateTodoInput = {
-          id: updatedTodo.id,
-          title: updatedTodo.title,
-          notes: updatedTodo.notes,
-          completed: updatedTodo.completed,
+          id: todoInput.id,
+          title: todoInput.title,
+          patientName: todoInput.patientName,
+          notes: todoInput.notes,
+          completed: todoInput.completed ? TodoStatus.COMPLETED : null,
+          pending: todoInput.completed ? null : TodoStatus.PENDING,
           lastModified: new Date().toISOString(),
-          owner: clinicianId
+          owner: clinicianId,
+          _version: todoInput._version
         };
 
         // Device is online
-        if (agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
+        if (isOnline) {
           // Gets latest version of current Todo
-          const query = await getTodo({ id: updatedTodo.id });
-          if (query.data) {
+          const query = await getTodo({ id: todoInput.id });
+          if (query.data.getTodo) {
             const latestTodo = query.data.getTodo;
+            /**
+             * Conflict resolution when latest Todo in database has higher version:
+             * Local Todo will not be updated to the cloud and will be replaced by the latest one
+             */
+            if (
+              latestTodo?._version &&
+              latestTodo._version > todoInput._version
+            ) {
+              await Storage.mergeTodoConflict(latestTodo);
+            } else {
+              // Updates Todo
+              const updateQuery = await updateTodo(todoToUpdate);
 
-            // Updates Todo
-            const updateQuery = await updateTodo({
-              ...todoToUpdate,
-              _version: latestTodo?._version
-            });
-
-            // Saves Todo locally
-            if (updateQuery.data && updateQuery.data.updateTodo) {
-              pendingSync = false;
+              // Saves Todo locally
+              if (updateQuery.data.updateTodo) {
+                // Updates to indicate that Todo is successfully updated
+                toSync = false;
+                todoVersion = updateQuery.data.updateTodo._version;
+              }
             }
           }
         }
         // Device is offline: saves Todo locally
         else {
-          pendingSync = true;
+          toSync = true;
         }
 
         // Updates locally saved Todo
-        if (pendingSync !== undefined) {
-          const localTodosStr = await AsyncStorage.getItem(
-            AsyncStorageKeys.TODOS
-          );
-          if (localTodosStr) {
-            const localTodos: Todo[] = JSON.parse(localTodosStr);
+        if (toSync !== undefined) {
+          // Constructs Todo to be stored
+          const todoToStore: LocalTodo = {
+            id: todoInput.id,
+            title: todoInput.title,
+            patientName: todoInput.patientName,
+            notes: todoInput.notes,
+            completed: todoInput.completed,
+            createdAt: todoInput.createdAt,
+            lastModified: todoToUpdate.lastModified!,
+            toSync: toSync,
+            _version: todoVersion || todoInput._version
+          };
 
-            localTodos.forEach((todo) => {
-              if (todo.id === todoToUpdate.id) {
-                todo.title = todoToUpdate.title!;
-                todo.notes = todoToUpdate.notes!;
-                todo.completed = todoToUpdate.completed!;
-                todo.lastModified = todoToUpdate.lastModified!;
-                todo.pendingSync = pendingSync!;
-              }
-            });
-            await AsyncStorage.setItem(
-              AsyncStorageKeys.TODOS,
-              JSON.stringify(localTodos)
-            );
-          }
+          // Updates Todo in local storage
+          await Storage.mergeTodo(todoToStore);
 
-          // Notifies NWA if the Todo to be stored has pendingSync set to true
-          if (pendingSync) {
+          // Notifies NWA if the Todo to be stored has toSync set to true
+          if (toSync) {
             // Notifies NWA
             agentNWA.addBelief(
-              new Belief(
-                BeliefKeys.APP,
-                AppAttributes.PENDING_TODO_UPDATE_SYNC,
-                true
-              )
+              new Belief(BeliefKeys.APP, AppAttributes.SYNC_TODOS_UPDATE, true)
             );
           }
+
+          agentAPI.addFact(
+            new Belief(
+              BeliefKeys.CLINICIAN,
+              ClinicianAttributes.TODO,
+              todoToStore
+            ),
+            false
+          );
         }
-
-        // LS-TODO: Dispatch updated Todo to front end
-
         // Dispatch to front end to indicate that procedure is successful
         store.dispatch(setProcedureSuccessful(true));
       }
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
+      // Dispatch to front end to indicate that procedure is successful
+      store.dispatch(setProcedureSuccessful(false));
     }
 
-    // Update Facts
-    // Removes Todo from facts
-    agentAPI.addFact(
-      new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.TODO, null),
-      false
-    );
-    // Stops the procedure
-    agentAPI.addFact(
-      new Belief(
-        BeliefKeys.PROCEDURE,
-        ProcedureAttributes.SRD,
-        ProcedureConst.INACTIVE
-      ),
-      true,
-      true
+    agent.addBelief(
+      new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.TODOS_UPDATED, true)
     );
   }
 }
 
-// Preconditions for activating the UpdateTodo class
+// Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.SRD,
+  ProcedureAttributes.SRD_II,
   ProcedureConst.ACTIVE
 );
 const rule2 = new ResettablePrecondition(
   BeliefKeys.CLINICIAN,
-  ClinicianAttributes.EDIT_TODO,
+  ClinicianAttributes.UPDATE_TODO,
   true
 );
 
-// Action Frame for UpdateTodo class
+// Actionframe
 const af_UpdateTodo = new Actionframe(
   `AF_${ActionFrameIDs.DTA.UPDATE_TODO}`,
   [rule1, rule2],

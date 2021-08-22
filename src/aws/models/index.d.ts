@@ -16,6 +16,14 @@ export declare class PatientInfo {
   readonly hospitalLocation: string;
   readonly targetWeight: string;
   readonly targetActivity: string;
+  readonly riskLevel: string;
+  readonly gender: string;
+  readonly birthDate: string;
+  readonly language: string;
+  readonly phoneNumber: string;
+  readonly email: string;
+  readonly emergencyContactName: string;
+  readonly emergencyContactNumber: string;
   readonly patientID: string;
   constructor(init: ModelInit<PatientInfo>);
   static copyOf(source: PatientInfo, mutator: (draft: MutableModel<PatientInfo>) => MutableModel<PatientInfo> | void): PatientInfo;
@@ -154,7 +162,8 @@ export declare class Todo {
   readonly lastModified: string;
   readonly alertID?: string;
   readonly alert?: Alert;
-  readonly completed: boolean;
+  readonly pending?: string;
+  readonly completed?: string;
   readonly owner: string;
   constructor(init: ModelInit<Todo>);
   static copyOf(source: Todo, mutator: (draft: MutableModel<Todo>) => MutableModel<Todo> | void): Todo;

@@ -9,6 +9,7 @@ interface CardWrapperProps {
   minHeight?: number;
   maxHeight?: number;
   firstItem?: boolean;
+  minWidth?: number;
   minWidthRequired?: boolean;
   paddingTop?: boolean;
   title?: string;
@@ -19,6 +20,7 @@ export const CardWrapper: FC<CardWrapperProps> = ({
   flex = 1,
   maxHeight,
   minHeight,
+  minWidth = ms(200),
   minWidthRequired = true,
   firstItem = false,
   paddingTop,
@@ -40,7 +42,7 @@ export const CardWrapper: FC<CardWrapperProps> = ({
           borderRadius: ms(5),
           ...(minHeight ? { minHeight: minHeight } : { minHeight: ms(100) }),
           ...(paddingTop ? { paddingTop: ms(20) } : {}),
-          ...(minWidthRequired ? { minWidth: ms(200) } : {}),
+          ...(minWidthRequired ? { minWidth: minWidth } : {}),
           ...(maxHeight ? { maxHeight: maxHeight } : {}),
           shadowRadius: ms(1),
           shadowOpacity: 0.1

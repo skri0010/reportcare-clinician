@@ -1,0 +1,143 @@
+import {
+  Actionframe,
+  Activity,
+  Agent,
+  Belief,
+  Precondition,
+  ResettablePrecondition,
+  setRetryLaterTimeout
+} from "rc_agents/framework";
+import {
+  ActionFrameIDs,
+  AppAttributes,
+  BeliefKeys
+} from "rc_agents/AgentEnums";
+import { AsyncStorageKeys, Storage } from "rc_agents/storage";
+import { getAlert } from "aws/TypedAPI/getQueries";
+import { updateAlert } from "aws";
+import { UpdateAlertInput } from "aws/API";
+import { agentNWA } from "rc_agents/agents";
+import { AlertStatus } from "rc_agents/model";
+import { mergeAlert, mergeAlertInfo } from "rc_agents/storage/setItem";
+
+// LS-TODO: To be tested once integrated with Alert.
+
+/**
+ * Class to represent the activity for syncing local update of Alerts.
+ */
+class SyncAlertsUpdate extends Activity {
+  /**
+   * Constructor for the SyncAlertsUpdate class
+   */
+  constructor() {
+    super(ActionFrameIDs.NWA.SYNC_ALERTS_UPDATE);
+  }
+
+  /**
+   * Perform this activity
+   * @param {Agent} agent - agent executing the activity
+   */
+  async doActivity(agent: Agent): Promise<void> {
+    super.doActivity(agent, [rule2]);
+
+    try {
+      // Gets locally stored clinicianId
+      const clinicianId = await Storage.getClinicianID();
+
+      // Gets alerts to be synced
+      const alerts = await Storage.getAlertsSync();
+
+      if (alerts && clinicianId) {
+        // Indicator of whether all pending updates have been synced
+        const successfulIds: string[] = [];
+
+        await Promise.all(
+          Object.values(alerts).map(async (alert) => {
+            // Queries current alert
+            const alertQuery = await getAlert({ id: alert.id });
+            if (alertQuery.data.getAlert) {
+              const latestAlert = alertQuery.data.getAlert;
+
+              // Latest Alert has higher version than local alert
+              if (latestAlert._version > alert._version) {
+                // Replace local alert and alert info with information from latest alert
+                await mergeAlert(latestAlert);
+                await mergeAlertInfo(latestAlert);
+              } else {
+                // This alert will be used for local merging later on
+                latestAlert.pending = null;
+                latestAlert.completed = AlertStatus.COMPLETED;
+
+                // Constructs alert object to be updated
+                const alertToUpdate: UpdateAlertInput = {
+                  id: latestAlert.id,
+                  completed: latestAlert.completed,
+                  pending: latestAlert.pending,
+                  _version: latestAlert._version
+                };
+                const updateResponse = await updateAlert(alertToUpdate);
+
+                // Updates to indicate that alert is successfully updated
+                if (updateResponse.data.updateAlert) {
+                  latestAlert._version =
+                    updateResponse.data.updateAlert._version;
+                } else {
+                  successfulIds.push(alert.id);
+                }
+
+                // Updates locally stored alert and alert info
+                // Input is of type Alert
+                await mergeAlert(latestAlert);
+                await mergeAlertInfo(latestAlert);
+              }
+            }
+          })
+        );
+
+        // Removes entry if all alerts are synced
+        if (successfulIds.length === Object.values(alerts).length) {
+          await Storage.removeItem(AsyncStorageKeys.ALERTS_SYNC);
+        } else {
+          // Removes successfully synced alerts
+          await Promise.all(
+            successfulIds.map((id) => {
+              delete alerts[id];
+              return id;
+            })
+          );
+
+          setRetryLaterTimeout(() => {
+            agentNWA.addBelief(
+              new Belief(BeliefKeys.APP, AppAttributes.SYNC_ALERTS_UPDATE, true)
+            );
+          });
+        }
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.log(error);
+      setRetryLaterTimeout(() => {
+        agentNWA.addBelief(
+          new Belief(BeliefKeys.APP, AppAttributes.SYNC_ALERTS_UPDATE, true)
+        );
+      });
+    }
+  }
+}
+
+// Preconditions
+const rule1 = new Precondition(BeliefKeys.APP, AppAttributes.ONLINE, true);
+const rule2 = new ResettablePrecondition(
+  BeliefKeys.APP,
+  AppAttributes.SYNC_ALERTS_UPDATE,
+  true
+);
+
+// Actionframe
+const af_SyncAlertsUpdate = new Actionframe(
+  `AF_${ActionFrameIDs.NWA.SYNC_ALERTS_UPDATE}`,
+  [rule1, rule2],
+  new SyncAlertsUpdate()
+);
+
+export default af_SyncAlertsUpdate;

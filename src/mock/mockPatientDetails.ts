@@ -43,7 +43,8 @@ export const mockAlertHistory: AlertHistory[] = [
     patientId: "1",
     risk: RiskLevel.MEDIUM,
     date: "07-07-2020",
-    description: "Jump in heart rate after standing up",
+    description:
+      "Jump in heart rate after standing up and walking in the morning after waking up",
     time: "13:25",
     HRV: 89,
     BP: "185/130",

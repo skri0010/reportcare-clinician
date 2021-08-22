@@ -57,10 +57,18 @@ export const PatientsTab: FC = () => {
     setRetrieving(true);
 
     agentDTA.addBelief(
-      new Belief(BeliefKeys.PATIENT, PatientAttributes.RETRIEVE_DETAILS, true)
+      new Belief(
+        BeliefKeys.PATIENT,
+        PatientAttributes.RETRIEVE_PATIENT_DETAILS,
+        true
+      )
     );
     agentAPI.addFact(
-      new Belief(BeliefKeys.PATIENT, PatientAttributes.VIEW_DETAILS, patientId),
+      new Belief(
+        BeliefKeys.PATIENT,
+        PatientAttributes.PATIENT_TO_VIEW_DETAILS,
+        patientId
+      ),
       false
     );
     agentAPI.addFact(
@@ -118,13 +126,11 @@ export const PatientsTab: FC = () => {
         data={patients}
         renderItem={({ item }) => (
           <PatientDetailsRow
-            generalDetails={item.details}
-            patientClass={item.details.NHYAclass!}
-            age={item.age}
-            onRowPress={() => getData(item.details.id!)}
+            patient={item}
+            onRowPress={() => getData(item.id)}
           />
         )}
-        keyExtractor={(item) => item.userId}
+        keyExtractor={(item) => item.patientID}
       />
 
       {/* To be removed: for testing purposes only */}

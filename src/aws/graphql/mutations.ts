@@ -19,6 +19,14 @@ export const createPatientInfo = /* GraphQL */ `
       hospitalLocation
       targetWeight
       targetActivity
+      riskLevel
+      gender
+      birthDate
+      language
+      phoneNumber
+      email
+      emergencyContactName
+      emergencyContactNumber
       patientID
       _version
       _deleted
@@ -46,6 +54,14 @@ export const updatePatientInfo = /* GraphQL */ `
       hospitalLocation
       targetWeight
       targetActivity
+      riskLevel
+      gender
+      birthDate
+      language
+      phoneNumber
+      email
+      emergencyContactName
+      emergencyContactNumber
       patientID
       _version
       _deleted
@@ -73,6 +89,14 @@ export const deletePatientInfo = /* GraphQL */ `
       hospitalLocation
       targetWeight
       targetActivity
+      riskLevel
+      gender
+      birthDate
+      language
+      phoneNumber
+      email
+      emergencyContactName
+      emergencyContactNumber
       patientID
       _version
       _deleted
@@ -1026,6 +1050,7 @@ export const createTodo = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      pending
       completed
       owner
       _version
@@ -1067,6 +1092,7 @@ export const updateTodo = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      pending
       completed
       owner
       _version
@@ -1108,6 +1134,7 @@ export const deleteTodo = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      pending
       completed
       owner
       _version
