@@ -1,7 +1,8 @@
 /* eslint-disable no-console */
 import React, { FC, useEffect, useState } from "react";
 import { RootState, select, useDispatch } from "util/useRedux";
-import { ScreenName, MainScreenProps, TodoListName } from "web/screens";
+import { MainScreenProps } from "web/navigation/types";
+import { ScreenName, TodoListName } from "web/navigation";
 import { View, Modal } from "react-native";
 import { RowSelectionTab } from "../RowSelectionTab";
 import { ScaledSheet } from "react-native-size-matters";
@@ -10,10 +11,10 @@ import { NavigationContainer } from "@react-navigation/native";
 import { AddTodoScreen } from "./AddTodoScreen";
 import { NoSelectionScreen } from "../Shared/NoSelectionScreen";
 import i18n from "util/language/i18n";
-import { TodoListNavigationStack } from "./TodoNavigations/TodoListNavigationStack";
-import { TodoDetailsNavigationStack } from "./TodoNavigations/TodoDetailsNavigationStack";
+import { TodoListTabNavigation } from "./TodoNavigations/TodoListTabNavigation";
+import { TodoDetailsStackNavigation } from "./TodoNavigations/TodoDetailsStackNavigation";
 import { LocalTodo } from "rc_agents/model";
-import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
+import { LoadingIndicator } from "components/indicators/LoadingIndicator";
 import { useToast } from "react-native-toast-notifications";
 import {
   setProcedureSuccessful,
@@ -137,7 +138,7 @@ export const TodoScreen: FC<MainScreenProps[ScreenName.TODO]> = ({
             isTodo
           />
           {/* Left tab navigator */}
-          <TodoListNavigationStack
+          <TodoListTabNavigation
             tabPressCurrent={() => {
               setAddButton(checkNeedAddButton(TodoListName.CURRENT));
             }}
@@ -158,7 +159,7 @@ export const TodoScreen: FC<MainScreenProps[ScreenName.TODO]> = ({
           {!isEmptyTodo ? (
             <NavigationContainer independent>
               {/* Todo details navigation stack */}
-              <TodoDetailsNavigationStack
+              <TodoDetailsStackNavigation
                 todo={todoSelected}
                 navigation={navigation}
               />

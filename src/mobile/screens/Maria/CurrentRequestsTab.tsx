@@ -1,9 +1,9 @@
 import React, { FC } from "react";
 import { View, FlatList } from "react-native";
 import { ScreenWrapper } from "mobile/screens/ScreenWrapper";
-import { MainTitle } from "components/Text";
-import { PatientRequestRow } from "components/RowComponents/PatientRows/PatientRequestRow";
-import { ItemSeparator } from "components/RowComponents/ItemSeparator";
+import { MainTitle } from "components/text";
+import { PatientRequestRow } from "components/rowComponents/PatientRows/PatientRequestRow";
+import { ItemSeparator } from "components/rowComponents/ItemSeparator";
 import { mockPatients } from "mock/mockPatients";
 
 export const CurrentRequestsTab: FC = () => {

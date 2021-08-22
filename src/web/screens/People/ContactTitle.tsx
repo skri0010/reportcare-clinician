@@ -2,8 +2,8 @@ import React, { FC } from "react";
 import { View } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { RootState, select } from "util/useRedux";
-import { H2 } from "components/Text/index";
-import { PeopleAvatar } from "components/RowComponents/PeopleAvatar";
+import { H2 } from "components/text/index";
+import { PeopleAvatar } from "components/rowComponents/PeopleAvatar";
 
 interface ContactTitleProps {
   name: string;

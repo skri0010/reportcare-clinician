@@ -10,7 +10,7 @@ import { LogBox } from "react-native";
 import { AuthState } from "./auth_screens";
 import agentAPI from "rc_agents/framework/AgentAPI";
 import { Storage } from "rc_agents/storage";
-import { ToastProviderComponent } from "components/IndicatorComponents/ToastProvider";
+import { ToastProviderComponent } from "components/indicators/ToastProvider";
 
 Amplify.configure(awsconfig);
 Auth.configure(awsconfig);

@@ -1,9 +1,9 @@
 import React, { FC } from "react";
 import { View } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
-import { H4 } from "components/Text";
+import { H4 } from "components/text";
 import { RootState, select } from "util/useRedux";
-import { ScreenName } from "web/screens";
+import { ScreenName } from "web/navigation";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 interface NoSelectionScreenProps {

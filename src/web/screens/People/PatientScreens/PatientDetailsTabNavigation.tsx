@@ -7,11 +7,11 @@ import { PatientParameters } from "./PatientDetailsScreen/PatientParameters";
 import { PatientICDCRT } from "./PatientDetailsScreen/PatientIcdCrt";
 import { PatientHistory } from "./PatientDetailsScreen/PatientHistory";
 import { PatientInformation } from "./PatientDetailsScreen/PatientInformation";
+import { PatientDetailsTabProps } from "web/navigation/types";
 import {
   PatientDetailsTabName,
-  PatientDetailsTabParamList,
-  PatientDetailsTabProps
-} from "web/screens";
+  PatientDetailsTabParamList
+} from "web/navigation";
 import i18n from "util/language/i18n";
 import { AlertHistory, MedicalRecords } from "mock/mockPatientDetails";
 import { PatientDetails } from "rc_agents/model";

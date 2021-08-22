@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { Text, View } from "react-native";
-import { SearchBarComponent } from "components/Bars/SearchBarComponent";
+import { SearchBarComponent } from "components/bars/SearchBarComponent";
 
 export const ChatContacts: FC = () => {
   return (

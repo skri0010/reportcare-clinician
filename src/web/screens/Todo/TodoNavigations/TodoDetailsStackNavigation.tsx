@@ -3,22 +3,22 @@ import { TodoDetailsScreen } from "./TodoDetailsScreen";
 import { EditTodoScreen } from "../EditTodoScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 import { MarkAsDoneButton } from "../MarkAsDoneButton";
-import { TodoDetailsName, TodoDetailsParamList } from "web/screens";
+import { TodoDetailsName, TodoDetailsStackParamList } from "web/navigation";
 import { LocalTodo } from "rc_agents/model";
 import i18n from "util/language/i18n";
 import { ms } from "react-native-size-matters";
-import { TodoScreenNavigation } from "web/screens/MainScreenProps";
+import { TodoScreenNavigation } from "web/navigation/types/MainScreenProps";
 import { onDonePress } from "../TodoCurrentTab";
 import { onUndoPress } from "../TodoCompletedTab";
 
-const Stack = createStackNavigator<TodoDetailsParamList>();
+const Stack = createStackNavigator<TodoDetailsStackParamList>();
 
 interface TodoDetailsNavigationStackProps {
   todo: LocalTodo;
   navigation: TodoScreenNavigation;
 }
 
-export const TodoDetailsNavigationStack: FC<TodoDetailsNavigationStackProps> =
+export const TodoDetailsStackNavigation: FC<TodoDetailsNavigationStackProps> =
   ({ todo, navigation }) => {
     const onButtonPress = () => {
       if (todo.completed) {

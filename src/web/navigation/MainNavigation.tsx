@@ -1,10 +1,10 @@
 import React, { FC, useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import { DrawerNavigation } from "./DrawerNavigation";
+import { MainDrawerNavigator } from "./MainDrawerNavigator";
 import { Auth } from "@aws-amplify/auth";
 import { useToast } from "react-native-toast-notifications";
 import i18n from "util/language/i18n";
-import { AuthState } from "./auth_screens";
+import { AuthState } from "web/auth-screens";
 import { useNetInfo } from "@react-native-community/netinfo";
 import agentAPI from "rc_agents/framework/AgentAPI";
 import Belief from "rc_agents/framework/base/Belief";
@@ -75,7 +75,7 @@ export const MainNavigationStack: FC<MainNavigationStackProps> = ({
 
   return (
     <NavigationContainer>
-      <DrawerNavigation signOut={signOut} />
+      <MainDrawerNavigator signOut={signOut} />
     </NavigationContainer>
   );
 };

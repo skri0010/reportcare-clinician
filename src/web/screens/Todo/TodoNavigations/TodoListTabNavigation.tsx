@@ -5,10 +5,10 @@ import { TodoCompletedTab } from "../TodoCompletedTab";
 import { getTopTabBarOptions } from "util/getStyles";
 import { RootState, select } from "util/useRedux";
 import i18n from "util/language/i18n";
-import { TodoListName, TodoListParamList } from "web/screens";
+import { TodoListName, TodoListTabParamList } from "web/navigation";
 import { LocalTodo } from "rc_agents/model";
 
-const Tab = createMaterialTopTabNavigator<TodoListParamList>();
+const Tab = createMaterialTopTabNavigator<TodoListTabParamList>();
 
 interface TodoListNavigationStackProps {
   tabPressCurrent: () => void; // callback when the current tab is pressed (allow add button visibility)
@@ -16,7 +16,7 @@ interface TodoListNavigationStackProps {
   setTodoSelected: (item: LocalTodo) => void; // set the todo details to be shown
 }
 
-export const TodoListNavigationStack: FC<TodoListNavigationStackProps> = ({
+export const TodoListTabNavigation: FC<TodoListNavigationStackProps> = ({
   tabPressCurrent,
   tabPressCompleted,
   setTodoSelected

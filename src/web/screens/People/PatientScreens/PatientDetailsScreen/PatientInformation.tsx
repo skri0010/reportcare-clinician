@@ -11,7 +11,7 @@ import {
   ContactInfoSection
 } from "./PatientInfoSections/ContactInfoSection";
 import { InfoTitleBar } from "./PatientInfoSections/InfoTitleBar";
-import { PatientDetailsTabProps } from "web/screens";
+import { PatientDetailsTabProps } from "web/navigation/types";
 import { getAge } from "util/utilityFunctions";
 import { PatientInfo } from "aws/API";
 

@@ -5,7 +5,7 @@ import { Dimensions, View } from "react-native";
 import { PatientAlertHistoryCard } from "./PatientHistoryScreens/PatientAlertHistoryCard";
 import { PatientMedicalRecordCard } from "./PatientHistoryScreens/PatientMedicalRecordCard";
 import { AlertHistory, MedicalRecords } from "mock/mockPatientDetails";
-import { PatientDetailsTabProps } from "web/screens";
+import { PatientDetailsTabProps } from "web/navigation/types";
 import { PatientInfo } from "aws/API";
 
 interface PatientHistoryProps extends PatientDetailsTabProps.HistoryTabProps {

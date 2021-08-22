@@ -1,8 +1,8 @@
 import React, { FC } from "react";
 import { ScaledSheet } from "react-native-size-matters";
-import { H4 } from "components/Text/index";
+import { H4 } from "components/text/index";
 import { View } from "react-native";
-import { RowButton } from "components/Buttons/RowButton";
+import { RowButton } from "components/buttons/RowButton";
 
 interface MedicalRecordRowProps {
   description: string;

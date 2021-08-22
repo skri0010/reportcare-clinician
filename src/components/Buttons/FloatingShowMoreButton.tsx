@@ -1,4 +1,4 @@
-import { H6 } from "components/Text";
+import { H6 } from "components/text";
 import React, { FC } from "react";
 import { TouchableOpacity, View } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";

@@ -1,8 +1,8 @@
-import { H4 } from "components/Text";
+import { H4 } from "components/text";
 import React, { FC } from "react";
 import { View } from "react-native";
 import { ScreenWrapper } from "../../../ScreenWrapper";
-import { PatientDetailsTabProps } from "web/screens";
+import { PatientDetailsTabProps } from "web/navigation/types";
 import { PatientDetails } from "rc_agents/model";
 
 interface PatientICDCRTProps extends PatientDetailsTabProps.ICDCRTTabProps {

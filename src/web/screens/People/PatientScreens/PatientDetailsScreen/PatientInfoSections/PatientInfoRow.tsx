@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { ms, ScaledSheet } from "react-native-size-matters";
-import { H4, H5 } from "components/Text/index";
+import { H4, H5 } from "components/text/index";
 import { View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 

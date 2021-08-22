@@ -4,7 +4,8 @@ import React, { FC } from "react";
 // import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 // import { getTopTabBarOptions } from "util/getStyles";
 // import { RootState, select } from "util/useRedux";
-import { ScreenName, MainScreenProps } from "web/screens";
+import { MainScreenProps } from "web/navigation/types";
+import { ScreenName } from "web/navigation";
 import { View, Text } from "react-native";
 
 // const Tab = createMaterialTopTabNavigator();

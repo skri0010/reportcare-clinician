@@ -1,10 +1,11 @@
 import React, { FC } from "react";
 import { View, FlatList } from "react-native";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
-import { PatientChatRow } from "components/RowComponents/PatientRows/PatientChatRow";
+import { PatientChatRow } from "components/rowComponents/PatientRows/PatientChatRow";
 import { mockPatients } from "mock/mockPatients";
-import { ItemSeparator } from "components/RowComponents/ItemSeparator";
-import { ScreenName, MainScreenProps } from "web/screens";
+import { ItemSeparator } from "components/rowComponents/ItemSeparator";
+import { MainScreenProps } from "web/navigation/types";
+import { ScreenName } from "web/navigation";
 
 export const ChatScreen: FC<MainScreenProps[ScreenName.CHAT]> = () => {
   // JH-TODO Add search button later

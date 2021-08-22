@@ -2,7 +2,7 @@ import React from "react";
 import { View, TouchableOpacity } from "react-native";
 import { PatientRowBase } from "./PatientRowBase";
 import { ScaledSheet } from "react-native-size-matters";
-import { H7 } from "components/Text/index";
+import { H7 } from "components/text/index";
 import { PatientInfo } from "aws/API";
 import { RiskLevel } from "models/RiskLevel";
 

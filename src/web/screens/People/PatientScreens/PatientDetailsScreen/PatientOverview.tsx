@@ -9,7 +9,7 @@ import { SymptomsCard } from "./PatientOverviewCards/SymptomsCard";
 import { Dimensions, View } from "react-native";
 import { ReportSymptom, ReportVitals } from "aws/API";
 import i18n from "util/language/i18n";
-import { PatientDetailsTabProps } from "web/screens";
+import { PatientDetailsTabProps } from "web/navigation/types";
 import { PatientDetails } from "rc_agents/model";
 
 interface PatientOverviewProps extends PatientDetailsTabProps.OverviewTabProps {

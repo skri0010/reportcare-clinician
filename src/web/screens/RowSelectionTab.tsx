@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
 import { View } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
-import { SearchBarComponent } from "components/Bars/SearchBarComponent";
+import { SearchBarComponent } from "components/bars/SearchBarComponent";
 import { RowSelectionHeader } from "./RowSelectionHeader";
 
 interface RowSelectionTabProps {

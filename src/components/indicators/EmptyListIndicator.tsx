@@ -1,4 +1,4 @@
-import { H5, RNTextStyle } from "components/Text";
+import { H5, RNTextStyle } from "components/text";
 import React, { FC } from "react";
 import { StyleProp, View, ViewStyle } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";

@@ -1,10 +1,10 @@
 import React, { FC } from "react";
 import { View } from "react-native";
-import { SearchBarComponent } from "components/Bars/SearchBarComponent";
+import { SearchBarComponent } from "components/bars/SearchBarComponent";
 import { ScreenWrapper } from "mobile/screens/ScreenWrapper";
 import { mockClinician } from "mock/mockClinicians";
-import { ClinicianContactRow } from "components/RowComponents/ClinicianRow/ClinicianContactRow";
-import { ClinicianShareRow } from "components/RowComponents/ClinicianRow/ClinicianShareRow";
+import { ClinicianContactRow } from "components/rowComponents/ClinicianRow/ClinicianContactRow";
+import { ClinicianShareRow } from "components/rowComponents/ClinicianRow/ClinicianShareRow";
 
 export const CliniciansTab: FC = () => {
   // JH-TODO: Replace placeholder with i18n

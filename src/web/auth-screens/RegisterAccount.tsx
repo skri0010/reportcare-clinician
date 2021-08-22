@@ -7,7 +7,7 @@ import { ms, ScaledSheet } from "react-native-size-matters";
 import { Picker } from "@react-native-picker/picker";
 import { Role, Hospital } from "rc_agents/model";
 import { RootState, select } from "util/useRedux";
-import { AuthScreenName, AuthScreensProps } from "web/auth_screens";
+import { AuthScreenName, AuthScreensProps } from "web/auth-screens";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import {
   validateEmail,
@@ -16,9 +16,9 @@ import {
 } from "util/validation";
 import i18n from "util/language/i18n";
 import { useToast } from "react-native-toast-notifications";
-import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
-import { AuthButton } from "components/Buttons/AuthButton";
-import { TextField } from "components/InputComponents/TextField";
+import { LoadingIndicator } from "components/indicators/LoadingIndicator";
+import { AuthButton } from "components/buttons/AuthButton";
+import { TextField } from "components/inputComponents/TextField";
 import { Storage } from "rc_agents/storage";
 
 export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({

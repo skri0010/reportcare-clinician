@@ -3,7 +3,7 @@ import { Dimensions, ViewStyle, Platform, View } from "react-native";
 import { RootState, select } from "util/useRedux";
 import { LineChart } from "react-native-chart-kit";
 import { ms, ScaledSheet } from "react-native-size-matters";
-import { H4, H5 } from "components/Text";
+import { H4, H5 } from "components/text";
 
 interface LineChartProps {
   graphTitle: string;

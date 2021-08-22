@@ -1,9 +1,12 @@
-import { PatientDetailsTabName, PatientDetailsTabParamList } from ".";
+import {
+  PatientDetailsTabName,
+  PatientDetailsTabParamList
+} from "web/navigation/index";
 import { MaterialTopTabNavigationProp } from "@react-navigation/material-top-tabs";
 import { RouteProp, CompositeNavigationProp } from "@react-navigation/native";
-import { PatientsScreenNavigation } from "web/screens/MainScreenProps";
+import { PatientsScreenNavigation } from "web/navigation/types/MainScreenProps";
 
-// Navigation and route for patients screen
+// Navigation and route for patient details tabs
 
 export type OverviewTabProps = {
   navigation: CompositeNavigationProp<

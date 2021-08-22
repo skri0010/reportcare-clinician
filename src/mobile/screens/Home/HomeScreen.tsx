@@ -1,11 +1,11 @@
 import React, { FC } from "react";
 import { View, FlatList } from "react-native";
 import { ScreenWrapper } from "mobile/screens/ScreenWrapper";
-import { AlertButton } from "components/Buttons/AlertButton";
+import { AlertButton } from "components/buttons/AlertButton";
 import { RiskLevel } from "models/RiskLevel";
-import { MainTitle } from "components/Text";
-import { PatientRequestRow } from "components/RowComponents/PatientRows/PatientRequestRow";
-import { ItemSeparator } from "components/RowComponents/ItemSeparator";
+import { MainTitle } from "components/text";
+import { PatientRequestRow } from "components/rowComponents/PatientRows/PatientRequestRow";
+import { ItemSeparator } from "components/rowComponents/ItemSeparator";
 import { mockPatients } from "mock/mockPatients";
 import { ScreenName, WithBottomTabsProps } from "mobile/screens";
 

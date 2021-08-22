@@ -16,7 +16,7 @@ import agentAPI from "rc_agents/framework/AgentAPI";
 import i18n from "util/language/i18n";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useToast } from "react-native-toast-notifications";
-import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
+import { LoadingIndicator } from "components/indicators/LoadingIndicator";
 import agentAPS from "rc_agents/agents/app-configuration-assistant/APS";
 import Belief from "rc_agents/framework/base/Belief";
 import {
@@ -29,9 +29,9 @@ import {
 import { AsyncStorageKeys } from "rc_agents/storage";
 import { useNetInfo } from "@react-native-community/netinfo";
 import { setProcedureOngoing } from "ic-redux/actions/agents/actionCreator";
-import { AuthButton } from "components/Buttons/AuthButton";
-import { TextField } from "components/InputComponents/TextField";
-import { H1, H5 } from "components/Text";
+import { AuthButton } from "components/buttons/AuthButton";
+import { TextField } from "components/inputComponents/TextField";
+import { H1, H5 } from "components/text";
 
 export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
   navigation,

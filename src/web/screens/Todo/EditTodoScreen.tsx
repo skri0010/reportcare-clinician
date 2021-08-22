@@ -7,13 +7,13 @@ import {
   ViewStyle
 } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
-import { TodoDetailsScreenProps } from "../TodoScreenProps";
-import { TodoDetailsName } from "../index";
+import { TodoDetailsStackProps } from "web/navigation/types";
+import { TodoDetailsName } from "web/navigation";
 import {
   TodoSection,
   EditHistorySection
 } from "./TodoNavigations/TodoDetailsScreen";
-import { H3 } from "components/Text";
+import { H3 } from "components/text";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import i18n from "util/language/i18n";
@@ -25,9 +25,10 @@ import {
 } from "ic-redux/actions/agents/actionCreator";
 import { AgentTrigger } from "rc_agents/trigger";
 
-export const EditTodoScreen: FC<
-  TodoDetailsScreenProps[TodoDetailsName.EDIT_TODO]
-> = ({ route, navigation }) => {
+export const EditTodoScreen: FC<TodoDetailsStackProps.EditTodoScreenProps> = ({
+  route,
+  navigation
+}) => {
   const { colors, updatedTodo } = select((state: RootState) => ({
     colors: state.settings.colors,
     updatedTodo: state.agents.updatedTodo

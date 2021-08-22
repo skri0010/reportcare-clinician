@@ -10,8 +10,8 @@ import { ChatScreen } from "web/screens/Chat/ChatScreen";
 import { TodoScreen } from "web/screens/Todo/TodoScreen";
 import { MariaScreen } from "web/screens/Maria/MariaScreen";
 import { SettingsScreen } from "web/screens/Setting/SettingsScreen";
-import { MainScreenTabButton } from "components/Buttons/MainScreenTabButton";
-import { ScreenName, MainScreenParamList } from "web/screens";
+import { MainScreenTabButton } from "components/buttons/MainScreenTabButton";
+import { ScreenName, MainScreenParamList } from "web/navigation";
 import { select, RootState } from "util/useRedux";
 import { getDrawerScreenOptions } from "util/getStyles";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -24,7 +24,7 @@ interface DrawerNavigationProps {
 
 const Drawer = createDrawerNavigator<MainScreenParamList>();
 
-export const DrawerNavigation: FC<DrawerNavigationProps> = ({ signOut }) => {
+export const MainDrawerNavigator: FC<DrawerNavigationProps> = ({ signOut }) => {
   const { colors, fonts } = select((state: RootState) => ({
     colors: state.settings.colors,
     fonts: state.settings.fonts

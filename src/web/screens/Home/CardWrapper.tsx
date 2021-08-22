@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { View } from "react-native";
 import { ms } from "react-native-size-matters";
 import { RootState, select } from "util/useRedux";
-import { H4 } from "components/Text/index";
+import { H4 } from "components/text/index";
 
 interface CardWrapperProps {
   flex?: number;

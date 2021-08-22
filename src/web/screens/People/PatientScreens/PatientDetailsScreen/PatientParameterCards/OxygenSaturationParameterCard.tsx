@@ -1,7 +1,7 @@
 import React, { FC, useState } from "react";
 import { CardWrapper } from "web/screens/Home/CardWrapper";
 import { mockVitals } from "mock/mockVitals";
-import { OxygenSaturationChart } from "components/Visualizations/OxygenSaturationChart";
+import { OxygenSaturationChart } from "components/visualization/OxygenSaturationChart";
 
 interface OxygenSaturationCardProps {
   patientId: string;

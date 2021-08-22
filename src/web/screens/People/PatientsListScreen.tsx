@@ -1,14 +1,14 @@
 import React, { FC, useState, useEffect } from "react";
 import { FlatList, View } from "react-native";
-import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
-import { ItemSeparator } from "components/RowComponents/ItemSeparator";
-import { PatientDetailsRow } from "components/RowComponents/PatientRows/PatientDetailsRow";
-import { H5 } from "components/Text";
+import { LoadingIndicator } from "components/indicators/LoadingIndicator";
+import { ItemSeparator } from "components/rowComponents/ItemSeparator";
+import { PatientDetailsRow } from "components/rowComponents/PatientRows/PatientDetailsRow";
+import { H5 } from "components/text";
 import { AgentTrigger } from "rc_agents/trigger";
 import { ScaledSheet } from "react-native-size-matters";
 import i18n from "util/language/i18n";
 import { RootState, select } from "util/useRedux";
-import { RiskFilterPillList } from "web/RiskFilterPillList";
+import { RiskFilterPillList } from "components/buttons/RiskFilterPillList";
 import { RowSelectionTab } from "../RowSelectionTab";
 
 interface PatientsListScreenProps {

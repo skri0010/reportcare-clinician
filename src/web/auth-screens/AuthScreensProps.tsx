@@ -1,4 +1,4 @@
-import { AuthScreenName, AuthStackParamList } from "web/auth_screens";
+import { AuthScreenName, AuthStackParamList } from "web/auth-screens";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RouteProp } from "@react-navigation/native";
 

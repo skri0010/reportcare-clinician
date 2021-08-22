@@ -1,8 +1,23 @@
-import { ScreenName, MainScreenParamList } from "web/screens";
+import { PatientDetailsTabName, ScreenName } from "web/navigation";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { RouteProp } from "@react-navigation/native";
+import { LocalTodo } from "rc_agents/model";
 
 // Navigation and route props for main screens
+
+// Main screen parameters
+export type MainScreenParamList = {
+  [ScreenName.HOME]: undefined;
+  [ScreenName.PATIENTS]: {
+    displayPatientId?: string;
+    selectedTab?: PatientDetailsTabName;
+  };
+  [ScreenName.CLINICIANS]: undefined;
+  [ScreenName.CHAT]: undefined;
+  [ScreenName.TODO]: LocalTodo | undefined;
+  [ScreenName.MARIA]: undefined;
+  [ScreenName.SETTINGS]: undefined;
+};
 
 export type MainScreenProps = {
   [ScreenName.HOME]: HomeScreenProps;
@@ -49,7 +64,7 @@ type SettingsScreenProps = {
   route: RouteProp<MainScreenParamList, ScreenName.SETTINGS>;
 };
 
-// Navigation declared to be used in this module as well as exported
+// Navigation declared to be used in this module as well as exported to other props
 
 export type HomeScreenNavigation = DrawerNavigationProp<
   MainScreenParamList,

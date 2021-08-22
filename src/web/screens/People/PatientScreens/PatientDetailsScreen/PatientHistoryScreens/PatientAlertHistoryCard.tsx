@@ -1,6 +1,6 @@
 import React, { FC, useState } from "react";
 import { RootState, select } from "util/useRedux";
-import { H3 } from "components/Text/index";
+import { H3 } from "components/text/index";
 import { CardWrapper } from "web/screens/Home/CardWrapper";
 import { AlertHistoryRow } from "./AlertHistoryRow";
 import { mockAlertHistory, AlertHistory } from "mock/mockPatientDetails";

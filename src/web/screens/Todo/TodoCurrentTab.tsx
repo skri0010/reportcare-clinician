@@ -1,13 +1,13 @@
 import React, { FC, useEffect } from "react";
 import { View, FlatList } from "react-native";
-import { TodoRow } from "components/RowComponents/TodoRow";
+import { TodoRow } from "components/rowComponents/TodoRow";
 import { RiskLevel } from "models/RiskLevel";
-import { ItemSeparator } from "components/RowComponents/ItemSeparator";
-import { SearchBarComponent } from "components/Bars/SearchBarComponent";
+import { ItemSeparator } from "components/rowComponents/ItemSeparator";
+import { SearchBarComponent } from "components/bars/SearchBarComponent";
 import { RootState, select, store } from "util/useRedux";
 import i18n from "util/language/i18n";
 import { LocalTodo, TodoStatus, TodoUpdateInput } from "rc_agents/model";
-import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
+import { LoadingIndicator } from "components/indicators/LoadingIndicator";
 import {
   setProcedureOngoing,
   setSubmittingTodo

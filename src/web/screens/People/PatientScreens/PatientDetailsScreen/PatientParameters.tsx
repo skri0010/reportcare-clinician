@@ -6,7 +6,7 @@ import { WeightParameterCard } from "./PatientParameterCards/WeightParameterCard
 import { DiastolicParameterCard } from "./PatientParameterCards/DiastolicParameterCard";
 import { OxygenSaturationParameterCard } from "./PatientParameterCards/OxygenSaturationParameterCard";
 import { SystolicParameterCard } from "./PatientParameterCards/SystolicParameterCard";
-import { PatientDetailsTabProps } from "web/screens";
+import { PatientDetailsTabProps } from "web/navigation/types";
 import { PatientDetails } from "rc_agents/model";
 
 interface PatientParametersProps

@@ -2,12 +2,12 @@
 import React, { FC } from "react";
 import { View, TouchableOpacity } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
-import { TodoDetailsScreenProps } from "web/screens/TodoScreenProps";
-import { H2, H3, H4, H5 } from "components/Text";
+import { TodoDetailsStackProps } from "web/navigation/types";
+import { H2, H3, H4, H5 } from "components/text";
 import { RootState, select } from "util/useRedux";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import i18n from "util/language/i18n";
-import { ScreenName, TodoDetailsName } from "web/screens";
+import { ScreenName, TodoDetailsName } from "web/navigation";
 import moment from "moment";
 
 interface TodoSectionProps {
@@ -61,91 +61,90 @@ export const EditHistorySection: FC<EditHistorySectionProps> = ({
   );
 };
 
-export const TodoDetailsScreen: FC<
-  TodoDetailsScreenProps[TodoDetailsName.VIEW_TODO]
-> = ({ route, navigation }) => {
-  const { colors } = select((state: RootState) => ({
-    colors: state.settings.colors
-  }));
-  const { todo } = route.params;
-  const { parentNavigation } = route.params;
-  return (
-    <ScreenWrapper>
-      <View style={styles.container}>
-        {/* Title */}
-        <TodoSection mainItem={i18n.t("Todo.Title")} content={todo.title} />
-        {/* Patient */}
-        <View style={styles.todoPatient}>
-          <TodoSection
-            mainItem={i18n.t("Todo.Patient")}
-            content={todo.patientName}
-          />
-          {/* View patient details button */}
-          <View
-            style={{
-              paddingLeft: ms(20),
-              alignItems: "center",
-              justifyContent: "center"
-            }}
-          >
-            <TouchableOpacity
-              style={[
-                styles.viewButton,
-                {
-                  backgroundColor: colors.primaryContrastTextColor,
-                  borderColor: colors.primaryTextColor
-                }
-              ]}
-              onPress={() => {
-                // If there is patientID defined, navigate to the patient tab when the view button is pressed
-                if (todo.patientId !== undefined && parentNavigation) {
-                  parentNavigation.navigate(ScreenName.PATIENTS, {
-                    displayPatientId: todo.patientId
-                  });
-                }
+export const TodoDetailsScreen: FC<TodoDetailsStackProps.ViewTodoScreenProps> =
+  ({ route, navigation }) => {
+    const { colors } = select((state: RootState) => ({
+      colors: state.settings.colors
+    }));
+    const { todo } = route.params;
+    const { parentNavigation } = route.params;
+    return (
+      <ScreenWrapper>
+        <View style={styles.container}>
+          {/* Title */}
+          <TodoSection mainItem={i18n.t("Todo.Title")} content={todo.title} />
+          {/* Patient */}
+          <View style={styles.todoPatient}>
+            <TodoSection
+              mainItem={i18n.t("Todo.Patient")}
+              content={todo.patientName}
+            />
+            {/* View patient details button */}
+            <View
+              style={{
+                paddingLeft: ms(20),
+                alignItems: "center",
+                justifyContent: "center"
               }}
             >
-              <H5
-                text={i18n.t("Todo.ViewButton")}
-                style={{ color: colors.primaryTextColor }}
+              <TouchableOpacity
+                style={[
+                  styles.viewButton,
+                  {
+                    backgroundColor: colors.primaryContrastTextColor,
+                    borderColor: colors.primaryTextColor
+                  }
+                ]}
+                onPress={() => {
+                  // If there is patientID defined, navigate to the patient tab when the view button is pressed
+                  if (todo.patientId !== undefined && parentNavigation) {
+                    parentNavigation.navigate(ScreenName.PATIENTS, {
+                      displayPatientId: todo.patientId
+                    });
+                  }
+                }}
+              >
+                <H5
+                  text={i18n.t("Todo.ViewButton")}
+                  style={{ color: colors.primaryTextColor }}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+          {/* Notes */}
+          <View style={{ marginTop: ms(10) }}>
+            <TodoSection mainItem={i18n.t("Todo.Notes")} content={todo.notes} />
+          </View>
+          {/* Edit history */}
+          <EditHistorySection
+            editType={i18n.t("Todo.CreatedOn")}
+            timeDate={todo.createdAt}
+          />
+          <EditHistorySection
+            editType={i18n.t("Todo.ModifiedOn")}
+            timeDate={todo.lastModified}
+          />
+          {/* Edit button */}
+          <View style={styles.editButtonContainer}>
+            <TouchableOpacity
+              style={[
+                styles.editButton,
+                { backgroundColor: colors.primaryTodoCompleteButtonColor }
+              ]}
+              onPress={() => {
+                navigation.navigate(TodoDetailsName.EDIT_TODO, { todo: todo });
+              }}
+            >
+              <H2
+                text={i18n.t("Todo.EditButton")}
+                style={{ color: colors.primaryContrastTextColor }}
               />
             </TouchableOpacity>
           </View>
         </View>
-        {/* Notes */}
-        <View style={{ marginTop: ms(10) }}>
-          <TodoSection mainItem={i18n.t("Todo.Notes")} content={todo.notes} />
-        </View>
-        {/* Edit history */}
-        <EditHistorySection
-          editType={i18n.t("Todo.CreatedOn")}
-          timeDate={todo.createdAt}
-        />
-        <EditHistorySection
-          editType={i18n.t("Todo.ModifiedOn")}
-          timeDate={todo.lastModified}
-        />
-        {/* Edit button */}
-        <View style={styles.editButtonContainer}>
-          <TouchableOpacity
-            style={[
-              styles.editButton,
-              { backgroundColor: colors.primaryTodoCompleteButtonColor }
-            ]}
-            onPress={() => {
-              navigation.navigate(TodoDetailsName.EDIT_TODO, { todo: todo });
-            }}
-          >
-            <H2
-              text={i18n.t("Todo.EditButton")}
-              style={{ color: colors.primaryContrastTextColor }}
-            />
-          </TouchableOpacity>
-        </View>
-      </View>
-    </ScreenWrapper>
-  );
-};
+      </ScreenWrapper>
+    );
+  };
 
 const styles = ScaledSheet.create({
   container: {

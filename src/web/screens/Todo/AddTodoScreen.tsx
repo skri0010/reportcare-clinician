@@ -7,7 +7,7 @@ import {
   StyleProp
 } from "react-native";
 import { ScaledSheet, ms } from "react-native-size-matters";
-import { H3 } from "components/Text";
+import { H3 } from "components/text";
 import { RootState, select, useDispatch } from "util/useRedux";
 import i18n from "util/language/i18n";
 import { TodoCreateInput } from "rc_agents/model";
@@ -16,7 +16,7 @@ import {
   setProcedureSuccessful
 } from "ic-redux/actions/agents/actionCreator";
 import { useToast } from "react-native-toast-notifications";
-import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
+import { LoadingIndicator } from "components/indicators/LoadingIndicator";
 import { AgentTrigger } from "rc_agents/trigger";
 
 interface AddTodoScreenProps {

@@ -1,11 +1,11 @@
 import React, { FC } from "react";
 import { FlatList, View } from "react-native";
 import { ScreenWrapper } from "mobile/screens/ScreenWrapper";
-import { MainTitle } from "components/Text";
-import { TodoRow } from "components/RowComponents/TodoRow";
+import { MainTitle } from "components/text";
+import { TodoRow } from "components/rowComponents/TodoRow";
 import { RiskLevel } from "models/RiskLevel";
 import { RootState, select } from "util/useRedux";
-import { ItemSeparator } from "components/RowComponents/ItemSeparator";
+import { ItemSeparator } from "components/rowComponents/ItemSeparator";
 
 export const TodoCurrentTab: FC = () => {
   // JH-TODO Replace titles with i18n

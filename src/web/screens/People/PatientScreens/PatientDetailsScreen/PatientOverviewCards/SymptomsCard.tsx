@@ -1,11 +1,11 @@
 import React, { FC } from "react";
 import { ms } from "react-native-size-matters";
-import { H4 } from "components/Text/index";
+import { H4 } from "components/text/index";
 import { CardWrapper } from "web/screens/Home/CardWrapper";
 import { ReportSymptom } from "aws/API";
 import { FlatList } from "react-native";
 import i18n from "util/language/i18n";
-import { EmptyListIndicator } from "components/IndicatorComponents/EmptyListIndicator";
+import { EmptyListIndicator } from "components/indicators/EmptyListIndicator";
 
 interface SymptomProps {
   symptoms: ReportSymptom[];

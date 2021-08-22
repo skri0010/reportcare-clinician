@@ -1,17 +1,17 @@
 import React, { FC, useEffect, useState, useCallback } from "react";
 import { Provider } from "react-redux";
 import { store } from "util/useRedux";
-import { MainNavigationStack } from "./MainNavigationStack";
-import { AuthNavigationStack } from "./AuthNavigationStack";
+import { MainNavigationStack } from "web/navigation/MainNavigation";
+import { AuthNavigationStack } from "web/navigation/AuthNavigationStack";
 import awsconfig from "aws/aws-exports";
 import { Amplify } from "@aws-amplify/core";
 import { Auth } from "@aws-amplify/auth";
-import { AuthState } from "web/auth_screens";
+import { AuthState } from "web/auth-screens";
 import agentAPI from "rc_agents/framework/AgentAPI";
 import { Storage } from "rc_agents/storage";
-import { ToastProviderComponent } from "components/IndicatorComponents/ToastProvider";
+import { ToastProviderComponent } from "components/indicators/ToastProvider";
 import { expectedAgentIds } from "rc_agents/agents";
-import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
+import { LoadingIndicator } from "components/indicators/LoadingIndicator";
 
 Amplify.configure(awsconfig);
 Auth.configure(awsconfig);

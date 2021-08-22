@@ -26,12 +26,13 @@ import {
 } from "ic-redux/actions/agents/actionCreator";
 import { PatientDetailsNavigationStack } from "./PatientScreens/PatientDetailsTabNavigation";
 import { PatientHistoryModal } from "./PatientDetailsScreen/PatientHistoryScreens/PatientHistoryModals";
-import { MainScreenProps, ScreenName } from "web/screens";
+import { MainScreenProps } from "web/navigation/types";
+import { ScreenName } from "web/navigation";
 import { PatientsListScreen } from "./PatientsListScreen";
 import { AgentTrigger } from "rc_agents/trigger";
 import { NoSelectionScreen } from "../Shared/NoSelectionScreen";
 import i18n from "util/language/i18n";
-import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
+import { LoadingIndicator } from "components/indicators/LoadingIndicator";
 
 export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
   route
