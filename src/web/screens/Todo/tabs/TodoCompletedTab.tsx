@@ -5,7 +5,6 @@ import { RiskLevel } from "models/RiskLevel";
 import { TodoRow } from "components/rowComponents/TodoRow";
 import { SearchBarComponent } from "components/bars/SearchBarComponent";
 import { ItemSeparator } from "components/rowComponents/ItemSeparator";
-import { TodoRowTabProps } from "./TodoCurrentTab";
 import { RootState, select, store } from "util/useRedux";
 import i18n from "util/language/i18n";
 import { LocalTodo, TodoStatus, TodoUpdateInput } from "rc_agents/model";
@@ -15,6 +14,12 @@ import {
   setSubmittingTodo
 } from "ic-redux/actions/agents/actionCreator";
 import { AgentTrigger } from "rc_agents/trigger";
+import { TodoListTabsProps } from "web/navigation/types";
+import { TodoRowTabProps } from "web/navigation/navigators/TodoListTabNavigator";
+
+interface TodoCompleteTabProps
+  extends TodoRowTabProps,
+    TodoListTabsProps.CompletedTabProps {}
 
 // Triggers DTA to update Todo to Pending
 export const onUndoPress = (item: LocalTodo): void => {
@@ -34,7 +39,9 @@ export const onUndoPress = (item: LocalTodo): void => {
   AgentTrigger.triggerUpdateTodo(todoToUpdate);
 };
 
-export const TodoCompletedTab: FC<TodoRowTabProps> = ({ setTodoSelected }) => {
+export const TodoCompletedTab: FC<TodoCompleteTabProps> = ({
+  setTodoSelected
+}) => {
   const { colors, completedTodos, fetchingCompletedTodos } = select(
     (state: RootState) => ({
       colors: state.settings.colors,

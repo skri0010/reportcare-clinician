@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from "react";
+import React, { FC, useEffect, useCallback } from "react";
 import { View, FlatList } from "react-native";
 import { TodoRow } from "components/rowComponents/TodoRow";
 import { RiskLevel } from "models/RiskLevel";
@@ -13,10 +13,12 @@ import {
   setSubmittingTodo
 } from "ic-redux/actions/agents/actionCreator";
 import { AgentTrigger } from "rc_agents/trigger";
+import { TodoListTabsProps } from "web/navigation/types";
+import { TodoRowTabProps } from "web/navigation/navigators/TodoListTabNavigator";
 
-export interface TodoRowTabProps {
-  setTodoSelected: (item: LocalTodo) => void;
-}
+interface TodoCurrentTabProps
+  extends TodoRowTabProps,
+    TodoListTabsProps.CurrentTabProps {}
 
 // Triggers DTA to update Todo to Completed
 export const onDonePress = (item: LocalTodo): void => {
@@ -37,7 +39,9 @@ export const onDonePress = (item: LocalTodo): void => {
   AgentTrigger.triggerUpdateTodo(todoToUpdate);
 };
 
-export const TodoCurrentTab: FC<TodoRowTabProps> = ({ setTodoSelected }) => {
+export const TodoCurrentTab: FC<TodoCurrentTabProps> = ({
+  setTodoSelected
+}) => {
   const { colors, pendingTodos, fetchingPendingTodos } = select(
     (state: RootState) => ({
       colors: state.settings.colors,
@@ -68,7 +72,6 @@ export const TodoCurrentTab: FC<TodoRowTabProps> = ({ setTodoSelected }) => {
         containerStyle={{ backgroundColor: colors.primaryContrastTextColor }}
         placeholder={i18n.t("Todo.SearchBarCurrentPlaceholder")}
       />
-      {/* <MainTitle title="Current Todo" /> */}
       <FlatList
         showsVerticalScrollIndicator={false}
         ItemSeparatorComponent={() => <ItemSeparator />}
@@ -84,7 +87,7 @@ export const TodoCurrentTab: FC<TodoRowTabProps> = ({ setTodoSelected }) => {
         keyExtractor={(item) => item.createdAt}
         pointerEvents={fetchingPendingTodos ? "none" : "auto"}
       />
-      {/* Loading Indicator while Todos are still being fetched */}
+      {/* Loading Indicator while todos are still being fetched */}
       {fetchingPendingTodos && <LoadingIndicator />}
     </View>
   );

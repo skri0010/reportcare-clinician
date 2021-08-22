@@ -37,10 +37,8 @@ export type PatientDetailsTabParamList = {
 // Todo list parameters
 
 export type TodoListTabParamList = {
-  [TodoListTabName.CURRENT]: {
-    todos: LocalTodo[];
-  };
-  [TodoListTabName.COMPLETED]: { todos: LocalTodo[] };
+  [TodoListTabName.CURRENT]: undefined;
+  [TodoListTabName.COMPLETED]: undefined;
 };
 // Todo details parameters
 
