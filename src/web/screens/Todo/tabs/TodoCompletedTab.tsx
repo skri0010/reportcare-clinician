@@ -16,6 +16,7 @@ import {
 import { AgentTrigger } from "rc_agents/trigger";
 import { TodoListTabsProps } from "web/navigation/types";
 import { TodoRowTabProps } from "web/navigation/navigators/TodoListTabNavigator";
+import { NoItemsTextIndicator } from "components/indicators/NoItemsTextIndicator";
 
 interface TodoCompleteTabProps
   extends TodoRowTabProps,
@@ -74,21 +75,34 @@ export const TodoCompletedTab: FC<TodoCompleteTabProps> = ({
         placeholder={i18n.t("Todo.SearchBarCompletePlaceholder")}
       />
       {/* List of completed todos */}
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        ItemSeparatorComponent={() => <ItemSeparator />}
-        data={completedTodos}
-        renderItem={({ item }) => (
-          <TodoRow
-            todoDetails={item}
-            riskLevel={item.riskLevel ? item.riskLevel : RiskLevel.UNASSIGNED}
-            onCardPress={() => onCardPress(item)}
-            onButtonPress={() => onUndoPress(item)}
-          />
-        )}
-        keyExtractor={(item) => item.createdAt}
-        pointerEvents={fetchingCompletedTodos ? "none" : "auto"}
-      />
+      {fetchingCompletedTodos ? (
+        // Show loading indicator if fetching completed todos
+        <LoadingIndicator flex={1} />
+      ) : completedTodos ? (
+        // Show completed todos
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          ListEmptyComponent={() => (
+            <NoItemsTextIndicator text={i18n.t("Todo.NoTodos")} />
+          )}
+          ItemSeparatorComponent={() => <ItemSeparator />}
+          data={completedTodos}
+          renderItem={({ item }) => (
+            <TodoRow
+              todoDetails={item}
+              riskLevel={item.riskLevel ? item.riskLevel : RiskLevel.UNASSIGNED}
+              onCardPress={() => onCardPress(item)}
+              onButtonPress={() => onUndoPress(item)}
+            />
+          )}
+          keyExtractor={(item) => item.createdAt}
+          pointerEvents={fetchingCompletedTodos ? "none" : "auto"}
+        />
+      ) : (
+        <NoItemsTextIndicator
+          text={i18n.t("Internet_Connection.FailedToRetrieveNotice")}
+        />
+      )}
 
       {/* Loading Indicator while Todos are still being fetched */}
       {fetchingCompletedTodos && <LoadingIndicator />}

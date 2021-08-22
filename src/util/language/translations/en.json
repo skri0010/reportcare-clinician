@@ -123,6 +123,7 @@
   "Todo": {
     "Current": "Current",
     "Completed": "Completed",
+    "NoTodos": "No todos found!",
     "SearchBarCurrentPlaceholder": "Search current todo",
     "SearchBarCompletePlaceholder": "Search completed todo",
     "ViewTodo": "View Todo",

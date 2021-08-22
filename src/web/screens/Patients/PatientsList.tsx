@@ -1,15 +1,14 @@
-import React, { FC, useState, useEffect } from "react";
+import React, { FC } from "react";
 import { FlatList, View } from "react-native";
 import { LoadingIndicator } from "components/indicators/LoadingIndicator";
 import { ItemSeparator } from "components/rowComponents/ItemSeparator";
 import { PatientDetailsRow } from "components/rowComponents/PatientRows/PatientDetailsRow";
-import { H5 } from "components/text";
 import { AgentTrigger } from "rc_agents/trigger";
-import { ScaledSheet } from "react-native-size-matters";
 import i18n from "util/language/i18n";
 import { RootState, select } from "util/useRedux";
 import { RiskFilterPillList } from "components/buttons/RiskFilterPillList";
 import { SearchBarComponent } from "components/bars/SearchBarComponent";
+import { NoItemsTextIndicator } from "components/indicators/NoItemsTextIndicator";
 
 interface PatientsListScreen {
   displayPatientId?: string;
@@ -25,23 +24,6 @@ export const PatientsList: FC<PatientsListScreen> = ({
     patients: state.agents.patients,
     fetchingPatients: state.agents.fetchingPatients
   }));
-
-  const [noPatientsNotice, setNoPatientsNotice] = useState<string>("");
-
-  // Prepare text notice to be displayed after fetching patients
-  useEffect(() => {
-    if (fetchingPatients) {
-      if (patients) {
-        // No patients found
-        setNoPatientsNotice(i18n.t("Patients.PatientsList.NoPatients"));
-      } else {
-        // Could not fetch patients
-        setNoPatientsNotice(
-          i18n.t("Internet_Connection.FailedToRetrieveNotice")
-        );
-      }
-    }
-  }, [patients, fetchingPatients]);
 
   return (
     <View
@@ -63,10 +45,15 @@ export const PatientsList: FC<PatientsListScreen> = ({
       {fetchingPatients ? (
         // Show loading indicator if fetching patients
         <LoadingIndicator flex={1} />
-      ) : patients && patients.length > 0 ? (
-        // Show patients if list exists and length > 0
+      ) : patients ? (
+        // Show patients if list exists
         <FlatList
           showsVerticalScrollIndicator={false}
+          ListEmptyComponent={() => (
+            <NoItemsTextIndicator
+              text={i18n.t("Patients.PatientsList.NoPatients")}
+            />
+          )}
           ItemSeparatorComponent={() => <ItemSeparator />}
           data={patients}
           renderItem={({ item }) => (
@@ -79,24 +66,10 @@ export const PatientsList: FC<PatientsListScreen> = ({
           keyExtractor={(item) => item.patientID}
         />
       ) : (
-        // Show text notice (no patients or failed to fetch patients)
-        <View style={styles.noPatientsContainer}>
-          <H5 text={noPatientsNotice} style={styles.noPatientsText} />
-        </View>
+        <NoItemsTextIndicator
+          text={i18n.t("Internet_Connection.FailedToRetrieveNotice")}
+        />
       )}
     </View>
   );
 };
-
-const styles = ScaledSheet.create({
-  noPatientsContainer: {
-    flex: 1,
-    paddingTop: "10@ms",
-    justifyContent: "flex-start",
-    alignItems: "center",
-    paddingHorizontal: "30@ms"
-  },
-  noPatientsText: {
-    textAlign: "center"
-  }
-});

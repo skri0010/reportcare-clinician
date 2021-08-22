@@ -1,15 +1,16 @@
 import { H4 } from "components/text";
+import { PatientDetails } from "rc_agents/model";
 import React, { FC } from "react";
 import { View } from "react-native";
-import { ScreenWrapper } from "../../../ScreenWrapper";
 import { PatientDetailsTabProps } from "web/navigation/types";
-import { PatientDetails } from "rc_agents/model";
+import { ScreenWrapper } from "web/screens/ScreenWrapper";
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface PatientICDCRTProps extends PatientDetailsTabProps.ICDCRTTabProps {
   details: PatientDetails;
 }
 
-export const PatientICDCRT: FC<PatientICDCRTProps> = () => {
+export const PatientICDCRT: FC<PatientICDCRTProps> = ({ details }) => {
   return (
     <ScreenWrapper padding>
       <View>

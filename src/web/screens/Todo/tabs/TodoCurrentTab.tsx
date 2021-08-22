@@ -1,5 +1,5 @@
-import React, { FC, useEffect, useCallback } from "react";
-import { View, FlatList } from "react-native";
+import React, { FC, useEffect } from "react";
+import { FlatList } from "react-native";
 import { TodoRow } from "components/rowComponents/TodoRow";
 import { RiskLevel } from "models/RiskLevel";
 import { ItemSeparator } from "components/rowComponents/ItemSeparator";

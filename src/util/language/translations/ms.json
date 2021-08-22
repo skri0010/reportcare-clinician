@@ -123,6 +123,7 @@
   "Todo": {
     "Current": "Semasa",
     "Completed": "Selesai",
+    "NoPatients": "Tiada todo yang dijumpai!",
     "SearchBarCurrentPlaceholder": "Cari todo yang semasa",
     "SearchBarCompletePlaceholder": "Cari todo yang selesai",
     "ViewTodo": "Lihat Todo",
