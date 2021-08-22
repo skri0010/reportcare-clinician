@@ -14,8 +14,6 @@ import {
   ProcedureAttributes,
   ProcedureConst
 } from "rc_agents/AgentEnums";
-import { H6 } from "components/text";
-import i18n from "util/language/i18n";
 
 export const RiskFilterPillList: FC = () => {
   const { colors, riskFilters } = select((state: RootState) => ({

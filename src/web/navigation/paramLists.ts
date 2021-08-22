@@ -1,5 +1,4 @@
 import { LocalTodo } from "rc_agents/model";
-import { TodoScreenNavigation } from "web/navigation/types/MainScreenProps";
 import {
   ScreenName,
   PatientDetailsTabName,

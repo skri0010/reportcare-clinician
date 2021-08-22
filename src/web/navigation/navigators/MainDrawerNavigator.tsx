@@ -17,8 +17,6 @@ import { getDrawerScreenOptions } from "util/getStyles";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { ms } from "react-native-size-matters";
 import i18n from "util/language/i18n";
-import { PatientDetailsTabNavigator } from "./PatientDetailsTabNavigator";
-import { TodoDetailsStackNavigator } from "./TodoDetailsStackNavigator";
 
 interface DrawerNavigationProps {
   signOut: () => void;

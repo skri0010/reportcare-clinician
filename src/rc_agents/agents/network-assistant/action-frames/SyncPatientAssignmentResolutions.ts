@@ -11,7 +11,6 @@ import {
   BeliefKeys
 } from "rc_agents/AgentEnums";
 import { Storage, AsyncStorageKeys } from "rc_agents/storage";
-import { PatientAssignmentResolution } from "rc_agents/model";
 import { resolvePatientAssignment } from "rc_agents/agents/data-assistant/action-frames/storing-data/ResolvePatientAssignment";
 
 /**
