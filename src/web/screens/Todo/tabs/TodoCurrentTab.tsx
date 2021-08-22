@@ -16,6 +16,7 @@ import { AgentTrigger } from "rc_agents/trigger";
 import { TodoListTabsProps } from "web/navigation/types";
 import { TodoRowTabProps } from "web/navigation/navigators/TodoListTabNavigator";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
+import { NoItemsTextIndicator } from "components/indicators/NoItemsTextIndicator";
 
 interface TodoCurrentTabProps
   extends TodoRowTabProps,
@@ -77,21 +78,30 @@ export const TodoCurrentTab: FC<TodoCurrentTabProps> = ({
         placeholder={i18n.t("Todo.SearchBarCurrentPlaceholder")}
       />
       {/* List of current todos */}
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        ItemSeparatorComponent={() => <ItemSeparator />}
-        data={pendingTodos}
-        renderItem={({ item }) => (
-          <TodoRow
-            todoDetails={item}
-            riskLevel={item.riskLevel ? item.riskLevel : RiskLevel.UNASSIGNED}
-            onCardPress={() => onCardPress(item)}
-            onButtonPress={() => onDonePress(item)}
-          />
-        )}
-        keyExtractor={(item) => item.createdAt}
-        pointerEvents={fetchingPendingTodos ? "none" : "auto"}
-      />
+      {fetchingPendingTodos ? (
+        // Show loading indicator if fetching pending todos
+        <LoadingIndicator flex={1} />
+      ) : pendingTodos ? (
+        // Show pending todos
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          ListEmptyComponent={() => (
+            <NoItemsTextIndicator text={i18n.t("Todo.NoTodos")} />
+          )}
+          ItemSeparatorComponent={() => <ItemSeparator />}
+          data={pendingTodos}
+          renderItem={({ item }) => (
+            <TodoRow
+              todoDetails={item}
+              riskLevel={item.riskLevel ? item.riskLevel : RiskLevel.UNASSIGNED}
+              onCardPress={() => onCardPress(item)}
+              onButtonPress={() => onDonePress(item)}
+            />
+          )}
+          keyExtractor={(item) => item.createdAt}
+          pointerEvents={fetchingPendingTodos ? "none" : "auto"}
+        />
+      ) : null}
       {/* Loading Indicator while todos are still being fetched */}
       {fetchingPendingTodos && <LoadingIndicator />}
     </ScreenWrapper>

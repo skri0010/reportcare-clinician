@@ -88,7 +88,6 @@ export const PatientOverview: FC<PatientOverviewProps> = ({ details }) => {
           />
         </View>
       </>
-      )
     </ScreenWrapper>
   );
 };

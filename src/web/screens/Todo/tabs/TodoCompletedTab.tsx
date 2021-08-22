@@ -98,11 +98,7 @@ export const TodoCompletedTab: FC<TodoCompleteTabProps> = ({
           keyExtractor={(item) => item.createdAt}
           pointerEvents={fetchingCompletedTodos ? "none" : "auto"}
         />
-      ) : (
-        <NoItemsTextIndicator
-          text={i18n.t("Internet_Connection.FailedToRetrieveNotice")}
-        />
-      )}
+      ) : null}
 
       {/* Loading Indicator while Todos are still being fetched */}
       {fetchingCompletedTodos && <LoadingIndicator />}

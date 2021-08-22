@@ -65,11 +65,7 @@ export const PatientsList: FC<PatientsListScreen> = ({
           )}
           keyExtractor={(item) => item.patientID}
         />
-      ) : (
-        <NoItemsTextIndicator
-          text={i18n.t("Internet_Connection.FailedToRetrieveNotice")}
-        />
-      )}
+      ) : null}
     </View>
   );
 };
