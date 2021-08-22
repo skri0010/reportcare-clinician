@@ -6,7 +6,7 @@ import { AuthNavigationStack } from "web/navigation/AuthNavigationStack";
 import awsconfig from "aws/aws-exports";
 import { Amplify } from "@aws-amplify/core";
 import { Auth } from "@aws-amplify/auth";
-import { AuthState } from "web/auth-screens";
+import { AuthState } from "web/auth_screens";
 import agentAPI from "rc_agents/framework/AgentAPI";
 import { Storage } from "rc_agents/storage";
 import { ToastProviderComponent } from "components/indicators/ToastProvider";

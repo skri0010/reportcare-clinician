@@ -4,7 +4,7 @@ import { MainDrawerNavigator } from "./MainDrawerNavigator";
 import { Auth } from "@aws-amplify/auth";
 import { useToast } from "react-native-toast-notifications";
 import i18n from "util/language/i18n";
-import { AuthState } from "web/auth-screens";
+import { AuthState } from "web/auth_screens";
 import { useNetInfo } from "@react-native-community/netinfo";
 import agentAPI from "rc_agents/framework/AgentAPI";
 import Belief from "rc_agents/framework/base/Belief";

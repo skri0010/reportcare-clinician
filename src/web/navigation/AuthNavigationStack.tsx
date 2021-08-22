@@ -1,12 +1,12 @@
 import React, { FC } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { AuthStackParamList, AuthScreenName } from "../auth-screens";
+import { AuthStackParamList, AuthScreenName } from "../auth_screens";
 import { RootState, select } from "util/useRedux";
-import { SignIn } from "../auth-screens/SignIn";
-import { RegisterAccount } from "../auth-screens/RegisterAccount";
-import { ForgotPassword } from "../auth-screens/ForgotPassword";
-import { ConfirmRegistration } from "../auth-screens/ConfirmRegistration";
+import { SignIn } from "../auth_screens/SignIn";
+import { RegisterAccount } from "../auth_screens/RegisterAccount";
+import { ForgotPassword } from "../auth_screens/ForgotPassword";
+import { ConfirmRegistration } from "../auth_screens/ConfirmRegistration";
 import { getMainScreenHeaderStyle } from "util/getStyles";
 import i18n from "util/language/i18n";
 

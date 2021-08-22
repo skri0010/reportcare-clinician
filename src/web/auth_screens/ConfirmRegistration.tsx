@@ -3,7 +3,7 @@ import { Dimensions } from "react-native";
 import { Auth } from "@aws-amplify/auth";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ms, ScaledSheet } from "react-native-size-matters";
-import { AuthScreenName, AuthScreensProps } from "web/auth-screens";
+import { AuthScreenName, AuthScreensProps } from "web/auth_screens";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { validateCode, validateUsername } from "util/validation";
 import i18n from "util/language/i18n";

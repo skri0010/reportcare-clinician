@@ -6,7 +6,7 @@ import { ms, ScaledSheet } from "react-native-size-matters";
 import { Picker } from "@react-native-picker/picker";
 import { Role, Hospital } from "rc_agents/model";
 import { RootState, select } from "util/useRedux";
-import { AuthScreenName, AuthScreensProps } from "web/auth-screens";
+import { AuthScreenName, AuthScreensProps } from "web/auth_screens";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import {
   validateEmail,

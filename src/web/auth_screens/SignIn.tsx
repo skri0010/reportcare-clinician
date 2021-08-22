@@ -5,7 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { RootState, select, useDispatch } from "util/useRedux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AuthScreenName, AuthScreensProps, AuthState } from "web/auth-screens";
+import { AuthScreenName, AuthScreensProps, AuthState } from "web/auth_screens";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { validatePassword, validateUsername } from "util/validation";
 import agentAPI from "rc_agents/framework/AgentAPI";
