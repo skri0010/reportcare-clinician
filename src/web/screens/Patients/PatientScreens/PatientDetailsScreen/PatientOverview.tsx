@@ -1,11 +1,11 @@
 import React, { FC, useState, useEffect } from "react";
 import { ms, ScaledSheet } from "react-native-size-matters";
-import { ScreenWrapper } from "../../../ScreenWrapper";
-import { BloodPressureCard } from "./PatientOverviewCards/BloodPressureCard";
-import { MedicationTakenCard } from "./PatientOverviewCards/MedicationCard";
-import { OxygenSaturationCard } from "./PatientOverviewCards/OxygenSaturationCard";
-import { WeightCard } from "./PatientOverviewCards/WeightCard";
-import { SymptomsCard } from "./PatientOverviewCards/SymptomsCard";
+import { ScreenWrapper } from "web/screens/ScreenWrapper";
+import { BloodPressureCard } from "./PatientOverviewComponents/BloodPressureCard";
+import { MedicationTakenCard } from "./PatientOverviewComponents/MedicationCard";
+import { OxygenSaturationCard } from "./PatientOverviewComponents/OxygenSaturationCard";
+import { WeightCard } from "./PatientOverviewComponents/WeightCard";
+import { SymptomsCard } from "./PatientOverviewComponents/SymptomsCard";
 import { Dimensions, View } from "react-native";
 import { ReportSymptom, ReportVitals } from "aws/API";
 import i18n from "util/language/i18n";

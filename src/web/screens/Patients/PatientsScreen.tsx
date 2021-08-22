@@ -5,12 +5,12 @@ import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { mockPatients } from "mock/mockPatients";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { ContactTitle } from "components/rowComponents/ContactTitle";
-import { AlertHistoryModal } from "./PatientScreens/PatientDetailsScreen/PatientHistoryScreens/AlertHistoryModal";
+import { AlertHistoryModal } from "./PatientScreens/PatientDetailsScreen/PatientHistoryComponents/AlertHistoryModal";
 import { AlertHistory, MedicalRecords } from "mock/mockPatientDetails";
 import { RiskLevel } from "models/RiskLevel";
 import { ScaledSheet } from "react-native-size-matters";
-import { ViewMedicalRecords } from "./PatientScreens/PatientDetailsScreen/PatientHistoryScreens/ViewMedicalRecord";
-import { AddMedicalRecord } from "./PatientScreens/PatientDetailsScreen/PatientHistoryScreens/AddMedicalRecord";
+import { ViewMedicalRecords } from "./PatientScreens/PatientDetailsScreen/PatientHistoryComponents/ViewMedicalRecord";
+import { AddMedicalRecord } from "./PatientScreens/PatientDetailsScreen/PatientHistoryComponents/AddMedicalRecord";
 import agentDTA from "rc_agents/agents/data-assistant/DTA";
 import Belief from "rc_agents/framework/base/Belief";
 import {
@@ -25,7 +25,7 @@ import {
   setProcedureOngoing
 } from "ic-redux/actions/agents/actionCreator";
 import { PatientDetailsTabNavigator } from "web/navigation/navigators/PatientDetailsTabNavigator";
-import { PatientHistoryModal } from "web/screens/Patients/PatientHistoryScreens/PatientHistoryModals";
+import { PatientHistoryModal } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientHistoryComponents/PatientHistoryModals";
 import { MainScreenProps } from "web/navigation/types";
 import { ScreenName } from "web/navigation";
 import { PatientsList } from "./PatientsList";

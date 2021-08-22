@@ -5,12 +5,12 @@ import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import {
   BasicInfo,
   BasicInfoSection
-} from "./PatientInfoSections/BasicInfoSection";
+} from "./PatientInformationComponents/BasicInfoSection";
 import {
   ContactInfo,
   ContactInfoSection
-} from "./PatientInfoSections/ContactInfoSection";
-import { InfoTitleBar } from "./PatientInfoSections/InfoTitleBar";
+} from "./PatientInformationComponents/ContactInfoSection";
+import { InfoTitleBar } from "./PatientInformationComponents/InfoTitleBar";
 import { PatientDetailsTabProps } from "web/navigation/types";
 import { getAge } from "util/utilityFunctions";
 import { PatientInfo } from "aws/API";

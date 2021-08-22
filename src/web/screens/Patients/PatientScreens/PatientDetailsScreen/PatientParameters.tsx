@@ -1,11 +1,11 @@
 import React, { FC } from "react";
 import { Dimensions, View } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
-import { ScreenWrapper } from "../../../ScreenWrapper";
-import { WeightParameterCard } from "./PatientParameterCards/WeightParameterCard";
-import { DiastolicParameterCard } from "./PatientParameterCards/DiastolicParameterCard";
-import { OxygenSaturationParameterCard } from "./PatientParameterCards/OxygenSaturationParameterCard";
-import { SystolicParameterCard } from "./PatientParameterCards/SystolicParameterCard";
+import { ScreenWrapper } from "web/screens/ScreenWrapper";
+import { WeightParameterCard } from "./PatientParameterComponents/WeightParameterCard";
+import { DiastolicParameterCard } from "./PatientParameterComponents/DiastolicParameterCard";
+import { OxygenSaturationParameterCard } from "./PatientParameterComponents/OxygenSaturationParameterCard";
+import { SystolicParameterCard } from "./PatientParameterComponents/SystolicParameterCard";
 import { PatientDetailsTabProps } from "web/navigation/types";
 import { PatientDetails } from "rc_agents/model";
 

@@ -1,9 +1,9 @@
 import React, { FC } from "react";
 import { ms, ScaledSheet } from "react-native-size-matters";
-import { ScreenWrapper } from "../../../ScreenWrapper";
+import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { Dimensions, View } from "react-native";
-import { PatientAlertHistoryCard } from "./PatientHistoryScreens/PatientAlertHistoryCard";
-import { PatientMedicalRecordCard } from "./PatientHistoryScreens/PatientMedicalRecordCard";
+import { PatientAlertHistoryCard } from "./PatientHistoryComponents/PatientAlertHistoryCard";
+import { PatientMedicalRecordCard } from "./PatientHistoryComponents/PatientMedicalRecordCard";
 import { AlertHistory, MedicalRecords } from "mock/mockPatientDetails";
 import { PatientDetailsTabProps } from "web/navigation/types";
 import { PatientInfo } from "aws/API";
