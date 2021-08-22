@@ -20,6 +20,7 @@ import {
   setUpdatedTodo
 } from "ic-redux/actions/agents/actionCreator";
 import { TodosList } from "web/screens/Todo/TodosList";
+import { AdaptiveTwoScreenWrapper } from "../AdaptiveTwoScreenWrapper";
 
 // Determines if the add button is needed in the header of left tab
 function checkNeedAddButton(tabName: TodoListTabName) {
@@ -138,43 +139,48 @@ export const TodoScreen: FC<MainScreenProps[ScreenName.TODO]> = ({
         style={styles.container}
         pointerEvents={modalVisible || submittingTodo ? "none" : "auto"}
       >
-        {/* Left side: List of todos */}
-        <TodosList
-          selectedTab={selectedListTab}
-          tabPressCurrent={() => {
-            setAddButton(checkNeedAddButton(TodoListTabName.CURRENT));
-          }}
-          tabPressCompleted={() => {
-            setAddButton(checkNeedAddButton(TodoListTabName.COMPLETED));
-          }}
-          onRowClick={onRowClick}
-        />
-
-        {/* Right side: Todo details */}
-        <View
-          style={{
-            flex: 2,
-            backgroundColor: colors.primaryWebBackgroundColor
-          }}
-        >
-          {fetchingTodoDetails ? (
-            <LoadingIndicator flex={1} />
-          ) : todoSelected ? (
-            <NavigationContainer independent>
-              {/* Todo details */}
-              <TodoDetailsStackNavigator
-                todo={todoSelected}
-                parentNavigation={navigation}
-                selectedScreen={selectedStackScreen}
-              />
-            </NavigationContainer>
-          ) : (
-            <NoSelectionScreen
-              screenName={ScreenName.TODO}
-              subtitle={i18n.t("Todo.NoSelection")}
+        <AdaptiveTwoScreenWrapper
+          // Left side: List of todos
+          LeftComponent={
+            <TodosList
+              selectedTab={selectedListTab}
+              tabPressCurrent={() => {
+                setAddButton(checkNeedAddButton(TodoListTabName.CURRENT));
+              }}
+              tabPressCompleted={() => {
+                setAddButton(checkNeedAddButton(TodoListTabName.COMPLETED));
+              }}
+              onRowClick={onRowClick}
             />
-          )}
-        </View>
+          }
+          // Right side: Todo details
+          RightComponent={
+            <View
+              style={{
+                flex: 2,
+                backgroundColor: colors.primaryWebBackgroundColor
+              }}
+            >
+              {fetchingTodoDetails ? (
+                <LoadingIndicator flex={1} />
+              ) : todoSelected ? (
+                <NavigationContainer independent>
+                  {/* Todo details */}
+                  <TodoDetailsStackNavigator
+                    todo={todoSelected}
+                    parentNavigation={navigation}
+                    selectedScreen={selectedStackScreen}
+                  />
+                </NavigationContainer>
+              ) : (
+                <NoSelectionScreen
+                  screenName={ScreenName.TODO}
+                  subtitle={i18n.t("Todo.NoSelection")}
+                />
+              )}
+            </View>
+          }
+        />
       </View>
 
       {/* ADD todo modal */}

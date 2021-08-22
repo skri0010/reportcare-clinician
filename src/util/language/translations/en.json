@@ -226,5 +226,9 @@
     "ContactInfo": "Contact Information",
     "Years": "years"
   },
+  "MobileMessage": {
+    "ViewList": "View List",
+    "BackToDetails": "Back to Details"
+  },
   "UnexpectedError": "An unexpected error has occured"
 }
