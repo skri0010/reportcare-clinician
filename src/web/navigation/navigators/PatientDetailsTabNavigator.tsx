@@ -2,11 +2,11 @@
 import React, { FC } from "react";
 import { select, RootState } from "util/useRedux";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { PatientOverview } from "./PatientDetailsScreen/PatientOverview";
-import { PatientParameters } from "./PatientDetailsScreen/PatientParameters";
-import { PatientICDCRT } from "./PatientDetailsScreen/PatientIcdCrt";
-import { PatientHistory } from "./PatientDetailsScreen/PatientHistory";
-import { PatientInformation } from "./PatientDetailsScreen/PatientInformation";
+import { PatientOverview } from "../../screens/Patients/PatientScreens/PatientDetailsScreen/PatientOverview";
+import { PatientParameters } from "../../screens/Patients/PatientScreens/PatientDetailsScreen/PatientParameters";
+import { PatientICDCRT } from "../../screens/Patients/PatientScreens/PatientDetailsScreen/PatientIcdCrt";
+import { PatientHistory } from "../../screens/Patients/PatientScreens/PatientDetailsScreen/PatientHistory";
+import { PatientInformation } from "../../screens/Patients/PatientScreens/PatientDetailsScreen/PatientInformation";
 import { PatientDetailsTabProps } from "web/navigation/types";
 import {
   PatientDetailsTabName,

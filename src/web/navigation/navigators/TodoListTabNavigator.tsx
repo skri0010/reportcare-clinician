@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { TodoCurrentTab } from "../TodoCurrentTab";
-import { TodoCompletedTab } from "../TodoCompletedTab";
+import { TodoCurrentTab } from "web/screens/Todo/TodoCurrentTab";
+import { TodoCompletedTab } from "web/screens/Todo/TodoCompletedTab";
 import { getTopTabBarOptions } from "util/getStyles";
 import { RootState, select } from "util/useRedux";
 import i18n from "util/language/i18n";
@@ -16,7 +16,7 @@ interface TodoListNavigationStackProps {
   setTodoSelected: (item: LocalTodo) => void; // set the todo details to be shown
 }
 
-export const TodoListTabNavigation: FC<TodoListNavigationStackProps> = ({
+export const TodoListTabNavigator: FC<TodoListNavigationStackProps> = ({
   tabPressCurrent,
   tabPressCompleted,
   setTodoSelected

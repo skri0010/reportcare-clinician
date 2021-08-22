@@ -4,7 +4,7 @@ import { View } from "react-native";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { mockPatients } from "mock/mockPatients";
 import { RootState, select, useDispatch } from "util/useRedux";
-import { ContactTitle } from "./ContactTitle";
+import { ContactTitle } from "components/rowComponents/ContactTitle";
 import { AlertHistoryModal } from "./PatientScreens/PatientDetailsScreen/PatientHistoryScreens/AlertHistoryModal";
 import { AlertHistory, MedicalRecords } from "mock/mockPatientDetails";
 import { RiskLevel } from "models/RiskLevel";
@@ -24,8 +24,8 @@ import {
   setPatientDetails,
   setProcedureOngoing
 } from "ic-redux/actions/agents/actionCreator";
-import { PatientDetailsNavigationStack } from "./PatientScreens/PatientDetailsTabNavigation";
-import { PatientHistoryModal } from "./PatientDetailsScreen/PatientHistoryScreens/PatientHistoryModals";
+import { PatientDetailsNavigationStack } from "../../navigation/navigators/PatientDetailsTabNavigator";
+import { PatientHistoryModal } from "web/screens/Patients/PatientHistoryScreens/PatientHistoryModals";
 import { MainScreenProps } from "web/navigation/types";
 import { ScreenName } from "web/navigation";
 import { PatientsListScreen } from "./PatientsListScreen";

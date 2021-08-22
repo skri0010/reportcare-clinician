@@ -11,8 +11,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import { AddTodoScreen } from "./AddTodoScreen";
 import { NoSelectionScreen } from "../Shared/NoSelectionScreen";
 import i18n from "util/language/i18n";
-import { TodoListTabNavigation } from "./TodoNavigations/TodoListTabNavigation";
-import { TodoDetailsStackNavigation } from "./TodoNavigations/TodoDetailsStackNavigation";
+import { TodoListTabNavigator } from "web/navigation/navigators/TodoListTabNavigator";
+import { TodoDetailsStackNavigator } from "../../navigation/navigators/TodoDetailsStackNavigator";
 import { LocalTodo } from "rc_agents/model";
 import { LoadingIndicator } from "components/indicators/LoadingIndicator";
 import { useToast } from "react-native-toast-notifications";
@@ -138,7 +138,7 @@ export const TodoScreen: FC<MainScreenProps[ScreenName.TODO]> = ({
             isTodo
           />
           {/* Left tab navigator */}
-          <TodoListTabNavigation
+          <TodoListTabNavigator
             tabPressCurrent={() => {
               setAddButton(checkNeedAddButton(TodoListName.CURRENT));
             }}
@@ -159,7 +159,7 @@ export const TodoScreen: FC<MainScreenProps[ScreenName.TODO]> = ({
           {!isEmptyTodo ? (
             <NavigationContainer independent>
               {/* Todo details navigation stack */}
-              <TodoDetailsStackNavigation
+              <TodoDetailsStackNavigator
                 todo={todoSelected}
                 navigation={navigation}
               />

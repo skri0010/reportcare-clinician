@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import { MainDrawerNavigator } from "./MainDrawerNavigator";
+import { MainDrawerNavigator } from "web/navigation/navigators/MainDrawerNavigator";
 import { Auth } from "@aws-amplify/auth";
 import { useToast } from "react-native-toast-notifications";
 import i18n from "util/language/i18n";

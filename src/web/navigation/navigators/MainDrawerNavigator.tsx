@@ -4,8 +4,8 @@ import {
   DrawerNavigationOptions
 } from "@react-navigation/drawer";
 import { HomeScreen } from "web/screens/Home/HomeScreen";
-import { CliniciansScreen } from "web/screens/People/CliniciansScreen";
-import { PatientsScreen } from "web/screens/People/PatientsScreen";
+import { CliniciansScreen } from "web/screens/Clinicians/CliniciansScreen";
+import { PatientsScreen } from "web/screens/Patients/PatientsScreen";
 import { ChatScreen } from "web/screens/Chat/ChatScreen";
 import { TodoScreen } from "web/screens/Todo/TodoScreen";
 import { MariaScreen } from "web/screens/Maria/MariaScreen";
