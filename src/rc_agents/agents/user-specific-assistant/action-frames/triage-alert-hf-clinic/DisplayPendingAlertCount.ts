@@ -14,9 +14,8 @@ import {
   ProcedureConst
 } from "rc_agents/AgentEnums";
 import agentAPI from "rc_agents/framework/AgentAPI";
-import { AlertColorCode, AlertInfo, PendingAlertCount } from "rc_agents/model";
+import { AlertInfo, PendingAlertCount } from "rc_agents/model";
 import { store } from "util/useRedux";
-import { Alert } from "aws/API";
 import { setPendingAlertCount } from "ic-redux/actions/agents/actionCreator";
 import { RiskLevel } from "models/RiskLevel";
 
@@ -37,7 +36,7 @@ class DisplayPendingAlertCount extends Activity {
     await super.doActivity(agent, [rule2]);
 
     try {
-      const pendingAlerts: Alert[] | AlertInfo[] | null =
+      const pendingAlerts: AlertInfo[] | null =
         agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.ALERTS];
 
       if (pendingAlerts) {
@@ -51,42 +50,22 @@ class DisplayPendingAlertCount extends Activity {
         // LS-TODO: Irrelevant alerts should be filtered out depending on user's role
 
         pendingAlerts.forEach((alert) => {
-          // Alert type is received if device is online
-          if ((alert as Alert).colorCode) {
-            switch ((alert as Alert).colorCode) {
-              case AlertColorCode.HIGH:
-                pendingAlertCount.highRisk += 1;
-                break;
-              case AlertColorCode.MEDIUM:
-                pendingAlertCount.mediumRisk += 1;
-                break;
-              case AlertColorCode.LOW:
-                pendingAlertCount.lowRisk += 1;
-                break;
-              case AlertColorCode.UNASSIGNED:
-                pendingAlertCount.unassignedRisk += 1;
-                break;
-              default:
-                break;
-            }
-          } else if ((alert as AlertInfo).riskLevel) {
-            // AlertInfo type is received if device is offline
-            switch ((alert as AlertInfo).riskLevel) {
-              case RiskLevel.HIGH:
-                pendingAlertCount.highRisk += 1;
-                break;
-              case RiskLevel.MEDIUM:
-                pendingAlertCount.mediumRisk += 1;
-                break;
-              case RiskLevel.LOW:
-                pendingAlertCount.lowRisk += 1;
-                break;
-              case RiskLevel.UNASSIGNED:
-                pendingAlertCount.unassignedRisk += 1;
-                break;
-              default:
-                break;
-            }
+          // Alert type is received if device is online or offline
+          switch ((alert as AlertInfo).riskLevel) {
+            case RiskLevel.HIGH:
+              pendingAlertCount.highRisk += 1;
+              break;
+            case RiskLevel.MEDIUM:
+              pendingAlertCount.mediumRisk += 1;
+              break;
+            case RiskLevel.LOW:
+              pendingAlertCount.lowRisk += 1;
+              break;
+            case RiskLevel.UNASSIGNED:
+              pendingAlertCount.unassignedRisk += 1;
+              break;
+            default:
+              break;
           }
         });
 

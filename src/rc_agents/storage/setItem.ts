@@ -1,7 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Alert, PatientInfo, Todo } from "aws/API";
-import { RiskLevel } from "models/RiskLevel";
-import { mapColorCodeToRiskLevel } from "rc_agents/agents/data-assistant/action-frames/triage-alert-hf-clinic/RetrievePendingAlertCount";
 import {
   AlertInfo,
   AlertStatus,
@@ -131,18 +129,20 @@ export const setAllPatientDetails = async (
  * Insert an alert or replace the existing one.
  * @param alert alert to be inserted
  */
-export const setAlert = async (alert: Alert): Promise<void> => {
+export const setAlert = async (alert: AlertInfo): Promise<void> => {
   let localData = await getAlerts();
-  if (!localData) {
-    localData = {
-      [RiskLevel.HIGH]: {},
-      [RiskLevel.MEDIUM]: {},
-      [RiskLevel.LOW]: {},
-      [RiskLevel.UNASSIGNED]: {}
-    };
+
+  if (localData) {
+    // Remove duplicate Alerts
+    const existIndex = localData.findIndex((t) => t.id === alert.id);
+    if (existIndex >= 0) {
+      localData.splice(existIndex, 1);
+    }
+  } else {
+    localData = [];
   }
-  const riskLevel = mapColorCodeToRiskLevel(alert.colorCode);
-  localData[riskLevel][alert.id] = alert;
+  // Add alert to front of list
+  localData.unshift(alert);
   await setAlerts(localData);
 };
 
@@ -153,7 +153,7 @@ export const setAlert = async (alert: Alert): Promise<void> => {
 export const mergeAlert = async (alert: Alert | AlertInfo): Promise<void> => {
   if ((alert as Alert).colorCode) {
     // Input is of type Alert
-    await setAlert(alert as Alert);
+    await setAlert(alert as AlertInfo);
   } else if ((alert as AlertInfo).riskLevel) {
     // Input is of type AlertInfo
     const alertInfo = alert as AlertInfo;
@@ -163,11 +163,9 @@ export const mergeAlert = async (alert: Alert | AlertInfo): Promise<void> => {
     );
     if (currentAlert) {
       if (alertInfo.completed) {
-        currentAlert.completed = AlertStatus.COMPLETED;
-        currentAlert.pending = null;
+        currentAlert.completed = true;
       } else {
-        currentAlert.completed = null;
-        currentAlert.pending = AlertStatus.PENDING;
+        currentAlert.completed = false;
       }
       await setAlert(currentAlert);
     }
@@ -178,22 +176,24 @@ export const mergeAlert = async (alert: Alert | AlertInfo): Promise<void> => {
  * Insert multiple alerts at a time.
  * @param alerts array of alerts to be inserted.
  */
-export const setMultipleAlerts = async (alerts: Alert[]): Promise<void> => {
+export const setMultipleAlerts = async (alerts: AlertInfo[]): Promise<void> => {
   let localData = await getAlerts();
 
   // Calling setAlert multiple times causes race condition
   await Promise.all(
     alerts.map(async (alert) => {
-      if (!localData) {
-        localData = {
-          [RiskLevel.HIGH]: {},
-          [RiskLevel.MEDIUM]: {},
-          [RiskLevel.LOW]: {},
-          [RiskLevel.UNASSIGNED]: {}
-        };
+      if (localData) {
+        // Remove duplicate Alerts
+        const existIndex = localData.findIndex((t) => t.id === alert.id);
+        if (existIndex >= 0) {
+          localData.splice(existIndex, 1);
+        }
+      } else {
+        localData = [];
       }
-      const riskLevel = mapColorCodeToRiskLevel(alert.colorCode);
-      localData[riskLevel][alert.id] = alert;
+      // Add alert to front of list
+      localData.unshift(alert);
+      return alert;
     })
   );
 

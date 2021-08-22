@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Alert, PatientInfo } from "aws/API";
 import { RiskLevel } from "models/RiskLevel";
-import { AlertInfo, AlertStatus, PatientDetails } from "rc_agents/model";
+import { AlertInfo, PatientDetails } from "rc_agents/model";
 import { AsyncStorageKeys, AsyncStorageType } from ".";
 
 export const getSignUpDetails = async (): Promise<
@@ -107,13 +107,18 @@ export const getAllPatientDetails = async (): Promise<
  * @param riskLevel riskLevel of the alert
  * @returns Alert if any, otherwise null
  */
+// Why do we need riskLevel is Id is unique
 export const getSingleAlert = async (
   alertId: string,
   riskLevel: RiskLevel
-): Promise<Alert | null> => {
+): Promise<AlertInfo | null> => {
   const localData = await getAlerts();
-  if (localData && localData[riskLevel]) {
-    return localData[riskLevel][alertId];
+  if (localData) {
+    for (let i = 0; i < localData.length; i++) {
+      if (localData[i].id === alertId && localData[i].riskLevel === riskLevel) {
+        return localData[i];
+      }
+    }
   }
   return null;
 };
@@ -132,56 +137,76 @@ export const getAlerts = async (): Promise<
   return null;
 };
 
-/**
- * Gets Alerts based on risk level and/or alert status
- * @param riskLevel risk level
- * @param status alert status
- * @returns array of Alerts if any, otherwise null
- */
-export const getRiskOrStatusAlerts = async (
-  riskLevel?: RiskLevel,
-  status?: AlertStatus
-): Promise<Alert[] | null> => {
+export const getPendingAlerts = async (): Promise<
+  AsyncStorageType[AsyncStorageKeys.ALERTS] | null
+> => {
   const localData = await getAlerts();
   if (localData) {
-    if (riskLevel) {
-      // Risk level is specified
-      const riskAlerts = localData[riskLevel];
-      if (status && status === AlertStatus.PENDING) {
-        return Object.values(riskAlerts).filter((a) => a.pending === status);
-      }
-      if (status && status === AlertStatus.COMPLETED) {
-        return Object.values(riskAlerts).filter((a) => a.completed === status);
-      }
-      return Object.values(riskAlerts);
-    }
-
-    if (status) {
-      // Risk level is not specified
-      const keys = Object.values(RiskLevel);
-      const statusAlerts: Alert[] = [];
-      await Promise.all(
-        keys.map((key) => {
-          const riskAlerts = localData[key];
-          Object.values(riskAlerts).map((alert) => {
-            if (status === AlertStatus.PENDING && alert.pending === status) {
-              statusAlerts.push(alert);
-            } else if (
-              status === AlertStatus.COMPLETED &&
-              alert.completed === status
-            ) {
-              statusAlerts.push(alert);
-            }
-            return alert;
-          });
-          return key;
-        })
-      );
-      return statusAlerts;
-    }
+    return localData.filter((t) => t.completed === false);
   }
   return null;
 };
+
+export const getCompletedAlerts = async (): Promise<
+  AsyncStorageType[AsyncStorageKeys.ALERTS] | null
+> => {
+  const localData = await getAlerts();
+  if (localData) {
+    return localData.filter((t) => t.completed === true);
+  }
+  return null;
+};
+
+// /**
+//  * Gets Alerts based on risk level and/or alert status
+//  * @param riskLevel risk level
+//  * @param status alert status
+//  * @returns array of Alerts if any, otherwise null
+//  */
+// export const getRiskOrStatusAlerts = async (
+//   riskLevel?: RiskLevel,
+//   status?: AlertStatus
+// ): Promise<Alert[] | null> => {
+//   const localData = await getAlerts();
+//   if (localData) {
+//     if (riskLevel) {
+//       // Risk level is specified
+//       const riskAlerts = localData[riskLevel];
+//       if (status && status === AlertStatus.PENDING) {
+//         return Object.values(riskAlerts).filter((a) => a.pending === status);
+//       }
+//       if (status && status === AlertStatus.COMPLETED) {
+//         return Object.values(riskAlerts).filter((a) => a.completed === status);
+//       }
+//       return Object.values(riskAlerts);
+//     }
+
+//     if (status) {
+//       // Risk level is not specified
+//       const keys = Object.values(RiskLevel);
+//       const statusAlerts: Alert[] = [];
+//       await Promise.all(
+//         keys.map((key) => {
+//           const riskAlerts = localData[key];
+//           Object.values(riskAlerts).map((alert) => {
+//             if (status === AlertStatus.PENDING && alert.pending === status) {
+//               statusAlerts.push(alert);
+//             } else if (
+//               status === AlertStatus.COMPLETED &&
+//               alert.completed === status
+//             ) {
+//               statusAlerts.push(alert);
+//             }
+//             return alert;
+//           });
+//           return key;
+//         })
+//       );
+//       return statusAlerts;
+//     }
+//   }
+//   return null;
+// };
 
 /**
  * Get a single AlertInfo from Alert

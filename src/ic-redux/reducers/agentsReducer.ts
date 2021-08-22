@@ -8,7 +8,7 @@ import {
   LocalTodo,
   RiskFilter
 } from "rc_agents/model";
-import { Alert, PatientAssignment, PatientInfo } from "aws/API";
+import { PatientAssignment, PatientInfo } from "aws/API";
 import { RiskLevel } from "models/RiskLevel";
 
 interface AgentsState {
@@ -25,7 +25,10 @@ interface AgentsState {
   patientRiskFilters: RiskFilter;
   alertRiskFilters: RiskFilter;
   pendingAlertCount: PendingAlertCount;
-  alerts: Alert[];
+  fetchingPendingAlerts: boolean;
+  fetchingCompletedAlerts: boolean;
+  pendingAlerts: AlertInfo[] | undefined;
+  completedAlerts: AlertInfo[] | undefined;
   alertInfo: AlertInfo | undefined;
   fetchingTodos: boolean;
   pendingTodos: LocalTodo[] | undefined;
@@ -63,7 +66,10 @@ const initialState: AgentsState = {
     lowRisk: 0,
     unassignedRisk: 0
   },
-  alerts: [],
+  fetchingPendingAlerts: false,
+  fetchingCompletedAlerts: false,
+  pendingAlerts: undefined,
+  completedAlerts: undefined,
   alertInfo: undefined,
   fetchingTodos: false,
   pendingTodos: undefined,
@@ -117,6 +123,26 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
       return {
         ...state,
         alerts: action.payload.alerts
+      };
+    case actionNames.SET_FETCHING_PENDING_ALERTS:
+      return {
+        ...state,
+        fetchingPendingAlerts: action.payload.fetchingPendingAlerts
+      };
+    case actionNames.SET_FETCHING_COMPLETED_ALERTS:
+      return {
+        ...state,
+        fetchingCompletedAlerts: action.payload.fetchingCompletedAlerts
+      };
+    case actionNames.SET_PENDING_ALERTS:
+      return {
+        ...state,
+        pendingAlerts: action.payload.pendingAlerts
+      };
+    case actionNames.SET_COMPLETED_ALERTS:
+      return {
+        ...state,
+        completedAlerts: action.payload.completedAlerts
       };
     case actionNames.SET_ALERT_INFO:
       return {

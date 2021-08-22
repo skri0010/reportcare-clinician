@@ -7,7 +7,7 @@ import {
 } from "rc_agents/model";
 import { actionNames } from "ic-redux/actions/actionNames";
 import { createAction } from "typesafe-actions";
-import { Alert, PatientAssignment, PatientInfo } from "aws/API";
+import { PatientAssignment, PatientInfo } from "aws/API";
 import { RiskFilterPillProps } from "web/RiskFilterPill";
 
 export const setProcedureOngoing = createAction(
@@ -80,9 +80,37 @@ export const setPendingAlertCount = createAction(
   })
 )();
 
+export const setFetchingPendingAlerts = createAction(
+  actionNames.SET_FETCHING_PENDING_ALERTS,
+  (fetchingPendingAlerts: boolean) => ({
+    fetchingPendingAlerts: fetchingPendingAlerts
+  })
+)();
+
+export const setFetchingCompletedAlerts = createAction(
+  actionNames.SET_FETCHING_COMPLETED_ALERTS,
+  (fetchingCompletedAlerts: boolean) => ({
+    fetchingCompletedAlerts: fetchingCompletedAlerts
+  })
+)();
+
+export const setPendingAlerts = createAction(
+  actionNames.SET_PENDING_ALERTS,
+  (pendingAlerts: AlertInfo[]) => ({
+    pendingAlerts: pendingAlerts
+  })
+)();
+
+export const setCompletedAlerts = createAction(
+  actionNames.SET_COMPLETED_ALERTS,
+  (completedAlerts: AlertInfo[]) => ({
+    completedAlerts: completedAlerts
+  })
+)();
+
 export const setAlerts = createAction(
   actionNames.SET_ALERTS,
-  (alerts: Alert[]) => ({
+  (alerts: AlertInfo[]) => ({
     alerts: alerts
   })
 )();

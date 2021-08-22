@@ -17,9 +17,8 @@ import {
 import { Storage } from "rc_agents/storage";
 import agentAPI from "rc_agents/framework/AgentAPI";
 import { Alert, ModelSortDirection } from "aws/API";
-import { mockPendingAlerts } from "mock/mockAlerts";
 import { listPendingAlertsByDateTime } from "aws";
-import { AlertColorCode, AlertStatus } from "rc_agents/model";
+import { AlertColorCode, AlertInfo, AlertStatus } from "rc_agents/model";
 import { RiskLevel } from "models/RiskLevel";
 
 /**
@@ -39,7 +38,7 @@ class RetrievePendingAlertCount extends Activity {
     await super.doActivity(agent, [rule2]);
 
     try {
-      let results: Alert[];
+      let results: Alert[] | undefined;
 
       if (agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
         // Device is online
@@ -51,27 +50,38 @@ class RetrievePendingAlertCount extends Activity {
         if (query.data.listPendingAlertsByDateTime?.items) {
           results = query.data.listPendingAlertsByDateTime.items as Alert[];
         }
-        // LS-TODO: To be removed
-        results = mockPendingAlerts;
 
-        if (results && results.length > 0) {
+        if (results) {
+          const pendingAlerts: AlertInfo[] = [];
+          results.map((alert) => {
+            const currentAlert: AlertInfo = {
+              id: alert.id,
+              patientId: alert.patientID,
+              patientName: alert.patientName,
+              riskLevel: mapColorCodeToRiskLevel(alert.colorCode),
+              dateTime: alert.dateTime,
+              summary: alert.summary,
+              completed: alert.completed === AlertStatus.COMPLETED,
+              _version: alert._version
+            };
+
+            pendingAlerts.push(currentAlert);
+            return alert;
+          });
           // Adds pending alerts to facts to be retrieved by UXSA
           agentAPI.addFact(
             new Belief(
               BeliefKeys.CLINICIAN,
               ClinicianAttributes.ALERTS,
-              results
+              pendingAlerts
             ),
             false
           );
-          await Storage.setMultipleAlerts(results);
+          await Storage.setMultipleAlerts(pendingAlerts);
         }
       } else {
         // Device is offline
-        const localPendingAlerts = await Storage.getRiskOrStatusAlerts(
-          undefined,
-          AlertStatus.PENDING
-        );
+        const localPendingAlerts = await Storage.getPendingAlerts();
         if (localPendingAlerts) {
           agentAPI.addFact(
             new Belief(
