@@ -72,6 +72,7 @@ const styles = ScaledSheet.create({
     justifyContent: "center",
     borderRadius: "5@ms",
     paddingVertical: "3@ms",
+    paddingHorizontal: "6@ms",
     marginHorizontal: "6@ms"
   },
   textStyle: {

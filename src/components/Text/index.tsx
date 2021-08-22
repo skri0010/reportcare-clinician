@@ -6,7 +6,7 @@ export { MainTitle } from "./MainTitle";
 
 export type RNTextStyle = StyleProp<TextStyle>; // Default text style props
 
-interface TextProps {
+export interface TextProps {
   text: string;
   style?: RNTextStyle;
   translate?: boolean; // translates text by default (@see BaseText)

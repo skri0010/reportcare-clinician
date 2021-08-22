@@ -179,7 +179,11 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
       >
         <AdaptiveTwoScreenWrapper
           // Left side: Patients list
-          LeftComponent={<PatientsList />}
+          LeftComponent={
+            <PatientsList
+              displayPatientId={patientDetails?.patientInfo.patientID}
+            />
+          }
           // Right side: Patient details
           RightComponent={
             <View

@@ -7,7 +7,7 @@ import { mockPatients } from "mock/mockPatients";
 import { PatientRequestRow } from "components/rowComponents/PatientRows/PatientRequestRow";
 import { H4, H6 } from "components/text";
 import { CardWrapper } from "./CardWrapper";
-import { FloatingBottomButton } from "components/buttons/FloatingShowMoreButton";
+import { FloatingBottomButton } from "components/buttons/FloatingBottomButton";
 import i18n from "util/language/i18n";
 
 interface RequestsByMariaCardProps {

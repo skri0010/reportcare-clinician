@@ -39,7 +39,11 @@ export const getDrawerScreenOptions: (input: {
   colors: ColorScheme;
   fonts: FontScheme;
   drawerWidth?: number;
-}) => DrawerNavigationOptions = ({ colors, fonts, drawerWidth = ms(60) }) => {
+}) => DrawerNavigationOptions = ({
+  colors,
+  fonts,
+  drawerWidth = ms(isMobile ? 80 : 60) // Larger drawer width for mobile, smaller drawer width for desktop
+}) => {
   const headerHeight = ms(40);
   const headerStyle = getMainScreenHeaderStyle(colors, headerHeight);
   const headerTitleStyle = getMainScreenHeaderTitleStyle(colors, fonts);
