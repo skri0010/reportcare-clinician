@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import React, { FC } from "react";
 import { ViewTodoScreen } from "web/screens/Todo/stack/ViewTodoScreen";
 import { EditTodoScreen } from "web/screens/Todo/stack/EditTodoScreen";
@@ -9,22 +10,27 @@ import {
 } from "web/navigation";
 import { LocalTodo } from "rc_agents/model";
 import i18n from "util/language/i18n";
-import { ms } from "react-native-size-matters";
-import { TodoScreenNavigation } from "web/navigation/types/MainScreenProps";
 import { onDonePress } from "web/screens/Todo/tabs/TodoCurrentTab";
 import { onUndoPress } from "web/screens/Todo/tabs/TodoCompletedTab";
+import { TodoDetailsStackProps } from "../types";
+import { getStackOptions } from "util/getStyles";
+import { RootState, select } from "util/useRedux";
 
 const Stack = createStackNavigator<TodoDetailsStackParamList>();
-
 interface TodoDetailsNavigationStackProps {
   todo: LocalTodo;
-  navigation: TodoScreenNavigation;
+  selectedScreen?: TodoDetailsStackScreenName;
 }
 
 export const TodoDetailsStackNavigator: FC<TodoDetailsNavigationStackProps> = ({
   todo,
-  navigation
+  selectedScreen: selectedTab
 }) => {
+  const { colors, fonts } = select((state: RootState) => ({
+    colors: state.settings.colors,
+    fonts: state.settings.fonts
+  }));
+
   const onButtonPress = () => {
     if (todo.completed) {
       onUndoPress(todo);
@@ -33,46 +39,45 @@ export const TodoDetailsStackNavigator: FC<TodoDetailsNavigationStackProps> = ({
     }
   };
 
+  // Type check params list. Required because initialParams is insufficient due to Partial<>
+  // Remove eslint check if needed
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const initialParamsList: TodoDetailsStackParamList = {
+    [TodoDetailsStackScreenName.VIEW_TODO]: undefined,
+    [TodoDetailsStackScreenName.EDIT_TODO]: undefined
+  };
+
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      initialRouteName={selectedTab || TodoDetailsStackScreenName.VIEW_TODO}
+      screenOptions={getStackOptions({ colors: colors, fonts: fonts })}
+    >
       {/* View todo screen */}
       <Stack.Screen
         name={TodoDetailsStackScreenName.VIEW_TODO}
-        component={ViewTodoScreen}
-        initialParams={{ todo: todo, parentNavigation: navigation }}
         options={() => ({
           title: i18n.t("Todo.ViewTodo"),
-          headerStyle: {
-            height: ms(45)
-          },
-          headerTitleStyle: {
-            fontWeight: "bold",
-            fontSize: ms(20),
-            paddingLeft: ms(15),
-            minWidth: ms(250)
-          },
           headerRight: () => (
             // Mark as done button
             <MarkAsDoneButton onPress={onButtonPress} todo={todo} />
           )
         })}
-      />
+      >
+        {(props: TodoDetailsStackProps.ViewTodoProps) => (
+          <ViewTodoScreen {...props} todo={todo} />
+        )}
+      </Stack.Screen>
       {/* Edit todo screen */}
       <Stack.Screen
         name={TodoDetailsStackScreenName.EDIT_TODO}
-        component={EditTodoScreen}
-        initialParams={{ todo: todo }}
         options={{
-          title: i18n.t("Todo.EditTodo"),
-          headerStyle: {
-            height: ms(45)
-          },
-          headerTitleStyle: {
-            fontWeight: "bold",
-            fontSize: ms(20)
-          }
+          title: i18n.t("Todo.EditTodo")
         }}
-      />
+      >
+        {(props: TodoDetailsStackProps.EditTodoProps) => (
+          <EditTodoScreen {...props} todo={todo} />
+        )}
+      </Stack.Screen>
     </Stack.Navigator>
   );
 };

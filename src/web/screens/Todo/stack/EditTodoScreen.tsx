@@ -22,8 +22,12 @@ import {
 } from "ic-redux/actions/agents/actionCreator";
 import { AgentTrigger } from "rc_agents/trigger";
 
-export const EditTodoScreen: FC<TodoDetailsStackProps.EditTodoProps> = ({
-  route,
+interface EditTodoScreenProps extends TodoDetailsStackProps.EditTodoProps {
+  todo: LocalTodo;
+}
+
+export const EditTodoScreen: FC<EditTodoScreenProps> = ({
+  todo,
   navigation
 }) => {
   const { colors, updatedTodo } = select((state: RootState) => ({
@@ -36,7 +40,6 @@ export const EditTodoScreen: FC<TodoDetailsStackProps.EditTodoProps> = ({
     borderColor: colors.primaryBorderColor
   };
 
-  const { todo } = route.params;
   const dispatch = useDispatch();
 
   const [titleInput, setTitleInput] = useState<string>(todo.title); // Title input
@@ -59,9 +62,7 @@ export const EditTodoScreen: FC<TodoDetailsStackProps.EditTodoProps> = ({
 
   useEffect(() => {
     if (updatedTodo) {
-      navigation.navigate(TodoDetailsStackScreenName.VIEW_TODO, {
-        todo: updatedTodo
-      });
+      navigation.navigate(TodoDetailsStackScreenName.VIEW_TODO);
       dispatch(setUpdatedTodo(undefined));
     }
   }, [dispatch, navigation, updatedTodo]);

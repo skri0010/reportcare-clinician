@@ -13,6 +13,7 @@ import { TodoListTabsProps } from "../types";
 const Tab = createMaterialTopTabNavigator<TodoListTabParamList>();
 
 interface TodoListNavigationStackProps {
+  selectedTab?: TodoListTabName;
   tabPressCurrent: () => void; // callback when the current tab is pressed (allow add button visibility)
   tabPressCompleted: () => void; // callback when the completed tab is pressed (turns off add button visibility)
   setTodoSelected: (item: LocalTodo) => void; // set the todo details to be shown
@@ -23,6 +24,7 @@ export interface TodoRowTabProps {
 }
 
 export const TodoListTabNavigator: FC<TodoListNavigationStackProps> = ({
+  selectedTab,
   tabPressCurrent,
   tabPressCompleted,
   setTodoSelected
@@ -42,6 +44,7 @@ export const TodoListTabNavigator: FC<TodoListNavigationStackProps> = ({
 
   return (
     <Tab.Navigator
+      initialRouteName={selectedTab || TodoListTabName.CURRENT}
       screenOptions={getTopTabBarOptions({ colors: colors, fonts: fonts })}
     >
       {/* Current todos list */}

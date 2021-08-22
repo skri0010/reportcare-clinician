@@ -1,10 +1,11 @@
 import { ViewStyle, StyleProp, TextStyle } from "react-native";
 import { ColorScheme } from "models/ColorScheme";
 import { FontScheme } from "models/FontScheme";
-import { ms } from "react-native-size-matters";
 import { DrawerNavigationOptions } from "@react-navigation/drawer";
 import { MaterialTopTabNavigationOptions } from "@react-navigation/material-top-tabs";
 import { BottomTabNavigationOptions } from "@react-navigation/bottom-tabs";
+import { StackNavigationOptions } from "@react-navigation/stack";
+import { ms } from "react-native-size-matters";
 
 // JH-TODO-NAV: Remove export
 // Style for main screen header
@@ -86,4 +87,21 @@ export const getBottomTabBarOptions: (input: {
   fonts: FontScheme;
 }) => BottomTabNavigationOptions = ({ colors, fonts }) => {
   return {};
+};
+
+// Props for stack options
+export const getStackOptions: (input: {
+  colors: ColorScheme;
+  fonts: FontScheme;
+}) => StackNavigationOptions = ({ colors, fonts }) => {
+  return {
+    headerStyle: {
+      height: fonts.h1Size + ms(25)
+    },
+    headerTitleStyle: {
+      fontWeight: "bold",
+      fontSize: fonts.h1Size,
+      paddingLeft: ms(15)
+    }
+  };
 };

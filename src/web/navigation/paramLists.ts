@@ -43,9 +43,6 @@ export type TodoListTabParamList = {
 // Todo details parameters
 
 export type TodoDetailsStackParamList = {
-  [TodoDetailsStackScreenName.VIEW_TODO]: {
-    todo: LocalTodo;
-    parentNavigation?: TodoScreenNavigation;
-  };
-  [TodoDetailsStackScreenName.EDIT_TODO]: { todo: LocalTodo };
+  [TodoDetailsStackScreenName.VIEW_TODO]: undefined;
+  [TodoDetailsStackScreenName.EDIT_TODO]: undefined;
 };

@@ -69,7 +69,7 @@ export const TodoScreen: FC<MainScreenProps[ScreenName.TODO]> = ({
   const test: LocalTodo = {
     id: "",
     title: "",
-    patientName: "",
+    patientName: "testsiuloong",
     notes: "",
     completed: false,
     alertId: "",
@@ -140,6 +140,7 @@ export const TodoScreen: FC<MainScreenProps[ScreenName.TODO]> = ({
       >
         {/* Left side: List of todos */}
         <TodosList
+          selectedTab={selectedListTab}
           tabPressCurrent={() => {
             setAddButton(checkNeedAddButton(TodoListTabName.CURRENT));
           }}
@@ -163,7 +164,7 @@ export const TodoScreen: FC<MainScreenProps[ScreenName.TODO]> = ({
               {/* Todo details */}
               <TodoDetailsStackNavigator
                 todo={todoSelected}
-                navigation={navigation}
+                selectedScreen={selectedStackScreen}
               />
             </NavigationContainer>
           ) : (
