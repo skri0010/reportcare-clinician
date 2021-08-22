@@ -6,6 +6,7 @@ import { MaterialTopTabNavigationOptions } from "@react-navigation/material-top-
 import { BottomTabNavigationOptions } from "@react-navigation/bottom-tabs";
 import { StackNavigationOptions } from "@react-navigation/stack";
 import { ms } from "react-native-size-matters";
+import { isMobile } from "./device";
 
 // JH-TODO-NAV: Remove export
 // Style for main screen header
@@ -44,7 +45,8 @@ export const getDrawerScreenOptions: (input: {
   const headerTitleStyle = getMainScreenHeaderTitleStyle(colors, fonts);
 
   return {
-    headerLeft: () => null,
+    ...(isMobile ? {} : { headerLeft: () => null }), // Show drawer icon for mobile, hide for desktop
+    headerTintColor: colors.primaryContrastTextColor, // Change color of header icons (drawer)
     headerStyle: headerStyle,
     headerTitleStyle: headerTitleStyle,
     headerTitleAlign: "center",
@@ -64,7 +66,7 @@ export const getDrawerScreenOptions: (input: {
     drawerContentContainerStyle: { paddingTop: headerHeight },
     drawerActiveTintColor: colors.selectedIconColor,
     drawerInactiveTintColor: colors.primaryContrastIconColor,
-    drawerType: "permanent"
+    drawerType: isMobile ? "slide" : "permanent" // Slide for mobile, permanent for desktop
   };
 };
 

@@ -17,6 +17,7 @@ import { getDrawerScreenOptions } from "util/getStyles";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { ms } from "react-native-size-matters";
 import i18n from "util/language/i18n";
+import { isMobile } from "util/device";
 
 interface DrawerNavigationProps {
   signOut: () => void;
@@ -85,7 +86,7 @@ export const MainDrawerNavigator: FC<DrawerNavigationProps> = ({ signOut }) => {
     <Drawer.Navigator
       initialRouteName={ScreenName.HOME}
       screenOptions={buildScreenOptions}
-      defaultStatus="open"
+      defaultStatus={isMobile ? "closed" : "open"} // Hide at start for mobile, show at start for desktop
     >
       <Drawer.Screen
         name={ScreenName.HOME}
