@@ -27,6 +27,7 @@ import {
   setPendingAlerts
 } from "ic-redux/actions/agents/actionCreator";
 import { mapColorCodeToRiskLevel } from "./RetrievePendingAlertCount";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // LS-TODO: To be tested with actual Alerts.
 // NOTE: This is originally MHA's action frame.
@@ -51,6 +52,8 @@ class RetrieveAlerts extends Activity {
     await super.doActivity(agent, [rule2]);
 
     try {
+      // clear storage
+      // await AsyncStorage.clear();
       const facts = agentAPI.getFacts();
 
       // Gets alert status and risk level from facts

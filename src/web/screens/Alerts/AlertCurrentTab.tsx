@@ -16,13 +16,13 @@ export interface AlertRowTabProps {
   setAlertSelected: (item: AlertInfo) => void;
 }
 export const AlertCurrentTab: FC<AlertRowTabProps> = ({ setAlertSelected }) => {
-  const { colors, pendingAlerts, fetchingPendingAlerts } = select(
-    (state: RootState) => ({
+  const { colors, pendingAlerts, fetchingPendingAlerts, alertRiskFilters } =
+    select((state: RootState) => ({
       colors: state.settings.colors,
       pendingAlerts: state.agents.pendingAlerts,
-      fetchingPendingAlerts: state.agents.fetchingPendingAlerts
-    })
-  );
+      fetchingPendingAlerts: state.agents.fetchingPendingAlerts,
+      alertRiskFilters: state.agents.alertRiskFilters
+    }));
 
   const [noPendingAlertsNotice, setNoPendingAlertsNotice] =
     useState<string>("");
@@ -32,7 +32,7 @@ export const AlertCurrentTab: FC<AlertRowTabProps> = ({ setAlertSelected }) => {
    */
   useEffect(() => {
     AgentTrigger.triggerRetriveAlerts(AlertStatus.PENDING);
-  }, []);
+  }, [alertRiskFilters]);
 
   // Prepare text notice to be displayed after fetching patients
   useEffect(() => {

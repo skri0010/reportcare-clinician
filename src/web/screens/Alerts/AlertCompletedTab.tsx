@@ -84,6 +84,7 @@ export const AlertCompletedTab: FC<AlertRowTabProps> = ({
               onCardPress={() => onCardPress(item)}
             />
           )}
+          keyExtractor={(item) => item.id}
         />
       ) : (
         <View style={styles.noAlertsContainer}>
