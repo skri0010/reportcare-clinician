@@ -2,7 +2,7 @@ import React, { FC, useState } from "react";
 import { RootState, select } from "util/useRedux";
 import { ScaledSheet } from "react-native-size-matters";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { H3 } from "components/Text/index";
+import { H3 } from "components/Text";
 import { CardWrapper } from "web/screens/Home/CardWrapper";
 import { mockMedicalRecord, MedicalRecords } from "mock/mockPatientDetails";
 import { FlatList, TouchableOpacity, View } from "react-native";

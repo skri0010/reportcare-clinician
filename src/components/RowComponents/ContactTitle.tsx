@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { View } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { RootState, select } from "util/useRedux";
-import { H2 } from "components/Text/index";
+import { H2 } from "components/Text";
 import { PeopleAvatar } from "components/RowComponents/PeopleAvatar";
 
 interface ContactTitleProps {

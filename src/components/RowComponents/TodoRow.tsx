@@ -3,7 +3,7 @@ import { RootState, select } from "util/useRedux";
 import { RiskLevel, getRiskLevelColor } from "models/RiskLevel";
 import { View, TouchableOpacity } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
-import { H5, H6 } from "components/Text/index";
+import { H5, H6 } from "components/Text";
 import { LocalTodo } from "rc_agents/model";
 import { RowButton } from "components/Buttons/RowButton";
 

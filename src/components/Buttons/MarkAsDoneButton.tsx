@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { View, TouchableOpacity } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import i18n from "util/language/i18n";
-import { H5 } from "components/Text/index";
+import { H5 } from "components/Text";
 import { RootState, select } from "util/useRedux";
 import { LocalTodo } from "rc_agents/model";
 

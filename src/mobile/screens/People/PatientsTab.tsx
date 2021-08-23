@@ -18,7 +18,7 @@ import agentAPI from "rc_agents/framework/AgentAPI";
 import agentUXSA from "rc_agents/agents/user-specific-assistant/UXSA";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { setProcedureOngoing } from "ic-redux/actions/agents/actionCreator";
-import { LoadingIndicator } from "components/indicators/LoadingIndicator";
+import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { useNetInfo } from "@react-native-community/netinfo";
 
 export const PatientsTab: FC = () => {

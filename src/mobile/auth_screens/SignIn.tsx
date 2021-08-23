@@ -16,7 +16,7 @@ import agentAPI from "rc_agents/framework/AgentAPI";
 import i18n from "util/language/i18n";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useToast } from "react-native-toast-notifications";
-import { LoadingIndicator } from "components/indicators/LoadingIndicator";
+import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import agentAPS from "rc_agents/agents/app-configuration-assistant/APS";
 import Belief from "rc_agents/framework/base/Belief";
 import {

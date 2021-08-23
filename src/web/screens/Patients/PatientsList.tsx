@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { FlatList, View } from "react-native";
-import { LoadingIndicator } from "components/indicators/LoadingIndicator";
+import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { PatientDetailsRow } from "components/RowComponents/PatientRows/PatientDetailsRow";
 import { AgentTrigger } from "rc_agents/trigger";
@@ -8,7 +8,7 @@ import i18n from "util/language/i18n";
 import { RootState, select } from "util/useRedux";
 import { RiskFilterPillList } from "components/Buttons/RiskFilterPillList";
 import { SearchBarComponent } from "components/Bars/SearchBarComponent";
-import { NoItemsTextIndicator } from "components/indicators/NoItemsTextIndicator";
+import { NoItemsTextIndicator } from "components/Indicators/NoItemsTextIndicator";
 
 interface PatientsListScreen {
   displayPatientId?: string;

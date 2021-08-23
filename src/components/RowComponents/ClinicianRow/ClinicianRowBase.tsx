@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { View, TouchableOpacity } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { RootState, select } from "util/useRedux";
-import { H5, H6 } from "components/Text/index";
+import { H5, H6 } from "components/Text";
 import { PeopleAvatar } from "../PeopleAvatar";
 
 interface SubtitleItemProps {

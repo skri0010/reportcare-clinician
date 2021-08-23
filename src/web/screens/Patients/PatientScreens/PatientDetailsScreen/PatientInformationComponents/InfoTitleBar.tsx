@@ -3,7 +3,7 @@ import { ScaledSheet } from "react-native-size-matters";
 import { View } from "react-native";
 import { RootState, select } from "util/useRedux";
 import i18n from "util/language/i18n";
-import { H3 } from "components/Text/index";
+import { H3 } from "components/Text";
 
 interface InfoTitleBarProps {
   title: string;
