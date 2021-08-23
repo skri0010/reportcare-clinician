@@ -223,6 +223,7 @@ export const setAlertInfo = async (alertInfo: AlertInfo): Promise<void> => {
   } else if (!localData[alertInfo.patientId]) {
     localData[alertInfo.patientId] = {};
   }
+  localData[alertInfo.patientId] = {};
   localData[alertInfo.patientId][alertInfo.id] = alertInfo;
 
   await setAlertInfos(localData);

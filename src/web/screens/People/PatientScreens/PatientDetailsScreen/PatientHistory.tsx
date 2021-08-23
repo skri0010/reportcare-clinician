@@ -18,7 +18,7 @@ export const PatientHistory: FC<
   // Query history data by patientId here or pass it into component for query
 
   useEffect(() => {
-    AgentTrigger.triggerGetHistoricalAlerts(patient.id);
+    AgentTrigger.triggerGetHistoricalAlerts(patient.patientID);
   });
 
   return (

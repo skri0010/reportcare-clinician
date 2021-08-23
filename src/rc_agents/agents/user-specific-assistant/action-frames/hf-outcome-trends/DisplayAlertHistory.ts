@@ -44,9 +44,6 @@ class DisplayAlertHistory extends Activity {
       ];
 
     if (alertHistory) {
-      // Store the alert history into redux
-      store.dispatch(setAlertHistory(alertHistory));
-
       // Remove the alert history from the facts
       agentAPI.addFact(
         new Belief(BeliefKeys.PATIENT, PatientAttributes.ALERT_HISTORY, null),
@@ -64,6 +61,9 @@ class DisplayAlertHistory extends Activity {
         true
       );
     }
+
+    // Store the alert history into redux
+    store.dispatch(setAlertHistory(alertHistory));
   }
 }
 
