@@ -21,11 +21,11 @@ interface TodosCardProps {
 }
 
 export const TodosCard: FC<TodosCardProps> = ({ maxHeight, navigation }) => {
-  const { colors, pendingTodos, fetchingPendingTodos } = select(
+  const { colors, pendingTodos, fetchingTodos } = select(
     (state: RootState) => ({
       colors: state.settings.colors,
       pendingTodos: state.agents.pendingTodos,
-      fetchingPendingTodos: state.agents.fetchingPendingTodos
+      fetchingTodos: state.agents.fetchingTodos
     })
   );
 
@@ -49,8 +49,6 @@ export const TodosCard: FC<TodosCardProps> = ({ maxHeight, navigation }) => {
       <View style={styles.titleContainer}>
         <H4 text={i18n.t("Home.Todos")} style={[styles.title, titleColor]} />
       </View>
-      {/* Loading indicator */}
-      {fetchingPendingTodos && <LoadingIndicator />}
       <View style={styles.listContainer}>
         <FlatList
           showsVerticalScrollIndicator={false}
@@ -90,6 +88,8 @@ export const TodosCard: FC<TodosCardProps> = ({ maxHeight, navigation }) => {
           keyExtractor={(item) => item.createdAt}
         />
       </View>
+      {/* Loading indicator */}
+      {fetchingTodos && <LoadingIndicator />}
     </CardWrapper>
   );
 };
