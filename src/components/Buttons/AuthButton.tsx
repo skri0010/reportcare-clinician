@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { TouchableOpacity, Platform, StyleProp, ViewStyle } from "react-native";
 import { RootState, select } from "util/useRedux";
 import { ScaledSheet, ms } from "react-native-size-matters";
-import { H3 } from "components/text/index";
+import { H3 } from "components/Text/index";
 
 interface AuthButtonProps {
   inputValid: boolean;

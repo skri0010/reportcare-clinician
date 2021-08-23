@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { View, TouchableOpacity, ScrollView } from "react-native";
 import { RootState, select } from "util/useRedux";
-import { H3, H4 } from "components/text/index";
+import { H3, H4 } from "components/Text/index";
 import { ScaledSheet, ms } from "react-native-size-matters";
 import { MedicalRecords } from "mock/mockPatientDetails";
 import i18n from "util/language/i18n";

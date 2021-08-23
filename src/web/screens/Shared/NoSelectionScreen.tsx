@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { View } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
-import { H4 } from "components/text";
+import { H4 } from "components/Text";
 import { RootState, select } from "util/useRedux";
 import { ScreenName } from "web/navigation";
 import Icon from "react-native-vector-icons/MaterialIcons";

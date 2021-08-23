@@ -10,7 +10,7 @@ import { ChatScreen } from "web/screens/Chat/ChatScreen";
 import { TodoScreen } from "web/screens/Todo/TodoScreen";
 import { MariaScreen } from "web/screens/Maria/MariaScreen";
 import { SettingsScreen } from "web/screens/Setting/SettingsScreen";
-import { MainScreenTabButton } from "components/buttons/MainScreenTabButton";
+import { MainScreenTabButton } from "components/Buttons/MainScreenTabButton";
 import { ScreenName, MainScreenParamList } from "web/navigation";
 import { select, RootState } from "util/useRedux";
 import { getDrawerScreenOptions } from "util/getStyles";

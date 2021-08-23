@@ -16,9 +16,9 @@ import {
 import i18n from "util/language/i18n";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useToast } from "react-native-toast-notifications";
-import { LoadingIndicator } from "components/indicators/LoadingIndicator";
-import { AuthButton } from "components/buttons/AuthButton";
-import { TextField } from "components/inputComponents/TextField";
+import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
+import { AuthButton } from "components/Buttons/AuthButton";
+import { TextField } from "components/InputComponents/TextField";
 import { Storage } from "rc_agents/storage";
 
 export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({

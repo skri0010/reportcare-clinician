@@ -7,7 +7,7 @@ import {
   ViewStyle
 } from "react-native";
 import { RootState, select } from "util/useRedux";
-import { H3 } from "components/text/index";
+import { H3 } from "components/Text/index";
 import { ScaledSheet, ms } from "react-native-size-matters";
 import i18n from "util/language/i18n";
 

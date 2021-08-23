@@ -2,12 +2,12 @@ import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
 import { View, FlatList, TextStyle } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
-import { ItemSeparator } from "components/rowComponents/ItemSeparator";
+import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { mockPatients } from "mock/mockPatients";
-import { PatientRequestRow } from "components/rowComponents/PatientRows/PatientRequestRow";
-import { H4, H6 } from "components/text";
+import { PatientRequestRow } from "components/RowComponents/PatientRows/PatientRequestRow";
+import { H4, H6 } from "components/Text";
 import { CardWrapper } from "./CardWrapper";
-import { FloatingShowMoreButton } from "components/buttons/FloatingShowMoreButton";
+import { FloatingShowMoreButton } from "components/Buttons/FloatingShowMoreButton";
 import i18n from "util/language/i18n";
 
 interface RequestsByMariaCardProps {

@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
 import { View } from "react-native";
 import { ms } from "react-native-size-matters";
-import { H4 } from "components/text/index";
+import { H4 } from "components/Text/index";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { MedicationInfo } from "aws/API";
 
