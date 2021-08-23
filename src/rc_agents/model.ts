@@ -38,6 +38,7 @@ export enum PatientAssignmentStatus {
 export enum AlertStatus {
   PENDING = "PENDING",
   COMPLETED = "COMPLETED",
+  ALL = "ALL",
   NONE = "NONE"
 }
 

@@ -23,13 +23,11 @@ import i18n from "util/language/i18n";
 interface RiskFilterPillListProps {
   patientScreen?: boolean;
   alertScreen?: boolean;
-  pendingAlert?: boolean;
 }
 
 export const RiskFilterPillList: FC<RiskFilterPillListProps> = ({
   patientScreen = false,
-  alertScreen = false,
-  pendingAlert = false
+  alertScreen = false
 }) => {
   const { colors, riskFilters } = select((state: RootState) => ({
     colors: state.settings.colors,
@@ -66,29 +64,18 @@ export const RiskFilterPillList: FC<RiskFilterPillListProps> = ({
         )
       );
     } else {
-      // Trigger agents to get filtered alerts
-      // Here need to trigger based on page of alert
+      // Trigger agents to set filtered alerts
       store.dispatch(setAlertRiskFilters(tempRiskFilters));
-      // add alert status to be used by agents
-      if (pendingAlert) {
-        agentAPI.addFact(
-          new Belief(
-            BeliefKeys.CLINICIAN,
-            ClinicianAttributes.ALERT_STATUS,
-            AlertStatus.PENDING
-          ),
-          false
-        );
-      } else {
-        agentAPI.addFact(
-          new Belief(
-            BeliefKeys.CLINICIAN,
-            ClinicianAttributes.ALERT_STATUS,
-            AlertStatus.COMPLETED
-          ),
-          false
-        );
-      }
+      // Alert status is all to trigger filter for both pending and completed
+      // to be used by agents
+      agentAPI.addFact(
+        new Belief(
+          BeliefKeys.CLINICIAN,
+          ClinicianAttributes.ALERT_STATUS,
+          AlertStatus.ALL
+        ),
+        false
+      );
 
       // Trigger DTA to retrieve alerts
       agentDTA.addBelief(

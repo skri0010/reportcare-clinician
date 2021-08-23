@@ -19,7 +19,8 @@ import {
   setPendingAlerts,
   setCompletedAlerts,
   setFetchingPendingAlerts,
-  setFetchingCompletedAlerts
+  setFetchingCompletedAlerts,
+  setFetchingAlerts
 } from "ic-redux/actions/agents/actionCreator";
 import { AlertInfo, AlertStatus } from "rc_agents/model";
 import { RiskLevel } from "models/RiskLevel";
@@ -48,8 +49,8 @@ class DisplayAlerts extends Activity {
       agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[
         ClinicianAttributes.ALERT_STATUS
       ];
-
-    const filteredAlerts: AlertInfo[] = [];
+    const filteredPendingAlerts: AlertInfo[] = [];
+    const filteredCompletedAlerts: AlertInfo[] = [];
 
     try {
       // Case where alerts are retrieved
@@ -67,50 +68,29 @@ class DisplayAlerts extends Activity {
         });
 
         // Filter patients if needed
-        if (shouldFilter && alertStatus === AlertStatus.PENDING) {
-          // case where needs filtering and getting pending
+        if (shouldFilter) {
+          // case where needs filtering
           alerts.forEach((alert) => {
             // We can assert RiskLevel in this condition
-            // eslint-disable-next-line no-console
-            console.log("ran here 1");
             if (
               alertRiskFilters[alert.riskLevel as RiskLevel] &&
               alert.completed === false
             ) {
-              filteredAlerts.push(alert);
-            }
-          });
-        } else if (shouldFilter && alertStatus === AlertStatus.COMPLETED) {
-          // case where needs filtering and getting completed
-          // eslint-disable-next-line no-console
-          console.log("ran here 2");
-          alerts.forEach((alert) => {
-            // We can assert RiskLevel in this condition
-            if (
+              filteredPendingAlerts.push(alert);
+            } else if (
               alertRiskFilters[alert.riskLevel as RiskLevel] &&
               alert.completed === true
             ) {
-              filteredAlerts.push(alert);
+              filteredCompletedAlerts.push(alert);
             }
           });
-        } else if (alertStatus === AlertStatus.PENDING) {
-          // eslint-disable-next-line no-console
-          console.log("ran here 3");
-          // case where no filtering is needed and pending required
+        } else {
+          // case where no filter is required
           alerts.forEach((alert) => {
-            // We can assert RiskLevel in this condition
-            if (alert.completed === false) {
-              filteredAlerts.push(alert);
-            }
-          });
-        } else if (alertStatus === AlertStatus.COMPLETED) {
-          // eslint-disable-next-line no-console
-          console.log("ran here 4");
-          // case where no filtering is needed and completing requried
-          alerts.forEach((alert) => {
-            // We can assert RiskLevel in this condition
             if (alert.completed === true) {
-              filteredAlerts.push(alert);
+              filteredCompletedAlerts.push(alert);
+            } else if (alert.completed === false) {
+              filteredPendingAlerts.push(alert);
             }
           });
         }
@@ -129,9 +109,6 @@ class DisplayAlerts extends Activity {
           ),
           false
         );
-      } else {
-        // eslint-disable-next-line no-console
-        console.log("NOTHING BRO");
       }
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -140,16 +117,17 @@ class DisplayAlerts extends Activity {
 
     // Dispatch filtered list based on status
     if (alertStatus === AlertStatus.PENDING) {
-      store.dispatch(setPendingAlerts(filteredAlerts));
-    } else {
-      store.dispatch(setCompletedAlerts(filteredAlerts));
-    }
-
-    // Dispatch to indicate process has ended
-    if (alertStatus === AlertStatus.PENDING) {
+      store.dispatch(setPendingAlerts(filteredPendingAlerts));
+      // Dispatch to indicate process has ended
       store.dispatch(setFetchingPendingAlerts(false));
-    } else {
+    } else if (alertStatus === AlertStatus.COMPLETED) {
+      store.dispatch(setCompletedAlerts(filteredCompletedAlerts));
+      // Dispatch to indicate process has ended
       store.dispatch(setFetchingCompletedAlerts(false));
+    } else if (alertStatus === AlertStatus.ALL) {
+      store.dispatch(setPendingAlerts(filteredPendingAlerts));
+      store.dispatch(setCompletedAlerts(filteredCompletedAlerts));
+      store.dispatch(setFetchingAlerts(false));
     }
 
     // Stops the procedure

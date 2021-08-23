@@ -8,7 +8,6 @@ import {
 import { actionNames } from "ic-redux/actions/actionNames";
 import { createAction } from "typesafe-actions";
 import { PatientAssignment, PatientInfo } from "aws/API";
-import { RiskFilterPillProps } from "web/RiskFilterPill";
 
 export const setProcedureOngoing = createAction(
   actionNames.SET_PROCEDURE_ONGOING,
@@ -77,6 +76,13 @@ export const setPendingAlertCount = createAction(
   actionNames.SET_PENDING_ALERT_COUNT,
   (pendingAlertCount: PendingAlertCount) => ({
     pendingAlertCount: pendingAlertCount
+  })
+)();
+
+export const setFetchingAlerts = createAction(
+  actionNames.SET_FETCHING_ALERTS,
+  (fetchingAlerts: boolean) => ({
+    fetchingAlerts: fetchingAlerts
   })
 )();
 

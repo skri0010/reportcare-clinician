@@ -5,38 +5,32 @@ import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { RootState, select } from "util/useRedux";
 import { AlertRow } from "components/RowComponents/AlertRow";
 import { RiskFilterPillList } from "web/RiskFilterPillList";
-import { AlertInfo, AlertStatus } from "rc_agents/model";
+import { AlertInfo } from "rc_agents/model";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
 import { ScaledSheet } from "react-native-size-matters";
 import { H5 } from "components/Text";
 import i18n from "util/language/i18n";
-import { AgentTrigger } from "rc_agents/trigger";
 
 export interface AlertRowTabProps {
   setAlertSelected: (item: AlertInfo) => void;
 }
+
 export const AlertCurrentTab: FC<AlertRowTabProps> = ({ setAlertSelected }) => {
-  const { colors, pendingAlerts, fetchingPendingAlerts, alertRiskFilters } =
+  const { colors, pendingAlerts, fetchingPendingAlerts, fetchingAlerts } =
     select((state: RootState) => ({
       colors: state.settings.colors,
       pendingAlerts: state.agents.pendingAlerts,
       fetchingPendingAlerts: state.agents.fetchingPendingAlerts,
-      alertRiskFilters: state.agents.alertRiskFilters
+      alertRiskFilters: state.agents.alertRiskFilters,
+      fetchingAlerts: state.agents.fetchingAlerts
     }));
 
   const [noPendingAlertsNotice, setNoPendingAlertsNotice] =
     useState<string>("");
 
-  /**
-   * Trigger agent to fetch pending alerts on initial load
-   */
-  useEffect(() => {
-    AgentTrigger.triggerRetriveAlerts(AlertStatus.PENDING);
-  }, [alertRiskFilters]);
-
   // Prepare text notice to be displayed after fetching patients
   useEffect(() => {
-    if (fetchingPendingAlerts) {
+    if (fetchingPendingAlerts || fetchingAlerts) {
       if (pendingAlerts) {
         // No patients found
         setNoPendingAlertsNotice(i18n.t("Alert.AlertList.NoPendingAlerts"));
@@ -47,7 +41,7 @@ export const AlertCurrentTab: FC<AlertRowTabProps> = ({ setAlertSelected }) => {
         );
       }
     }
-  }, [pendingAlerts, fetchingPendingAlerts]);
+  }, [pendingAlerts, fetchingPendingAlerts, fetchingAlerts]);
 
   function onCardPress(item: AlertInfo) {
     setAlertSelected(item);
@@ -67,10 +61,10 @@ export const AlertCurrentTab: FC<AlertRowTabProps> = ({ setAlertSelected }) => {
       />
 
       {/* Filter for Pending Alerts */}
-      <RiskFilterPillList alertScreen pendingAlert />
+      <RiskFilterPillList alertScreen />
 
       {/* Show no alerts message if no alert found */}
-      {fetchingPendingAlerts ? (
+      {fetchingPendingAlerts || fetchingAlerts ? (
         // Show loading indicator if fetching patients
         <LoadingIndicator flex={1} />
       ) : pendingAlerts && pendingAlerts.length > 0 ? (

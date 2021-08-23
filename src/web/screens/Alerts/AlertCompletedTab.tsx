@@ -5,39 +5,30 @@ import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { RootState, select } from "util/useRedux";
 import { AlertRow } from "components/RowComponents/AlertRow";
 import { AlertRowTabProps } from "./AlertCurrentTab";
-import { ScreenWrapper } from "../ScreenWrapper";
 import { RiskFilterPillList } from "web/RiskFilterPillList";
-import { AlertInfo, AlertStatus } from "rc_agents/model";
+import { AlertInfo } from "rc_agents/model";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
 import { H5 } from "components/Text";
 import { ScaledSheet } from "react-native-size-matters";
 import i18n from "util/language/i18n";
-import { AgentTrigger } from "rc_agents/trigger";
 
 export const AlertCompletedTab: FC<AlertRowTabProps> = ({
   setAlertSelected
 }) => {
-  const { colors, completedAlerts, fetchingCompletedAlerts } = select(
-    (state: RootState) => ({
+  const { colors, completedAlerts, fetchingCompletedAlerts, fetchingAlerts } =
+    select((state: RootState) => ({
       colors: state.settings.colors,
       completedAlerts: state.agents.completedAlerts,
-      fetchingCompletedAlerts: state.agents.fetchingCompletedAlerts
-    })
-  );
+      fetchingCompletedAlerts: state.agents.fetchingCompletedAlerts,
+      fetchingAlerts: state.agents.fetchingAlerts
+    }));
 
   const [noCompletedAlertsNotice, setNoCompletedAlertsNotice] =
     useState<string>("");
 
-  /**
-   * Trigger agent to fetch pending alerts on initial load
-   */
-  useEffect(() => {
-    // AgentTrigger.triggerRetriveAlerts(AlertStatus.COMPLETED);
-  }, []);
-
   // Prepare text notice to be displayed after fetching patients
   useEffect(() => {
-    if (fetchingCompletedAlerts) {
+    if (fetchingCompletedAlerts || fetchingAlerts) {
       if (completedAlerts) {
         // No patients found
         setNoCompletedAlertsNotice(i18n.t("Alert.AlertList.NoCompletedAlerts"));
@@ -48,14 +39,14 @@ export const AlertCompletedTab: FC<AlertRowTabProps> = ({
         );
       }
     }
-  }, [completedAlerts, fetchingCompletedAlerts]);
+  }, [completedAlerts, fetchingCompletedAlerts, fetchingAlerts]);
 
   function onCardPress(item: AlertInfo) {
     setAlertSelected(item);
   }
 
   return (
-    <ScreenWrapper style={{ backgroundColor: colors.primaryBackgroundColor }}>
+    <View style={{ flex: 1, backgroundColor: colors.primaryBackgroundColor }}>
       <SearchBarComponent
         onSearchClick={() => {
           null;
@@ -71,7 +62,7 @@ export const AlertCompletedTab: FC<AlertRowTabProps> = ({
       <RiskFilterPillList alertScreen />
 
       {/* Show loading if alerts is still being fetched */}
-      {fetchingCompletedAlerts ? (
+      {fetchingCompletedAlerts || fetchingAlerts ? (
         <LoadingIndicator flex={1} />
       ) : completedAlerts && completedAlerts.length > 0 ? (
         <FlatList
@@ -91,7 +82,7 @@ export const AlertCompletedTab: FC<AlertRowTabProps> = ({
           <H5 text={noCompletedAlertsNotice} style={styles.noAlertsText} />
         </View>
       )}
-    </ScreenWrapper>
+    </View>
   );
 };
 

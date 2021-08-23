@@ -18,7 +18,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { NoSelectionScreen } from "../Shared/NoSelectionScreen";
 import { AlertDetailsScreen } from "./AlertDetailsScreen";
 import { AgentTrigger } from "rc_agents/trigger";
-import { AlertInfo } from "rc_agents/model";
+import { AlertInfo, AlertStatus } from "rc_agents/model";
 import { RiskLevel } from "models/RiskLevel";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
 
@@ -37,13 +37,16 @@ export const AlertContext = createContext({
 });
 
 export const AlertScreen: FC<WithSideTabsProps[ScreenName.ALERTS]> = () => {
-  const { colors, fetchingPendingAlerts, fetchingCompletedAlerts } = select(
-    (state: RootState) => ({
-      colors: state.settings.colors,
-      fetchingPendingAlerts: state.agents.fetchingPendingAlerts,
-      fetchingCompletedAlerts: state.agents.fetchingCompletedAlerts
-    })
-  );
+  const { colors } = select((state: RootState) => ({
+    colors: state.settings.colors
+  }));
+
+  /**
+   * Trigger agent to fetch ALL alerts on initial load
+   */
+  useEffect(() => {
+    AgentTrigger.triggerRetriveAlerts(AlertStatus.ALL);
+  }, []);
 
   const [alertSelected, setAlertSelected] = useState<AlertInfo>({
     id: "",
