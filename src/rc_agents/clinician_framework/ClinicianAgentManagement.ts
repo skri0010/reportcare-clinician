@@ -7,12 +7,12 @@ import {
 import { AgentIDs, AppAttributes, BeliefKeys } from "./index";
 import { Storage } from "../storage";
 import AgentManagement from "agents-framework/management/AgentManagement";
-import ClinicianAgent from "./ClinicianAgent";
+import { ClinicianAgent } from "./ClinicianAgent";
 
 /**
  * Base class for management of active agents.
  */
-class ClinicianAgentManagement extends AgentManagement {
+export class ClinicianAgentManagement extends AgentManagement {
   /**
    * Retrieve saved state of facts from the database
    */
@@ -236,5 +236,3 @@ class ClinicianAgentManagement extends AgentManagement {
     }
   }
 }
-
-export default ClinicianAgentManagement;

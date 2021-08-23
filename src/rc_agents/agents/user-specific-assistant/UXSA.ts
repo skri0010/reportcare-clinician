@@ -10,8 +10,8 @@ import { af_DisplayPendingAlertCount } from "./action-frames/triage-alert-hf-cli
 import { af_DisplayAlertInfo } from "./action-frames/triage-alert-hf-clinic/DisplayAlertInfo";
 import { af_DisplayPatientsByFilter } from "./action-frames/hf-outcome-trends/DisplayPatientsByFilter";
 import { af_DisplayTodos } from "./action-frames/storing-data/DisplayTodos";
-import agentAPI from "rc_agents/clinician_framework/ClinicianAgentAPI";
-import ClinicianAgent from "rc_agents/clinician_framework/ClinicianAgent";
+import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
+import { ClinicianAgent } from "rc_agents/clinician_framework/ClinicianAgent";
 
 // Initial Beliefs of Agent
 const belief1 = new Belief(AgentIDs.UXSA, CommonAttributes.LAST_ACTIVITY, null);

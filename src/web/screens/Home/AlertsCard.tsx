@@ -14,7 +14,7 @@ import {
 } from "rc_agents/clinician_framework";
 import { Belief } from "agents-framework";
 import { ProcedureConst } from "agents-framework/Enums";
-import agentAPI from "rc_agents/clinician_framework/ClinicianAgentAPI";
+import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import { AlertStatus } from "rc_agents/model";
 import { agentDTA } from "rc_agents/agents";
 import { Alert } from "aws/API";

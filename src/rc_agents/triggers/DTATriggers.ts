@@ -8,7 +8,7 @@ import {
 import { ProcedureConst } from "agents-framework/Enums";
 import { agentDTA } from "rc_agents/agents";
 import { Belief } from "agents-framework";
-import agentAPI from "rc_agents/clinician_framework/ClinicianAgentAPI";
+import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
   PatientAssignmentResolution,
   TodoCreateInput,

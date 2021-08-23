@@ -3,8 +3,8 @@ import { AgentIDs } from "rc_agents/clinician_framework";
 import { CommonAttributes } from "agents-framework/Enums";
 import { af_AssociateData } from "./action-frames/app-device-configuration/AssociateData";
 import { af_RequestEntryData } from "./action-frames/app-device-configuration/RequestEntryData";
-import agentAPI from "rc_agents/clinician_framework/ClinicianAgentAPI";
-import ClinicianAgent from "rc_agents/clinician_framework/ClinicianAgent";
+import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
+import { ClinicianAgent } from "rc_agents/clinician_framework/ClinicianAgent";
 
 // Initial Beliefs of the Agent
 

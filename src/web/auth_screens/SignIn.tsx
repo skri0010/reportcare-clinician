@@ -20,7 +20,7 @@ import {
   ClinicianAttributes,
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
-import agentAPI from "rc_agents/clinician_framework/ClinicianAgentAPI";
+import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import { AsyncStorageKeys } from "rc_agents/storage";
 import { useNetInfo } from "@react-native-community/netinfo";
 import { setProcedureOngoing } from "ic-redux/actions/agents/actionCreator";

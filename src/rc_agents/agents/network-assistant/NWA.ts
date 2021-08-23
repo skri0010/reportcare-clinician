@@ -6,8 +6,8 @@ import { af_SyncPatientAssignmentResolutions } from "./action-frames/SyncPatient
 import af_SyncTodosCreate from "./action-frames/SyncTodosCreate";
 import af_SyncTodosUpdate from "./action-frames/SyncTodosUpdate";
 import af_SyncAlertsUpdate from "./action-frames/SyncAlertsUpdate";
-import agentAPI from "rc_agents/clinician_framework/ClinicianAgentAPI";
-import ClinicianAgent from "rc_agents/clinician_framework/ClinicianAgent";
+import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
+import { ClinicianAgent } from "rc_agents/clinician_framework/ClinicianAgent";
 
 // Initial Beliefs of Agent
 const belief1 = new Belief(AgentIDs.NWA, CommonAttributes.LAST_ACTIVITY, null);

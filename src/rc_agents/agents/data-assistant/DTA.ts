@@ -21,8 +21,8 @@ import af_CreateTodo from "./action-frames/storing-data/CreateTodo";
 import af_UpdateTodo from "./action-frames/storing-data/UpdateTodo";
 import af_RetrieveTodos from "./action-frames/storing-data/RetrieveTodos";
 import { af_RequestDisplayTodos } from "./action-frames/storing-data/RequestDisplayTodos";
-import agentAPI from "rc_agents/clinician_framework/ClinicianAgentAPI";
-import ClinicianAgent from "rc_agents/clinician_framework/ClinicianAgent";
+import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
+import { ClinicianAgent } from "rc_agents/clinician_framework/ClinicianAgent";
 
 // Initial Beliefs of Agent
 

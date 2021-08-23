@@ -7,7 +7,7 @@ import {
   ResettablePrecondition
 } from "agents-framework";
 import { ProcedureConst } from "agents-framework/Enums";
-import agentAPI from "rc_agents/clinician_framework/ClinicianAgentAPI";
+import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
   setRetryLaterTimeout,
   ActionFrameIDs,

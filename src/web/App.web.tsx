@@ -7,7 +7,7 @@ import awsconfig from "aws/aws-exports";
 import { Amplify } from "@aws-amplify/core";
 import { Auth } from "@aws-amplify/auth";
 import { AuthState } from "web/auth_screens";
-import agentAPI from "rc_agents/clinician_framework/ClinicianAgentAPI";
+import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import { Storage } from "rc_agents/storage";
 import { ToastProviderComponent } from "components/IndicatorComponents/ToastProvider";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";

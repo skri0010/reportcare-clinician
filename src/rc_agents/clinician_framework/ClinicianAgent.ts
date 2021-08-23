@@ -10,7 +10,7 @@ import AgentAPI from "agents-framework/AgentAPI";
 /**
  * Class representing the Agent
  */
-class ClinicianAgent extends Agent {
+export class ClinicianAgent extends Agent {
   private initialized: boolean;
 
   constructor(
@@ -145,5 +145,3 @@ class ClinicianAgent extends Agent {
     });
   }
 }
-
-export default ClinicianAgent;
