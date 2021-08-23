@@ -218,14 +218,23 @@ export const setAlerts = async (
  */
 export const setAlertInfo = async (alertInfo: AlertInfo): Promise<void> => {
   let localData = await getAlertInfos();
+  // if (!localData) {
+  //   localData = {};
+  // } else if (!localData[alertInfo.patientId]) {
+  //   localData[alertInfo.patientId] = {};
+  // }
+  // localData[alertInfo.patientId] = {}; **original code does not have this
+  // localData[alertInfo.patientId][alertInfo.id] = alertInfo;
+
   if (!localData) {
     localData = {};
-  } else if (!localData[alertInfo.patientId]) {
+  }
+
+  if (!localData[alertInfo.patientId]) {
     localData[alertInfo.patientId] = {};
   }
-  localData[alertInfo.patientId] = {};
-  localData[alertInfo.patientId][alertInfo.id] = alertInfo;
 
+  localData[alertInfo.patientId][alertInfo.id] = alertInfo;
   await setAlertInfos(localData);
 };
 
