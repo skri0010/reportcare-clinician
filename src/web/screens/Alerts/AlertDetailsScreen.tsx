@@ -13,7 +13,13 @@ import { CardWrapper } from "../Home/CardWrapper";
 import i18n from "util/language/i18n";
 import { mockAlertHistory } from "mock/mockPatientDetails";
 
-export const AlertDetailsScreen: FC = () => {
+interface AlertDetailsScreenProps {
+  setModalVisible: (state: boolean) => void;
+}
+
+export const AlertDetailsScreen: FC<AlertDetailsScreenProps> = ({
+  setModalVisible
+}) => {
   const { colors, fonts } = select((state: RootState) => ({
     colors: state.settings.colors,
     fonts: state.settings.fonts
@@ -40,6 +46,7 @@ export const AlertDetailsScreen: FC = () => {
               { backgroundColor: colors.primaryTodoCompleteButtonColor }
             ]}
             onPress={() => {
+              setModalVisible(true);
               // Call on add todo screen
             }}
           >

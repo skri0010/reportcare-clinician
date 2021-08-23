@@ -24,14 +24,14 @@ interface AddTodoScreenProps {
 }
 
 export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
-  const { colors, fonts, procedureSuccessful, procedureOngoing } = select(
-    (state: RootState) => ({
+  const { colors, fonts, procedureSuccessful, procedureOngoing, alertInfo } =
+    select((state: RootState) => ({
       colors: state.settings.colors,
       fonts: state.settings.fonts,
       procedureOngoing: state.agents.procedureOngoing,
-      procedureSuccessful: state.agents.procedureSuccessful
-    })
-  );
+      procedureSuccessful: state.agents.procedureSuccessful,
+      alertInfo: state.agents.alertInfo
+    }));
 
   const shortTodoTextInputStyle: StyleProp<ViewStyle> = {
     backgroundColor: colors.primaryContrastTextColor,
@@ -66,7 +66,8 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
       notes: noteInput,
       completed: false,
       createdAt: new Date().toISOString(),
-      _version: 1
+      _version: 1,
+      alert: alertInfo
     };
 
     dispatch(setProcedureOngoing(true));

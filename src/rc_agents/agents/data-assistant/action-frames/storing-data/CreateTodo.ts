@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import {
   Actionframe,
   Agent,
@@ -124,6 +125,8 @@ class CreateTodo extends Activity {
                 ProcedureConst.ACTIVE
               )
             );
+            console.log(agentAPI.getFacts());
+            console.log(agent.getBeliefs());
           }
         }
 

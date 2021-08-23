@@ -1,4 +1,4 @@
-import { PatientInfo } from "aws/API";
+import { Alert, PatientInfo } from "aws/API";
 import {
   BeliefKeys,
   ClinicianAttributes,
@@ -160,6 +160,31 @@ export const triggerUpdateTodo = (input: TodoInput): void => {
     new Belief(
       BeliefKeys.PROCEDURE,
       ProcedureAttributes.SRD_II,
+      ProcedureConst.ACTIVE
+    )
+  );
+};
+
+// AT-CP-II Triggers RetrieveAlertInfo of DTA
+export const triggerRetrieveAlertInfo = (input: Alert): void => {
+  // Add alert as facts
+  agentAPI.addFact(
+    new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.ALERT, input),
+    false
+  );
+
+  agentDTA.addBelief(
+    new Belief(
+      BeliefKeys.CLINICIAN,
+      ClinicianAttributes.RETRIEVE_ALERT_INFO,
+      true
+    )
+  );
+
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PROCEDURE,
+      ProcedureAttributes.AT_CP_II,
       ProcedureConst.ACTIVE
     )
   );

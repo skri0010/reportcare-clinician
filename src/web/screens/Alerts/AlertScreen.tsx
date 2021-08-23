@@ -1,7 +1,7 @@
-import React, { FC, useState, createContext } from "react";
-import { RootState, select } from "util/useRedux";
+import React, { FC, useState, createContext, useEffect } from "react";
+import { RootState, select, useDispatch } from "util/useRedux";
 import { ScreenName, WithSideTabsProps } from "web/screens";
-import { View, Text } from "react-native";
+import { View, Text, Modal } from "react-native";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import {
@@ -17,6 +17,14 @@ import { Alert } from "aws/API";
 import { NavigationContainer } from "@react-navigation/native";
 import { NoSelectionScreen } from "../Shared/NoSelectionScreen";
 import { AlertDetailsScreen } from "./AlertDetailsScreen";
+import { AddTodoScreen } from "web/screens/Todo/AddTodoScreen";
+import { useToast } from "react-native-toast-notifications";
+import {
+  setProcedureSuccessful,
+  setSubmittingTodo,
+  setUpdatedTodo
+} from "ic-redux/actions/agents/actionCreator";
+import i18n from "util/language/i18n";
 
 const Tab = createMaterialTopTabNavigator();
 const Stack = createStackNavigator();
@@ -34,9 +42,13 @@ export const AlertContext = createContext({
 });
 
 export const AlertScreen: FC<WithSideTabsProps[ScreenName.ALERTS]> = () => {
-  const { colors } = select((state: RootState) => ({
-    colors: state.settings.colors
-  }));
+  const { colors, procedureOngoing, procedureSuccessful, submittingTodo } =
+    select((state: RootState) => ({
+      colors: state.settings.colors, // Used to detect completion of updateTodo procedure
+      procedureOngoing: state.agents.procedureOngoing,
+      procedureSuccessful: state.agents.procedureSuccessful,
+      submittingTodo: state.agents.submittingTodo
+    }));
 
   const [alertSelected, setAlertSelected] = useState<Alert>({
     id: "",
@@ -55,6 +67,11 @@ export const AlertScreen: FC<WithSideTabsProps[ScreenName.ALERTS]> = () => {
     __typename: "Alert"
   });
   const [isEmptyAlert, setEmptyAlert] = useState(true);
+
+  // For pointer events
+  const [modalVisible, setModalVisible] = useState(false);
+  const toast = useToast();
+  const dispatch = useDispatch();
 
   function onRowClick(item: Alert) {
     const currentSelected = alertSelected;
@@ -94,9 +111,27 @@ export const AlertScreen: FC<WithSideTabsProps[ScreenName.ALERTS]> = () => {
     modifiedTimeDate: alertSelected.updatedAt
   };
 
+  // Detects completion of UpdateTodo procedure and shows the appropriate toast.
+  useEffect(() => {
+    if (submittingTodo && !procedureOngoing) {
+      dispatch(setSubmittingTodo(false));
+      if (procedureSuccessful) {
+        // Operation successful
+        toast.show(i18n.t("Todo.TodoUpdateSuccessful"), { type: "success" });
+        dispatch(setProcedureSuccessful(false));
+      } else {
+        // Operation failed
+        toast.show(i18n.t("UnexpectedError"), { type: "danger" });
+      }
+    }
+  }, [dispatch, procedureOngoing, procedureSuccessful, toast, submittingTodo]);
+
   return (
     <ScreenWrapper fixed>
-      <View style={styles.container}>
+      <View
+        style={styles.container}
+        pointerEvents={modalVisible || submittingTodo ? "none" : "auto"}
+      >
         <View style={styles.rowSelection}>
           <RowSelectionTab title="Alerts" isTodo />
           <Tab.Navigator tabBarOptions={getTopTabBarOptions(colors)}>
@@ -120,7 +155,7 @@ export const AlertScreen: FC<WithSideTabsProps[ScreenName.ALERTS]> = () => {
                 <Stack.Navigator>
                   <Stack.Screen
                     name="ViewAlert"
-                    component={AlertDetailsScreen}
+                    // component={AlertDetailsScreen}
                     options={() => ({
                       title: initialAlert.patientName,
                       headerStyle: {
@@ -132,7 +167,11 @@ export const AlertScreen: FC<WithSideTabsProps[ScreenName.ALERTS]> = () => {
                         paddingLeft: ms(15)
                       }
                     })}
-                  />
+                  >
+                    {() => (
+                      <AlertDetailsScreen setModalVisible={setModalVisible} />
+                    )}
+                  </Stack.Screen>
                 </Stack.Navigator>
               </AlertContext.Provider>
             </NavigationContainer>
@@ -143,6 +182,27 @@ export const AlertScreen: FC<WithSideTabsProps[ScreenName.ALERTS]> = () => {
             />
           )}
         </View>
+      </View>
+      {/* ADD TODO modal */}
+      <View style={styles.modalView}>
+        <Modal
+          transparent
+          visible={modalVisible}
+          animationType="slide"
+          onRequestClose={() => {
+            setModalVisible(false);
+          }}
+        >
+          <View
+            style={[
+              styles.modalContainer,
+              { backgroundColor: colors.overlayColor }
+            ]}
+          >
+            {/* Add todo modal */}
+            <AddTodoScreen setModalVisible={setModalVisible} />
+          </View>
+        </Modal>
       </View>
     </ScreenWrapper>
   );

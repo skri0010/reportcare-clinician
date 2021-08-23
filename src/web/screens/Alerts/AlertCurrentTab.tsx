@@ -7,6 +7,7 @@ import { Alert } from "aws/API";
 import { mockPendingAlerts } from "mock/mockAlerts";
 import { AlertRow } from "components/RowComponents/AlertRow";
 import { ScreenWrapper } from "../ScreenWrapper";
+import { AgentTrigger } from "rc_agents/trigger";
 
 export interface AlertRowTabProps {
   setAlertSelected: (item: Alert) => void;
@@ -38,7 +39,13 @@ export const AlertCurrentTab: FC<AlertRowTabProps> = ({ setAlertSelected }) => {
           showsVerticalScrollIndicator={false}
           ItemSeparatorComponent={() => <ItemSeparator />}
           data={mockPendingAlerts}
-          renderItem={({ item }) => <AlertRow alertDetails={item} onCardPress={() => onCardPress(item)} />}
+          renderItem={({ item }) => (
+            <AlertRow
+              alertDetails={item}
+              onCardPress={() => onCardPress(item)}
+              // onCardPress={() => AgentTrigger.triggerRetrieveAlertInfo(item)}
+            />
+          )}
         />
       </View>
     </ScreenWrapper>

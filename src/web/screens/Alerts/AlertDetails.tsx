@@ -33,8 +33,9 @@ const AlertDetailsRow: FC<AlertDetailsRowProps> = ({
   );
 };
 export const AlertDetails: FC<AlertDetailsProps> = ({ alertHistory }) => {
-  const { colors } = select((state: RootState) => ({
-    colors: state.settings.colors
+  const { colors, alertInfo } = select((state: RootState) => ({
+    colors: state.settings.colors,
+    alertInfo: state.agents.alertInfo
   }));
 
   const cardHeight = Math.max(ms(100), Dimensions.get("window").height * 0.25);
@@ -42,13 +43,13 @@ export const AlertDetails: FC<AlertDetailsProps> = ({ alertHistory }) => {
   return (
     <View style={{ flexDirection: "column" }}>
       <SummaryCard
-        summary={alertHistory.description}
-        risk={alertHistory.risk}
+        summary={alertInfo ? alertInfo.summary : "-"}
+        risk={alertInfo ? alertInfo.riskLevel : "-"}
         maxHeight={cardHeight}
         minHeight={cardHeight}
       />
       <SymptomCard
-        symptom={alertHistory.symptom}
+        symptom={alertHistory.signs}
         signs={alertHistory.signs}
         maxHeight={cardHeight}
         minHeight={cardHeight}
