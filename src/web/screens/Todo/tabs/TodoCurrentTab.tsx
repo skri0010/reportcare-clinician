@@ -44,11 +44,11 @@ export const onDonePress = (item: LocalTodo): void => {
 export const TodoCurrentTab: FC<TodoCurrentTabProps> = ({
   setTodoSelected
 }) => {
-  const { colors, pendingTodos, fetchingPendingTodos } = select(
+  const { colors, pendingTodos, fetchingTodos } = select(
     (state: RootState) => ({
       colors: state.settings.colors,
       pendingTodos: state.agents.pendingTodos,
-      fetchingPendingTodos: state.agents.fetchingPendingTodos
+      fetchingTodos: state.agents.fetchingTodos
     })
   );
 
@@ -78,7 +78,7 @@ export const TodoCurrentTab: FC<TodoCurrentTabProps> = ({
         placeholder={i18n.t("Todo.SearchBarCurrentPlaceholder")}
       />
       {/* List of current todos */}
-      {fetchingPendingTodos ? (
+      {fetchingTodos ? (
         // Show loading indicator if fetching pending todos
         <LoadingIndicator flex={1} />
       ) : pendingTodos ? (
@@ -99,11 +99,9 @@ export const TodoCurrentTab: FC<TodoCurrentTabProps> = ({
             />
           )}
           keyExtractor={(item) => item.createdAt}
-          pointerEvents={fetchingPendingTodos ? "none" : "auto"}
+          pointerEvents={fetchingTodos ? "none" : "auto"}
         />
       ) : null}
-      {/* Loading Indicator while todos are still being fetched */}
-      {fetchingPendingTodos && <LoadingIndicator />}
     </ScreenWrapper>
   );
 };

@@ -29,9 +29,8 @@ interface AgentsState {
   todoDetails: LocalTodo | null;
   pendingTodos: LocalTodo[] | null;
   completedTodos: LocalTodo[] | null;
+  fetchingTodos: boolean;
   fetchingTodoDetails: boolean;
-  fetchingPendingTodos: boolean;
-  fetchingCompletedTodos: boolean;
   submittingTodo: boolean;
   updatedTodo: LocalTodo | undefined;
 }
@@ -64,9 +63,8 @@ const initialState: AgentsState = {
   todoDetails: null,
   pendingTodos: null,
   completedTodos: null,
+  fetchingTodos: false,
   fetchingTodoDetails: false,
-  fetchingPendingTodos: false,
-  fetchingCompletedTodos: false,
   submittingTodo: false,
   updatedTodo: undefined
 };
@@ -125,7 +123,10 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
     case actionNames.SET_RISK_FILTERS:
       return { ...state, riskFilters: action.payload.riskFilters };
     case actionNames.SET_FETCHING_TODOS:
-      return { ...state, fetchingTodos: action.payload.fetchingTodos };
+      return {
+        ...state,
+        fetchingTodos: action.payload.fetchingTodos
+      };
     case actionNames.SET_PENDING_TODOS:
       return { ...state, pendingTodos: action.payload.pendingTodos };
     case actionNames.SET_COMPLETED_TODOS:
