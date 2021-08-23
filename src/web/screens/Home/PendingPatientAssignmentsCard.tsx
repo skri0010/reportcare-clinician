@@ -12,9 +12,9 @@ import {
 } from "rc_agents/model";
 import { PatientAssignment } from "aws/API";
 import { PatientAssignmentRow } from "components/RowComponents/PatientRows/PatientPendingAssignmentRow";
-import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
+import { LoadingIndicator } from "components/indicators/LoadingIndicator";
 import { AgentTrigger } from "rc_agents/trigger";
-import { EmptyListIndicator } from "components/Indicators/EmptyListIndicator";
+import { EmptyListIndicator } from "components/indicators/EmptyListIndicator";
 
 interface PendingPatientAssignmentsCardProps {
   maxHeight: number;

@@ -12,7 +12,7 @@ import { NoSelectionScreen } from "../Shared/NoSelectionScreen";
 import i18n from "util/language/i18n";
 import { TodoDetailsStackNavigator } from "../../navigation/navigators/TodoDetailsStackNavigator";
 import { LocalTodo } from "rc_agents/model";
-import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
+import { LoadingIndicator } from "components/indicators/LoadingIndicator";
 import { useToast } from "react-native-toast-notifications";
 import {
   setProcedureSuccessful,

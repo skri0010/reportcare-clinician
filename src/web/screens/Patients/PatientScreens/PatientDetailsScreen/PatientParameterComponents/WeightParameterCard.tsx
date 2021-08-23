@@ -1,7 +1,7 @@
 import React, { FC, useState } from "react";
 import { CardWrapper } from "web/screens/Home/CardWrapper";
 import { mockVitals } from "mock/mockVitals";
-import { WeightChart } from "components/Visualization/WeightChart";
+import { WeightChart } from "components/visualization/WeightChart";
 
 interface WeightCardProps {
   patientId: string;

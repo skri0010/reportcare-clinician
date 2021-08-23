@@ -4,7 +4,7 @@ import { select, RootState } from "util/useRedux";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { PatientOverview } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientOverview";
 import { PatientParameters } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientParameters";
-import { PatientICDCRT } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientICDCRT";
+import { PatientICDCRT } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientIcdCrt";
 import { PatientHistory } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientHistory";
 import { PatientInformation } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientInformation";
 import { PatientDetailsTabProps } from "web/navigation/types";

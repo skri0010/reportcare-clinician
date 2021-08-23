@@ -9,9 +9,9 @@ import { Auth } from "@aws-amplify/auth";
 import { AuthState } from "web/auth_screens";
 import agentAPI from "rc_agents/framework/AgentAPI";
 import { Storage } from "rc_agents/storage";
-import { ToastProviderComponent } from "components/Indicators/ToastProvider";
+import { ToastProviderComponent } from "components/indicators/ToastProvider";
 import { expectedAgentIds } from "rc_agents/agents";
-import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
+import { LoadingIndicator } from "components/indicators/LoadingIndicator";
 
 Amplify.configure(awsconfig);
 Auth.configure(awsconfig);

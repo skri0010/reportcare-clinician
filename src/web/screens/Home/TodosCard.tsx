@@ -11,7 +11,7 @@ import { FloatingShowMoreButton } from "components/Buttons/FloatingShowMoreButto
 import i18n from "util/language/i18n";
 import { ScreenName } from "web/navigation";
 import { TodoStatus } from "rc_agents/model";
-import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
+import { LoadingIndicator } from "components/indicators/LoadingIndicator";
 import { AgentTrigger } from "rc_agents/trigger";
 import { HomeScreenNavigation } from "web/navigation/types/MainScreenProps";
 
