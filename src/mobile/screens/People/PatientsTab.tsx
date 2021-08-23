@@ -1,10 +1,10 @@
 import React, { FC, useEffect, useState } from "react";
 import { View, FlatList, Button } from "react-native";
 import { MobileScreenWrapper } from "mobile/screens/MobileScreenWrapper";
-import { SearchBarComponent } from "components/bars/SearchBarComponent";
+import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { ScaledSheet } from "react-native-size-matters";
-import { PatientDetailsRow } from "components/rowComponents/PatientRows/PatientDetailsRow";
-import { ItemSeparator } from "components/rowComponents/ItemSeparator";
+import { PatientDetailsRow } from "components/RowComponents/PatientRows/PatientDetailsRow";
+import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import agentDTA from "rc_agents/agents/data-assistant/DTA";
 import Belief from "rc_agents/framework/base/Belief";
 import {
@@ -18,7 +18,7 @@ import agentAPI from "rc_agents/framework/AgentAPI";
 import agentUXSA from "rc_agents/agents/user-specific-assistant/UXSA";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { setProcedureOngoing } from "ic-redux/actions/agents/actionCreator";
-import { LoadingIndicator } from "components/indicators/LoadingIndicator";
+import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { useNetInfo } from "@react-native-community/netinfo";
 
 export const PatientsTab: FC = () => {

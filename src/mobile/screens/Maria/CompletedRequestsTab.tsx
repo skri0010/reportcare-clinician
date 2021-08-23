@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { View } from "react-native";
 import { MobileScreenWrapper } from "mobile/screens/MobileScreenWrapper";
-import { MainTitle } from "components/text";
+import { MainTitle } from "components/Text";
 
 export const CompletedRequestsTab: FC = () => {
   // JH-TODO Replace titles with i18n

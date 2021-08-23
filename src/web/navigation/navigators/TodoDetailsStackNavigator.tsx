@@ -3,7 +3,7 @@ import React, { FC } from "react";
 import { ViewTodoScreen } from "web/screens/Todo/stack/ViewTodoScreen";
 import { EditTodoScreen } from "web/screens/Todo/stack/EditTodoScreen";
 import { createStackNavigator } from "@react-navigation/stack";
-import { MarkAsDoneButton } from "components/buttons/MarkAsDoneButton";
+import { MarkAsDoneButton } from "components/Buttons/MarkAsDoneButton";
 import {
   TodoDetailsStackScreenName,
   TodoDetailsStackParamList

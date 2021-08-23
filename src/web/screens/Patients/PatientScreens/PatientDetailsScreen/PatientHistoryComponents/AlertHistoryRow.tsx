@@ -1,10 +1,10 @@
 import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
 import { ScaledSheet } from "react-native-size-matters";
-import { H4, H5 } from "components/text/index";
+import { H4, H5 } from "components/Text";
 import { getRiskLevelColor, RiskLevel } from "models/RiskLevel";
 import { View } from "react-native";
-import { RowButton } from "components/buttons/RowButton";
+import { RowButton } from "components/Buttons/RowButton";
 import i18n from "util/language/i18n";
 
 interface AlertHistoryRowProps {

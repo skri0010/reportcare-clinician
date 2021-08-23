@@ -1,7 +1,7 @@
 import React, { FC, useState } from "react";
 import { CardWrapper } from "web/screens/Home/CardWrapper";
 import { mockVitals } from "mock/mockVitals";
-import { SystolicPressureChart } from "components/visualization/SystolicPressureChart";
+import { SystolicPressureChart } from "components/Visualization/SystolicPressureChart";
 
 interface SystolicCardProps {
   patientId: string;

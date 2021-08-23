@@ -1,4 +1,4 @@
-import { FloatingBottomButton } from "components/buttons/FloatingBottomButton";
+import { FloatingBottomButton } from "components/Buttons/FloatingBottomButton";
 import React, { FC, ReactElement, useState } from "react";
 import { View } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";

@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { FC } from "react";
 import { TouchableOpacity, View } from "react-native";
-import { H3, H6, TextProps } from "components/text";
+import { H3, H6, TextProps } from "components/Text";
 import { ScaledSheet } from "react-native-size-matters";
 import { select, RootState } from "util/useRedux";
 import i18n from "util/language/i18n";

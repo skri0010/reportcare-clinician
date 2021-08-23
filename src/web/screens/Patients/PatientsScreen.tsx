@@ -4,7 +4,7 @@ import { View } from "react-native";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { mockPatients } from "mock/mockPatients";
 import { RootState, select, useDispatch } from "util/useRedux";
-import { ContactTitle } from "components/rowComponents/ContactTitle";
+import { ContactTitle } from "components/RowComponents/ContactTitle";
 import { AlertHistoryModal } from "./PatientScreens/PatientDetailsScreen/PatientHistoryComponents/AlertHistoryModal";
 import { AlertHistory, MedicalRecords } from "mock/mockPatientDetails";
 import { RiskLevel } from "models/RiskLevel";
@@ -32,7 +32,7 @@ import { PatientsList } from "./PatientsList";
 import { AgentTrigger } from "rc_agents/trigger";
 import { NoSelectionScreen } from "../Shared/NoSelectionScreen";
 import i18n from "util/language/i18n";
-import { LoadingIndicator } from "components/indicators/LoadingIndicator";
+import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AdaptiveTwoScreenWrapper } from "web/screens/AdaptiveTwoScreenWrapper";
 
 export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({

@@ -10,7 +10,7 @@ import { ms, ScaledSheet } from "react-native-size-matters";
 import { TodoDetailsStackProps } from "web/navigation/types";
 import { TodoDetailsStackScreenName } from "web/navigation";
 import { TodoSection, EditHistorySection } from "./ViewTodoScreen";
-import { H3 } from "components/text";
+import { H3 } from "components/Text";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import i18n from "util/language/i18n";

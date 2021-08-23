@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { View } from "react-native";
-import { H6 } from "components/text";
+import { H6 } from "components/Text";
 import { RootState, select } from "util/useRedux";
 
 interface MainScreenTabButtonProps {

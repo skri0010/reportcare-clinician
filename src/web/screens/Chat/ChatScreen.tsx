@@ -1,9 +1,9 @@
 import React, { FC } from "react";
 import { View, FlatList } from "react-native";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
-import { PatientChatRow } from "components/rowComponents/PatientRows/PatientChatRow";
+import { PatientChatRow } from "components/RowComponents/PatientRows/PatientChatRow";
 import { mockPatients } from "mock/mockPatients";
-import { ItemSeparator } from "components/rowComponents/ItemSeparator";
+import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { MainScreenProps } from "web/navigation/types";
 import { ScreenName } from "web/navigation";
 

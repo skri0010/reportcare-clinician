@@ -2,13 +2,13 @@ import React, { FC, useEffect } from "react";
 import { FlatList } from "react-native";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { RiskLevel } from "models/RiskLevel";
-import { TodoRow } from "components/rowComponents/TodoRow";
-import { SearchBarComponent } from "components/bars/SearchBarComponent";
-import { ItemSeparator } from "components/rowComponents/ItemSeparator";
+import { TodoRow } from "components/RowComponents/TodoRow";
+import { SearchBarComponent } from "components/Bars/SearchBarComponent";
+import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { RootState, select, store } from "util/useRedux";
 import i18n from "util/language/i18n";
 import { LocalTodo, TodoStatus, TodoUpdateInput } from "rc_agents/model";
-import { LoadingIndicator } from "components/indicators/LoadingIndicator";
+import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import {
   setProcedureOngoing,
   setSubmittingTodo
@@ -16,7 +16,7 @@ import {
 import { AgentTrigger } from "rc_agents/trigger";
 import { TodoListTabsProps } from "web/navigation/types";
 import { TodoRowTabProps } from "web/navigation/navigators/TodoListTabNavigator";
-import { NoItemsTextIndicator } from "components/indicators/NoItemsTextIndicator";
+import { NoItemsTextIndicator } from "components/Indicators/NoItemsTextIndicator";
 
 interface TodoCompleteTabProps
   extends TodoRowTabProps,

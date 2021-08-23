@@ -8,9 +8,9 @@ import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { validateCode, validateUsername } from "util/validation";
 import i18n from "util/language/i18n";
 import { useToast } from "react-native-toast-notifications";
-import { LoadingIndicator } from "components/indicators/LoadingIndicator";
-import { AuthButton } from "components/buttons/AuthButton";
-import { TextField } from "components/inputComponents/TextField";
+import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
+import { AuthButton } from "components/Buttons/AuthButton";
+import { TextField } from "components/InputComponents/TextField";
 
 export const ConfirmRegistration: FC<
   AuthScreensProps[AuthScreenName.CONFIRM_REGISTER]

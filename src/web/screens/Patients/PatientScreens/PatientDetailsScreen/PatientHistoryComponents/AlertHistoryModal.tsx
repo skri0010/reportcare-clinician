@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { View, TouchableOpacity, ScrollView } from "react-native";
 import { RootState, select } from "util/useRedux";
 import { getRiskLevelColor } from "models/RiskLevel";
-import { H3, H4, H5 } from "components/text/index";
+import { H3, H4, H5 } from "components/Text";
 import { ScaledSheet, ms } from "react-native-size-matters";
 import { AlertHistory } from "mock/mockPatientDetails";
 import i18n from "util/language/i18n";
