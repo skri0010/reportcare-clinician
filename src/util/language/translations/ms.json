@@ -118,7 +118,11 @@
     "HighRisk": "Risiko Tinggi",
     "MediumRisk": "Risiko Sederhana",
     "LowRisk": "Risiko Rendah",
-    "UnassignedRisk": "Risiko belum ditetapkan"
+    "UnassignedRisk": "Risiko belum ditetapkan",
+    "AlertList": {
+      "NoPendingAlerts": "Tiada amaran belum selesai dijumpai.",
+      "NoCompletedAlerts": "Tiada amaran selesai dijumpai"
+    }
   },
   "Todo": {
     "Current": "Semasa",

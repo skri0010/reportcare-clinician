@@ -48,12 +48,14 @@ class DisplayAlerts extends Activity {
       agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[
         ClinicianAttributes.ALERT_STATUS
       ];
+
+    const filteredAlerts: AlertInfo[] = [];
+
     try {
+      // Case where alerts are retrieved
       if (alerts) {
         // LS-TODO: Irrelevant alerts should be filtered out depending on user's role
 
-        // Dispatch alerts to front end for display
-        const filteredAlerts: AlertInfo[] = [];
         const { alertRiskFilters } = store.getState().agents;
         let shouldFilter = false;
 
@@ -69,6 +71,8 @@ class DisplayAlerts extends Activity {
           // case where needs filtering and getting pending
           alerts.forEach((alert) => {
             // We can assert RiskLevel in this condition
+            // eslint-disable-next-line no-console
+            console.log("ran here 1");
             if (
               alertRiskFilters[alert.riskLevel as RiskLevel] &&
               alert.completed === false
@@ -78,6 +82,8 @@ class DisplayAlerts extends Activity {
           });
         } else if (shouldFilter && alertStatus === AlertStatus.COMPLETED) {
           // case where needs filtering and getting completed
+          // eslint-disable-next-line no-console
+          console.log("ran here 2");
           alerts.forEach((alert) => {
             // We can assert RiskLevel in this condition
             if (
@@ -88,6 +94,8 @@ class DisplayAlerts extends Activity {
             }
           });
         } else if (alertStatus === AlertStatus.PENDING) {
+          // eslint-disable-next-line no-console
+          console.log("ran here 3");
           // case where no filtering is needed and pending required
           alerts.forEach((alert) => {
             // We can assert RiskLevel in this condition
@@ -96,6 +104,8 @@ class DisplayAlerts extends Activity {
             }
           });
         } else if (alertStatus === AlertStatus.COMPLETED) {
+          // eslint-disable-next-line no-console
+          console.log("ran here 4");
           // case where no filtering is needed and completing requried
           alerts.forEach((alert) => {
             // We can assert RiskLevel in this condition
@@ -105,22 +115,41 @@ class DisplayAlerts extends Activity {
           });
         }
 
-        // Dispatch filtered list based on status
-        if (alertStatus === AlertStatus.PENDING) {
-          store.dispatch(setPendingAlerts(filteredAlerts));
-        } else {
-          store.dispatch(setCompletedAlerts(filteredAlerts));
-        }
-
         // Removes alert info from facts
         agentAPI.addFact(
           new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.ALERTS, null),
           false
         );
+        // Remove alert status from fact
+        agentAPI.addFact(
+          new Belief(
+            BeliefKeys.CLINICIAN,
+            ClinicianAttributes.ALERT_STATUS,
+            null
+          ),
+          false
+        );
+      } else {
+        // eslint-disable-next-line no-console
+        console.log("NOTHING BRO");
       }
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
+    }
+
+    // Dispatch filtered list based on status
+    if (alertStatus === AlertStatus.PENDING) {
+      store.dispatch(setPendingAlerts(filteredAlerts));
+    } else {
+      store.dispatch(setCompletedAlerts(filteredAlerts));
+    }
+
+    // Dispatch to indicate process has ended
+    if (alertStatus === AlertStatus.PENDING) {
+      store.dispatch(setFetchingPendingAlerts(false));
+    } else {
+      store.dispatch(setFetchingCompletedAlerts(false));
     }
 
     // Stops the procedure
@@ -133,13 +162,6 @@ class DisplayAlerts extends Activity {
       true,
       true
     );
-
-    // Dispatch to indicate process has ended
-    if (alertStatus === AlertStatus.PENDING) {
-      store.dispatch(setFetchingPendingAlerts(false));
-    } else {
-      store.dispatch(setFetchingCompletedAlerts(false));
-    }
   }
 }
 

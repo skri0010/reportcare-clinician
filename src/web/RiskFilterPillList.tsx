@@ -8,7 +8,7 @@ import {
   setAlertRiskFilters,
   setPatientRiskFilters
 } from "ic-redux/actions/agents/actionCreator";
-import { RiskFilter } from "rc_agents/model";
+import { AlertStatus, RiskFilter } from "rc_agents/model";
 import { agentDTA } from "rc_agents/agents";
 import { agentAPI, Belief } from "rc_agents/framework";
 import {
@@ -23,11 +23,13 @@ import i18n from "util/language/i18n";
 interface RiskFilterPillListProps {
   patientScreen?: boolean;
   alertScreen?: boolean;
+  pendingAlert?: boolean;
 }
 
 export const RiskFilterPillList: FC<RiskFilterPillListProps> = ({
   patientScreen = false,
-  alertScreen = false
+  alertScreen = false,
+  pendingAlert = false
 }) => {
   const { colors, riskFilters } = select((state: RootState) => ({
     colors: state.settings.colors,
@@ -65,7 +67,44 @@ export const RiskFilterPillList: FC<RiskFilterPillListProps> = ({
       );
     } else {
       // Trigger agents to get filtered alerts
+      // Here need to trigger based on page of alert
       store.dispatch(setAlertRiskFilters(tempRiskFilters));
+      // add alert status to be used by agents
+      if (pendingAlert) {
+        agentAPI.addFact(
+          new Belief(
+            BeliefKeys.CLINICIAN,
+            ClinicianAttributes.ALERT_STATUS,
+            AlertStatus.PENDING
+          ),
+          false
+        );
+      } else {
+        agentAPI.addFact(
+          new Belief(
+            BeliefKeys.CLINICIAN,
+            ClinicianAttributes.ALERT_STATUS,
+            AlertStatus.COMPLETED
+          ),
+          false
+        );
+      }
+
+      // Trigger DTA to retrieve alerts
+      agentDTA.addBelief(
+        new Belief(
+          BeliefKeys.CLINICIAN,
+          ClinicianAttributes.RETRIEVE_ALERTS,
+          true
+        )
+      );
+      agentAPI.addFact(
+        new Belief(
+          BeliefKeys.PROCEDURE,
+          ProcedureAttributes.AT_CP,
+          ProcedureConst.ACTIVE
+        )
+      );
     }
   };
 

@@ -49,7 +49,7 @@ export const TodoCompletedTab: FC<TodoRowTabProps> = ({ setTodoSelected }) => {
   }
 
   useEffect(() => {
-    AgentTrigger.triggerRetrieveTodos(TodoStatus.COMPLETED);
+    // AgentTrigger.triggerRetrieveTodos(TodoStatus.COMPLETED);
   }, []);
   return (
     <ScreenWrapper>

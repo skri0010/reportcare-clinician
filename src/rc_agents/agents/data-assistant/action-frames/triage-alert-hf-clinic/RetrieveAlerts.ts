@@ -143,23 +143,23 @@ class RetrieveAlerts extends Activity {
           }
         }
 
-        // Removes alert status and risk level from facts
-        agentAPI.addFact(
-          new Belief(
-            BeliefKeys.CLINICIAN,
-            ClinicianAttributes.ALERT_STATUS,
-            null
-          ),
-          false
-        );
-        agentAPI.addFact(
-          new Belief(
-            BeliefKeys.CLINICIAN,
-            ClinicianAttributes.ALERT_RISK_LEVEL,
-            null
-          ),
-          false
-        );
+        // // Removes alert status and risk level from facts
+        // agentAPI.addFact(
+        //   new Belief(
+        //     BeliefKeys.CLINICIAN,
+        //     ClinicianAttributes.ALERT_STATUS,
+        //     null
+        //   ),
+        //   false
+        // );
+        // agentAPI.addFact(
+        //   new Belief(
+        //     BeliefKeys.CLINICIAN,
+        //     ClinicianAttributes.ALERT_RISK_LEVEL,
+        //     null
+        //   ),
+        //   false
+        // );
       }
     } catch (error) {
       // eslint-disable-next-line no-console

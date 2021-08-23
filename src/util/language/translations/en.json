@@ -118,7 +118,11 @@
     "HighRisk": "High Risk",
     "MediumRisk": "Medium Risk",
     "LowRisk": "Low Risk",
-    "UnassignedRisk": "Unassigned Risk"
+    "UnassignedRisk": "Unassigned Risk",
+    "AlertList": {
+      "NoPendingAlerts": "You have no pending alerts",
+      "NoCompletedAlerts": "You have no completed alerts"
+    }
   },
   "Todo": {
     "Current": "Current",

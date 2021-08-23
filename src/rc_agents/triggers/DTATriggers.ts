@@ -9,6 +9,7 @@ import {
 import { agentDTA } from "rc_agents/agents";
 import { agentAPI, Belief } from "rc_agents/framework";
 import {
+  AlertStatus,
   PatientAssignmentResolution,
   TodoCreateInput,
   TodoStatus,
@@ -160,6 +161,30 @@ export const triggerUpdateTodo = (input: TodoUpdateInput): void => {
     new Belief(
       BeliefKeys.PROCEDURE,
       ProcedureAttributes.SRD_II,
+      ProcedureConst.ACTIVE
+    )
+  );
+};
+
+// AT-CP-I: Trigger RetriveAlerts of DTA
+export const triggerRetriveAlerts = (alertStatus: AlertStatus): void => {
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.CLINICIAN,
+      ClinicianAttributes.ALERT_STATUS,
+      alertStatus
+    ),
+    false
+  );
+
+  // Trigger DTA to retrieve alerts
+  agentDTA.addBelief(
+    new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.RETRIEVE_ALERTS, true)
+  );
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PROCEDURE,
+      ProcedureAttributes.AT_CP,
       ProcedureConst.ACTIVE
     )
   );

@@ -16,7 +16,10 @@ import {
 import agentAPI from "rc_agents/framework/AgentAPI";
 import { AlertInfo, PendingAlertCount } from "rc_agents/model";
 import { store } from "util/useRedux";
-import { setPendingAlertCount } from "ic-redux/actions/agents/actionCreator";
+import {
+  setFetchingPendingAlerts,
+  setPendingAlertCount
+} from "ic-redux/actions/agents/actionCreator";
 import { RiskLevel } from "models/RiskLevel";
 
 /**
@@ -91,6 +94,8 @@ class DisplayPendingAlertCount extends Activity {
         ProcedureConst.INACTIVE
       )
     );
+
+    store.dispatch(setFetchingPendingAlerts(false));
   }
 }
 

@@ -1,4 +1,4 @@
-import React, { FC, useState, createContext } from "react";
+import React, { FC, useState, createContext, useEffect } from "react";
 import { RootState, select } from "util/useRedux";
 import { ScreenName, WithSideTabsProps } from "web/screens";
 import { View, Text } from "react-native";
@@ -17,62 +17,58 @@ import { Alert } from "aws/API";
 import { NavigationContainer } from "@react-navigation/native";
 import { NoSelectionScreen } from "../Shared/NoSelectionScreen";
 import { AlertDetailsScreen } from "./AlertDetailsScreen";
+import { AgentTrigger } from "rc_agents/trigger";
+import { AlertInfo } from "rc_agents/model";
+import { RiskLevel } from "models/RiskLevel";
+import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
 
 const Tab = createMaterialTopTabNavigator();
 const Stack = createStackNavigator();
 
 export const AlertContext = createContext({
   id: "",
+  patientId: "",
   patientName: "",
-  patientID: "",
+  dateTime: "",
   summary: "",
-  colorCode: "",
-  vitalsReportID: "",
-  symptomReportID: "",
-  createdTimeDate: "",
-  modifiedTimeDate: ""
+  completed: false,
+  riskLevel: RiskLevel.UNASSIGNED,
+  _version: 0
 });
 
 export const AlertScreen: FC<WithSideTabsProps[ScreenName.ALERTS]> = () => {
-  const { colors } = select((state: RootState) => ({
-    colors: state.settings.colors
-  }));
+  const { colors, fetchingPendingAlerts, fetchingCompletedAlerts } = select(
+    (state: RootState) => ({
+      colors: state.settings.colors,
+      fetchingPendingAlerts: state.agents.fetchingPendingAlerts,
+      fetchingCompletedAlerts: state.agents.fetchingCompletedAlerts
+    })
+  );
 
-  const [alertSelected, setAlertSelected] = useState<Alert>({
+  const [alertSelected, setAlertSelected] = useState<AlertInfo>({
     id: "",
-    patientID: "",
+    patientId: "",
     patientName: "",
     dateTime: "",
     summary: "",
-    colorCode: "",
-    vitalsReportID: "",
-    symptomReportID: "",
-    owner: "",
-    _version: 0,
-    _lastChangedAt: 0,
-    createdAt: "",
-    updatedAt: "",
-    __typename: "Alert"
+    completed: false,
+    riskLevel: RiskLevel.UNASSIGNED,
+    _version: 0
   });
+
   const [isEmptyAlert, setEmptyAlert] = useState(true);
 
-  function onRowClick(item: Alert) {
+  function onRowClick(item: AlertInfo) {
     const currentSelected = alertSelected;
-    const emptyAlert: Alert = {
+    const emptyAlert: AlertInfo = {
       id: "",
-      patientID: "",
+      patientId: "",
       patientName: "",
       dateTime: "",
       summary: "",
-      colorCode: "",
-      vitalsReportID: "",
-      symptomReportID: "",
-      owner: "",
-      _version: 0,
-      _lastChangedAt: 0,
-      createdAt: "",
-      updatedAt: "",
-      __typename: "Alert"
+      completed: false,
+      riskLevel: RiskLevel.UNASSIGNED,
+      _version: 0
     };
     if (currentSelected !== item && item !== emptyAlert) {
       setEmptyAlert(false);
@@ -85,13 +81,12 @@ export const AlertScreen: FC<WithSideTabsProps[ScreenName.ALERTS]> = () => {
   const initialAlert = {
     id: alertSelected.id,
     patientName: alertSelected.patientName,
-    patientID: alertSelected.patientID,
-    vitalsReportID: alertSelected.vitalsReportID,
-    symptomReportID: alertSelected.symptomReportID,
+    patientId: alertSelected.patientId,
     summary: alertSelected.summary,
-    colorCode: alertSelected.colorCode,
-    createdTimeDate: alertSelected.createdAt,
-    modifiedTimeDate: alertSelected.updatedAt
+    riskLevel: alertSelected.riskLevel,
+    _version: alertSelected._version,
+    dateTime: alertSelected.dateTime,
+    completed: alertSelected.completed
   };
 
   return (

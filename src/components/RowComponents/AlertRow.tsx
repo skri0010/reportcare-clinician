@@ -1,13 +1,11 @@
 import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
-import { RiskLevel, getRiskLevelColor } from "models/RiskLevel";
-import { Alert } from "aws/API";
-import { View, Button, TouchableOpacity } from "react-native";
-import { ScaledSheet } from "react-native-size-matters";
+import { View, TouchableOpacity } from "react-native";
 import { H4, H5 } from "components/Text/index";
+import { AlertInfo } from "rc_agents/model";
 
 interface AlertRowProps {
-  alertDetails: Alert;
+  alertDetails: AlertInfo;
   onButtonPress?: () => void;
   onCardPress?: () => void;
 }

@@ -20,6 +20,8 @@ import { Alert, ModelSortDirection } from "aws/API";
 import { listPendingAlertsByDateTime } from "aws";
 import { AlertColorCode, AlertInfo, AlertStatus } from "rc_agents/model";
 import { RiskLevel } from "models/RiskLevel";
+import { store } from "util/useRedux";
+import { setFetchingPendingAlerts } from "ic-redux/actions/agents/actionCreator";
 
 /**
  * Class to represent an activity for retrieving pending alerts.
@@ -39,6 +41,7 @@ class RetrievePendingAlertCount extends Activity {
 
     try {
       let results: Alert[] | undefined;
+      store.dispatch(setFetchingPendingAlerts(true));
 
       if (agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
         // Device is online
