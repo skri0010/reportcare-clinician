@@ -21,11 +21,9 @@ import { AlertInfo, AlertStatus } from "rc_agents/model";
 import { Alert, ModelSortDirection } from "aws/API";
 import { store } from "util/useRedux";
 import {
-  setCompletedAlerts,
   setFetchingAlerts,
   setFetchingCompletedAlerts,
-  setFetchingPendingAlerts,
-  setPendingAlerts
+  setFetchingPendingAlerts
 } from "ic-redux/actions/agents/actionCreator";
 import { mapColorCodeToRiskLevel } from "./RetrievePendingAlertCount";
 
@@ -108,15 +106,9 @@ class RetrieveAlerts extends Activity {
               false
             );
           }
-        } else if (
-          alertStatus === AlertStatus.PENDING ||
-          alertStatus === AlertStatus.COMPLETED
-        ) {
+        } else {
           // Device is offline need to add get pending
-          dispatchFromMemory(alertStatus);
-        } else if (alertStatus === AlertStatus.ALL) {
-          await dispatchFromMemory(AlertStatus.PENDING);
-          await dispatchFromMemory(AlertStatus.COMPLETED);
+          await dispatchFromMemory(AlertStatus.ALL);
         }
       }
     } catch (error) {
@@ -133,18 +125,24 @@ class RetrieveAlerts extends Activity {
 export const dispatchFromMemory = async (
   alertStatus: AlertStatus
 ): Promise<void> => {
+  let alertsToDispatch: AlertInfo[] | null = null;
+
   if (alertStatus === AlertStatus.PENDING) {
-    const alertsToDispatch = await Storage.getPendingAlerts();
-    if (alertsToDispatch) {
-      store.dispatch(setPendingAlerts(sortAlertsByDateTime(alertsToDispatch)));
-    }
+    alertsToDispatch = await Storage.getPendingAlerts();
   } else if (alertStatus === AlertStatus.COMPLETED) {
-    const alertsToDispatch = await Storage.getCompletedAlerts();
-    if (alertsToDispatch) {
-      store.dispatch(
-        setCompletedAlerts(sortAlertsByDateTime(alertsToDispatch))
-      );
-    }
+    alertsToDispatch = await Storage.getCompletedAlerts();
+  } else if (alertStatus === AlertStatus.ALL) {
+    alertsToDispatch = await Storage.getAlerts();
+  }
+  if (alertsToDispatch) {
+    agentAPI.addFact(
+      new Belief(
+        BeliefKeys.CLINICIAN,
+        ClinicianAttributes.ALERTS,
+        alertsToDispatch
+      ),
+      false
+    );
   }
 };
 
