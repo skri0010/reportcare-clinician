@@ -20,7 +20,7 @@ import { AlertInfo } from "rc_agents/model";
 
 /**
  * Class to represent an activity for triggering the display of alert info.
- * This happens in Procedure Triage Alert HF Clinic (AT-CP).
+ * This happens in Procedure Triage Alert HF Clinic (AT-CP-II).
  */
 class DisplayAlertInfo extends Activity {
   constructor() {

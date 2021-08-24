@@ -27,6 +27,8 @@ import {
 } from "aws";
 import { Alert, ModelSortDirection } from "aws/API";
 import { mapColorCodeToRiskLevel } from "./RetrievePendingAlertCount";
+import { store } from "util/useRedux";
+import { setFetchingAlertInfo } from "ic-redux/actions/agents/actionCreator";
 
 /**
  * Class to represent an activity for retrieving patient's information associated with an alert.
@@ -43,6 +45,9 @@ class RetrieveAlertInfo extends Activity {
    */
   async doActivity(agent: Agent): Promise<void> {
     await super.doActivity(agent, [rule2]);
+
+    // Dispatch to frontend that alert info is being fetched
+    store.dispatch(setFetchingAlertInfo(true));
 
     try {
       const facts = agentAPI.getFacts();
@@ -92,6 +97,9 @@ class RetrieveAlertInfo extends Activity {
       // eslint-disable-next-line no-console
       console.log(error);
     }
+
+    // Dispatch to frontend that the fetching of alert info has completed
+    store.dispatch(setFetchingAlertInfo(false));
   }
 }
 

@@ -1,12 +1,10 @@
-import React, { FC, useContext } from "react";
-import { View, Text, TouchableOpacity, Dimensions } from "react-native";
+/* eslint-disable no-console */
+import React, { FC } from "react";
+import { View, Dimensions } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
-import { H2, H3, H4, H5 } from "components/Text";
+import { H5 } from "components/Text";
 import { RootState, select } from "util/useRedux";
-import { ScreenWrapper } from "../ScreenWrapper";
-import { AlertContext } from "./AlertScreen";
 import { AlertHistory } from "mock/mockPatientDetails";
-import { RiskLevel } from "models/RiskLevel";
 import { BloodPressureCard } from "./AlertDetailsCards/BloodPressureCard";
 import { HRVCard } from "./AlertDetailsCards/HRVCard";
 import { SymptomCard } from "./AlertDetailsCards/SymptomCard";
@@ -32,7 +30,8 @@ const AlertDetailsRow: FC<AlertDetailsRowProps> = ({
     </View>
   );
 };
-export const AlertDetails: FC<AlertDetailsProps> = ({ alertHistory }) => {
+
+export const AlertDetails: FC = () => {
   const { colors, alertInfo } = select((state: RootState) => ({
     colors: state.settings.colors,
     alertInfo: state.agents.alertInfo
@@ -41,30 +40,35 @@ export const AlertDetails: FC<AlertDetailsProps> = ({ alertHistory }) => {
   const cardHeight = Math.max(ms(100), Dimensions.get("window").height * 0.25);
 
   return (
-    <View style={{ flexDirection: "column" }}>
+    <View style={{ flexDirection: "column", paddingBottom: ms(20) }}>
+      {/* Alert summary */}
       <SummaryCard
         summary={alertInfo ? alertInfo.summary : "-"}
         risk={alertInfo ? alertInfo.riskLevel : "-"}
         maxHeight={cardHeight}
         minHeight={cardHeight}
       />
+      {/* Alert symptoms and signs */}
       <SymptomCard
-        symptom={alertHistory.signs}
-        signs={alertHistory.signs}
-        maxHeight={cardHeight}
+        symptom={
+          alertInfo && alertInfo.symptoms?.Name ? alertInfo.symptoms.Name : "-"
+        }
+        signs="Edema (Scale 3)" // JQ-TODO Get clarification on what signs mean and where to get the data
+        maxHeight={ms(150)}
         minHeight={cardHeight}
       />
-      <View style={{ flexDirection: "row", flex: 1 }}>
+      {/* Alert BP */}
+      <View style={{ flexDirection: "row", flex: 1, flexWrap: "wrap" }}>
         <BloodPressureCard
-          bloodPressure={alertHistory.BP}
+          bloodPressure={
+            alertInfo && alertInfo.vitals?.BPDi ? alertInfo.vitals.BPDi : "-"
+          }
           maxHeight={cardHeight}
           minHeight={cardHeight}
         />
-        <HRVCard
-          HRV={alertHistory.HRV}
-          maxHeight={cardHeight}
-          minHeight={cardHeight}
-        />
+        {/* Alert HRV */}
+        {/* JQ-TODO Change hardcoded value for HRV once that is added to the schema */}
+        <HRVCard HRV={89} maxHeight={cardHeight} minHeight={cardHeight} />
       </View>
     </View>
   );

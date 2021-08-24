@@ -8,20 +8,22 @@ import { mockCompletedAlerts } from "mock/mockAlerts";
 import { AlertRow } from "components/RowComponents/AlertRow";
 import { AlertRowTabProps } from "./AlertCurrentTab";
 import { ScreenWrapper } from "../ScreenWrapper";
+import { AgentTrigger } from "rc_agents/trigger";
 
-export const AlertCompletedTab: FC<AlertRowTabProps> = ({
-  setAlertSelected
-}) => {
+export const AlertCompletedTab: FC<AlertRowTabProps> = ({ setEmptyAlert }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
   }));
 
+  // Trigger the retrieval of alert info when the alert item is selected
   function onCardPress(item: Alert) {
-    setAlertSelected(item);
+    AgentTrigger.triggerRetrieveAlertInfo(item);
+    setEmptyAlert(false);
   }
 
   return (
     <ScreenWrapper style={{ backgroundColor: colors.primaryBackgroundColor }}>
+      {/* Search bar */}
       <SearchBarComponent
         onSearchClick={() => {
           null;
@@ -32,6 +34,7 @@ export const AlertCompletedTab: FC<AlertRowTabProps> = ({
         containerStyle={{ backgroundColor: colors.primaryContrastTextColor }}
         placeholder="Search..."
       />
+      {/* Completed alerts list */}
       <FlatList
         showsVerticalScrollIndicator={false}
         ItemSeparatorComponent={() => <ItemSeparator />}

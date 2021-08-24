@@ -25,6 +25,7 @@ interface AgentsState {
   riskFilters: RiskFilter;
   pendingAlertCount: PendingAlertCount;
   alerts: Alert[];
+  fetchingAlertInfo: boolean;
   alertInfo: AlertInfo | undefined;
   fetchingTodos: boolean;
   pendingTodos: LocalTodo[] | undefined;
@@ -57,6 +58,7 @@ const initialState: AgentsState = {
     unassignedRisk: 0
   },
   alerts: [],
+  fetchingAlertInfo: false,
   alertInfo: undefined,
   fetchingTodos: false,
   pendingTodos: undefined,
@@ -110,6 +112,11 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
       return {
         ...state,
         alerts: action.payload.alerts
+      };
+    case actionNames.SET_FETCHING_ALERT_INFO:
+      return {
+        ...state,
+        fetchingAlertInfo: action.payload.fetchingAlertInfo
       };
     case actionNames.SET_ALERT_INFO:
       return {

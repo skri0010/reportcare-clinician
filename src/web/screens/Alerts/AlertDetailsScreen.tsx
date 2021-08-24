@@ -1,17 +1,13 @@
+/* eslint-disable no-console */
 import React, { FC, useContext } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
-import { ms, ScaledSheet } from "react-native-size-matters";
-import { H2, H3, H4, H5 } from "components/Text";
+import { View, TouchableOpacity } from "react-native";
+import { ScaledSheet } from "react-native-size-matters";
+import { H4 } from "components/Text";
 import { RootState, select } from "util/useRedux";
 import { ScreenWrapper } from "../ScreenWrapper";
 import { AlertContext } from "./AlertScreen";
-import { mockSymptomRecords } from "mock/mockSymptoms";
-import { mockVitals } from "mock/mockVitals";
-import { mockAlerts } from "mock/mockAlerts";
 import { AlertDetails } from "./AlertDetails";
-import { CardWrapper } from "../Home/CardWrapper";
 import i18n from "util/language/i18n";
-import { mockAlertHistory } from "mock/mockPatientDetails";
 
 interface AlertDetailsScreenProps {
   setModalVisible: (state: boolean) => void;
@@ -20,25 +16,27 @@ interface AlertDetailsScreenProps {
 export const AlertDetailsScreen: FC<AlertDetailsScreenProps> = ({
   setModalVisible
 }) => {
-  const { colors, fonts } = select((state: RootState) => ({
-    colors: state.settings.colors,
-    fonts: state.settings.fonts
+  const { colors } = select((state: RootState) => ({
+    colors: state.settings.colors
   }));
-  const context = useContext(AlertContext);
-  const findSymptoms = (id: string) => {
-    // TODO: to be replaced with an API or agent call
-    // this is just to keep the symptoms dynamic
 
-    for (let i = 0; i < mockAlertHistory.length; i += 1) {
-      if (mockAlertHistory[i].id === id) {
-        return <AlertDetails alertHistory={mockAlertHistory[i]} />;
-      }
-    }
-  };
+  const context = useContext(AlertContext);
+  // const findSymptoms = (id: string) => {
+  //   // TODO: to be replaced with an API or agent call
+  //   // this is just to keep the symptoms dynamic
+
+  //   for (let i = 0; i < mockAlertHistory.length; i += 1) {
+  //     if (mockAlertHistory[i].id === id) {
+  //       return <AlertDetails />;
+  //     }
+  //   }
+  // };
   return (
     <ScreenWrapper>
       <View style={styles.container}>
-        {findSymptoms(context.id)}
+        {/* Alert details cards */}
+        <AlertDetails />
+        {/* Create todo button */}
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={[
@@ -46,8 +44,8 @@ export const AlertDetailsScreen: FC<AlertDetailsScreenProps> = ({
               { backgroundColor: colors.primaryTodoCompleteButtonColor }
             ]}
             onPress={() => {
+              // Allows the create todo modal to be visible
               setModalVisible(true);
-              // Call on add todo screen
             }}
           >
             <H4

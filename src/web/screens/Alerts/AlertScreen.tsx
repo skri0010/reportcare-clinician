@@ -1,13 +1,10 @@
 import React, { FC, useState, createContext, useEffect } from "react";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { ScreenName, WithSideTabsProps } from "web/screens";
-import { View, Text, Modal } from "react-native";
+import { View, Modal } from "react-native";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { ms, ScaledSheet } from "react-native-size-matters";
-import {
-  CardStyleInterpolators,
-  createStackNavigator
-} from "@react-navigation/stack";
+import { createStackNavigator } from "@react-navigation/stack";
 import { RowSelectionTab } from "web/screens/RowSelectionTab";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { getTopTabBarOptions } from "util/getStyles";
@@ -25,6 +22,7 @@ import {
   setUpdatedTodo
 } from "ic-redux/actions/agents/actionCreator";
 import i18n from "util/language/i18n";
+import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
 
 const Tab = createMaterialTopTabNavigator();
 const Stack = createStackNavigator();
@@ -42,13 +40,21 @@ export const AlertContext = createContext({
 });
 
 export const AlertScreen: FC<WithSideTabsProps[ScreenName.ALERTS]> = () => {
-  const { colors, procedureOngoing, procedureSuccessful, submittingTodo } =
-    select((state: RootState) => ({
-      colors: state.settings.colors, // Used to detect completion of updateTodo procedure
-      procedureOngoing: state.agents.procedureOngoing,
-      procedureSuccessful: state.agents.procedureSuccessful,
-      submittingTodo: state.agents.submittingTodo
-    }));
+  const {
+    colors,
+    procedureOngoing,
+    procedureSuccessful,
+    submittingTodo,
+    fetchingAlertInfo,
+    alertInfo
+  } = select((state: RootState) => ({
+    colors: state.settings.colors, // Used to detect completion of updateTodo procedure
+    procedureOngoing: state.agents.procedureOngoing,
+    procedureSuccessful: state.agents.procedureSuccessful,
+    submittingTodo: state.agents.submittingTodo,
+    fetchingAlertInfo: state.agents.fetchingAlertInfo,
+    alertInfo: state.agents.alertInfo
+  }));
 
   const [alertSelected, setAlertSelected] = useState<Alert>({
     id: "",
@@ -72,32 +78,6 @@ export const AlertScreen: FC<WithSideTabsProps[ScreenName.ALERTS]> = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const toast = useToast();
   const dispatch = useDispatch();
-
-  function onRowClick(item: Alert) {
-    const currentSelected = alertSelected;
-    const emptyAlert: Alert = {
-      id: "",
-      patientID: "",
-      patientName: "",
-      dateTime: "",
-      summary: "",
-      colorCode: "",
-      vitalsReportID: "",
-      symptomReportID: "",
-      owner: "",
-      _version: 0,
-      _lastChangedAt: 0,
-      createdAt: "",
-      updatedAt: "",
-      __typename: "Alert"
-    };
-    if (currentSelected !== item && item !== emptyAlert) {
-      setEmptyAlert(false);
-      setAlertSelected(item);
-    } else if (item === emptyAlert) {
-      setEmptyAlert(true);
-    }
-  }
 
   const initialAlert = {
     id: alertSelected.id,
@@ -136,10 +116,10 @@ export const AlertScreen: FC<WithSideTabsProps[ScreenName.ALERTS]> = () => {
           <RowSelectionTab title="Alerts" isTodo />
           <Tab.Navigator tabBarOptions={getTopTabBarOptions(colors)}>
             <Tab.Screen name="Pending">
-              {() => <AlertCurrentTab setAlertSelected={onRowClick} />}
+              {() => <AlertCurrentTab setEmptyAlert={setEmptyAlert} />}
             </Tab.Screen>
             <Tab.Screen name="Completed">
-              {() => <AlertCompletedTab setAlertSelected={onRowClick} />}
+              {() => <AlertCompletedTab setEmptyAlert={setEmptyAlert} />}
             </Tab.Screen>
           </Tab.Navigator>
         </View>
@@ -149,15 +129,16 @@ export const AlertScreen: FC<WithSideTabsProps[ScreenName.ALERTS]> = () => {
             backgroundColor: colors.primaryWebBackgroundColor
           }}
         >
-          {!isEmptyAlert ? (
+          {fetchingAlertInfo ? (
+            <LoadingIndicator flex={1} />
+          ) : !isEmptyAlert ? (
             <NavigationContainer independent>
               <AlertContext.Provider value={initialAlert}>
                 <Stack.Navigator>
                   <Stack.Screen
                     name="ViewAlert"
-                    // component={AlertDetailsScreen}
                     options={() => ({
-                      title: initialAlert.patientName,
+                      title: alertInfo?.patientName,
                       headerStyle: {
                         height: ms(45)
                       },
