@@ -15,6 +15,7 @@ import { WithPatientsScreenProps, PatientsScreenName } from "web/screens";
 import { RootState, select } from "util/useRedux";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
 import { getAge } from "util/utilityFunctions";
+import { AgentTrigger } from "rc_agents/trigger";
 
 export const PatientInformation: FC<
   WithPatientsScreenProps[PatientsScreenName.INFO]
@@ -51,6 +52,8 @@ export const PatientInformation: FC<
         emergencyContactName: info.emergencyContactName
       };
       setContactInfo(contactInfoToSet);
+      // Trigger the retrieval of alert history
+      AgentTrigger.triggerGetHistoricalAlerts(info.patientID);
     }
   }, [patientDetails]);
 

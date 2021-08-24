@@ -6,6 +6,7 @@ import { PatientAlertHistoryCard } from "./PatientHistoryScreens/PatientAlertHis
 import { PatientMedicalRecordCard } from "./PatientHistoryScreens/PatientMedicalRecordCard";
 import { WithPatientsScreenProps, PatientsScreenName } from "web/screens";
 import { AgentTrigger } from "rc_agents/trigger";
+import { RootState, select } from "util/useRedux";
 
 export const PatientHistory: FC<
   WithPatientsScreenProps[PatientsScreenName.HISTORY]
@@ -17,9 +18,9 @@ export const PatientHistory: FC<
   );
   // Query history data by patientId here or pass it into component for query
 
-  useEffect(() => {
-    AgentTrigger.triggerGetHistoricalAlerts(patient.patientID);
-  });
+  // useEffect(() => {
+  //   AgentTrigger.triggerGetHistoricalAlerts(patient.patientID);
+  // });
 
   return (
     <ScreenWrapper padding>
