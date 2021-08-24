@@ -4,19 +4,19 @@ import {
   Agent,
   Belief,
   Precondition,
-  ResettablePrecondition,
-  setRetryLaterTimeout
-} from "rc_agents/framework";
+  ResettablePrecondition
+} from "agents-framework";
+import { ProcedureConst } from "agents-framework/Enums";
+import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
+  setRetryLaterTimeout,
   ActionFrameIDs,
   AppAttributes,
   BeliefKeys,
   PatientAttributes,
-  ProcedureAttributes,
-  ProcedureConst
-} from "rc_agents/AgentEnums";
+  ProcedureAttributes
+} from "rc_agents/clinician_framework";
 import { PatientDetails } from "rc_agents/model";
-import agentAPI from "rc_agents/framework/AgentAPI";
 import {
   listActivityInfosByPatientID,
   listReportSymptomsByPatientID,

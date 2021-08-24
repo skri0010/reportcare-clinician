@@ -124,7 +124,7 @@ export const setSubmittingTodo = createAction(
 
 export const setUpdatedTodo = createAction(
   actionNames.SET_UPDATED_TODO,
-  (updatedTodo: LocalTodo) => ({
+  (updatedTodo: LocalTodo | undefined) => ({
     updatedTodo: updatedTodo
   })
 )();

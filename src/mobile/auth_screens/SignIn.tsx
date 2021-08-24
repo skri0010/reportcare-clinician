@@ -12,20 +12,20 @@ import {
 } from "mobile/auth_screens";
 import { ScreenWrapper } from "mobile/screens/ScreenWrapper";
 import { validatePassword, validateUsername } from "util/validation";
-import agentAPI from "rc_agents/framework/AgentAPI";
+import { Belief } from "agents-framework";
+import { ProcedureConst } from "agents-framework/Enums";
+import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import i18n from "util/language/i18n";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useToast } from "react-native-toast-notifications";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
-import agentAPS from "rc_agents/agents/app-configuration-assistant/APS";
-import Belief from "rc_agents/framework/base/Belief";
+import { agentAPS } from "rc_agents/agents";
 import {
-  ProcedureConst,
   BeliefKeys,
   AppAttributes,
   ClinicianAttributes,
   ProcedureAttributes
-} from "rc_agents/AgentEnums";
+} from "rc_agents/clinician_framework";
 import { AsyncStorageKeys } from "rc_agents/storage";
 import { useNetInfo } from "@react-native-community/netinfo";
 import { setProcedureOngoing } from "ic-redux/actions/agents/actionCreator";
@@ -77,9 +77,6 @@ export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
     })
       .then(async () => {
         await AsyncStorage.setItem(AsyncStorageKeys.USERNAME, username);
-
-        // Triggers initialization of agents
-        agentAPI.startAgents();
 
         // Triggers APS to retrieve existing entry or create new entry
         setTimeout(() => {

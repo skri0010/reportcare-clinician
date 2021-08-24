@@ -14,6 +14,7 @@ import { InfoTitleBar } from "./PatientInfoSections/InfoTitleBar";
 import { WithPatientsScreenProps, PatientsScreenName } from "web/screens";
 import { RootState, select } from "util/useRedux";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
+import { getAge } from "util/utilityFunctions";
 
 export const PatientInformation: FC<
   WithPatientsScreenProps[PatientsScreenName.INFO]
@@ -33,20 +34,21 @@ export const PatientInformation: FC<
       // Set basic info
       const basicInfoToSet: BasicInfo = {
         // JH-TODO-NEW: Schema is missing hardcoded values
-        gender: "???",
-        age: "???",
-        birthdate: "????",
+        gender: info.gender,
+        age: getAge(info.birthDate),
+        birthDate: new Date(info.birthDate).toLocaleDateString(),
         location: info.hospitalLocation,
         class: info.NHYAclass,
-        language: "???"
+        language: info.language
       };
       setBasicInfo(basicInfoToSet);
 
       const contactInfoToSet: ContactInfo = {
-        phoneNumber: "???",
-        email: "???",
-        address: "???",
-        emergencyContact: "???"
+        phoneNumber: info.phoneNumber,
+        email: info.email,
+        address: info.address,
+        emergencyContactNumber: info.emergencyContactNumber,
+        emergencyContactName: info.emergencyContactName
       };
       setContactInfo(contactInfoToSet);
     }

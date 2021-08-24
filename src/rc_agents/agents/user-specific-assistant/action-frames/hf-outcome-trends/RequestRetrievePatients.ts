@@ -5,18 +5,20 @@ import {
   Belief,
   Precondition,
   ResettablePrecondition
-} from "rc_agents/framework";
+} from "agents-framework";
+import {
+  ProcedureConst,
+  Performative,
+  CommonAttributes
+} from "agents-framework/Enums";
 import {
   ActionFrameIDs,
   AgentIDs,
   BeliefKeys,
   ClinicianAttributes,
-  CommonAttributes,
   PatientAttributes,
-  Performative,
-  ProcedureAttributes,
-  ProcedureConst
-} from "rc_agents/AgentEnums";
+  ProcedureAttributes
+} from "rc_agents/clinician_framework";
 
 /**
  * The class represents the activity for requesting retrieval of all patients specific to a role.

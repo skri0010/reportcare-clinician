@@ -6,10 +6,6 @@ import {
 } from "aws/API";
 import { RiskLevel } from "models/RiskLevel";
 
-export interface Fact {
-  [k: string]: { [k: string]: any };
-}
-
 // Role selection during clinician sign up
 // Note: Role values must be compatible with the custom:hospital_role values for Cognito user groups
 export enum Role {
@@ -37,8 +33,7 @@ export enum PatientAssignmentStatus {
 
 export enum AlertStatus {
   PENDING = "PENDING",
-  COMPLETED = "COMPLETED",
-  NONE = "NONE"
+  COMPLETED = "COMPLETED"
 }
 
 export enum AlertColorCode {

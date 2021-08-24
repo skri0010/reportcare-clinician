@@ -17,6 +17,13 @@ export declare class PatientInfo {
   readonly targetWeight: string;
   readonly targetActivity: string;
   readonly riskLevel: string;
+  readonly gender: string;
+  readonly birthDate: string;
+  readonly language: string;
+  readonly phoneNumber: string;
+  readonly email: string;
+  readonly emergencyContactName: string;
+  readonly emergencyContactNumber: string;
   readonly patientID: string;
   constructor(init: ModelInit<PatientInfo>);
   static copyOf(source: PatientInfo, mutator: (draft: MutableModel<PatientInfo>) => MutableModel<PatientInfo> | void): PatientInfo;

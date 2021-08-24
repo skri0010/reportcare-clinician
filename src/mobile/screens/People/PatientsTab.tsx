@@ -5,17 +5,16 @@ import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { ScaledSheet } from "react-native-size-matters";
 import { PatientDetailsRow } from "components/RowComponents/PatientRows/PatientDetailsRow";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
-import agentDTA from "rc_agents/agents/data-assistant/DTA";
-import Belief from "rc_agents/framework/base/Belief";
+import { agentDTA, agentUXSA } from "rc_agents/agents";
+import { Belief } from "agents-framework";
+import { ProcedureConst } from "agents-framework/Enums";
+import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
   BeliefKeys,
   ClinicianAttributes,
   PatientAttributes,
-  ProcedureAttributes,
-  ProcedureConst
-} from "rc_agents/AgentEnums";
-import agentAPI from "rc_agents/framework/AgentAPI";
-import agentUXSA from "rc_agents/agents/user-specific-assistant/UXSA";
+  ProcedureAttributes
+} from "rc_agents/clinician_framework";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { setProcedureOngoing } from "ic-redux/actions/agents/actionCreator";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
@@ -127,8 +126,6 @@ export const PatientsTab: FC = () => {
         renderItem={({ item }) => (
           <PatientDetailsRow
             patient={item}
-            // JH-TODO-NEW Age must be calculated
-            age={0}
             onRowPress={() => getData(item.id)}
           />
         )}

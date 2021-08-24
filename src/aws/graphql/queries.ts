@@ -28,6 +28,13 @@ export const syncPatientInfos = /* GraphQL */ `
         targetWeight
         targetActivity
         riskLevel
+        gender
+        birthDate
+        language
+        phoneNumber
+        email
+        emergencyContactName
+        emergencyContactNumber
         patientID
         _version
         _deleted
@@ -56,6 +63,13 @@ export const getPatientInfo = /* GraphQL */ `
       targetWeight
       targetActivity
       riskLevel
+      gender
+      birthDate
+      language
+      phoneNumber
+      email
+      emergencyContactName
+      emergencyContactNumber
       patientID
       _version
       _deleted
@@ -94,6 +108,13 @@ export const listPatientInfos = /* GraphQL */ `
         targetWeight
         targetActivity
         riskLevel
+        gender
+        birthDate
+        language
+        phoneNumber
+        email
+        emergencyContactName
+        emergencyContactNumber
         patientID
         _version
         _deleted

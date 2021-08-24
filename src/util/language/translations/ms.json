@@ -136,10 +136,17 @@
     "EditButton": "Edit",
     "CancelButton": "Batal",
     "SaveButton": "Simpan",
+    "Never": "Belum pernah",
     "TitleInputPlaceholder": "Apakah todo ini tentang?",
     "PatientInputPlaceholder": "Siapakah nama pesakit?",
     "NotesInputPlaceholder": "Apakah yang perlu dicatatkan?",
-    "NoSelection": "Pilihkan salah satu item Todo untuk melihat butirannya"
+    "NoSelection": "Pilihkan salah satu item Todo untuk melihat butirannya",
+    "TodoCreateSuccessful": "Todo telah berjaya dicipta",
+    "TodoUpdateSuccessful": "Todo telah berjaya dikemas kini",
+    "MarkAsDone": "TANDA SEBAGAI SELESAI",
+    "UndoFromCompleted": "PINDAH DARI SELESAI",
+    "Done": "SIAP",
+    "Undo": "UNDO"
   },
   "Patients": {
     "PatientsList": {
@@ -216,6 +223,8 @@
     "LanguageSpoken": "Bahasa Pertuturan",
     "EmergencyContact": "Talian Kecemasan",
     "BasicInfo": "Informasi Asas",
-    "ContactInfo": "Informasi Hubungan"
-  }
+    "ContactInfo": "Informasi Hubungan",
+    "Years": "tahun"
+  },
+  "UnexpectedError": "Ralat yang tidak disangkai telah berlaku"
 }

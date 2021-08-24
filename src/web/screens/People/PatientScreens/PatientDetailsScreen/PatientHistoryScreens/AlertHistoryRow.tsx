@@ -4,7 +4,7 @@ import { ScaledSheet } from "react-native-size-matters";
 import { H4, H5 } from "components/Text/index";
 import { getRiskLevelColor, RiskLevel } from "models/RiskLevel";
 import { View } from "react-native";
-import { ViewRowButton } from "./ViewRowButton";
+import { RowButton } from "components/Buttons/RowButton";
 import i18n from "util/language/i18n";
 
 interface AlertHistoryRowProps {
@@ -68,7 +68,7 @@ export const AlertHistoryRow: FC<AlertHistoryRowProps> = ({
       </View>
       {/* View button */}
       <View style={[styles.buttonContainer]}>
-        <ViewRowButton onRowPress={onRowPress} />
+        <RowButton onRowPress={onRowPress} title="Patient_History.ViewButton" />
       </View>
     </View>
   );

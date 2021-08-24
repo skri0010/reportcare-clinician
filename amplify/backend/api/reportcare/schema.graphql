@@ -28,6 +28,13 @@ type PatientInfo
   targetWeight: String!
   targetActivity: String!
   riskLevel: String!
+  gender: String!
+  birthDate: AWSDate!
+  language: String!
+  phoneNumber: String!
+  email: String!
+  emergencyContactName: String!
+  emergencyContactNumber: String!
   patientID: String!
 }
 

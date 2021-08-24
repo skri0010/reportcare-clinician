@@ -10,28 +10,21 @@ import { ScaledSheet, ms } from "react-native-size-matters";
 import { H3 } from "components/Text";
 import { RootState, select, useDispatch } from "util/useRedux";
 import i18n from "util/language/i18n";
-import { agentDTA } from "rc_agents/agents";
-import {
-  BeliefKeys,
-  ClinicianAttributes,
-  ProcedureAttributes,
-  ProcedureConst
-} from "rc_agents/AgentEnums";
-import { agentAPI, Belief } from "rc_agents/framework";
 import { TodoCreateInput } from "rc_agents/model";
-import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
 import {
   setProcedureOngoing,
   setProcedureSuccessful
 } from "ic-redux/actions/agents/actionCreator";
 import { useToast } from "react-native-toast-notifications";
+import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
+import { AgentTrigger } from "rc_agents/trigger";
 
 interface AddTodoScreenProps {
   setModalVisible: (state: boolean) => void;
 }
 
 export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
-  const { colors, fonts, procedureOngoing, procedureSuccessful } = select(
+  const { colors, fonts, procedureSuccessful, procedureOngoing } = select(
     (state: RootState) => ({
       colors: state.settings.colors,
       fonts: state.settings.fonts,
@@ -46,11 +39,12 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
     height: ms(45)
   };
 
-  const [titleInput, setTitleInput] = useState<string>("");
-  const [patientInput, setPatientInput] = useState<string>("");
-  const [noteInput, setNoteInput] = useState<string>("");
-  const [submittingTodo, setSubmittingTodo] = useState(false);
+  const [titleInput, setTitleInput] = useState<string>(""); // Title input
+  const [patientInput, setPatientInput] = useState<string>(""); // Patient name input
+  const [noteInput, setNoteInput] = useState<string>(""); // Notes input
+  const [creating, setCreating] = useState(false); // Used locally for detecting ongoing procedure
 
+  // Functions that allow user inputs to be shown in the text inputs
   const onChangeTitle = (newTitle: string) => {
     setTitleInput(newTitle);
   };
@@ -64,7 +58,7 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
   const dispatch = useDispatch();
   const toast = useToast();
 
-  // Triggers the start of procedure SRD-II to insert Todo
+  // Triggers CreateTodo procedure
   const createTodo = () => {
     const todoInput: TodoCreateInput = {
       title: titleInput,
@@ -74,26 +68,14 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
     };
 
     dispatch(setProcedureOngoing(true));
-    setSubmittingTodo(true);
-    agentAPI.addFact(
-      new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.TODO, todoInput),
-      false
-    );
-    agentDTA.addBelief(
-      new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.CREATE_TODO, true)
-    );
-    agentAPI.addFact(
-      new Belief(
-        BeliefKeys.PROCEDURE,
-        ProcedureAttributes.SRD_II,
-        ProcedureConst.ACTIVE
-      )
-    );
+    setCreating(true);
+    AgentTrigger.triggerCreateTodo(todoInput);
   };
 
+  // Detects completion of CreateTodo procedure and shows the appropriate toast.
   useEffect(() => {
-    if (submittingTodo && !procedureOngoing) {
-      setSubmittingTodo(false);
+    if (creating && !procedureOngoing) {
+      setCreating(false);
       setModalVisible(false);
 
       if (procedureSuccessful) {
@@ -107,10 +89,10 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
     }
   }, [
     dispatch,
-    procedureOngoing,
+    creating,
     procedureSuccessful,
     setModalVisible,
-    submittingTodo,
+    procedureOngoing,
     toast
   ]);
 
@@ -123,6 +105,7 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
         }
       ]}
     >
+      {/* Title input */}
       <H3 text={i18n.t("Todo.Title")} style={styles.inputTitle} />
       <TextInput
         value={titleInput}
@@ -134,6 +117,7 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
         ]}
         onChangeText={onChangeTitle}
       />
+      {/* Patient name input */}
       <H3 text={i18n.t("Todo.Patient")} style={styles.inputTitle} />
       <TextInput
         value={patientInput}
@@ -145,6 +129,7 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
         ]}
         onChangeText={onChangePatient}
       />
+      {/* Notes input */}
       <H3 text={i18n.t("Todo.Notes")} style={styles.inputTitle} />
       <TextInput
         multiline
@@ -162,7 +147,7 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
         ]}
         onChangeText={onChangeNotes}
       />
-
+      {/* Save button */}
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={[
@@ -176,6 +161,7 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
             style={{ color: colors.primaryContrastTextColor }}
           />
         </TouchableOpacity>
+        {/* Cancel button */}
         <TouchableOpacity
           style={[
             styles.button,
@@ -195,7 +181,9 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
           />
         </TouchableOpacity>
       </View>
-      {submittingTodo && <LoadingIndicator />}
+
+      {/* Loading Indicator while Todo is being created */}
+      {creating && <LoadingIndicator />}
     </View>
   );
 };

@@ -3,11 +3,12 @@ import { ScaledSheet } from "react-native-size-matters";
 import i18n from "util/language/i18n";
 import { View } from "react-native";
 import { PatientInfoRow, InfoIcon } from "./PatientInfoRow";
+import { capitalizeFirstLetter } from "util/utilityFunctions";
 
 export interface BasicInfo {
   gender: string;
   age: string;
-  birthdate: string;
+  birthDate: string;
   location: string;
   class: string;
   language: string;
@@ -22,15 +23,15 @@ export const BasicInfoSection: FC<BasicInfoSectionProps> = ({ info }) => {
       {/* Details of patient basic information */}
       <PatientInfoRow
         title={i18n.t("Patient_Info.Gender")}
-        content={info.gender}
+        content={capitalizeFirstLetter(info.gender)}
         iconType={InfoIcon.GENDER}
       />
       {/* JH-TODO-NEW: Calculate age */}
       <PatientInfoRow
         title={i18n.t("Patient_Info.DOB")}
-        content={info.birthdate}
+        content={info.birthDate}
         iconType={InfoIcon.BIRTHDATE}
-        subcontent={info.age}
+        subcontent={`${info.age} ${i18n.t("Patient_Info.Years")}`}
       />
       {/* JH-TODO-NEW: Update this location attribute */}
       <PatientInfoRow
@@ -45,7 +46,7 @@ export const BasicInfoSection: FC<BasicInfoSectionProps> = ({ info }) => {
       />
       <PatientInfoRow
         title={i18n.t("Patient_Info.LanguageSpoken")}
-        content={info.language}
+        content={capitalizeFirstLetter(info.language)}
         iconType={InfoIcon.LANGUAGE}
       />
     </View>
