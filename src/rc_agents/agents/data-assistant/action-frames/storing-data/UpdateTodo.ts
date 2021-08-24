@@ -161,7 +161,7 @@ class UpdateTodo extends Activity {
 // Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.SRD_II,
+  ProcedureAttributes.SRD_III,
   ProcedureConst.ACTIVE
 );
 const rule2 = new ResettablePrecondition(

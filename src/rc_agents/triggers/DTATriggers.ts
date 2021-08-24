@@ -141,7 +141,7 @@ export const triggerCreateTodo = (input: TodoInput): void => {
   agentAPI.addFact(
     new Belief(
       BeliefKeys.PROCEDURE,
-      ProcedureAttributes.SRD_II,
+      ProcedureAttributes.SRD_III,
       ProcedureConst.ACTIVE
     )
   );
@@ -159,7 +159,7 @@ export const triggerUpdateTodo = (input: TodoInput): void => {
   agentAPI.addFact(
     new Belief(
       BeliefKeys.PROCEDURE,
-      ProcedureAttributes.SRD_II,
+      ProcedureAttributes.SRD_III,
       ProcedureConst.ACTIVE
     )
   );
