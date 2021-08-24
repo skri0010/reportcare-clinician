@@ -59,6 +59,13 @@ export const setFetchingPatientDetails = createAction(
   })
 )();
 
+export const setFetchingPatientAlertHistory = createAction(
+  actionNames.SET_FETCHING_PATIENT_ALERT_HISTORY,
+  (fetchingPatientAlertHistory: boolean) => ({
+    fetchingPatientAlertHistory: fetchingPatientAlertHistory
+  })
+)();
+
 export const setFetchingPendingPatientAssignments = createAction(
   actionNames.SET_FETCHING_PENDING_PATIENT_ASSIGNMENTS,
   (fetchingPendingPatientAssignments: boolean) => ({
