@@ -49,7 +49,9 @@ const compileNodeModules = [
   "react-native-ratings",
   "react-native-vector-icons",
   "react-native-chart-kit",
-  "react-native-web"
+  "@react-native-picker/picker",
+  "react-native-web",
+  "agents-framework"
 ].map((moduleName) => path.resolve(appDirectory, `node_modules/${moduleName}`));
 
 // Loader for react-native packages to be compiled
@@ -142,11 +144,8 @@ module.exports = {
       "react-native-svg": "react-native-svg-web",
       [path.resolve(
         appDirectory,
-        "src/rc_agents/framework/management/MobileAgentManagement"
-      )]: path.resolve(
-        appDirectory,
-        "src/rc_agents/framework/management/WebAgentManagement"
-      ),
+        "src/repos/management/MobileAgentManagement"
+      )]: path.resolve(appDirectory, "src/repos/management/WebAgentManagement"),
       ...srcFolderAliasPaths
     },
     fallback: {

@@ -4,20 +4,20 @@ import {
   Agent,
   Belief,
   Precondition,
-  ResettablePrecondition,
-  setRetryLaterTimeout
-} from "rc_agents/framework";
+  ResettablePrecondition
+} from "agents-framework";
 import {
+  setRetryLaterTimeout,
   ActionFrameIDs,
   AppAttributes,
   BeliefKeys
-} from "rc_agents/AgentEnums";
+} from "rc_agents/clinician_framework";
 import { Storage } from "rc_agents/storage";
 import { updateTodo } from "aws/TypedAPI/updateMutations";
 import { createTodo } from "aws/TypedAPI/createMutations";
 import { CreateTodoInput, Todo, UpdateTodoInput } from "aws/API";
 import { listTodosByAlertID } from "aws";
-import agentNWA from "../NWA";
+import { agentNWA } from "rc_agents/agents";
 import { TodoStatus } from "rc_agents/model";
 
 /**

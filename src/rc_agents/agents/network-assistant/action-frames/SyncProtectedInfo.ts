@@ -4,12 +4,12 @@ import {
   Agent,
   Precondition,
   ResettablePrecondition
-} from "rc_agents/framework";
+} from "agents-framework";
 import {
   ActionFrameIDs,
   AppAttributes,
   BeliefKeys
-} from "rc_agents/AgentEnums";
+} from "rc_agents/clinician_framework";
 import { Storage } from "rc_agents/storage";
 import { updateClinicianProtectedInfo } from "aws/TypedAPI/updateMutations";
 import { UpdateClinicianProtectedInfoInput } from "aws/API";

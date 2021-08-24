@@ -3725,6 +3725,10 @@ agent-base@6:
   dependencies:
     debug "4"
 
+"agents-framework@git+https://git-codecommit.ap-southeast-1.amazonaws.com/v1/repos/agents-framework":
+  version "0.0.0"
+  resolved "git+https://git-codecommit.ap-southeast-1.amazonaws.com/v1/repos/agents-framework#2c848b351ea6e405d1dee812c05a081ea11247b5"
+
 ajv-errors@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/ajv-errors/-/ajv-errors-1.0.1.tgz#f35986aceb91afadec4102fbd85014950cefa64d"

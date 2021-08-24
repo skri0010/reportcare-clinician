@@ -3,11 +3,12 @@ import {
   BeliefKeys,
   ClinicianAttributes,
   PatientAttributes,
-  ProcedureAttributes,
-  ProcedureConst
-} from "rc_agents/AgentEnums";
+  ProcedureAttributes
+} from "rc_agents/clinician_framework";
+import { ProcedureConst } from "agents-framework/Enums";
 import { agentDTA } from "rc_agents/agents";
-import { agentAPI, Belief } from "rc_agents/framework";
+import { Belief } from "agents-framework";
+import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
   PatientAssignmentResolution,
   TodoCreateInput,

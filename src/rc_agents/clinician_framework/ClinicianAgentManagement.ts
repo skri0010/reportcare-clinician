@@ -1,36 +1,22 @@
-import { DeviceEventEmitter } from "react-native";
-import Agent from "../base/Agent";
-import Belief from "../base/Belief";
-import { Fact } from "../../model";
+import { Belief } from "agents-framework";
 import { getClinicianProtectedInfo, updateClinicianProtectedInfo } from "aws";
 import {
   UpdateClinicianProtectedInfoInput,
   ClinicianProtectedInfo
 } from "aws/API";
-import { AgentIDs, AppAttributes, BeliefKeys } from "../../AgentEnums";
-import { Storage } from "../../storage";
+import { AgentIDs, AppAttributes, BeliefKeys } from "./index";
+import { Storage } from "../storage";
+import AgentManagement from "agents-framework/management/AgentManagement";
+import { ClinicianAgent } from "./ClinicianAgent";
 
 /**
  * Base class for management of active agents.
  */
-abstract class AgentManagement {
-  private agents: Agent[];
-
-  private facts: Fact;
-
-  /**
-   * Constructor for the Agent Management System
-   */
-  constructor() {
-    this.agents = [];
-    this.facts = {};
-    this.factFromDB();
-  }
-
+export class ClinicianAgentManagement extends AgentManagement {
   /**
    * Retrieve saved state of facts from the database
    */
-  async factFromDB(): Promise<void> {
+  override async factFromDB(): Promise<void> {
     let factsSet = false;
     let protectedInfo: ClinicianProtectedInfo | null | undefined;
 
@@ -74,45 +60,16 @@ abstract class AgentManagement {
   }
 
   /**
-   * Register the agent in the system
-   * @param {Agent} agent - agent to be registered
-   */
-  registerAgent(agent: Agent): void {
-    this.agents.push(agent);
-  }
-
-  /**
-   * Get the specified agent
-   * @param {string} agentID - identifier of the agent
-   * @return {Agent} return the specified Agent class
-   */
-  getAgent(agentID: string): Agent | null {
-    for (let i = 0; i < this.agents.length; i += 1) {
-      if (this.agents[i].getID() === agentID) {
-        return this.agents[i];
-      }
-    }
-    return null;
-  }
-
-  /**
-   * Unregister specified agent from the system
-   * @param {string} agentID - identifier of the agent
-   */
-  unregisterAgent(agentID: string): void {
-    for (let i = 0; i < this.agents.length; i += 1) {
-      if (this.agents[i].getID() === agentID) {
-        this.agents.splice(i, 1);
-        break;
-      }
-    }
-  }
-
-  /**
    * Get all the registered agents
    */
-  getAgents(): Agent[] {
-    return this.agents;
+  override getAgents(): ClinicianAgent[] {
+    const registeredAgents: ClinicianAgent[] = [];
+    this.agents.forEach((agent) => {
+      if (agent instanceof ClinicianAgent) {
+        registeredAgents.push(agent);
+      }
+    });
+    return registeredAgents;
   }
 
   /**
@@ -121,30 +78,13 @@ abstract class AgentManagement {
    * @param {Boolean} broadcast - whether fact is to be broadcasted
    * @param {Boolean} updateDb - whether the local beliefs and facts should be written to database
    */
-  async addFact(
+  override async addFact(
     fact: Belief,
     broadcast: boolean = true,
     updateDb: boolean = false
   ): Promise<void> {
     try {
-      const key = fact.getKey();
-      const value = fact.getValue();
-      const attribute = fact.getAttribute();
-
-      if (value === null && key in this.facts) {
-        // Clears intermediate attributes and values of actions from current facts
-        delete this.facts[key][attribute];
-      } else {
-        // Add new fact
-        if (!(key in this.facts)) {
-          this.facts[key] = {};
-        }
-        this.facts[key][attribute] = value;
-
-        if (broadcast) {
-          DeviceEventEmitter.emit("env", fact);
-        }
-      }
+      super.addFact(fact, broadcast);
 
       if (updateDb) {
         await this.updateDbStates();
@@ -172,14 +112,6 @@ abstract class AgentManagement {
         });
       }
     });
-  }
-
-  /**
-   * Get all the facts
-   * @return {Fact} facts or state of the environment
-   */
-  getFacts(): Fact {
-    return this.facts;
   }
 
   /**
@@ -303,11 +235,4 @@ abstract class AgentManagement {
       }
     }
   }
-
-  /**
-   * Triggers the initialization of agents.
-   */
-  abstract startAgents(): void;
 }
-
-export default AgentManagement;
