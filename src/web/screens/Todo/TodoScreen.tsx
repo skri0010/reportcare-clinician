@@ -56,33 +56,16 @@ export const TodoScreen: FC<MainScreenProps[ScreenName.TODO]> = ({
 
   const { todoToShow, selectedListTab, selectedStackScreen } = route.params;
 
-  // console.log(route.params);
-  // Todo that has been selected by the user from the list of todos *****
-  // const [selectedTodo] = useState(mockCurrentTodo[0]);
-
   // For pointer events
   const [modalVisible, setModalVisible] = useState(false);
 
   // For add button visibility in the header of left tab
   const [addButton, setAddButton] = useState(true);
 
-  // JH-TODO-NAV: Remove test todo
-  const test: LocalTodo = {
-    id: "",
-    title: "",
-    patientName: "testsiuloong",
-    notes: "",
-    completed: false,
-    alertId: "",
-    patientId: "testsiuloong",
-    createdAt: "",
-    lastModified: "",
-    toSync: false,
-    _version: -1
-  };
-
   // Selected todo details
-  const [todoSelected, setTodoSelected] = useState<LocalTodo>(test);
+  const [todoSelected, setTodoSelected] = useState<LocalTodo | undefined>(
+    undefined
+  );
 
   const toast = useToast();
   const dispatch = useDispatch();
@@ -110,7 +93,7 @@ export const TodoScreen: FC<MainScreenProps[ScreenName.TODO]> = ({
   // Compares dispatched updatedTodo with current Todo displayed in the TodoDetailsScreen
   useEffect(() => {
     // Updates the TodoDetailsScreen with the newly updated Todo
-    if (updatedTodo && updatedTodo.id === todoSelected.id) {
+    if (updatedTodo && todoSelected && updatedTodo.id === todoSelected.id) {
       onRowClick(updatedTodo);
       dispatch(setUpdatedTodo(undefined));
     }
