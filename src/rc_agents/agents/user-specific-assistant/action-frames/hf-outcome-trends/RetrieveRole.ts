@@ -5,9 +5,9 @@ import {
   Belief,
   Precondition,
   ResettablePrecondition
-} from "rc_agents/framework";
-import { ProcedureConst } from "rc_agents/framework/Enums";
-import agentAPI from "rc_agents/clinician_framework/ClinicianAgentAPI";
+} from "agents-framework";
+import { ProcedureConst } from "agents-framework/Enums";
+import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
   setRetryLaterTimeout,
   BeliefKeys,

@@ -1,8 +1,8 @@
-import Belief from "../framework/base/Belief";
+import { Belief } from "agents-framework";
 // eslint-disable-next-line no-restricted-imports
-import AgentAPI from "rc_agents/framework/AgentAPI";
-import ClinicianAgentManagement from "./ClinicianAgentManagement";
-import ClinicianAgent from "./ClinicianAgent";
+import AgentAPI from "agents-framework/AgentAPI";
+import { ClinicianAgentManagement } from "./ClinicianAgentManagement";
+import { ClinicianAgent } from "./ClinicianAgent";
 
 /**
  * Class representing an end point for the agent system
@@ -49,6 +49,4 @@ class ClinicianAgentAPI extends AgentAPI {
   }
 }
 
-const agentAPI = new ClinicianAgentAPI();
-
-export default agentAPI;
+export const agentAPI = new ClinicianAgentAPI();

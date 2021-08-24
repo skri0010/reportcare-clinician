@@ -5,10 +5,10 @@ import {
   PatientAttributes,
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
-import { ProcedureConst } from "rc_agents/framework/Enums";
+import { ProcedureConst } from "agents-framework/Enums";
 import { agentDTA } from "rc_agents/agents";
-import { Belief } from "rc_agents/framework";
-import agentAPI from "rc_agents/clinician_framework/ClinicianAgentAPI";
+import { Belief } from "agents-framework";
+import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
   PatientAssignmentResolution,
   TodoInput,

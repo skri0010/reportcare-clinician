@@ -1,4 +1,4 @@
-import Belief from "../framework/base/Belief";
+import { Belief } from "agents-framework";
 import { getClinicianProtectedInfo, updateClinicianProtectedInfo } from "aws";
 import {
   UpdateClinicianProtectedInfoInput,
@@ -6,13 +6,13 @@ import {
 } from "aws/API";
 import { AgentIDs, AppAttributes, BeliefKeys } from "./index";
 import { Storage } from "../storage";
-import AgentManagement from "../framework/management/AgentManagement";
-import ClinicianAgent from "./ClinicianAgent";
+import AgentManagement from "agents-framework/management/AgentManagement";
+import { ClinicianAgent } from "./ClinicianAgent";
 
 /**
  * Base class for management of active agents.
  */
-class ClinicianAgentManagement extends AgentManagement {
+export class ClinicianAgentManagement extends AgentManagement {
   /**
    * Retrieve saved state of facts from the database
    */
@@ -236,5 +236,3 @@ class ClinicianAgentManagement extends AgentManagement {
     }
   }
 }
-
-export default ClinicianAgentManagement;

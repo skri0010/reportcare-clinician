@@ -118,7 +118,7 @@ module.exports = {
             message: "Please import from util/useRedux instead"
           },
           {
-            name: "rc_agents/framework/AgentAPI",
+            name: "agents-framework/AgentAPI",
             message:
               "Please import from rc_agents/clinician_framework/ClinicianAgentAPI instead"
           }
