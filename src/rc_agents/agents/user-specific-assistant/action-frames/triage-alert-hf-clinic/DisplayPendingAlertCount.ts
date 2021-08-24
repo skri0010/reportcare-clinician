@@ -5,15 +5,15 @@ import {
   Belief,
   Precondition,
   ResettablePrecondition
-} from "rc_agents/framework";
+} from "agents-framework";
+import { ProcedureConst } from "agents-framework/Enums";
+import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
   ActionFrameIDs,
   BeliefKeys,
   ClinicianAttributes,
-  ProcedureAttributes,
-  ProcedureConst
-} from "rc_agents/AgentEnums";
-import agentAPI from "rc_agents/framework/AgentAPI";
+  ProcedureAttributes
+} from "rc_agents/clinician_framework";
 import { AlertColorCode, AlertInfo, PendingAlertCount } from "rc_agents/model";
 import { store } from "util/useRedux";
 import { Alert } from "aws/API";
@@ -110,9 +110,7 @@ class DisplayPendingAlertCount extends Activity {
         BeliefKeys.PROCEDURE,
         ProcedureAttributes.AT_CP,
         ProcedureConst.INACTIVE
-      ),
-      true,
-      true
+      )
     );
   }
 }

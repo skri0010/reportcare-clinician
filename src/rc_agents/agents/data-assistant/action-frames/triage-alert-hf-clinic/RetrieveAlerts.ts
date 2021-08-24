@@ -5,37 +5,25 @@ import {
   Belief,
   Precondition,
   ResettablePrecondition
-} from "rc_agents/framework";
+} from "agents-framework";
+import { ProcedureConst } from "agents-framework/Enums";
+import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
   ActionFrameIDs,
   AppAttributes,
   BeliefKeys,
   ClinicianAttributes,
-  ProcedureAttributes,
-  ProcedureConst
-} from "rc_agents/AgentEnums";
-import { AsyncStorageKeys } from "rc_agents/storage";
-import agentAPI from "rc_agents/framework/AgentAPI";
+  ProcedureAttributes
+} from "rc_agents/clinician_framework";
+import { Storage } from "rc_agents/storage";
 import { mockCompletedAlerts, mockPendingAlerts } from "mock/mockAlerts";
-import {
-  AlertStatus,
-  listCompletedRiskAlerts,
-  listPendingRiskAlerts
-} from "aws";
-import { AlertColorCode, AlertInfo } from "rc_agents/model";
+import { listCompletedRiskAlerts, listPendingRiskAlerts } from "aws";
+import { AlertColorCode, AlertInfo, AlertStatus } from "rc_agents/model";
 import { RiskLevel } from "models/RiskLevel";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Alert } from "aws/API";
 
 // LS-TODO: To be tested with actual Alerts.
 // NOTE: This is originally MHA's action frame.
-
-interface LocalAlerts {
-  [RiskLevel.HIGH]?: string;
-  [RiskLevel.MEDIUM]?: string;
-  [RiskLevel.LOW]?: string;
-  [RiskLevel.UNASSIGNED]?: string;
-}
 
 /**
  * Class to represent the activity for retrieving alerts.
@@ -68,9 +56,6 @@ class RetrieveAlerts extends Activity {
 
       // Retrieves all alerts with a specific status and risk level
       if (alertStatus && alertRiskLevel) {
-        // Retrieves locally stored alerts
-        const alertsJSON = await AsyncStorage.getItem(AsyncStorageKeys.ALERTS);
-
         if (facts[BeliefKeys.APP][AppAttributes.ONLINE]) {
           // Device is online
 
@@ -154,17 +139,16 @@ class RetrieveAlerts extends Activity {
             );
 
             // Merges newly retrieved alerts into locally stored alerts
-            await this.mergeIntoLocalAlerts(alerts, alertsJSON, alertRiskLevel);
+            await Storage.setMultipleAlerts(alerts);
           }
-        } else if (alertsJSON) {
+        } else {
           // Device is offline
-          const localAlerts = await this.retrieveLocalAlerts(
-            alertsJSON,
-            alertStatus,
-            alertRiskLevel
+          const localRiskAlerts = await Storage.getRiskOrStatusAlerts(
+            alertRiskLevel,
+            alertStatus
           );
-          if (localAlerts) {
-            const sortedAlerts = sortAlertsByDateTime(localAlerts);
+          if (localRiskAlerts) {
+            const sortedAlerts = sortAlertsByDateTime(localRiskAlerts);
             agentAPI.addFact(
               new Belief(
                 BeliefKeys.CLINICIAN,
@@ -199,88 +183,6 @@ class RetrieveAlerts extends Activity {
       console.log(error);
     }
   }
-
-  /**
-   * Merges retrieved alert into JSON string for local storage
-   * @param alert current alert
-   * @param alertsJSON JSON string according to risk level
-   * @param riskLevel risk level of the current alert
-   * @returns merged JSON string
-   */
-  // eslint-disable-next-line class-methods-use-this
-  async mergeIntoLocalAlerts(
-    alerts: Alert[],
-    alertsJSON: string | null,
-    riskLevel: RiskLevel
-  ): Promise<void> {
-    let localAlerts: LocalAlerts;
-
-    if (alertsJSON) {
-      localAlerts = JSON.parse(alertsJSON);
-      if (localAlerts[riskLevel]) {
-        const riskAlerts: Alert[] = JSON.parse(localAlerts[riskLevel]!);
-        // Checks and replaces existing alerts with the newly retrieved ones
-        // Otherwise new alerts are added into the list
-        alerts.forEach((alert) => {
-          const existIndex = riskAlerts.findIndex((a) => a.id === alert.id);
-          if (existIndex >= 0) {
-            riskAlerts[existIndex] = alert;
-          } else {
-            riskAlerts.push(alert);
-          }
-        });
-        localAlerts[riskLevel] = JSON.stringify(riskAlerts);
-      } else {
-        localAlerts[riskLevel] = JSON.stringify(alerts);
-      }
-    } else {
-      localAlerts = {};
-      localAlerts[riskLevel] = JSON.stringify(alerts);
-    }
-    // Stores into local storage
-    await AsyncStorage.setItem(
-      AsyncStorageKeys.ALERTS,
-      JSON.stringify(localAlerts)
-    );
-  }
-
-  /**
-   * Gets locally stored alerts with specific status and risk level.
-   * @param alertsJSON locally stored JSON string
-   * @param alertStatus alert status
-   * @param riskLevel risk level
-   * @returns a list of alerts if any
-   */
-  // eslint-disable-next-line class-methods-use-this
-  async retrieveLocalAlerts(
-    alertsJSON: string,
-    alertStatus: AlertStatus,
-    riskLevel: RiskLevel
-  ): Promise<Alert[] | null> {
-    const alerts: LocalAlerts = JSON.parse(alertsJSON);
-    const riskAlertsJSON = alerts[riskLevel];
-    if (riskAlertsJSON) {
-      const riskAlerts: Alert[] = JSON.parse(riskAlertsJSON);
-      const alertsToReturn: Alert[] = [];
-      if (alertStatus === AlertStatus.PENDING) {
-        riskAlerts.forEach((alert) => {
-          if (alert.pending === AlertStatus.PENDING) {
-            alertsToReturn.push(alert);
-          }
-        });
-      } else if (alertStatus === AlertStatus.COMPLETED) {
-        riskAlerts.forEach((alert) => {
-          if (alert.completed === AlertStatus.COMPLETED) {
-            alertsToReturn.push(alert);
-          }
-        });
-      }
-      if (alertsToReturn.length > 0) {
-        return alertsToReturn;
-      }
-    }
-    return null;
-  }
 }
 
 const mapRiskLevelToColorCode = (alertRiskLevel: RiskLevel): AlertColorCode => {
@@ -313,7 +215,7 @@ export const sortAlertsByDateTime = (
   });
 };
 
-// Rules or preconditions for activating the RetrieveAlerts class
+// Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
   ProcedureAttributes.AT_CP,
@@ -325,7 +227,7 @@ const rule2 = new ResettablePrecondition(
   true
 );
 
-// Actionframe of the RetrieveAlerts class
+// Actionframe
 export const af_RetrieveAlerts = new Actionframe(
   `AF_${ActionFrameIDs.DTA.RETRIEVE_ALERTS}`,
   [rule1, rule2],

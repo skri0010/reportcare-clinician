@@ -4,28 +4,28 @@ import {
   Belief,
   Activity,
   Precondition,
-  agentAPI,
-  setRetryLaterTimeout,
   ResettablePrecondition
-} from "rc_agents/framework";
+} from "agents-framework";
+import { ProcedureConst } from "agents-framework/Enums";
+import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
+  setRetryLaterTimeout,
   ActionFrameIDs,
   AppAttributes,
   BeliefKeys,
   PatientAttributes,
-  ProcedureAttributes,
-  ProcedureConst
-} from "rc_agents/AgentEnums";
+  ProcedureAttributes
+} from "rc_agents/clinician_framework";
 import { Storage } from "rc_agents/storage";
 import { PatientAssignmentStatus } from "rc_agents/model";
 import { listPendingPatientAssignments } from "aws";
 import { PatientAssignment } from "aws/API";
 import { setFetchingPendingPatientAssignments } from "ic-redux/actions/agents/actionCreator";
-import { store } from "ic-redux/store";
+import { store } from "util/useRedux";
 
 /**
  * Class to represent an activity for retrieving pending patient assignments.
- * This happens in Procedure Storing Data (SRD).
+ * This happens in Procedure Storing Data (SRD-I).
  */
 class RetrievePendingPatientAssignments extends Activity {
   constructor() {
@@ -47,27 +47,33 @@ class RetrievePendingPatientAssignments extends Activity {
     try {
       // Get locally stored clinicianId
       const clinicianId = await Storage.getClinicianID();
+      // Get online status from facts
       const isOnline =
         agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE];
-      // Device is online
-      if (clinicianId && isOnline) {
-        // Retrieve pending patient assignments
-        const query = await listPendingPatientAssignments({
-          clinicianID: clinicianId,
-          pending: { eq: PatientAssignmentStatus.PENDING.toString() }
-        });
 
-        if (query.data.listPendingPatientAssignments?.items) {
-          pendingPatientAssignments = query.data.listPendingPatientAssignments
-            .items as PatientAssignment[];
-          // Save retrieved data locally
-          await Storage.setPendingPatientAssignments(pendingPatientAssignments);
+      if (clinicianId) {
+        // Device is online
+        if (isOnline) {
+          // Retrieve pending patient assignments
+          const query = await listPendingPatientAssignments({
+            clinicianID: clinicianId,
+            pending: { eq: PatientAssignmentStatus.PENDING.toString() }
+          });
+
+          if (query.data.listPendingPatientAssignments?.items) {
+            pendingPatientAssignments = query.data.listPendingPatientAssignments
+              .items as PatientAssignment[];
+            // Save retrieved data locally
+            await Storage.setPendingPatientAssignments(
+              pendingPatientAssignments
+            );
+          }
         }
-      }
-      // Device is offline: Retrieve locally stored data (if any)
-      else if (clinicianId && !isOnline) {
-        pendingPatientAssignments =
-          await Storage.getPendingPatientAssignments();
+        // Device is offline: Retrieve locally stored data (if any)
+        else {
+          pendingPatientAssignments =
+            await Storage.getPendingPatientAssignments();
+        }
       }
 
       if (pendingPatientAssignments) {
@@ -105,7 +111,7 @@ class RetrievePendingPatientAssignments extends Activity {
         agentAPI.addFact(
           new Belief(
             BeliefKeys.PROCEDURE,
-            ProcedureAttributes.SRD,
+            ProcedureAttributes.SRD_I,
             ProcedureConst.ACTIVE
           )
         );
@@ -116,11 +122,12 @@ class RetrievePendingPatientAssignments extends Activity {
       agentAPI.addFact(
         new Belief(
           BeliefKeys.PROCEDURE,
-          ProcedureAttributes.SRD,
+          ProcedureAttributes.SRD_I,
           ProcedureConst.INACTIVE
-        )
+        ),
+        true,
+        true
       );
-    } finally {
       // Dispatch to store to indicate fetching has ended
       store.dispatch(setFetchingPendingPatientAssignments(false));
     }
@@ -130,7 +137,7 @@ class RetrievePendingPatientAssignments extends Activity {
 // Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.SRD,
+  ProcedureAttributes.SRD_I,
   ProcedureConst.ACTIVE
 );
 const rule2 = new ResettablePrecondition(

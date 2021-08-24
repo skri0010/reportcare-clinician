@@ -8,9 +8,7 @@ import { Amplify } from "@aws-amplify/core";
 import { Auth } from "@aws-amplify/auth";
 import { LogBox } from "react-native";
 import { AuthState } from "./auth_screens";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import agentAPI from "rc_agents/framework/AgentAPI";
-import { AsyncStorageKeys } from "rc_agents/storage";
+import { Storage } from "rc_agents/storage";
 import { ToastProviderComponent } from "components/IndicatorComponents/ToastProvider";
 
 Amplify.configure(awsconfig);
@@ -31,11 +29,8 @@ const App: FC = () => {
     try {
       await Auth.currentAuthenticatedUser();
       // In case local storage has been cleared
-      const clinicianId = await AsyncStorage.getItem(
-        AsyncStorageKeys.CLINICIAN_ID
-      );
+      const clinicianId = await Storage.getClinicianID();
       if (clinicianId) {
-        agentAPI.startAgents();
         setAuthState(AuthState.SIGNED_IN);
       } else {
         setAuthState(AuthState.SIGNED_OUT);

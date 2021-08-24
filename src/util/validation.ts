@@ -2,7 +2,7 @@
 
 // Checks that username has 3 to 16 characters
 export const validateUsername = (username: string): boolean => {
-  return /^[a-z0-9_-]{3,16}$/i.test(username);
+  return /^[a-z0-9_-]{3,16}$/.test(username);
 };
 
 export const validateEmail = (email: string): boolean => {

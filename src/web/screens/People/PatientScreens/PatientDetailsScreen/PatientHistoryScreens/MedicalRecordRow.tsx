@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { ScaledSheet } from "react-native-size-matters";
 import { H4 } from "components/Text/index";
 import { View } from "react-native";
-import { ViewRowButton } from "./ViewRowButton";
+import { RowButton } from "components/Buttons/RowButton";
 
 interface MedicalRecordRowProps {
   description: string;
@@ -19,7 +19,7 @@ export const MedicalRecordRow: FC<MedicalRecordRowProps> = ({
       <H4 text={description} style={[styles.textContainer]} />
 
       <View style={[styles.buttonContainer]}>
-        <ViewRowButton onRowPress={onRowPress} />
+        <RowButton onRowPress={onRowPress} title="Patient_History.ViewButton" />
       </View>
     </View>
   );

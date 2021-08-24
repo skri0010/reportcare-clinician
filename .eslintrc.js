@@ -68,6 +68,7 @@ module.exports = {
     ],
     "no-plusplus": "off",
     "prefer-rest-params": "off",
+    "no-fallthrough": "error",
     "import/order": 0,
     "import/no-extraneous-dependencies": 0,
     "no-use-before-define": "off",
@@ -111,6 +112,15 @@ module.exports = {
             name: "@react-native-picker/picker",
             message:
               "Please import the component directly (eg @react-native-picker/picker/js/Picker.web)"
+          },
+          {
+            name: "ic-redux/store",
+            message: "Please import from util/useRedux instead"
+          },
+          {
+            name: "agents-framework/AgentAPI",
+            message:
+              "Please import from rc_agents/clinician_framework/ClinicianAgentAPI instead"
           }
         ],
         patterns: [
@@ -118,6 +128,14 @@ module.exports = {
             group: ["aws/graphql/queries"],
             message:
               "Use exports from aws/graphql/TypedAPI files instead. If statements do not exists, create your own"
+          },
+          {
+            group: ["aws/models"],
+            message: "Use exported types from aws/API files instead."
+          },
+          {
+            group: ["rc_agents/agents/"],
+            message: "Please import from rc_agents/agents instead"
           }
         ]
       }

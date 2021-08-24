@@ -5,17 +5,17 @@ import {
   Belief,
   Precondition,
   ResettablePrecondition
-} from "rc_agents/framework";
+} from "agents-framework";
+import { ProcedureConst } from "agents-framework/Enums";
+import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
-  ProcedureConst,
   BeliefKeys,
   ClinicianAttributes,
   ProcedureAttributes,
   ActionFrameIDs
-} from "rc_agents/AgentEnums";
-import { AsyncStorageKeys } from "rc_agents/storage";
+} from "rc_agents/clinician_framework";
+import { AsyncStorageKeys, Storage } from "rc_agents/storage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import agentAPI from "rc_agents/framework/AgentAPI";
 import { createClinicianInfo, createClinicianProtectedInfo } from "aws";
 import { store } from "util/useRedux";
 import {
@@ -89,7 +89,7 @@ class StoreEntryData extends Activity {
           ]);
 
           // Removes sign up details from local storage
-          await AsyncStorage.removeItem(AsyncStorageKeys.SIGN_UP_DETAILS);
+          await Storage.removeItem(AsyncStorageKeys.SIGN_UP_DETAILS);
 
           // Dispatch to front end that sign in was successful
           store.dispatch(setProcedureSuccessful(true));
@@ -131,7 +131,7 @@ class StoreEntryData extends Activity {
   }
 }
 
-// Rules or preconditions for activating the StoreEntryData class
+// Preconditions
 const rule1 = new ResettablePrecondition(
   BeliefKeys.CLINICIAN,
   ClinicianAttributes.RETRIEVE_ENTRY,
@@ -148,7 +148,7 @@ const rule3 = new Precondition(
   ProcedureConst.ACTIVE
 );
 
-// Action Frame for StoreEntryData class
+// Actionframe
 export const af_StoreEntryData = new Actionframe(
   `AF_${ActionFrameIDs.DTA.STORE_ENTRY_DATA}`,
   [rule1, rule2, rule3],

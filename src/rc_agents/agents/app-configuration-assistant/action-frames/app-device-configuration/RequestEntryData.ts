@@ -4,17 +4,19 @@ import {
   Agent,
   Belief,
   Precondition
-} from "rc_agents/framework";
+} from "agents-framework";
+import {
+  ProcedureConst,
+  Performative,
+  CommonAttributes
+} from "agents-framework/Enums";
 import {
   ActionFrameIDs,
   AgentIDs,
   BeliefKeys,
   ClinicianAttributes,
-  CommonAttributes,
-  Performative,
-  ProcedureAttributes,
-  ProcedureConst
-} from "rc_agents/AgentEnums";
+  ProcedureAttributes
+} from "rc_agents/clinician_framework";
 
 /**
  * Class to represent the activity for requesting clinician's entry data.
@@ -52,7 +54,7 @@ class RequestEntryData extends Communicate {
   }
 }
 
-// Rules or preconditions for activating the RequestEntryData class
+// Preconditions
 const rule1 = new Precondition(
   AgentIDs.APS,
   CommonAttributes.LAST_ACTIVITY,
@@ -64,7 +66,7 @@ const rule2 = new Precondition(
   ProcedureConst.ACTIVE
 );
 
-// Actionframe of the RequestEntryData class
+// Actionframe
 export const af_RequestEntryData = new Actionframe(
   `AF_${ActionFrameIDs.APS.REQUEST_ENTRY_DATA}`,
   [rule1, rule2],

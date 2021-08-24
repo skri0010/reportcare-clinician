@@ -27,7 +27,13 @@ import {
   ListReportSymptomsByPatientIDQuery,
   ListReportSymptomsByPatientIDQueryVariables,
   ListReportVitalsByPatientIDQuery,
-  ListReportVitalsByPatientIDQueryVariables
+  ListReportVitalsByPatientIDQueryVariables,
+  ListTodosByAlertIDQuery,
+  ListTodosByAlertIDQueryVariables,
+  ListPendingTodosByLastModifiedDateQuery,
+  ListPendingTodosByLastModifiedDateQueryVariables,
+  ListCompletedTodosByLastModifiedDateQuery,
+  ListCompletedTodosByLastModifiedDateQueryVariables
 } from "aws/API";
 
 interface ListClinicianInfosResponse extends BaseResponse {
@@ -196,4 +202,43 @@ export const listCompletedRiskAlerts = async (
     query: queries.listCompletedRiskAlerts,
     variables: variables
   })) as ListCompletedRiskAlertsResponse;
+};
+
+interface ListTodosByAlertIDResponse extends BaseResponse {
+  data: ListTodosByAlertIDQuery;
+}
+
+export const listTodosByAlertID = async (
+  variables: ListTodosByAlertIDQueryVariables
+): Promise<ListTodosByAlertIDResponse> => {
+  return (await API.graphql({
+    query: queries.listTodosByAlertID,
+    variables: variables
+  })) as ListTodosByAlertIDResponse;
+};
+
+interface ListPendingTodosByLastModifiedDateResponse extends BaseResponse {
+  data: ListPendingTodosByLastModifiedDateQuery;
+}
+
+export const listPendingTodosByLastModifiedDate = async (
+  variables: ListPendingTodosByLastModifiedDateQueryVariables
+): Promise<ListPendingTodosByLastModifiedDateResponse> => {
+  return (await API.graphql({
+    query: queries.listPendingTodosByLastModifiedDate,
+    variables: variables
+  })) as ListPendingTodosByLastModifiedDateResponse;
+};
+
+interface ListCompletedTodosByLastModifiedDateResponse extends BaseResponse {
+  data: ListCompletedTodosByLastModifiedDateQuery;
+}
+
+export const listCompletedTodosByLastModifiedDate = async (
+  variables: ListCompletedTodosByLastModifiedDateQueryVariables
+): Promise<ListCompletedTodosByLastModifiedDateResponse> => {
+  return (await API.graphql({
+    query: queries.listCompletedTodosByLastModifiedDate,
+    variables: variables
+  })) as ListCompletedTodosByLastModifiedDateResponse;
 };

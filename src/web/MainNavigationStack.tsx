@@ -6,16 +6,16 @@ import { ScreenName, RootStackParamList } from "./screens";
 import { RootState, select } from "util/useRedux";
 import { ms } from "react-native-size-matters";
 import { Auth } from "@aws-amplify/auth";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useToast } from "react-native-toast-notifications";
 import i18n from "util/language/i18n";
 import { AuthState } from "./auth_screens";
 import { useNetInfo } from "@react-native-community/netinfo";
-import agentAPI from "rc_agents/framework/AgentAPI";
-import Belief from "rc_agents/framework/base/Belief";
-import { AppAttributes, BeliefKeys } from "rc_agents/AgentEnums";
+import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
+import { Belief } from "agents-framework";
+import { AppAttributes, BeliefKeys } from "rc_agents/clinician_framework";
 import { getMainScreenHeaderStyle } from "util/getStyles";
+import { Storage } from "rc_agents/storage";
 
 interface MainNavigationStackProps {
   setAuthState: (state: string) => void;
@@ -41,10 +41,7 @@ export const MainNavigationStack: FC<MainNavigationStackProps> = ({
 
   const signOut = async (): Promise<void> => {
     await Auth.signOut().then(async () => {
-      const keys = await AsyncStorage.getAllKeys();
-      if (keys && keys.length > 0) {
-        await AsyncStorage.multiRemove(keys);
-      }
+      await Storage.removeAll();
       toast.show(i18n.t("Auth_SignOut.SignOutSuccessful"), { type: "success" });
       setAuthState(AuthState.SIGNED_OUT);
     });
@@ -72,7 +69,7 @@ export const MainNavigationStack: FC<MainNavigationStackProps> = ({
       netInfo.isInternetReachable === false
     ) {
       // Removes online broadcast from facts
-      agentAPI.addFact(new Belief(BeliefKeys.APP, AppAttributes.ONLINE, null));
+      agentAPI.addFact(new Belief(BeliefKeys.APP, AppAttributes.ONLINE, false));
       if (!warningToastShown) {
         toast.show(i18n.t("Internet_Connection.OfflineNotice"), {
           type: "warning"

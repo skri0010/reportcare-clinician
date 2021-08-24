@@ -5,33 +5,46 @@ import {
   Belief,
   Precondition,
   ResettablePrecondition
-} from "rc_agents/framework";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+} from "agents-framework";
+import { ProcedureConst } from "agents-framework/Enums";
+import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
-  ProcedureConst,
   BeliefKeys,
   ProcedureAttributes,
   AppAttributes,
   ActionFrameIDs,
   ClinicianAttributes
-} from "rc_agents/AgentEnums";
-import { AsyncStorageKeys } from "rc_agents/storage";
-import agentAPI from "rc_agents/framework/AgentAPI";
-import { store } from "ic-redux/store";
+} from "rc_agents/clinician_framework";
+import { Storage } from "rc_agents/storage";
+import { store } from "util/useRedux";
+import { setProcedureSuccessful } from "ic-redux/actions/agents/actionCreator";
+import { agentNWA } from "rc_agents/agents";
 import {
-  setNewTodo,
-  setProcedureSuccessful
-} from "ic-redux/actions/agents/actionCreator";
-import agentNWA from "rc_agents/agents/network-assistant/NWA";
-import { AlertStatus, createTodo, getAlert, updateAlert } from "aws";
-import { AlertInfo, NewTodoInput, Todo } from "rc_agents/model";
-import { CreateTodoInput } from "aws/API";
+  createTodo,
+  getAlert,
+  listTodosByAlertID,
+  updateAlert,
+  updateTodo
+} from "aws";
+import {
+  TodoCreateInput,
+  LocalTodo,
+  AlertStatus,
+  TodoStatus,
+  TodoUpdateInput
+} from "rc_agents/model";
+import {
+  CreateTodoInput,
+  Todo,
+  UpdateAlertInput,
+  UpdateTodoInput
+} from "aws/API";
 
-// LS-TODO: To be tested again after integrating with Alert and Todo front end
+// LS-TODO: To be tested with creating Todo associated with an Alert.
 
 /**
  * Class to represent an activity for creating an entry to clinician's Todo table.
- * This happens in Procedure Storing Data (SRD) when a clinician creates a new Todo.
+ * This happens in Procedure Storing Data (SRD-II) when a clinician creates a new Todo.
  */
 class CreateTodo extends Activity {
   constructor() {
@@ -45,149 +58,251 @@ class CreateTodo extends Activity {
   async doActivity(agent: Agent): Promise<void> {
     await super.doActivity(agent, [rule2]);
 
+    const facts = agentAPI.getFacts();
+
     try {
-      // Gets Todo details to be added
-      const newTodo: NewTodoInput =
-        agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.TODO];
+      // Gets Todo from facts
+      const todoInput: TodoCreateInput | TodoUpdateInput =
+        facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.TODO];
 
       // Gets locally stored clinicianId
-      const clinicianId = await AsyncStorage.getItem(
-        AsyncStorageKeys.CLINICIAN_ID
-      );
+      const clinicianId = await Storage.getClinicianID();
 
-      if (newTodo && clinicianId) {
+      if (todoInput && clinicianId) {
         let todoId: string | undefined;
-        let pendingSync: boolean | undefined;
+        let pendingTodoSync: boolean | undefined;
+        let pendingAlertSync = false;
+        let alertTodoExists = false;
+        let existingTodo: Todo | undefined;
 
+        // Constructs CreateTodoInput to be inserted
         const todoToInsert: CreateTodoInput = {
           clinicianID: clinicianId,
-          title: newTodo.title,
-          patientName: newTodo.patientName,
-          notes: newTodo.notes,
+          title: todoInput.title,
+          patientName: todoInput.patientName,
+          notes: todoInput.notes,
           lastModified: new Date().toISOString(),
-          completed: false,
           owner: clinicianId
         };
 
-        if (newTodo.alert) {
-          todoToInsert.alertID = newTodo.alert.id;
+        if (todoInput.completed) {
+          todoToInsert.completed = TodoStatus.COMPLETED;
+        } else {
+          todoToInsert.pending = TodoStatus.PENDING;
         }
 
-        // Device is online
-        if (agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
-          // Inserts into Todo
-          const createResponse = await createTodo(todoToInsert);
-          if (createResponse.data?.createTodo) {
-            const currentTodo = createResponse.data.createTodo;
-            todoId = currentTodo.id;
+        if (todoInput.alert) {
+          todoToInsert.alertID = todoInput.alert.id;
+          todoInput.alert.completed = true;
+        }
 
-            // Updates alert to completed if any
-            if (todoToInsert.alertID) {
-              const alertQuery = await getAlert({ id: todoToInsert.alertID });
-              if (alertQuery.data && alertQuery.data.getAlert) {
-                const latestAlert = alertQuery.data.getAlert;
-                const updateResponse = await updateAlert({
-                  id: latestAlert?.id,
-                  completed: AlertStatus.COMPLETED,
-                  pending: null,
-                  _version: latestAlert?._version
-                });
-
-                // Updates pendingSync to indicate the operation is successful
-                if (updateResponse.data && updateResponse.data.updateAlert) {
-                  pendingSync = false;
-                }
+        /**
+         * Device is online:
+         * 1. Query existing Todo with the same Alert
+         * 2. If Todo already exists, update Todo instead.
+         * 3. If Todo does not exist, insert Todo.
+         * 4. If Todo is successfully updated, set pendingTodoSync to false, otherwise set to true.
+         * 4. If Todo is inserted, set pendingTodoSync to false, update Alert to completed.
+         * 5. If failed to update Alert, set pendingAlertSync to true, store locally in AlertsSync list.
+         */
+        if (facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
+          if (todoInput.alert) {
+            // Queries existing Todo with the same Alert
+            const query = await listTodosByAlertID({
+              clinicianID: clinicianId,
+              alertID: { eq: todoInput.alert.id }
+            });
+            if (query.data.listTodosByAlertID?.items) {
+              const results = query.data.listTodosByAlertID?.items;
+              if (results && results.length > 0) {
+                alertTodoExists = true;
+                existingTodo = results[0]!;
               }
-            } else {
-              pendingSync = false;
             }
           }
-        }
-        // Device is offline: Todo object to be stored has null id and pendingSync set to true.
-        else {
-          pendingSync = true;
+          if (!alertTodoExists) {
+            // Inserts Todo
+            const createResponse = await createTodo(todoToInsert);
+            if (createResponse.data.createTodo) {
+              // Gets newly inserted Todo to update local Todo id
+              const insertedTodo = createResponse.data.createTodo;
+              todoId = insertedTodo.id;
+
+              // Updates to indicate that Todo is successfully inserted
+              pendingTodoSync = false;
+
+              // Updates alert to completed if any
+              if (insertedTodo.alertID) {
+                // Queries latest alert
+                const alertQuery = await getAlert({ id: insertedTodo.alertID });
+                if (alertQuery.data.getAlert) {
+                  const latestAlert = alertQuery.data.getAlert;
+
+                  // Latest Alert has higher version than local alert
+                  if (
+                    todoInput.alert?._version &&
+                    latestAlert._version > todoInput.alert?._version
+                  ) {
+                    // Replace local alert and alert info with information from latest alert
+                    await Storage.mergeAlert(latestAlert);
+                    await Storage.mergeAlertInfo(latestAlert);
+                  } else {
+                    // This alert will be used for local merging later on
+                    latestAlert.pending = null;
+                    latestAlert.completed = AlertStatus.COMPLETED;
+
+                    // Constructs alert object to be updated
+                    const alertToUpdate: UpdateAlertInput = {
+                      id: latestAlert.id,
+                      completed: latestAlert.completed,
+                      pending: latestAlert.pending,
+                      _version: latestAlert._version
+                    };
+                    const updateResponse = await updateAlert(alertToUpdate);
+
+                    // Updates to indicate that alert is successfully updated
+                    if (updateResponse.data.updateAlert) {
+                      pendingAlertSync = false;
+                      latestAlert._version =
+                        updateResponse.data.updateAlert._version;
+                    } else {
+                      // Failed to update alert
+                      pendingAlertSync = true;
+                    }
+
+                    // Updates locally stored alert and alert info
+                    // Input is of type Alert
+                    await Storage.mergeAlert(latestAlert);
+                    await Storage.mergeAlertInfo(latestAlert);
+                  }
+                }
+              }
+            }
+          } else if (alertTodoExists && existingTodo) {
+            // Updates Todo
+            // No conflict resolution required since existingTodo is the latest Todo
+            const todoToUpdate: UpdateTodoInput = {
+              ...todoToInsert,
+              id: existingTodo.id,
+              _version: existingTodo._version
+            };
+            const updateResponse = await updateTodo(todoToUpdate);
+            if (updateResponse.data.updateTodo) {
+              pendingTodoSync = false;
+              const updatedTodo = updateResponse.data.updateTodo;
+              existingTodo._version = updatedTodo._version;
+              existingTodo.lastModified = updatedTodo.lastModified;
+            } else {
+              pendingTodoSync = true;
+            }
+          }
+        } else {
+          /**
+           * Device is offline:
+           * Both Todo and Alert require syncing.
+           */
+          pendingTodoSync = true;
+          pendingAlertSync = true;
         }
 
-        // Saves Todo locally
-        if (pendingSync !== undefined) {
-          const todoToStore: Todo = {
+        /**
+         * Constructs LocalTodo object to be stored locally.
+         * 1. Local Todo for syncing is recognized using the toSync attribute.
+         * 2. Local Todo to be inserted has null id and toSync set to true.
+         * 3. Local Todo to be updated has non-null id and toSync set to true.
+         * 4. If Todo already exists, update local Todo with existing Todo's id, createdAt and _version values.
+         * 5. If Todo has associated Alert, include alertId and patientId attributes.
+         * 6. If Todo has been successfully inserted, Local Todo will have non-null id.
+         * 7. If Todo has been/ is to be updated, Local Todo will have a non-null lastModified.
+         */
+        if (pendingTodoSync !== undefined) {
+          // Constructs Todo to be stored
+          const todoToStore: LocalTodo = {
             title: todoToInsert.title,
             patientName: todoToInsert.patientName,
             notes: todoToInsert.notes,
-            completed: todoToInsert.completed,
-            createdAt: todoToInsert.lastModified,
-            pendingSync: pendingSync
+            completed: todoToInsert.completed === TodoStatus.COMPLETED,
+            createdAt: todoInput.createdAt
+              ? todoInput.createdAt
+              : todoToInsert.lastModified,
+            toSync: pendingTodoSync,
+            _version: 1
           };
 
-          if (newTodo.alert) {
-            todoToStore.alertId = newTodo.alert.id;
-            todoToStore.patientId = newTodo.alert.patientId;
+          // Todo is associated with an Alert
+          if (todoInput.alert) {
+            todoToStore.alertId = todoInput.alert.id;
+            todoToStore.patientId = todoInput.alert.patientId;
+            todoToStore.riskLevel = todoInput.alert.riskLevel;
 
-            // Saves updated alert locally with patientId as nested key
-            // Gets all alerts
-            const alertsStr = await AsyncStorage.getItem(
-              AsyncStorageKeys.ALERTS
-            );
-            if (alertsStr) {
-              const alerts = JSON.parse(alertsStr);
+            // Offline: local alert and alert info haven't been updated yet
+            if (pendingTodoSync) {
+              // Input is of type AlertInfo
+              await Storage.mergeAlert(todoInput.alert);
+              await Storage.mergeAlertInfo(todoInput.alert);
+            }
 
-              // Gets alerts specific to current patient
-              const patientAlertsStr = alerts[newTodo.alert.patientId];
-              if (patientAlertsStr) {
-                const patientAlerts: AlertInfo[] = JSON.parse(patientAlertsStr);
-                patientAlerts.forEach((alert) => {
-                  if (alert.id === newTodo.alert!.id) {
-                    alert.completed = true;
-                  }
-                });
-                alerts[newTodo.alert.patientId] = JSON.stringify(patientAlerts);
-
-                await AsyncStorage.setItem(
-                  AsyncStorageKeys.ALERTS,
-                  JSON.stringify(alerts)
-                );
-              }
+            // Merge alert into local storage list to be synced
+            if (pendingAlertSync) {
+              await Storage.setAlertSync(todoInput.alert);
+              // Notifies NWA
+              agentNWA.addBelief(
+                new Belief(
+                  BeliefKeys.APP,
+                  AppAttributes.SYNC_ALERTS_UPDATE,
+                  true
+                )
+              );
             }
           }
 
-          if (!pendingSync) {
+          // Existing Todo for the same Alert already exists
+          if (alertTodoExists && existingTodo) {
+            todoToStore.id = existingTodo.id;
+            todoToStore.createdAt = existingTodo.createdAt;
+            todoToStore.lastModified = todoToInsert.lastModified;
+            todoToStore._version = existingTodo._version;
+          }
+
+          // Todo has been successfully inserted
+          if (!pendingTodoSync && todoId) {
             todoToStore.id = todoId;
           }
 
-          const localTodosStr = await AsyncStorage.getItem(
-            AsyncStorageKeys.TODOS
+          // Updates local Todos
+          await Storage.mergeTodo(todoToStore);
+
+          // Notifies NWA to sync update or create Todo
+          if (pendingTodoSync) {
+            if (alertTodoExists) {
+              // Offline and Todo already exists: set pending update to true
+              agentNWA.addBelief(
+                new Belief(
+                  BeliefKeys.APP,
+                  AppAttributes.SYNC_TODOS_UPDATE,
+                  true
+                )
+              );
+            } else {
+              // Offline and Todo does not exist: set pending insert to true
+              agentNWA.addBelief(
+                new Belief(
+                  BeliefKeys.APP,
+                  AppAttributes.SYNC_TODOS_CREATE,
+                  true
+                )
+              );
+            }
+          }
+
+          agentAPI.addFact(
+            new Belief(
+              BeliefKeys.CLINICIAN,
+              ClinicianAttributes.TODO,
+              todoToStore
+            ),
+            false
           );
-          // Other Todos exist
-          if (localTodosStr) {
-            const localTodos: Todo[] = JSON.parse(localTodosStr);
-            localTodos.push(todoToStore);
-            await AsyncStorage.setItem(
-              AsyncStorageKeys.TODOS,
-              JSON.stringify(localTodos)
-            );
-          }
-          // Current Todo is the first to be stored
-          else {
-            await AsyncStorage.setItem(
-              AsyncStorageKeys.TODOS,
-              JSON.stringify([todoToStore])
-            );
-          }
-
-          // Notifies NWA if the Todo to be stored has pendingSync set to true
-          if (pendingSync) {
-            // Notifies NWA
-            agentNWA.addBelief(
-              new Belief(
-                BeliefKeys.APP,
-                AppAttributes.PENDING_TODO_INSERT_SYNC,
-                true
-              )
-            );
-          }
-
-          // Dispatch new Todo to front end
-          store.dispatch(setNewTodo(todoToStore));
         }
 
         // Dispatch to front end to indicate that procedure is successful
@@ -196,40 +311,28 @@ class CreateTodo extends Activity {
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
+      store.dispatch(setProcedureSuccessful(false));
     }
 
-    // Update Facts
-    // Removes new Todo from facts
-    agentAPI.addFact(
-      new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.TODO, null),
-      false
-    );
-    // Stops the procedure
-    agentAPI.addFact(
-      new Belief(
-        BeliefKeys.PROCEDURE,
-        ProcedureAttributes.SRD,
-        ProcedureConst.INACTIVE
-      ),
-      true,
-      true
+    agent.addBelief(
+      new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.TODOS_UPDATED, true)
     );
   }
 }
 
-// Preconditions for activating the CreateTodo class
+// Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.SRD,
+  ProcedureAttributes.SRD_II,
   ProcedureConst.ACTIVE
 );
 const rule2 = new ResettablePrecondition(
   BeliefKeys.CLINICIAN,
-  ClinicianAttributes.NEW_TODO,
+  ClinicianAttributes.CREATE_TODO,
   true
 );
 
-// Action Frame for CreateTodo class
+// Actionframe
 const af_CreateTodo = new Actionframe(
   `AF_${ActionFrameIDs.DTA.CREATE_TODO}`,
   [rule1, rule2],

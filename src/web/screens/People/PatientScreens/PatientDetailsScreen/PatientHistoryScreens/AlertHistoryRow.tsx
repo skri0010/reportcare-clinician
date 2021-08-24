@@ -4,7 +4,7 @@ import { ScaledSheet } from "react-native-size-matters";
 import { H4, H5 } from "components/Text/index";
 import { getRiskLevelColor, RiskLevel } from "models/RiskLevel";
 import { View } from "react-native";
-import { ViewRowButton } from "./ViewRowButton";
+import { RowButton } from "components/Buttons/RowButton";
 import i18n from "util/language/i18n";
 
 interface AlertHistoryRowProps {
@@ -39,15 +39,6 @@ export const AlertHistoryRow: FC<AlertHistoryRowProps> = ({
     fonts: state.settings.fonts
   }));
 
-  // Truncate descriptions that have length >35 characters and append ellipses at the end
-  const getDescription = () => {
-    // Word limit
-    const limit = 35;
-    return description.length > limit
-      ? `${description.slice(0, limit)}...`
-      : description;
-  };
-
   return (
     <View style={[styles.container]}>
       <View style={[styles.textContainer]}>
@@ -70,13 +61,14 @@ export const AlertHistoryRow: FC<AlertHistoryRowProps> = ({
         </View>
         {/* Description */}
         <H4
-          text={getDescription()}
+          text={description}
           style={{ color: colors.primaryTextColor }}
+          numberOfLines={2}
         />
       </View>
       {/* View button */}
       <View style={[styles.buttonContainer]}>
-        <ViewRowButton onRowPress={onRowPress} />
+        <RowButton onRowPress={onRowPress} title="Patient_History.ViewButton" />
       </View>
     </View>
   );

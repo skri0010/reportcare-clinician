@@ -5,21 +5,23 @@ import {
   Communicate,
   Precondition,
   ResettablePrecondition
-} from "rc_agents/framework";
+} from "agents-framework";
+import {
+  ProcedureConst,
+  Performative,
+  CommonAttributes
+} from "agents-framework/Enums";
 import {
   ActionFrameIDs,
   AgentIDs,
   BeliefKeys,
-  CommonAttributes,
   PatientAttributes,
-  Performative,
-  ProcedureAttributes,
-  ProcedureConst
-} from "rc_agents/AgentEnums";
+  ProcedureAttributes
+} from "rc_agents/clinician_framework";
 
 /**
  * Class to represent the activity for requesting display of retrieved pending patient assignments.
- * This happens in Procedure Storing Data (SRD).
+ * This happens in Procedure Storing Data (SRD-I).
  */
 class RequestDisplayPendingPatientAssignments extends Communicate {
   constructor() {
@@ -29,7 +31,7 @@ class RequestDisplayPendingPatientAssignments extends Communicate {
       Performative.REQUEST,
       new Belief(
         BeliefKeys.PATIENT,
-        PatientAttributes.DISPLAY_PENDING_ASSIGNMENTS_REQUESTED,
+        PatientAttributes.PENDING_PATIENT_ASSIGNMENTS_RETRIEVED,
         true
       ),
       [AgentIDs.UXSA]
@@ -54,7 +56,7 @@ class RequestDisplayPendingPatientAssignments extends Communicate {
 // Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.SRD,
+  ProcedureAttributes.SRD_I,
   ProcedureConst.ACTIVE
 );
 const rule2 = new Precondition(

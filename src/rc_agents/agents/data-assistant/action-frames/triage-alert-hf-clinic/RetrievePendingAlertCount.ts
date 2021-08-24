@@ -5,22 +5,22 @@ import {
   Belief,
   Precondition,
   ResettablePrecondition
-} from "rc_agents/framework";
+} from "agents-framework";
+import { ProcedureConst } from "agents-framework/Enums";
+import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
   ActionFrameIDs,
   AppAttributes,
   BeliefKeys,
   ClinicianAttributes,
-  ProcedureAttributes,
-  ProcedureConst
-} from "rc_agents/AgentEnums";
-import { AsyncStorageKeys } from "rc_agents/storage";
-import agentAPI from "rc_agents/framework/AgentAPI";
+  ProcedureAttributes
+} from "rc_agents/clinician_framework";
+import { Storage } from "rc_agents/storage";
 import { Alert, ModelSortDirection } from "aws/API";
 import { mockPendingAlerts } from "mock/mockAlerts";
-import { AlertStatus, listPendingAlertsByDateTime } from "aws";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AlertInfo } from "rc_agents/model";
+import { listPendingAlertsByDateTime } from "aws";
+import { AlertColorCode, AlertStatus } from "rc_agents/model";
+import { RiskLevel } from "models/RiskLevel";
 
 /**
  * Class to represent an activity for retrieving pending alerts.
@@ -39,7 +39,7 @@ class RetrievePendingAlertCount extends Activity {
     await super.doActivity(agent, [rule2]);
 
     try {
-      let results: (Alert | undefined | null)[] | undefined | null;
+      let results: Alert[];
 
       if (agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
         // Device is online
@@ -48,8 +48,8 @@ class RetrievePendingAlertCount extends Activity {
           sortDirection: ModelSortDirection.DESC
         });
 
-        if (query.data && query.data.listPendingAlertsByDateTime) {
-          results = query.data.listPendingAlertsByDateTime.items;
+        if (query.data.listPendingAlertsByDateTime?.items) {
+          results = query.data.listPendingAlertsByDateTime.items as Alert[];
         }
         // LS-TODO: To be removed
         results = mockPendingAlerts;
@@ -64,29 +64,20 @@ class RetrievePendingAlertCount extends Activity {
             ),
             false
           );
+          await Storage.setMultipleAlerts(results);
         }
       } else {
         // Device is offline
-        const alertsStr = await AsyncStorage.getItem(AsyncStorageKeys.ALERTS);
-        const localAlerts: AlertInfo[] = [];
-        if (alertsStr) {
-          const alerts = JSON.parse(alertsStr);
-          Object.keys(alerts).forEach((key) => {
-            const patientAlerts: AlertInfo[] = JSON.parse(alerts[key]);
-            patientAlerts.forEach((alert) => {
-              if (!alert.completed) {
-                localAlerts.push(alert);
-              }
-            });
-          });
-        }
-
-        if (localAlerts.length > 0) {
+        const localPendingAlerts = await Storage.getRiskOrStatusAlerts(
+          undefined,
+          AlertStatus.PENDING
+        );
+        if (localPendingAlerts) {
           agentAPI.addFact(
             new Belief(
               BeliefKeys.CLINICIAN,
               ClinicianAttributes.ALERTS,
-              localAlerts
+              localPendingAlerts
             ),
             false
           );
@@ -99,7 +90,27 @@ class RetrievePendingAlertCount extends Activity {
   }
 }
 
-// Preconditions for activating the RetrievePendingAlertCount class
+/**
+ * Maps alert's color code to risk level.
+ * @param colorCode alert's color code
+ * @returns risk level corresponding to the color code
+ */
+export const mapColorCodeToRiskLevel = (colorCode: string): RiskLevel => {
+  switch (colorCode) {
+    case AlertColorCode.HIGH:
+      return RiskLevel.HIGH;
+    case AlertColorCode.MEDIUM:
+      return RiskLevel.MEDIUM;
+    case AlertColorCode.LOW:
+      return RiskLevel.LOW;
+    case AlertColorCode.UNASSIGNED:
+      return RiskLevel.UNASSIGNED;
+    default:
+      return RiskLevel.UNASSIGNED;
+  }
+};
+
+// Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
   ProcedureAttributes.AT_CP,
@@ -111,7 +122,7 @@ const rule2 = new ResettablePrecondition(
   true
 );
 
-// Action Frame for RetrievePendingAlertCount class
+// Actionframe
 export const af_RetrievePendingAlertCount = new Actionframe(
   `AF_${ActionFrameIDs.DTA.RETRIEVE_PENDING_ALERT_COUNT}`,
   [rule1, rule2],

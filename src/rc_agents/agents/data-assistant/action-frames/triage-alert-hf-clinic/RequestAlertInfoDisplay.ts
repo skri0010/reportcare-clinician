@@ -4,17 +4,19 @@ import {
   Agent,
   Belief,
   Precondition
-} from "rc_agents/framework";
+} from "agents-framework";
+import {
+  ProcedureConst,
+  Performative,
+  CommonAttributes
+} from "agents-framework/Enums";
 import {
   ActionFrameIDs,
   AgentIDs,
   BeliefKeys,
   ClinicianAttributes,
-  CommonAttributes,
-  Performative,
-  ProcedureAttributes,
-  ProcedureConst
-} from "rc_agents/AgentEnums";
+  ProcedureAttributes
+} from "rc_agents/clinician_framework";
 
 /**
  * Class to represent the activity for requesting display of information associated with an alert.
@@ -52,7 +54,7 @@ class RequestAlertInfoDisplay extends Communicate {
   }
 }
 
-// Rules or preconditions for activating the RequestAlertInfoDisplay class
+// Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
   ProcedureAttributes.AT_CP,
@@ -64,7 +66,7 @@ const rule2 = new Precondition(
   ActionFrameIDs.DTA.RETRIEVE_ALERT_INFO
 );
 
-// Actionframe of the RequestAlertInfoDisplay class
+// Actionframe
 export const af_RequestAlertInfoDisplay = new Actionframe(
   `AF_${ActionFrameIDs.DTA.REQUEST_ALERT_INFO_DISPLAY}`,
   [rule1, rule2],

@@ -4,14 +4,15 @@ import {
   Activity,
   Precondition,
   ResettablePrecondition
-} from "rc_agents/framework";
+} from "agents-framework";
 import {
   ActionFrameIDs,
   AppAttributes,
   BeliefKeys
-} from "rc_agents/AgentEnums";
+} from "rc_agents/clinician_framework";
 import { Storage, AsyncStorageKeys } from "rc_agents/storage";
 import { PatientAssignmentResolution } from "rc_agents/model";
+// eslint-disable-next-line no-restricted-imports
 import { resolvePatientAssignment } from "rc_agents/agents/data-assistant/action-frames/storing-data/ResolvePatientAssignment";
 
 /**
@@ -45,20 +46,22 @@ class SyncPatientAssignmentResolutions extends Activity {
 
       if (resolutionList && clinicianId) {
         Object.keys(resolutionList).forEach(async (key) => {
-          const resolution: PatientAssignmentResolution = resolutionList[key];
-          try {
-            // Resolve (APPROVE or REASSIGN based on assignment)
-            // This function handles conflicts as well
-            await resolvePatientAssignment({
-              resolution: resolution,
-              ownClinicianId: clinicianId
-            });
-            delete resolutionList[key];
-            // Insert remaining resolutions back into storage
-            Storage.setPatientAssignmentResolutions(resolutionList);
-          } catch (error) {
-            // eslint-disable-next-line no-console
-            console.log(error);
+          const resolution = resolutionList[key];
+          if (resolution) {
+            try {
+              // Resolve (APPROVE or REASSIGN based on assignment)
+              // This function handles conflicts as well
+              await resolvePatientAssignment({
+                resolution: resolution,
+                ownClinicianId: clinicianId
+              });
+              delete resolutionList[key];
+              // Insert remaining resolutions back into storage
+              Storage.setPatientAssignmentResolutions(resolutionList);
+            } catch (error) {
+              // eslint-disable-next-line no-console
+              console.log(error);
+            }
           }
         });
 

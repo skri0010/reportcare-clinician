@@ -1,4 +1,5 @@
 import { PatientInfo } from "aws/API";
+import { RiskLevel } from "models/RiskLevel";
 
 export const mockPatients: PatientInfo[] = [
   {
@@ -17,6 +18,14 @@ export const mockPatients: PatientInfo[] = [
     patientID: "20",
     createdAt: "",
     updatedAt: "",
+    riskLevel: RiskLevel.UNASSIGNED,
+    gender: "male",
+    birthDate: "1999-04-30",
+    language: "english",
+    phoneNumber: "+60123456789",
+    emergencyContactName: "Emergency Test",
+    emergencyContactNumber: "999",
+    email: "testemail@legit.com",
     _lastChangedAt: 1627604201979,
     _version: 1
   },
@@ -36,6 +45,14 @@ export const mockPatients: PatientInfo[] = [
     patientID: "30",
     createdAt: "",
     updatedAt: "",
+    gender: "male",
+    birthDate: "1999-04-30",
+    language: "english",
+    phoneNumber: "+60123456789",
+    emergencyContactName: "Emergency Test",
+    emergencyContactNumber: "999",
+    email: "testemail@legit.com",
+    riskLevel: RiskLevel.LOW,
     _lastChangedAt: 1627604201979,
     _version: 1
   },
@@ -55,6 +72,14 @@ export const mockPatients: PatientInfo[] = [
     patientID: "50",
     createdAt: "",
     updatedAt: "",
+    riskLevel: RiskLevel.MEDIUM,
+    gender: "male",
+    birthDate: "1999-04-30",
+    language: "english",
+    phoneNumber: "+60123456789",
+    emergencyContactName: "Emergency Test",
+    emergencyContactNumber: "999",
+    email: "testemail@legit.com",
     _lastChangedAt: 1627604201979,
     _version: 1
   },
@@ -74,92 +99,15 @@ export const mockPatients: PatientInfo[] = [
     patientID: "60",
     createdAt: "",
     updatedAt: "",
-    _lastChangedAt: 1627604201979,
-    _version: 1
-  },
-  {
-    __typename: "PatientInfo",
-    id: "5",
-    name: "Mohammad Abdul",
-    address: "Canberra",
-    deviceNo: "1",
-    diagnosisInfo: "none",
-    NHYAclass: "NHYA III",
-    cardiologist: "Doctor Wong",
-    hospitalName: "Canberra Hospital",
-    hospitalLocation: "Canberra",
-    targetWeight: "55",
-    targetActivity: "cardio",
-    patientID: "70",
-    createdAt: "",
-    updatedAt: "",
+    riskLevel: RiskLevel.HIGH,
+    gender: "male",
+    birthDate: "1999-04-30",
+    language: "english",
+    phoneNumber: "+60123456789",
+    emergencyContactName: "Emergency Test",
+    emergencyContactNumber: "999",
+    email: "testemail@legit.com",
     _lastChangedAt: 1627604201979,
     _version: 1
   }
 ];
-
-// interface IMockPatientDetails {
-//   generalDetails: PersonRowGeneralDetails;
-//   age: number;
-//   patientClass: string;
-//   message: string;
-//   unreadMessageCount: number;
-//   request: string;
-//   itemId: string;
-// }
-
-// const mockHighRiskPatient = {
-//   id: "1",
-//   name: "Mohammad Zaini",
-//   riskLevel: RiskLevel.HIGH
-// };
-
-// const mockMediumRiskPatient = {
-//   id: "2",
-//   name: "Tyler Haris",
-//   riskLevel: RiskLevel.MEDIUM
-// };
-
-// const mockLowRiskPatient = {
-//   id: "3",
-//   name: "Danial Williams",
-//   riskLevel: RiskLevel.LOW
-// };
-// export const mockPatients: IMockPatientDetails[] = [
-//   {
-//     generalDetails: mockHighRiskPatient,
-//     patientClass: "NHYA III",
-//     age: 55,
-//     message: "Should I change my diet?",
-//     unreadMessageCount: 1,
-//     request: "Verify titration values",
-//     itemId: "1"
-//   },
-//   {
-//     generalDetails: mockMediumRiskPatient,
-//     patientClass: "NHYA II",
-//     age: 45,
-//     message: "Is everything ok?",
-//     unreadMessageCount: 1,
-//     request: "Verify titration values",
-//     itemId: "2"
-//   },
-//   {
-//     generalDetails: mockLowRiskPatient,
-//     patientClass: "NHYA I",
-//     age: 35,
-//     message: "Should I avoid running?",
-//     unreadMessageCount: 1,
-//     request: "Verify titration values",
-//     itemId: "3"
-//   },
-//   {
-//     generalDetails: mockLowRiskPatient,
-//     patientClass: "NHYA I",
-//     age: 35,
-//     message: "Should I avoid running?",
-//     unreadMessageCount: 1,
-//     request: "Verify titration values",
-//     itemId: "4"
-//   }
-// ];

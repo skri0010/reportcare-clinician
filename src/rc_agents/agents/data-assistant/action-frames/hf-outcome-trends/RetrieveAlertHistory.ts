@@ -5,30 +5,22 @@ import {
   Belief,
   Precondition,
   ResettablePrecondition
-} from "rc_agents/framework";
+} from "agents-framework";
+import { ProcedureConst } from "agents-framework/Enums";
+import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
   ActionFrameIDs,
   AppAttributes,
   BeliefKeys,
   PatientAttributes,
-  ProcedureAttributes,
-  ProcedureConst
-} from "rc_agents/AgentEnums";
-import { AsyncStorageKeys } from "rc_agents/storage";
-import agentAPI from "rc_agents/framework/AgentAPI";
+  ProcedureAttributes
+} from "rc_agents/clinician_framework";
+import { Storage } from "rc_agents/storage";
 import { listPatientAlertsByDateTime } from "aws";
 import { AlertInfo } from "rc_agents/model";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ModelSortDirection } from "aws/API";
-import {
-  queryAlertInfo,
-  mergeIntoLocalAlertInfos
-} from "../triage-alert-hf-clinic/RetrieveAlertInfo";
+import { queryAlertInfo } from "../triage-alert-hf-clinic/RetrieveAlertInfo";
 import { sortAlertsByDateTime } from "../triage-alert-hf-clinic/RetrieveAlerts";
-
-interface LocalAlertInfos {
-  [patientId: string]: string;
-}
 
 /**
  * Class to represent the activity for retrieving alert history of a patient.
@@ -57,10 +49,6 @@ class RetrieveAlertHistory extends Activity {
         facts[BeliefKeys.PATIENT]?.[PatientAttributes.ALERT_PATIENT_ID];
 
       if (patientId) {
-        // Retrieves locally stored alert infos
-        let alertInfosJSON = await AsyncStorage.getItem(
-          AsyncStorageKeys.ALERT_INFOS
-        );
         const alertInfos: AlertInfo[] = [];
 
         if (facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
@@ -78,20 +66,10 @@ class RetrieveAlertHistory extends Activity {
                   const alertInfo = await queryAlertInfo(alert!);
                   if (alertInfo) {
                     alertInfos.push(alertInfo);
-                    alertInfosJSON = await mergeIntoLocalAlertInfos(
-                      alertInfo,
-                      alertInfosJSON
-                    );
+                    await Storage.setAlertInfo(alertInfo);
                   }
                 })
               );
-              if (alertInfosJSON) {
-                // Saves updated JSON into local storage
-                await AsyncStorage.setItem(
-                  AsyncStorageKeys.ALERT_INFOS,
-                  alertInfosJSON
-                );
-              }
             }
           }
 
@@ -106,12 +84,9 @@ class RetrieveAlertHistory extends Activity {
               false
             );
           }
-        } else if (alertInfosJSON) {
+        } else {
           // Device is offline: get alert infos of current patient from local storage
-          const patientAlerts = this.retrieveLocalPatientAlerts(
-            alertInfosJSON,
-            patientId
-          );
+          const patientAlerts = await Storage.getPatientAlertInfos(patientId);
           if (patientAlerts) {
             const sortedPatientAlerts = sortAlertsByDateTime(patientAlerts);
             agentAPI.addFact(
@@ -140,28 +115,9 @@ class RetrieveAlertHistory extends Activity {
       console.log(error);
     }
   }
-
-  /**
-   * Gets locally stored alert infos of a patient.
-   * @param alertInfosJSON locally stored JSON string
-   * @param patientId patient Id
-   * @returns a list of alert infos if any
-   */
-  // eslint-disable-next-line class-methods-use-this
-  retrieveLocalPatientAlerts(
-    alertInfosJSON: string,
-    patientId: string
-  ): AlertInfo[] | null {
-    const alertInfos: LocalAlertInfos = JSON.parse(alertInfosJSON);
-    const patientAlertsJSON = alertInfos[patientId];
-    if (patientAlertsJSON) {
-      return JSON.parse(patientAlertsJSON);
-    }
-    return null;
-  }
 }
 
-// Rules or preconditions for activating the RetrieveAlertHistory class
+// Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
   ProcedureAttributes.HF_OTP_II,
@@ -173,7 +129,7 @@ const rule2 = new ResettablePrecondition(
   true
 );
 
-// Actionframe of the RetrieveAlertHistory class
+// Actionframe
 export const af_RetrieveAlertHistory = new Actionframe(
   `AF_${ActionFrameIDs.DTA.RETRIEVE_ALERT_HISTORY}`,
   [rule1, rule2],

@@ -5,22 +5,24 @@ import {
   Communicate,
   Precondition,
   ResettablePrecondition
-} from "rc_agents/framework";
+} from "agents-framework";
+import {
+  ProcedureConst,
+  Performative,
+  CommonAttributes
+} from "agents-framework/Enums";
 import {
   ActionFrameIDs,
   AgentIDs,
   AppAttributes,
   BeliefKeys,
-  CommonAttributes,
   PatientAttributes,
-  Performative,
-  ProcedureAttributes,
-  ProcedureConst
-} from "rc_agents/AgentEnums";
+  ProcedureAttributes
+} from "rc_agents/clinician_framework";
 
 /**
  * Class to represent the activity for requesting syncing of local patient assignment resolutions.
- * This happens in Procedure Storing Data (SRD).
+ * This happens in Procedure Storing Data (SRD-I).
  */
 class RequestSyncPatientAssignmentResolutions extends Communicate {
   constructor() {
@@ -55,7 +57,7 @@ class RequestSyncPatientAssignmentResolutions extends Communicate {
 // Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.SRD,
+  ProcedureAttributes.SRD_I,
   ProcedureConst.ACTIVE
 );
 const rule2 = new Precondition(

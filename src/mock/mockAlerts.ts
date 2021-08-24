@@ -1,5 +1,4 @@
-import { AlertColorCode } from "rc_agents/model";
-import { AlertStatus } from "aws";
+import { AlertColorCode, AlertStatus } from "rc_agents/model";
 import { Alert } from "aws/API";
 
 export const mockPendingAlerts: Alert[] = [

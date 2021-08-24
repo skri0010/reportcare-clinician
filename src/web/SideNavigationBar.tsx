@@ -55,7 +55,7 @@ export const SideNavigationBar: FC<MainScreenProps> = () => {
         width: drawerSize,
         backgroundColor: colors.primaryBarColor
       }}
-      initialRouteName={ScreenName.ALERTS}
+      initialRouteName={ScreenName.PATIENTS}
     >
       <Drawer.Screen
         name={ScreenName.HOME}
@@ -69,7 +69,7 @@ export const SideNavigationBar: FC<MainScreenProps> = () => {
         }}
       />
       <Drawer.Screen
-        name={ScreenName.PATIENT}
+        name={ScreenName.PATIENTS}
         component={PatientsScreen}
         options={{
           drawerIcon: ({ color }) => (
@@ -79,7 +79,7 @@ export const SideNavigationBar: FC<MainScreenProps> = () => {
         }}
       />
       <Drawer.Screen
-        name={ScreenName.CLINICIAN}
+        name={ScreenName.CLINICIANS}
         component={CliniciansTab}
         options={{
           drawerIcon: ({ color }) => (

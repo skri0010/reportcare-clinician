@@ -80,6 +80,62 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
+                "riskLevel": {
+                    "name": "riskLevel",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "gender": {
+                    "name": "gender",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "birthDate": {
+                    "name": "birthDate",
+                    "isArray": false,
+                    "type": "AWSDate",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "language": {
+                    "name": "language",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "phoneNumber": {
+                    "name": "phoneNumber",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "email": {
+                    "name": "email",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "emergencyContactName": {
+                    "name": "emergencyContactName",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "emergencyContactNumber": {
+                    "name": "emergencyContactNumber",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
                 "patientID": {
                     "name": "patientID",
                     "isArray": false,
@@ -1563,11 +1619,18 @@ export const schema = {
                         "targetName": "alertID"
                     }
                 },
+                "pending": {
+                    "name": "pending",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "completed": {
                     "name": "completed",
                     "isArray": false,
-                    "type": "Boolean",
-                    "isRequired": true,
+                    "type": "String",
+                    "isRequired": false,
                     "attributes": []
                 },
                 "owner": {
@@ -1588,22 +1651,34 @@ export const schema = {
                 {
                     "type": "key",
                     "properties": {
-                        "name": "todosByClinicianID",
+                        "name": "pendingTodosByLastModifiedDate",
                         "fields": [
-                            "clinicianID"
+                            "pending",
+                            "lastModified"
                         ],
-                        "queryField": "listTodosByClinicianID"
+                        "queryField": "listPendingTodosByLastModifiedDate"
                     }
                 },
                 {
                     "type": "key",
                     "properties": {
-                        "name": "todosByLastModifiedDate",
+                        "name": "completedTodosByLastModifiedDate",
                         "fields": [
-                            "clinicianID",
+                            "completed",
                             "lastModified"
                         ],
-                        "queryField": "listTodosByLastModifiedDate"
+                        "queryField": "listCompletedTodosByLastModifiedDate"
+                    }
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "todosByAlertID",
+                        "fields": [
+                            "clinicianID",
+                            "alertID"
+                        ],
+                        "queryField": "listTodosByAlertID"
                     }
                 },
                 {
@@ -1657,5 +1732,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "613b60fa5b401c2dd643da14364472fe"
+    "version": "75372649be6c0c4c752c2a5006f14016"
 };

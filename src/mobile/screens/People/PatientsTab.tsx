@@ -5,17 +5,16 @@ import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { ScaledSheet } from "react-native-size-matters";
 import { PatientDetailsRow } from "components/RowComponents/PatientRows/PatientDetailsRow";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
-import agentDTA from "rc_agents/agents/data-assistant/DTA";
-import Belief from "rc_agents/framework/base/Belief";
+import { agentDTA, agentUXSA } from "rc_agents/agents";
+import { Belief } from "agents-framework";
+import { ProcedureConst } from "agents-framework/Enums";
+import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
   BeliefKeys,
   ClinicianAttributes,
   PatientAttributes,
-  ProcedureAttributes,
-  ProcedureConst
-} from "rc_agents/AgentEnums";
-import agentAPI from "rc_agents/framework/AgentAPI";
-import agentUXSA from "rc_agents/agents/user-specific-assistant/UXSA";
+  ProcedureAttributes
+} from "rc_agents/clinician_framework";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { setProcedureOngoing } from "ic-redux/actions/agents/actionCreator";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
@@ -57,10 +56,18 @@ export const PatientsTab: FC = () => {
     setRetrieving(true);
 
     agentDTA.addBelief(
-      new Belief(BeliefKeys.PATIENT, PatientAttributes.RETRIEVE_DETAILS, true)
+      new Belief(
+        BeliefKeys.PATIENT,
+        PatientAttributes.RETRIEVE_PATIENT_DETAILS,
+        true
+      )
     );
     agentAPI.addFact(
-      new Belief(BeliefKeys.PATIENT, PatientAttributes.VIEW_DETAILS, patientId),
+      new Belief(
+        BeliefKeys.PATIENT,
+        PatientAttributes.PATIENT_TO_VIEW_DETAILS,
+        patientId
+      ),
       false
     );
     agentAPI.addFact(
@@ -118,13 +125,11 @@ export const PatientsTab: FC = () => {
         data={patients}
         renderItem={({ item }) => (
           <PatientDetailsRow
-            generalDetails={item.details}
-            patientClass={item.details.NHYAclass!}
-            age={item.age}
-            onRowPress={() => getData(item.details.id!)}
+            patient={item}
+            onRowPress={() => getData(item.id)}
           />
         )}
-        keyExtractor={(item) => item.userId}
+        keyExtractor={(item) => item.patientID}
       />
 
       {/* To be removed: for testing purposes only */}
