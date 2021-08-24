@@ -5,7 +5,7 @@ import {
   Belief,
   Precondition,
   ResettablePrecondition
-} from "rc_agents/framework";
+} from "agents-framework";
 import {
   setRetryLaterTimeout,
   ActionFrameIDs,
@@ -19,7 +19,7 @@ import { CreateTodoInput } from "aws/API";
 import { listTodosByAlertID } from "aws";
 import { agentNWA } from "rc_agents/agents";
 import { TodoStatus } from "rc_agents/model";
-import agentAPI from "rc_agents/clinician_framework/ClinicianAgentAPI";
+import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 
 /**
  * Class to represent the activity for syncing local creation of new Todos.

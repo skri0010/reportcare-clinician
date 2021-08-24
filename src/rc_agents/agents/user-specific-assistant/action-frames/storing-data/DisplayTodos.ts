@@ -5,9 +5,9 @@ import {
   Activity,
   Precondition,
   ResettablePrecondition
-} from "rc_agents/framework";
-import { ProcedureConst } from "rc_agents/framework/Enums";
-import agentAPI from "rc_agents/clinician_framework/ClinicianAgentAPI";
+} from "agents-framework";
+import { ProcedureConst } from "agents-framework/Enums";
+import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
   ActionFrameIDs,
   BeliefKeys,
@@ -124,7 +124,7 @@ class DisplayTodos extends Activity {
     agentAPI.addFact(
       new Belief(
         BeliefKeys.PROCEDURE,
-        ProcedureAttributes.SRD_II,
+        ProcedureAttributes.SRD_III,
         ProcedureConst.INACTIVE
       ),
       true,
@@ -139,7 +139,7 @@ class DisplayTodos extends Activity {
 // Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.SRD_II,
+  ProcedureAttributes.SRD_III,
   ProcedureConst.ACTIVE
 );
 const rule2 = new ResettablePrecondition(

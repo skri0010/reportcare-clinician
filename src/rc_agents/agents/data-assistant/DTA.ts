@@ -1,6 +1,6 @@
 import { AgentIDs } from "rc_agents/clinician_framework";
-import { CommonAttributes } from "rc_agents/framework/Enums";
-import { Agent, Belief } from "rc_agents/framework";
+import { CommonAttributes } from "agents-framework/Enums";
+import { Belief } from "agents-framework";
 import { af_RetrieveEntryData } from "./action-frames/app-device-configuration/RetrieveEntryData";
 import { af_StoreEntryData } from "./action-frames/app-device-configuration/StoreEntryData";
 import { af_RetrievePatientDetails } from "./action-frames/hf-outcome-trends/RetrievePatientDetails";
@@ -21,6 +21,8 @@ import af_CreateTodo from "./action-frames/storing-data/CreateTodo";
 import af_UpdateTodo from "./action-frames/storing-data/UpdateTodo";
 import af_RetrieveTodos from "./action-frames/storing-data/RetrieveTodos";
 import { af_RequestDisplayTodos } from "./action-frames/storing-data/RequestDisplayTodos";
+import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
+import { ClinicianAgent } from "rc_agents/clinician_framework/ClinicianAgent";
 
 // Initial Beliefs of Agent
 
@@ -28,7 +30,7 @@ import { af_RequestDisplayTodos } from "./action-frames/storing-data/RequestDisp
 const belief1 = new Belief(AgentIDs.DTA, CommonAttributes.LAST_ACTIVITY, null);
 
 // Data Assistant Agent
-const agentDTA = new Agent(
+const agentDTA = new ClinicianAgent(
   AgentIDs.DTA,
   [
     // ADC
@@ -63,7 +65,8 @@ const agentDTA = new Agent(
     af_UpdateTodo,
     af_RequestDisplayTodos
   ], // action frame
-  [belief1] // beliefs
+  [belief1], // beliefs
+  agentAPI
 );
 
 export default agentDTA;

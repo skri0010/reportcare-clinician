@@ -5,9 +5,9 @@ import {
   Belief,
   Precondition,
   ResettablePrecondition
-} from "rc_agents/framework";
-import { ProcedureConst } from "rc_agents/framework/Enums";
-import agentAPI from "rc_agents/clinician_framework/ClinicianAgentAPI";
+} from "agents-framework";
+import { ProcedureConst } from "agents-framework/Enums";
+import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
   BeliefKeys,
   ProcedureAttributes,
@@ -150,7 +150,9 @@ class CreateTodo extends Activity {
                 // Updates input to be used for updating Todo
                 todoInput.id = existingTodo.id;
                 todoInput._version = existingTodo._version;
-                todoInput.lastModified = existingTodo.createdAt;
+                todoInput.lastModified = todoInput.lastModified
+                  ? todoInput.lastModified
+                  : todoInput.createdAt;
                 todoInput.createdAt = existingTodo.createdAt;
 
                 agentAPI.addFact(
@@ -241,7 +243,7 @@ class CreateTodo extends Activity {
 // Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.SRD_II,
+  ProcedureAttributes.SRD_III,
   ProcedureConst.ACTIVE
 );
 const rule2 = new ResettablePrecondition(
