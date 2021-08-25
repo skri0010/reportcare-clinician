@@ -8,17 +8,28 @@ import { getAge } from "util/utilityFunctions";
 
 export interface PatientDetailsRowProps {
   patient: PatientInfo;
+  selected?: boolean;
   onRowPress?: (patient: PatientInfo) => void;
 }
 
 export const PatientDetailsRow: React.FC<PatientDetailsRowProps> = ({
   patient,
+  selected = false,
   onRowPress
 }) => {
   const { name, NHYAclass, riskLevel } = patient;
 
+  // JH-TODO-NEW: Selected patient styling
+
   return (
     <TouchableOpacity
+      style={
+        selected
+          ? {
+              opacity: 0.5 // Indicate selected
+            }
+          : {}
+      }
       onPress={onRowPress ? () => onRowPress(patient) : undefined}
     >
       <PatientRowBase

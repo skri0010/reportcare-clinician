@@ -5,19 +5,19 @@ import { ScaledSheet } from "react-native-size-matters";
 import { TodoRow } from "components/RowComponents/TodoRow";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { RiskLevel } from "models/RiskLevel";
-import { H4 } from "components/Text/index";
+import { H4 } from "components/Text";
 import { CardWrapper } from "./CardWrapper";
-import { FloatingShowMoreButton } from "components/Buttons/FloatingShowMoreButton";
+import { FloatingBottomButton } from "components/Buttons/FloatingBottomButton";
 import i18n from "util/language/i18n";
-import { ScreenName } from "web/screens";
+import { ScreenName } from "web/navigation";
 import { TodoStatus } from "rc_agents/model";
-import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
+import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AgentTrigger } from "rc_agents/trigger";
-import { HomeNavigationProps } from "web/screens/WithSideTabsProps";
+import { HomeScreenNavigation } from "web/navigation/types/MainScreenProps";
 
 interface TodosCardProps {
   maxHeight: number;
-  navigation: HomeNavigationProps;
+  navigation: HomeScreenNavigation;
 }
 
 export const TodosCard: FC<TodosCardProps> = ({ maxHeight, navigation }) => {
@@ -49,8 +49,6 @@ export const TodosCard: FC<TodosCardProps> = ({ maxHeight, navigation }) => {
       <View style={styles.titleContainer}>
         <H4 text={i18n.t("Home.Todos")} style={[styles.title, titleColor]} />
       </View>
-      {/* Loading indicator */}
-      {fetchingTodos && <LoadingIndicator />}
       <View style={styles.listContainer}>
         <FlatList
           showsVerticalScrollIndicator={false}
@@ -68,11 +66,11 @@ export const TodosCard: FC<TodosCardProps> = ({ maxHeight, navigation }) => {
                   reduceOpacity
                   onCardPress={() => {
                     // Navigate to Todo screen
-                    navigation.navigate(ScreenName.TODO, item);
+                    navigation.navigate(ScreenName.TODO, { todoToShow: item });
                   }}
                 />
                 {/* Disable last row, display "Show More button" */}
-                <FloatingShowMoreButton />
+                <FloatingBottomButton />
               </>
             ) : (
               <TodoRow
@@ -82,7 +80,7 @@ export const TodosCard: FC<TodosCardProps> = ({ maxHeight, navigation }) => {
                 }
                 onCardPress={() => {
                   // Navigate to Todo screen
-                  navigation.navigate(ScreenName.TODO, item);
+                  navigation.navigate(ScreenName.TODO, { todoToShow: item });
                 }}
               />
             );
@@ -90,6 +88,8 @@ export const TodosCard: FC<TodosCardProps> = ({ maxHeight, navigation }) => {
           keyExtractor={(item) => item.createdAt}
         />
       </View>
+      {/* Loading indicator */}
+      {fetchingTodos && <LoadingIndicator />}
     </CardWrapper>
   );
 };

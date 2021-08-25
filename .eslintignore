@@ -12,4 +12,3 @@ amplify
 src/aws/models
 src/aws/graphql
 src/aws/API.ts
-src\aws\models

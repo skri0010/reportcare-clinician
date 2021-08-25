@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { FlatList, View } from "react-native";
-import { ScreenWrapper } from "mobile/screens/ScreenWrapper";
+import { MobileScreenWrapper } from "mobile/screens/MobileScreenWrapper";
 import { MainTitle } from "components/Text";
 import { TodoRow } from "components/RowComponents/TodoRow";
 import { RiskLevel } from "models/RiskLevel";
@@ -17,7 +17,7 @@ export const TodoCurrentTab: FC = () => {
   }));
 
   return (
-    <ScreenWrapper>
+    <MobileScreenWrapper>
       <View>
         <MainTitle title="Current Todo" />
 
@@ -34,6 +34,6 @@ export const TodoCurrentTab: FC = () => {
           keyExtractor={(item) => item.createdAt}
         />
       </View>
-    </ScreenWrapper>
+    </MobileScreenWrapper>
   );
 };

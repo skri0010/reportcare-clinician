@@ -3,7 +3,7 @@ import { View, TouchableOpacity } from "react-native";
 import { PatientRowBase } from "./PatientRowBase";
 import { PatientInfo } from "aws/API";
 import { ScaledSheet } from "react-native-size-matters";
-import { H6 } from "components/Text/index";
+import { H6 } from "components/Text";
 import { RiskLevel } from "models/RiskLevel";
 
 export interface PatientRequestRowProps {

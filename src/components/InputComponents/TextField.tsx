@@ -2,7 +2,7 @@ import React from "react";
 import { StyleProp, ViewStyle, View, TextInput, Platform } from "react-native";
 import { RootState, select } from "util/useRedux";
 import { ScaledSheet, ms } from "react-native-size-matters";
-import { H3, H5 } from "components/Text/index";
+import { H3, H5 } from "components/Text";
 
 interface TextFieldProps {
   editable?: boolean;

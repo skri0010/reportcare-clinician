@@ -93,12 +93,13 @@
       "Saturday": "Sat"
     }
   },
-  "TabTitle": {
+  "ScreenName": {
     "Home": "Home",
     "Patients": "Patients",
     "Clinicians": "Clinicians",
-    "Chat": "Chat",
+    "Alerts": "Alerts",
     "Todo": "Todo",
+    "Chat": "Chat",
     "MARIA": "MARIA",
     "Settings": "Settings",
     "Help": "Help"
@@ -123,6 +124,7 @@
   "Todo": {
     "Current": "Current",
     "Completed": "Completed",
+    "NoTodos": "No todos found!",
     "SearchBarCurrentPlaceholder": "Search current todo",
     "SearchBarCompletePlaceholder": "Search completed todo",
     "ViewTodo": "View Todo",
@@ -151,7 +153,6 @@
   "Patients": {
     "PatientsList": {
       "NoPatients": "No patients found!",
-      "FilterBy": "Filter by:",
       "Class": "Class",
       "Age": "Age"
     },
@@ -225,6 +226,16 @@
     "BasicInfo": "Basic Information",
     "ContactInfo": "Contact Information",
     "Years": "years"
+  },
+  "Clinicians": {
+    "SearchBarPlaceholder": "Search clinician (eg John)"
+  },
+  "Alerts": {
+    "SearchBarPlaceholder": "Search alerts"
+  },
+  "MobileMessage": {
+    "ViewList": "View List",
+    "BackToDetails": "Back to Details"
   },
   "UnexpectedError": "An unexpected error has occured"
 }

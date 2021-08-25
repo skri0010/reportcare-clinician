@@ -1,62 +1,113 @@
-import { ViewStyle, StyleProp } from "react-native";
+import { ViewStyle, StyleProp, TextStyle } from "react-native";
 import { ColorScheme } from "models/ColorScheme";
+import { FontScheme } from "models/FontScheme";
+import { DrawerNavigationOptions } from "@react-navigation/drawer";
+import { MaterialTopTabNavigationOptions } from "@react-navigation/material-top-tabs";
+import { BottomTabNavigationOptions } from "@react-navigation/bottom-tabs";
+import { StackNavigationOptions } from "@react-navigation/stack";
 import { ms } from "react-native-size-matters";
-import { MaterialTopTabBarOptions } from "@react-navigation/material-top-tabs";
-import { DrawerContentOptions } from "@react-navigation/drawer";
+import { isMobile } from "./device";
 
-// Props for material top tabs options
-export const getTopTabBarOptions: (
-  colors: ColorScheme
-) => MaterialTopTabBarOptions = (colors) => {
-  return {
-    activeTintColor: colors.primaryContrastTextColor,
-    inactiveTintColor: colors.primaryContrastTextColor,
-    indicatorStyle: {
-      backgroundColor: colors.primaryIndicatorColor,
-      marginBottom: ms(2),
-      height: ms(3)
-    },
-    style: {
-      backgroundColor: colors.primaryBarColor,
-      elevation: 0, // Remove shadow on Android
-      shadowOpacity: 0 // Remove shadow on iOS
-    }
-  };
-};
-
-// Props for material bottom tabs options
-export const getBottomTabBarOptions: (
-  colors: ColorScheme
-) => MaterialTopTabBarOptions = (colors) => {
-  return {
-    activeTintColor: colors.selectedTextColor,
-    inactiveTintColor: colors.primaryContrastTextColor,
-    indicatorStyle: {
-      backgroundColor: colors.primaryIndicatorColor,
-      height: ms(3)
-    },
-    style: {
-      backgroundColor: colors.primaryBarColor,
-      elevation: 0, // Remove shadow on Android
-      shadowOpacity: 0 // Remove shadow on iOS
-    }
-  };
-};
-
-// Props for material side tabs options
-export const getSideTabBarOptions: (
-  colors: ColorScheme
-) => DrawerContentOptions = (colors) => {
-  return getBottomTabBarOptions(colors) as DrawerContentOptions;
-};
-
+// JH-TODO-NAV: Remove export
+// Style for main screen header
 export const getMainScreenHeaderStyle: (
-  colors: ColorScheme
-) => StyleProp<ViewStyle> = (colors) => {
+  colors: ColorScheme,
+  height?: number
+) => StyleProp<ViewStyle> = (colors, height = ms(40)) => {
   return {
     backgroundColor: colors.primaryBarColor,
+    height: height,
     elevation: 0, // Remove shadow on Android
     shadowOpacity: 0, // Remove shadow on iOS
     borderBottomWidth: 0
+  };
+};
+
+// Style for main screen header title
+const getMainScreenHeaderTitleStyle: (
+  colors: ColorScheme,
+  fonts: FontScheme
+) => TextStyle = (colors, fonts) => {
+  return {
+    color: colors.primaryContrastTextColor,
+    fontSize: fonts.h2Size
+  };
+};
+
+// Style for drawer screen
+export const getDrawerScreenOptions: (input: {
+  colors: ColorScheme;
+  fonts: FontScheme;
+  drawerWidth?: number;
+}) => DrawerNavigationOptions = ({
+  colors,
+  fonts,
+  drawerWidth = ms(isMobile ? 80 : 60) // Larger drawer width for mobile, smaller drawer width for desktop
+}) => {
+  const headerHeight = ms(40);
+  const headerStyle = getMainScreenHeaderStyle(colors, headerHeight);
+  const headerTitleStyle = getMainScreenHeaderTitleStyle(colors, fonts);
+
+  return {
+    ...(isMobile ? {} : { headerLeft: () => null }), // Show drawer icon for mobile, hide for desktop
+    headerTintColor: colors.primaryContrastTextColor, // Change color of header icons (drawer)
+    headerStyle: headerStyle,
+    headerTitleStyle: headerTitleStyle,
+    headerTitleAlign: "center",
+    drawerStyle: {
+      width: drawerWidth,
+      borderRightWidth: 0, // Remove white line between drawer and header,
+      backgroundColor: colors.secondaryBarColor,
+      elevation: 0, // Remove shadow on Android
+      shadowOpacity: 0 // Remove shadow on iOS
+    },
+    drawerLabel: () => null,
+    drawerLabelStyle: { flex: 0 },
+    drawerItemStyle: {
+      height: drawerWidth * 0.8,
+      justifyContent: "center"
+    }, // Icon and label style
+    drawerContentContainerStyle: { paddingTop: headerHeight },
+    drawerActiveTintColor: colors.selectedIconColor,
+    drawerInactiveTintColor: colors.primaryContrastIconColor,
+    drawerType: isMobile ? "slide" : "permanent" // Slide for mobile, permanent for desktop
+  };
+};
+
+// Style for top tabs
+export const getTopTabBarOptions: (input: {
+  colors: ColorScheme;
+  fonts: FontScheme;
+}) => MaterialTopTabNavigationOptions = ({ colors, fonts }) => {
+  return {
+    tabBarLabelStyle: { fontSize: fonts.h6Size, textTransform: "none" },
+    tabBarIndicatorStyle: { backgroundColor: colors.primaryBarColor },
+    tabBarStyle: { backgroundColor: colors.primaryContrastTextColor }
+  };
+};
+
+// JH-TODO-NAV: Update
+// Props for material bottom tabs options
+export const getBottomTabBarOptions: (input: {
+  colors: ColorScheme;
+  fonts: FontScheme;
+}) => BottomTabNavigationOptions = ({ colors, fonts }) => {
+  return {};
+};
+
+// Props for stack options
+export const getStackOptions: (input: {
+  colors: ColorScheme;
+  fonts: FontScheme;
+}) => StackNavigationOptions = ({ colors, fonts }) => {
+  return {
+    headerStyle: {
+      height: fonts.h1Size + ms(25)
+    },
+    headerTitleStyle: {
+      fontWeight: "bold",
+      fontSize: fonts.h1Size,
+      paddingLeft: ms(15)
+    }
   };
 };

@@ -3,7 +3,7 @@ import { RootState, select } from "util/useRedux";
 import { View, TextStyle, FlatList } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
-import { H4 } from "components/Text/index";
+import { H4 } from "components/Text";
 import { CardWrapper } from "./CardWrapper";
 import i18n from "util/language/i18n";
 import {
@@ -12,9 +12,9 @@ import {
 } from "rc_agents/model";
 import { PatientAssignment } from "aws/API";
 import { PatientAssignmentRow } from "components/RowComponents/PatientRows/PatientPendingAssignmentRow";
-import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
+import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AgentTrigger } from "rc_agents/trigger";
-import { EmptyListIndicator } from "components/IndicatorComponents/EmptyListIndicator";
+import { EmptyListIndicator } from "components/Indicators/EmptyListIndicator";
 
 interface PendingPatientAssignmentsCardProps {
   maxHeight: number;
