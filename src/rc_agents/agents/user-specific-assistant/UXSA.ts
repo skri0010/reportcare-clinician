@@ -4,6 +4,7 @@ import { af_RetrieveRole } from "./action-frames/hf-outcome-trends/RetrieveRole"
 import { af_RequestRetrievePatients } from "./action-frames/hf-outcome-trends/RequestRetrievePatients";
 import { af_DisplayAlerts } from "./action-frames/triage-alert-hf-clinic/DisplayAlerts";
 import { af_DisplayPendingPatientAssignments } from "./action-frames/storing-data/DisplayPendingPatientAssignments";
+import { af_DisplayTodoDetails } from "./action-frames/storing-data/DisplayTodoDetails";
 import { AgentIDs } from "rc_agents/clinician_framework";
 import { CommonAttributes } from "agents-framework/Enums";
 import { af_DisplayPendingAlertCount } from "./action-frames/triage-alert-hf-clinic/DisplayPendingAlertCount";
@@ -33,6 +34,9 @@ const agentUXSA = new ClinicianAgent(
 
     // SRD-II
     af_DisplayTodos,
+
+    // SRD-III
+    af_DisplayTodoDetails,
 
     // AT-CP
     af_DisplayPendingAlertCount,

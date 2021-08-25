@@ -71,6 +71,9 @@ export const ActionFrameIDs = {
     // SRD-II: Todos
     DISPLAY_TODOS: "DisplayTodos",
 
+    // SRD -III : Todo Details
+
+    DISPLAY_TODO_DETAILS: "DisplayTodoDetails",
     // AT-CP
     DISPLAY_PENDING_ALERT_COUNT: "DisplayPendingAlertCount",
     DISPLAY_ALERTS: "DisplayAlerts",
@@ -117,44 +120,49 @@ export enum ProcedureAttributes {
   HF_OTP_II = "HF-OTP-II",
   SRD_I = "SRD-I",
   SRD_II = "SRD-II",
+  SRD_III = "SRD-III",
   AT_CP = "AT-CP"
 }
 
 // Attributes for CLINICIAN key
+
 export enum ClinicianAttributes {
-  USERNAME = "Username",
-  HAS_ENTRY = "HasEntry",
-  ENTRY_DATA = "EntryData",
-  CONFIGURED = "Configured",
-  RETRIEVE_ENTRY = "RetrieveEntry",
+    USERNAME = "Username",
+    HAS_ENTRY = "HasEntry",
+    ENTRY_DATA = "EntryData",
+    CONFIGURED = "Configured",
+    RETRIEVE_ENTRY = "RetrieveEntry",
 
-  // HF-OTP-I: ClinicianInfo and all patients (PatientInfo)
-  ROLE = "Role",
-  RETRIEVE_ROLE = "RetrieveRole",
-  ROLE_RETRIEVED = "RoleRetrieved",
+    // HF-OTP-I: ClinicianInfo and all patients (PatientInfo)
+    ROLE = "Role",
+    RETRIEVE_ROLE = "RetrieveRole",
+    ROLE_RETRIEVED = "RoleRetrieved",
 
-  // AT-CP: Alerts
-  RETRIEVE_PENDING_ALERT_COUNT = "RetrievePendingAlertCount",
-  PENDING_ALERT_COUNT_RETRIEVED = "PendingAlertCountRetrieved",
-  ALERT_STATUS = "AlertStatus",
-  ALERT_RISK_LEVEL = "AlertRiskLevel",
-  RETRIEVE_ALERTS = "RetrieveAlerts",
-  ALERTS = "Alerts",
-  ALERTS_RETRIEVED = "AlertsRetrieved",
-  ALERT = "Alert",
-  RETRIEVE_ALERT_INFO = "RetrieveAlertInfo",
-  ALERT_INFO = "AlertInfo",
-  ALERT_INFO_RETRIEVED = "AlertInfoRetrieved",
+    // AT-CP: Alerts
+    RETRIEVE_PENDING_ALERT_COUNT = "RetrievePendingAlertCount",
+    PENDING_ALERT_COUNT_RETRIEVED = "PendingAlertCountRetrieved",
+    ALERT_STATUS = "AlertStatus",
+    ALERT_RISK_LEVEL = "AlertRiskLevel",
+    RETRIEVE_ALERTS = "RetrieveAlerts",
+    ALERTS = "Alerts",
+    ALERTS_RETRIEVED = "AlertsRetrieved",
+    ALERT = "Alert",
+    RETRIEVE_ALERT_INFO = "RetrieveAlertInfo",
+    ALERT_INFO = "AlertInfo",
+    ALERT_INFO_RETRIEVED = "AlertInfoRetrieved",
 
-  // SRD-II - Todos
-  RETRIEVE_TODOS = "RetrieveTodos",
-  TODOS = "Todos",
-  TODO_STATUS = "TodoStatus",
-  CREATE_TODO = "CreateTodo",
-  UPDATE_TODO = "UpdateTodo",
-  TODO = "Todo",
-  TODOS_UPDATED = "TodosUpdated",
-  DISPLAY_TODOS = "DisplayTodos"
+    // SRD-II - Todos
+    RETRIEVE_TODOS = "RetrieveTodos",
+    TODOS = "Todos",
+    TODO_STATUS = "TodoStatus",
+    CREATE_TODO = "CreateTodo",
+    UPDATE_TODO = "UpdateTodo",
+    TODO = "Todo",
+    TODOS_UPDATED = "TodosUpdated",
+    DISPLAY_TODOS = "DisplayTodos",
+
+    // SRD-III - Todo Details
+    DISPLAY_TODO_DETAILS = "DisplayTodoDetails"
 }
 
 // Attributes for PATIENT key
