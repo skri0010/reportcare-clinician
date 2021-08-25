@@ -15,7 +15,7 @@ export const HomeScreen: FC<MainScreenProps[ScreenName.HOME]> = ({
 }) => {
   // JH-TODO Replace titles with i18n
   // JH-TODO Replace welcome card name
-  const topMaxHeight = ms(150);
+  const topMaxHeight = ms(200);
   const maxHeight = ms(250);
 
   return (
