@@ -13,7 +13,8 @@ import {
   PatientAssignmentResolution,
   TodoCreateInput,
   TodoStatus,
-  TodoUpdateInput
+  TodoUpdateInput,
+  TodoDetails
 } from "rc_agents/model";
 
 // HF-OTP-I
@@ -161,6 +162,24 @@ export const triggerUpdateTodo = (input: TodoUpdateInput): void => {
     new Belief(
       BeliefKeys.PROCEDURE,
       ProcedureAttributes.SRD_II,
+      ProcedureConst.ACTIVE
+    )
+  );
+};
+
+// SRD-III: Triggers RetrieveTodoDetails of DTA
+export const triggerRetrieveTodoDetails = (input: TodoDetails): void => {
+  agentAPI.addFact(
+    new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.DISPLAY_TODO_DETAILS, input),
+    false
+  );
+  agentDTA.addBelief(
+    new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.DISPLAY_TODO_DETAILS, true)
+  );
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PROCEDURE,
+      ProcedureAttributes.SRD_III,
       ProcedureConst.ACTIVE
     )
   );
