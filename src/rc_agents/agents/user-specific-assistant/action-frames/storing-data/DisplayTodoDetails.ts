@@ -10,13 +10,17 @@ import {
   import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
   import {
     ActionFrameIDs,
+    AppAttributes,
     BeliefKeys,
     ClinicianAttributes,
     ProcedureAttributes
   } from "rc_agents/clinician_framework";
 import { store } from "util/useRedux";
-import { TodoDetailsParamList } from "web/screens";
-import { LocalTodo } from "rc_agents/model";
+import { Storage } from "rc_agents/storage";
+import { LocalTodo, TodoStatus } from "rc_agents/model";
+import { Todo, GetTodoQueryVariables } from "aws/API";
+import { getTodo } from "aws/TypedAPI/getQueries";
+import { mapColorCodeToRiskLevel } from "rc_agents/agents/data-assistant/action-frames/triage-alert-hf-clinic/RetrievePendingAlertCount";
 
   /**
    * Class representing an activity that triggers the display of todo details.
@@ -36,7 +40,61 @@ import { LocalTodo } from "rc_agents/model";
           // reset preconditions
           await super.doActivity(agent, [rule2]);
 
-          const todos: LocalTodo = agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.TODO];
+          const facts = agentAPI.getFacts();
+
+          try {
+
+            // Get fact with todo details
+            const todoDetails: string = agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.TODO];
+
+            if (todoDetails) {
+                let todoDetail: Todo | undefined;
+                // Check if device is online
+                if (facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
+                    // is online
+                    const query = await getTodo({
+                        id: todoDetails
+                    })
+                    // call getTodo query
+                    if (query.data?.getTodo){
+                        const result = query.data.getTodo;
+
+                        if (result){
+                            todoDetail = result as Todo;
+                        }
+                    }
+                }
+                if (todoDetail) {
+                    // Change todo fromat to LocalTodo for dispatch
+                    const todoToDispatch: LocalTodo = {
+                        id: todoDetail.id,
+                        title: todoDetail.title,
+                        patientName: todoDetail.patientName,
+                        notes: todoDetail.notes,
+                        completed: todoDetail.completed === TodoStatus.COMPLETED,
+                        createdAt: todoDetail.createdAt,
+                        lastModified: todoDetail.lastModified,
+                        toSync: false,
+                        _version: todoDetail._version
+                    };
+                    // check is optional alert data exists
+                    if (todoDetail.alert){
+                        todoToDispatch.alertId = todoDetail.alert.id;
+                        todoToDispatch.patientId = todoDetail.alert.patientID;
+                        todoToDispatch.riskLevel = mapColorCodeToRiskLevel(
+                            todoDetail.alert.colorCode
+                        );
+                    }
+                    // Save to local storage
+                    await Storage.
+                }
+            } 
+
+
+          }
+
+          
+
       }
   }
 
