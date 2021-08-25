@@ -3,13 +3,12 @@ import { FlatList, View } from "react-native";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { PatientDetailsRow } from "components/RowComponents/PatientRows/PatientDetailsRow";
-import { H5 } from "components/Text";
 import { AgentTrigger } from "rc_agents/trigger";
-import { ScaledSheet } from "react-native-size-matters";
 import i18n from "util/language/i18n";
 import { RootState, select } from "util/useRedux";
 import { RiskFilterPillList } from "web/RiskFilterPillList";
 import { RowSelectionTab } from "../RowSelectionTab";
+import { NoListItemMessage } from "../Shared/NoListItemMessage";
 
 interface PatientsListScreenProps {
   flex?: number;
@@ -71,23 +70,8 @@ export const PatientsListScreen: FC<PatientsListScreenProps> = ({
         />
       ) : (
         // Show text notice (no patients or failed to fetch patients)
-        <View style={styles.noPatientsContainer}>
-          <H5 text={noPatientsNotice} style={styles.noPatientsText} />
-        </View>
+        <NoListItemMessage screenMessage={noPatientsNotice} />
       )}
     </View>
   );
 };
-
-const styles = ScaledSheet.create({
-  noPatientsContainer: {
-    flex: 1,
-    paddingTop: "10@ms",
-    justifyContent: "flex-start",
-    alignItems: "center",
-    paddingHorizontal: "30@ms"
-  },
-  noPatientsText: {
-    textAlign: "center"
-  }
-});

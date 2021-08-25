@@ -8,9 +8,8 @@ import { AlertRowTabProps } from "./AlertCurrentTab";
 import { RiskFilterPillList } from "web/RiskFilterPillList";
 import { AlertInfo } from "rc_agents/model";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
-import { H5 } from "components/Text";
-import { ScaledSheet } from "react-native-size-matters";
 import i18n from "util/language/i18n";
+import { NoListItemMessage } from "../Shared/NoListItemMessage";
 
 export const AlertCompletedTab: FC<AlertRowTabProps> = ({
   setAlertSelected
@@ -78,23 +77,8 @@ export const AlertCompletedTab: FC<AlertRowTabProps> = ({
           keyExtractor={(item) => item.id}
         />
       ) : (
-        <View style={styles.noAlertsContainer}>
-          <H5 text={noCompletedAlertsNotice} style={styles.noAlertsText} />
-        </View>
+        <NoListItemMessage screenMessage={noCompletedAlertsNotice} />
       )}
     </View>
   );
 };
-
-const styles = ScaledSheet.create({
-  noAlertsContainer: {
-    flex: 1,
-    paddingTop: "10@ms",
-    justifyContent: "flex-start",
-    alignItems: "center",
-    paddingHorizontal: "30@ms"
-  },
-  noAlertsText: {
-    textAlign: "center"
-  }
-});

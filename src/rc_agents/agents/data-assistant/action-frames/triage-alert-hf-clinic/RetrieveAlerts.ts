@@ -16,9 +16,9 @@ import {
 } from "rc_agents/AgentEnums";
 import { Storage } from "rc_agents/storage";
 import agentAPI from "rc_agents/framework/AgentAPI";
-import { listCompletedRiskAlerts, listPendingAlertsByDateTime } from "aws";
+import { listCompletedRiskAlerts, listPendingRiskAlerts } from "aws";
 import { AlertInfo, AlertStatus } from "rc_agents/model";
-import { Alert, ModelSortDirection } from "aws/API";
+import { Alert } from "aws/API";
 import { store } from "util/useRedux";
 import {
   setFetchingAlerts,
@@ -75,11 +75,13 @@ class RetrieveAlerts extends Activity {
             alertStatus === AlertStatus.PENDING ||
             alertStatus === AlertStatus.COMPLETED
           ) {
+            // retrieve alerts by status
             alerts = await getAlertsByStatus(alertStatus);
           } else {
             // case when all alert is required
             alerts = await getAlertsByStatus(AlertStatus.PENDING);
             additionalAlerts = await getAlertsByStatus(AlertStatus.COMPLETED);
+            // Only two conditions, as by default it alerts list is used anyways
             if (alerts && additionalAlerts) {
               // If both list not empty
               alerts = alerts.concat(additionalAlerts);
@@ -184,12 +186,11 @@ export const getAlertsByStatus = async (
   let alerts: Alert[] | undefined;
 
   if (alertStatus === AlertStatus.PENDING) {
-    const query = await listPendingAlertsByDateTime({
-      pending: AlertStatus.PENDING,
-      sortDirection: ModelSortDirection.DESC
+    const query = await listPendingRiskAlerts({
+      pending: AlertStatus.PENDING
     });
-    if (query.data && query.data.listPendingAlertsByDateTime) {
-      const result = query.data.listPendingAlertsByDateTime.items;
+    if (query.data && query.data.listPendingRiskAlerts) {
+      const result = query.data.listPendingRiskAlerts.items;
       if (result && result.length > 0) {
         alerts = result as Alert[];
       }
