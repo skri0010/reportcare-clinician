@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-imports */
+
 // Type checking for main screens (navigation and route)
 export type { MainScreenProps } from "web/navigation/types/MainScreenProps";
 

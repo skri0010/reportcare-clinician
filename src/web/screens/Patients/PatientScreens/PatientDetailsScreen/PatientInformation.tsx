@@ -10,7 +10,7 @@ import {
   ContactInfo,
   ContactInfoSection
 } from "./PatientInformationComponents/ContactInfoSection";
-import { InfoTitleBar } from "./PatientInformationComponents/InfoTitleBar";
+import { InfoTitleBar } from "../../../../../components/Bars/InfoTitleBar";
 import { PatientDetailsTabProps } from "web/navigation/types";
 import { getAge } from "util/utilityFunctions";
 import { PatientInfo } from "aws/API";

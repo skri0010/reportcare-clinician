@@ -1,11 +1,10 @@
 import React from "react";
-import { TouchableOpacity, Text } from "react-native";
+import { TouchableOpacity } from "react-native";
 import { PatientRowBase } from "./PatientRowBase";
 import { PatientInfo } from "aws/API";
 import { RiskLevel } from "models/RiskLevel";
 import i18n from "util/language/i18n";
 import { getAge } from "util/utilityFunctions";
-import { ms } from "react-native-size-matters";
 
 export interface PatientDetailsRowProps {
   patient: PatientInfo;

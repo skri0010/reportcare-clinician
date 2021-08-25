@@ -97,8 +97,9 @@
     "Home": "Home",
     "Patients": "Patients",
     "Clinicians": "Clinicians",
-    "Chat": "Chat",
+    "Alerts": "Alerts",
     "Todo": "Todo",
+    "Chat": "Chat",
     "MARIA": "MARIA",
     "Settings": "Settings",
     "Help": "Help"
@@ -225,6 +226,12 @@
     "BasicInfo": "Basic Information",
     "ContactInfo": "Contact Information",
     "Years": "years"
+  },
+  "Clinicians": {
+    "SearchBarPlaceholder": "Search clinician (eg John)"
+  },
+  "Alerts": {
+    "SearchBarPlaceholder": "Search alerts"
   },
   "MobileMessage": {
     "ViewList": "View List",

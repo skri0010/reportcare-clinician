@@ -15,12 +15,13 @@ export type MainScreenParamList = {
     selectedTab?: PatientDetailsTabName;
   };
   [ScreenName.CLINICIANS]: undefined;
-  [ScreenName.CHAT]: undefined;
+  [ScreenName.ALERTS]: undefined;
   [ScreenName.TODO]: {
     todoToShow?: LocalTodo;
     selectedListTab?: TodoListTabName;
     selectedStackScreen?: TodoDetailsStackScreenName;
   };
+  [ScreenName.CHAT]: undefined;
   [ScreenName.MARIA]: undefined;
   [ScreenName.SETTINGS]: undefined;
 };

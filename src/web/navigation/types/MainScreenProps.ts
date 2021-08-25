@@ -8,8 +8,9 @@ export type MainScreenProps = {
   [ScreenName.HOME]: HomeScreenProps;
   [ScreenName.PATIENTS]: PatientScreenProps;
   [ScreenName.CLINICIANS]: ClinicianScreenProps;
-  [ScreenName.CHAT]: ChatScreenProps;
+  [ScreenName.ALERTS]: AlertScreenProps;
   [ScreenName.TODO]: TodoScreenProps;
+  [ScreenName.CHAT]: ChatScreenProps;
   [ScreenName.MARIA]: MARIAScreenProps;
   [ScreenName.SETTINGS]: SettingsScreenProps;
 };
@@ -37,6 +38,11 @@ type ChatScreenProps = {
 type TodoScreenProps = {
   navigation: TodoScreenNavigation;
   route: RouteProp<MainScreenParamList, ScreenName.TODO>;
+};
+
+type AlertScreenProps = {
+  navigation: DrawerNavigationProp<MainScreenParamList, ScreenName.ALERTS>;
+  route: RouteProp<MainScreenParamList, ScreenName.ALERTS>;
 };
 
 type MARIAScreenProps = {

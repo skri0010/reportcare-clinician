@@ -3,8 +3,9 @@ export enum ScreenName {
   HOME = "Home",
   PATIENTS = "Patients",
   CLINICIANS = "Clinicians",
-  CHAT = "Chat",
+  ALERTS = "Alerts",
   TODO = "Todo",
+  CHAT = "Chat",
   MARIA = "MARIA",
   SETTINGS = "Settings"
 }

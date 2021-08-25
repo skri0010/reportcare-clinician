@@ -18,6 +18,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { ms } from "react-native-size-matters";
 import i18n from "util/language/i18n";
 import { isMobile } from "util/device";
+import { AlertsScreen } from "web/screens/Alerts/AlertsScreen";
 
 interface DrawerNavigationProps {
   signOut: () => void;
@@ -76,8 +77,9 @@ export const MainDrawerNavigator: FC<DrawerNavigationProps> = ({ signOut }) => {
     [ScreenName.HOME]: undefined,
     [ScreenName.PATIENTS]: {},
     [ScreenName.CLINICIANS]: undefined,
-    [ScreenName.CHAT]: undefined,
+    [ScreenName.ALERTS]: undefined,
     [ScreenName.TODO]: {},
+    [ScreenName.CHAT]: undefined,
     [ScreenName.MARIA]: undefined,
     [ScreenName.SETTINGS]: undefined
   };
@@ -120,12 +122,12 @@ export const MainDrawerNavigator: FC<DrawerNavigationProps> = ({ signOut }) => {
         }}
       />
       <Drawer.Screen
-        name={ScreenName.CHAT}
-        component={ChatScreen}
+        name={ScreenName.ALERTS}
+        component={AlertsScreen}
         options={{
           ...buildOptions({
             iconName: "chat",
-            iconLabel: i18n.t("ScreenName.Chat")
+            iconLabel: i18n.t("ScreenName.Alerts")
           })
         }}
       />
@@ -140,6 +142,17 @@ export const MainDrawerNavigator: FC<DrawerNavigationProps> = ({ signOut }) => {
         }}
         initialParams={initialParamsList[ScreenName.TODO]}
       />
+      {/* To be implemented in future versions */}
+      {/* <Drawer.Screen
+        name={ScreenName.CHAT}
+        component={ChatScreen}
+        options={{
+          ...buildOptions({
+            iconName: "chat",
+            iconLabel: i18n.t("ScreenName.Chat")
+          })
+        }}
+      />
       <Drawer.Screen
         name={ScreenName.MARIA}
         component={MariaScreen}
@@ -149,7 +162,7 @@ export const MainDrawerNavigator: FC<DrawerNavigationProps> = ({ signOut }) => {
             iconLabel: i18n.t("ScreenName.MARIA")
           })
         }}
-      />
+      /> */}
       <Drawer.Screen
         name={ScreenName.SETTINGS}
         component={SettingsScreen}

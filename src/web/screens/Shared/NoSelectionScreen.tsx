@@ -45,6 +45,14 @@ export const NoSelectionScreen: FC<NoSelectionScreenProps> = ({
             color={colors.secondaryIconColor}
           />
         );
+      case ScreenName.CLINICIANS:
+        return (
+          <Icon
+            name="local-hospital"
+            size={ms(iconSize)}
+            color={colors.secondaryIconColor}
+          />
+        );
       default:
         return (
           <Icon
