@@ -17,6 +17,7 @@ export const lightColorScheme: ColorScheme = {
   primaryBackgroundColor: "#ffffff",
   secondaryBackgroundColor: "#727272",
   primaryWebBackgroundColor: "#F5F5F5",
+  secondaryWebBackgroundColor: "#ffffff",
 
   // Borders
   primaryBorderColor: "#D2D2D2",
@@ -28,7 +29,7 @@ export const lightColorScheme: ColorScheme = {
 
   // Bars
   primaryBarColor: "#0d8ca8",
-  secondaryBarColor: "#ffffff",
+  secondaryBarColor: "#0b849e",
 
   // Indicators
   primaryIndicatorColor: "#ffffff",
@@ -48,6 +49,8 @@ export const lightColorScheme: ColorScheme = {
   // Icons
   primaryIconColor: "#000000",
   secondaryIconColor: "#ABA9A9",
+  primaryContrastIconColor: "#FFFFFF",
+  selectedIconColor: "#00ffff",
   acceptIconColor: "#6AC574",
 
   // Others

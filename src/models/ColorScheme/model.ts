@@ -12,6 +12,7 @@ export interface ColorScheme {
   primaryBackgroundColor: string;
   secondaryBackgroundColor: string;
   primaryWebBackgroundColor: string;
+  secondaryWebBackgroundColor: string;
 
   // Borders
   primaryBorderColor: string;
@@ -43,6 +44,8 @@ export interface ColorScheme {
   // Icons
   primaryIconColor: string;
   secondaryIconColor: string;
+  primaryContrastIconColor: string;
+  selectedIconColor: string;
   acceptIconColor: string;
 
   // Others

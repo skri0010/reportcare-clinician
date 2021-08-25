@@ -7,7 +7,7 @@ import { mockPatients } from "mock/mockPatients";
 import { PatientRequestRow } from "components/RowComponents/PatientRows/PatientRequestRow";
 import { H4, H6 } from "components/Text";
 import { CardWrapper } from "./CardWrapper";
-import { FloatingShowMoreButton } from "components/Buttons/FloatingShowMoreButton";
+import { FloatingBottomButton } from "components/Buttons/FloatingBottomButton";
 import i18n from "util/language/i18n";
 
 interface RequestsByMariaCardProps {
@@ -57,7 +57,7 @@ export const RequestsByMariaCard: FC<RequestsByMariaCardProps> = ({
                   reduceOpacity
                 />
                 {/* Disable last row, display "Show More button" */}
-                <FloatingShowMoreButton />
+                <FloatingBottomButton />
               </>
             ) : (
               <PatientRequestRow

@@ -6,9 +6,11 @@ import { LanguageID, defaultLanguage } from "util/language";
 import { ColorScheme, lightColorScheme } from "../../models/ColorScheme";
 import {
   FontScheme,
+  largeWebFont,
   normalMobileFontScheme,
-  normalDesktopFontScheme
+  normalWebFont
 } from "../../models/FontScheme";
+import { isMobile } from "util/device";
 
 interface SettingsState {
   colors: ColorScheme;
@@ -22,9 +24,9 @@ const initialState: SettingsState = {
   fonts: Platform.select({
     android: normalMobileFontScheme,
     ios: normalMobileFontScheme,
-    windows: normalDesktopFontScheme,
-    macos: normalDesktopFontScheme,
-    default: normalDesktopFontScheme
+    // Display mobile fonts for mobile, web fonts for desktop
+    web: isMobile ? largeWebFont : normalWebFont,
+    default: normalWebFont
   })
 };
 

@@ -93,12 +93,13 @@
       "Saturday": "Sabtu"
     }
   },
-  "TabTitle": {
+  "ScreenName": {
     "Home": "Home",
     "Patients": "Pesakit",
     "Clinicians": "Pakar",
-    "Chat": "Perbualan",
+    "Alerts": "Amaran",
     "Todo": "Todo",
+    "Chat": "Perbualan",
     "MARIA": "MARIA",
     "Settings": "Settings",
     "Help": "Help"
@@ -123,6 +124,7 @@
   "Todo": {
     "Current": "Semasa",
     "Completed": "Selesai",
+    "NoPatients": "Tiada todo yang dijumpai!",
     "SearchBarCurrentPlaceholder": "Cari todo yang semasa",
     "SearchBarCompletePlaceholder": "Cari todo yang selesai",
     "ViewTodo": "Lihat Todo",
@@ -151,7 +153,6 @@
   "Patients": {
     "PatientsList": {
       "NoPatients": "Tiada pesakit yang dijumpai!",
-      "FilterBy": "Tapis berdasarkan:",
       "Class": "Kelas",
       "Age": "Umur,"
     },
@@ -225,6 +226,16 @@
     "BasicInfo": "Informasi Asas",
     "ContactInfo": "Informasi Hubungan",
     "Years": "tahun"
+  },
+  "Clinicians": {
+    "SearchBarPlaceholder": "Cari pakar(contohnya John)"
+  },
+  "Alerts": {
+    "SearchBarPlaceholder": "Cari amaran"
+  },
+  "MobileMessage": {
+    "ViewList": "Lihat Senarai",
+    "BackToDetails": "Balik ke Butiran"
   },
   "UnexpectedError": "Ralat yang tidak disangkai telah berlaku"
 }

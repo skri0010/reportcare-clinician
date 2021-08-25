@@ -3,7 +3,7 @@ import { View } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { H4 } from "components/Text";
 import { RootState, select } from "util/useRedux";
-import { ScreenName } from "web/screens";
+import { ScreenName } from "web/navigation";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 interface NoSelectionScreenProps {
@@ -41,6 +41,14 @@ export const NoSelectionScreen: FC<NoSelectionScreenProps> = ({
         return (
           <Icon
             name="message"
+            size={ms(iconSize)}
+            color={colors.secondaryIconColor}
+          />
+        );
+      case ScreenName.CLINICIANS:
+        return (
+          <Icon
+            name="local-hospital"
             size={ms(iconSize)}
             color={colors.secondaryIconColor}
           />

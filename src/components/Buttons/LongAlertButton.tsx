@@ -4,7 +4,7 @@ import { RootState, select } from "util/useRedux";
 import { getRiskLevelColor, RiskLevel } from "../../models/RiskLevel";
 import { ScaledSheet, ms } from "react-native-size-matters";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import { H5, H6 } from "components/Text/index";
+import { H5, H6 } from "components/Text";
 import i18n from "util/language/i18n";
 import { AlertStatus } from "rc_agents/model";
 
