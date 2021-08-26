@@ -4,11 +4,13 @@ import { af_RetrieveRole } from "./action-frames/hf-outcome-trends/RetrieveRole"
 import { af_RequestRetrievePatients } from "./action-frames/hf-outcome-trends/RequestRetrievePatients";
 import { af_DisplayAlerts } from "./action-frames/triage-alert-hf-clinic/DisplayAlerts";
 import { af_DisplayPendingPatientAssignments } from "./action-frames/storing-data/DisplayPendingPatientAssignments";
-import { AgentIDs, CommonAttributes } from "rc_agents/AgentEnums";
+import { AgentIDs } from "rc_agents/clinician_framework";
+import { CommonAttributes } from "rc_agents/framework/Enums";
 import { af_DisplayPendingAlertCount } from "./action-frames/triage-alert-hf-clinic/DisplayPendingAlertCount";
 import { af_DisplayAlertInfo } from "./action-frames/triage-alert-hf-clinic/DisplayAlertInfo";
 import { af_DisplayPatientsByFilter } from "./action-frames/hf-outcome-trends/DisplayPatientsByFilter";
 import { af_DisplayTodos } from "./action-frames/storing-data/DisplayTodos";
+import { af_DisplayAlertHistory } from "./action-frames/hf-outcome-trends/DisplayAlertHistory";
 
 // Initial Beliefs of Agent
 const belief1 = new Belief(AgentIDs.UXSA, CommonAttributes.LAST_ACTIVITY, null);
@@ -24,6 +26,7 @@ const agentUXSA = new Agent(
 
     // HF-OTP-II
     af_VisualizeParameters,
+    af_DisplayAlertHistory,
 
     // SRD-I
     af_DisplayPendingPatientAssignments,

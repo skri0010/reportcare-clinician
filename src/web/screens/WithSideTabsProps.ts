@@ -21,7 +21,7 @@ export type WithSideTabsProps = {
   [ScreenName.MARIA]: MARIAScreenProps;
   [ScreenName.SETTING]: SettingsScreenProps;
   [ScreenName.HELP]: HelpScreenProps;
-  [ScreenName.ALERTS]: ALERTScreenProps;
+  [ScreenName.ALERTS]: AlertScreenProps;
 };
 
 // Home
@@ -117,7 +117,7 @@ type ALERTNavigationProps = CompositeNavigationProp<
   StackNavigationProp<RootStackParamList>
 >;
 
-type ALERTScreenProps = {
+type AlertScreenProps = {
   navigation: ALERTNavigationProps;
   route: RouteProp<SideTabsParamList, ScreenName.ALERTS>;
 };

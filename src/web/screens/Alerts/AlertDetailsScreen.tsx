@@ -1,38 +1,29 @@
-import React, { FC, useContext } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
-import { ms, ScaledSheet } from "react-native-size-matters";
-import { H2, H3, H4, H5 } from "components/Text";
+/* eslint-disable no-console */
+import React, { FC } from "react";
+import { View, TouchableOpacity } from "react-native";
+import { ScaledSheet } from "react-native-size-matters";
+import { H4 } from "components/Text";
 import { RootState, select } from "util/useRedux";
 import { ScreenWrapper } from "../ScreenWrapper";
-import { AlertContext } from "./AlertScreen";
-import { mockSymptomRecords } from "mock/mockSymptoms";
-import { mockVitals } from "mock/mockVitals";
-import { mockAlerts } from "mock/mockAlerts";
 import { AlertDetails } from "./AlertDetails";
-import { CardWrapper } from "../Home/CardWrapper";
-import i18n from "util/language/i18n";
-import { mockAlertHistory } from "mock/mockPatientDetails";
 
-export const AlertDetailsScreen: FC = () => {
-  const { colors, fonts } = select((state: RootState) => ({
-    colors: state.settings.colors,
-    fonts: state.settings.fonts
+interface AlertDetailsScreenProps {
+  setModalVisible: (state: boolean) => void;
+}
+
+export const AlertDetailsScreen: FC<AlertDetailsScreenProps> = ({
+  setModalVisible
+}) => {
+  const { colors } = select((state: RootState) => ({
+    colors: state.settings.colors
   }));
-  const context = useContext(AlertContext);
-  const findSymptoms = (id: string) => {
-    // TODO: to be replaced with an API or agent call
-    // this is just to keep the symptoms dynamic
 
-    for (let i = 0; i < mockAlertHistory.length; i += 1) {
-      if (mockAlertHistory[i].id === id) {
-        return <AlertDetails alertHistory={mockAlertHistory[i]} />;
-      }
-    }
-  };
   return (
     <ScreenWrapper>
       <View style={styles.container}>
-        {findSymptoms(context.id)}
+        {/* Alert details cards */}
+        <AlertDetails />
+        {/* Create todo button */}
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={[
@@ -40,7 +31,8 @@ export const AlertDetailsScreen: FC = () => {
               { backgroundColor: colors.primaryTodoCompleteButtonColor }
             ]}
             onPress={() => {
-              // Call on add todo screen
+              // Allows the create todo modal to be visible
+              setModalVisible(true);
             }}
           >
             <H4

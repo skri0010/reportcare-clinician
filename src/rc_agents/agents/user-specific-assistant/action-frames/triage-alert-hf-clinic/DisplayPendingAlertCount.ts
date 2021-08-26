@@ -6,14 +6,8 @@ import {
   Precondition,
   ResettablePrecondition
 } from "rc_agents/framework";
-import {
-  ActionFrameIDs,
-  BeliefKeys,
-  ClinicianAttributes,
-  ProcedureAttributes,
-  ProcedureConst
-} from "rc_agents/AgentEnums";
-import agentAPI from "rc_agents/framework/AgentAPI";
+import agentAPI from "rc_agents/clinician_framework/ClinicianAgentAPI";
+import { ProcedureConst } from "rc_agents/framework/Enums";
 import { AlertInfo, PendingAlertCount } from "rc_agents/model";
 import { store } from "util/useRedux";
 import {
@@ -21,6 +15,12 @@ import {
   setPendingAlertCount
 } from "ic-redux/actions/agents/actionCreator";
 import { RiskLevel } from "models/RiskLevel";
+import {
+  ActionFrameIDs,
+  BeliefKeys,
+  ClinicianAttributes,
+  ProcedureAttributes
+} from "rc_agents/clinician_framework";
 
 /**
  * Class to represent an activity for triggering the display of pending alert count.
@@ -90,7 +90,7 @@ class DisplayPendingAlertCount extends Activity {
     agentAPI.addFact(
       new Belief(
         BeliefKeys.PROCEDURE,
-        ProcedureAttributes.AT_CP,
+        ProcedureAttributes.AT_CP_I,
         ProcedureConst.INACTIVE
       )
     );
@@ -102,7 +102,7 @@ class DisplayPendingAlertCount extends Activity {
 // Preconditions for activating the DisplayPendingAlertCount class
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.AT_CP,
+  ProcedureAttributes.AT_CP_I,
   ProcedureConst.ACTIVE
 );
 const rule2 = new ResettablePrecondition(

@@ -6,21 +6,21 @@ import {
   Precondition,
   ResettablePrecondition
 } from "rc_agents/framework";
+import { ProcedureConst } from "rc_agents/framework/Enums";
+import agentAPI from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
   ActionFrameIDs,
   BeliefKeys,
   ClinicianAttributes,
-  ProcedureAttributes,
-  ProcedureConst
-} from "rc_agents/AgentEnums";
-import agentAPI from "rc_agents/framework/AgentAPI";
+  ProcedureAttributes
+} from "rc_agents/clinician_framework";
 import { store } from "util/useRedux";
 import { setAlertInfo } from "ic-redux/actions/agents/actionCreator";
 import { AlertInfo } from "rc_agents/model";
 
 /**
  * Class to represent an activity for triggering the display of alert info.
- * This happens in Procedure Triage Alert HF Clinic (AT-CP).
+ * This happens in Procedure Triage Alert HF Clinic (AT-CP-II).
  */
 class DisplayAlertInfo extends Activity {
   constructor() {
@@ -41,7 +41,6 @@ class DisplayAlertInfo extends Activity {
         ];
 
       if (alertInfo) {
-        // Dispatch alert info to front end for display
         store.dispatch(setAlertInfo(alertInfo));
 
         // Removes alert info from facts
@@ -63,7 +62,7 @@ class DisplayAlertInfo extends Activity {
     agentAPI.addFact(
       new Belief(
         BeliefKeys.PROCEDURE,
-        ProcedureAttributes.AT_CP,
+        ProcedureAttributes.AT_CP_II,
         ProcedureConst.INACTIVE
       ),
       true,
@@ -75,7 +74,7 @@ class DisplayAlertInfo extends Activity {
 // Preconditions for activating the DisplayAlertInfo class
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.AT_CP,
+  ProcedureAttributes.AT_CP_II,
   ProcedureConst.ACTIVE
 );
 const rule2 = new ResettablePrecondition(

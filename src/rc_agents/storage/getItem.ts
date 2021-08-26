@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Alert, PatientInfo } from "aws/API";
+import { PatientInfo } from "aws/API";
 import { RiskLevel } from "models/RiskLevel";
 import { AlertInfo, PatientDetails } from "rc_agents/model";
 import { AsyncStorageKeys, AsyncStorageType } from ".";
@@ -157,69 +157,19 @@ export const getCompletedAlerts = async (): Promise<
   return null;
 };
 
-// /**
-//  * Gets Alerts based on risk level and/or alert status
-//  * @param riskLevel risk level
-//  * @param status alert status
-//  * @returns array of Alerts if any, otherwise null
-//  */
-// export const getRiskOrStatusAlerts = async (
-//   riskLevel?: RiskLevel,
-//   status?: AlertStatus
-// ): Promise<Alert[] | null> => {
-//   const localData = await getAlerts();
-//   if (localData) {
-//     if (riskLevel) {
-//       // Risk level is specified
-//       const riskAlerts = localData[riskLevel];
-//       if (status && status === AlertStatus.PENDING) {
-//         return Object.values(riskAlerts).filter((a) => a.pending === status);
-//       }
-//       if (status && status === AlertStatus.COMPLETED) {
-//         return Object.values(riskAlerts).filter((a) => a.completed === status);
-//       }
-//       return Object.values(riskAlerts);
-//     }
-
-//     if (status) {
-//       // Risk level is not specified
-//       const keys = Object.values(RiskLevel);
-//       const statusAlerts: Alert[] = [];
-//       await Promise.all(
-//         keys.map((key) => {
-//           const riskAlerts = localData[key];
-//           Object.values(riskAlerts).map((alert) => {
-//             if (status === AlertStatus.PENDING && alert.pending === status) {
-//               statusAlerts.push(alert);
-//             } else if (
-//               status === AlertStatus.COMPLETED &&
-//               alert.completed === status
-//             ) {
-//               statusAlerts.push(alert);
-//             }
-//             return alert;
-//           });
-//           return key;
-//         })
-//       );
-//       return statusAlerts;
-//     }
-//   }
-//   return null;
-// };
-
 /**
  * Get a single AlertInfo from Alert
  * @param alert alert
  * @returns AlertInfo corresponding to the input Alert if any, otherwise null
  */
 export const getSingleAlertInfo = async (
-  alert: Alert
+  alertId: string,
+  patientId: string
 ): Promise<AlertInfo | null> => {
   const localData = await getAlertInfos();
-  if (localData && localData[alert.patientID]) {
-    const patientAlertInfos = localData[alert.patientID];
-    return patientAlertInfos[alert.id];
+  if (localData && localData[patientId]) {
+    const patientAlertInfos = localData[patientId];
+    return patientAlertInfos[alertId];
   }
   return null;
 };

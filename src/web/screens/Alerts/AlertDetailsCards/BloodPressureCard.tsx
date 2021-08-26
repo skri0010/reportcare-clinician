@@ -1,5 +1,5 @@
 import { H4, H5 } from "components/Text";
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import { ms } from "react-native-size-matters";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import i18n from "util/language/i18n";

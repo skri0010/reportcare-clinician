@@ -6,16 +6,16 @@ import {
   Precondition,
   ResettablePrecondition
 } from "rc_agents/framework";
+import { ProcedureConst } from "rc_agents/framework/Enums";
+import agentAPI from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
-  ProcedureConst,
   BeliefKeys,
   ClinicianAttributes,
   ProcedureAttributes,
   ActionFrameIDs
-} from "rc_agents/AgentEnums";
+} from "rc_agents/clinician_framework";
 import { AsyncStorageKeys, Storage } from "rc_agents/storage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import agentAPI from "rc_agents/framework/AgentAPI";
 import { createClinicianInfo, createClinicianProtectedInfo } from "aws";
 import { store } from "util/useRedux";
 import {

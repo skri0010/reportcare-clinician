@@ -1,24 +1,14 @@
 import React, { FC } from "react";
-import { RootState, select } from "util/useRedux";
 import { View, TouchableOpacity } from "react-native";
 import { H4, H5 } from "components/Text/index";
 import { AlertInfo } from "rc_agents/model";
 
 interface AlertRowProps {
   alertDetails: AlertInfo;
-  onButtonPress?: () => void;
   onCardPress?: () => void;
 }
 
-export const AlertRow: FC<AlertRowProps> = ({
-  alertDetails,
-  onButtonPress = () => null,
-  onCardPress
-}) => {
-  const { colors } = select((state: RootState) => ({
-    colors: state.settings.colors
-  }));
-
+export const AlertRow: FC<AlertRowProps> = ({ alertDetails, onCardPress }) => {
   return (
     <TouchableOpacity onPress={onCardPress} style={{ opacity: 1 }}>
       <View style={{ flexDirection: "row" }}>

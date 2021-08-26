@@ -16,12 +16,15 @@ export const PatientHistory: FC<
   );
   // Query history data by patientId here or pass it into component for query
 
+  // useEffect(() => {
+  //   AgentTrigger.triggerGetHistoricalAlerts(patient.patientID);
+  // });
+
   return (
     <ScreenWrapper padding>
       <View style={styles.container}>
         {/* Alert Histories */}
         <PatientAlertHistoryCard
-          name={patient.name}
           patientId={patient.patientID}
           maxHeight={cardMaxHeight}
           setDisplayHistory={alertHistoryFunc.setDisplayHistory}

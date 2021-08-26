@@ -6,21 +6,23 @@ import {
   Precondition,
   ResettablePrecondition
 } from "rc_agents/framework";
+import { ProcedureConst } from "rc_agents/framework/Enums";
+import agentAPI from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
   ActionFrameIDs,
   AppAttributes,
   BeliefKeys,
   PatientAttributes,
-  ProcedureAttributes,
-  ProcedureConst
-} from "rc_agents/AgentEnums";
+  ProcedureAttributes
+} from "rc_agents/clinician_framework";
 import { Storage } from "rc_agents/storage";
-import agentAPI from "rc_agents/framework/AgentAPI";
 import { listPatientAlertsByDateTime } from "aws";
 import { AlertInfo } from "rc_agents/model";
 import { ModelSortDirection } from "aws/API";
 import { queryAlertInfo } from "../triage-alert-hf-clinic/RetrieveAlertInfo";
 import { sortAlertsByDateTime } from "../triage-alert-hf-clinic/RetrieveAlerts";
+import { store } from "util/useRedux";
+import { setFetchingPatientAlertHistory } from "ic-redux/actions/agents/actionCreator";
 
 /**
  * Class to represent the activity for retrieving alert history of a patient.
@@ -40,6 +42,9 @@ class RetrieveAlertHistory extends Activity {
    */
   async doActivity(agent: Agent): Promise<void> {
     await super.doActivity(agent, [rule2]);
+
+    // Dispatch to frontend that the patient alert history is being fetched
+    store.dispatch(setFetchingPatientAlertHistory(true));
 
     try {
       const facts = agentAPI.getFacts();
@@ -100,6 +105,15 @@ class RetrieveAlertHistory extends Activity {
           }
         }
 
+        // Trigger request to dispatch alert history to UXSA for frontend display
+        agent.addBelief(
+          new Belief(
+            BeliefKeys.PATIENT,
+            PatientAttributes.PATIENT_ALERT_HISTORY_RETRIEVED,
+            true
+          )
+        );
+
         // Removes patientId from facts
         agentAPI.addFact(
           new Belief(
@@ -114,6 +128,8 @@ class RetrieveAlertHistory extends Activity {
       // eslint-disable-next-line no-console
       console.log(error);
     }
+    // Dispatch to frontend that the fetching of patient alert history has ended
+    store.dispatch(setFetchingPatientAlertHistory(false));
   }
 }
 

@@ -9,13 +9,14 @@ import { PatientInformation } from "./PatientDetailsScreen/PatientInformation";
 import { PatientsScreenName, PatientsScreenParamList } from "web/screens";
 import { PatientInfo } from "aws/API";
 import i18n from "util/language/i18n";
-import { AlertHistory, MedicalRecords } from "mock/mockPatientDetails";
+import { MedicalRecords } from "mock/mockPatientDetails";
+import { AlertInfo } from "rc_agents/model";
 
 const Tab = createMaterialTopTabNavigator<PatientsScreenParamList>();
 
 export interface PatientDetailsNavigationStackProps {
   patient: PatientInfo;
-  setDisplayHistory: (state: AlertHistory) => void; // alert history details to be shown
+  setDisplayHistory: (state: AlertInfo) => void; // alert history details to be shown
   setModalAlertVisible: (state: boolean) => void; // alert modal visibility
   setViewMedicalModal: (state: boolean) => void; // medical record modal visibility
   setDisplayMedicalRecord: (state: MedicalRecords) => void; // medical record details to be shown

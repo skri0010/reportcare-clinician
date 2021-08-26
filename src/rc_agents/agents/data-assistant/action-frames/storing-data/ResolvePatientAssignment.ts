@@ -4,17 +4,17 @@ import {
   Belief,
   Activity,
   Precondition,
-  agentAPI,
   ResettablePrecondition
 } from "rc_agents/framework";
+import { ProcedureConst } from "rc_agents/framework/Enums";
+import agentAPI from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
-  ProcedureConst,
   BeliefKeys,
   PatientAttributes,
   ProcedureAttributes,
   AppAttributes,
   ActionFrameIDs
-} from "rc_agents/AgentEnums";
+} from "rc_agents/clinician_framework";
 import { Storage, AsyncStorageKeys, AsyncStorageType } from "rc_agents/storage";
 import {
   PatientAssignmentResolution,

@@ -6,16 +6,16 @@ import {
   Precondition,
   ResettablePrecondition
 } from "rc_agents/framework";
+import { ProcedureConst } from "rc_agents/framework/Enums";
+import agentAPI from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
   ActionFrameIDs,
   AppAttributes,
   BeliefKeys,
   ClinicianAttributes,
-  ProcedureAttributes,
-  ProcedureConst
-} from "rc_agents/AgentEnums";
+  ProcedureAttributes
+} from "rc_agents/clinician_framework";
 import { Storage } from "rc_agents/storage";
-import agentAPI from "rc_agents/framework/AgentAPI";
 import { listCompletedRiskAlerts, listPendingRiskAlerts } from "aws";
 import { AlertInfo, AlertStatus } from "rc_agents/model";
 import { Alert } from "aws/API";
@@ -159,11 +159,14 @@ export const alertToAlertInfo = (alerts: Alert[] | undefined): AlertInfo[] => {
     alerts.map((alert) => {
       const currentAlert: AlertInfo = {
         id: alert.id,
-        patientId: alert.patientID,
+        patientID: alert.patientID,
         patientName: alert.patientName,
+        vitalsReportID: alert.vitalsReportID,
+        symptomReportID: alert.symptomReportID,
         riskLevel: mapColorCodeToRiskLevel(alert.colorCode),
         dateTime: alert.dateTime,
         summary: alert.summary,
+        colorCode: alert.colorCode,
         completed: alert.completed === AlertStatus.COMPLETED,
         _version: alert._version
       };
@@ -225,7 +228,7 @@ export const sortAlertsByDateTime = (alerts: AlertInfo[]): AlertInfo[] => {
 // Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.AT_CP,
+  ProcedureAttributes.AT_CP_I,
   ProcedureConst.ACTIVE
 );
 const rule2 = new ResettablePrecondition(

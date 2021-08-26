@@ -10,13 +10,14 @@ import {
 } from "ic-redux/actions/agents/actionCreator";
 import { AlertStatus, RiskFilter } from "rc_agents/model";
 import { agentDTA } from "rc_agents/agents";
-import { agentAPI, Belief } from "rc_agents/framework";
+import { Belief } from "rc_agents/framework";
+import { ProcedureConst } from "rc_agents/framework/Enums";
+import agentAPI from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
   BeliefKeys,
   ClinicianAttributes,
-  ProcedureAttributes,
-  ProcedureConst
-} from "rc_agents/AgentEnums";
+  ProcedureAttributes
+} from "rc_agents/clinician_framework";
 import { H6 } from "components/Text";
 import i18n from "util/language/i18n";
 
@@ -88,7 +89,7 @@ export const RiskFilterPillList: FC<RiskFilterPillListProps> = ({
       agentAPI.addFact(
         new Belief(
           BeliefKeys.PROCEDURE,
-          ProcedureAttributes.AT_CP,
+          ProcedureAttributes.AT_CP_I,
           ProcedureConst.ACTIVE
         )
       );

@@ -3,17 +3,18 @@ import {
   BeliefKeys,
   ClinicianAttributes,
   PatientAttributes,
-  ProcedureAttributes,
-  ProcedureConst
-} from "rc_agents/AgentEnums";
+  ProcedureAttributes
+} from "rc_agents/clinician_framework";
+import { ProcedureConst } from "rc_agents/framework/Enums";
 import { agentDTA } from "rc_agents/agents";
-import { agentAPI, Belief } from "rc_agents/framework";
+import { Belief } from "rc_agents/framework";
+import agentAPI from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
+  AlertInfo,
   AlertStatus,
   PatientAssignmentResolution,
-  TodoCreateInput,
-  TodoStatus,
-  TodoUpdateInput
+  TodoInput,
+  TodoStatus
 } from "rc_agents/model";
 
 // HF-OTP-I
@@ -131,7 +132,7 @@ export const triggerRetrieveTodos = (status: TodoStatus): void => {
 };
 
 // SRD-II: Triggers CreateTodo of DTA
-export const triggerCreateTodo = (input: TodoCreateInput): void => {
+export const triggerCreateTodo = (input: TodoInput): void => {
   agentAPI.addFact(
     new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.TODO, input),
     false
@@ -149,7 +150,7 @@ export const triggerCreateTodo = (input: TodoCreateInput): void => {
 };
 
 // SRD-II: Triggers UpdateTodo of DTA
-export const triggerUpdateTodo = (input: TodoUpdateInput): void => {
+export const triggerUpdateTodo = (input: TodoInput): void => {
   agentAPI.addFact(
     new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.TODO, input),
     false
@@ -184,7 +185,61 @@ export const triggerRetriveAlerts = (alertStatus: AlertStatus): void => {
   agentAPI.addFact(
     new Belief(
       BeliefKeys.PROCEDURE,
-      ProcedureAttributes.AT_CP,
+      ProcedureAttributes.AT_CP_I,
+      ProcedureConst.ACTIVE
+    )
+  );
+};
+
+// AT-CP-II Triggers RetrieveAlertInfo of DTA
+export const triggerRetrieveAlertInfo = (input: AlertInfo): void => {
+  // Add alert as facts
+  agentAPI.addFact(
+    new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.ALERT, input),
+    false
+  );
+
+  agentDTA.addBelief(
+    new Belief(
+      BeliefKeys.CLINICIAN,
+      ClinicianAttributes.RETRIEVE_ALERT_INFO,
+      true
+    )
+  );
+
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PROCEDURE,
+      ProcedureAttributes.AT_CP_II,
+      ProcedureConst.ACTIVE
+    )
+  );
+};
+
+// HF-OTP-II Triggers retrieval of historical alerts according to patient ID
+export const triggerGetHistoricalAlerts = (patientId: string): void => {
+  // Add patient ID as fact
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PATIENT,
+      PatientAttributes.ALERT_PATIENT_ID,
+      patientId
+    ),
+    false
+  );
+  // Set preconditions
+  agentDTA.addBelief(
+    new Belief(
+      BeliefKeys.PATIENT,
+      PatientAttributes.RETRIEVE_ALERT_HISTORY,
+      true
+    )
+  );
+
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PROCEDURE,
+      ProcedureAttributes.HF_OTP_II,
       ProcedureConst.ACTIVE
     )
   );

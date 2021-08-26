@@ -6,14 +6,13 @@ import { RootState, select } from "util/useRedux";
 import { AlertRow } from "components/RowComponents/AlertRow";
 import { AlertRowTabProps } from "./AlertCurrentTab";
 import { RiskFilterPillList } from "web/RiskFilterPillList";
-import { AlertInfo } from "rc_agents/model";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
 import i18n from "util/language/i18n";
 import { NoListItemMessage } from "../Shared/NoListItemMessage";
+import { AgentTrigger } from "rc_agents/trigger";
+import { AlertInfo } from "rc_agents/model";
 
-export const AlertCompletedTab: FC<AlertRowTabProps> = ({
-  setAlertSelected
-}) => {
+export const AlertCompletedTab: FC<AlertRowTabProps> = ({ setEmptyAlert }) => {
   const { colors, completedAlerts, fetchingCompletedAlerts, fetchingAlerts } =
     select((state: RootState) => ({
       colors: state.settings.colors,
@@ -24,6 +23,12 @@ export const AlertCompletedTab: FC<AlertRowTabProps> = ({
 
   const [noCompletedAlertsNotice, setNoCompletedAlertsNotice] =
     useState<string>("");
+
+  // Trigger the retrieval of alert info when the alert item is selected
+  function onCardPress(item: AlertInfo) {
+    AgentTrigger.triggerRetrieveAlertInfo(item);
+    setEmptyAlert(false);
+  }
 
   // Prepare text notice to be displayed after fetching patients
   useEffect(() => {
@@ -39,10 +44,6 @@ export const AlertCompletedTab: FC<AlertRowTabProps> = ({
       }
     }
   }, [completedAlerts, fetchingCompletedAlerts, fetchingAlerts]);
-
-  function onCardPress(item: AlertInfo) {
-    setAlertSelected(item);
-  }
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.primaryBackgroundColor }}>

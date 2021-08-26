@@ -1,8 +1,8 @@
 import { StackScreenProps } from "@react-navigation/stack";
 import { NavigatorScreenParams } from "@react-navigation/native";
 import { PatientInfo } from "aws/API";
-import { LocalTodo } from "rc_agents/model";
-import { AlertHistory, MedicalRecords } from "mock/mockPatientDetails";
+import { LocalTodo, AlertInfo } from "rc_agents/model";
+import { MedicalRecords } from "mock/mockPatientDetails";
 import { TodoNavigationProps } from "web/screens/WithSideTabsProps";
 
 export enum ScreenName {
@@ -73,7 +73,7 @@ export type PatientsScreenParamList = {
   [PatientsScreenName.HISTORY]: {
     patient: PatientInfo;
     alertHistoryFunc: {
-      setDisplayHistory: (state: AlertHistory) => void;
+      setDisplayHistory: (state: AlertInfo) => void;
       setModalAlertVisible: (state: boolean) => void;
     };
     medicalRecordFunc: {

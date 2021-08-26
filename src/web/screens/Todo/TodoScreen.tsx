@@ -117,7 +117,6 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = ({
         toast.show(i18n.t("UnexpectedError"), { type: "danger" });
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, procedureOngoing, procedureSuccessful, toast, submittingTodo]);
 
   return (

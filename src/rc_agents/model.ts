@@ -6,10 +6,6 @@ import {
 } from "aws/API";
 import { RiskLevel } from "models/RiskLevel";
 
-export interface Fact {
-  [k: string]: { [k: string]: any };
-}
-
 // Role selection during clinician sign up
 // Note: Role values must be compatible with the custom:hospital_role values for Cognito user groups
 export enum Role {
@@ -94,15 +90,18 @@ export interface PendingAlertCount {
 
 export interface AlertInfo {
   id: string;
-  patientId: string;
+  patientID: string;
   patientName: string;
   riskLevel: RiskLevel;
   NHYAClass?: string;
   diagnosis?: string;
   dateTime: string;
   summary: string;
-  vitals?: ReportVitals;
-  symptoms?: ReportSymptom;
+  colorCode: string;
+  vitalsReportID: string;
+  symptomReportID: string;
+  vitalsReport?: ReportVitals;
+  symptomReport?: ReportSymptom;
   lastMedication?: string;
   medicationQuantity?: string;
   activityDuringAlert?: string;
@@ -110,23 +109,18 @@ export interface AlertInfo {
   _version: number;
 }
 
-export interface TodoCreateInput {
-  title: string;
-  patientName: string;
-  notes: string;
-  alert?: AlertInfo;
-  completed: boolean;
-  createdAt?: string;
-}
-
-export interface TodoUpdateInput {
+export interface TodoInput {
   id?: string;
   title: string;
   patientName: string;
   notes: string;
-  alert?: AlertInfo;
   completed: boolean;
+  alert?: AlertInfo;
+  alertId?: string;
+  patientId?: string;
+  riskLevel?: RiskLevel;
   createdAt: string;
+  lastModified?: string;
   _version: number;
 }
 

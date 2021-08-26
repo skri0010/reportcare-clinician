@@ -7,9 +7,9 @@ import {
   ResettablePrecondition
 } from "rc_agents/framework";
 import {
-  ProcedureConst,
+  CommonAttributes,
   Performative,
-  CommonAttributes
+  ProcedureConst
 } from "rc_agents/framework/Enums";
 import {
   ActionFrameIDs,
@@ -20,18 +20,18 @@ import {
 } from "rc_agents/clinician_framework";
 
 /**
- * Class to represent the activity for requesting display of retrieved patients' info.
- * This happens in Procedure HF Outcome Trends (HF-OTP-I).
+ * Class to represent the activity for requesting the display of alert history
+ * This happens in Procedure HF Outcome Trends (HF-OTP-II)
  */
-class RequestDisplayPatients extends Communicate {
+class RequestDisplayAlertHistory extends Communicate {
   constructor() {
-    // Triggers DisplayPatients of UXSA agent
     super(
-      ActionFrameIDs.DTA.REQUEST_DISPLAY_PATIENTS,
+      ActionFrameIDs.DTA.REQUEST_DISPLAY_ALERT_HISTORY,
       Performative.REQUEST,
+      //   Belief to trigger the UXSA action frame of DisplayAlertHistory
       new Belief(
         BeliefKeys.PATIENT,
-        PatientAttributes.PATIENTS_RETRIEVED,
+        PatientAttributes.PATIENT_ALERT_HISTORY_RETRIEVED,
         true
       ),
       [AgentIDs.UXSA]
@@ -39,7 +39,7 @@ class RequestDisplayPatients extends Communicate {
   }
 
   /**
-   * Perform the activity
+   * Perform this activity
    * @param {Agent} agent - agent executing the activity
    */
   async doActivity(agent: Agent): Promise<void> {
@@ -56,23 +56,23 @@ class RequestDisplayPatients extends Communicate {
 // Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.HF_OTP_I,
+  ProcedureAttributes.HF_OTP_II,
   ProcedureConst.ACTIVE
 );
 const rule2 = new Precondition(
   AgentIDs.DTA,
   CommonAttributes.LAST_ACTIVITY,
-  ActionFrameIDs.DTA.RETRIEVE_PATIENTS_BY_ROLE
+  ActionFrameIDs.DTA.RETRIEVE_ALERT_HISTORY
 );
 const rule3 = new ResettablePrecondition(
-  BeliefKeys.PATIENT,
-  PatientAttributes.PATIENTS_RETRIEVED,
+  AgentIDs.DTA,
+  PatientAttributes.PATIENT_ALERT_HISTORY_RETRIEVED,
   true
 );
 
 // Actionframe
-export const af_RequestDisplayPatients = new Actionframe(
-  `AF_${ActionFrameIDs.DTA.REQUEST_DISPLAY_PATIENTS}`,
-  [rule1, rule2, rule3],
-  new RequestDisplayPatients()
+export const af_RequestDisplayAlertHistory = new Actionframe(
+  `AF_${ActionFrameIDs.DTA.REQUEST_DISPLAY_ALERT_HISTORY}`,
+  [rule1, rule2],
+  new RequestDisplayAlertHistory()
 );

@@ -21,6 +21,7 @@ interface AgentsState {
   patientAssignmentsSynced: boolean;
   fetchingPatients: boolean;
   fetchingPatientDetails: boolean;
+  fetchingPatientAlertHistory: boolean;
   fetchingPendingPatientAssignments: boolean;
   patientRiskFilters: RiskFilter;
   alertRiskFilters: RiskFilter;
@@ -30,7 +31,9 @@ interface AgentsState {
   fetchingCompletedAlerts: boolean;
   pendingAlerts: AlertInfo[] | undefined;
   completedAlerts: AlertInfo[] | undefined;
+  fetchingAlertInfo: boolean;
   alertInfo: AlertInfo | undefined;
+  alertHistory: AlertInfo[] | undefined;
   fetchingTodos: boolean;
   pendingTodos: LocalTodo[] | undefined;
   completedTodos: LocalTodo[] | undefined;
@@ -47,6 +50,7 @@ const initialState: AgentsState = {
   pendingPatientAssignments: [],
   fetchingPatients: false,
   fetchingPatientDetails: false,
+  fetchingPatientAlertHistory: false,
   fetchingPendingPatientAssignments: false,
   patientAssignmentsSynced: false,
   patientRiskFilters: {
@@ -72,7 +76,9 @@ const initialState: AgentsState = {
   fetchingCompletedAlerts: false,
   pendingAlerts: undefined,
   completedAlerts: undefined,
+  fetchingAlertInfo: false,
   alertInfo: undefined,
+  alertHistory: undefined,
   fetchingTodos: false,
   pendingTodos: undefined,
   completedTodos: undefined,
@@ -100,6 +106,13 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
         ...state,
         fetchingPatientDetails: action.payload.fetchingPatientDetails
       };
+    case actionNames.SET_FETCHING_PATIENT_ALERT_HISTORY:
+      return {
+        ...state,
+        fetchingPatientAlertHistory: action.payload.fetchingPatientAlertHistory
+      };
+    case actionNames.SET_ALERT_HISTORY:
+      return { ...state, alertHistory: action.payload.alertHistory };
     case actionNames.SET_FETCHING_PENDING_PATIENT_ASSIGNMENTS:
       return {
         ...state,
@@ -150,6 +163,11 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
       return {
         ...state,
         completedAlerts: action.payload.completedAlerts
+      };
+    case actionNames.SET_FETCHING_ALERT_INFO:
+      return {
+        ...state,
+        fetchingAlertInfo: action.payload.fetchingAlertInfo
       };
     case actionNames.SET_ALERT_INFO:
       return {

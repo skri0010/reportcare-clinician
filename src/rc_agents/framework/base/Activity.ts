@@ -1,4 +1,4 @@
-import { ActivityStatus } from "../../AgentEnums";
+import { ActivityStatus } from "../Enums";
 import Agent from "./Agent";
 import Belief from "./Belief";
 import ResettablePrecondition from "./ResettablePrecondition";

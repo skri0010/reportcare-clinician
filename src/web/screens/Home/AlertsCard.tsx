@@ -7,18 +7,18 @@ import { AlertButton } from "components/Buttons/AlertButton";
 import { H4, H6 } from "components/Text";
 import { CardWrapper } from "./CardWrapper";
 import i18n from "util/language/i18n";
-import Belief from "rc_agents/framework/base/Belief";
-import {
-  BeliefKeys,
-  ClinicianAttributes,
-  ProcedureAttributes,
-  ProcedureConst
-} from "rc_agents/AgentEnums";
-import agentAPI from "rc_agents/framework/AgentAPI";
+import { ProcedureConst } from "rc_agents/framework/Enums";
 import { RiskFilter } from "rc_agents/model";
 import { agentDTA } from "rc_agents/agents";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
 import { setAlertRiskFilters } from "ic-redux/actions/agents/actionCreator";
+import { Belief } from "rc_agents/framework";
+import {
+  BeliefKeys,
+  ClinicianAttributes,
+  ProcedureAttributes
+} from "rc_agents/clinician_framework";
+import agentAPI from "rc_agents/clinician_framework/ClinicianAgentAPI";
 
 interface AlertsCardProps {
   flex?: number;
@@ -56,7 +56,7 @@ export const AlertsCard: FC<AlertsCardProps> = ({
     agentAPI.addFact(
       new Belief(
         BeliefKeys.PROCEDURE,
-        ProcedureAttributes.AT_CP,
+        ProcedureAttributes.AT_CP_I,
         ProcedureConst.ACTIVE
       )
     );

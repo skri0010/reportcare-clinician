@@ -6,21 +6,21 @@ import {
   Precondition,
   ResettablePrecondition
 } from "rc_agents/framework";
+import { ProcedureConst } from "rc_agents/framework/Enums";
+import agentAPI from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
-  ProcedureConst,
   BeliefKeys,
   ProcedureAttributes,
   AppAttributes,
   ActionFrameIDs,
   ClinicianAttributes
-} from "rc_agents/AgentEnums";
+} from "rc_agents/clinician_framework";
 import { Storage } from "rc_agents/storage";
-import agentAPI from "rc_agents/framework/AgentAPI";
 import { store } from "util/useRedux";
 import { setProcedureSuccessful } from "ic-redux/actions/agents/actionCreator";
-import agentNWA from "rc_agents/agents/network-assistant/NWA";
+import { agentNWA } from "rc_agents/agents";
 import { getTodo, updateTodo } from "aws";
-import { LocalTodo, TodoStatus, TodoUpdateInput } from "rc_agents/model";
+import { LocalTodo, TodoStatus, TodoInput } from "rc_agents/model";
 import { UpdateTodoInput } from "aws/API";
 
 /**
@@ -43,7 +43,7 @@ class UpdateTodo extends Activity {
 
     try {
       // Gets Todo details to be updated
-      const todoInput: TodoUpdateInput =
+      const todoInput: TodoInput =
         facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.TODO];
 
       const isOnline: boolean = facts[BeliefKeys.APP]?.[AppAttributes.ONLINE];
@@ -62,7 +62,6 @@ class UpdateTodo extends Activity {
         );
       } else if (todoInput && todoInput.id && clinicianId) {
         let toSync: boolean | undefined;
-        let todoVersion: number | undefined;
 
         // Constructs UpdateTodoInput to be updated
         const todoToUpdate: UpdateTodoInput = {
@@ -72,7 +71,7 @@ class UpdateTodo extends Activity {
           notes: todoInput.notes,
           completed: todoInput.completed ? TodoStatus.COMPLETED : null,
           pending: todoInput.completed ? null : TodoStatus.PENDING,
-          lastModified: new Date().toISOString(),
+          lastModified: todoInput.lastModified,
           owner: clinicianId,
           _version: todoInput._version
         };
@@ -91,7 +90,7 @@ class UpdateTodo extends Activity {
               latestTodo?._version &&
               latestTodo._version > todoInput._version
             ) {
-              await Storage.mergeTodoConflict(latestTodo);
+              await Storage.setTodo(latestTodo);
             } else {
               // Updates Todo
               const updateQuery = await updateTodo(todoToUpdate);
@@ -100,7 +99,7 @@ class UpdateTodo extends Activity {
               if (updateQuery.data.updateTodo) {
                 // Updates to indicate that Todo is successfully updated
                 toSync = false;
-                todoVersion = updateQuery.data.updateTodo._version;
+                todoInput._version = updateQuery.data.updateTodo._version;
               }
             }
           }
@@ -114,28 +113,22 @@ class UpdateTodo extends Activity {
         if (toSync !== undefined) {
           // Constructs Todo to be stored
           const todoToStore: LocalTodo = {
-            id: todoInput.id,
-            title: todoInput.title,
-            patientName: todoInput.patientName,
-            notes: todoInput.notes,
-            completed: todoInput.completed,
-            createdAt: todoInput.createdAt,
-            lastModified: todoToUpdate.lastModified!,
-            toSync: toSync,
-            _version: todoVersion || todoInput._version
+            ...todoInput,
+            toSync: toSync
           };
 
           // Updates Todo in local storage
-          await Storage.mergeTodo(todoToStore);
+          await Storage.setTodo(todoToStore);
 
           // Notifies NWA if the Todo to be stored has toSync set to true
           if (toSync) {
             // Notifies NWA
             agentNWA.addBelief(
-              new Belief(BeliefKeys.APP, AppAttributes.SYNC_TODOS_UPDATE, true)
+              new Belief(BeliefKeys.APP, AppAttributes.SYNC_UPDATE_TODOS, true)
             );
           }
 
+          // Adds LocalTodo to facts to be dispatched by UXSA
           agentAPI.addFact(
             new Belief(
               BeliefKeys.CLINICIAN,
@@ -147,6 +140,14 @@ class UpdateTodo extends Activity {
         }
         // Dispatch to front end to indicate that procedure is successful
         store.dispatch(setProcedureSuccessful(true));
+
+        agent.addBelief(
+          new Belief(
+            BeliefKeys.CLINICIAN,
+            ClinicianAttributes.TODOS_UPDATED,
+            true
+          )
+        );
       }
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -154,10 +155,6 @@ class UpdateTodo extends Activity {
       // Dispatch to front end to indicate that procedure is successful
       store.dispatch(setProcedureSuccessful(false));
     }
-
-    agent.addBelief(
-      new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.TODOS_UPDATED, true)
-    );
   }
 }
 

@@ -3,24 +3,14 @@ import React, { FC, useEffect, useState } from "react";
 import { View } from "react-native";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { mockPatients } from "mock/mockPatients";
-import { RootState, select, useDispatch } from "util/useRedux";
+import { RootState, select } from "util/useRedux";
 import { ContactTitle } from "./ContactTitle";
 import { AlertHistoryModal } from "./PatientScreens/PatientDetailsScreen/PatientHistoryScreens/AlertHistoryModal";
-import { AlertHistory, MedicalRecords } from "mock/mockPatientDetails";
+import { MedicalRecords } from "mock/mockPatientDetails";
 import { RiskLevel } from "models/RiskLevel";
 import { ScaledSheet } from "react-native-size-matters";
 import { ViewMedicalRecords } from "./PatientScreens/PatientDetailsScreen/PatientHistoryScreens/ViewMedicalRecord";
 import { AddMedicalRecord } from "./PatientScreens/PatientDetailsScreen/PatientHistoryScreens/AddMedicalRecord";
-import agentDTA from "rc_agents/agents/data-assistant/DTA";
-import Belief from "rc_agents/framework/base/Belief";
-import {
-  BeliefKeys,
-  PatientAttributes,
-  ProcedureAttributes,
-  ProcedureConst
-} from "rc_agents/AgentEnums";
-import agentAPI from "rc_agents/framework/AgentAPI";
-import { setProcedureOngoing } from "ic-redux/actions/agents/actionCreator";
 import { PatientDetailsNavigationStack } from "./PatientScreens/PatientDetailsNavigationStack";
 import { PatientHistoryModal } from "./PatientDetailsScreen/PatientHistoryScreens/PatientHistoryModals";
 import { WithSideTabsProps, ScreenName } from "web/screens";
@@ -29,6 +19,7 @@ import { AgentTrigger } from "rc_agents/trigger";
 import { NoSelectionScreen } from "../Shared/NoSelectionScreen";
 import i18n from "util/language/i18n";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
+import { AlertInfo } from "rc_agents/model";
 
 export const PatientsScreen: FC<WithSideTabsProps[ScreenName.PATIENTS]> =
   () => {
@@ -48,17 +39,18 @@ export const PatientsScreen: FC<WithSideTabsProps[ScreenName.PATIENTS]> =
     }, []);
 
     // Initial alert history details for the modal
-    const initialAlertHistory = {
+    const initialAlertHistory: AlertInfo = {
       id: "",
-      patientId: "",
-      risk: RiskLevel.UNASSIGNED,
-      date: "",
-      time: "",
-      description: "",
-      HRV: 0,
-      BP: "",
-      symptom: "",
-      signs: ""
+      patientID: "",
+      patientName: "",
+      riskLevel: RiskLevel.UNASSIGNED,
+      vitalsReportID: "",
+      symptomReportID: "",
+      dateTime: "",
+      summary: "",
+      colorCode: "",
+      completed: false,
+      _version: -1
     };
 
     // Inital medical record details for the modal
@@ -81,7 +73,7 @@ export const PatientsScreen: FC<WithSideTabsProps[ScreenName.PATIENTS]> =
     const [modalAlertVisible, setModalAlertVisible] = useState<boolean>(false);
     // Feed in the alert details to be displayed in the modal
     const [displayHistory, setDisplayHistory] =
-      useState<AlertHistory>(initialAlertHistory);
+      useState<AlertInfo>(initialAlertHistory);
 
     // For view medical record modal visibility
     const [viewMedicalModal, setViewMedicalModal] = useState<boolean>(false);
@@ -92,40 +84,10 @@ export const PatientsScreen: FC<WithSideTabsProps[ScreenName.PATIENTS]> =
     // For add medical record modal visibility
     const [addMedicalRecord, setAddMedicalRecord] = useState<boolean>(false);
 
-    const [retrieving, setRetrieving] = useState(false); // used locally to indicate ongoing retrieval of details
-    const [showGraph, setShowGraph] = useState(false); // used locally for graph display
+    // const [retrieving, setRetrieving] = useState(false); // used locally to indicate ongoing retrieval of details
+    // const [showGraph, setShowGraph] = useState(false); // used locally for graph display
 
-    const dispatch = useDispatch();
-
-    // Triggers series of actions to retrieve details specific to a patient.
-    const getData = (patientId: string) => {
-      // Start of retrieval
-      dispatch(setProcedureOngoing(true));
-      setRetrieving(true);
-
-      agentDTA.addBelief(
-        new Belief(
-          BeliefKeys.PATIENT,
-          PatientAttributes.RETRIEVE_PATIENT_DETAILS,
-          true
-        )
-      );
-      agentAPI.addFact(
-        new Belief(
-          BeliefKeys.PATIENT,
-          PatientAttributes.PATIENT_TO_VIEW_DETAILS,
-          patientId
-        ),
-        false
-      );
-      agentAPI.addFact(
-        new Belief(
-          BeliefKeys.PROCEDURE,
-          ProcedureAttributes.HF_OTP_II,
-          ProcedureConst.ACTIVE
-        )
-      );
-    };
+    // const dispatch = useDispatch();
 
     // JH-TODO-NEW
     // // Detects completion of retrieval procedure

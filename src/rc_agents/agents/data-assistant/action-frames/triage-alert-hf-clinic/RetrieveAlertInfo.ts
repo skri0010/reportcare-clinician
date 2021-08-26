@@ -6,17 +6,17 @@ import {
   Precondition,
   ResettablePrecondition
 } from "rc_agents/framework";
+import { ProcedureConst } from "rc_agents/framework/Enums";
+import agentAPI from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
   ActionFrameIDs,
   AppAttributes,
   BeliefKeys,
   ClinicianAttributes,
-  ProcedureAttributes,
-  ProcedureConst
-} from "rc_agents/AgentEnums";
+  ProcedureAttributes
+} from "rc_agents/clinician_framework";
 import { Storage } from "rc_agents/storage";
 import { AlertInfo, AlertStatus } from "rc_agents/model";
-import agentAPI from "rc_agents/framework/AgentAPI";
 import {
   listMedCompliantsByDate,
   getMedicationInfo,
@@ -26,6 +26,8 @@ import {
   getPatientInfo
 } from "aws";
 import { Alert, ModelSortDirection } from "aws/API";
+import { store } from "util/useRedux";
+import { setFetchingAlertInfo } from "ic-redux/actions/agents/actionCreator";
 import { mapColorCodeToRiskLevel } from "./RetrievePendingAlertCount";
 
 /**
@@ -44,11 +46,14 @@ class RetrieveAlertInfo extends Activity {
   async doActivity(agent: Agent): Promise<void> {
     await super.doActivity(agent, [rule2]);
 
+    // Dispatch to frontend that alert info is being fetched
+    store.dispatch(setFetchingAlertInfo(true));
+
     try {
       const facts = agentAPI.getFacts();
 
       // Retrieves alert from facts
-      const alert: Alert =
+      const alert: AlertInfo =
         facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.ALERT];
 
       if (alert) {
@@ -63,7 +68,10 @@ class RetrieveAlertInfo extends Activity {
           }
         } else {
           // Device is offline: get alert info from local storage
-          alertInfo = await Storage.getSingleAlertInfo(alert);
+          alertInfo = await Storage.getSingleAlertInfo(
+            alert.id,
+            alert.patientID
+          );
         }
 
         if (alertInfo) {
@@ -89,11 +97,14 @@ class RetrieveAlertInfo extends Activity {
       // eslint-disable-next-line no-console
       console.log(error);
     }
+
+    // Dispatch to frontend that the fetching of alert info has completed
+    store.dispatch(setFetchingAlertInfo(false));
   }
 }
 
 export const queryAlertInfo = async (
-  alert: Alert
+  alert: Alert | AlertInfo
 ): Promise<AlertInfo | null> => {
   // Ensures vitals and symptoms are present
   let alertVitals = alert.vitalsReport;
@@ -119,14 +130,17 @@ export const queryAlertInfo = async (
     // LS-TODO: To include HRV
     const alertInfo: AlertInfo = {
       id: alert.id,
-      patientId: alert.patientID,
+      patientID: alert.patientID,
       patientName: alert.patientName,
       dateTime: alert.dateTime,
+      vitalsReportID: alert.vitalsReportID,
+      symptomReportID: alert.symptomReportID,
       summary: alert.summary,
-      vitals: alertVitals,
-      symptoms: alertSymptoms,
+      vitalsReport: alertVitals,
+      symptomReport: alertSymptoms,
       completed: alert.completed === AlertStatus.COMPLETED,
       riskLevel: mapColorCodeToRiskLevel(alert.colorCode),
+      colorCode: alert.colorCode,
       _version: alert._version
     };
 
@@ -171,7 +185,7 @@ export const queryAlertInfo = async (
     if (alertSymptoms.ActivityInfo) {
       alertInfo.activityDuringAlert = alertSymptoms.ActivityInfo.Actname;
       // Prevents the entire ActivityInfo from being stored locally
-      delete alertInfo.symptoms?.ActivityInfo;
+      delete alertInfo.symptomReport?.ActivityInfo;
     } else {
       const activityInfoQuery = await getActivityInfo({
         id: alertSymptoms.ActId
@@ -190,7 +204,7 @@ export const queryAlertInfo = async (
 // Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.AT_CP,
+  ProcedureAttributes.AT_CP_II,
   ProcedureConst.ACTIVE
 );
 const rule2 = new ResettablePrecondition(

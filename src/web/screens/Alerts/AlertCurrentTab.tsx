@@ -9,12 +9,13 @@ import { AlertInfo } from "rc_agents/model";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
 import i18n from "util/language/i18n";
 import { NoListItemMessage } from "../Shared/NoListItemMessage";
+import { AgentTrigger } from "rc_agents/trigger";
 
 export interface AlertRowTabProps {
-  setAlertSelected: (item: AlertInfo) => void;
+  setEmptyAlert: (state: boolean) => void;
 }
 
-export const AlertCurrentTab: FC<AlertRowTabProps> = ({ setAlertSelected }) => {
+export const AlertCurrentTab: FC<AlertRowTabProps> = ({ setEmptyAlert }) => {
   const { colors, pendingAlerts, fetchingPendingAlerts, fetchingAlerts } =
     select((state: RootState) => ({
       colors: state.settings.colors,
@@ -42,8 +43,10 @@ export const AlertCurrentTab: FC<AlertRowTabProps> = ({ setAlertSelected }) => {
     }
   }, [pendingAlerts, fetchingPendingAlerts, fetchingAlerts]);
 
+  // When the alert item is pressed, trigger the retrieval of alert info
   function onCardPress(item: AlertInfo) {
-    setAlertSelected(item);
+    AgentTrigger.triggerRetrieveAlertInfo(item);
+    setEmptyAlert(false);
   }
 
   return (

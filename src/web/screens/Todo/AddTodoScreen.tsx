@@ -10,7 +10,7 @@ import { ScaledSheet, ms } from "react-native-size-matters";
 import { H3 } from "components/Text";
 import { RootState, select, useDispatch } from "util/useRedux";
 import i18n from "util/language/i18n";
-import { TodoCreateInput } from "rc_agents/model";
+import { TodoInput } from "rc_agents/model";
 import {
   setProcedureOngoing,
   setProcedureSuccessful
@@ -18,20 +18,22 @@ import {
 import { useToast } from "react-native-toast-notifications";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
 import { AgentTrigger } from "rc_agents/trigger";
+import { useRoute } from "@react-navigation/native";
+import { ScreenName } from "web/screens";
 
 interface AddTodoScreenProps {
   setModalVisible: (state: boolean) => void;
 }
 
 export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
-  const { colors, fonts, procedureSuccessful, procedureOngoing } = select(
-    (state: RootState) => ({
+  const { colors, fonts, procedureSuccessful, procedureOngoing, alertInfo } =
+    select((state: RootState) => ({
       colors: state.settings.colors,
       fonts: state.settings.fonts,
       procedureOngoing: state.agents.procedureOngoing,
-      procedureSuccessful: state.agents.procedureSuccessful
-    })
-  );
+      procedureSuccessful: state.agents.procedureSuccessful,
+      alertInfo: state.agents.alertInfo
+    }));
 
   const shortTodoTextInputStyle: StyleProp<ViewStyle> = {
     backgroundColor: colors.primaryContrastTextColor,
@@ -57,14 +59,20 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
 
   const dispatch = useDispatch();
   const toast = useToast();
+  const route = useRoute();
 
   // Triggers CreateTodo procedure
   const createTodo = () => {
-    const todoInput: TodoCreateInput = {
+    const todoInput: TodoInput = {
       title: titleInput,
       patientName: patientInput,
       notes: noteInput,
-      completed: false
+      completed: false,
+      createdAt: new Date().toISOString(),
+      _version: 1,
+      // When the todo is created in the Alert screen, include the alert info
+      alert:
+        route.name === ScreenName.ALERTS && alertInfo ? alertInfo : undefined
     };
 
     dispatch(setProcedureOngoing(true));
@@ -90,9 +98,9 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
   }, [
     dispatch,
     creating,
+    procedureOngoing,
     procedureSuccessful,
     setModalVisible,
-    procedureOngoing,
     toast
   ]);
 

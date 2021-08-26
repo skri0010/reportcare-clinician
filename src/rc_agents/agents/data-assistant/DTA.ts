@@ -1,4 +1,5 @@
-import { AgentIDs, CommonAttributes } from "rc_agents/AgentEnums";
+import { AgentIDs } from "rc_agents/clinician_framework";
+import { CommonAttributes } from "rc_agents/framework/Enums";
 import { Agent, Belief } from "rc_agents/framework";
 import { af_RetrieveEntryData } from "./action-frames/app-device-configuration/RetrieveEntryData";
 import { af_StoreEntryData } from "./action-frames/app-device-configuration/StoreEntryData";
@@ -20,6 +21,9 @@ import af_CreateTodo from "./action-frames/storing-data/CreateTodo";
 import af_UpdateTodo from "./action-frames/storing-data/UpdateTodo";
 import af_RetrieveTodos from "./action-frames/storing-data/RetrieveTodos";
 import { af_RequestDisplayTodos } from "./action-frames/storing-data/RequestDisplayTodos";
+import af_UpdateAlert from "./action-frames/triage-alert-hf-clinic/UpdateAlert";
+import { af_RetrieveAlertHistory } from "./action-frames/hf-outcome-trends/RetrieveAlertHistory";
+import { af_RequestDisplayAlertHistory } from "./action-frames/hf-outcome-trends/RequestDisplayAlertHistory";
 
 // Initial Beliefs of Agent
 
@@ -47,6 +51,8 @@ const agentDTA = new Agent(
     // HF-OTP-II
     af_RetrievePatientDetails,
     af_RequestDisplayPatientDetails,
+    af_RetrieveAlertHistory,
+    af_RequestDisplayAlertHistory,
 
     // AT-CP
     af_RetrievePendingAlertCount,
@@ -55,6 +61,7 @@ const agentDTA = new Agent(
     af_RequestAlertsDisplay,
     af_RetrieveAlertInfo,
     af_RequestAlertInfoDisplay,
+    af_UpdateAlert,
 
     // SRD-II
     af_RetrieveTodos,
