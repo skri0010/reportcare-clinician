@@ -21,7 +21,7 @@ export const mockPendingAlerts: Alert[] = [
   },
   {
     __typename: "Alert",
-    id: "92b7ea94-cdb3-4747-8aa7-e3db67920cad",
+    id: "32127aeb-d8fb-4cb6-86fa-d6090f5b1836",
     summary: "Sudden increase in heart rate during daily acitvity",
     patientID: "patient_john",
     patientName: "John Doe",

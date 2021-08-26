@@ -21,12 +21,14 @@ interface AgentsState {
   patientAssignmentsSynced: boolean;
   fetchingPatients: boolean;
   fetchingPatientDetails: boolean;
+  fetchingPatientAlertHistory: boolean;
   fetchingPendingPatientAssignments: boolean;
   riskFilters: RiskFilter;
   pendingAlertCount: PendingAlertCount;
   alerts: Alert[];
   fetchingAlertInfo: boolean;
   alertInfo: AlertInfo | undefined;
+  alertHistory: AlertInfo[] | undefined;
   fetchingTodos: boolean;
   pendingTodos: LocalTodo[] | undefined;
   completedTodos: LocalTodo[] | undefined;
@@ -43,6 +45,7 @@ const initialState: AgentsState = {
   pendingPatientAssignments: [],
   fetchingPatients: false,
   fetchingPatientDetails: false,
+  fetchingPatientAlertHistory: false,
   fetchingPendingPatientAssignments: false,
   patientAssignmentsSynced: false,
   riskFilters: {
@@ -60,6 +63,7 @@ const initialState: AgentsState = {
   alerts: [],
   fetchingAlertInfo: false,
   alertInfo: undefined,
+  alertHistory: undefined,
   fetchingTodos: false,
   pendingTodos: undefined,
   completedTodos: undefined,
@@ -87,6 +91,13 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
         ...state,
         fetchingPatientDetails: action.payload.fetchingPatientDetails
       };
+    case actionNames.SET_FETCHING_PATIENT_ALERT_HISTORY:
+      return {
+        ...state,
+        fetchingPatientAlertHistory: action.payload.fetchingPatientAlertHistory
+      };
+    case actionNames.SET_ALERT_HISTORY:
+      return { ...state, alertHistory: action.payload.alertHistory };
     case actionNames.SET_FETCHING_PENDING_PATIENT_ASSIGNMENTS:
       return {
         ...state,

@@ -29,6 +29,7 @@ import { AgentTrigger } from "rc_agents/trigger";
 import { NoSelectionScreen } from "../Shared/NoSelectionScreen";
 import i18n from "util/language/i18n";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
+import { AlertInfo } from "rc_agents/model";
 
 export const PatientsScreen: FC<WithSideTabsProps[ScreenName.PATIENTS]> =
   () => {
@@ -51,14 +52,12 @@ export const PatientsScreen: FC<WithSideTabsProps[ScreenName.PATIENTS]> =
     const initialAlertHistory = {
       id: "",
       patientId: "",
-      risk: RiskLevel.UNASSIGNED,
-      date: "",
-      time: "",
-      description: "",
-      HRV: 0,
-      BP: "",
-      symptom: "",
-      signs: ""
+      patientName: "",
+      riskLevel: RiskLevel.UNASSIGNED,
+      dateTime: "",
+      summary: "",
+      completed: false,
+      _version: -1
     };
 
     // Inital medical record details for the modal
@@ -81,7 +80,7 @@ export const PatientsScreen: FC<WithSideTabsProps[ScreenName.PATIENTS]> =
     const [modalAlertVisible, setModalAlertVisible] = useState<boolean>(false);
     // Feed in the alert details to be displayed in the modal
     const [displayHistory, setDisplayHistory] =
-      useState<AlertHistory>(initialAlertHistory);
+      useState<AlertInfo>(initialAlertHistory);
 
     // For view medical record modal visibility
     const [viewMedicalModal, setViewMedicalModal] = useState<boolean>(false);

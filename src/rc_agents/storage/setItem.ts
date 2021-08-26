@@ -219,13 +219,18 @@ export const setAlerts = async (
  */
 export const setAlertInfo = async (alertInfo: AlertInfo): Promise<void> => {
   let localData = await getAlertInfos();
+
+  // Create new local alert info data when currently there isn't any in the local storage
   if (!localData) {
     localData = {};
-  } else if (!localData[alertInfo.patientId]) {
+  }
+
+  // If there is data in local storage, add an entry for the patient that doesn't have an entry yet
+  if (!localData[alertInfo.patientId]) {
     localData[alertInfo.patientId] = {};
   }
-  localData[alertInfo.patientId][alertInfo.id] = alertInfo;
 
+  localData[alertInfo.patientId][alertInfo.id] = alertInfo;
   await setAlertInfos(localData);
 };
 

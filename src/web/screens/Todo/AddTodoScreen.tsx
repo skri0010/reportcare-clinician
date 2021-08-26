@@ -18,6 +18,8 @@ import {
 import { useToast } from "react-native-toast-notifications";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
 import { AgentTrigger } from "rc_agents/trigger";
+import { useRoute } from "@react-navigation/native";
+import { ScreenName } from "web/screens";
 
 interface AddTodoScreenProps {
   setModalVisible: (state: boolean) => void;
@@ -57,6 +59,7 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
 
   const dispatch = useDispatch();
   const toast = useToast();
+  const route = useRoute();
 
   // Triggers CreateTodo procedure
   const createTodo = () => {
@@ -67,7 +70,9 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
       completed: false,
       createdAt: new Date().toISOString(),
       _version: 1,
-      alert: alertInfo
+      // When the todo is created in the Alert screen, include the alert info
+      alert:
+        route.name === ScreenName.ALERTS && alertInfo ? alertInfo : undefined
     };
 
     dispatch(setProcedureOngoing(true));

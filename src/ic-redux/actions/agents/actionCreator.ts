@@ -30,6 +30,13 @@ export const setPatients = createAction(
   })
 )();
 
+export const setAlertHistory = createAction(
+  actionNames.SET_ALERT_HISTORY,
+  (alertHistory: AlertInfo[]) => ({
+    alertHistory: alertHistory
+  })
+)();
+
 export const setPatientDetails = createAction(
   actionNames.SET_PATIENT_DETAILS,
   (patientDetails: PatientDetails) => ({
@@ -48,6 +55,13 @@ export const setFetchingPatientDetails = createAction(
   actionNames.SET_FETCHING_PATIENT_DETAILS,
   (fetchingPatientDetails: boolean) => ({
     fetchingPatientDetails: fetchingPatientDetails
+  })
+)();
+
+export const setFetchingPatientAlertHistory = createAction(
+  actionNames.SET_FETCHING_PATIENT_ALERT_HISTORY,
+  (fetchingPatientAlertHistory: boolean) => ({
+    fetchingPatientAlertHistory: fetchingPatientAlertHistory
   })
 )();
 
