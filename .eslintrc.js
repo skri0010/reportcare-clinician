@@ -116,6 +116,10 @@ module.exports = {
             name: "agents-framework/AgentAPI",
             message:
               "Please import from rc_agents/clinician_framework/ClinicianAgentAPI instead"
+          },
+          {
+            name: "lodash",
+            message: "Please import from lodash/xxx instead"
           }
         ],
         patterns: [

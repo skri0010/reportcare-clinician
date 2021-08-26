@@ -61,12 +61,14 @@ export const TextField: React.FC<TextFieldProps> = ({
         keyboardType={keyboardType}
         autoCapitalize={autoCapitalize}
       />
-      {error && (
-        <H5
-          text={errorMessage!}
-          style={{ fontWeight: "bold", color: colors.errorColor }}
-        />
-      )}
+      <H5
+        text={errorMessage!}
+        style={{
+          fontWeight: "bold",
+          color: colors.errorColor,
+          opacity: error ? 1 : 0
+        }}
+      />
     </View>
   );
 };

@@ -164,6 +164,28 @@
     "Info": "Info",
     "NoSelection": "Select a patient to view details"
   },
+  "Patient_Configuration": {
+    "Label": {
+      "DeviceNo": "Device number",
+      "DiagnosisInfo": "Diagnosis information",
+      "HospitalName": "Hospital name",
+      "TargetActivity": "Target number of steps",
+      "TargetWeight": "Target weight (in kg)",
+      "FluidIntakeGoal": "Fluid intake goal (in ml)"
+    },
+    "Error": {
+      "TargetActivity": "Please input a valid target number of steps",
+      "TargetWeight": "Please input a valid target weight (in kg)",
+      "FluidIntakeGoal": "Please input a valid fluid intake goal (in ml)"
+    },
+    "Placeholder": {
+      "DeviceNo": "Enter device number",
+      "DiagnosisInfo": "Enter diagnosis information",
+      "TargetActivity": "Enter target number of steps",
+      "TargetWeight": "Enter target weight (in kg)",
+      "FluidIntakeGoal": "Enter fluid intake goal (in ml)"
+    }
+  },
   "Patient_Overview": {
     "BloodPressure": "Blood Pressure",
     "Systolic": "Systolic",
