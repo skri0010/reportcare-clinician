@@ -17,12 +17,13 @@ import { af_ResolvePatientAssignment } from "./action-frames/storing-data/Resolv
 import { af_RequestSyncPatientAssignmentResolutions } from "./action-frames/storing-data/RequestSyncPatientAssignmentResolutions";
 import { af_RetrievePendingAlertCount } from "./action-frames/triage-alert-hf-clinic/RetrievePendingAlertCount";
 import { af_RequestPendingAlertCountDisplay } from "./action-frames/triage-alert-hf-clinic/RequestPendingAlertCountDisplay";
-import af_CreateTodo from "./action-frames/storing-data/CreateTodo";
-import af_UpdateTodo from "./action-frames/storing-data/UpdateTodo";
-import af_RetrieveTodos from "./action-frames/storing-data/RetrieveTodos";
+import { af_CreateTodo } from "./action-frames/storing-data/CreateTodo";
+import { af_UpdateTodo } from "./action-frames/storing-data/UpdateTodo";
+import { af_RetrieveTodos } from "./action-frames/storing-data/RetrieveTodos";
 import { af_RequestDisplayTodos } from "./action-frames/storing-data/RequestDisplayTodos";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import { ClinicianAgent } from "rc_agents/clinician_framework/ClinicianAgent";
+import { af_ConfigurePatient } from "./action-frames/hf-outcome-trends/ConfigurePatient";
 
 // Initial Beliefs of Agent
 
@@ -50,6 +51,7 @@ const agentDTA = new ClinicianAgent(
     // HF-OTP-II
     af_RetrievePatientDetails,
     af_RequestDisplayPatientDetails,
+    af_ConfigurePatient,
 
     // AT-CP
     af_RetrievePendingAlertCount,

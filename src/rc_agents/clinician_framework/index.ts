@@ -27,6 +27,7 @@ export const ActionFrameIDs = {
     REQUEST_RETRIEVE_ROLE: "RequestRetrieveRole",
     RETRIEVE_PATIENTS_BY_ROLE: "RetrievePatientsByRole",
     REQUEST_DISPLAY_PATIENTS: "RequestDisplayPatients",
+    CONFIGURE_PATIENT: "ConfigurePatient",
 
     // HF-OTP-II: Single patient's details
     RETRIEVE_PATIENT_DETAILS: "RetrievePatientDetails",
@@ -82,6 +83,9 @@ export const ActionFrameIDs = {
   NWA: {
     SYNC_PROTECTED_INFO: "SyncProtectedInfo",
 
+    // HF-OTP-II - Patient Configuration
+    SYNC_CONFIGURE_PATIENTS: "SyncConfigurePatients",
+
     // SRD-I - Patient Assignments
     SYNC_PATIENT_ASSIGNMENT_RESOLUTIONS: "SyncPatientAssignmentResolutions",
 
@@ -110,6 +114,7 @@ export enum AppAttributes {
   ONLINE = "Online",
   SYNC_PROTECTED_INFO = "SyncProtectedInfo",
   SYNC_PATIENT_ASSIGNMENT_RESOLUTIONS = "SyncPatientAssignmentResolutions",
+  SYNC_CONFIGURE_PATIENTS = "SyncConfigurePatients",
   SYNC_CREATE_TODOS = "SyncCreateTodos",
   SYNC_UPDATE_TODOS = "SyncUpdateTodos",
   SYNC_UPDATE_ALERTS = "SyncUpdateAlerts"
@@ -178,6 +183,8 @@ export enum PatientAttributes {
   PATIENT_DETAILS_RETRIEVED = "PatientDetailsRetrieved",
   DISPLAY_PATIENT_DETAILS_REQUESTED = "DisplayPatientDetailsRequested",
   PATIENT_DETAILS = "PatientDetails",
+  PATIENT_TO_CONFIGURE = "PatientToConfigure",
+  CONFIGURE_PATIENT = "ConfigurePatient",
 
   // SRD-I: Patient Assignments
   PENDING_PATIENT_ASSIGNMENTS = "PendingPatientAssignments",

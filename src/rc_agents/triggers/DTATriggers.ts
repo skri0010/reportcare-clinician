@@ -10,10 +10,12 @@ import { agentDTA } from "rc_agents/agents";
 import { Belief } from "agents-framework";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
+  Hospital,
   PatientAssignmentResolution,
   TodoInput,
   TodoStatus
 } from "rc_agents/model";
+import { Storage } from "rc_agents/storage";
 
 // HF-OTP-I
 // Triggers RetrievePatientsByRole of DTA
@@ -106,6 +108,39 @@ export const triggerResolvePendingAssignments = (
     new Belief(
       BeliefKeys.PROCEDURE,
       ProcedureAttributes.SRD_I,
+      ProcedureConst.ACTIVE
+    )
+  );
+};
+
+// LS-TODO: To be removed after integrated with patient configuration UI
+export const mockPatientConfiguration = async (): Promise<void> => {
+  const patient = await Storage.getPatientDetails("patient_john");
+  if (patient && patient.patientInfo) {
+    const configuration = patient.patientInfo;
+    configuration.hospitalName = Hospital.HB;
+    configuration.configured = true;
+    triggerConfigurePatient(configuration);
+  }
+};
+
+// HF-OTP-II: Triggers ConfigurePatient of DTA
+export const triggerConfigurePatient = (input: PatientInfo): void => {
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PATIENT,
+      PatientAttributes.PATIENT_TO_CONFIGURE,
+      input
+    ),
+    false
+  );
+  agentDTA.addBelief(
+    new Belief(BeliefKeys.PATIENT, PatientAttributes.CONFIGURE_PATIENT, true)
+  );
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PROCEDURE,
+      ProcedureAttributes.HF_OTP_II,
       ProcedureConst.ACTIVE
     )
   );

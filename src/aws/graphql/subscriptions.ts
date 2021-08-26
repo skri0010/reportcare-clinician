@@ -24,6 +24,8 @@ export const onCreatePatientInfo = /* GraphQL */ `
       email
       emergencyContactName
       emergencyContactNumber
+      fluidIntakeGoal
+      configured
       patientID
       _version
       _deleted
@@ -56,6 +58,8 @@ export const onUpdatePatientInfo = /* GraphQL */ `
       email
       emergencyContactName
       emergencyContactNumber
+      fluidIntakeGoal
+      configured
       patientID
       _version
       _deleted
@@ -88,6 +92,8 @@ export const onDeletePatientInfo = /* GraphQL */ `
       email
       emergencyContactName
       emergencyContactNumber
+      fluidIntakeGoal
+      configured
       patientID
       _version
       _deleted

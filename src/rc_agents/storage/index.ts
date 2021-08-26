@@ -4,7 +4,7 @@ import {
   PatientAssignmentResolution,
   PatientDetails
 } from "rc_agents/model";
-import { Alert, ClinicianInfo, PatientAssignment } from "aws/API";
+import { Alert, ClinicianInfo, PatientAssignment, PatientInfo } from "aws/API";
 import * as accessFunctions from "./accessFunctions";
 import { RiskLevel } from "models/RiskLevel";
 
@@ -25,6 +25,7 @@ export enum AsyncStorageKeys {
   ALERT_INFOS = "AlertInfos",
   PENDING_PATIENT_ASSIGNMENTS = "PendingPatientAssignments",
   PATIENT_ASSIGNMENTS_RESOLUTIONS = "PatientAssignmentsResolutions",
+  PATIENT_CONFIGURATIONS = "PatientConfigurations",
   TODOS = "Todos",
   ALERTS_SYNC = "AlertsSync"
 }
@@ -47,6 +48,7 @@ export type AsyncStorageType = {
   [AsyncStorageKeys.ALL_PATIENT_DETAILS]: {
     [patientId: string]: PatientDetails | undefined;
   };
+  [AsyncStorageKeys.PATIENT_CONFIGURATIONS]: PatientInfo[];
   [AsyncStorageKeys.ALERTS]: {
     [key in RiskLevel]: { [key: string]: Alert };
   };

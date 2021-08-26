@@ -136,6 +136,20 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
+                "fluidIntakeGoal": {
+                    "name": "fluidIntakeGoal",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "configured": {
+                    "name": "configured",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": true,
+                    "attributes": []
+                },
                 "patientID": {
                     "name": "patientID",
                     "isArray": false,
@@ -195,7 +209,8 @@ export const schema = {
                                 "allow": "groups",
                                 "groupsField": "patientID",
                                 "operations": [
-                                    "read"
+                                    "read",
+                                    "update"
                                 ],
                                 "groupField": "groups"
                             }
@@ -1732,5 +1747,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "75372649be6c0c4c752c2a5006f14016"
+    "version": "519a5755c59526d66578090e79a8c203"
 };

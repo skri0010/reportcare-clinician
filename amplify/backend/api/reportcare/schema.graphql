@@ -12,7 +12,7 @@ type PatientInfo
     rules: [
       { allow: owner }
       { allow: groups, groups: ["Admin"] }
-      { allow: groups, groupsField: "patientID", operations: [read] }
+      { allow: groups, groupsField: "patientID", operations: [read, update] }
     ]
   )
   @key(fields: ["patientID"]) {
@@ -35,6 +35,8 @@ type PatientInfo
   email: String!
   emergencyContactName: String!
   emergencyContactNumber: String!
+  fluidIntakeGoal: String!
+  configured: Boolean!
   patientID: String!
 }
 

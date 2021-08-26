@@ -21,9 +21,9 @@ import { TodoStatus } from "rc_agents/model";
 /**
  * Class to represent the activity for syncing local update of Todos.
  */
-class SyncTodosUpdate extends Activity {
+class SyncUpdateTodos extends Activity {
   /**
-   * Constructor for the SyncTodosUpdate class
+   * Constructor
    */
   constructor() {
     super(ActionFrameIDs.NWA.SYNC_UPDATE_TODOS);
@@ -128,10 +128,8 @@ const rule2 = new ResettablePrecondition(
 );
 
 // Actionframe
-const af_SyncTodosUpdate = new Actionframe(
+export const af_SyncUpdateTodos = new Actionframe(
   `AF_${ActionFrameIDs.NWA.SYNC_UPDATE_TODOS}`,
   [rule1, rule2],
-  new SyncTodosUpdate()
+  new SyncUpdateTodos()
 );
-
-export default af_SyncTodosUpdate;
