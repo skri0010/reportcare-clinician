@@ -122,6 +122,9 @@
     "AlertList": {
       "NoPendingAlerts": "Tiada amaran belum selesai dijumpai.",
       "NoCompletedAlerts": "Tiada amaran selesai dijumpai"
+    },
+    "AlertVitals": {
+      "HeartRate": "Kadar Jantung"
     }
   },
   "Todo": {

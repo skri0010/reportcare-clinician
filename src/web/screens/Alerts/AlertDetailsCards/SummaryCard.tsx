@@ -33,7 +33,7 @@ export const SummaryCard: FC<SummaryCardProps> = ({
         }}
       />
       <H5
-        text="Severity: "
+        text={i18n.t("Patient_History.AlertSummaryCard.Severity")}
         style={{ paddingLeft: ms(5), paddingBottom: ms(5), fontWeight: "bold" }}
       />
       <H4 text={`${risk}`} style={{ paddingLeft: ms(5) }} />
