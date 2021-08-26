@@ -276,3 +276,13 @@ export const getCompletedTodos = async (): Promise<
   }
   return null;
 };
+
+export const getTodo = async (
+  id: string
+): Promise<AsyncStorageType[AsyncStorageKeys.TODOS] | null> => {
+  const localData = await getTodos();
+  if (localData) {
+    return localData.filter((t) => t.id === id);
+  }
+  return null;
+};
