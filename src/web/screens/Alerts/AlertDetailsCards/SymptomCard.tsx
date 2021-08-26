@@ -24,7 +24,7 @@ export const SymptomCard: FC<SymptomCardProps> = ({
     <CardWrapper flex={1} minHeight={minHeight} maxHeight={maxHeight}>
       <Icon name="clipboard-alert-outline" size={iconSize} />
       <H5
-        text="Symptoms: "
+        text={i18n.t("Patient_Overview.Symptoms")}
         style={{ paddingLeft: ms(5), paddingBottom: ms(5), fontWeight: "bold" }}
       />
       <H4
@@ -32,7 +32,7 @@ export const SymptomCard: FC<SymptomCardProps> = ({
         style={{ paddingLeft: ms(5), paddingBottom: ms(10) }}
       />
       <H5
-        text="Signs: "
+        text={i18n.t("Patient_History.AlertSummaryCard.Signs")}
         style={{ paddingLeft: ms(5), paddingBottom: ms(5), fontWeight: "bold" }}
       />
       <H4 text={`${signs}`} style={{ paddingLeft: ms(5) }} />

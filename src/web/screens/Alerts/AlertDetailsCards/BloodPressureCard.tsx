@@ -22,7 +22,7 @@ export const BloodPressureCard: FC<BloodPressureCardProps> = ({
     <CardWrapper flex={1} minHeight={minHeight} maxHeight={maxHeight}>
       <Icon name="plus-outline" size={iconSize} />
       <H5
-        text="Blood Pressure: "
+        text={i18n.t("Patient_Overview.BloodPressure")}
         style={{ paddingLeft: ms(5), paddingBottom: ms(5), fontWeight: "bold" }}
       />
       <H4 text={bloodPressure} style={{ paddingLeft: ms(5) }} />

@@ -122,6 +122,9 @@
     "AlertList": {
       "NoPendingAlerts": "You have no pending alerts",
       "NoCompletedAlerts": "You have no completed alerts"
+    },
+    "AlertVitals": {
+      "HeartRate": "Heart Rate"
     }
   },
   "Todo": {
