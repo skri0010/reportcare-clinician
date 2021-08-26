@@ -35,6 +35,8 @@ export const syncPatientInfos = /* GraphQL */ `
         email
         emergencyContactName
         emergencyContactNumber
+        fluidIntakeGoal
+        configured
         patientID
         _version
         _deleted
@@ -70,6 +72,8 @@ export const getPatientInfo = /* GraphQL */ `
       email
       emergencyContactName
       emergencyContactNumber
+      fluidIntakeGoal
+      configured
       patientID
       _version
       _deleted
@@ -115,6 +119,8 @@ export const listPatientInfos = /* GraphQL */ `
         email
         emergencyContactName
         emergencyContactNumber
+        fluidIntakeGoal
+        configured
         patientID
         _version
         _deleted

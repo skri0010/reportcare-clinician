@@ -35,6 +35,8 @@ type PatientInfo
   email: String!
   emergencyContactName: String!
   emergencyContactNumber: String!
+  fluidIntakeGoal: String!
+  configured: Boolean!
   patientID: String!
 }
 
