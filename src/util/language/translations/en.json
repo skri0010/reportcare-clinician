@@ -165,6 +165,7 @@
     "NoSelection": "Select a patient to view details"
   },
   "Patient_Configuration": {
+    "Title": "Configure details",
     "Label": {
       "DeviceNo": "Device number",
       "DiagnosisInfo": "Diagnosis information",
@@ -172,6 +173,9 @@
       "TargetActivity": "Target number of steps",
       "TargetWeight": "Target weight (in kg)",
       "FluidIntakeGoal": "Fluid intake goal (in ml)"
+    },
+    "Prompt": {
+      "DeviceNo": "Does this patient have a device?"
     },
     "Error": {
       "TargetActivity": "Please input a valid target number of steps",

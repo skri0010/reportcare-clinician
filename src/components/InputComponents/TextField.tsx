@@ -1,8 +1,8 @@
 import React from "react";
 import { StyleProp, ViewStyle, View, TextInput, Platform } from "react-native";
 import { RootState, select } from "util/useRedux";
-import { ScaledSheet, ms } from "react-native-size-matters";
-import { H3, H5 } from "components/Text";
+import { ScaledSheet } from "react-native-size-matters";
+import { H5, H7 } from "components/Text";
 
 interface TextFieldProps {
   editable?: boolean;
@@ -42,13 +42,14 @@ export const TextField: React.FC<TextFieldProps> = ({
 
   return (
     <View>
-      <H3 text={label} style={[styles.label, labelStyle]} />
+      <H5 text={label} style={[styles.label, labelStyle]} />
       <TextInput
         editable={editable}
         style={[
           styles.input,
           {
-            fontSize: fonts.h4Size,
+            fontSize: fonts.h6Size,
+            backgroundColor: colors.primaryBackgroundColor,
             borderColor: error ? colors.errorColor : colors.primaryBorderColor
           }
         ]}
@@ -61,7 +62,7 @@ export const TextField: React.FC<TextFieldProps> = ({
         keyboardType={keyboardType}
         autoCapitalize={autoCapitalize}
       />
-      <H5
+      <H7
         text={errorMessage!}
         style={{
           fontWeight: "bold",
@@ -76,12 +77,12 @@ export const TextField: React.FC<TextFieldProps> = ({
 const styles = ScaledSheet.create({
   label: {
     fontWeight: "600",
-    marginTop: ms(10),
-    marginBottom: ms(5)
+    marginTop: "10@ms",
+    marginBottom: "5@ms"
   },
   input: {
-    borderWidth: ms(2),
-    height: Platform.OS === "web" ? ms(30) : ms(40),
-    marginBottom: ms(5)
+    borderWidth: "2@ms",
+    height: Platform.OS === "web" ? "30@ms" : "40@ms",
+    paddingLeft: "10@ms"
   }
 });

@@ -198,16 +198,14 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
                 <LoadingIndicator flex={1} />
               ) : patientDetails ? (
                 // Patient details is fetched and patient details is not null
-                patientDetails.patientInfo.configured === true ? (
-                  // Patient is configured
-                  <>
-                    {/* Patient name and avatar header */}
-                    <ContactTitle
-                      name={patientDetails.patientInfo.name}
-                      isPatient
-                    />
-
-                    {/* Patient details */}
+                <>
+                  {/* Patient avatar and name */}
+                  <ContactTitle
+                    name={patientDetails.patientInfo.name}
+                    isPatient
+                  />
+                  {patientDetails.patientInfo.configured ? (
+                    // Patient is configured: Show details
                     <PatientDetailsTabNavigator
                       details={patientDetails}
                       selectedTab={selectedTab}
@@ -217,13 +215,13 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
                       setModalAlertVisible={setModalAlertVisible}
                       setViewMedicalModal={setViewMedicalModal}
                     />
-                  </>
-                ) : (
-                  // Patient is not configured
-                  <PatientConfigurationScreen
-                    info={patientDetails.patientInfo}
-                  />
-                )
+                  ) : (
+                    // Patient is not configured: Show configuration screen
+                    <PatientConfigurationScreen
+                      info={patientDetails.patientInfo}
+                    />
+                  )}
+                </>
               ) : (
                 // Patient details is not being fetched and patient details is null
                 <NoSelectionScreen
