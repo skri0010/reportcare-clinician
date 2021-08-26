@@ -16,10 +16,13 @@ import { LocalTodo } from "rc_agents/model";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
 import { useToast } from "react-native-toast-notifications";
 import {
+  setProcedureOngoing,
   setProcedureSuccessful,
   setSubmittingTodo,
+  setTodoDetails,
   setUpdatedTodo
 } from "ic-redux/actions/agents/actionCreator";
+import { AgentTrigger } from "rc_agents/trigger";
 
 // Determines if the add button is needed in the header of left tab
 function checkNeedAddButton(tabName: TodoListName) {
@@ -91,6 +94,11 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = ({
   // JQ-TODO To be integrated with redux store for todo item details display on the right screen
   function onRowClick(item: LocalTodo) {
     setEmptyTodo(false);
+    dispatch(setProcedureOngoing(true));
+    dispatch(setTodoDetails(item));
+    if (item.id) {
+      AgentTrigger.triggerRetrieveTodoDetails({ id: item.id });
+    }
     setTodoSelected(item);
   }
 

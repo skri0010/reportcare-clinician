@@ -31,6 +31,7 @@ interface AgentsState {
   completedTodos: LocalTodo[] | undefined;
   submittingTodo: boolean;
   updatedTodo: LocalTodo | undefined;
+  todoDetails: LocalTodo | undefined;
 }
 
 const initialState: AgentsState = {
@@ -62,7 +63,8 @@ const initialState: AgentsState = {
   pendingTodos: undefined,
   completedTodos: undefined,
   submittingTodo: false,
-  updatedTodo: undefined
+  updatedTodo: undefined,
+  todoDetails: undefined
 };
 
 export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
@@ -128,6 +130,8 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
       return { ...state, submittingTodo: action.payload.submittingTodo };
     case actionNames.SET_UPDATED_TODO:
       return { ...state, updatedTodo: action.payload.updatedTodo };
+    case actionNames.SET_TODO_DETAILS:
+      return { ...state, todoDetails: action.payload.todoDetails };
     default:
       return state;
   }

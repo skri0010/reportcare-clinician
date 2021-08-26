@@ -20,6 +20,7 @@ import { Storage } from "rc_agents/storage";
 import { LocalTodo, TodoStatus } from "rc_agents/model";
 import { Todo } from "aws/API";
 import { getTodo } from "aws/TypedAPI/getQueries";
+// eslint-disable-next-line no-restricted-imports
 import { mapColorCodeToRiskLevel } from "rc_agents/agents/data-assistant/action-frames/triage-alert-hf-clinic/RetrievePendingAlertCount";
 import { setTodoDetails } from "ic-redux/actions/agents/actionCreator";
 
@@ -42,25 +43,21 @@ import { setTodoDetails } from "ic-redux/actions/agents/actionCreator";
           await super.doActivity(agent, [rule2]);
 
           const facts = agentAPI.getFacts();
-
+          // eslint-disable-next-line no-console
           try {
 
             // Get fact with todo details
             // TODO: Change this from ClinicianAttributes.TODO to something else
             const todoDetails: string = agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.TODO_DETAILS];
-
             if (todoDetails) {
                 let todoDetail: Todo | undefined;
                 // Check if device is online
                 if (facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
                     // is online
-                    const query = await getTodo({
-                        id: todoDetails
-                    });
+                    const query = await getTodo({ id: todoDetails });
                     // call getTodo query
-                    if (query.data?.getTodo){
+                    if (query.data.getTodo){
                         const result = query.data.getTodo;
-
                         if (result){
                             todoDetail = result as Todo;
                         }
@@ -108,6 +105,7 @@ import { setTodoDetails } from "ic-redux/actions/agents/actionCreator";
                     
                     if (todoToDispatch){
                         // move to front of the list
+                        console.log(todoToDispatch);
                         await Storage.setTodo(todoToDispatch[0]);
 
                         // remoce display todo details from 
