@@ -170,7 +170,7 @@ export const triggerUpdateTodo = (input: TodoUpdateInput): void => {
 // SRD-III: Triggers RetrieveTodoDetails of DTA
 export const triggerRetrieveTodoDetails = (input: TodoDetails): void => {
   agentAPI.addFact(
-    new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.DISPLAY_TODO_DETAILS, input),
+    new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.TODO_DETAILS, input),
     false
   );
   agentDTA.addBelief(

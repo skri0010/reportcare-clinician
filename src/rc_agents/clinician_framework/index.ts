@@ -162,6 +162,7 @@ export enum ClinicianAttributes {
     DISPLAY_TODOS = "DisplayTodos",
 
     // SRD-III - Todo Details
+    TODO_DETAILS = "TodoDetails",
     DISPLAY_TODO_DETAILS = "DisplayTodoDetails"
 }
 

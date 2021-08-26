@@ -18,7 +18,7 @@ import {
 import { store } from "util/useRedux";
 import { Storage } from "rc_agents/storage";
 import { LocalTodo, TodoStatus } from "rc_agents/model";
-import { Todo, GetTodoQueryVariables } from "aws/API";
+import { Todo } from "aws/API";
 import { getTodo } from "aws/TypedAPI/getQueries";
 import { mapColorCodeToRiskLevel } from "rc_agents/agents/data-assistant/action-frames/triage-alert-hf-clinic/RetrievePendingAlertCount";
 import { setTodoDetails } from "ic-redux/actions/agents/actionCreator";
@@ -46,7 +46,8 @@ import { setTodoDetails } from "ic-redux/actions/agents/actionCreator";
           try {
 
             // Get fact with todo details
-            const todoDetails: string = agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.TODO];
+            // TODO: Change this from ClinicianAttributes.TODO to something else
+            const todoDetails: string = agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.TODO_DETAILS];
 
             if (todoDetails) {
                 let todoDetail: Todo | undefined;
@@ -55,7 +56,7 @@ import { setTodoDetails } from "ic-redux/actions/agents/actionCreator";
                     // is online
                     const query = await getTodo({
                         id: todoDetails
-                    })
+                    });
                     // call getTodo query
                     if (query.data?.getTodo){
                         const result = query.data.getTodo;
@@ -101,22 +102,44 @@ import { setTodoDetails } from "ic-redux/actions/agents/actionCreator";
                             false
                         );
                     }
+                } else {
+                    // check local storage for todo details
+                    const todoToDispatch = await Storage.getTodo(todoDetails);
+                    
+                    if (todoToDispatch){
+                        // move to front of the list
+                        await Storage.setTodo(todoToDispatch[0]);
+
+                        // remoce display todo details from 
+                        agentAPI.addFact(
+                            new Belief(
+                                BeliefKeys.CLINICIAN,
+                                ClinicianAttributes.DISPLAY_TODO_DETAILS,
+                                null
+                            ),
+                            false
+                        );
+                    }
+
                 }
-                 else {
-                    // check local storage for todo
-                    const todos = await Storage.getTodos();
-                    let todoToDispatch: LocalTodo | undefined;
+            }
 
 
-
-                }
-            }  // TODO: if offline
-
-
+          } catch (error) {
+              // eslint-disable-next-line no-console
+              console.log(error);
           }
 
-          
-
+          // Stop procedure
+          agentAPI.addFact(
+              new Belief(
+                  BeliefKeys.PROCEDURE,
+                  ProcedureAttributes.SRD_III,
+                  ProcedureConst.INACTIVE
+              ),
+              true,
+              true
+          );
       }
   }
 
