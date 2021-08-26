@@ -1,6 +1,6 @@
 // Functions for validating authentication inputs
 
-import { Hospital } from "rc_agents/model";
+import { Hospital, NYHAClass } from "rc_agents/model";
 
 // Checks that username has 3 to 16 characters
 export const validateUsername = (username: string): boolean => {
@@ -33,6 +33,13 @@ export const validateHospitalName = (hospitalName: string): boolean => {
   return (
     hospitalName !== Hospital.UNKNOWN &&
     Object.values(Hospital).includes(hospitalName as Hospital)
+  );
+};
+
+export const validateNYHAClass = (NYHAclass: string): boolean => {
+  return (
+    NYHAclass !== Hospital.UNKNOWN &&
+    Object.values(NYHAClass).includes(NYHAclass as NYHAClass)
   );
 };
 

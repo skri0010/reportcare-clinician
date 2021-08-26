@@ -9,6 +9,7 @@ import {
   notEmptyString,
   validateFluidIntakeGoal,
   validateHospitalName,
+  validateNYHAClass,
   validateTargetActivity,
   validateTargetWeight
 } from "util/validation";
@@ -18,7 +19,7 @@ import { H3 } from "components/Text";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { RootState, select } from "util/useRedux";
 import { Picker } from "@react-native-picker/picker";
-import { Hospital } from "rc_agents/model";
+import { Hospital, NYHAClass } from "rc_agents/model";
 import { getPickerStyles } from "util/getStyles";
 import { Label } from "components/Text/Label";
 import { AuthButton } from "components/Buttons/AuthButton";
@@ -29,6 +30,7 @@ interface PatientConfigurationScreenProps {
 
 export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
   ({ info }) => {
+    // States
     const { fonts, colors } = select((state: RootState) => ({
       colors: state.settings.colors,
       fonts: state.settings.fonts
@@ -36,18 +38,36 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
     const [configInfo, setConfigInfo] = useState<PatientInfo>(() => {
       return cloneDeep(info);
     });
+    const [allInputValid, setAllInputValid] = useState<boolean>(false);
     const [hasDevice, setHasDevice] = useState<boolean>(
       notEmptyString(info.deviceNo)
     );
-    const { pickerContainerStyle, pickerStyle } = getPickerStyles({
+
+    // Picker styles
+    const {
+      pickerContainerStyle: hospitalNamePickerContainerStyle,
+      pickerStyle: hospitalNamePickerStyle
+    } = getPickerStyles({
       colors: colors,
       fonts: fonts,
       error: !validateHospitalName(configInfo.hospitalName)
+    });
+    const {
+      pickerContainerStyle: NYHAClassPickerContainerStyle,
+      pickerStyle: NYHAClassPickerStyle
+    } = getPickerStyles({
+      colors: colors,
+      fonts: fonts,
+      error: !validateNYHAClass(configInfo.NHYAclass)
     });
 
     // Update functions
     const updateHospitalName = (hospitalName: string) => {
       setConfigInfo({ ...configInfo, hospitalName: hospitalName });
+    };
+
+    const updateNYHAClass = (NHYAclass: string) => {
+      setConfigInfo({ ...configInfo, NHYAclass: NHYAclass });
     };
 
     const updateDiagnosisInfo = (diagnosisInfo: string) => {
@@ -83,6 +103,29 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
       }
     }, [hasDevice, configInfo, updateDeviceNumber]);
 
+    // Side effect for final validation
+    useEffect(() => {
+      // Validation for mandatory fields
+      const mandatory = (validateHospitalName(configInfo.hospitalName) &&
+        validateNYHAClass(configInfo.NHYAclass) &&
+        configInfo.diagnosisInfo &&
+        validateTargetActivity(configInfo.targetActivity) &&
+        validateTargetWeight(configInfo.targetWeight) &&
+        validateFluidIntakeGoal(configInfo.fluidIntakeGoal)) as boolean;
+
+      // Validation for optional fields
+      const optional = (!hasDevice || configInfo.deviceNo) as boolean;
+
+      const valid = mandatory && optional;
+
+      setAllInputValid(valid);
+    }, [configInfo, hasDevice]);
+
+    // Proceed button onPress
+    const onProceedPress = () => {
+      // Trigger agents here
+    };
+
     return (
       <ScreenWrapper
         fixed
@@ -92,20 +135,12 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
         <H3 text={i18n.t("Patient_Configuration.Title")} style={styles.title} />
 
         <ScrollView>
-          {/* Basic fields */}
-          <TextField
-            label={i18n.t("Patient_Configuration.Label.DiagnosisInfo")}
-            value={configInfo.diagnosisInfo}
-            onChange={(diagnosisInfo) => updateDiagnosisInfo(diagnosisInfo)}
-            placeholder={i18n.t(
-              "Patient_Configuration.Placeholder.DiagnosisInfo"
-            )}
-          />
-
+          {/* Mandatory fields */}
+          {/* Hospital name */}
           <Label text={i18n.t("Patient_Configuration.Label.HospitalName")} />
-          <View style={pickerContainerStyle}>
+          <View style={hospitalNamePickerContainerStyle}>
             <Picker
-              style={pickerStyle}
+              style={hospitalNamePickerStyle}
               selectedValue={configInfo.hospitalName}
               onValueChange={(value: string) => {
                 updateHospitalName(value);
@@ -123,7 +158,39 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
             </Picker>
           </View>
 
+          <Label text={i18n.t("Patient_Configuration.Label.NYHAClass")} />
+          <View style={NYHAClassPickerContainerStyle}>
+            <Picker
+              style={NYHAClassPickerStyle}
+              selectedValue={configInfo.NHYAclass}
+              onValueChange={(value: string) => {
+                updateNYHAClass(value);
+              }}
+            >
+              {Object.entries(NYHAClass).map(([key, value]) => {
+                return (
+                  <Picker.Item
+                    key={key}
+                    value={value}
+                    label={i18n.t(value.toString())}
+                  />
+                );
+              })}
+            </Picker>
+          </View>
+
+          {/* Diagnosis info */}
+          <TextField
+            label={i18n.t("Patient_Configuration.Label.DiagnosisInfo")}
+            value={configInfo.diagnosisInfo}
+            onChange={(diagnosisInfo) => updateDiagnosisInfo(diagnosisInfo)}
+            placeholder={i18n.t(
+              "Patient_Configuration.Placeholder.DiagnosisInfo"
+            )}
+          />
+
           {/* Optional fields */}
+          {/* Device number */}
           <CheckboxText
             text={i18n.t("Patient_Configuration.Prompt.DeviceNo")}
             containerStyle={styles.promptTextContainer}
@@ -143,7 +210,8 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
           {/* Separator */}
           <ItemSeparator topSpacing={ms(25)} bottomSpacing={ms(10)} />
 
-          {/* Values fields */}
+          {/* Mandatory fields for values */}
+          {/* Target activity (number of steps) */}
           <TextField
             label={i18n.t("Patient_Configuration.Label.TargetActivity")}
             value={configInfo.targetActivity}
@@ -157,6 +225,7 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
             }
             errorMessage={i18n.t("Patient_Configuration.Error.TargetActivity")}
           />
+          {/* Target weight */}
           <TextField
             label={i18n.t("Patient_Configuration.Label.TargetWeight")}
             value={configInfo.targetWeight}
@@ -170,6 +239,7 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
             }
             errorMessage={i18n.t("Patient_Configuration.Error.TargetWeight")}
           />
+          {/* Fluid intake goal */}
           <TextField
             label={i18n.t("Patient_Configuration.Label.FluidIntakeGoal")}
             value={configInfo.fluidIntakeGoal}
@@ -187,8 +257,13 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
           />
         </ScrollView>
 
-        {/* Done button */}
-        <AuthButton buttonTitle="DONE" inputValid={false} />
+        {/* Proceed button */}
+        <AuthButton
+          buttonTitle={i18n.t("Patient_Configuration.Proceed")}
+          onPress={onProceedPress}
+          inputValid={allInputValid}
+          noTextTransform
+        />
       </ScreenWrapper>
     );
   };

@@ -7,6 +7,7 @@ import { H3 } from "components/Text";
 interface AuthButtonProps {
   inputValid: boolean;
   buttonTitle: string;
+  noTextTransform?: boolean;
   onPress?: () => void;
   style?: StyleProp<ViewStyle>;
 }
@@ -15,7 +16,8 @@ export const AuthButton: React.FC<AuthButtonProps> = ({
   inputValid,
   buttonTitle,
   onPress,
-  style
+  style,
+  noTextTransform
 }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
@@ -44,11 +46,12 @@ export const AuthButton: React.FC<AuthButtonProps> = ({
       <H3
         text={buttonTitle}
         style={[
+          styles.buttonText,
           {
             opacity: active ? 1 : 0.3,
-            color: colors.primaryContrastTextColor
-          },
-          styles.buttonText
+            color: colors.primaryContrastTextColor,
+            ...(noTextTransform ? { textTransform: "none" } : {})
+          }
         ]}
       />
     </TouchableOpacity>

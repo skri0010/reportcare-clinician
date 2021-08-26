@@ -26,6 +26,14 @@ export enum Hospital {
   HB = "Hospital Bintulu"
 }
 
+export enum NYHAClass {
+  UNKNOWN = "",
+  I = "I",
+  II = "II",
+  III = "III",
+  IV = "IV"
+}
+
 export enum PatientAssignmentStatus {
   PENDING = "PENDING",
   APPROVED = "APPROVED",

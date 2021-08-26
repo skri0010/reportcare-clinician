@@ -166,8 +166,10 @@
   },
   "Patient_Configuration": {
     "Title": "Configure details",
+    "Proceed": "Proceed",
     "Label": {
       "HospitalName": "Hospital name",
+      "NYHAClass": "NYHA class",
       "DiagnosisInfo": "Diagnosis information",
       "DeviceNo": "Device number",
       "TargetActivity": "Target number of steps",
@@ -183,7 +185,6 @@
       "FluidIntakeGoal": "Please input a valid fluid intake goal (in ml)"
     },
     "Placeholder": {
-      "HospitalName": "Pick a hospital name",
       "DiagnosisInfo": "Enter diagnosis information",
       "DeviceNo": "Enter device number",
       "TargetActivity": "Enter target number of steps",
