@@ -166,7 +166,6 @@ export const alertToAlertInfo = (alerts: Alert[] | undefined): AlertInfo[] => {
         riskLevel: mapColorCodeToRiskLevel(alert.colorCode),
         dateTime: alert.dateTime,
         summary: alert.summary,
-        colorCode: alert.colorCode,
         completed: alert.completed === AlertStatus.COMPLETED,
         _version: alert._version
       };

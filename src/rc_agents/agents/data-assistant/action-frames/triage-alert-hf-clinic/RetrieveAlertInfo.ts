@@ -16,7 +16,7 @@ import {
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
 import { Storage } from "rc_agents/storage";
-import { AlertInfo, AlertStatus } from "rc_agents/model";
+import { AlertInfo } from "rc_agents/model";
 import {
   listMedCompliantsByDate,
   getMedicationInfo,
@@ -25,10 +25,9 @@ import {
   getReportSymptom,
   getPatientInfo
 } from "aws";
-import { Alert, ModelSortDirection } from "aws/API";
+import { ModelSortDirection } from "aws/API";
 import { store } from "util/useRedux";
 import { setFetchingAlertInfo } from "ic-redux/actions/agents/actionCreator";
-import { mapColorCodeToRiskLevel } from "./RetrievePendingAlertCount";
 
 /**
  * Class to represent an activity for retrieving patient's information associated with an alert.
@@ -104,7 +103,7 @@ class RetrieveAlertInfo extends Activity {
 }
 
 export const queryAlertInfo = async (
-  alert: Alert | AlertInfo
+  alert: AlertInfo
 ): Promise<AlertInfo | null> => {
   // Ensures vitals and symptoms are present
   let alertVitals = alert.vitalsReport;
@@ -138,10 +137,8 @@ export const queryAlertInfo = async (
       summary: alert.summary,
       vitalsReport: alertVitals,
       symptomReport: alertSymptoms,
-      completed:
-        alert.completed === AlertStatus.COMPLETED || alert.completed === true,
-      riskLevel: mapColorCodeToRiskLevel(alert.colorCode),
-      colorCode: alert.colorCode,
+      completed: alert.completed,
+      riskLevel: alert.riskLevel,
       _version: alert._version
     };
 

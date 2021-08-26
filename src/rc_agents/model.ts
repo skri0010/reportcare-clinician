@@ -97,7 +97,6 @@ export interface AlertInfo {
   diagnosis?: string;
   dateTime: string;
   summary: string;
-  colorCode: string;
   vitalsReportID: string;
   symptomReportID: string;
   vitalsReport?: ReportVitals;

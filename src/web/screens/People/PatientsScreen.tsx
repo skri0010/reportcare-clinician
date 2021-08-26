@@ -48,7 +48,6 @@ export const PatientsScreen: FC<WithSideTabsProps[ScreenName.PATIENTS]> =
       symptomReportID: "",
       dateTime: "",
       summary: "",
-      colorCode: "",
       completed: false,
       _version: -1
     };

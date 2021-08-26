@@ -18,9 +18,12 @@ import {
 import { Storage } from "rc_agents/storage";
 import { listPatientAlertsByDateTime } from "aws";
 import { AlertInfo } from "rc_agents/model";
-import { ModelSortDirection } from "aws/API";
+import { Alert, ModelSortDirection } from "aws/API";
 import { queryAlertInfo } from "../triage-alert-hf-clinic/RetrieveAlertInfo";
-import { sortAlertsByDateTime } from "../triage-alert-hf-clinic/RetrieveAlerts";
+import {
+  alertToAlertInfo,
+  sortAlertsByDateTime
+} from "../triage-alert-hf-clinic/RetrieveAlerts";
 import { store } from "util/useRedux";
 import { setFetchingPatientAlertHistory } from "ic-redux/actions/agents/actionCreator";
 
@@ -54,7 +57,8 @@ class RetrieveAlertHistory extends Activity {
         facts[BeliefKeys.PATIENT]?.[PatientAttributes.ALERT_PATIENT_ID];
 
       if (patientId) {
-        const alertInfos: AlertInfo[] = [];
+        // Alert Infos with vital and symptom report
+        const alertDetails: AlertInfo[] = [];
 
         if (facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
           // Device is online: retrieves alerts of the current patient
@@ -64,13 +68,16 @@ class RetrieveAlertHistory extends Activity {
           });
 
           if (query.data.listPatientAlertsByDateTime?.items) {
-            const result = query.data.listPatientAlertsByDateTime.items;
+            const result = query.data.listPatientAlertsByDateTime
+              .items as Alert[];
             if (result && result.length > 0) {
+              // Alert Info without vitals and symptoms
+              const alertInfos = alertToAlertInfo(result);
               await Promise.all(
-                result.map(async (alert) => {
-                  const alertInfo = await queryAlertInfo(alert!);
+                alertInfos.map(async (alert) => {
+                  const alertInfo = await queryAlertInfo(alert);
                   if (alertInfo) {
-                    alertInfos.push(alertInfo);
+                    alertDetails.push(alertInfo);
                     await Storage.setAlertInfo(alertInfo);
                   }
                 })
@@ -78,8 +85,8 @@ class RetrieveAlertHistory extends Activity {
             }
           }
 
-          if (alertInfos.length > 0) {
-            const sortedPatientAlerts = sortAlertsByDateTime(alertInfos);
+          if (alertDetails.length > 0) {
+            const sortedPatientAlerts = sortAlertsByDateTime(alertDetails);
             agentAPI.addFact(
               new Belief(
                 BeliefKeys.PATIENT,
