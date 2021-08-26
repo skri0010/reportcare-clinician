@@ -138,7 +138,8 @@ export const queryAlertInfo = async (
       summary: alert.summary,
       vitalsReport: alertVitals,
       symptomReport: alertSymptoms,
-      completed: alert.completed === AlertStatus.COMPLETED || alert.completed === true,
+      completed:
+        alert.completed === AlertStatus.COMPLETED || alert.completed === true,
       riskLevel: mapColorCodeToRiskLevel(alert.colorCode),
       colorCode: alert.colorCode,
       _version: alert._version
