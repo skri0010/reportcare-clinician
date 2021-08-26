@@ -86,7 +86,7 @@ export const MainDrawerNavigator: FC<DrawerNavigationProps> = ({ signOut }) => {
 
   return (
     <Drawer.Navigator
-      initialRouteName={ScreenName.PATIENTS}
+      initialRouteName={ScreenName.HOME}
       screenOptions={buildScreenOptions}
       defaultStatus={isMobile ? "closed" : "open"} // Hide at start for mobile, show at start for desktop
     >

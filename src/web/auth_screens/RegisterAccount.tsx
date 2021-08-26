@@ -10,6 +10,7 @@ import { AuthScreenName, AuthScreensProps } from "web/auth_screens";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import {
   validateEmail,
+  validateHospitalName,
   validatePassword,
   validateUsername
 } from "util/validation";
@@ -20,6 +21,7 @@ import { AuthButton } from "components/Buttons/AuthButton";
 import { TextField } from "components/InputComponents/TextField";
 import { Storage } from "rc_agents/storage";
 import { getPickerStyles } from "util/getStyles";
+import { Label } from "components/Text/Label";
 
 export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
   navigation
@@ -94,19 +96,6 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
     />
   );
 
-  // Sets up picker items for Hospital
-  const hospitals: string[] = Object.values(Hospital);
-  const hospitalPickerItems: JSX.Element[] = hospitals.map((item) => {
-    return <Picker.Item key={item} value={item} label={item} />;
-  });
-  hospitalPickerItems.unshift(
-    <Picker.Item
-      key="default"
-      value={undefined}
-      label={i18n.t("Auth_Registration.HospitalPlaceholder")}
-    />
-  );
-
   // Validates inputs
   useEffect(() => {
     setInputValid(
@@ -114,7 +103,7 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
         validateEmail(email) &&
         validateUsername(username) &&
         role &&
-        hospital &&
+        validateHospitalName(hospital) &&
         validatePassword(password) &&
         passwordMatch) as boolean
     );
@@ -174,18 +163,24 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
             </View>
 
             {/* Hospital */}
-            <Text style={inputLabelStyle}>
-              {i18n.t("Auth_Registration.Hospital")}
-            </Text>
+            <Label text={i18n.t("Auth_Registration.Hospital")} />
             <View style={pickerContainerStyle}>
               <Picker
                 style={pickerStyle}
                 selectedValue={hospital}
-                onValueChange={(value) => {
-                  setHospital(value as string);
+                onValueChange={(value: string) => {
+                  setHospital(value);
                 }}
               >
-                {hospitalPickerItems}
+                {Object.entries(Hospital).map(([key, value]) => {
+                  return (
+                    <Picker.Item
+                      key={key}
+                      value={value}
+                      label={i18n.t(value.toString())}
+                    />
+                  );
+                })}
               </Picker>
             </View>
           </View>

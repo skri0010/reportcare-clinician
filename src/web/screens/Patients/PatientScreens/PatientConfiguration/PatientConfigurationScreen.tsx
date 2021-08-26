@@ -123,6 +123,7 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
 
     // Proceed button onPress
     const onProceedPress = () => {
+      const infoToUpdate = { ...configInfo, configured: true };
       // Trigger agents here
     };
 
