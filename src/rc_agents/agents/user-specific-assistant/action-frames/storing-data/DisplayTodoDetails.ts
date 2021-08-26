@@ -21,6 +21,7 @@ import { LocalTodo, TodoStatus } from "rc_agents/model";
 import { Todo, GetTodoQueryVariables } from "aws/API";
 import { getTodo } from "aws/TypedAPI/getQueries";
 import { mapColorCodeToRiskLevel } from "rc_agents/agents/data-assistant/action-frames/triage-alert-hf-clinic/RetrievePendingAlertCount";
+import { setTodoDetails } from "ic-redux/actions/agents/actionCreator";
 
   /**
    * Class representing an activity that triggers the display of todo details.
@@ -63,32 +64,53 @@ import { mapColorCodeToRiskLevel } from "rc_agents/agents/data-assistant/action-
                             todoDetail = result as Todo;
                         }
                     }
-                }
-                if (todoDetail) {
-                    // Change todo fromat to LocalTodo for dispatch
-                    const todoToDispatch: LocalTodo = {
-                        id: todoDetail.id,
-                        title: todoDetail.title,
-                        patientName: todoDetail.patientName,
-                        notes: todoDetail.notes,
-                        completed: todoDetail.completed === TodoStatus.COMPLETED,
-                        createdAt: todoDetail.createdAt,
-                        lastModified: todoDetail.lastModified,
-                        toSync: false,
-                        _version: todoDetail._version
-                    };
-                    // check is optional alert data exists
-                    if (todoDetail.alert){
-                        todoToDispatch.alertId = todoDetail.alert.id;
-                        todoToDispatch.patientId = todoDetail.alert.patientID;
-                        todoToDispatch.riskLevel = mapColorCodeToRiskLevel(
-                            todoDetail.alert.colorCode
+                    if (todoDetail) {
+                        // Change todo fromat to LocalTodo for dispatch
+                        const todoToDispatch: LocalTodo = {
+                            id: todoDetail.id,
+                            title: todoDetail.title,
+                            patientName: todoDetail.patientName,
+                            notes: todoDetail.notes,
+                            completed: todoDetail.completed === TodoStatus.COMPLETED,
+                            createdAt: todoDetail.createdAt,
+                            lastModified: todoDetail.lastModified,
+                            toSync: false,
+                            _version: todoDetail._version
+                        };
+                        // check is optional alert data exists
+                        if (todoDetail.alert){
+                            todoToDispatch.alertId = todoDetail.alert.id;
+                            todoToDispatch.patientId = todoDetail.alert.patientID;
+                            todoToDispatch.riskLevel = mapColorCodeToRiskLevel(
+                                todoDetail.alert.colorCode
+                            );
+                        }
+                        // Save to local storage
+                        await Storage.setTodo(todoToDispatch);
+    
+                        // Dispatch to front end using redux
+                        store.dispatch(setTodoDetails(todoToDispatch));
+    
+                        // remove display todo details from facts
+                        agentAPI.addFact(
+                            new Belief(
+                                BeliefKeys.CLINICIAN,
+                                ClinicianAttributes.DISPLAY_TODO_DETAILS,
+                                null
+                            ),
+                            false
                         );
                     }
-                    // Save to local storage
-                    await Storage.
                 }
-            } 
+                 else {
+                    // check local storage for todo
+                    const todos = await Storage.getTodos();
+                    let todoToDispatch: LocalTodo | undefined;
+
+
+
+                }
+            }  // TODO: if offline
 
 
           }

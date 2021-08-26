@@ -108,6 +108,13 @@ export const setPendingTodos = createAction(
   })
 )();
 
+export const setTodoDetails = createAction(
+  actionNames.SET_TODO_DETAILS,
+  (todoDetails: LocalTodo) => ({
+    todoDetails: todoDetails
+  })
+)();
+
 export const setCompletedTodos = createAction(
   actionNames.SET_COMPLETED_TODOS,
   (completedTodos: LocalTodo[]) => ({
