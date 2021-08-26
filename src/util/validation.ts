@@ -1,5 +1,7 @@
 // Functions for validating authentication inputs
 
+import { Hospital } from "rc_agents/model";
+
 // Checks that username has 3 to 16 characters
 export const validateUsername = (username: string): boolean => {
   return /^[a-z0-9_-]{3,16}$/.test(username);
@@ -24,6 +26,13 @@ export const validateTargetWeight = (targetWeight: string): boolean => {
     validateNumber(targetWeight) &&
     parseFloat(targetWeight) > minWeight &&
     parseFloat(targetWeight) <= maxWeight
+  );
+};
+
+export const validateHospitalName = (hospitalName: string): boolean => {
+  return (
+    hospitalName !== Hospital.UNKNOWN &&
+    Object.values(Hospital).includes(hospitalName as Hospital)
   );
 };
 

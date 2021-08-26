@@ -1,4 +1,4 @@
-import { ViewStyle, StyleProp, TextStyle } from "react-native";
+import { ViewStyle, StyleProp, TextStyle, View } from "react-native";
 import { ColorScheme } from "models/ColorScheme";
 import { FontScheme } from "models/FontScheme";
 import { DrawerNavigationOptions } from "@react-navigation/drawer";
@@ -109,5 +109,35 @@ export const getStackOptions: (input: {
       fontSize: fonts.h1Size,
       paddingLeft: ms(15)
     }
+  };
+};
+
+// Styles for pickers
+export const getPickerStyles: (input: {
+  colors: ColorScheme;
+  fonts: FontScheme;
+  error?: boolean;
+}) => {
+  pickerContainerStyle: StyleProp<ViewStyle>;
+  pickerStyle: StyleProp<TextStyle>;
+} = ({ colors, fonts, error = false }) => {
+  const pickerContainerStyle: StyleProp<ViewStyle> = {
+    borderWidth: ms(2),
+    height: ms(30),
+    marginBottom: ms(5),
+    justifyContent: "center",
+    borderColor: error ? colors.errorColor : colors.primaryBorderColor
+  };
+
+  const pickerStyle: StyleProp<TextStyle> = {
+    height: "100%",
+    paddingLeft: ms(10),
+    borderWidth: 0,
+    fontSize: fonts.h6Size
+  };
+
+  return {
+    pickerContainerStyle: pickerContainerStyle,
+    pickerStyle: pickerStyle
   };
 };

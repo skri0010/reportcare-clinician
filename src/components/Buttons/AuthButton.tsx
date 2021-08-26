@@ -39,6 +39,7 @@ export const AuthButton: React.FC<AuthButtonProps> = ({
         styles.button,
         style
       ]}
+      disabled={!inputValid}
     >
       <H3
         text={buttonTitle}
@@ -56,8 +57,8 @@ export const AuthButton: React.FC<AuthButtonProps> = ({
 
 const styles = ScaledSheet.create({
   button: {
-    height: Platform.OS === "web" ? ms(40) : ms(45),
-    width: Platform.OS === "web" ? ms(200) : ms(250),
+    height: ms(35),
+    width: Platform.OS === "web" ? ms(150) : ms(200),
     marginTop: ms(15),
     borderRadius: "10@ms",
     justifyContent: "center",

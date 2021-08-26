@@ -1,8 +1,13 @@
 import React, { FC } from "react";
-
-import { H5 } from "components/Text";
+import { H4 } from "components/Text";
 import { ScaledSheet } from "react-native-size-matters";
-import { StyleProp, TextStyle, View, ViewStyle } from "react-native";
+import {
+  StyleProp,
+  TextStyle,
+  TouchableOpacity,
+  View,
+  ViewStyle
+} from "react-native";
 import { select, RootState } from "util/useRedux";
 import { Checkbox, CheckboxProps } from "components/InputComponents/Checkbox";
 
@@ -30,14 +35,13 @@ export const CheckboxText: FC<CheckboxTextProps> = ({
     <View style={[styles.containerStyle, containerStyle]}>
       <Checkbox
         checked={checked}
-        onPress={onPress}
         iconSize={iconSize || fonts.h3Size}
         checkboxStyle={styles.iconStyle}
+        onPress={onPress}
       />
-      <H5
-        text={text}
-        style={[textStyle, { fontSize: fontSize || fonts.h4Size }]}
-      />
+      <TouchableOpacity onPress={onPress}>
+        <H4 text={text} style={[textStyle, { fontSize: fontSize }]} />
+      </TouchableOpacity>
     </View>
   );
 };

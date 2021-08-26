@@ -3,6 +3,7 @@ import { StyleProp, ViewStyle, View, TextInput, Platform } from "react-native";
 import { RootState, select } from "util/useRedux";
 import { ScaledSheet } from "react-native-size-matters";
 import { H5, H7 } from "components/Text";
+import { Label } from "components/Text/Label";
 
 interface TextFieldProps {
   editable?: boolean;
@@ -42,7 +43,7 @@ export const TextField: React.FC<TextFieldProps> = ({
 
   return (
     <View>
-      <H5 text={label} style={[styles.label, labelStyle]} />
+      <Label text={label} style={labelStyle} />
       <TextInput
         editable={editable}
         style={[
@@ -75,11 +76,6 @@ export const TextField: React.FC<TextFieldProps> = ({
 };
 
 const styles = ScaledSheet.create({
-  label: {
-    fontWeight: "600",
-    marginTop: "10@ms",
-    marginBottom: "5@ms"
-  },
   input: {
     borderWidth: "2@ms",
     height: Platform.OS === "web" ? "30@ms" : "40@ms",

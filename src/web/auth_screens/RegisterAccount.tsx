@@ -19,6 +19,7 @@ import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AuthButton } from "components/Buttons/AuthButton";
 import { TextField } from "components/InputComponents/TextField";
 import { Storage } from "rc_agents/storage";
+import { getPickerStyles } from "util/getStyles";
 
 export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
   navigation
@@ -126,11 +127,10 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
 
   // Local styles
   const inputLabelStyle = [styles.inputLabel, { fontSize: fonts.h3Size }];
-  const pickerContainerStyle = [
-    styles.pickerContainer,
-    { borderColor: colors.primaryBorderColor }
-  ];
-  const pickerStyle = [styles.picker, { fontSize: fonts.h4Size }];
+  const { pickerContainerStyle, pickerStyle } = getPickerStyles({
+    colors: colors,
+    fonts: fonts
+  });
 
   return (
     <ScreenWrapper>
@@ -261,15 +261,5 @@ const styles = ScaledSheet.create({
     fontWeight: "600",
     marginTop: ms(10),
     marginBottom: ms(5)
-  },
-  pickerContainer: {
-    borderWidth: ms(2),
-    height: ms(30),
-    marginBottom: ms(5),
-    justifyContent: "center"
-  },
-  picker: {
-    height: "100%",
-    borderWidth: 0
   }
 });

@@ -1,4 +1,5 @@
 import React, { FC, useState, useEffect, useCallback } from "react";
+import { View, ScrollView } from "react-native";
 import { TextField } from "components/InputComponents/TextField";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import i18n from "util/language/i18n";
@@ -7,6 +8,7 @@ import cloneDeep from "lodash/cloneDeep";
 import {
   notEmptyString,
   validateFluidIntakeGoal,
+  validateHospitalName,
   validateTargetActivity,
   validateTargetWeight
 } from "util/validation";
@@ -14,6 +16,12 @@ import { ms, ScaledSheet } from "react-native-size-matters";
 import { CheckboxText } from "components/InputComponents/CheckboxText";
 import { H3 } from "components/Text";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
+import { RootState, select } from "util/useRedux";
+import { Picker } from "@react-native-picker/picker";
+import { Hospital } from "rc_agents/model";
+import { getPickerStyles } from "util/getStyles";
+import { Label } from "components/Text/Label";
+import { AuthButton } from "components/Buttons/AuthButton";
 
 interface PatientConfigurationScreenProps {
   info: PatientInfo;
@@ -21,24 +29,37 @@ interface PatientConfigurationScreenProps {
 
 export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
   ({ info }) => {
+    const { fonts, colors } = select((state: RootState) => ({
+      colors: state.settings.colors,
+      fonts: state.settings.fonts
+    }));
     const [configInfo, setConfigInfo] = useState<PatientInfo>(() => {
       return cloneDeep(info);
     });
     const [hasDevice, setHasDevice] = useState<boolean>(
       notEmptyString(info.deviceNo)
     );
+    const { pickerContainerStyle, pickerStyle } = getPickerStyles({
+      colors: colors,
+      fonts: fonts,
+      error: !validateHospitalName(configInfo.hospitalName)
+    });
 
     // Update functions
+    const updateHospitalName = (hospitalName: string) => {
+      setConfigInfo({ ...configInfo, hospitalName: hospitalName });
+    };
+
+    const updateDiagnosisInfo = (diagnosisInfo: string) => {
+      setConfigInfo({ ...configInfo, diagnosisInfo: diagnosisInfo });
+    };
+
     const updateDeviceNumber = useCallback(
       (deviceNo: string) => {
         setConfigInfo({ ...configInfo, deviceNo: deviceNo });
       },
       [configInfo]
     );
-
-    const updateDiagnosisInfo = (diagnosisInfo: string) => {
-      setConfigInfo({ ...configInfo, diagnosisInfo: diagnosisInfo });
-    };
 
     const updateTargetActivity = (targetActivity: string) => {
       setConfigInfo({ ...configInfo, targetActivity: targetActivity });
@@ -63,76 +84,111 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
     }, [hasDevice, configInfo, updateDeviceNumber]);
 
     return (
-      <ScreenWrapper padding style={{ width: "70%", alignSelf: "center" }}>
+      <ScreenWrapper
+        fixed
+        padding
+        style={{ width: "70%", alignSelf: "center" }}
+      >
         <H3 text={i18n.t("Patient_Configuration.Title")} style={styles.title} />
 
-        {/* Basic fields */}
-        <TextField
-          label={i18n.t("Patient_Configuration.Label.DiagnosisInfo")}
-          value={configInfo.diagnosisInfo}
-          onChange={(diagnosisInfo) => updateDiagnosisInfo(diagnosisInfo)}
-          placeholder={i18n.t(
-            "Patient_Configuration.Placeholder.DiagnosisInfo"
-          )}
-        />
-
-        {/* Optional fields */}
-        <CheckboxText
-          text={i18n.t("Patient_Configuration.Prompt.DeviceNo")}
-          containerStyle={styles.promptTextContainer}
-          checked={hasDevice}
-          onPress={() => setHasDevice(!hasDevice)}
-        />
-        {hasDevice ? (
+        <ScrollView>
+          {/* Basic fields */}
           <TextField
-            label={i18n.t("Patient_Configuration.Label.DeviceNo")}
-            value={configInfo.deviceNo}
-            onChange={(deviceNo) => updateDeviceNumber(deviceNo)}
-            placeholder={i18n.t("Patient_Configuration.Placeholder.DeviceNo")}
+            label={i18n.t("Patient_Configuration.Label.DiagnosisInfo")}
+            value={configInfo.diagnosisInfo}
+            onChange={(diagnosisInfo) => updateDiagnosisInfo(diagnosisInfo)}
+            placeholder={i18n.t(
+              "Patient_Configuration.Placeholder.DiagnosisInfo"
+            )}
           />
-        ) : null}
 
-        {/* Separator */}
-        <ItemSeparator topSpacing={ms(25)} bottomSpacing={ms(10)} />
+          <Label text={i18n.t("Patient_Configuration.Label.HospitalName")} />
+          <View style={pickerContainerStyle}>
+            <Picker
+              style={pickerStyle}
+              selectedValue={configInfo.hospitalName}
+              onValueChange={(value: string) => {
+                updateHospitalName(value);
+              }}
+            >
+              {Object.entries(Hospital).map(([key, value]) => {
+                return (
+                  <Picker.Item
+                    key={key}
+                    value={value}
+                    label={i18n.t(value.toString())}
+                  />
+                );
+              })}
+            </Picker>
+          </View>
 
-        {/* Values fields */}
-        <TextField
-          label={i18n.t("Patient_Configuration.Label.TargetActivity")}
-          value={configInfo.targetActivity}
-          onChange={(targetActivity) => updateTargetActivity(targetActivity)}
-          placeholder={i18n.t(
-            "Patient_Configuration.Placeholder.TargetActivity"
-          )}
-          error={
-            notEmptyString(configInfo.targetActivity) &&
-            !validateTargetActivity(configInfo.targetActivity)
-          }
-          errorMessage={i18n.t("Patient_Configuration.Error.TargetActivity")}
-        />
-        <TextField
-          label={i18n.t("Patient_Configuration.Label.TargetWeight")}
-          value={configInfo.targetWeight}
-          onChange={(targetWeight) => updateTargetWeight(targetWeight)}
-          placeholder={i18n.t("Patient_Configuration.Placeholder.TargetWeight")}
-          error={
-            notEmptyString(configInfo.targetWeight) &&
-            !validateTargetWeight(configInfo.targetWeight)
-          }
-          errorMessage={i18n.t("Patient_Configuration.Error.TargetWeight")}
-        />
-        <TextField
-          label={i18n.t("Patient_Configuration.Label.FluidIntakeGoal")}
-          value={configInfo.fluidIntakeGoal}
-          onChange={(fluidIntakeGoal) => updateFluidIntakeGoal(fluidIntakeGoal)}
-          placeholder={i18n.t(
-            "Patient_Configuration.Placeholder.FluidIntakeGoal"
-          )}
-          error={
-            notEmptyString(configInfo.fluidIntakeGoal) &&
-            !validateFluidIntakeGoal(configInfo.fluidIntakeGoal)
-          }
-          errorMessage={i18n.t("Patient_Configuration.Error.FluidIntakeGoal")}
-        />
+          {/* Optional fields */}
+          <CheckboxText
+            text={i18n.t("Patient_Configuration.Prompt.DeviceNo")}
+            containerStyle={styles.promptTextContainer}
+            fontSize={fonts.h6Size}
+            checked={hasDevice}
+            onPress={() => setHasDevice(!hasDevice)}
+          />
+          {hasDevice ? (
+            <TextField
+              label={i18n.t("Patient_Configuration.Label.DeviceNo")}
+              value={configInfo.deviceNo}
+              onChange={(deviceNo) => updateDeviceNumber(deviceNo)}
+              placeholder={i18n.t("Patient_Configuration.Placeholder.DeviceNo")}
+            />
+          ) : null}
+
+          {/* Separator */}
+          <ItemSeparator topSpacing={ms(25)} bottomSpacing={ms(10)} />
+
+          {/* Values fields */}
+          <TextField
+            label={i18n.t("Patient_Configuration.Label.TargetActivity")}
+            value={configInfo.targetActivity}
+            onChange={(targetActivity) => updateTargetActivity(targetActivity)}
+            placeholder={i18n.t(
+              "Patient_Configuration.Placeholder.TargetActivity"
+            )}
+            error={
+              notEmptyString(configInfo.targetActivity) &&
+              !validateTargetActivity(configInfo.targetActivity)
+            }
+            errorMessage={i18n.t("Patient_Configuration.Error.TargetActivity")}
+          />
+          <TextField
+            label={i18n.t("Patient_Configuration.Label.TargetWeight")}
+            value={configInfo.targetWeight}
+            onChange={(targetWeight) => updateTargetWeight(targetWeight)}
+            placeholder={i18n.t(
+              "Patient_Configuration.Placeholder.TargetWeight"
+            )}
+            error={
+              notEmptyString(configInfo.targetWeight) &&
+              !validateTargetWeight(configInfo.targetWeight)
+            }
+            errorMessage={i18n.t("Patient_Configuration.Error.TargetWeight")}
+          />
+          <TextField
+            label={i18n.t("Patient_Configuration.Label.FluidIntakeGoal")}
+            value={configInfo.fluidIntakeGoal}
+            onChange={(fluidIntakeGoal) =>
+              updateFluidIntakeGoal(fluidIntakeGoal)
+            }
+            placeholder={i18n.t(
+              "Patient_Configuration.Placeholder.FluidIntakeGoal"
+            )}
+            error={
+              notEmptyString(configInfo.fluidIntakeGoal) &&
+              !validateFluidIntakeGoal(configInfo.fluidIntakeGoal)
+            }
+            errorMessage={i18n.t("Patient_Configuration.Error.FluidIntakeGoal")}
+          />
+        </ScrollView>
+
+        {/* Done button */}
+        <AuthButton buttonTitle="DONE" inputValid={false} />
       </ScreenWrapper>
     );
   };
