@@ -154,6 +154,7 @@ export enum ClinicianAttributes {
   ALERT_INFO = "AlertInfo",
   ALERT_INFO_RETRIEVED = "AlertInfoRetrieved",
   UPDATE_ALERT = "UpdateAlert",
+  ALERTS_UPDATED = "AlertsUpdated",
 
   // SRD-II - Todos
   RETRIEVE_TODOS = "RetrieveTodos",

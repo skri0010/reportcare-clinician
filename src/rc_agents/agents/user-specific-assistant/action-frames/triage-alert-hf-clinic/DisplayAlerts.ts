@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import {
   Actionframe,
   Activity,
@@ -40,9 +41,14 @@ class DisplayAlerts extends Activity {
    */
   async doActivity(agent: Agent): Promise<void> {
     await super.doActivity(agent, [rule2]);
+
     // Get list of alerts that was retrieved
     const alerts: AlertInfo[] =
       agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.ALERTS];
+
+    // Get updated alert info if any
+    const alertUpdated: AlertInfo =
+      agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.ALERT];
 
     // Gets alert status and risk level from facts
     const alertStatus: AlertStatus =
@@ -66,6 +72,11 @@ class DisplayAlerts extends Activity {
             shouldFilter = true;
           }
         });
+
+        // If there is updated alert info and the alert is completed, check if it's in pending alerts
+        if (alertUpdated && alertUpdated.completed) {
+          filteredCompletedAlerts.push(alertUpdated);
+        }
 
         // Filter patients if needed
         if (shouldFilter) {
@@ -93,6 +104,26 @@ class DisplayAlerts extends Activity {
               filteredPendingAlerts.push(alert);
             }
           });
+        }
+
+        // Remove the alert from pending alerts
+        if (alertUpdated && alertUpdated.completed) {
+          // Find the index of the alert info in pending alerts
+          const existIndex = filteredPendingAlerts.findIndex(
+            (t) => t.id === alertUpdated.id
+          );
+          // If it exists in pending alerts, remove from pending alerts
+          if (existIndex >= 0) {
+            filteredPendingAlerts.splice(existIndex, 1);
+          }
+        }
+
+        // Remove updated alert info from facts
+        if (alertUpdated) {
+          agentAPI.addFact(
+            new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.ALERT, null),
+            false
+          );
         }
 
         // Removes alert info from facts

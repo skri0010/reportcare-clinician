@@ -112,6 +112,14 @@ class UpdateAlert extends Activity {
             new Belief(BeliefKeys.APP, AppAttributes.SYNC_UPDATE_ALERTS, true)
           );
         }
+
+        // agent.addBelief(
+        //   new Belief(
+        //     BeliefKeys.CLINICIAN,
+        //     ClinicianAttributes.ALERTS_UPDATED,
+        //     true
+        //   )
+        // );
       }
 
       // Dispatch to front end to indicate that procedure is successful
