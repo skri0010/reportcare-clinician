@@ -51,6 +51,15 @@ export const setClinician = async (
   );
 };
 
+export const setClinicianContacts = async (
+  clinicianContacts: AsyncStorageType[AsyncStorageKeys.CLINICIAN_CONTACTS]
+): Promise<void> => {
+  await AsyncStorage.setItem(
+    AsyncStorageKeys.CLINICIAN_CONTACTS,
+    JSON.stringify(clinicianContacts)
+  );
+};
+
 export const setPendingPatientAssignments = async (
   pendingPatientAssignments: AsyncStorageType[AsyncStorageKeys.PENDING_PATIENT_ASSIGNMENTS]
 ): Promise<void> => {

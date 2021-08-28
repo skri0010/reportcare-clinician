@@ -7,7 +7,7 @@ import {
 } from "rc_agents/model";
 import { actionNames } from "ic-redux/actions/actionNames";
 import { createAction } from "typesafe-actions";
-import { Alert, PatientAssignment, PatientInfo } from "aws/API";
+import { Alert, PatientAssignment, PatientInfo, ClinicianInfo } from "aws/API";
 
 export const setProcedureOngoing = createAction(
   actionNames.SET_PROCEDURE_ONGOING,
@@ -55,6 +55,20 @@ export const setFetchingPendingPatientAssignments = createAction(
   actionNames.SET_FETCHING_PENDING_PATIENT_ASSIGNMENTS,
   (fetchingPendingPatientAssignments: boolean) => ({
     fetchingPendingPatientAssignments: fetchingPendingPatientAssignments
+  })
+)();
+
+export const setClinicianContacts = createAction(
+  actionNames.SET_CLINICIAN_CONTACTS,
+  (clinicianContacts: ClinicianInfo[]) => ({
+    clinicianContacts: clinicianContacts
+  })
+)();
+
+export const setFetchingClinicianContacts = createAction(
+  actionNames.SET_FETCHING_CLINICIAN_CONTACTS,
+  (fetchingClinianContacts: boolean) => ({
+    fetchingClinianContacts: fetchingClinianContacts
   })
 )();
 

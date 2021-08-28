@@ -256,7 +256,8 @@
     "Years": "years"
   },
   "Clinicians": {
-    "SearchBarPlaceholder": "Search clinician (eg John)"
+    "SearchBarPlaceholder": "Search clinician (eg John)",
+    "NoSelection": "Choose Clinician to view more info."
   },
   "Alerts": {
     "SearchBarPlaceholder": "Search alerts"

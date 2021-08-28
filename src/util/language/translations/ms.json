@@ -256,7 +256,8 @@
     "Years": "tahun"
   },
   "Clinicians": {
-    "SearchBarPlaceholder": "Cari pakar(contohnya John)"
+    "SearchBarPlaceholder": "Cari pakar(contohnya John)",
+    "NoSelection": "Pilihkan salah satu pakar untuk mendapat informasi lanjut"
   },
   "Alerts": {
     "SearchBarPlaceholder": "Cari amaran"
