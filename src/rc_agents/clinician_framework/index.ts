@@ -148,6 +148,7 @@ export enum ClinicianAttributes {
   ALERT_RISK_LEVEL = "AlertRiskLevel",
   RETRIEVE_ALERTS = "RetrieveAlerts",
   ALERTS = "Alerts",
+  PENDING_ALERTS = "PendingAlerts",
   ALERTS_RETRIEVED = "AlertsRetrieved",
   ALERT = "Alert",
   RETRIEVE_ALERT_INFO = "RetrieveAlertInfo",

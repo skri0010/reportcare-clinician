@@ -29,6 +29,7 @@ interface AgentsState {
   fetchingAlerts: boolean;
   fetchingPendingAlerts: boolean;
   fetchingCompletedAlerts: boolean;
+  updatePendingAlerts: boolean;
   pendingAlerts: AlertInfo[] | undefined;
   completedAlerts: AlertInfo[] | undefined;
   fetchingAlertInfo: boolean;
@@ -74,6 +75,7 @@ const initialState: AgentsState = {
   fetchingAlerts: false,
   fetchingPendingAlerts: false,
   fetchingCompletedAlerts: false,
+  updatePendingAlerts: false,
   pendingAlerts: undefined,
   completedAlerts: undefined,
   fetchingAlertInfo: false,
@@ -148,6 +150,11 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
       return {
         ...state,
         fetchingCompletedAlerts: action.payload.fetchingCompletedAlerts
+      };
+    case actionNames.SET_UPDATE_PENDING_ALERTS:
+      return {
+        ...state,
+        updatePendingAlerts: action.payload.updatePendingAlerts
       };
     case actionNames.SET_FETCHING_ALERTS:
       return {

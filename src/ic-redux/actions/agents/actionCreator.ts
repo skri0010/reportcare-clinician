@@ -114,6 +114,13 @@ export const setFetchingCompletedAlerts = createAction(
   })
 )();
 
+export const setUpdatePendingAlerts = createAction(
+  actionNames.SET_UPDATE_PENDING_ALERTS,
+  (updatePendingAlerts: boolean) => ({
+    updatePendingAlerts: updatePendingAlerts
+  })
+)();
+
 export const setPendingAlerts = createAction(
   actionNames.SET_PENDING_ALERTS,
   (pendingAlerts: AlertInfo[]) => ({

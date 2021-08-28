@@ -12,7 +12,8 @@ import { AlertInfo, PendingAlertCount } from "rc_agents/model";
 import { store } from "util/useRedux";
 import {
   setFetchingPendingAlerts,
-  setPendingAlertCount
+  setPendingAlertCount,
+  setUpdatePendingAlerts
 } from "ic-redux/actions/agents/actionCreator";
 import { RiskLevel } from "models/RiskLevel";
 import {
@@ -40,7 +41,9 @@ class DisplayPendingAlertCount extends Activity {
 
     try {
       const pendingAlerts: AlertInfo[] | null =
-        agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.ALERTS];
+        agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[
+          ClinicianAttributes.PENDING_ALERTS
+        ];
 
       if (pendingAlerts) {
         const pendingAlertCount: PendingAlertCount = {
@@ -77,7 +80,11 @@ class DisplayPendingAlertCount extends Activity {
 
         // Removes pending alerts from facts
         agentAPI.addFact(
-          new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.ALERTS, null),
+          new Belief(
+            BeliefKeys.CLINICIAN,
+            ClinicianAttributes.PENDING_ALERTS,
+            null
+          ),
           false
         );
       }
@@ -86,13 +93,18 @@ class DisplayPendingAlertCount extends Activity {
       console.log(error);
     }
 
+    // Reset updatePendingAlerts to false
+    store.dispatch(setUpdatePendingAlerts(false));
+
     // Stops the procedure
     agentAPI.addFact(
       new Belief(
         BeliefKeys.PROCEDURE,
         ProcedureAttributes.AT_CP_I,
         ProcedureConst.INACTIVE
-      )
+      ),
+      true,
+      true
     );
 
     store.dispatch(setFetchingPendingAlerts(false));

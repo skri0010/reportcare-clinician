@@ -21,10 +21,12 @@ import {
   setCompletedAlerts,
   setFetchingPendingAlerts,
   setFetchingCompletedAlerts,
-  setFetchingAlerts
+  setFetchingAlerts,
+  setUpdatePendingAlerts
 } from "ic-redux/actions/agents/actionCreator";
 import { AlertInfo, AlertStatus } from "rc_agents/model";
 import { RiskLevel } from "models/RiskLevel";
+import { agentDTA } from "rc_agents/agents";
 
 /**
  * Class to represent an activity for triggering the display of alerts.
@@ -73,11 +75,6 @@ class DisplayAlerts extends Activity {
           }
         });
 
-        // If there is updated alert info and the alert is completed, check if it's in pending alerts
-        if (alertUpdated && alertUpdated.completed) {
-          filteredCompletedAlerts.push(alertUpdated);
-        }
-
         // Filter patients if needed
         if (shouldFilter) {
           // case where needs filtering
@@ -104,18 +101,6 @@ class DisplayAlerts extends Activity {
               filteredPendingAlerts.push(alert);
             }
           });
-        }
-
-        // Remove the alert from pending alerts
-        if (alertUpdated && alertUpdated.completed) {
-          // Find the index of the alert info in pending alerts
-          const existIndex = filteredPendingAlerts.findIndex(
-            (t) => t.id === alertUpdated.id
-          );
-          // If it exists in pending alerts, remove from pending alerts
-          if (existIndex >= 0) {
-            filteredPendingAlerts.splice(existIndex, 1);
-          }
         }
 
         // Remove updated alert info from facts
@@ -171,6 +156,30 @@ class DisplayAlerts extends Activity {
       true,
       true
     );
+
+    // Prepare to trigger the update of pending alert counts in home tab
+    const agentState = store.getState().agents;
+    const updatePendingAlertCount = agentState.updatePendingAlerts;
+
+    // When updatePendingAlertCount is true trigger RetrievePendingAlertCount procedure
+    if (updatePendingAlertCount) {
+      agentDTA.addBelief(
+        new Belief(
+          BeliefKeys.CLINICIAN,
+          ClinicianAttributes.RETRIEVE_PENDING_ALERT_COUNT,
+          true
+        )
+      );
+
+      // Starts the procedure
+      agentAPI.addFact(
+        new Belief(
+          BeliefKeys.PROCEDURE,
+          ProcedureAttributes.AT_CP_I,
+          ProcedureConst.ACTIVE
+        )
+      );
+    }
   }
 }
 

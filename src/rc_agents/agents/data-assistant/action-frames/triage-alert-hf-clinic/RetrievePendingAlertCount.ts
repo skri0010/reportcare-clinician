@@ -77,7 +77,7 @@ class RetrievePendingAlertCount extends Activity {
           agentAPI.addFact(
             new Belief(
               BeliefKeys.CLINICIAN,
-              ClinicianAttributes.ALERTS,
+              ClinicianAttributes.PENDING_ALERTS,
               pendingAlerts
             ),
             false
@@ -91,7 +91,7 @@ class RetrievePendingAlertCount extends Activity {
           agentAPI.addFact(
             new Belief(
               BeliefKeys.CLINICIAN,
-              ClinicianAttributes.ALERTS,
+              ClinicianAttributes.PENDING_ALERTS,
               localPendingAlerts
             ),
             false

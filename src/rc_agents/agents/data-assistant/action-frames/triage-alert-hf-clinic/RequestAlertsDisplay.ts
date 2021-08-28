@@ -3,8 +3,7 @@ import {
   Communicate,
   Agent,
   Belief,
-  Precondition,
-  ResettablePrecondition
+  Precondition
 } from "rc_agents/framework";
 import {
   ProcedureConst,
@@ -66,13 +65,6 @@ const rule2 = new Precondition(
   CommonAttributes.LAST_ACTIVITY,
   ActionFrameIDs.DTA.RETRIEVE_ALERTS
 );
-
-// Supposed new precondition for instead of the current rule2
-// const rule2 = new ResettablePrecondition(
-//   BeliefKeys.CLINICIAN,
-//   ClinicianAttributes.ALERTS_UPDATED,
-//   true
-// );
 
 // Actionframe
 export const af_RequestAlertsDisplay = new Actionframe(

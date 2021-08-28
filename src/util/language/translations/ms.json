@@ -153,7 +153,8 @@
     "MarkAsDone": "TANDA SEBAGAI SELESAI",
     "UndoFromCompleted": "PINDAH DARI SELESAI",
     "Done": "SIAP",
-    "Undo": "UNDO"
+    "Undo": "UNDO",
+    "NoPendingTodo": "Semua todo sudah disiapkan!"
   },
   "Patients": {
     "PatientsList": {

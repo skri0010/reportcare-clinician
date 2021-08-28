@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import {
   Actionframe,
   Agent,
@@ -91,6 +92,7 @@ class RetrieveTodos extends Activity {
             // Maps retrieved Todos to LocalTodos for dispatching and local storage
             const todosToDispatch: LocalTodo[] = [];
             todos.map((todo) => {
+              console.log(todo);
               const currentTodo: LocalTodo = {
                 id: todo.id,
                 title: todo.title,

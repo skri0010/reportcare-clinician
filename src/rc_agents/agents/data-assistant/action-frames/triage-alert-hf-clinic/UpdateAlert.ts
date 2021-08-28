@@ -17,7 +17,10 @@ import {
 } from "rc_agents/clinician_framework";
 import { Storage } from "rc_agents/storage";
 import { store } from "util/useRedux";
-import { setProcedureSuccessful } from "ic-redux/actions/agents/actionCreator";
+import {
+  setProcedureSuccessful,
+  setUpdatePendingAlerts
+} from "ic-redux/actions/agents/actionCreator";
 import { agentNWA } from "rc_agents/agents";
 import { getAlert, updateAlert } from "aws";
 import { AlertInfo, AlertStatus } from "rc_agents/model";
@@ -113,14 +116,37 @@ class UpdateAlert extends Activity {
           );
         }
 
-        // agent.addBelief(
-        //   new Belief(
-        //     BeliefKeys.CLINICIAN,
-        //     ClinicianAttributes.ALERTS_UPDATED,
-        //     true
-        //   )
-        // );
+        //  Set the alert status to all to retrieve both pending and completed updated alerts
+        agentAPI.addFact(
+          new Belief(
+            BeliefKeys.CLINICIAN,
+            ClinicianAttributes.ALERT_STATUS,
+            AlertStatus.ALL
+          ),
+          false
+        );
+
+        // Trigger RetrieveAlerts
+        agent.addBelief(
+          new Belief(
+            BeliefKeys.CLINICIAN,
+            ClinicianAttributes.RETRIEVE_ALERTS,
+            true
+          )
+        );
+
+        // Starts the procedure
+        agentAPI.addFact(
+          new Belief(
+            BeliefKeys.PROCEDURE,
+            ProcedureAttributes.AT_CP_I,
+            ProcedureConst.ACTIVE
+          )
+        );
       }
+
+      // Allows the triggering of update pending alert counts in the home tab
+      store.dispatch(setUpdatePendingAlerts(true));
 
       // Dispatch to front end to indicate that procedure is successful
       store.dispatch(setProcedureSuccessful(true));
@@ -137,7 +163,9 @@ class UpdateAlert extends Activity {
         BeliefKeys.PROCEDURE,
         ProcedureAttributes.AT_CP_II,
         ProcedureConst.INACTIVE
-      )
+      ),
+      true,
+      true
     );
   }
 }

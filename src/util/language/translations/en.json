@@ -153,7 +153,8 @@
     "MarkAsDone": "MARK AS DONE",
     "UndoFromCompleted": "UNDO FROM COMPLETED",
     "Done": "DONE",
-    "Undo": "UNDO"
+    "Undo": "UNDO",
+    "NoPendingTodo": "All todos have been completed!"
   },
   "Patients": {
     "PatientsList": {
