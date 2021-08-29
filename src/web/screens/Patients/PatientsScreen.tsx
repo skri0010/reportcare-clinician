@@ -194,7 +194,7 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
               }}
             >
               {fetchingPatientDetails ? (
-                // : Patient details is being fetched
+                // Patient details is being fetched
                 <LoadingIndicator flex={1} />
               ) : patientDetails ? (
                 // Patient details is fetched and patient details is not null
