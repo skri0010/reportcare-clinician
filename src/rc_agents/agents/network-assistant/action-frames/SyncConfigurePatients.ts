@@ -43,29 +43,37 @@ class SyncConfigurePatients extends Activity {
         // Indicator of whether all patient configurations have been synced
         let configurationsSuccessful = true;
         // Keeps track of configuration updates that have succeeded
-        const succeedIndex: number[] = [];
+        const succeedIndices: number[] = [];
 
-        configurations.forEach(async (configuration) => {
-          // Updates patient info using configuration
-          const updateSuccessful = await updatePatientConfiguration(
-            configuration
-          );
-          if (updateSuccessful) {
-            // Pushes index of succeeded update into the list
-            succeedIndex.push(configurations.indexOf(configuration));
-          } else {
-            configurationsSuccessful = false;
-          }
-        });
+        await Promise.all(
+          configurations.map(async (configuration) => {
+            try {
+              // Updates patient info using configuration
+              const updateSuccessful = await updatePatientConfiguration(
+                configuration
+              );
+              if (updateSuccessful) {
+                // Pushes index of succeeded update into the list
+                succeedIndices.push(configurations.indexOf(configuration));
+              } else {
+                configurationsSuccessful = false;
+              }
+            } catch (error) {
+              // eslint-disable-next-line no-console
+              console.log(error);
+            }
+            return configuration;
+          })
+        );
 
         // Remove AsyncStorage entry if all configurations are updated
         if (configurationsSuccessful) {
           await Storage.removeItem(AsyncStorageKeys.PATIENT_CONFIGURATIONS);
         }
         // Store configurations that failed to be updated
-        else if (succeedIndex.length > 0) {
+        else if (succeedIndices.length > 0) {
           await Storage.setPatientConfigurations(
-            configurations.filter((_, index) => !succeedIndex.includes(index))
+            configurations.filter((_, index) => !succeedIndices.includes(index))
           );
           setRetryLaterTimeout(() => {
             agentNWA.addBelief(

@@ -124,6 +124,13 @@ class ConfigurePatient extends Activity {
             true
           )
         );
+        agentAPI.addFact(
+          new Belief(
+            BeliefKeys.PROCEDURE,
+            ProcedureAttributes.HF_OTP_II,
+            ProcedureConst.ACTIVE
+          )
+        );
       });
 
       // Update Facts
@@ -156,10 +163,8 @@ export const updatePatientConfiguration = async (
 
   // Extracts information to be updated
   const patientInfoToUpdate = {
-    cardiologist: configuration.cardiologist,
     deviceNo: configuration.deviceNo,
     diagnosisInfo: configuration.diagnosisInfo,
-    hospitalLocation: configuration.hospitalLocation,
     hospitalName: configuration.hospitalName,
     NHYAclass: configuration.NHYAclass,
     targetActivity: configuration.targetActivity,
