@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import {
   Actionframe,
   Activity,
@@ -15,8 +16,17 @@ import {
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
 import { store } from "util/useRedux";
-import { setAlerts } from "ic-redux/actions/agents/actionCreator";
-import { Alert } from "aws/API";
+import {
+  setPendingAlerts,
+  setCompletedAlerts,
+  setFetchingPendingAlerts,
+  setFetchingCompletedAlerts,
+  setFetchingAlerts,
+  setUpdatePendingAlerts
+} from "ic-redux/actions/agents/actionCreator";
+import { AlertInfo, AlertStatus } from "rc_agents/model";
+import { RiskLevel } from "models/RiskLevel";
+import { agentDTA } from "rc_agents/agents";
 
 /**
  * Class to represent an activity for triggering the display of alerts.
@@ -34,25 +44,106 @@ class DisplayAlerts extends Activity {
   async doActivity(agent: Agent): Promise<void> {
     await super.doActivity(agent, [rule2]);
 
-    try {
-      const alerts: Alert[] =
-        agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.ALERTS];
+    // Get list of alerts that was retrieved
+    const alerts: AlertInfo[] =
+      agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.ALERTS];
 
+    // Get updated alert info if any
+    const alertUpdated: AlertInfo =
+      agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.ALERT];
+
+    // Gets alert status and risk level from facts
+    const alertStatus: AlertStatus =
+      agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[
+        ClinicianAttributes.ALERT_STATUS
+      ];
+    const filteredPendingAlerts: AlertInfo[] = [];
+    const filteredCompletedAlerts: AlertInfo[] = [];
+
+    try {
+      // Case where alerts are retrieved
       if (alerts) {
         // LS-TODO: Irrelevant alerts should be filtered out depending on user's role
 
-        // Dispatch alerts to front end for display
-        store.dispatch(setAlerts(alerts));
+        const { alertRiskFilters } = store.getState().agents;
+        let shouldFilter = false;
+
+        // If one of the risk filters is true, we must proceed to filter
+        Object.values(alertRiskFilters).forEach((value) => {
+          if (value) {
+            shouldFilter = true;
+          }
+        });
+
+        // Filter patients if needed
+        if (shouldFilter) {
+          // case where needs filtering
+          alerts.forEach((alert) => {
+            // We can assert RiskLevel in this condition
+            if (
+              alertRiskFilters[alert.riskLevel as RiskLevel] &&
+              alert.completed === false
+            ) {
+              filteredPendingAlerts.push(alert);
+            } else if (
+              alertRiskFilters[alert.riskLevel as RiskLevel] &&
+              alert.completed === true
+            ) {
+              filteredCompletedAlerts.push(alert);
+            }
+          });
+        } else {
+          // case where no filter is required
+          alerts.forEach((alert) => {
+            if (alert.completed === true) {
+              filteredCompletedAlerts.push(alert);
+            } else if (alert.completed === false) {
+              filteredPendingAlerts.push(alert);
+            }
+          });
+        }
+
+        // Remove updated alert info from facts
+        if (alertUpdated) {
+          agentAPI.addFact(
+            new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.ALERT, null),
+            false
+          );
+        }
 
         // Removes alert info from facts
         agentAPI.addFact(
           new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.ALERTS, null),
           false
         );
+        // Remove alert status from fact
+        agentAPI.addFact(
+          new Belief(
+            BeliefKeys.CLINICIAN,
+            ClinicianAttributes.ALERT_STATUS,
+            null
+          ),
+          false
+        );
       }
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
+    }
+
+    // Dispatch filtered list based on status
+    if (alertStatus === AlertStatus.PENDING) {
+      store.dispatch(setPendingAlerts(filteredPendingAlerts));
+      // Dispatch to indicate process has ended
+      store.dispatch(setFetchingPendingAlerts(false));
+    } else if (alertStatus === AlertStatus.COMPLETED) {
+      store.dispatch(setCompletedAlerts(filteredCompletedAlerts));
+      // Dispatch to indicate process has ended
+      store.dispatch(setFetchingCompletedAlerts(false));
+    } else if (alertStatus === AlertStatus.ALL) {
+      store.dispatch(setPendingAlerts(filteredPendingAlerts));
+      store.dispatch(setCompletedAlerts(filteredCompletedAlerts));
+      store.dispatch(setFetchingAlerts(false));
     }
 
     // Stops the procedure
@@ -65,6 +156,30 @@ class DisplayAlerts extends Activity {
       true,
       true
     );
+
+    // Prepare to trigger the update of pending alert counts in home tab
+    const agentState = store.getState().agents;
+    const updatePendingAlertCount = agentState.updatePendingAlerts;
+
+    // When updatePendingAlertCount is true trigger RetrievePendingAlertCount procedure
+    if (updatePendingAlertCount) {
+      agentDTA.addBelief(
+        new Belief(
+          BeliefKeys.CLINICIAN,
+          ClinicianAttributes.RETRIEVE_PENDING_ALERT_COUNT,
+          true
+        )
+      );
+
+      // Starts the procedure
+      agentAPI.addFact(
+        new Belief(
+          BeliefKeys.PROCEDURE,
+          ProcedureAttributes.AT_CP_I,
+          ProcedureConst.ACTIVE
+        )
+      );
+    }
   }
 }
 

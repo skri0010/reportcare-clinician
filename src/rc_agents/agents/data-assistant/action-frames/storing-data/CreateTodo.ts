@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import {
   Actionframe,
   Agent,
@@ -176,6 +177,7 @@ class CreateTodo extends Activity {
             }
           }
           if (!alertTodoExists) {
+            // console.log("TODO RELATED TO ALERT DOES NOT EXIST");
             // Inserts Todo
             const createResponse = await createTodo(todoToInsert);
             if (createResponse.data.createTodo) {
@@ -186,6 +188,8 @@ class CreateTodo extends Activity {
               // Updates to indicate that Todo is successfully inserted
               toSync = false;
             }
+            // console.log("NEWLY CREATED TODO");
+            // console.log(createResponse.data.createTodo);
           }
         } else {
           // Device is offline: Todo requires syncing
@@ -202,6 +206,8 @@ class CreateTodo extends Activity {
           // Updates local Todos
           await Storage.setTodo(todoToStore);
 
+          // console.log("TODO TO STORE IN LOCAL STORAGE IS");
+          // console.log(todoToStore);
           // Notifies NWA to sync update or create Todo
           if (toSync) {
             // Offline and Todo does not exist: set pending insert to true

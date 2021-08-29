@@ -23,6 +23,9 @@ import af_RetrieveTodos from "./action-frames/storing-data/RetrieveTodos";
 import { af_RequestDisplayTodos } from "./action-frames/storing-data/RequestDisplayTodos";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import { ClinicianAgent } from "rc_agents/clinician_framework/ClinicianAgent";
+import af_UpdateAlert from "./action-frames/triage-alert-hf-clinic/UpdateAlert";
+import { af_RetrieveAlertHistory } from "./action-frames/hf-outcome-trends/RetrieveAlertHistory";
+import { af_RequestDisplayAlertHistory } from "./action-frames/hf-outcome-trends/RequestDisplayAlertHistory";
 
 // Initial Beliefs of Agent
 
@@ -50,6 +53,8 @@ const agentDTA = new ClinicianAgent(
     // HF-OTP-II
     af_RetrievePatientDetails,
     af_RequestDisplayPatientDetails,
+    af_RetrieveAlertHistory,
+    af_RequestDisplayAlertHistory,
 
     // AT-CP
     af_RetrievePendingAlertCount,
@@ -58,6 +63,7 @@ const agentDTA = new ClinicianAgent(
     af_RequestAlertsDisplay,
     af_RetrieveAlertInfo,
     af_RequestAlertInfoDisplay,
+    af_UpdateAlert,
 
     // SRD-II
     af_RetrieveTodos,

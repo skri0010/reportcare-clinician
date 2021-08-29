@@ -4,8 +4,11 @@ import { RiskFilterPill } from "./RiskFilterPill";
 import { View, FlatList } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { select, RootState, store } from "util/useRedux";
-import { setRiskFilters } from "ic-redux/actions/agents/actionCreator";
-import { RiskFilter } from "rc_agents/model";
+import {
+  setAlertRiskFilters,
+  setPatientRiskFilters
+} from "ic-redux/actions/agents/actionCreator";
+import { AlertStatus, RiskFilter } from "rc_agents/model";
 import { agentDTA } from "rc_agents/agents";
 import { Belief } from "agents-framework";
 import { ProcedureConst } from "agents-framework/Enums";
@@ -16,10 +19,20 @@ import {
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
 
-export const RiskFilterPillList: FC = () => {
+interface RiskFilterPillListProps {
+  patientScreen?: boolean;
+  alertScreen?: boolean;
+}
+
+export const RiskFilterPillList: FC<RiskFilterPillListProps> = ({
+  patientScreen = false,
+  alertScreen = false
+}) => {
   const { colors, riskFilters } = select((state: RootState) => ({
     colors: state.settings.colors,
-    riskFilters: state.agents.riskFilters
+    riskFilters: alertScreen
+      ? state.agents.alertRiskFilters
+      : state.agents.patientRiskFilters
   }));
 
   // Function to toggle selected risk filters
@@ -31,20 +44,54 @@ export const RiskFilterPillList: FC = () => {
       [RiskLevel.UNASSIGNED]: riskFilters.Unassigned
     };
     tempRiskFilters[riskLevel] = !tempRiskFilters[riskLevel];
-    // Update risk filters
-    store.dispatch(setRiskFilters(tempRiskFilters));
-    // Trigger agents to retrieve filtered patients
-    agentDTA.addBelief(
-      new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.RETRIEVE_ROLE, true)
-    );
+    // Update risk filters based on which Screen user is on
+    if (patientScreen) {
+      store.dispatch(setPatientRiskFilters(tempRiskFilters));
+      // Trigger agents to retrieve filtered patients
+      agentDTA.addBelief(
+        new Belief(
+          BeliefKeys.CLINICIAN,
+          ClinicianAttributes.RETRIEVE_ROLE,
+          true
+        )
+      );
+      agentAPI.addFact(
+        new Belief(
+          BeliefKeys.PROCEDURE,
+          ProcedureAttributes.HF_OTP_I,
+          ProcedureConst.ACTIVE
+        )
+      );
+    } else {
+      // Trigger agents to set filtered alerts
+      store.dispatch(setAlertRiskFilters(tempRiskFilters));
+      // Alert status is all to trigger filter for both pending and completed
+      // to be used by agents
+      agentAPI.addFact(
+        new Belief(
+          BeliefKeys.CLINICIAN,
+          ClinicianAttributes.ALERT_STATUS,
+          AlertStatus.ALL
+        ),
+        false
+      );
 
-    agentAPI.addFact(
-      new Belief(
-        BeliefKeys.PROCEDURE,
-        ProcedureAttributes.HF_OTP_I,
-        ProcedureConst.ACTIVE
-      )
-    );
+      // Trigger DTA to retrieve alerts
+      agentDTA.addBelief(
+        new Belief(
+          BeliefKeys.CLINICIAN,
+          ClinicianAttributes.RETRIEVE_ALERTS,
+          true
+        )
+      );
+      agentAPI.addFact(
+        new Belief(
+          BeliefKeys.PROCEDURE,
+          ProcedureAttributes.AT_CP_I,
+          ProcedureConst.ACTIVE
+        )
+      );
+    }
   };
 
   return (

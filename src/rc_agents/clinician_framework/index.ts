@@ -33,6 +33,7 @@ export const ActionFrameIDs = {
     REQUEST_DISPLAY_PATIENT_DETAILS: "RequestDisplayPatientDetails",
 
     RETRIEVE_ALERT_HISTORY: "RetrieveAlertHistory",
+    REQUEST_DISPLAY_ALERT_HISTORY: "RequestDisplayAlertHistory",
 
     // AT-CP-I: Alerts
     RETRIEVE_PENDING_ALERT_COUNT: "RetrievePendingAlertCount",
@@ -67,6 +68,7 @@ export const ActionFrameIDs = {
 
     // HF-OTP-II: Single patient's details
     VISUALIZE_PARAMETERS: "VisualizeParameters",
+    DISPLAY_ALERT_HISTORY: "DisplayAlertHistory",
 
     // SRD-I: Patient Assignments
     DISPLAY_PENDING_PATIENT_ASSIGNMENTS: "DisplayPendingPatientAssignments",
@@ -147,12 +149,14 @@ export enum ClinicianAttributes {
   ALERT_RISK_LEVEL = "AlertRiskLevel",
   RETRIEVE_ALERTS = "RetrieveAlerts",
   ALERTS = "Alerts",
+  PENDING_ALERTS = "PendingAlerts",
   ALERTS_RETRIEVED = "AlertsRetrieved",
   ALERT = "Alert",
   RETRIEVE_ALERT_INFO = "RetrieveAlertInfo",
   ALERT_INFO = "AlertInfo",
   ALERT_INFO_RETRIEVED = "AlertInfoRetrieved",
   UPDATE_ALERT = "UpdateAlert",
+  ALERTS_UPDATED = "AlertsUpdated",
 
   // SRD-II - Todos
   RETRIEVE_TODOS = "RetrieveTodos",
@@ -178,6 +182,7 @@ export enum PatientAttributes {
   PATIENT_DETAILS_RETRIEVED = "PatientDetailsRetrieved",
   DISPLAY_PATIENT_DETAILS_REQUESTED = "DisplayPatientDetailsRequested",
   PATIENT_DETAILS = "PatientDetails",
+  PATIENT_ALERT_HISTORY_RETRIEVED = "PatientAlertHistoryRetrieved",
 
   // SRD-I: Patient Assignments
   PENDING_PATIENT_ASSIGNMENTS = "PendingPatientAssignments",

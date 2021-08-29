@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { FC, useEffect, useState } from "react";
 import { RootState, select } from "util/useRedux";
 import { View, TextStyle, FlatList } from "react-native";
@@ -35,7 +36,9 @@ export const TodosCard: FC<TodosCardProps> = ({ maxHeight, navigation }) => {
 
   useEffect(() => {
     AgentTrigger.triggerRetrieveTodos(TodoStatus.PENDING);
-  }, []);
+    // console.log("TODOS CARD PENDING TODO");
+    // console.log(pendingTodos);
+  }, [pendingTodos]);
 
   useEffect(() => {
     if (pendingTodos && pendingTodos.length > 10) {
@@ -62,8 +65,6 @@ export const TodosCard: FC<TodosCardProps> = ({ maxHeight, navigation }) => {
                   riskLevel={
                     item.riskLevel ? item.riskLevel : RiskLevel.UNASSIGNED
                   }
-                  disabled
-                  reduceOpacity
                   onCardPress={() => {
                     // Navigate to Todo screen
                     navigation.navigate(ScreenName.TODO, { todoToShow: item });

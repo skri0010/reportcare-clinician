@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { FC, useEffect } from "react";
 import { FlatList } from "react-native";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
@@ -33,6 +34,8 @@ export const onUndoPress = (item: LocalTodo): void => {
     completed: false,
     lastModified: new Date().toISOString()
   };
+  // console.log("TODO TO UPDATE IS:");
+  // console.log(todoToUpdate);
   AgentTrigger.triggerUpdateTodo(todoToUpdate);
 };
 

@@ -7,7 +7,7 @@ import {
 } from "rc_agents/model";
 import { actionNames } from "ic-redux/actions/actionNames";
 import { createAction } from "typesafe-actions";
-import { Alert, PatientAssignment, PatientInfo } from "aws/API";
+import { PatientAssignment, PatientInfo } from "aws/API";
 
 export const setProcedureOngoing = createAction(
   actionNames.SET_PROCEDURE_ONGOING,
@@ -30,6 +30,13 @@ export const setPatients = createAction(
   })
 )();
 
+export const setAlertHistory = createAction(
+  actionNames.SET_ALERT_HISTORY,
+  (alertHistory: AlertInfo[]) => ({
+    alertHistory: alertHistory
+  })
+)();
+
 export const setPatientDetails = createAction(
   actionNames.SET_PATIENT_DETAILS,
   (patientDetails: PatientDetails | null) => ({
@@ -48,6 +55,13 @@ export const setFetchingPatientDetails = createAction(
   actionNames.SET_FETCHING_PATIENT_DETAILS,
   (fetchingPatientDetails: boolean) => ({
     fetchingPatientDetails: fetchingPatientDetails
+  })
+)();
+
+export const setFetchingPatientAlertHistory = createAction(
+  actionNames.SET_FETCHING_PATIENT_ALERT_HISTORY,
+  (fetchingPatientAlertHistory: boolean) => ({
+    fetchingPatientAlertHistory: fetchingPatientAlertHistory
   })
 )();
 
@@ -79,10 +93,59 @@ export const setPendingAlertCount = createAction(
   })
 )();
 
+export const setFetchingAlerts = createAction(
+  actionNames.SET_FETCHING_ALERTS,
+  (fetchingAlerts: boolean) => ({
+    fetchingAlerts: fetchingAlerts
+  })
+)();
+
+export const setFetchingPendingAlerts = createAction(
+  actionNames.SET_FETCHING_PENDING_ALERTS,
+  (fetchingPendingAlerts: boolean) => ({
+    fetchingPendingAlerts: fetchingPendingAlerts
+  })
+)();
+
+export const setFetchingCompletedAlerts = createAction(
+  actionNames.SET_FETCHING_COMPLETED_ALERTS,
+  (fetchingCompletedAlerts: boolean) => ({
+    fetchingCompletedAlerts: fetchingCompletedAlerts
+  })
+)();
+
+export const setUpdatePendingAlerts = createAction(
+  actionNames.SET_UPDATE_PENDING_ALERTS,
+  (updatePendingAlerts: boolean) => ({
+    updatePendingAlerts: updatePendingAlerts
+  })
+)();
+
+export const setPendingAlerts = createAction(
+  actionNames.SET_PENDING_ALERTS,
+  (pendingAlerts: AlertInfo[]) => ({
+    pendingAlerts: pendingAlerts
+  })
+)();
+
+export const setCompletedAlerts = createAction(
+  actionNames.SET_COMPLETED_ALERTS,
+  (completedAlerts: AlertInfo[]) => ({
+    completedAlerts: completedAlerts
+  })
+)();
+
 export const setAlerts = createAction(
   actionNames.SET_ALERTS,
-  (alerts: Alert[]) => ({
+  (alerts: AlertInfo[]) => ({
     alerts: alerts
+  })
+)();
+
+export const setFetchingAlertInfo = createAction(
+  actionNames.SET_FETCHING_ALERT_INFO,
+  (fetchingAlertInfo: boolean) => ({
+    fetchingAlertInfo: fetchingAlertInfo
   })
 )();
 
@@ -128,9 +191,16 @@ export const setUpdatedTodo = createAction(
   })
 )();
 
-export const setRiskFilters = createAction(
-  actionNames.SET_RISK_FILTERS,
+export const setPatientRiskFilters = createAction(
+  actionNames.SET_PATIENT_RISK_FILTERS,
   (riskFilters: RiskFilters) => ({
-    riskFilters: riskFilters
+    patientRiskFilters: riskFilters
+  })
+)();
+
+export const setAlertRiskFilters = createAction(
+  actionNames.SET_ALERT_RISK_FILTERS,
+  (riskFilters: RiskFilters) => ({
+    alertRiskFilters: riskFilters
   })
 )();

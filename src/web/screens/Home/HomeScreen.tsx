@@ -18,10 +18,18 @@ export const HomeScreen: FC<MainScreenProps[ScreenName.HOME]> = ({
   const topMaxHeight = ms(200);
   const maxHeight = ms(250);
 
+  const navigateToAlert = () => {
+    navigation.navigate(ScreenName.ALERTS);
+  };
+
   return (
     <ScreenWrapper padding>
       <View style={styles.container}>
-        <AlertsCard maxHeight={topMaxHeight} flex={1.2} />
+        <AlertsCard
+          maxHeight={topMaxHeight}
+          flex={1.2}
+          navigateCallback={navigateToAlert}
+        />
         <WelcomeCard name="Nailah" maxHeight={topMaxHeight} flex={1.8} />
       </View>
       <View style={styles.container}>

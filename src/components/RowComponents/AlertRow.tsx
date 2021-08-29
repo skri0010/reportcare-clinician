@@ -1,19 +1,20 @@
 import React, { FC } from "react";
-import { Alert } from "aws/API";
 import { View, TouchableOpacity } from "react-native";
 import { H4, H5 } from "components/Text/index";
+import { AlertInfo } from "rc_agents/model";
+import moment from "moment";
 
 interface AlertRowProps {
-  alertDetails: Alert;
-  onButtonPress?: () => void;
+  alertDetails: AlertInfo;
   onCardPress?: () => void;
 }
 
-export const AlertRow: FC<AlertRowProps> = ({
-  alertDetails,
-  onButtonPress,
-  onCardPress
-}) => {
+const getLocalDateTime = (datetime: string) => {
+  const localDateTime = moment.utc(datetime).local();
+  return localDateTime.format("HH:mm DD-MM-YYYY");
+};
+
+export const AlertRow: FC<AlertRowProps> = ({ alertDetails, onCardPress }) => {
   return (
     <TouchableOpacity onPress={onCardPress} style={{ opacity: 1 }}>
       <View style={{ flexDirection: "row" }}>
@@ -28,7 +29,7 @@ export const AlertRow: FC<AlertRowProps> = ({
               style={{ paddingBottom: "10@ms " }}
             />
             <H5
-              text={alertDetails.dateTime}
+              text={getLocalDateTime(alertDetails.dateTime)}
               style={{ paddingBottom: "10@ms" }}
             />
           </View>

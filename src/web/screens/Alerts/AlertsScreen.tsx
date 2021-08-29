@@ -1,7 +1,7 @@
-import React, { FC, useState, createContext } from "react";
-import { RootState, select } from "util/useRedux";
+import React, { FC, useState, useEffect } from "react";
+import { RootState, select, useDispatch } from "util/useRedux";
 import { ScreenName } from "web/navigation";
-import { View } from "react-native";
+import { View, Modal } from "react-native";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -9,104 +9,80 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import { getTopTabBarOptions } from "util/getStyles";
 import { AlertCurrentTab } from "./AlertCurrentTab";
 import { AlertCompletedTab } from "./AlertCompletedTab";
-import { Alert } from "aws/API";
 import { NavigationContainer } from "@react-navigation/native";
 import { NoSelectionScreen } from "../Shared/NoSelectionScreen";
 import { AlertDetailsScreen } from "./AlertDetailsScreen";
 import { MainScreenProps } from "web/navigation/types";
 import { SearchBarComponent } from "components/Bars/SearchBarComponent";
+import { AgentTrigger } from "rc_agents/trigger";
+import { AlertStatus } from "rc_agents/model";
+import { AddTodoScreen } from "web/screens/Todo/modals/AddTodoScreen";
+import { useToast } from "react-native-toast-notifications";
+import {
+  setProcedureSuccessful,
+  setSubmittingTodo
+} from "ic-redux/actions/agents/actionCreator";
 import i18n from "util/language/i18n";
+import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 
 const Tab = createMaterialTopTabNavigator();
 const Stack = createStackNavigator();
 
-export const AlertContext = createContext({
-  id: "",
-  patientName: "",
-  patientID: "",
-  summary: "",
-  colorCode: "",
-  vitalsReportID: "",
-  symptomReportID: "",
-  createdTimeDate: "",
-  modifiedTimeDate: ""
-});
-
-export const AlertsScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
-  const { colors, fonts } = select((state: RootState) => ({
-    colors: state.settings.colors,
-    fonts: state.settings.fonts
+export const AlertScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
+  const {
+    colors,
+    fonts,
+    procedureOngoing,
+    procedureSuccessful,
+    submittingTodo,
+    fetchingAlertInfo,
+    alertInfo
+  } = select((state: RootState) => ({
+    colors: state.settings.colors, // Used to detect completion of updateTodo procedure
+    fonts: state.settings.fonts,
+    procedureOngoing: state.agents.procedureOngoing,
+    procedureSuccessful: state.agents.procedureSuccessful,
+    submittingTodo: state.agents.submittingTodo,
+    fetchingAlertInfo: state.agents.fetchingAlertInfo,
+    alertInfo: state.agents.alertInfo
   }));
 
-  const [alertSelected, setAlertSelected] = useState<Alert>({
-    id: "",
-    patientID: "",
-    patientName: "",
-    dateTime: "",
-    summary: "",
-    colorCode: "",
-    vitalsReportID: "",
-    symptomReportID: "",
-    owner: "",
-    _version: 0,
-    _lastChangedAt: 0,
-    createdAt: "",
-    updatedAt: "",
-    __typename: "Alert"
-  });
+  /**
+   * Trigger agent to fetch ALL alerts on initial load
+   */
+  useEffect(() => {
+    AgentTrigger.triggerRetriveAlerts(AlertStatus.ALL);
+  }, []);
+
   const [isEmptyAlert, setEmptyAlert] = useState(true);
 
-  function onRowClick(item: Alert) {
-    const currentSelected = alertSelected;
-    const emptyAlert: Alert = {
-      id: "",
-      patientID: "",
-      patientName: "",
-      dateTime: "",
-      summary: "",
-      colorCode: "",
-      vitalsReportID: "",
-      symptomReportID: "",
-      owner: "",
-      _version: 0,
-      _lastChangedAt: 0,
-      createdAt: "",
-      updatedAt: "",
-      __typename: "Alert"
-    };
-    if (currentSelected !== item && item !== emptyAlert) {
-      setEmptyAlert(false);
-      setAlertSelected(item);
-    } else if (item === emptyAlert) {
-      setEmptyAlert(true);
-    }
-  }
+  // For pointer events
+  const [modalVisible, setModalVisible] = useState(false);
+  const toast = useToast();
+  const dispatch = useDispatch();
 
-  const initialAlert = {
-    id: alertSelected.id,
-    patientName: alertSelected.patientName,
-    patientID: alertSelected.patientID,
-    vitalsReportID: alertSelected.vitalsReportID,
-    symptomReportID: alertSelected.symptomReportID,
-    summary: alertSelected.summary,
-    colorCode: alertSelected.colorCode,
-    createdTimeDate: alertSelected.createdAt,
-    modifiedTimeDate: alertSelected.updatedAt
-  };
+  // Detects completion of UpdateTodo procedure and shows the appropriate toast.
+  useEffect(() => {
+    if (submittingTodo && !procedureOngoing) {
+      dispatch(setSubmittingTodo(false));
+      if (procedureSuccessful) {
+        // Operation successful
+        toast.show(i18n.t("Todo.TodoUpdateSuccessful"), { type: "success" });
+        dispatch(setProcedureSuccessful(false));
+      } else {
+        // Operation failed
+        toast.show(i18n.t("UnexpectedError"), { type: "danger" });
+      }
+    }
+  }, [dispatch, procedureOngoing, procedureSuccessful, toast, submittingTodo]);
 
   return (
     <ScreenWrapper fixed>
-      <View style={styles.container}>
+      <View
+        style={styles.container}
+        pointerEvents={modalVisible || submittingTodo ? "none" : "auto"}
+      >
         <View style={styles.rowSelection}>
-          <SearchBarComponent
-            onUserInput={() => {
-              null;
-            }}
-            containerStyle={{
-              backgroundColor: colors.primaryContrastTextColor
-            }}
-            placeholder={i18n.t("Alerts.SearchBarPlaceholder")}
-          />
           <Tab.Navigator
             screenOptions={getTopTabBarOptions({
               colors: colors,
@@ -114,10 +90,10 @@ export const AlertsScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
             })}
           >
             <Tab.Screen name="Pending">
-              {() => <AlertCurrentTab setAlertSelected={onRowClick} />}
+              {() => <AlertCurrentTab setEmptyAlert={setEmptyAlert} />}
             </Tab.Screen>
             <Tab.Screen name="Completed">
-              {() => <AlertCompletedTab setAlertSelected={onRowClick} />}
+              {() => <AlertCompletedTab setEmptyAlert={setEmptyAlert} />}
             </Tab.Screen>
           </Tab.Navigator>
         </View>
@@ -127,27 +103,30 @@ export const AlertsScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
             backgroundColor: colors.primaryWebBackgroundColor
           }}
         >
-          {!isEmptyAlert ? (
+          {fetchingAlertInfo ? (
+            <LoadingIndicator flex={1} />
+          ) : !isEmptyAlert ? (
             <NavigationContainer independent>
-              <AlertContext.Provider value={initialAlert}>
-                <Stack.Navigator>
-                  <Stack.Screen
-                    name="ViewAlert"
-                    component={AlertDetailsScreen}
-                    options={() => ({
-                      title: initialAlert.patientName,
-                      headerStyle: {
-                        height: ms(45)
-                      },
-                      headerTitleStyle: {
-                        fontWeight: "bold",
-                        fontSize: ms(20),
-                        paddingLeft: ms(15)
-                      }
-                    })}
-                  />
-                </Stack.Navigator>
-              </AlertContext.Provider>
+              <Stack.Navigator>
+                <Stack.Screen
+                  name="ViewAlert"
+                  options={() => ({
+                    title: alertInfo?.patientName,
+                    headerStyle: {
+                      height: ms(45)
+                    },
+                    headerTitleStyle: {
+                      fontWeight: "bold",
+                      fontSize: ms(20),
+                      paddingLeft: ms(15)
+                    }
+                  })}
+                >
+                  {() => (
+                    <AlertDetailsScreen setModalVisible={setModalVisible} />
+                  )}
+                </Stack.Screen>
+              </Stack.Navigator>
             </NavigationContainer>
           ) : (
             <NoSelectionScreen
@@ -156,6 +135,27 @@ export const AlertsScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
             />
           )}
         </View>
+      </View>
+      {/* ADD TODO modal */}
+      <View style={styles.modalView}>
+        <Modal
+          transparent
+          visible={modalVisible}
+          animationType="slide"
+          onRequestClose={() => {
+            setModalVisible(false);
+          }}
+        >
+          <View
+            style={[
+              styles.modalContainer,
+              { backgroundColor: colors.overlayColor }
+            ]}
+          >
+            {/* Add todo modal */}
+            <AddTodoScreen setModalVisible={setModalVisible} />
+          </View>
+        </Modal>
       </View>
     </ScreenWrapper>
   );

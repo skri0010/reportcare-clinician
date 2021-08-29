@@ -8,17 +8,20 @@ import {
 } from "agents-framework";
 import { ProcedureConst } from "agents-framework/Enums";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
+import { AlertInfo, PendingAlertCount } from "rc_agents/model";
+import { store } from "util/useRedux";
+import {
+  setFetchingPendingAlerts,
+  setPendingAlertCount,
+  setUpdatePendingAlerts
+} from "ic-redux/actions/agents/actionCreator";
+import { RiskLevel } from "models/RiskLevel";
 import {
   ActionFrameIDs,
   BeliefKeys,
   ClinicianAttributes,
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
-import { AlertColorCode, AlertInfo, PendingAlertCount } from "rc_agents/model";
-import { store } from "util/useRedux";
-import { Alert } from "aws/API";
-import { setPendingAlertCount } from "ic-redux/actions/agents/actionCreator";
-import { RiskLevel } from "models/RiskLevel";
 
 /**
  * Class to represent an activity for triggering the display of pending alert count.
@@ -37,8 +40,10 @@ class DisplayPendingAlertCount extends Activity {
     await super.doActivity(agent, [rule2]);
 
     try {
-      const pendingAlerts: Alert[] | AlertInfo[] | null =
-        agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.ALERTS];
+      const pendingAlerts: AlertInfo[] | null =
+        agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[
+          ClinicianAttributes.PENDING_ALERTS
+        ];
 
       if (pendingAlerts) {
         const pendingAlertCount: PendingAlertCount = {
@@ -51,42 +56,22 @@ class DisplayPendingAlertCount extends Activity {
         // LS-TODO: Irrelevant alerts should be filtered out depending on user's role
 
         pendingAlerts.forEach((alert) => {
-          // Alert type is received if device is online
-          if ((alert as Alert).colorCode) {
-            switch ((alert as Alert).colorCode) {
-              case AlertColorCode.HIGH:
-                pendingAlertCount.highRisk += 1;
-                break;
-              case AlertColorCode.MEDIUM:
-                pendingAlertCount.mediumRisk += 1;
-                break;
-              case AlertColorCode.LOW:
-                pendingAlertCount.lowRisk += 1;
-                break;
-              case AlertColorCode.UNASSIGNED:
-                pendingAlertCount.unassignedRisk += 1;
-                break;
-              default:
-                break;
-            }
-          } else if ((alert as AlertInfo).riskLevel) {
-            // AlertInfo type is received if device is offline
-            switch ((alert as AlertInfo).riskLevel) {
-              case RiskLevel.HIGH:
-                pendingAlertCount.highRisk += 1;
-                break;
-              case RiskLevel.MEDIUM:
-                pendingAlertCount.mediumRisk += 1;
-                break;
-              case RiskLevel.LOW:
-                pendingAlertCount.lowRisk += 1;
-                break;
-              case RiskLevel.UNASSIGNED:
-                pendingAlertCount.unassignedRisk += 1;
-                break;
-              default:
-                break;
-            }
+          // Alert type is received if device is online or offline
+          switch ((alert as AlertInfo).riskLevel) {
+            case RiskLevel.HIGH:
+              pendingAlertCount.highRisk += 1;
+              break;
+            case RiskLevel.MEDIUM:
+              pendingAlertCount.mediumRisk += 1;
+              break;
+            case RiskLevel.LOW:
+              pendingAlertCount.lowRisk += 1;
+              break;
+            case RiskLevel.UNASSIGNED:
+              pendingAlertCount.unassignedRisk += 1;
+              break;
+            default:
+              break;
           }
         });
 
@@ -95,7 +80,11 @@ class DisplayPendingAlertCount extends Activity {
 
         // Removes pending alerts from facts
         agentAPI.addFact(
-          new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.ALERTS, null),
+          new Belief(
+            BeliefKeys.CLINICIAN,
+            ClinicianAttributes.PENDING_ALERTS,
+            null
+          ),
           false
         );
       }
@@ -104,14 +93,21 @@ class DisplayPendingAlertCount extends Activity {
       console.log(error);
     }
 
+    // Reset updatePendingAlerts to false
+    store.dispatch(setUpdatePendingAlerts(false));
+
     // Stops the procedure
     agentAPI.addFact(
       new Belief(
         BeliefKeys.PROCEDURE,
         ProcedureAttributes.AT_CP_I,
         ProcedureConst.INACTIVE
-      )
+      ),
+      true,
+      true
     );
+
+    store.dispatch(setFetchingPendingAlerts(false));
   }
 }
 

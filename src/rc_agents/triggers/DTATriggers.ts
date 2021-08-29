@@ -10,6 +10,8 @@ import { agentDTA } from "rc_agents/agents";
 import { Belief } from "agents-framework";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
+  AlertInfo,
+  AlertStatus,
   PatientAssignmentResolution,
   TodoInput,
   TodoStatus
@@ -160,6 +162,84 @@ export const triggerUpdateTodo = (input: TodoInput): void => {
     new Belief(
       BeliefKeys.PROCEDURE,
       ProcedureAttributes.SRD_III,
+      ProcedureConst.ACTIVE
+    )
+  );
+};
+
+// AT-CP-I: Trigger RetriveAlerts of DTA
+export const triggerRetriveAlerts = (alertStatus: AlertStatus): void => {
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.CLINICIAN,
+      ClinicianAttributes.ALERT_STATUS,
+      alertStatus
+    ),
+    false
+  );
+
+  // Trigger DTA to retrieve alerts
+  agentDTA.addBelief(
+    new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.RETRIEVE_ALERTS, true)
+  );
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PROCEDURE,
+      ProcedureAttributes.AT_CP_I,
+      ProcedureConst.ACTIVE
+    )
+  );
+};
+
+// AT-CP-II Triggers RetrieveAlertInfo of DTA
+export const triggerRetrieveAlertInfo = (input: AlertInfo): void => {
+  // Add alert as facts
+  agentAPI.addFact(
+    new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.ALERT, input),
+    false
+  );
+
+  agentDTA.addBelief(
+    new Belief(
+      BeliefKeys.CLINICIAN,
+      ClinicianAttributes.RETRIEVE_ALERT_INFO,
+      true
+    )
+  );
+
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PROCEDURE,
+      ProcedureAttributes.AT_CP_II,
+      ProcedureConst.ACTIVE
+    )
+  );
+};
+
+// HF-OTP-II Triggers retrieval of historical alerts according to patient ID
+export const triggerGetHistoricalAlerts = (patientId: string): void => {
+  // Add patient ID as fact
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PATIENT,
+      PatientAttributes.ALERT_PATIENT_ID,
+      patientId
+    ),
+    false
+  );
+  // Set preconditions
+  agentDTA.addBelief(
+    new Belief(
+      BeliefKeys.PATIENT,
+      PatientAttributes.RETRIEVE_ALERT_HISTORY,
+      true
+    )
+  );
+
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PROCEDURE,
+      ProcedureAttributes.HF_OTP_II,
       ProcedureConst.ACTIVE
     )
   );

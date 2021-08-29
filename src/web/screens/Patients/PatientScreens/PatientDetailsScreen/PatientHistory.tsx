@@ -4,14 +4,15 @@ import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { Dimensions, View } from "react-native";
 import { PatientAlertHistoryCard } from "./PatientHistoryComponents/PatientAlertHistoryCard";
 import { PatientMedicalRecordCard } from "./PatientHistoryComponents/PatientMedicalRecordCard";
-import { AlertHistory, MedicalRecords } from "mock/mockPatientDetails";
+import { MedicalRecords } from "mock/mockPatientDetails";
 import { PatientDetailsTabProps } from "web/navigation/types";
 import { PatientInfo } from "aws/API";
+import { AlertInfo } from "rc_agents/model";
 
 interface PatientHistoryProps extends PatientDetailsTabProps.HistoryTabProps {
   info: PatientInfo;
   alertHistoryFunc: {
-    setDisplayHistory: (state: AlertHistory) => void;
+    setDisplayHistory: (state: AlertInfo) => void;
     setModalAlertVisible: (state: boolean) => void;
   };
   medicalRecordFunc: {
@@ -31,13 +32,11 @@ export const PatientHistory: FC<PatientHistoryProps> = ({
     Dimensions.get("window").height * 0.65
   );
 
-  // Query history data by patientId here or pass it into component for query
   return (
     <ScreenWrapper padding>
       <View style={styles.container}>
         {/* Alert Histories */}
         <PatientAlertHistoryCard
-          name={info.name}
           patientId={info.patientID}
           maxHeight={cardMaxHeight}
           setDisplayHistory={alertHistoryFunc.setDisplayHistory}

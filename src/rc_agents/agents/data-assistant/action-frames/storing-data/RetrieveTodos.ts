@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import {
   Actionframe,
   Agent,
@@ -24,7 +25,8 @@ import {
 } from "ic-redux/actions/agents/actionCreator";
 import {
   listCompletedTodosByLastModifiedDate,
-  listPendingTodosByLastModifiedDate
+  listPendingTodosByLastModifiedDate,
+  getAlert
 } from "aws";
 import { ModelSortDirection, Todo } from "aws/API";
 import { LocalTodo, TodoStatus } from "rc_agents/model";
@@ -58,6 +60,8 @@ class RetrieveTodos extends Activity {
       const todoStatus: TodoStatus =
         facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.TODO_STATUS];
 
+      // console.log("TODO STATUS IS");
+      // console.log(todoStatus);
       if (todoStatus && clinicianId) {
         if (facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
           // Device is online
@@ -71,6 +75,8 @@ class RetrieveTodos extends Activity {
               const result =
                 query.data.listPendingTodosByLastModifiedDate.items;
               if (result && result.length > 0) {
+                // console.log("ALL PENDING TODOS ARE:");
+                // console.log(result);
                 todos = result as Todo[];
               }
             }
@@ -84,13 +90,17 @@ class RetrieveTodos extends Activity {
                 query.data.listCompletedTodosByLastModifiedDate.items;
               if (result && result.length > 0) {
                 todos = result as Todo[];
+                // console.log("ALL COMPLETED TODOS ARE:");
+                // console.log(result);
               }
             }
           }
           if (todos) {
             // Maps retrieved Todos to LocalTodos for dispatching and local storage
             const todosToDispatch: LocalTodo[] = [];
-            todos.map((todo) => {
+            todos.map(async (todo) => {
+              // console.log("TODOS RETRIEVED");
+              // console.log(todo);
               const currentTodo: LocalTodo = {
                 id: todo.id,
                 title: todo.title,
@@ -102,13 +112,21 @@ class RetrieveTodos extends Activity {
                 toSync: false,
                 _version: todo._version
               };
-              if (todo.alert) {
-                currentTodo.alertId = todo.alert.id;
-                currentTodo.patientId = todo.alert.patientID;
-                currentTodo.riskLevel = mapColorCodeToRiskLevel(
-                  todo.alert.colorCode
-                );
+              if (todo.alertID) {
+                const query = await getAlert({
+                  id: todo.alertID
+                });
+                if (query.data?.getAlert) {
+                  const result = query.data.getAlert;
+                  currentTodo.alertId = result.id;
+                  currentTodo.patientId = result.patientID;
+                  currentTodo.riskLevel = mapColorCodeToRiskLevel(
+                    result.colorCode
+                  );
+                }
               }
+              // console.log("CURRENT PENDING TODO");
+              // console.log(currentTodo);
               todosToDispatch.push(currentTodo);
               return todo;
             });
@@ -116,8 +134,11 @@ class RetrieveTodos extends Activity {
             // Saves mapped Todos to local storage
             await Storage.setMultipleTodos(todosToDispatch);
 
+            // console.log(todoStatus);
             // Dispatches Todos according to status
             if (todoStatus === TodoStatus.PENDING) {
+              // console.log("TODO TO DISPATCH");
+              // console.log(todosToDispatch);
               store.dispatch(setPendingTodos(todosToDispatch));
             } else {
               store.dispatch(setCompletedTodos(todosToDispatch));

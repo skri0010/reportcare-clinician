@@ -18,7 +18,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { ms } from "react-native-size-matters";
 import i18n from "util/language/i18n";
 import { isMobile } from "util/device";
-import { AlertsScreen } from "web/screens/Alerts/AlertsScreen";
+import { AlertScreen } from "web/screens/Alerts/AlertsScreen";
 
 interface DrawerNavigationProps {
   signOut: () => void;
@@ -123,7 +123,7 @@ export const MainDrawerNavigator: FC<DrawerNavigationProps> = ({ signOut }) => {
       />
       <Drawer.Screen
         name={ScreenName.ALERTS}
-        component={AlertsScreen}
+        component={AlertScreen}
         options={{
           ...buildOptions({
             iconName: "chat",
