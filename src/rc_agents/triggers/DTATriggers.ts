@@ -113,17 +113,6 @@ export const triggerResolvePendingAssignments = (
   );
 };
 
-// LS-TODO: To be removed after integrated with patient configuration UI
-export const mockPatientConfiguration = async (): Promise<void> => {
-  const patient = await Storage.getPatientDetails("patient_john");
-  if (patient && patient.patientInfo) {
-    const configuration = patient.patientInfo;
-    configuration.hospitalName = Hospital.HB;
-    configuration.configured = true;
-    triggerConfigurePatient(configuration);
-  }
-};
-
 // HF-OTP-II: Triggers ConfigurePatient of DTA
 export const triggerConfigurePatient = (input: PatientInfo): void => {
   agentAPI.addFact(

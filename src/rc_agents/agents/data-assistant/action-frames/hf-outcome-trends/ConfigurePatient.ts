@@ -43,9 +43,6 @@ class ConfigurePatient extends Activity {
     // Reset preconditions
     await super.doActivity(agent, [rule2]);
 
-    // Dispatch to store to indicate ongoing configuration
-    store.dispatch(setConfiguringPatient(true));
-
     try {
       // Get patient configuration from facts
       const configuration: PatientInfo =
