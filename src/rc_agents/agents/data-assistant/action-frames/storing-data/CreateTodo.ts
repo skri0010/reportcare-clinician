@@ -259,10 +259,8 @@ const rule2 = new ResettablePrecondition(
 );
 
 // Actionframe
-const af_CreateTodo = new Actionframe(
+export const af_CreateTodo = new Actionframe(
   `AF_${ActionFrameIDs.DTA.CREATE_TODO}`,
   [rule1, rule2],
   new CreateTodo()
 );
-
-export default af_CreateTodo;

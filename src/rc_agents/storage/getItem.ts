@@ -212,6 +212,22 @@ export const getPatientAlertInfos = async (
 };
 
 /**
+ * Gets patient configurations to be synced.
+ * @returns array of patient infos if any, otherwise null
+ */
+export const getPatientConfigurations = async (): Promise<
+  AsyncStorageType[AsyncStorageKeys.PATIENT_CONFIGURATIONS] | null
+> => {
+  const localData = await AsyncStorage.getItem(
+    AsyncStorageKeys.PATIENT_CONFIGURATIONS
+  );
+  if (localData) {
+    return JSON.parse(localData);
+  }
+  return null;
+};
+
+/**
  * Gets Alerts with updated to be synced.
  * @returns array of Alerts if any, otherwise null
  */

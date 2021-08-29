@@ -4,8 +4,10 @@ import {
   PatientAssignmentResolution,
   PatientDetails
 } from "rc_agents/model";
-import { ClinicianInfo, PatientAssignment } from "aws/API";
-import * as accessFunctions from "./accessFunctions";
+import { Alert, ClinicianInfo, PatientAssignment, PatientInfo } from "aws/API";
+// eslint-disable-next-line no-restricted-imports
+import * as accessFunctions from "rc_agents/storage/accessFunctions";
+import { RiskLevel } from "models/RiskLevel";
 
 /**
  * AsyncStorage access functions (SET, GET and REMOVE) with types
@@ -24,6 +26,7 @@ export enum AsyncStorageKeys {
   ALERT_INFOS = "AlertInfos",
   PENDING_PATIENT_ASSIGNMENTS = "PendingPatientAssignments",
   PATIENT_ASSIGNMENTS_RESOLUTIONS = "PatientAssignmentsResolutions",
+  PATIENT_CONFIGURATIONS = "PatientConfigurations",
   TODOS = "Todos",
   ALERTS_SYNC = "AlertsSync"
 }
@@ -47,6 +50,7 @@ export type AsyncStorageType = {
     [patientId: string]: PatientDetails | undefined;
   };
   [AsyncStorageKeys.ALERTS]: AlertInfo[];
+  [AsyncStorageKeys.PATIENT_CONFIGURATIONS]: PatientInfo[];
   [AsyncStorageKeys.ALERT_INFOS]: {
     [key: string]: { [key: string]: AlertInfo };
   };

@@ -12,10 +12,12 @@ import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
   AlertInfo,
   AlertStatus,
+  Hospital,
   PatientAssignmentResolution,
   TodoInput,
   TodoStatus
 } from "rc_agents/model";
+import { Storage } from "rc_agents/storage";
 
 // HF-OTP-I
 // Triggers RetrievePatientsByRole of DTA
@@ -108,6 +110,28 @@ export const triggerResolvePendingAssignments = (
     new Belief(
       BeliefKeys.PROCEDURE,
       ProcedureAttributes.SRD_I,
+      ProcedureConst.ACTIVE
+    )
+  );
+};
+
+// HF-OTP-II: Triggers ConfigurePatient of DTA
+export const triggerConfigurePatient = (input: PatientInfo): void => {
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PATIENT,
+      PatientAttributes.PATIENT_TO_CONFIGURE,
+      input
+    ),
+    false
+  );
+  agentDTA.addBelief(
+    new Belief(BeliefKeys.PATIENT, PatientAttributes.CONFIGURE_PATIENT, true)
+  );
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PROCEDURE,
+      ProcedureAttributes.HF_OTP_II,
       ProcedureConst.ACTIVE
     )
   );

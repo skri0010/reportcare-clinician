@@ -26,7 +26,7 @@ import { AlertInfo, AlertStatus } from "rc_agents/model";
  */
 class SyncUpdateAlerts extends Activity {
   /**
-   * Constructor for the SyncUpdateAlerts class
+   * Constructor
    */
   constructor() {
     super(ActionFrameIDs.NWA.SYNC_UPDATE_ALERTS);
@@ -138,10 +138,8 @@ const rule2 = new ResettablePrecondition(
 );
 
 // Actionframe
-const af_SyncUpdateAlerts = new Actionframe(
+export const af_SyncUpdateAlerts = new Actionframe(
   `AF_${ActionFrameIDs.NWA.SYNC_UPDATE_ALERTS}`,
   [rule1, rule2],
   new SyncUpdateAlerts()
 );
-
-export default af_SyncUpdateAlerts;

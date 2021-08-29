@@ -86,6 +86,20 @@ export const setPatientAssignmentsSynced = createAction(
   })
 )();
 
+export const setConfiguringPatient = createAction(
+  actionNames.SET_CONFIGURING_PATIENT,
+  (configuringPatient: boolean) => ({
+    configuringPatient: configuringPatient
+  })
+)();
+
+export const setConfigurationSuccessful = createAction(
+  actionNames.SET_CONFIGURATION_SUCCESSFUL,
+  (configurationSuccessful: boolean) => ({
+    configurationSuccessful: configurationSuccessful
+  })
+)();
+
 export const setPendingAlertCount = createAction(
   actionNames.SET_PENDING_ALERT_COUNT,
   (pendingAlertCount: PendingAlertCount) => ({

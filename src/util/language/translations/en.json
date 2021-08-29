@@ -198,7 +198,8 @@
       "TargetActivity": "Enter target number of steps",
       "TargetWeight": "Enter target weight (in kg)",
       "FluidIntakeGoal": "Enter fluid intake goal (in ml)"
-    }
+    },
+    "ConfigurationSuccessful": "Patient has been successfully configured"
   },
   "Patient_Overview": {
     "BloodPressure": "Blood Pressure",

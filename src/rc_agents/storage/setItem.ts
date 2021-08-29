@@ -15,6 +15,8 @@ import {
   getAlerts,
   getAlertsSync,
   getAllPatientDetails,
+  getPatientConfigurations,
+  getPatientDetails,
   getSingleAlert,
   getSingleAlertInfo,
   getTodos
@@ -96,6 +98,21 @@ export const setPatients = async (
 };
 
 /**
+ * Stores as PatientDetails
+ * Performs local merging (saving only patientInfo)
+ */
+export const setPatient = async (patient: PatientInfo): Promise<void> => {
+  const localPatient = await getPatientDetails(patient.patientID);
+
+  await setPatientDetails({
+    patientInfo: patient,
+    activityInfos: localPatient?.activityInfos || {},
+    symptomReports: localPatient?.symptomReports || {},
+    vitalsReports: localPatient?.vitalsReports || {}
+  });
+};
+
+/**
  * Stores as AllPatientDetails
  * Performs local merging (saving all but PatientInfo)
  */
@@ -112,7 +129,7 @@ export const setPatientDetails = async (
   if (patient && patient.patientID && localPatients) {
     // Patient exists locally: Merge
     localPatients[patient.patientID] = {
-      patientInfo: localPatients[patient.patientID]?.patientInfo || patient,
+      patientInfo: patient,
       activityInfos: patientDetails.activityInfos,
       symptomReports: patientDetails.symptomReports,
       vitalsReports: patientDetails.vitalsReports
@@ -130,6 +147,30 @@ export const setAllPatientDetails = async (
   await AsyncStorage.setItem(
     AsyncStorageKeys.ALL_PATIENT_DETAILS,
     JSON.stringify(patientsDetails)
+  );
+};
+
+export const setPatientConfigurations = async (
+  configurations: PatientInfo[]
+): Promise<void> => {
+  let localData = await getPatientConfigurations();
+
+  configurations.forEach((configuration) => {
+    if (localData) {
+      // Removes existing patient configuration if any
+      const existIndex = localData.findIndex((p) => p.id === configuration.id);
+      if (existIndex >= 0) {
+        localData.splice(existIndex, 1);
+      }
+    } else {
+      localData = [];
+    }
+    localData.push(configuration);
+  });
+
+  await AsyncStorage.setItem(
+    AsyncStorageKeys.PATIENT_CONFIGURATIONS,
+    JSON.stringify(localData)
   );
 };
 

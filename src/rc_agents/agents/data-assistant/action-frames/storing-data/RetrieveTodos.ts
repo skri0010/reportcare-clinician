@@ -212,10 +212,8 @@ const rule2 = new ResettablePrecondition(
 );
 
 // Actionframe
-const af_RetrieveTodos = new Actionframe(
+export const af_RetrieveTodos = new Actionframe(
   `AF_${ActionFrameIDs.DTA.RETRIEVE_TODOS}`,
   [rule1, rule2],
   new RetrieveTodos()
 );
-
-export default af_RetrieveTodos;
