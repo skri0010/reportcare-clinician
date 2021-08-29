@@ -14,7 +14,7 @@ export const OxygenSaturationParameterCard: FC<OxygenSaturationCardProps> = ({
   const [vitals] = useState(mockVitals);
 
   return (
-    <CardWrapper maxHeight={maxHeight} paddingTop>
+    <CardWrapper maxHeight={maxHeight}>
       <OxygenSaturationChart data={vitals} />
     </CardWrapper>
   );

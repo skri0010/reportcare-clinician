@@ -1,5 +1,5 @@
 import React, { FC, useState, createContext } from "react";
-import { View, Dimensions, FlatList } from "react-native";
+import { View, FlatList } from "react-native";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { mockClinician } from "mock/mockClinicians";
 import { ClinicianContactRow } from "components/RowComponents/ClinicianRow/ClinicianContactRow";
@@ -92,7 +92,7 @@ export const CliniciansScreen: FC<MainScreenProps[ScreenName.CLINICIANS]> =
             ) : (
               <NoSelectionScreen
                 screenName={ScreenName.CLINICIANS}
-                subtitle="Choose Clinician to view more info"
+                subtitle={i18n.t("Clinicians.NoSelection")}
               />
             )}
           </View>

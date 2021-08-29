@@ -1,10 +1,10 @@
 import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
 import { ScaledSheet } from "react-native-size-matters";
-import { H4, H5 } from "components/Text";
+import { H5, H6 } from "components/Text";
 import { getRiskLevelColor, RiskLevel } from "models/RiskLevel";
 import { View } from "react-native";
-import { RowButton } from "components/Buttons/RowButton";
+import { RowButton } from "components/Buttons/TextButton";
 import i18n from "util/language/i18n";
 
 interface AlertHistoryRowProps {
@@ -44,32 +44,27 @@ export const AlertHistoryRow: FC<AlertHistoryRowProps> = ({
       <View style={[styles.textContainer]}>
         {/* Risk level and date */}
         <View style={[styles.contentTitle]}>
-          <H5
+          <H6
             text={`${getRiskName(risk)} `}
             style={{
               fontWeight: "bold",
-              color: getRiskLevelColor(
-                colors.riskLevelSelectedBackgroundColors,
-                risk
-              )
+              color: getRiskLevelColor(colors.riskLevelBorderColors, risk)
             }}
           />
-          <H5
+          <H6
             text={`${date}:`}
-            style={{ fontWeight: "bold", color: colors.primaryTextColor }}
+            style={{ fontWeight: "600", color: colors.primaryTextColor }}
           />
         </View>
         {/* Description */}
-        <H4
+        <H5
           text={description}
           style={{ color: colors.primaryTextColor }}
           numberOfLines={2}
         />
       </View>
       {/* View button */}
-      <View style={[styles.buttonContainer]}>
-        <RowButton onRowPress={onRowPress} title="Patient_History.ViewButton" />
-      </View>
+      <RowButton onPress={onRowPress} title="Patient_History.ViewButton" />
     </View>
   );
 };
