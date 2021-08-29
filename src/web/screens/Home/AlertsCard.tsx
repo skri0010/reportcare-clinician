@@ -1,10 +1,9 @@
 import React, { FC, useState, useEffect } from "react";
 import { RootState, select, store } from "util/useRedux";
 import { RiskLevel } from "models/RiskLevel";
-import { View, TextStyle } from "react-native";
+import { View } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { AlertButton } from "components/Buttons/AlertButton";
-import { H4, H6 } from "components/Text";
 import { CardWrapper } from "./CardWrapper";
 import i18n from "util/language/i18n";
 import { RiskFilter } from "rc_agents/model";
@@ -39,9 +38,6 @@ export const AlertsCard: FC<AlertsCardProps> = ({
       fetchingPendingAlerts: state.agents.fetchingPendingAlerts
     })
   );
-
-  const titleColor = { color: colors.primaryTextColor } as TextStyle;
-  const detailsColors = { color: colors.secondaryTextColor } as TextStyle;
 
   const [remainingAlert, setRemainingAlert] = useState(0);
 
@@ -90,14 +86,12 @@ export const AlertsCard: FC<AlertsCardProps> = ({
   const iconSize = isMobile ? ms(30) : ms(15); // Larger icon size for mobile
 
   return (
-    <CardWrapper flex={flex} maxHeight={maxHeight}>
-      <View style={styles.titleContainer}>
-        <H4 text={i18n.t("Home.Alerts")} style={[styles.title, titleColor]} />
-        <H6
-          text={`(${remainingAlert} remaining)`}
-          style={[styles.title, detailsColors]}
-        />
-      </View>
+    <CardWrapper
+      flex={flex}
+      maxHeight={maxHeight}
+      title={i18n.t("Home.Alerts")}
+      subtitle={`(${remainingAlert} ${i18n.t("Keywords.remaining")})`}
+    >
       {/* Alert Button Row */}
       {fetchingPendingAlerts ? (
         <LoadingIndicator flex={1} />
@@ -151,19 +145,11 @@ export const AlertsCard: FC<AlertsCardProps> = ({
 };
 
 const styles = ScaledSheet.create({
-  titleContainer: {
-    flexDirection: "row",
-    alignItems: "baseline"
-  },
-  title: {
-    fontWeight: "bold",
-    paddingRight: "5@ms"
-  },
   alertsContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
     alignSelf: "center",
     justifyContent: "center",
-    paddingTop: "15@ms"
+    paddingTop: "5@ms"
   }
 });

@@ -1,10 +1,8 @@
 import React, { FC } from "react";
-import { RootState, select } from "util/useRedux";
-import { View } from "react-native";
-import { ms, ScaledSheet } from "react-native-size-matters";
-import { H1, H4, H5 } from "components/Text";
+import { ms } from "react-native-size-matters";
 import { CardWrapper } from "web/screens/Home/CardWrapper";
 import i18n from "util/language/i18n";
+import { AbsoluteParameters } from "components/Text/AbsoluteParameters";
 
 interface WeightProps {
   weight: string;
@@ -19,58 +17,18 @@ export const WeightCard: FC<WeightProps> = ({
   minHeight,
   flex
 }) => {
-  const { colors } = select((state: RootState) => ({
-    colors: state.settings.colors
-  }));
-
   return (
     <CardWrapper
-      maxHeight={minHeight}
+      minHeight={minHeight}
       flex={flex}
       minWidth={ms(100)}
       title={i18n.t("Patient_Overview.Weight")}
+      bottomText={`${i18n.t(
+        "Patient_Overview.TargetWeight"
+      )}: ${targetWeight}kg`}
+      noChildrenPaddingHorizontal
     >
-      <View style={styles.container}>
-        <View style={styles.textContainer}>
-          <View style={styles.text}>
-            <H1
-              text={weight}
-              style={{ fontWeight: "bold", color: colors.primaryTextColor }}
-            />
-            <H4 text="kg" style={styles.label} />
-          </View>
-        </View>
-        <H5
-          text={`${i18n.t("Patient_Overview.TargetWeight")}: ${targetWeight}`}
-          style={null}
-        />
-      </View>
+      <AbsoluteParameters centerText={weight} bottomText="kg" />
     </CardWrapper>
   );
 };
-
-const styles = ScaledSheet.create({
-  container: {
-    flex: 1,
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  textContainer: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    paddingTop: "44@ms"
-  },
-  text: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: "15@ms"
-  },
-  label: {
-    opacity: 0.8
-  }
-});

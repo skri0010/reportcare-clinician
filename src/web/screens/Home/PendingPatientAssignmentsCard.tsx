@@ -3,7 +3,6 @@ import { RootState, select } from "util/useRedux";
 import { View, TextStyle, FlatList } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
-import { H4 } from "components/Text";
 import { CardWrapper } from "./CardWrapper";
 import i18n from "util/language/i18n";
 import {
@@ -59,13 +58,10 @@ export const PendingPatientAssignmentsCard: FC<PendingPatientAssignmentsCardProp
     };
 
     return (
-      <CardWrapper maxHeight={maxHeight}>
-        <View style={styles.titleContainer}>
-          <H4
-            text={i18n.t("Home.PatientAssignments")}
-            style={[styles.title, titleColor]}
-          />
-        </View>
+      <CardWrapper
+        maxHeight={maxHeight}
+        title={i18n.t("Home.PatientAssignments")}
+      >
         {/* Loading indicator */}
         {fetchingPendingPatientAssignments ? <LoadingIndicator /> : null}
 
@@ -106,19 +102,10 @@ export const PendingPatientAssignmentsCard: FC<PendingPatientAssignmentsCardProp
   };
 
 const styles = ScaledSheet.create({
-  title: {
-    fontWeight: "bold"
-  },
   listContainer: {
-    flex: 1,
-    paddingTop: "15@ms"
+    flex: 1
   },
   flatlistLoadingOpacity: {
     opacity: 0.5
-  },
-  titleContainer: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "baseline"
   }
 });

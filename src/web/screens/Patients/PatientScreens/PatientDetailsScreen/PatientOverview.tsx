@@ -17,7 +17,7 @@ interface PatientOverviewProps extends PatientDetailsTabProps.OverviewTabProps {
 }
 
 export const PatientOverview: FC<PatientOverviewProps> = ({ details }) => {
-  const cardHeight = Math.max(ms(100), Dimensions.get("window").height * 0.325);
+  const cardHeight = Math.max(ms(100), Dimensions.get("window").height * 0.3);
 
   const [vitals, setVitals] = useState<ReportVitals | null>(null);
   const [symptoms, setSymptoms] = useState<ReportSymptom[]>([]);
@@ -56,8 +56,8 @@ export const PatientOverview: FC<PatientOverviewProps> = ({ details }) => {
         <View style={[styles.container]}>
           {/* Blood Pressure Card */}
           <BloodPressureCard
-            systolic={vitals?.BPDi || noRecord}
-            dystolic={vitals?.BPSys || noRecord}
+            systolicBP={vitals?.BPDi || noRecord}
+            diastolicBP={vitals?.BPSys || noRecord}
             minHeight={cardHeight}
             flex={2}
           />

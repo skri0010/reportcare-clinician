@@ -149,7 +149,7 @@
     "TitleInputPlaceholder": "Apakah todo ini tentang?",
     "PatientInputPlaceholder": "Siapakah nama pesakit?",
     "NotesInputPlaceholder": "Apakah yang perlu dicatatkan?",
-    "NoSelection": "Pilihkan salah satu item Todo untuk melihat butirannya",
+    "NoSelection": "Pilih salah satu item todo untuk melihat butirannya",
     "TodoCreateSuccessful": "Todo telah berjaya dicipta",
     "TodoUpdateSuccessful": "Todo telah berjaya dikemas kini",
     "MarkAsDone": "TANDA SEBAGAI SELESAI",
@@ -170,7 +170,7 @@
     "ICD/CRT": "ICD/CRT",
     "History": "Sejarah",
     "Info": "Info",
-    "NoSelection": "Pilihkan salah satu pesakit untuk mendapat informasi lanjut"
+    "NoSelection": "Pilih salah satu pesakit untuk mendapat informasi lanjut"
   },
   "Patient_Configuration": {
     "Title": "Konfigurasikan butiran",
@@ -181,7 +181,7 @@
       "DiagnosisInfo": "Info diagnosis",
       "DeviceNo": "Nombor peranti",
       "TargetActivity": "Sasaran nombor langkah",
-      "TargetWeight": "Sasaran berat (dalam kg)",
+      "TargetWeight": "Sasaran berat badan (dalam kg)",
       "FluidIntakeGoal": "Sasaran pengambilan air (dalam ml)"
     },
     "Prompt": {
@@ -189,14 +189,14 @@
     },
     "Error": {
       "TargetActivity": "Sila masukkan sasaran nombor langkah yang sah",
-      "TargetWeight": "Sila masukkan sasaran berat yang sah (dalam kg)",
+      "TargetWeight": "Sila masukkan sasaran berat badan yang sah (dalam kg)",
       "FluidIntakeGoal": "Sila masukkan sasaran pengambilan air yang sah (dalam ml)"
     },
     "Placeholder": {
       "DiagnosisInfo": "Masukkan info diagnosis",
       "DeviceNo": "Masukkan nombor peranti",
       "TargetActivity": "Masukkan sasaran nombor langkah",
-      "TargetWeight": "Masukkan sasaran berat (dalam kg)",
+      "TargetWeight": "Masukkan sasaran berat badan (dalam kg)",
       "FluidIntakeGoal": "Masukkan sasaran pengambilan air (dalam ml)"
     }
   },
@@ -205,9 +205,9 @@
     "Systolic": "Sistolik",
     "Diastolic": "Diastolik",
     "Medications": "Ubatan diprediksi",
-    "OxygenSaturation": "Ketepuan O2",
+    "OxygenSaturation": "Ketepuan Oxsigen",
     "Weight": "Berat Badan",
-    "TargetWeight": "Berat Badan Sasaran",
+    "TargetWeight": "Sasaran berat badan",
     "Symptoms": "Simptom",
     "NoRecord": "-",
     "NoSymptoms": "No symptoms recorded"
@@ -265,14 +265,21 @@
     "Years": "tahun"
   },
   "Clinicians": {
-    "SearchBarPlaceholder": "Cari pakar(contohnya John)"
+    "SearchBarPlaceholder": "Cari pakar(contohnya John)",
+    "NoSelection": "Pilih salah satu pakar untuk melihat butirannya"
   },
   "Alerts": {
-    "SearchBarPlaceholder": "Cari amaran"
+    "SearchBarPlaceholder": "Cari amaran",
+    "NoSelection": "Pilih salah satu amaran untuk melihat butirannya",
+    "Symptoms": "Simptom",
+    "Signs": "Tanda"
   },
   "MobileMessage": {
     "ViewList": "Lihat Senarai",
     "BackToDetails": "Balik ke Butiran"
   },
-  "UnexpectedError": "Ralat yang tidak disangkai telah berlaku"
+  "UnexpectedError": "Ralat yang tidak disangkai telah berlaku",
+  "Keywords": {
+    "remaining": "yang tinggal"
+  }
 }

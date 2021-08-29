@@ -19,7 +19,6 @@ import { useToast } from "react-native-toast-notifications";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AgentTrigger } from "rc_agents/trigger";
 import { useRoute } from "@react-navigation/native";
-import { RiskLevel } from "models/RiskLevel";
 import { ScreenName } from "web/navigation";
 
 interface AddTodoScreenProps {

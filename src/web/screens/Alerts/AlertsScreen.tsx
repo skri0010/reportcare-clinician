@@ -13,7 +13,6 @@ import { NavigationContainer } from "@react-navigation/native";
 import { NoSelectionScreen } from "../Shared/NoSelectionScreen";
 import { AlertDetailsScreen } from "./AlertDetailsScreen";
 import { MainScreenProps } from "web/navigation/types";
-import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { AgentTrigger } from "rc_agents/trigger";
 import { AlertStatus } from "rc_agents/model";
 import { AddTodoScreen } from "web/screens/Todo/modals/AddTodoScreen";

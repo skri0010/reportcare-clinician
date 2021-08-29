@@ -21,6 +21,10 @@ export const HomeScreen: FC<MainScreenProps[ScreenName.HOME]> = ({
   const navigateToAlert = () => {
     navigation.navigate(ScreenName.ALERTS);
   };
+  // navigation.navigate(ScreenName.PATIENTS, {
+  //   displayPatientId: "testsiuloong",
+  //   selectedTab: PatientDetailsTabName.HISTORY
+  // });
 
   return (
     <ScreenWrapper padding>

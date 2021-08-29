@@ -1,11 +1,9 @@
 import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
-import { H3 } from "components/Text";
 import { CardWrapper } from "web/screens/Home/CardWrapper";
 import { AlertHistoryRow } from "./AlertHistoryRow";
-import { FlatList, View } from "react-native";
+import { FlatList } from "react-native";
 import i18n from "util/language/i18n";
-import { ScaledSheet } from "react-native-size-matters";
 import { AlertInfo } from "rc_agents/model";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { EmptyListIndicator } from "components/Indicators/EmptyListIndicator";
@@ -37,19 +35,7 @@ export const PatientAlertHistoryCard: FC<PatientAlertHistoryProps> = ({
   }
 
   return (
-    <CardWrapper maxHeight={maxHeight}>
-      <View style={styles.title}>
-        <H3
-          text={i18n.t("Home.Alerts")}
-          style={[
-            {
-              fontWeight: "bold",
-              color: colors.primaryTextColor
-            }
-          ]}
-        />
-      </View>
-
+    <CardWrapper maxHeight={maxHeight} title={i18n.t("Home.Alerts")}>
       {/* List of alert histories */}
       {alertHistory && alertHistory.length > 0 ? (
         <FlatList
@@ -73,13 +59,3 @@ export const PatientAlertHistoryCard: FC<PatientAlertHistoryProps> = ({
     </CardWrapper>
   );
 };
-
-const styles = ScaledSheet.create({
-  title: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingBottom: "15@ms",
-    alignItems: "center"
-  }
-});

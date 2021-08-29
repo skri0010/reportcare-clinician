@@ -21,8 +21,7 @@ import {
   setCompletedAlerts,
   setFetchingPendingAlerts,
   setFetchingCompletedAlerts,
-  setFetchingAlerts,
-  setUpdatePendingAlerts
+  setFetchingAlerts
 } from "ic-redux/actions/agents/actionCreator";
 import { AlertInfo, AlertStatus } from "rc_agents/model";
 import { RiskLevel } from "models/RiskLevel";

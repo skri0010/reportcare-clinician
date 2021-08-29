@@ -1,9 +1,9 @@
 import { H4, H5 } from "components/Text";
 import React, { FC } from "react";
-import { ms } from "react-native-size-matters";
+import { ms, ScaledSheet } from "react-native-size-matters";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { CardWrapper } from "web/screens/Home/CardWrapper";
 import i18n from "util/language/i18n";
+import { CardWrapper } from "web/screens/Home/CardWrapper";
 
 interface SymptomCardProps {
   symptom: number | string;
@@ -23,19 +23,21 @@ export const SymptomCard: FC<SymptomCardProps> = ({
   return (
     <CardWrapper flex={1} minHeight={minHeight} maxHeight={maxHeight}>
       <Icon name="clipboard-alert-outline" size={iconSize} />
-      <H5
-        text={i18n.t("Patient_Overview.Symptoms")}
-        style={{ paddingLeft: ms(5), paddingBottom: ms(5), fontWeight: "bold" }}
-      />
+      <H5 text={`${i18n.t("Alerts.Symptoms")}: `} style={styles.title} />
       <H4
         text={`${symptom}`}
         style={{ paddingLeft: ms(5), paddingBottom: ms(10) }}
       />
-      <H5
-        text={i18n.t("Patient_History.AlertSummaryCard.Signs")}
-        style={{ paddingLeft: ms(5), paddingBottom: ms(5), fontWeight: "bold" }}
-      />
+      <H5 text={`${i18n.t("Alerts.Signs")}: `} style={styles.title} />
       <H4 text={`${signs}`} style={{ paddingLeft: ms(5) }} />
     </CardWrapper>
   );
 };
+
+const styles = ScaledSheet.create({
+  title: {
+    fontWeight: "bold",
+    paddingLeft: "5@ms",
+    paddingBottom: "5@ms"
+  }
+});

@@ -68,7 +68,7 @@ export const LongAlertButton: React.FC<LongAlertButtonProps> = ({
           style={[
             styles.badgeContainerStyle,
             {
-              backgroundColor: colors.primaryButtonColor,
+              backgroundColor: colors.acceptButtonColor,
               borderColor: colors.primaryContrastTextColor
             }
           ]}

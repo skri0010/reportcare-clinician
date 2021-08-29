@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
 import { View, TextStyle, Image } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
-import { H1, H3, H5 } from "components/Text";
+import { H3, H5 } from "components/Text";
 import { CardWrapper } from "./CardWrapper";
 import i18n from "util/language/i18n";
 
@@ -26,7 +26,11 @@ export const WelcomeCard: FC<WelcomeCardProps> = ({
   } as TextStyle;
 
   return (
-    <CardWrapper flex={flex} maxHeight={maxHeight}>
+    <CardWrapper
+      flex={flex}
+      maxHeight={maxHeight}
+      title={i18n.t("Home.Dashboard")}
+    >
       <View
         style={[
           styles.card,
@@ -34,8 +38,6 @@ export const WelcomeCard: FC<WelcomeCardProps> = ({
         ]}
       >
         <View style={styles.textContainer}>
-          {/* Dashboard title */}
-          <H1 text={i18n.t("Home.Dashboard")} style={[styles.username]} />
           <View style={styles.messageContainer}>
             {/* Welcome title */}
             <H3
@@ -72,14 +74,13 @@ const styles = ScaledSheet.create({
     maxWidth: "70%"
   },
   messageContainer: {
-    paddingVertical: "10@ms",
     paddingLeft: "15@ms"
   },
   logoContainer: {
     justifyContent: "center"
   },
   username: {
-    fontWeight: "bold"
+    fontWeight: "600"
   },
   message: {
     paddingTop: "5@ms"
