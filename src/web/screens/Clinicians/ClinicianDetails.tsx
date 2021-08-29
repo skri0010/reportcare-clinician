@@ -1,7 +1,6 @@
 import React, { FC } from "react";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { View } from "react-native";
-import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { ContactTitle } from "components/RowComponents/ContactTitle";
 import i18n from "util/language/i18n";
 import { InfoTitleBar } from "components/Bars/InfoTitleBar";
@@ -16,7 +15,7 @@ export const ClinicianDetails: FC = () => {
   }));
 
   return (
-    <ScreenWrapper>
+    <View style={{ flex: 2 }}>
       {!clinicianSelected ? (
         <NoSelectionScreen
           screenName={ScreenName.CLINICIANS}
@@ -42,7 +41,7 @@ export const ClinicianDetails: FC = () => {
           </View>
         </View>
       )}
-    </ScreenWrapper>
+    </View>
   );
 };
 

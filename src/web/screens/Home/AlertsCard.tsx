@@ -31,9 +31,6 @@ export const AlertsCard: FC<AlertsCardProps> = ({ flex = 1, maxHeight }) => {
     pendingAlertCount: state.agents.pendingAlertCount
   }));
 
-  const titleColor = { color: colors.primaryTextColor } as TextStyle;
-  const detailsColors = { color: colors.secondaryTextColor } as TextStyle;
-
   const [remainingAlert, setRemainingAlert] = useState(0);
 
   useEffect(() => {
@@ -128,14 +125,12 @@ export const AlertsCard: FC<AlertsCardProps> = ({ flex = 1, maxHeight }) => {
   const iconSize = isMobile ? ms(30) : ms(15); // Larger icon size for mobile
 
   return (
-    <CardWrapper flex={flex} maxHeight={maxHeight}>
-      <View style={styles.titleContainer}>
-        <H4 text={i18n.t("Home.Alerts")} style={[styles.title, titleColor]} />
-        <H6
-          text={`(${remainingAlert} remaining)`}
-          style={[styles.title, detailsColors]}
-        />
-      </View>
+    <CardWrapper
+      flex={flex}
+      maxHeight={maxHeight}
+      title={i18n.t("Home.Alerts")}
+      subtitle={`(${remainingAlert} ${i18n.t("Keywords.remaining")})`}
+    >
       {/* Alert Button Row */}
       <View style={styles.alertsContainer}>
         {/* JH-TODO: Remove hardcoding of alertCount */}
@@ -193,19 +188,11 @@ export const AlertsCard: FC<AlertsCardProps> = ({ flex = 1, maxHeight }) => {
 };
 
 const styles = ScaledSheet.create({
-  titleContainer: {
-    flexDirection: "row",
-    alignItems: "baseline"
-  },
-  title: {
-    fontWeight: "bold",
-    paddingRight: "5@ms"
-  },
   alertsContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
     alignSelf: "center",
     justifyContent: "center",
-    paddingTop: "15@ms"
+    paddingTop: "5@ms"
   }
 });

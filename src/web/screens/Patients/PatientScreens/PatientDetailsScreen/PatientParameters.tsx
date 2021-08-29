@@ -2,10 +2,10 @@ import React, { FC } from "react";
 import { Dimensions, View } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
-import { WeightParameterCard } from "./PatientParameterComponents/WeightParameterCard";
-import { DiastolicParameterCard } from "./PatientParameterComponents/DiastolicParameterCard";
-import { OxygenSaturationParameterCard } from "./PatientParameterComponents/OxygenSaturationParameterCard";
-import { SystolicParameterCard } from "./PatientParameterComponents/SystolicParameterCard";
+import { WeightChartCard } from "./PatientParameterComponents/WeightChartCard";
+import { DiastolicBPChartCard } from "./PatientParameterComponents/DiastolicBPChartCard";
+import { OxygenSaturationParameterCard } from "./PatientParameterComponents/OxygenSaturationChartCard";
+import { SystolicBPChartCard } from "./PatientParameterComponents/SystolicBPChartCard";
 import { PatientDetailsTabProps } from "web/navigation/types";
 import { PatientDetails } from "rc_agents/model";
 
@@ -24,12 +24,12 @@ export const PatientParameters: FC<PatientParametersProps> = ({ details }) => {
     <ScreenWrapper padding>
       <View style={styles.container}>
         {/* Systolic Blood Graph */}
-        <SystolicParameterCard
+        <SystolicBPChartCard
           patientId={details.patientInfo.patientID}
           maxHeight={cardMaxHeight}
         />
         {/* Diastolic Blood Graph */}
-        <DiastolicParameterCard
+        <DiastolicBPChartCard
           patientId={details.patientInfo.patientID}
           maxHeight={cardMaxHeight}
         />
@@ -41,7 +41,7 @@ export const PatientParameters: FC<PatientParametersProps> = ({ details }) => {
           maxHeight={cardMaxHeight}
         />
         {/* Weight Graph */}
-        <WeightParameterCard
+        <WeightChartCard
           patientId={details.patientInfo.patientID}
           maxHeight={cardMaxHeight}
         />

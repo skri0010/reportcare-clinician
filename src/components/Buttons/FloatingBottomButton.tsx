@@ -29,7 +29,7 @@ export const FloatingBottomButton: FC<FloatingBottomButtonProps> = ({
     <View style={styles.buttonContainer}>
       <TouchableOpacity
         onPress={onPress}
-        style={[{ backgroundColor: colors.primaryButtonColor }, styles.button]}
+        style={[{ backgroundColor: colors.acceptButtonColor }, styles.button]}
       >
         {isMobile ? <H3 {...textProps} /> : <H6 {...textProps} />}
       </TouchableOpacity>

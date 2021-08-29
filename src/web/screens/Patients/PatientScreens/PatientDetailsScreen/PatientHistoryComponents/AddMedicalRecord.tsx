@@ -113,7 +113,7 @@ export const AddMedicalRecord: FC<AddMedicalRecordProps> = ({
           style={[
             styles.saveButton,
             {
-              backgroundColor: colors.primaryButtonColor,
+              backgroundColor: colors.acceptButtonColor,
               borderColor: colors.primaryTextColor
             }
           ]}
