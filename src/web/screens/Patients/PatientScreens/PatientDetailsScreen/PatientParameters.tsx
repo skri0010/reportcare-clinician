@@ -14,7 +14,7 @@ import {
   getParameterStatFromOneVitalsReport,
   obtainFullChartData,
   ParameterStats
-} from "components/Visualization/ParameterGraphs";
+} from "components/VisualizationComponents/ParameterGraphs";
 import { mockLocalReportVitals } from "mock/mockVitals";
 
 interface PatientParametersProps

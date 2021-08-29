@@ -1,5 +1,4 @@
 import { ReportVitals } from "aws/API";
-import moment from "moment";
 import i18n from "util/language/i18n";
 
 enum days {

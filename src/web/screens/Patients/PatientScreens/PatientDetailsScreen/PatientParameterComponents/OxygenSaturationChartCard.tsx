@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { CardWrapper } from "web/screens/Home/CardWrapper";
-import { OxygenSaturationChart } from "components/Visualization/OxygenSaturationChart";
-import { ParameterGraphsProps } from "components/Visualization/ParameterGraphs";
+import { OxygenSaturationChart } from "components/VisualizationComponents/OxygenSaturationChart";
+import { ParameterGraphsProps } from "components/VisualizationComponents/ParameterGraphs";
 
 interface OxygenSaturationCardProps extends ParameterGraphsProps {
   maxHeight: number;
