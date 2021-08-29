@@ -25,14 +25,14 @@
     "EmailPlaceholder": "Enter email",
     "EmailError": "Invalid email address",
     "Role": "Role",
-    "RolePlaceholder": "-- Select a role --",
+    "RolePlaceholder": "Select a role",
     "EP": "Electrophysiologist",
     "MedicalOfficer": "Medical Officer",
     "HFSpecialist": "Heart Failure Specialist",
     "Nurse": "Nurse",
     "Pharmacist": "Pharmacist",
     "Hospital": "Hospital",
-    "HospitalPlaceholder": "-- Select a hospital --",
+    "HospitalPlaceholder": "Select a hospital",
     "ConfirmPassword": "Confirm Password",
     "ConfirmPasswordPlaceholder": "Confirm password",
     "ConfirmPasswordError": "Passwords did not match",
@@ -163,6 +163,34 @@
     "History": "History",
     "Info": "Info",
     "NoSelection": "Select a patient to view details"
+  },
+  "Patient_Configuration": {
+    "Title": "Configure details",
+    "Proceed": "Proceed",
+    "Label": {
+      "HospitalName": "Hospital name",
+      "NYHAClass": "NYHA class",
+      "DiagnosisInfo": "Diagnosis information",
+      "DeviceNo": "Device number",
+      "TargetActivity": "Target number of steps",
+      "TargetWeight": "Target weight (in kg)",
+      "FluidIntakeGoal": "Fluid intake goal (in ml)"
+    },
+    "Prompt": {
+      "DeviceNo": "Does this patient have a device?"
+    },
+    "Error": {
+      "TargetActivity": "Please input a valid target number of steps",
+      "TargetWeight": "Please input a valid target weight (in kg)",
+      "FluidIntakeGoal": "Please input a valid fluid intake goal (in ml)"
+    },
+    "Placeholder": {
+      "DiagnosisInfo": "Enter diagnosis information",
+      "DeviceNo": "Enter device number",
+      "TargetActivity": "Enter target number of steps",
+      "TargetWeight": "Enter target weight (in kg)",
+      "FluidIntakeGoal": "Enter fluid intake goal (in ml)"
+    }
   },
   "Patient_Overview": {
     "BloodPressure": "Blood Pressure",

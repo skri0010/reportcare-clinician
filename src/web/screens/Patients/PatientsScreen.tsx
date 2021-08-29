@@ -34,6 +34,7 @@ import { NoSelectionScreen } from "../Shared/NoSelectionScreen";
 import i18n from "util/language/i18n";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AdaptiveTwoScreenWrapper } from "web/screens/AdaptiveTwoScreenWrapper";
+import { PatientConfigurationScreen } from "web/screens/Patients/PatientScreens/PatientConfiguration/PatientConfigurationScreen";
 
 export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
   route
@@ -193,27 +194,36 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
               }}
             >
               {fetchingPatientDetails ? (
+                // : Patient details is being fetched
                 <LoadingIndicator flex={1} />
               ) : patientDetails ? (
+                // Patient details is fetched and patient details is not null
                 <>
-                  {/* Patient name and avatar header */}
+                  {/* Patient avatar and name */}
                   <ContactTitle
                     name={patientDetails.patientInfo.name}
                     isPatient
                   />
-
-                  {/* Patient details */}
-                  <PatientDetailsTabNavigator
-                    details={patientDetails}
-                    selectedTab={selectedTab}
-                    setAddMedicalRecord={setAddMedicalRecord}
-                    setDisplayHistory={setDisplayHistory}
-                    setDisplayMedicalRecord={setDisplayMedicalRecord}
-                    setModalAlertVisible={setModalAlertVisible}
-                    setViewMedicalModal={setViewMedicalModal}
-                  />
+                  {patientDetails.patientInfo.configured ? (
+                    // Patient is configured: Show details
+                    <PatientDetailsTabNavigator
+                      details={patientDetails}
+                      selectedTab={selectedTab}
+                      setAddMedicalRecord={setAddMedicalRecord}
+                      setDisplayHistory={setDisplayHistory}
+                      setDisplayMedicalRecord={setDisplayMedicalRecord}
+                      setModalAlertVisible={setModalAlertVisible}
+                      setViewMedicalModal={setViewMedicalModal}
+                    />
+                  ) : (
+                    // Patient is not configured: Show configuration screen
+                    <PatientConfigurationScreen
+                      info={patientDetails.patientInfo}
+                    />
+                  )}
                 </>
               ) : (
+                // Patient details is not being fetched and patient details is null
                 <NoSelectionScreen
                   screenName={ScreenName.PATIENTS}
                   subtitle={i18n.t("Patients.NoSelection")}

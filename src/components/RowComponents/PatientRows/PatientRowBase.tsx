@@ -121,7 +121,7 @@ const styles = ScaledSheet.create({
     flex: 1
   },
   titleTextStyle: {
-    fontWeight: "bold",
+    fontWeight: "600",
     paddingBottom: "7@ms"
   },
   subtitleContainer: {

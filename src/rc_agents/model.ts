@@ -18,11 +18,20 @@ export enum Role {
 
 // Hospital selection during clinician sign up
 export enum Hospital {
+  UNKNOWN = "",
   PHKL = "Pantai Hospital Kuala Lumpur",
   GKL = "Gleneagles Kuala Lumpur",
   HEQ = "Hospital Queen Elizabeth",
   HQEII = "Hospital Queen Elizabeth II",
   HB = "Hospital Bintulu"
+}
+
+export enum NYHAClass {
+  UNKNOWN = "",
+  I = "I",
+  II = "II",
+  III = "III",
+  IV = "IV"
 }
 
 export enum PatientAssignmentStatus {

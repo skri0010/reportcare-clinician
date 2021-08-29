@@ -26,7 +26,7 @@ export const mockPatients: PatientInfo[] = [
     emergencyContactName: "Emergency Test",
     emergencyContactNumber: "999",
     email: "testemail@legit.com",
-    fluidIntakeGoal: RiskLevel.UNASSIGNED,
+    fluidIntakeGoal: "1000",
     configured: false,
     _lastChangedAt: 1627604201979,
     _version: 1
@@ -54,9 +54,9 @@ export const mockPatients: PatientInfo[] = [
     emergencyContactName: "Emergency Test",
     emergencyContactNumber: "999",
     email: "testemail@legit.com",
+    fluidIntakeGoal: "1000",
+    configured: true,
     riskLevel: RiskLevel.LOW,
-    fluidIntakeGoal: RiskLevel.UNASSIGNED,
-    configured: false,
     _lastChangedAt: 1627604201979,
     _version: 1
   },
@@ -84,8 +84,8 @@ export const mockPatients: PatientInfo[] = [
     emergencyContactName: "Emergency Test",
     emergencyContactNumber: "999",
     email: "testemail@legit.com",
-    fluidIntakeGoal: RiskLevel.UNASSIGNED,
-    configured: false,
+    fluidIntakeGoal: "1000",
+    configured: true,
     _lastChangedAt: 1627604201979,
     _version: 1
   },
@@ -113,8 +113,8 @@ export const mockPatients: PatientInfo[] = [
     emergencyContactName: "Emergency Test",
     emergencyContactNumber: "999",
     email: "testemail@legit.com",
-    fluidIntakeGoal: RiskLevel.UNASSIGNED,
-    configured: false,
+    fluidIntakeGoal: "1000",
+    configured: true,
     _lastChangedAt: 1627604201979,
     _version: 1
   }
