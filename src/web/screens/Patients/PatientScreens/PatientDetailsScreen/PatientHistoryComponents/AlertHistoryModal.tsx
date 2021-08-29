@@ -6,6 +6,7 @@ import { H3, H4, H5 } from "components/Text";
 import { ScaledSheet, ms } from "react-native-size-matters";
 import i18n from "util/language/i18n";
 import { AlertInfo } from "rc_agents/model";
+import moment from "moment";
 
 interface AlertHistoryModalProps {
   name: string; // patient name
@@ -42,6 +43,11 @@ function getRiskName(risk: RiskLevel) {
   }
   return i18n.t(riskName);
 }
+
+const getLocalDateTime = (datetime: string) => {
+  const localDateTime = moment.utc(datetime).local();
+  return localDateTime.format("HH:mm DD-MM-YYYY");
+};
 
 export const AlertHistoryModal: FC<AlertHistoryModalProps> = ({
   name,
@@ -126,7 +132,7 @@ export const AlertHistoryModal: FC<AlertHistoryModalProps> = ({
             style={{ fontWeight: "bold", color: colors.secondaryTextColor }}
           />
           <H5
-            text={`${alertHistory.dateTime}`}
+            text={`${getLocalDateTime(alertHistory.dateTime)}`}
             style={{ color: colors.secondaryTextColor }}
           />
         </View>
