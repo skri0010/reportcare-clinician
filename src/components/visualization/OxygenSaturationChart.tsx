@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import i18n from "util/language/i18n";
-import { LineChartComponent } from "./LineChart";
+import { LineChartComponent } from "./LineChartComponent";
 import {
   getAverageStats,
   getXLabels,
