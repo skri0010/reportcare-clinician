@@ -1,17 +1,17 @@
 import React, { FC, useState } from "react";
 import { CardWrapper } from "web/screens/Home/CardWrapper";
-import { mockVitals } from "mock/mockVitals";
 import { SystolicPressureChart } from "components/Visualization/SystolicPressureChart";
+import { ReportVitals } from "aws/API";
 
 interface SystolicBPChartCardProps {
-  patientId: string;
+  vitals: ReportVitals[];
   maxHeight: number;
 }
 
 export const SystolicBPChartCard: FC<SystolicBPChartCardProps> = ({
+  vitals,
   maxHeight
 }) => {
-  const [vitals] = useState(mockVitals);
 
   return (
     <CardWrapper maxHeight={maxHeight}>

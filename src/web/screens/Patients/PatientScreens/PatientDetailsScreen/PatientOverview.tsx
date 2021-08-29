@@ -11,6 +11,7 @@ import { ReportSymptom, ReportVitals } from "aws/API";
 import i18n from "util/language/i18n";
 import { PatientDetailsTabProps } from "web/navigation/types";
 import { PatientDetails } from "rc_agents/model";
+import { getLatestVitalsReport } from "util/utilityFunctions";
 
 interface PatientOverviewProps extends PatientDetailsTabProps.OverviewTabProps {
   details: PatientDetails;
@@ -29,14 +30,7 @@ export const PatientOverview: FC<PatientOverviewProps> = ({ details }) => {
     // Take the latest vitals report and update vitals on date
     const vitalsReportsOnDate = details.vitalsReports[date];
     if (vitalsReportsOnDate) {
-      const datetimeList = vitalsReportsOnDate.map((report) =>
-        Date.parse(report.DateTime)
-      );
-      const latestDatetime = Math.max(...datetimeList);
-      const latestVitalsReport: ReportVitals | undefined =
-        vitalsReportsOnDate.find(
-          (item) => item.DateTime === new Date(latestDatetime).toISOString()
-        );
+      const latestVitalsReport = getLatestVitalsReport(vitalsReportsOnDate);
       if (latestVitalsReport) {
         setVitals(latestVitalsReport);
       }
