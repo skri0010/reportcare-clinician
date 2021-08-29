@@ -53,5 +53,5 @@ const styles = ScaledSheet.create({
     alignItems: "center",
     flexWrap: "wrap"
   },
-  infoTitle: { fontWeight: "bold", paddingRight: "5@ms" }
+  infoTitle: { fontWeight: "600", paddingRight: "5@ms" }
 });

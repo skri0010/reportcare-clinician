@@ -80,7 +80,7 @@ const styles = ScaledSheet.create({
     justifyContent: "center"
   },
   username: {
-    fontWeight: "bold"
+    fontWeight: "600"
   },
   message: {
     paddingTop: "5@ms"

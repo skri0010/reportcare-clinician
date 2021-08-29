@@ -1,7 +1,6 @@
 import React, { FC } from "react";
 import { View, Dimensions } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
-import { H5 } from "components/Text";
 import { RootState, select } from "util/useRedux";
 import { AlertHistory } from "mock/mockPatientDetails";
 import { BloodPressureCard } from "./AlertDetailsCards/BloodPressureCard";
@@ -14,10 +13,6 @@ export interface AlertDetailsProps {
 }
 
 export const AlertDetails: FC<AlertDetailsProps> = ({ alertHistory }) => {
-  const { colors } = select((state: RootState) => ({
-    colors: state.settings.colors
-  }));
-
   const cardHeight = Math.max(ms(100), Dimensions.get("window").height * 0.25);
 
   return (

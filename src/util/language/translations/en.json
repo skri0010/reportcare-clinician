@@ -260,7 +260,10 @@
     "NoSelection": "Select a clinician to view more details"
   },
   "Alerts": {
-    "SearchBarPlaceholder": "Search alerts"
+    "SearchBarPlaceholder": "Search alerts",
+    "NoSelection": "Select an alert to view more details",
+    "Symptoms": "Symptoms",
+    "Signs": "Signs"
   },
   "MobileMessage": {
     "ViewList": "View List",

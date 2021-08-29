@@ -260,7 +260,10 @@
     "NoSelection": "Pilih salah satu pakar untuk melihat butirannya"
   },
   "Alerts": {
-    "SearchBarPlaceholder": "Cari amaran"
+    "SearchBarPlaceholder": "Cari amaran",
+    "NoSelection": "Pilih salah satu amaran untuk melihat butirannya",
+    "Symptoms": "Simptom",
+    "Signs": "Tanda"
   },
   "MobileMessage": {
     "ViewList": "Lihat Senarai",

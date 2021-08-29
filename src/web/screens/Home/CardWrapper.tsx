@@ -119,7 +119,7 @@ const styles = ScaledSheet.create({
     width: "100%"
   },
   title: {
-    fontWeight: "600",
+    fontWeight: "bold",
     flexWrap: "wrap"
   },
   subtitle: {
