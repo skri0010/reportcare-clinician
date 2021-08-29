@@ -42,6 +42,7 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = ({
     procedureOngoing,
     procedureSuccessful,
     updatedTodo,
+    todoDetails,
     submittingTodo
   } = select((state: RootState) => ({
     colors: state.settings.colors,
@@ -49,7 +50,8 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = ({
     procedureOngoing: state.agents.procedureOngoing,
     procedureSuccessful: state.agents.procedureSuccessful,
     updatedTodo: state.agents.updatedTodo,
-    submittingTodo: state.agents.submittingTodo
+    submittingTodo: state.agents.submittingTodo,
+    todoDetails: state.agents.todoDetails
   }));
 
   // console.log(route.params);
@@ -95,7 +97,7 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = ({
   function onRowClick(item: LocalTodo) {
     setEmptyTodo(false);
     dispatch(setProcedureOngoing(true));
-    dispatch(setTodoDetails(item));
+    // dispatch(setTodoDetails(item));
     if (item.id) {
       AgentTrigger.triggerRetrieveTodoDetails({ id: item.id });
     }

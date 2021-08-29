@@ -54,7 +54,11 @@ export const ActionFrameIDs = {
     RETRIEVE_TODOS: "RetrieveTodos",
     CREATE_TODO: "CreateTodo",
     UPDATE_TODO: "UpdateTodo",
-    REQUEST_DISPLAY_TODOS: "RequestDisplayTodos"
+    REQUEST_DISPLAY_TODOS: "RequestDisplayTodos",
+
+    // SRD-III: Todo Details
+    RETRIEVE_TODO_DETAILS: "RetrieveTodoDetails",
+    REQUEST_DISPLAY_TODO_DETAILS: "RequestDisplayTodoDetails"
   },
   UXSA: {
     // HF-OTP-I: ClinicianInfo and all patients (PatientInfo)
@@ -72,7 +76,6 @@ export const ActionFrameIDs = {
     DISPLAY_TODOS: "DisplayTodos",
 
     // SRD -III : Todo Details
-
     DISPLAY_TODO_DETAILS: "DisplayTodoDetails",
     // AT-CP
     DISPLAY_PENDING_ALERT_COUNT: "DisplayPendingAlertCount",
@@ -162,6 +165,7 @@ export enum ClinicianAttributes {
     DISPLAY_TODOS = "DisplayTodos",
 
     // SRD-III - Todo Details
+    RETRIEVE_TODO_DETAILS = "RetrieveTodoDetails",
     TODO_DETAILS = "TodoDetails",
     DISPLAY_TODO_DETAILS = "DisplayTodoDetails"
 }

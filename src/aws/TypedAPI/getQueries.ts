@@ -138,7 +138,6 @@ interface GetTodoResponse extends BaseResponse {
 export const getTodo = async (
   variables: GetTodoQueryVariables
 ): Promise<GetTodoResponse> => {
-  console.log(variables.id);
   return (await API.graphql({
     query: queries.getTodo,
     variables: { id: variables.id }
