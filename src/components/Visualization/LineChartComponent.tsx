@@ -10,6 +10,7 @@ interface LineChartProps {
   graphSubtitle?: string;
   xLabels: string[];
   data: number[];
+  fromZero?: boolean;
 }
 
 /*
@@ -21,7 +22,8 @@ export const LineChartComponent: FC<LineChartProps> = ({
   graphTitle,
   graphSubtitle,
   xLabels,
-  data
+  data,
+  fromZero = false
 }) => {
   const { colors, fonts } = select((state: RootState) => ({
     colors: state.settings.colors,
@@ -88,6 +90,7 @@ export const LineChartComponent: FC<LineChartProps> = ({
         height={height}
         chartConfig={chartConfig}
         style={chartStyle}
+        fromZero={fromZero}
       />
     </View>
   );

@@ -30,7 +30,10 @@ export const WeightCard: FC<WeightProps> = ({
       )}: ${targetWeight}kg`}
       noChildrenPaddingHorizontal
     >
-      <AbsoluteParameters centerText={weight} bottomText="kg" />
+      <AbsoluteParameters
+        centerText={weight}
+        bottomText={i18n.t("Parameter_Graphs.WeightUnit")}
+      />
     </CardWrapper>
   );
 };

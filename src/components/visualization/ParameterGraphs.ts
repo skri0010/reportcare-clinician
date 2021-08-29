@@ -1,6 +1,11 @@
 import { ReportVitals } from "aws/API";
 import i18n from "util/language/i18n";
 
+export interface ChartData {
+  data: number[];
+  xLabels: string[];
+}
+
 enum days {
   "Sunday" = 0,
   "Monday" = 1,
@@ -26,7 +31,7 @@ interface AverageStats {
 }
 
 export interface ParameterGraphsProps {
-  data: ReportVitals[];
+  vitals: ReportVitals[];
 }
 
 export const getAverageStats = (

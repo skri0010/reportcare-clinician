@@ -8,12 +8,12 @@ interface WeightChartCardProps extends ParameterGraphsProps {
 }
 
 export const WeightChartCard: FC<WeightChartCardProps> = ({
-  data,
+  vitals,
   maxHeight
 }) => {
   return (
     <CardWrapper maxHeight={maxHeight}>
-      <WeightChart data={data} />
+      <WeightChart vitals={vitals} />
     </CardWrapper>
   );
 };

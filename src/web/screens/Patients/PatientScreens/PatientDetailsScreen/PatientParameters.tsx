@@ -58,18 +58,18 @@ export const PatientParameters: FC<PatientParametersProps> = ({ details }) => {
         <>
           <View style={styles.container}>
             {/* Systolic Blood Graph */}
-            <SystolicBPChartCard data={vitals} maxHeight={cardMaxHeight} />
+            <SystolicBPChartCard vitals={vitals} maxHeight={cardMaxHeight} />
             {/* Diastolic Blood Graph */}
-            <DiastolicBPChartCard data={vitals} maxHeight={cardMaxHeight} />
+            <DiastolicBPChartCard vitals={vitals} maxHeight={cardMaxHeight} />
           </View>
           <View style={styles.container}>
             {/* Oxygen Saturation graph */}
             <OxygenSaturationChartCard
-              data={vitals}
+              vitals={vitals}
               maxHeight={cardMaxHeight}
             />
             {/* Weight Graph */}
-            <WeightChartCard data={vitals} maxHeight={cardMaxHeight} />
+            <WeightChartCard vitals={vitals} maxHeight={cardMaxHeight} />
           </View>
         </>
       ) : null}

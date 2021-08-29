@@ -23,7 +23,10 @@ export const OxygenSaturationCard: FC<OxygenSaturationProps> = ({
       title={i18n.t("Patient_Overview.OxygenSaturation")}
       noChildrenPaddingHorizontal
     >
-      <AbsoluteParameters centerText={oxySatValue} bottomText="%" />
+      <AbsoluteParameters
+        centerText={oxySatValue}
+        bottomText={i18n.t("Parameter_Graphs.OxygenSaturationUnit")}
+      />
     </CardWrapper>
   );
 };
