@@ -10,13 +10,15 @@ interface RowButtonProps {
   onPress: () => void;
   fontSize?: number;
   backgroundColor?: string;
+  textColor?: string;
 }
 
 export const RowButton: FC<RowButtonProps> = ({
   title,
   onPress,
   fontSize,
-  backgroundColor
+  backgroundColor,
+  textColor
 }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
@@ -28,8 +30,7 @@ export const RowButton: FC<RowButtonProps> = ({
         style={[
           styles.button,
           {
-            borderWidth: backgroundColor ? ms(0) : ms(1),
-            backgroundColor: backgroundColor || colors.primaryBackgroundColor
+            backgroundColor: backgroundColor || colors.primaryButtonColor
           }
         ]}
         onPress={onPress}
@@ -39,9 +40,7 @@ export const RowButton: FC<RowButtonProps> = ({
           style={[
             styles.buttonText,
             {
-              color: backgroundColor
-                ? colors.primaryContrastTextColor
-                : colors.primaryTextColor,
+              color: textColor || colors.primaryContrastTextColor,
               ...(fontSize ? { fontSize: fontSize } : {})
             }
           ]}
@@ -63,6 +62,7 @@ const styles = ScaledSheet.create({
     flex: 1,
     justifyContent: "center",
     textAlign: "center",
-    textAlignVertical: "center"
+    textAlignVertical: "center",
+    opacity: 0.9
   }
 });

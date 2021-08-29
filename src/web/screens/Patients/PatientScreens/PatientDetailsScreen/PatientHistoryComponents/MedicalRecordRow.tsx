@@ -27,14 +27,7 @@ const styles = ScaledSheet.create({
   container: {
     display: "flex",
     flexDirection: "row",
-    marginTop: "10@ms",
-    justifyContent: "space-between",
-    paddingBottom: "20@ms"
-  },
-  button: {
-    borderRadius: "2@ms",
-    borderWidth: "1@ms",
-    width: "70@ms"
+    alignItems: "center"
   },
   textContainer: {
     flex: 5,

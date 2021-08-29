@@ -7,6 +7,7 @@ import { FlatList, View } from "react-native";
 import { MedicalRecordRow } from "./MedicalRecordRow";
 import i18n from "util/language/i18n";
 import { IconButton, IconType } from "components/Buttons/IconButton";
+import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 
 interface PatientMedicalRecordProps {
   patientId: string;
@@ -58,6 +59,7 @@ export const PatientMedicalRecordCard: FC<PatientMedicalRecordProps> = ({
       {/* List of medical records */}
       <FlatList
         showsVerticalScrollIndicator={false}
+        ItemSeparatorComponent={ItemSeparator}
         data={medicalRecords}
         renderItem={({ item }) => (
           <MedicalRecordRow

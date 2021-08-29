@@ -18,11 +18,6 @@ export const HomeScreen: FC<MainScreenProps[ScreenName.HOME]> = ({
   const topMaxHeight = ms(200);
   const maxHeight = ms(250);
 
-  navigation.navigate(ScreenName.PATIENTS, {
-    displayPatientId: "testsiuloong",
-    selectedTab: PatientDetailsTabName.HISTORY
-  });
-
   return (
     <ScreenWrapper padding>
       <View style={styles.container}>

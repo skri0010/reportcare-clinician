@@ -142,7 +142,7 @@
     "TitleInputPlaceholder": "What's this todo about?",
     "PatientInputPlaceholder": "What's the patient's name?",
     "NotesInputPlaceholder": "Anything notable?",
-    "NoSelection": "Select a Todo item to view its details",
+    "NoSelection": "Select a todo item to view its details",
     "TodoCreateSuccessful": "Todo has been successfully created",
     "TodoUpdateSuccessful": "Todo has been successfully updated",
     "MarkAsDone": "MARK AS DONE",
@@ -256,7 +256,8 @@
     "Years": "years"
   },
   "Clinicians": {
-    "SearchBarPlaceholder": "Search clinician (eg John)"
+    "SearchBarPlaceholder": "Search clinician (eg John)",
+    "NoSelection": "Select a clinician to view more details"
   },
   "Alerts": {
     "SearchBarPlaceholder": "Search alerts"

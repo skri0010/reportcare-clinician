@@ -142,7 +142,7 @@
     "TitleInputPlaceholder": "Apakah todo ini tentang?",
     "PatientInputPlaceholder": "Siapakah nama pesakit?",
     "NotesInputPlaceholder": "Apakah yang perlu dicatatkan?",
-    "NoSelection": "Pilihkan salah satu item Todo untuk melihat butirannya",
+    "NoSelection": "Pilih salah satu item todo untuk melihat butirannya",
     "TodoCreateSuccessful": "Todo telah berjaya dicipta",
     "TodoUpdateSuccessful": "Todo telah berjaya dikemas kini",
     "MarkAsDone": "TANDA SEBAGAI SELESAI",
@@ -162,7 +162,7 @@
     "ICD/CRT": "ICD/CRT",
     "History": "Sejarah",
     "Info": "Info",
-    "NoSelection": "Pilihkan salah satu pesakit untuk mendapat informasi lanjut"
+    "NoSelection": "Pilih salah satu pesakit untuk mendapat informasi lanjut"
   },
   "Patient_Configuration": {
     "Title": "Konfigurasikan butiran",
@@ -256,7 +256,8 @@
     "Years": "tahun"
   },
   "Clinicians": {
-    "SearchBarPlaceholder": "Cari pakar(contohnya John)"
+    "SearchBarPlaceholder": "Cari pakar(contohnya John)",
+    "NoSelection": "Pilih salah satu pakar untuk melihat butirannya"
   },
   "Alerts": {
     "SearchBarPlaceholder": "Cari amaran"

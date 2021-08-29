@@ -63,8 +63,8 @@ export const IconButton: FC<IconButtonProps> = ({
       onPress={onPress}
       style={[
         {
-          borderColor: colors.primaryButtonColor,
-          backgroundColor: colors.primaryButtonColor
+          borderColor: colors.acceptButtonColor,
+          backgroundColor: colors.acceptButtonColor
         },
         containerStyle
       ]}

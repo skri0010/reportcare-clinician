@@ -69,11 +69,11 @@ export const TodoRow: FC<TodoRowProps> = ({
           ]}
         >
           <RowButton
-            onRowPress={onButtonPress}
+            onPress={onButtonPress}
             title={todoDetails.completed === false ? "Todo.Done" : "Todo.Undo"}
             backgroundColor={
               todoDetails.completed === false
-                ? colors.primaryButtonColor
+                ? colors.acceptButtonColor
                 : colors.primaryWarningButtonColor
             }
           />

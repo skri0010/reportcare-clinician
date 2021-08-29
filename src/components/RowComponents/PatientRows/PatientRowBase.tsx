@@ -88,7 +88,7 @@ export const PatientRowBase: React.FC<PatientRowBaseProps> = ({
                 onPress={onBottomButtonPress}
                 style={[
                   styles.bottomButton,
-                  { backgroundColor: colors.primaryButtonColor }
+                  { backgroundColor: colors.acceptButtonColor }
                 ]}
               >
                 {/* JH-TODO i18n for button label */}
