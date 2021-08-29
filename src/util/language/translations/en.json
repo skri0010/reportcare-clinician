@@ -149,7 +149,7 @@
     "TitleInputPlaceholder": "What's this todo about?",
     "PatientInputPlaceholder": "What's the patient's name?",
     "NotesInputPlaceholder": "Anything notable?",
-    "NoSelection": "Select a Todo item to view its details",
+    "NoSelection": "Select a todo item to view its details",
     "TodoCreateSuccessful": "Todo has been successfully created",
     "TodoUpdateSuccessful": "Todo has been successfully updated",
     "MarkAsDone": "MARK AS DONE",
@@ -205,9 +205,9 @@
     "Systolic": "Systolic",
     "Diastolic": "Diastolic",
     "Medications": "Medications",
-    "OxygenSaturation": "O2 Saturation",
+    "OxygenSaturation": "Oxygen Saturation",
     "Weight": "Weight",
-    "TargetWeight": "Target Weight",
+    "TargetWeight": "Target weight",
     "Symptoms": "Symptoms",
     "NoRecord": "-",
     "NoSymptoms": "No symptoms recorded"
@@ -264,14 +264,21 @@
     "Years": "years"
   },
   "Clinicians": {
-    "SearchBarPlaceholder": "Search clinician (eg John)"
+    "SearchBarPlaceholder": "Search clinician (eg John)",
+    "NoSelection": "Select a clinician to view more details"
   },
   "Alerts": {
-    "SearchBarPlaceholder": "Search alerts"
+    "SearchBarPlaceholder": "Search alerts",
+    "NoSelection": "Select an alert to view more details",
+    "Symptoms": "Symptoms",
+    "Signs": "Signs"
   },
   "MobileMessage": {
     "ViewList": "View List",
     "BackToDetails": "Back to Details"
   },
-  "UnexpectedError": "An unexpected error has occured"
+  "UnexpectedError": "An unexpected error has occured",
+  "Keywords": {
+    "remaining": "remaining"
+  }
 }

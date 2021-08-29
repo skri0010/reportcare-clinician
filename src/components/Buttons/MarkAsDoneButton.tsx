@@ -29,7 +29,7 @@ export const MarkAsDoneButton: FC<MarkAsDoneButtonProps> = ({
         style={[
           styles.markAsSave,
           {
-            backgroundColor: !todo.completed ? colors.primaryButtonColor : "red"
+            backgroundColor: !todo.completed ? colors.acceptButtonColor : "red"
           }
         ]}
         onPress={onPress}

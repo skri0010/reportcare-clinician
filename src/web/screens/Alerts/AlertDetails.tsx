@@ -2,22 +2,16 @@ import React, { FC } from "react";
 import { View, Dimensions } from "react-native";
 import { ms } from "react-native-size-matters";
 import { RootState, select } from "util/useRedux";
-import { AlertHistory } from "mock/mockPatientDetails";
 import { BloodPressureCard } from "./AlertDetailsCards/BloodPressureCard";
 import { HRVCard } from "./AlertDetailsCards/HRVCard";
 import { SymptomCard } from "./AlertDetailsCards/SymptomCard";
 import { SummaryCard } from "./AlertDetailsCards/SummaryCard";
 
-export interface AlertDetailsProps {
-  alertHistory: AlertHistory;
-}
-
 export const AlertDetails: FC = () => {
+  const cardHeight = Math.max(ms(100), Dimensions.get("window").height * 0.25);
   const { alertInfo } = select((state: RootState) => ({
     alertInfo: state.agents.alertInfo
   }));
-
-  const cardHeight = Math.max(ms(100), Dimensions.get("window").height * 0.25);
 
   return (
     <View style={{ flexDirection: "column", paddingBottom: ms(20) }}>

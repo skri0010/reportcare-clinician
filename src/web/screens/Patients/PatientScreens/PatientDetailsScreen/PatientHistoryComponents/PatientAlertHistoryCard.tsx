@@ -41,19 +41,7 @@ export const PatientAlertHistoryCard: FC<PatientAlertHistoryProps> = ({
   }
 
   return (
-    <CardWrapper maxHeight={maxHeight}>
-      <View style={styles.title}>
-        <H3
-          text={i18n.t("Home.Alerts")}
-          style={[
-            {
-              fontWeight: "bold",
-              color: colors.primaryTextColor
-            }
-          ]}
-        />
-      </View>
-
+    <CardWrapper maxHeight={maxHeight} title={i18n.t("Home.Alerts")}>
       {/* List of alert histories */}
       <FlatList
         showsVerticalScrollIndicator={false}
@@ -73,13 +61,3 @@ export const PatientAlertHistoryCard: FC<PatientAlertHistoryProps> = ({
     </CardWrapper>
   );
 };
-
-const styles = ScaledSheet.create({
-  title: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingBottom: "15@ms",
-    alignItems: "center"
-  }
-});

@@ -38,7 +38,8 @@ export const lightColorScheme: ColorScheme = {
   notificationColor: "#57c081",
 
   // Buttons
-  primaryButtonColor: "#57c081",
+  primaryButtonColor: "#9e3ce6",
+  acceptButtonColor: "#57c081",
   primaryDeactivatedButtonColor: "#d1d1d1",
   primaryWarningButtonColor: "#D11C1C",
   primaryTodoCompleteButtonColor: "#A484FF",

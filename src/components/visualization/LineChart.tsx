@@ -102,6 +102,6 @@ const styles = ScaledSheet.create({
     marginBottom: ms(-10)
   },
   title: {
-    fontWeight: "bold"
+    fontWeight: "600"
   }
 });

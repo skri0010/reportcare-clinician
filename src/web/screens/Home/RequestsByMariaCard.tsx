@@ -5,7 +5,6 @@ import { ScaledSheet } from "react-native-size-matters";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { mockPatients } from "mock/mockPatients";
 import { PatientRequestRow } from "components/RowComponents/PatientRows/PatientRequestRow";
-import { H4, H6 } from "components/Text";
 import { CardWrapper } from "./CardWrapper";
 import { FloatingBottomButton } from "components/Buttons/FloatingBottomButton";
 import i18n from "util/language/i18n";
@@ -17,29 +16,16 @@ interface RequestsByMariaCardProps {
 export const RequestsByMariaCard: FC<RequestsByMariaCardProps> = ({
   maxHeight
 }) => {
-  const { colors } = select((state: RootState) => ({
-    colors: state.settings.colors
-  }));
-
-  const titleColor = { color: colors.primaryTextColor } as TextStyle;
-  const detailsColors = { color: colors.secondaryTextColor } as TextStyle;
   // JH-TODO: Replace with actual models
   const maxPatientsShown = Math.min(mockPatients.length, 10); // At 10 items, `Show More` button is displayed
   const lastPatientIndex = maxPatientsShown - 1;
 
   return (
-    <CardWrapper maxHeight={maxHeight}>
-      {/* Requests by MARIA */}
-      <View style={styles.titleContainer}>
-        <H4
-          text={i18n.t("Home.RequestsByMaria")}
-          style={[styles.title, titleColor]}
-        />
-        <H6
-          text={`(2 ${i18n.t("Home.ItemsRemaining")})`}
-          style={[styles.details, detailsColors]}
-        />
-      </View>
+    <CardWrapper
+      maxHeight={maxHeight}
+      title={i18n.t("Home.RequestsByMaria")}
+      subtitle={`(? ${i18n.t("Home.ItemsRemaining")})`}
+    >
       {/* Patient Requests List */}
       <View style={styles.patientRequestsContainer}>
         <FlatList
@@ -75,21 +61,8 @@ export const RequestsByMariaCard: FC<RequestsByMariaCardProps> = ({
 };
 
 const styles = ScaledSheet.create({
-  titleContainer: {
-    flexDirection: "row",
-    alignItems: "baseline"
-  },
-  title: {
-    fontWeight: "bold",
-    paddingBottom: "8@ms",
-    paddingRight: "5@ms"
-  },
   patientRequestsContainer: {
-    flex: 1,
-    paddingTop: "15@ms"
-  },
-  details: {
-    fontWeight: "bold"
+    flex: 1
   },
   button: {
     borderRadius: "5@ms",
