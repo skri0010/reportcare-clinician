@@ -1,21 +1,19 @@
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import { CardWrapper } from "web/screens/Home/CardWrapper";
-import { mockVitals } from "mock/mockVitals";
 import { OxygenSaturationChart } from "components/Visualization/OxygenSaturationChart";
+import { ParameterGraphsProps } from "components/Visualization/ParameterGraphs";
 
-interface OxygenSaturationCardProps {
-  patientId: string;
+interface OxygenSaturationCardProps extends ParameterGraphsProps {
   maxHeight: number;
 }
 
-export const OxygenSaturationParameterCard: FC<OxygenSaturationCardProps> = ({
+export const OxygenSaturationChartCard: FC<OxygenSaturationCardProps> = ({
+  data,
   maxHeight
 }) => {
-  const [vitals] = useState(mockVitals);
-
   return (
     <CardWrapper maxHeight={maxHeight}>
-      <OxygenSaturationChart data={vitals} />
+      <OxygenSaturationChart data={data} />
     </CardWrapper>
   );
 };

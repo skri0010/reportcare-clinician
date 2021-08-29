@@ -1,19 +1,19 @@
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import { CardWrapper } from "web/screens/Home/CardWrapper";
-import { mockVitals } from "mock/mockVitals";
 import { WeightChart } from "components/Visualization/WeightChart";
+import { ParameterGraphsProps } from "components/Visualization/ParameterGraphs";
 
-interface WeightChartCardProps {
-  patientId: string;
+interface WeightChartCardProps extends ParameterGraphsProps {
   maxHeight: number;
 }
 
-export const WeightChartCard: FC<WeightChartCardProps> = ({ maxHeight }) => {
-  const [vitals] = useState(mockVitals);
-
+export const WeightChartCard: FC<WeightChartCardProps> = ({
+  data,
+  maxHeight
+}) => {
   return (
     <CardWrapper maxHeight={maxHeight}>
-      <WeightChart data={vitals} />
+      <WeightChart data={data} />
     </CardWrapper>
   );
 };
