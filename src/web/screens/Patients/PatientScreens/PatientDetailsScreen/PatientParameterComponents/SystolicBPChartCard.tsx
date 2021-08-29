@@ -8,12 +8,12 @@ interface SystolicBPChartCardProps extends ParameterGraphsProps {
 }
 
 export const SystolicBPChartCard: FC<SystolicBPChartCardProps> = ({
-  stats,
+  data,
   maxHeight
 }) => {
   return (
     <CardWrapper maxHeight={maxHeight}>
-      <SystolicBPChart stats={stats} />
+      <SystolicBPChart data={data} />
     </CardWrapper>
   );
 };

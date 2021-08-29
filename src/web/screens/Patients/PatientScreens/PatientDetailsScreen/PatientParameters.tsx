@@ -10,7 +10,9 @@ import { PatientDetailsTabProps } from "web/navigation/types";
 import { LocalReportVitals, PatientDetails } from "rc_agents/model";
 import { getWeekLocaleDateString } from "util/utilityFunctions";
 import {
+  FullChartData,
   getParameterStatFromOneVitalsReport,
+  obtainFullChartData,
   ParameterStats
 } from "components/Visualization/ParameterGraphs";
 import { mockLocalReportVitals } from "mock/mockVitals";
@@ -25,24 +27,27 @@ export const PatientParameters: FC<PatientParametersProps> = ({ details }) => {
     ms(200),
     Dimensions.get("window").height * 0.8
   );
+  // JH-TODO: Uncomment following line and remove line with mock local report vitals
   // const { vitalsReports } = details;
   const vitalsReports = mockLocalReportVitals;
 
-  const [stats, setStats] = useState<ParameterStats[] | null>(null);
+  const [fullChartData, setFullChartData] = useState<FullChartData | null>(
+    null
+  );
 
   useEffect(() => {
     if (vitalsReports) {
       const tempLocalVitals: LocalReportVitals = {};
       const tempParameterStats: ParameterStats[] = [];
-      // Get the last 7 days
+      // Get 7 days locale date string[]
       const targetLocaleDateStrings = getWeekLocaleDateString();
 
-      // Get ReportVitals[] from those last 7 days if they exist
+      // Get ReportVitals[] from those days (if exist)
       targetLocaleDateStrings.forEach(
         (date) => (tempLocalVitals[date] = vitalsReports[date] || [])
       );
 
-      // For each day, get parameter stats
+      // Extract parameter stat (min, max, average) for each ReportVitals[] (each day)
       Object.keys(tempLocalVitals).forEach((date) => {
         const vitalsList = tempLocalVitals[date];
         if (vitalsList) {
@@ -56,31 +61,44 @@ export const PatientParameters: FC<PatientParametersProps> = ({ details }) => {
         }
       });
 
-      // Sort parameter stats
+      // Sort parameter stats based on ascending date
       tempParameterStats.sort((a, b) => a.date.valueOf() - b.date.valueOf());
 
-      setStats(tempParameterStats);
+      // Finally obtain full chart data
+      // ie for each parameter, like systolic => min[], max[], average[], dates[]
+      const tempFullChartData = obtainFullChartData(tempParameterStats);
+
+      setFullChartData(tempFullChartData);
     }
   }, [vitalsReports]);
 
   return (
     <ScreenWrapper padding>
-      {stats ? (
+      {fullChartData ? (
         <>
           <View style={styles.container}>
-            {/* Systolic Blood Graph */}
-            <SystolicBPChartCard stats={stats} maxHeight={cardMaxHeight} />
             {/* Diastolic Blood Graph */}
-            <DiastolicBPChartCard stats={stats} maxHeight={cardMaxHeight} />
+            <DiastolicBPChartCard
+              data={fullChartData.diastolic}
+              maxHeight={cardMaxHeight}
+            />
+            {/* Systolic Blood Graph */}
+            <SystolicBPChartCard
+              data={fullChartData.systolic}
+              maxHeight={cardMaxHeight}
+            />
           </View>
           <View style={styles.container}>
             {/* Oxygen Saturation graph */}
             <OxygenSaturationChartCard
-              stats={stats}
+              data={fullChartData.oxygenSaturation}
               maxHeight={cardMaxHeight}
             />
             {/* Weight Graph */}
-            <WeightChartCard stats={stats} maxHeight={cardMaxHeight} />
+            <WeightChartCard
+              data={fullChartData.weight}
+              maxHeight={cardMaxHeight}
+            />
           </View>
         </>
       ) : null}

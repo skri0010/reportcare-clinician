@@ -26,15 +26,22 @@ export interface ParameterStats {
   date: Date;
 }
 
-export interface ParameterGraphsProps {
-  stats: ParameterStats[];
-}
-
 // Processed from Stat in ParameterStats
 export type SubParameterStat = {
   parameter: Stat;
   date: Date;
 };
+
+export interface FullChartData {
+  diastolic: ChartData;
+  systolic: ChartData;
+  weight: ChartData;
+  oxygenSaturation: ChartData;
+}
+
+export interface ParameterGraphsProps {
+  data: ChartData;
+}
 
 export interface ChartData {
   min: number[];
@@ -90,6 +97,35 @@ export const getParameterStatFromOneVitalsReport = (
     };
   }
   return stats;
+};
+
+// Divides parameter stat into a specific sub parameter stat (ie breakdown to diastolic, systolic, etc)
+export const obtainFullChartData = (
+  parameterStats: ParameterStats[]
+): FullChartData => {
+  const rename = parameterStats;
+  return {
+    diastolic: subParameterStatsToChartData(
+      rename
+        .filter((data) => data.diastolic && data.date)
+        .map((data) => ({ parameter: data.diastolic, date: data.date }))
+    ),
+    systolic: subParameterStatsToChartData(
+      rename
+        .filter((data) => data.systolic && data.date)
+        .map((data) => ({ parameter: data.systolic, date: data.date }))
+    ),
+    weight: subParameterStatsToChartData(
+      rename
+        .filter((data) => data.weight && data.date)
+        .map((data) => ({ parameter: data.weight, date: data.date }))
+    ),
+    oxygenSaturation: subParameterStatsToChartData(
+      rename
+        .filter((data) => data.oxygenSaturation && data.date)
+        .map((data) => ({ parameter: data.oxygenSaturation, date: data.date }))
+    )
+  };
 };
 
 export const subParameterStatsToChartData: (
