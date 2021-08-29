@@ -5,7 +5,8 @@ import {
   PatientDetails
 } from "rc_agents/model";
 import { Alert, ClinicianInfo, PatientAssignment, PatientInfo } from "aws/API";
-import * as accessFunctions from "./accessFunctions";
+// eslint-disable-next-line no-restricted-imports
+import * as accessFunctions from "rc_agents/storage/accessFunctions";
 import { RiskLevel } from "models/RiskLevel";
 
 /**
