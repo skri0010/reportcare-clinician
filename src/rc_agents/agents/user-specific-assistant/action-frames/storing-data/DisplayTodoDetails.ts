@@ -105,7 +105,6 @@ import { setTodoDetails } from "ic-redux/actions/agents/actionCreator";
                     
                     if (todoToDispatch){
                         // move to front of the list
-                        console.log(todoToDispatch);
                         await Storage.setTodo(todoToDispatch[0]);
 
                         // remoce display todo details from 

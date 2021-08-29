@@ -87,14 +87,14 @@ import { setTodoDetails } from "ic-redux/actions/agents/actionCreator";
                       await Storage.setTodo(todoToDispatch);
   
                       // Dispatch to front end using redux
-                      store.dispatch(setTodoDetails(todoToDispatch));
+                      // store.dispatch(setTodoDetails(todoToDispatch));
   
                       // remove display todo details from facts
                       agentAPI.addFact(
                           new Belief(
                               BeliefKeys.CLINICIAN,
                               ClinicianAttributes.DISPLAY_TODO_DETAILS,
-                              null
+                              todoToDispatch
                           ),
                           false
                       );
@@ -105,15 +105,14 @@ import { setTodoDetails } from "ic-redux/actions/agents/actionCreator";
                   
                   if (todoToDispatch){
                       // move to front of the list
-                      console.log(todoToDispatch);
                       await Storage.setTodo(todoToDispatch[0]);
 
-                      // remoce display todo details from 
+                      // remove display todo details from 
                       agentAPI.addFact(
                           new Belief(
                               BeliefKeys.CLINICIAN,
                               ClinicianAttributes.RETRIEVE_TODO_DETAILS,
-                              null
+                              todoToDispatch[0]
                           ),
                           false
                       );
