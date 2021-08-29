@@ -1,4 +1,5 @@
 import { ReportVitals } from "aws/API";
+import moment from "moment";
 import i18n from "util/language/i18n";
 
 enum days {
@@ -79,7 +80,7 @@ export const getParameterStatFromOneVitalsReport = (
       .filter((data) => parseFloat(data.Weight))
       .map((data) => parseFloat(data.Weight));
 
-    // Statsw
+    // Stats
     stats = {
       diastolic: getStat(diastolicBPVitals),
       systolic: getStat(systolicBPVitals),

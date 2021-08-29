@@ -26,7 +26,7 @@ export const OxygenSaturationChart: FC<ParameterGraphsProps> = ({ stats }) => {
       graphTitle={i18n.t("Parameter_Graphs.OxygenSaturation")}
       graphSubtitle={i18n.t("Parameter_Graphs.OxygenSaturationUnit")}
       xLabels={chartData.xLabels}
-      data={chartData.min}
+      data={chartData}
     />
   ) : (
     <LoadingIndicator />

@@ -13,6 +13,7 @@ import {
   getParameterStatFromOneVitalsReport,
   ParameterStats
 } from "components/Visualization/ParameterGraphs";
+import { mockLocalReportVitals } from "mock/mockVitals";
 
 interface PatientParametersProps
   extends PatientDetailsTabProps.ParametersTabProps {
@@ -24,7 +25,8 @@ export const PatientParameters: FC<PatientParametersProps> = ({ details }) => {
     ms(200),
     Dimensions.get("window").height * 0.8
   );
-  const { vitalsReports } = details;
+  // const { vitalsReports } = details;
+  const vitalsReports = mockLocalReportVitals;
 
   const [stats, setStats] = useState<ParameterStats[] | null>(null);
 

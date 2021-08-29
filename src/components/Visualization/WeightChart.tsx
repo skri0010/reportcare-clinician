@@ -26,7 +26,7 @@ export const WeightChart: FC<ParameterGraphsProps> = ({ stats }) => {
       graphTitle={i18n.t("Parameter_Graphs.Weight")}
       graphSubtitle={i18n.t("Parameter_Graphs.WeightUnit")}
       xLabels={chartData.xLabels}
-      data={chartData.min}
+      data={chartData}
     />
   ) : (
     <LoadingIndicator />

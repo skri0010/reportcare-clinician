@@ -4,12 +4,13 @@ import { RootState, select } from "util/useRedux";
 import { LineChart } from "react-native-chart-kit";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { H4, H5 } from "components/Text";
+import { ChartData } from "./ParameterGraphs";
 
 interface LineChartProps {
   graphTitle: string;
   graphSubtitle?: string;
   xLabels: string[];
-  data: number[];
+  data: ChartData;
   fromZero?: boolean;
 }
 
@@ -82,7 +83,13 @@ export const LineChartComponent: FC<LineChartProps> = ({
           labels: xLabels,
           datasets: [
             {
-              data: data
+              data: data.min
+            },
+            {
+              data: data.average
+            },
+            {
+              data: data.max
             }
           ]
         }}

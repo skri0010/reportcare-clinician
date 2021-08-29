@@ -1,6 +1,8 @@
 import { ReportVitals } from "aws/API";
+import { LocalReportVitals } from "rc_agents/model";
+import { getWeekLocaleDateString } from "util/utilityFunctions";
 
-export const mockVitals: ReportVitals[] = [
+const mockVitals: ReportVitals[] = [
   {
     __typename: "ReportVitals",
     patientID: "Mohammad Zaini",
@@ -206,3 +208,28 @@ export const mockVitals: ReportVitals[] = [
     _version: 1
   }
 ];
+
+const targetLocaleDateStrings = getWeekLocaleDateString();
+const tempLocalReportVitals: LocalReportVitals = {};
+
+let localeDateStringIndex = 0;
+mockVitals.forEach((vitals) => {
+  // Use dates from current date
+  vitals.DateTime = new Date(
+    targetLocaleDateStrings[localeDateStringIndex]
+  ).toString();
+  localeDateStringIndex =
+    (localeDateStringIndex + 1) % targetLocaleDateStrings.length;
+
+  // Get localReportVitals similar to RetrievePatientDetails
+  const dateKey = new Date(vitals.DateTime).toLocaleDateString();
+  const localVitalsReports = tempLocalReportVitals[dateKey];
+  if (localVitalsReports) {
+    localVitalsReports.push(vitals);
+    tempLocalReportVitals[dateKey] = localVitalsReports;
+  } else {
+    tempLocalReportVitals[dateKey] = [vitals];
+  }
+});
+
+export const mockLocalReportVitals = tempLocalReportVitals;

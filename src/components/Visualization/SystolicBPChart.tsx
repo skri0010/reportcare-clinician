@@ -26,7 +26,7 @@ export const SystolicBPChart: FC<ParameterGraphsProps> = ({ stats }) => {
       graphTitle={i18n.t("Parameter_Graphs.SystolicBP")}
       graphSubtitle={i18n.t("Parameter_Graphs.BPUnit")}
       xLabels={chartData.xLabels}
-      data={chartData.min}
+      data={chartData}
     />
   ) : (
     <LoadingIndicator />
