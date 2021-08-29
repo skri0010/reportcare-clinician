@@ -6,6 +6,7 @@ import { getRiskLevelColor, RiskLevel } from "models/RiskLevel";
 import { View } from "react-native";
 import { RowButton } from "components/Buttons/RowButton";
 import i18n from "util/language/i18n";
+import moment from "moment";
 
 interface AlertHistoryRowProps {
   risk: RiskLevel;
@@ -27,6 +28,11 @@ function getRiskName(risk: RiskLevel) {
   }
   return i18n.t(riskName);
 }
+
+const getLocalDateTime = (datetime: string) => {
+  const localDateTime = moment.utc(datetime).local();
+  return localDateTime.format("HH:mm DD-MM-YYYY");
+};
 
 export const AlertHistoryRow: FC<AlertHistoryRowProps> = ({
   risk,
@@ -55,7 +61,7 @@ export const AlertHistoryRow: FC<AlertHistoryRowProps> = ({
             }}
           />
           <H5
-            text={`${date}:`}
+            text={`${getLocalDateTime(date)}:`}
             style={{ fontWeight: "bold", color: colors.primaryTextColor }}
           />
         </View>

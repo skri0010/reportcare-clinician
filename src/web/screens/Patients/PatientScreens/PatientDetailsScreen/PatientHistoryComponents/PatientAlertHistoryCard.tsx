@@ -8,6 +8,7 @@ import i18n from "util/language/i18n";
 import { ScaledSheet } from "react-native-size-matters";
 import { AlertInfo } from "rc_agents/model";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
+import { EmptyListIndicator } from "components/Indicators/EmptyListIndicator";
 
 interface PatientAlertHistoryProps {
   patientId?: string;
@@ -28,11 +29,6 @@ export const PatientAlertHistoryCard: FC<PatientAlertHistoryProps> = ({
       fetchingPatientAlertHistory: state.agents.fetchingPatientAlertHistory
     })
   );
-  // Query database for a specific patient by patientId for alert histories
-  // For now I just mocked it
-
-  // const [alertHistory] = useState(mockAlertHistory);
-  // const [displayHistory, setDisplayHistory] = useState<AlertHistory>();
 
   // On row press, set the alert history details to be shown and set the modal to be visible
   function onRowPress(history: AlertInfo) {
@@ -55,20 +51,24 @@ export const PatientAlertHistoryCard: FC<PatientAlertHistoryProps> = ({
       </View>
 
       {/* List of alert histories */}
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        data={alertHistory}
-        renderItem={({ item }) => (
-          <AlertHistoryRow
-            risk={item.riskLevel}
-            description={item.summary}
-            date={item.dateTime}
-            onRowPress={() => onRowPress(item)}
-            key={item.id}
-          />
-        )}
-        keyExtractor={(alert) => alert.id}
-      />
+      {alertHistory && alertHistory.length > 0 ? (
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          data={alertHistory}
+          renderItem={({ item }) => (
+            <AlertHistoryRow
+              risk={item.riskLevel}
+              description={item.summary}
+              date={item.dateTime}
+              onRowPress={() => onRowPress(item)}
+              key={item.id}
+            />
+          )}
+          keyExtractor={(alert) => alert.id}
+        />
+      ) : !fetchingPatientAlertHistory ? (
+        <EmptyListIndicator text={i18n.t("Patient_History.NoAlertHistory")} />
+      ) : null}
       {fetchingPatientAlertHistory && <LoadingIndicator />}
     </CardWrapper>
   );

@@ -242,7 +242,8 @@
       "TitleInputPlaceholder": "Give the medical record a name (eg Family Background)",
       "Description": "Description",
       "DescriptionInputPlaceholder": "What is the content of the medical record?"
-    }
+    },
+    "NoAlertHistory": "The patient does not have any alert histories currently!"
   },
   "Patient_Info": {
     "Male": "Male",

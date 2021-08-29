@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { Dimensions, View } from "react-native";
@@ -8,6 +8,7 @@ import { MedicalRecords } from "mock/mockPatientDetails";
 import { PatientDetailsTabProps } from "web/navigation/types";
 import { PatientInfo } from "aws/API";
 import { AlertInfo } from "rc_agents/model";
+import { AgentTrigger } from "rc_agents/trigger";
 
 interface PatientHistoryProps extends PatientDetailsTabProps.HistoryTabProps {
   info: PatientInfo;
@@ -31,6 +32,11 @@ export const PatientHistory: FC<PatientHistoryProps> = ({
     ms(250),
     Dimensions.get("window").height * 0.65
   );
+
+  // Trigger the retrieval of alert history
+  useEffect(() => {
+    AgentTrigger.triggerGetHistoricalAlerts(info.patientID);
+  }, []);
 
   return (
     <ScreenWrapper padding>

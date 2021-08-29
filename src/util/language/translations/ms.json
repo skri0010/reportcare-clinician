@@ -242,7 +242,8 @@
       "TitleInputPlaceholder": "Berikan nama kepada rekod perubatan ini (contohnya latar belakang)",
       "Description": "Deskripsi",
       "DescriptionInputPlaceholder": "Apakah isi-isi deskripsi ini?"
-    }
+    },
+    "NoAlertHistory": "Pesakit ini belum mempunyai sejarah amaran!"
   },
   "Patient_Info": {
     "Male": "Lelaki",
