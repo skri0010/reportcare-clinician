@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { FC, useEffect, useState } from "react";
 import { RootState, select } from "util/useRedux";
 import { View, TextStyle, FlatList } from "react-native";
@@ -36,7 +37,9 @@ export const TodosCard: FC<TodosCardProps> = ({ maxHeight, navigation }) => {
 
   useEffect(() => {
     AgentTrigger.triggerRetrieveTodos(TodoStatus.PENDING);
-  }, []);
+    // console.log("TODOS CARD PENDING TODO");
+    // console.log(pendingTodos);
+  }, [pendingTodos]);
 
   useEffect(() => {
     if (pendingTodos && pendingTodos.length > 10) {
@@ -52,51 +55,49 @@ export const TodosCard: FC<TodosCardProps> = ({ maxHeight, navigation }) => {
       </View>
       {/* Loading indicator */}
       {fetchingTodos && <LoadingIndicator />}
-      {pendingTodos ? (
-        pendingTodos.length > 0 ? (
-          <View style={styles.listContainer}>
-            <FlatList
-              showsVerticalScrollIndicator={false}
-              ItemSeparatorComponent={() => <ItemSeparator />}
-              data={pendingTodos}
-              renderItem={({ item, index }) => {
-                return index === lastPatientIndex ? (
-                  <>
-                    <TodoRow
-                      todoDetails={item}
-                      riskLevel={
-                        item.riskLevel ? item.riskLevel : RiskLevel.UNASSIGNED
-                      }
-                      disabled
-                      reduceOpacity
-                      onCardPress={() => {
-                        // Navigate to Todo screen
-                        navigation.navigate(ScreenName.TODO, item);
-                      }}
-                    />
-                    {/* Disable last row, display "Show More button" */}
-                    <FloatingShowMoreButton />
-                  </>
-                ) : (
+      {pendingTodos && pendingTodos.length > 0 ? (
+        <View style={styles.listContainer}>
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            ItemSeparatorComponent={() => <ItemSeparator />}
+            data={pendingTodos}
+            renderItem={({ item, index }) => {
+              return index === lastPatientIndex ? (
+                <>
                   <TodoRow
                     todoDetails={item}
                     riskLevel={
                       item.riskLevel ? item.riskLevel : RiskLevel.UNASSIGNED
                     }
+                    disabled
+                    reduceOpacity
                     onCardPress={() => {
                       // Navigate to Todo screen
                       navigation.navigate(ScreenName.TODO, item);
                     }}
                   />
-                );
-              }}
-              keyExtractor={(item) => item.createdAt}
-            />
-          </View> // Display text to indicate no pending assignments
-        ) : (
-          <EmptyListIndicator text={i18n.t("Todo.NoPendingTodo")} />
-        )
-      ) : null}
+                  {/* Disable last row, display "Show More button" */}
+                  <FloatingShowMoreButton />
+                </>
+              ) : (
+                <TodoRow
+                  todoDetails={item}
+                  riskLevel={
+                    item.riskLevel ? item.riskLevel : RiskLevel.UNASSIGNED
+                  }
+                  onCardPress={() => {
+                    // Navigate to Todo screen
+                    navigation.navigate(ScreenName.TODO, item);
+                  }}
+                />
+              );
+            }}
+            keyExtractor={(item) => item.createdAt}
+          />
+        </View> // Display text to indicate no pending assignments
+      ) : (
+        <EmptyListIndicator text={i18n.t("Todo.NoPendingTodo")} />
+      )}
     </CardWrapper>
   );
 };

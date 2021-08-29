@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { FC, useEffect } from "react";
 import { FlatList } from "react-native";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
@@ -8,7 +9,7 @@ import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { TodoRowTabProps } from "./TodoCurrentTab";
 import { RootState, select, store } from "util/useRedux";
 import i18n from "util/language/i18n";
-import { LocalTodo, TodoInput } from "rc_agents/model";
+import { LocalTodo, TodoInput, TodoStatus } from "rc_agents/model";
 import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
 import {
   setProcedureOngoing,
@@ -27,6 +28,8 @@ export const onUndoPress = (item: LocalTodo): void => {
     completed: false,
     lastModified: new Date().toISOString()
   };
+  // console.log("TODO TO UPDATE IS:");
+  // console.log(todoToUpdate);
   AgentTrigger.triggerUpdateTodo(todoToUpdate);
 };
 
@@ -45,7 +48,7 @@ export const TodoCompletedTab: FC<TodoRowTabProps> = ({ setTodoSelected }) => {
   }
 
   useEffect(() => {
-    // AgentTrigger.triggerRetrieveTodos(TodoStatus.COMPLETED);
+    AgentTrigger.triggerRetrieveTodos(TodoStatus.COMPLETED);
   }, []);
   return (
     <ScreenWrapper>

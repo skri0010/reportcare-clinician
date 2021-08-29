@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { FC, useEffect } from "react";
 import { View, FlatList } from "react-native";
 import { TodoRow } from "components/RowComponents/TodoRow";
@@ -29,7 +30,8 @@ export const onDonePress = (item: LocalTodo): void => {
     completed: true,
     lastModified: new Date().toISOString()
   };
-
+  // console.log("TODO TO UPDATE IS:");
+  // console.log(todoToUpdate);
   AgentTrigger.triggerUpdateTodo(todoToUpdate);
 };
 
