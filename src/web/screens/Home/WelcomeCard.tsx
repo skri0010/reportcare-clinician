@@ -26,7 +26,11 @@ export const WelcomeCard: FC<WelcomeCardProps> = ({
   } as TextStyle;
 
   return (
-    <CardWrapper flex={flex} maxHeight={maxHeight}>
+    <CardWrapper
+      flex={flex}
+      maxHeight={maxHeight}
+      title={i18n.t("Home.Dashboard")}
+    >
       <View
         style={[
           styles.card,
@@ -34,8 +38,6 @@ export const WelcomeCard: FC<WelcomeCardProps> = ({
         ]}
       >
         <View style={styles.textContainer}>
-          {/* Dashboard title */}
-          <H1 text={i18n.t("Home.Dashboard")} style={[styles.username]} />
           <View style={styles.messageContainer}>
             {/* Welcome title */}
             <H3
@@ -72,7 +74,6 @@ const styles = ScaledSheet.create({
     maxWidth: "70%"
   },
   messageContainer: {
-    paddingVertical: "10@ms",
     paddingLeft: "15@ms"
   },
   logoContainer: {

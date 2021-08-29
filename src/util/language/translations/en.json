@@ -266,5 +266,8 @@
     "ViewList": "View List",
     "BackToDetails": "Back to Details"
   },
-  "UnexpectedError": "An unexpected error has occured"
+  "UnexpectedError": "An unexpected error has occured",
+  "Keywords": {
+    "remaining": "remaining"
+  }
 }

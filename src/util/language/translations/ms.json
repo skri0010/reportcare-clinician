@@ -266,5 +266,8 @@
     "ViewList": "Lihat Senarai",
     "BackToDetails": "Balik ke Butiran"
   },
-  "UnexpectedError": "Ralat yang tidak disangkai telah berlaku"
+  "UnexpectedError": "Ralat yang tidak disangkai telah berlaku",
+  "Keywords": {
+    "remaining": "yang tinggal"
+  }
 }

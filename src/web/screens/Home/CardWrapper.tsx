@@ -13,6 +13,7 @@ interface CardWrapperProps {
   minWidthRequired?: boolean;
   noChildrenPaddingHorizontal?: boolean;
   title?: string;
+  subtitle?: string;
   ComponentNextToTitle?: FC;
   bottomText?: string;
 }
@@ -27,6 +28,7 @@ export const CardWrapper: FC<CardWrapperProps> = ({
   firstItem = false,
   noChildrenPaddingHorizontal = false,
   title,
+  subtitle,
   ComponentNextToTitle,
   bottomText
 }) => {
@@ -44,6 +46,8 @@ export const CardWrapper: FC<CardWrapperProps> = ({
           marginHorizontal: ms(10, 0.2),
           borderRadius: ms(5),
           paddingTop: ms(title ? 0 : 10), // Title will use its own padding top
+          paddingBottom: ms(10),
+          paddingHorizontal: ms(noChildrenPaddingHorizontal ? 0 : 5),
           ...(minHeight ? { minHeight: minHeight } : { minHeight: ms(100) }),
           ...(minWidthRequired ? { minWidth: minWidth } : {}),
           ...(maxHeight ? { maxHeight: maxHeight } : {}),
@@ -59,12 +63,23 @@ export const CardWrapper: FC<CardWrapperProps> = ({
             <H4
               text={title}
               style={[
-                styles.mainText,
+                styles.title,
                 {
                   color: colors.primaryTextColor
                 }
               ]}
             />
+            {subtitle ? (
+              <H6
+                text={subtitle}
+                style={[
+                  styles.subtitle,
+                  {
+                    color: colors.secondaryTextColor
+                  }
+                ]}
+              />
+            ) : null}
             {ComponentNextToTitle ? <ComponentNextToTitle /> : null}
           </View>
         ) : null
@@ -103,9 +118,13 @@ const styles = ScaledSheet.create({
     padding: "10@ms",
     width: "100%"
   },
-  mainText: {
+  title: {
     fontWeight: "600",
     flexWrap: "wrap"
+  },
+  subtitle: {
+    alignSelf: "center",
+    paddingLeft: "5@ms"
   },
   bottomTextContainer: {
     position: "absolute",
