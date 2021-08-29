@@ -3,7 +3,8 @@ import {
   Communicate,
   Agent,
   Belief,
-  Precondition
+  Precondition,
+  ResettablePrecondition
 } from "agents-framework";
 import {
   ProcedureConst,
@@ -66,9 +67,15 @@ const rule2 = new Precondition(
   ActionFrameIDs.DTA.RETRIEVE_CLINICIAN_CONTACTS
 );
 
+const rule3 = new ResettablePrecondition(
+  BeliefKeys.CLINICIAN,
+  ClinicianAttributes.CLINICIAN_CONTACTS_RETRIEVED,
+  true
+);
+
 // Actionframe
 export const af_RequestClinicianContactDisplay = new Actionframe(
   `AF_${ActionFrameIDs.DTA.REQUEST_DISPLAY_CLINICIAN_CONTACTS}`,
-  [rule1, rule2],
+  [rule1, rule2, rule3],
   new RequestClinicianContactsDisplay()
 );

@@ -1,43 +1,47 @@
 import React, { FC } from "react";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { View } from "react-native";
-import { ClinicianInfo } from "aws/API";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { ContactTitle } from "components/RowComponents/ContactTitle";
 import i18n from "util/language/i18n";
 import { InfoTitleBar } from "components/Bars/InfoTitleBar";
 import { ClinicianInfoRow } from "./ClinicianInfoRow";
+import { RootState, select } from "util/useRedux";
+import { NoSelectionScreen } from "../Shared/NoSelectionScreen";
+import { ScreenName } from "web/navigation";
 
-interface ClinicianDetailsProp {
-  clinicianDetails: ClinicianInfo;
-}
+export const ClinicianDetails: FC = () => {
+  const { clinicianSelected } = select((state: RootState) => ({
+    clinicianSelected: state.agents.clinicianSelected
+  }));
 
-export const ClinicianDetails: FC<ClinicianDetailsProp> = ({
-  clinicianDetails
-}) => {
   return (
     <ScreenWrapper>
-      <ContactTitle name={i18n.t(clinicianDetails.name)} isPatient={false} />
-      <View style={{ marginHorizontal: ms(40) }}>
-        <InfoTitleBar title="General Details" />
-        <View style={styles.infoSection}>
-          <ClinicianInfoRow
-            title="Email:"
-            content={clinicianDetails.id}
-            iconType="email"
-          />
-          <ClinicianInfoRow
-            title="Role:"
-            content={clinicianDetails.role}
-            iconType="doctor"
-          />
-          <ClinicianInfoRow
-            title="Hospital Name:"
-            content={clinicianDetails.hospitalName}
-            iconType="hospital"
-          />
+      {!clinicianSelected ? (
+        <NoSelectionScreen
+          screenName={ScreenName.CLINICIANS}
+          subtitle={i18n.t("Clinicians.NoSelection")}
+        />
+      ) : (
+        <View>
+          <ContactTitle name={clinicianSelected?.name} isPatient={false} />
+          <View style={{ marginHorizontal: ms(40) }}>
+            <InfoTitleBar title="General Details" />
+            <View style={styles.infoSection}>
+              <ClinicianInfoRow
+                title={i18n.t("Clinicians.Role")}
+                content={clinicianSelected?.role}
+                iconType="doctor"
+              />
+              <ClinicianInfoRow
+                title={i18n.t("Clinicians.HospitalName")}
+                content={clinicianSelected?.hospitalName}
+                iconType="hospital"
+              />
+            </View>
+          </View>
         </View>
-      </View>
+      )}
     </ScreenWrapper>
   );
 };

@@ -3,9 +3,10 @@ import { FlatList, View } from "react-native";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import i18n from "util/language/i18n";
-import { RootState, select } from "util/useRedux";
+import { RootState, select, store } from "util/useRedux";
 import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { ClinicianContactRow } from "components/RowComponents/ClinicianRow/ClinicianContactRow";
+import { setClinicianSelected } from "ic-redux/actions/agents/actionCreator";
 
 interface CliniciansListScreen {
   flex?: number;
@@ -50,7 +51,7 @@ export const CliniciansList: FC<CliniciansListScreen> = ({ flex = 1 }) => {
             <ClinicianContactRow
               generalDetails={item}
               onRowPress={() => {
-                null;
+                store.dispatch(setClinicianSelected(item));
               }}
             />
           )}

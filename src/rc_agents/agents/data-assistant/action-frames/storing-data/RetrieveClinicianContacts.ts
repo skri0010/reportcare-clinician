@@ -78,6 +78,14 @@ class RetrieveClinicianContacts extends Activity {
           ),
           false
         );
+        // Trigger request to Communicate to USXA
+        agent.addBelief(
+          new Belief(
+            BeliefKeys.CLINICIAN,
+            ClinicianAttributes.CLINICIAN_CONTACTS_RETRIEVED,
+            true
+          )
+        );
       }
     } catch (error) {
       // eslint-disable-next-line no-console

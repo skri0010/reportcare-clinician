@@ -257,7 +257,9 @@
   },
   "Clinicians": {
     "SearchBarPlaceholder": "Search clinician (eg John)",
-    "NoSelection": "Choose Clinician to view more info."
+    "NoSelection": "Choose Clinician to view more info.",
+    "Role": "Role",
+    "HospitalName": "Hospital Name"
   },
   "Alerts": {
     "SearchBarPlaceholder": "Search alerts"

@@ -65,6 +65,13 @@ export const setClinicianContacts = createAction(
   })
 )();
 
+export const setClinicianSelected = createAction(
+  actionNames.SET_CLINICIAN_SELECTED,
+  (clinicianSelected: ClinicianInfo) => ({
+    clinicianSelected: clinicianSelected
+  })
+)();
+
 export const setFetchingClinicianContacts = createAction(
   actionNames.SET_FETCHING_CLINICIAN_CONTACTS,
   (fetchingClinianContacts: boolean) => ({

@@ -18,7 +18,8 @@ interface AgentsState {
   patients: PatientInfo[] | null;
   patientDetails: PatientDetails | null;
   pendingPatientAssignments: PatientAssignment[];
-  clinicianContacts: ClinicianInfo[];
+  clinicianContacts: ClinicianInfo[] | null;
+  clinicianSelected: ClinicianInfo | null;
   patientAssignmentsSynced: boolean;
   fetchingPatients: boolean;
   fetchingPatientDetails: boolean;
@@ -44,7 +45,8 @@ const initialState: AgentsState = {
   patients: null,
   patientDetails: null,
   pendingPatientAssignments: [],
-  clinicianContacts: [],
+  clinicianContacts: null,
+  clinicianSelected: null,
   fetchingPatients: false,
   fetchingPatientDetails: false,
   fetchingPendingPatientAssignments: false,
@@ -104,6 +106,11 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
       return {
         ...state,
         clinicianContacts: action.payload.clinicianContacts
+      };
+    case actionNames.SET_CLINICIAN_SELECTED:
+      return {
+        ...state,
+        clinicianSelected: action.payload.clinicianSelected
       };
     case actionNames.SET_FETCHING_CLINICIAN_CONTACTS:
       return {

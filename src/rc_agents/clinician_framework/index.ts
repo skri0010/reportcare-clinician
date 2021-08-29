@@ -173,9 +173,9 @@ export enum ClinicianAttributes {
   DISPLAY_TODOS = "DisplayTodos",
 
   //SRD-IV - Clinician Contacts
-  RETRIEVE_CLINICIAN_CONTACTS = "RETRIEVE_CLINICIAN_CONTACTS",
-  CLINICIAN_CONTACTS_RETRIEVED = "CLINICIAN_CONTACTS_RETRIEVED",
-  CLINICIAN_CONTACTS = "CLINICIAN_CONTACTS"
+  RETRIEVE_CLINICIAN_CONTACTS = "RetrieveClinicianContatcts",
+  CLINICIAN_CONTACTS_RETRIEVED = "ClinicianContactsRetrieved",
+  CLINICIAN_CONTACTS = "ClinicianContacts"
 }
 
 // Attributes for PATIENT key
