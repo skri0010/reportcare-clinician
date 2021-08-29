@@ -13,6 +13,7 @@ interface CardWrapperProps {
   minWidthRequired?: boolean;
   noChildrenPaddingHorizontal?: boolean;
   title?: string;
+  ComponentNextToTitle?: FC;
   bottomText?: string;
 }
 
@@ -26,6 +27,7 @@ export const CardWrapper: FC<CardWrapperProps> = ({
   firstItem = false,
   noChildrenPaddingHorizontal = false,
   title,
+  ComponentNextToTitle,
   bottomText
 }) => {
   const { colors } = select((state: RootState) => ({
@@ -53,7 +55,7 @@ export const CardWrapper: FC<CardWrapperProps> = ({
       {
         // Main title
         title ? (
-          <View style={styles.textContainer}>
+          <View style={styles.titleContainer}>
             <H4
               text={title}
               style={[
@@ -63,6 +65,7 @@ export const CardWrapper: FC<CardWrapperProps> = ({
                 }
               ]}
             />
+            {ComponentNextToTitle ? <ComponentNextToTitle /> : null}
           </View>
         ) : null
       }
@@ -77,7 +80,7 @@ export const CardWrapper: FC<CardWrapperProps> = ({
       {
         // Bottom text
         bottomText ? (
-          <View style={[styles.textContainer, styles.bottomTextContainer]}>
+          <View style={[styles.titleContainer, styles.bottomTextContainer]}>
             <H6
               text={bottomText}
               style={{
@@ -95,11 +98,12 @@ export const CardWrapper: FC<CardWrapperProps> = ({
 };
 
 const styles = ScaledSheet.create({
-  textContainer: {
-    padding: "10@ms"
+  titleContainer: {
+    flexDirection: "row",
+    padding: "10@ms",
+    width: "100%"
   },
   mainText: {
-    paddingLeft: "5@ms",
     fontWeight: "600",
     flexWrap: "wrap"
   },

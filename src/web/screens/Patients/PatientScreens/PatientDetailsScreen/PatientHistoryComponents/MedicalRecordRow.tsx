@@ -1,8 +1,8 @@
 import React, { FC } from "react";
 import { ScaledSheet } from "react-native-size-matters";
-import { H4 } from "components/Text";
+import { H5 } from "components/Text";
 import { View } from "react-native";
-import { RowButton } from "components/Buttons/RowButton";
+import { RowButton } from "components/Buttons/TextButton";
 
 interface MedicalRecordRowProps {
   description: string;
@@ -16,11 +16,9 @@ export const MedicalRecordRow: FC<MedicalRecordRowProps> = ({
   return (
     <View style={[styles.container]}>
       {/* Medical record title */}
-      <H4 text={description} style={[styles.textContainer]} />
-
-      <View style={[styles.buttonContainer]}>
-        <RowButton onRowPress={onRowPress} title="Patient_History.ViewButton" />
-      </View>
+      <H5 text={description} style={[styles.textContainer]} />
+      {/* View button */}
+      <RowButton onPress={onRowPress} title="Patient_History.ViewButton" />
     </View>
   );
 };
@@ -37,12 +35,6 @@ const styles = ScaledSheet.create({
     borderRadius: "2@ms",
     borderWidth: "1@ms",
     width: "70@ms"
-  },
-  buttonText: {
-    textAlign: "center"
-  },
-  buttonContainer: {
-    flex: 1
   },
   textContainer: {
     flex: 5,

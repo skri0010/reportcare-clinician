@@ -1,13 +1,12 @@
 import React, { FC, useState } from "react";
 import { RootState, select } from "util/useRedux";
 import { ScaledSheet } from "react-native-size-matters";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { H3 } from "components/Text";
 import { CardWrapper } from "web/screens/Home/CardWrapper";
 import { mockMedicalRecord, MedicalRecords } from "mock/mockPatientDetails";
-import { FlatList, TouchableOpacity, View } from "react-native";
+import { FlatList, View } from "react-native";
 import { MedicalRecordRow } from "./MedicalRecordRow";
 import i18n from "util/language/i18n";
+import { IconButton, IconType } from "components/Buttons/IconButton";
 
 interface PatientMedicalRecordProps {
   patientId: string;
@@ -23,9 +22,8 @@ export const PatientMedicalRecordCard: FC<PatientMedicalRecordProps> = ({
   setViewMedicalModal,
   setDisplayMedicalRecord
 }) => {
-  const { colors, fonts } = select((state: RootState) => ({
-    colors: state.settings.colors,
-    fonts: state.settings.fonts
+  const { colors } = select((state: RootState) => ({
+    colors: state.settings.colors
   }));
 
   // Query database for a specific patient by patientId for alert histories here
@@ -35,39 +33,28 @@ export const PatientMedicalRecordCard: FC<PatientMedicalRecordProps> = ({
     setViewMedicalModal(true);
     setDisplayMedicalRecord(record);
   }
-  return (
-    <CardWrapper maxHeight={maxHeight}>
-      <View style={styles.title}>
-        <H3
-          text={i18n.t("Patient_History.MedicalRecords")}
-          style={[
-            {
-              fontWeight: "bold",
-              color: colors.primaryTextColor
-            }
-          ]}
-        />
-        {/* Add button */}
-        <TouchableOpacity
-          onPress={onAddPress}
-          style={[
-            styles.button,
-            {
-              borderColor: colors.primaryButtonColor,
-              width: fonts.h1Size,
-              height: fonts.h1Size,
-              backgroundColor: colors.primaryButtonColor
-            }
-          ]}
-        >
-          <Icon
-            name="plus"
-            size={fonts.h2Size}
-            style={{ color: colors.primaryContrastTextColor }}
-          />
-        </TouchableOpacity>
-      </View>
 
+  // Add medical record button
+  const AddMedicalRecordButton: FC = () => {
+    return (
+      <View style={styles.buttonContainer}>
+        <IconButton
+          name="plus"
+          type={IconType.MATERIAL_COMMUNITY}
+          onPress={onAddPress}
+          containerStyle={styles.button}
+          iconStyle={{ color: colors.primaryContrastTextColor }}
+        />
+      </View>
+    );
+  };
+
+  return (
+    <CardWrapper
+      maxHeight={maxHeight}
+      title={i18n.t("Patient_History.MedicalRecords")}
+      ComponentNextToTitle={AddMedicalRecordButton}
+    >
       {/* List of medical records */}
       <FlatList
         showsVerticalScrollIndicator={false}
@@ -85,12 +72,11 @@ export const PatientMedicalRecordCard: FC<PatientMedicalRecordProps> = ({
 };
 
 const styles = ScaledSheet.create({
-  title: {
-    display: "flex",
+  buttonContainer: {
+    flex: 1,
     flexDirection: "row",
-    justifyContent: "space-between",
-    paddingBottom: "15@ms",
-    alignItems: "center"
+    justifyContent: "flex-end",
+    alignItems: "flex-end"
   },
   button: {
     borderRadius: "10@ms",
