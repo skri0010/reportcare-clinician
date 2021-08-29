@@ -15,6 +15,17 @@ export const getAge = (birthDate: string): string => {
   return age;
 };
 
+// Requirements: Get last 7 days of parameters.
+// This function is used to get the locale date string of the last 7 days
+export const getWeekLocaleDateString = (): string[] => {
+  const dates: string[] = [];
+  for (let i = 0; i < 7; i++) {
+    const date = moment().subtract(i, "days");
+    dates.push(new Date(date.toString()).toLocaleDateString());
+  }
+  return dates;
+};
+
 export const getLocalDateTime = (datetime: string): string => {
   const localDateTime = moment.utc(datetime).local();
   return localDateTime.format("HH:mm DD-MM-YYYY");

@@ -1,11 +1,6 @@
 import { ReportVitals } from "aws/API";
 import i18n from "util/language/i18n";
 
-export interface ChartData {
-  data: number[];
-  xLabels: string[];
-}
-
 enum days {
   "Sunday" = 0,
   "Monday" = 1,
@@ -16,73 +11,106 @@ enum days {
   "Saturday" = 6
 }
 
-interface AverageStats {
-  count: number;
-  totalDiastolic: number;
-  averageDiastolic: number;
-  totalSystolic: number;
-  averageSystolic: number;
-  totalWeight: number;
-  averageWeight: number;
-  totalSteps: number;
-  averageSteps: number;
-  totalOxySat: number;
-  averageOxySat: number;
+export interface Stat {
+  min: number;
+  max: number;
+  average: number;
+}
+
+export interface ParameterStats {
+  diastolic: Stat;
+  systolic: Stat;
+  weight: Stat;
+  oxygenSaturation: Stat;
+  date: Date;
 }
 
 export interface ParameterGraphsProps {
-  vitals: ReportVitals[];
+  stats: ParameterStats[];
 }
 
-export const getAverageStats = (
-  vitalsData: ReportVitals[]
-): { [k: string]: AverageStats } => {
-  // Calculates average diastolic BP, systolic BP, weight and oxygen saturation each day.
-  const averageStats: { [k: string]: AverageStats } = {};
-  for (let i = 0; i < vitalsData.length; i += 1) {
-    const item = vitalsData[i];
-    const date = new Date(item.DateTime!);
-    if (days[date.getDay()] in averageStats) {
-      const currentMap = averageStats[days[date.getDay()]];
-      currentMap.count += 1;
-      currentMap.totalDiastolic += parseFloat(item.BPDi!);
-      currentMap.averageDiastolic =
-        currentMap.totalDiastolic / currentMap.count;
+// Processed from Stat in ParameterStats
+export type SubParameterStat = {
+  parameter: Stat;
+  date: Date;
+};
 
-      currentMap.totalSystolic += parseFloat(item.BPSys!);
-      currentMap.averageSystolic = currentMap.totalSystolic / currentMap.count;
+export interface ChartData {
+  min: number[];
+  max: number[];
+  average: number[];
+  xLabels: string[];
+}
 
-      currentMap.totalWeight += parseFloat(item.Weight!);
-      currentMap.averageWeight = currentMap.totalWeight / currentMap.count;
+// Calculates average, min and max diastolic BP, systolic BP, weight and oxygen saturation from one day.
+export const getParameterStatFromOneVitalsReport = (
+  vitalsData: ReportVitals[],
+  localeDateString: string
+): ParameterStats | null => {
+  let stats: ParameterStats | null = null;
+  if (vitalsData.length > 0) {
+    // Utility functions
+    const average = (array: number[]) =>
+      array.reduce((a, b) => a + b) / array.length;
 
-      currentMap.totalSteps += parseFloat(item.NoSteps!);
-      currentMap.averageSteps = currentMap.totalSteps / currentMap.count;
+    const getStat = (array: number[]) => ({
+      min: Math.min(...array),
+      max: Math.max(...array),
+      average: average(array)
+    });
 
-      currentMap.totalOxySat += parseFloat(item.BPDi!);
-      currentMap.averageOxySat = currentMap.totalOxySat / currentMap.count;
+    // Diastolic BP
+    const diastolicBPVitals: number[] = vitalsData
+      .filter((data) => parseFloat(data.BPDi))
+      .map((data) => parseFloat(data.BPDi));
 
-      averageStats[days[date.getDay()]] = currentMap;
-    } else {
-      averageStats[days[date.getDay()]] = {
-        count: 1,
-        totalDiastolic: parseFloat(item.BPDi!),
-        averageDiastolic: parseFloat(item.BPDi!),
-        totalSystolic: parseFloat(item.BPSys!),
-        averageSystolic: parseFloat(item.BPSys!),
-        totalWeight: parseFloat(item.Weight!),
-        averageWeight: parseFloat(item.Weight!),
-        totalSteps: parseFloat(item.NoSteps!),
-        averageSteps: parseFloat(item.NoSteps!),
-        totalOxySat: parseFloat(item.OxySat!),
-        averageOxySat: parseFloat(item.OxySat!)
-      };
-    }
+    // Systolic BP
+    const systolicBPVitals: number[] = vitalsData
+      .filter((data) => parseFloat(data.BPSys))
+      .map((data) => parseFloat(data.BPSys));
+
+    // Oxygen saturation
+    const oxygenSaturation: number[] = vitalsData
+      .filter((data) => parseFloat(data.OxySat))
+      .map((data) => parseFloat(data.OxySat));
+
+    // Weight
+    const weightVitals: number[] = vitalsData
+      .filter((data) => parseFloat(data.Weight))
+      .map((data) => parseFloat(data.Weight));
+
+    // Statsw
+    stats = {
+      diastolic: getStat(diastolicBPVitals),
+      systolic: getStat(systolicBPVitals),
+      weight: getStat(oxygenSaturation),
+      oxygenSaturation: getStat(weightVitals),
+      date: new Date(localeDateString)
+    };
   }
-  return averageStats;
+  return stats;
+};
+
+export const subParameterStatsToChartData: (
+  subParameterStats: SubParameterStat[]
+) => ChartData = (subParameterStats) => {
+  const chartData: ChartData = {
+    min: [],
+    max: [],
+    average: [],
+    xLabels: []
+  };
+  subParameterStats.forEach(({ parameter, date }) => {
+    chartData.min.push(parameter.min);
+    chartData.max.push(parameter.max);
+    chartData.average.push(parameter.average);
+    chartData.xLabels.push(date.toLocaleDateString());
+  });
+  return chartData;
 };
 
 export const getXLabels = (averageStats: {
-  [k: string]: AverageStats;
+  [k: string]: ParameterStats;
 }): string[] => {
   const xLabels = Object.keys(averageStats).map((key) =>
     i18n.t(`Parameter_Graphs.Days.${key}`)

@@ -8,12 +8,12 @@ interface DiastolicBPChartCardProps extends ParameterGraphsProps {
 }
 
 export const DiastolicBPChartCard: FC<DiastolicBPChartCardProps> = ({
-  vitals,
+  stats,
   maxHeight
 }) => {
   return (
     <CardWrapper maxHeight={maxHeight}>
-      <DiastolicBPChart vitals={vitals} />
+      <DiastolicBPChart stats={stats} />
     </CardWrapper>
   );
 };

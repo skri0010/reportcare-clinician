@@ -8,12 +8,12 @@ interface OxygenSaturationCardProps extends ParameterGraphsProps {
 }
 
 export const OxygenSaturationChartCard: FC<OxygenSaturationCardProps> = ({
-  vitals,
+  stats,
   maxHeight
 }) => {
   return (
     <CardWrapper maxHeight={maxHeight}>
-      <OxygenSaturationChart vitals={vitals} />
+      <OxygenSaturationChart stats={stats} />
     </CardWrapper>
   );
 };

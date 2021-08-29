@@ -7,9 +7,12 @@ import { DiastolicBPChartCard } from "./PatientParameterComponents/DiastolicBPCh
 import { OxygenSaturationChartCard } from "./PatientParameterComponents/OxygenSaturationChartCard";
 import { SystolicBPChartCard } from "./PatientParameterComponents/SystolicBPChartCard";
 import { PatientDetailsTabProps } from "web/navigation/types";
-import { PatientDetails } from "rc_agents/model";
-import { ReportVitals } from "aws/API";
-import { getLatestVitalsReport } from "util/utilityFunctions";
+import { LocalReportVitals, PatientDetails } from "rc_agents/model";
+import { getWeekLocaleDateString } from "util/utilityFunctions";
+import {
+  getParameterStatFromOneVitalsReport,
+  ParameterStats
+} from "components/Visualization/ParameterGraphs";
 
 interface PatientParametersProps
   extends PatientDetailsTabProps.ParametersTabProps {
@@ -23,53 +26,59 @@ export const PatientParameters: FC<PatientParametersProps> = ({ details }) => {
   );
   const { vitalsReports } = details;
 
-  const [vitals, setVitals] = useState<ReportVitals[] | null>(null);
+  const [stats, setStats] = useState<ParameterStats[] | null>(null);
 
   useEffect(() => {
     if (vitalsReports) {
-      const tempVitals: ReportVitals[] = [];
-      // Keys are dates
-      const dates = Object.keys(vitalsReports).map((key) => new Date(key));
-      dates.sort((a, b) => {
-        // Sort dates by ascending order
-        return a.valueOf() - b.valueOf();
-      });
-      dates.forEach((date) => {
-        // Get the latest vitals report for each date
-        const dateStr = date.toLocaleDateString();
-        const reportsOnDate = vitalsReports[dateStr];
-        if (reportsOnDate) {
-          const latestVitalsReport = getLatestVitalsReport(reportsOnDate);
-          if (latestVitalsReport) {
-            // Push to array
-            tempVitals.push(latestVitalsReport);
+      const tempLocalVitals: LocalReportVitals = {};
+      const tempParameterStats: ParameterStats[] = [];
+      // Get the last 7 days
+      const targetLocaleDateStrings = getWeekLocaleDateString();
+
+      // Get ReportVitals[] from those last 7 days if they exist
+      targetLocaleDateStrings.forEach(
+        (date) => (tempLocalVitals[date] = vitalsReports[date] || [])
+      );
+
+      // For each day, get parameter stats
+      Object.keys(tempLocalVitals).forEach((date) => {
+        const vitalsList = tempLocalVitals[date];
+        if (vitalsList) {
+          const parameterStat = getParameterStatFromOneVitalsReport(
+            vitalsList,
+            date
+          );
+          if (parameterStat) {
+            tempParameterStats.push(parameterStat);
           }
         }
       });
-      if (tempVitals.length > 0) {
-        setVitals(tempVitals);
-      }
+
+      // Sort parameter stats
+      tempParameterStats.sort((a, b) => a.date.valueOf() - b.date.valueOf());
+
+      setStats(tempParameterStats);
     }
   }, [vitalsReports]);
 
   return (
     <ScreenWrapper padding>
-      {vitals ? (
+      {stats ? (
         <>
           <View style={styles.container}>
             {/* Systolic Blood Graph */}
-            <SystolicBPChartCard vitals={vitals} maxHeight={cardMaxHeight} />
+            <SystolicBPChartCard stats={stats} maxHeight={cardMaxHeight} />
             {/* Diastolic Blood Graph */}
-            <DiastolicBPChartCard vitals={vitals} maxHeight={cardMaxHeight} />
+            <DiastolicBPChartCard stats={stats} maxHeight={cardMaxHeight} />
           </View>
           <View style={styles.container}>
             {/* Oxygen Saturation graph */}
             <OxygenSaturationChartCard
-              vitals={vitals}
+              stats={stats}
               maxHeight={cardMaxHeight}
             />
             {/* Weight Graph */}
-            <WeightChartCard vitals={vitals} maxHeight={cardMaxHeight} />
+            <WeightChartCard stats={stats} maxHeight={cardMaxHeight} />
           </View>
         </>
       ) : null}
