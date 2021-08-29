@@ -14,7 +14,7 @@ export const DiastolicParameterCard: FC<DiastolicCardProps> = ({
   const [vitals] = useState(mockVitals);
 
   return (
-    <CardWrapper maxHeight={maxHeight} paddingTop>
+    <CardWrapper maxHeight={maxHeight}>
       <DiastolicPressureChart data={vitals} />
     </CardWrapper>
   );

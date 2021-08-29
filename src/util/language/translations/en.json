@@ -197,9 +197,9 @@
     "Systolic": "Systolic",
     "Diastolic": "Diastolic",
     "Medications": "Medications",
-    "OxygenSaturation": "O2 Saturation",
+    "OxygenSaturation": "Oxygen Saturation",
     "Weight": "Weight",
-    "TargetWeight": "Target Weight",
+    "TargetWeight": "Target weight",
     "Symptoms": "Symptoms",
     "NoRecord": "-",
     "NoSymptoms": "No symptoms recorded"

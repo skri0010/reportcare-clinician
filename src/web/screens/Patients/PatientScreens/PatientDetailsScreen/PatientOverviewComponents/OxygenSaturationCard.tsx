@@ -1,10 +1,8 @@
 import React, { FC } from "react";
-import { RootState, select } from "util/useRedux";
-import { View } from "react-native";
-import { ms, ScaledSheet } from "react-native-size-matters";
-import { H1, H5 } from "components/Text";
+import { ms } from "react-native-size-matters";
 import { CardWrapper } from "web/screens/Home/CardWrapper";
 import i18n from "util/language/i18n";
+import { AbsoluteParameters } from "components/Text/AbsoluteParameters";
 
 interface OxygenSaturationProps {
   oxySatValue: string;
@@ -17,45 +15,15 @@ export const OxygenSaturationCard: FC<OxygenSaturationProps> = ({
   minHeight,
   flex
 }) => {
-  const { colors } = select((state: RootState) => ({
-    colors: state.settings.colors
-  }));
-
   return (
     <CardWrapper
       minHeight={minHeight}
       flex={flex}
       minWidth={ms(100)}
       title={i18n.t("Patient_Overview.OxygenSaturation")}
+      noChildrenPaddingHorizontal
     >
-      <View style={styles.container}>
-        <View style={styles.text}>
-          <H1
-            text={oxySatValue}
-            style={{ fontWeight: "bold", color: colors.primaryTextColor }}
-          />
-          <H5 text="%" style={styles.label} />
-        </View>
-      </View>
+      <AbsoluteParameters centerText={oxySatValue} bottomText="%" />
     </CardWrapper>
   );
 };
-
-const styles = ScaledSheet.create({
-  container: {
-    flex: 1,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  text: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    top: "6@ms"
-  },
-  label: {
-    opacity: 0.8
-  }
-});
