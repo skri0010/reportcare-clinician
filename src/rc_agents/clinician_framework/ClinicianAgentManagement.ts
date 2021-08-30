@@ -85,6 +85,7 @@ export class ClinicianAgentManagement extends AgentManagement {
   ): Promise<void> {
     try {
       super.addFact(fact, broadcast);
+      this.facts = JSON.parse(JSON.stringify(this.facts));
 
       if (updateDb) {
         await this.updateDbStates();
