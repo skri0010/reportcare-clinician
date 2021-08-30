@@ -83,7 +83,7 @@ const App: FC = () => {
           ) : null}
         </ToastProviderComponent>
       ) : (
-        <LoadingIndicator />
+        <LoadingIndicator overlayBackgroundColor />
       )}
     </Provider>
   );

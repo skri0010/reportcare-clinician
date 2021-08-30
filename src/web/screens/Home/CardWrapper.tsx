@@ -132,6 +132,7 @@ const styles = ScaledSheet.create({
     bottom: "10@ms"
   },
   item: {
+    flex: 1,
     paddingHorizontal: "10@ms"
   }
 });
