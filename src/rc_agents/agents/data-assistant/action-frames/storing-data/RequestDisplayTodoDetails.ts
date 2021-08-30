@@ -33,7 +33,8 @@ import {
    */
    async doActivity(agent: Agent): Promise<void> {
     try {
-      await super.doActivity(agent, [rule3]);
+      console.log("comms");
+      await super.doActivity(agent, [rule2]);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
@@ -47,20 +48,16 @@ const rule1 = new Precondition(
   ProcedureAttributes.SRD_III,
   ProcedureConst.ACTIVE
 );
-const rule2 = new Precondition(
-  AgentIDs.DTA,
-  CommonAttributes.LAST_ACTIVITY,
-  ActionFrameIDs.DTA.RETRIEVE_TODO_DETAILS
-);
 
-const rule3 = new ResettablePrecondition(
-  AgentIDs.DTA,
+
+const rule2 = new ResettablePrecondition(
+  BeliefKeys.CLINICIAN,
   ClinicianAttributes.DISPLAY_TODO_DETAILS,
   true
 );
 
 // Actionframe
-export const af_RequestDisplayTodos = new Actionframe(
+export const af_RequestDisplayTodoDetails = new Actionframe(
   `AF_${ActionFrameIDs.DTA.REQUEST_DISPLAY_TODOS}`,
   [rule1, rule2],
   new RequestDisplayTodoDetails()

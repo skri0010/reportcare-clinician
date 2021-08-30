@@ -101,7 +101,6 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = ({
     if (item.id) {
       AgentTrigger.triggerRetrieveTodoDetails({ id: item.id });
     }
-    setTodoSelected(item);
   }
 
   // Compares dispatched updatedTodo with current Todo displayed in the TodoDetailsScreen
@@ -113,6 +112,13 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updatedTodo]);
+
+  useEffect(() => {
+    if (todoDetails) {
+      console.log("Hena");
+      setTodoSelected(todoDetails);
+    }
+  }, [todoDetails]);
 
   // Detects completion of UpdateTodo procedure and shows the appropriate toast.
   useEffect(() => {

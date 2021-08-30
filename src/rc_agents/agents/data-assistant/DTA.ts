@@ -20,7 +20,8 @@ import { af_RequestPendingAlertCountDisplay } from "./action-frames/triage-alert
 import af_CreateTodo from "./action-frames/storing-data/CreateTodo";
 import af_UpdateTodo from "./action-frames/storing-data/UpdateTodo";
 import af_RetrieveTodos from "./action-frames/storing-data/RetrieveTodos";
-import { af_DisplayTodoDetails } from "../user-specific-assistant/action-frames/storing-data/DisplayTodoDetails";
+import { af_RetrieveTodoDetails } from "./action-frames/storing-data/RetrieveTodoDetails";
+import { af_RequestDisplayTodoDetails } from "./action-frames/storing-data/RequestDisplayTodoDetails";
 import { af_RequestDisplayTodos } from "./action-frames/storing-data/RequestDisplayTodos";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import { ClinicianAgent } from "rc_agents/clinician_framework/ClinicianAgent";
@@ -67,7 +68,8 @@ const agentDTA = new ClinicianAgent(
     af_RequestDisplayTodos,
 
     // SRD-III
-    af_DisplayTodoDetails
+    af_RetrieveTodoDetails,
+    af_RequestDisplayTodoDetails
   ], // action frame
   [belief1], // beliefs
   agentAPI

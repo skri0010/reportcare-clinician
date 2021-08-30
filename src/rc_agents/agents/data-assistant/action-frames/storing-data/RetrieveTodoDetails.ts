@@ -41,8 +41,11 @@ import { mapColorCodeToRiskLevel } from "rc_agents/agents/data-assistant/action-
         // reset preconditions
         await super.doActivity(agent, [rule2]);
 
-        const facts = agentAPI.getFacts();
         // eslint-disable-next-line no-console
+        console.log("hena");
+
+        const facts = agentAPI.getFacts();
+        
         try {
 
           // Get fact with todo details
@@ -99,7 +102,7 @@ import { mapColorCodeToRiskLevel } from "rc_agents/agents/data-assistant/action-
                       );
 
                       // Trigger request for UXSA to display
-
+                      console.log("UXSA");
                       agent.addBelief(
                           new Belief(
                               BeliefKeys.CLINICIAN,
