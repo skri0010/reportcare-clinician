@@ -8,6 +8,7 @@ import { AgentIDs, AppAttributes, BeliefKeys } from "./index";
 import { Storage } from "../storage";
 import AgentManagement from "agents-framework/management/AgentManagement";
 import { ClinicianAgent } from "./ClinicianAgent";
+import cloneDeep from "lodash/cloneDeep";
 
 /**
  * Base class for management of active agents.
@@ -85,7 +86,7 @@ export class ClinicianAgentManagement extends AgentManagement {
   ): Promise<void> {
     try {
       super.addFact(fact, broadcast);
-      this.facts = JSON.parse(JSON.stringify(this.facts));
+      this.facts = cloneDeep(this.facts); // Necessary to prevent obtaining cached value
 
       if (updateDb) {
         await this.updateDbStates();
