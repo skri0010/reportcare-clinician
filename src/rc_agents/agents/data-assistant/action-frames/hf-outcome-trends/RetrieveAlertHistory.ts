@@ -26,7 +26,6 @@ import {
 } from "../triage-alert-hf-clinic/RetrieveAlerts";
 import { store } from "util/useRedux";
 import { setFetchingPatientAlertHistory } from "ic-redux/actions/agents/actionCreator";
-import { getAlertInfos } from "rc_agents/storage/getItem";
 
 /**
  * Class to represent the activity for retrieving alert history of a patient.

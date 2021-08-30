@@ -20,9 +20,8 @@ export const PatientAlertHistoryCard: FC<PatientAlertHistoryProps> = ({
   setDisplayHistory,
   setModalAlertVisible
 }) => {
-  const { colors, alertHistory, fetchingPatientAlertHistory } = select(
+  const { alertHistory, fetchingPatientAlertHistory } = select(
     (state: RootState) => ({
-      colors: state.settings.colors,
       alertHistory: state.agents.alertHistory,
       fetchingPatientAlertHistory: state.agents.fetchingPatientAlertHistory
     })

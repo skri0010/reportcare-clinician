@@ -36,6 +36,7 @@ export const PatientHistory: FC<PatientHistoryProps> = ({
   // Trigger the retrieval of alert history
   useEffect(() => {
     AgentTrigger.triggerGetHistoricalAlerts(info.patientID);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

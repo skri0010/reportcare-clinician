@@ -31,9 +31,8 @@ export const AlertsCard: FC<AlertsCardProps> = ({
   maxHeight,
   navigateCallback
 }) => {
-  const { colors, pendingAlertCount, fetchingPendingAlerts } = select(
+  const { pendingAlertCount, fetchingPendingAlerts } = select(
     (state: RootState) => ({
-      colors: state.settings.colors,
       pendingAlertCount: state.agents.pendingAlertCount,
       fetchingPendingAlerts: state.agents.fetchingPendingAlerts
     })

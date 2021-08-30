@@ -9,15 +9,6 @@ import {
   setPatientRiskFilters
 } from "ic-redux/actions/agents/actionCreator";
 import { AlertStatus, RiskFilter } from "rc_agents/model";
-import { agentDTA } from "rc_agents/agents";
-import { Belief } from "agents-framework";
-import { ProcedureConst } from "agents-framework/Enums";
-import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
-import {
-  BeliefKeys,
-  ClinicianAttributes,
-  ProcedureAttributes
-} from "rc_agents/clinician_framework";
 import { AgentTrigger } from "rc_agents/trigger";
 
 interface RiskFilterPillListProps {

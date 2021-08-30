@@ -17,7 +17,6 @@ import {
   TodoInput,
   TodoStatus
 } from "rc_agents/model";
-import { Storage } from "rc_agents/storage";
 
 // HF-OTP-I
 // Triggers RetrievePatientsByRole of DTA
