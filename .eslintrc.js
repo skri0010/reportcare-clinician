@@ -120,6 +120,10 @@ module.exports = {
           {
             name: "lodash",
             message: "Please import from lodash/xxx instead"
+          },
+          {
+            name: "rc_agents/storage/accessFunctions",
+            message: "Please import from rc_agents/storage instead"
           }
         ],
         patterns: [

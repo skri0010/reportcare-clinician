@@ -209,7 +209,8 @@ export const schema = {
                                 "allow": "groups",
                                 "groupsField": "patientID",
                                 "operations": [
-                                    "read"
+                                    "read",
+                                    "update"
                                 ],
                                 "groupField": "groups"
                             }

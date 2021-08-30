@@ -190,7 +190,8 @@
       "TargetActivity": "Masukkan sasaran nombor langkah",
       "TargetWeight": "Masukkan sasaran berat badan (dalam kg)",
       "FluidIntakeGoal": "Masukkan sasaran pengambilan air (dalam ml)"
-    }
+    },
+    "ConfigurationSuccessful": "Pesakit telah berjaya dikonfigurasi"
   },
   "Patient_Overview": {
     "BloodPressure": "Tekanan Darah",

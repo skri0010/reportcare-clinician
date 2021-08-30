@@ -5,10 +5,12 @@ import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { PatientDetailsRow } from "components/RowComponents/PatientRows/PatientDetailsRow";
 import { AgentTrigger } from "rc_agents/trigger";
 import i18n from "util/language/i18n";
-import { RootState, select } from "util/useRedux";
+import { RootState, select, useDispatch } from "util/useRedux";
 import { RiskFilterPillList } from "components/Buttons/RiskFilterPillList";
 import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { NoItemsTextIndicator } from "components/Indicators/NoItemsTextIndicator";
+import { setPatientDetails } from "ic-redux/actions/agents/actionCreator";
+import { PatientInfo } from "aws/API";
 
 interface PatientsListScreen {
   displayPatientId?: string;
@@ -24,6 +26,25 @@ export const PatientsList: FC<PatientsListScreen> = ({
     patients: state.agents.patients,
     fetchingPatients: state.agents.fetchingPatients
   }));
+
+  const dispatch = useDispatch();
+
+  const onPatientRowPress = (patient: PatientInfo) => {
+    if (patient) {
+      dispatch(
+        setPatientDetails({
+          patientInfo: patient,
+          activityInfos: {},
+          symptomReports: {},
+          vitalsReports: {}
+        })
+      );
+      if (patient.configured) {
+        // Patient has been configured. Retrieve patient details
+        AgentTrigger.triggerRetrievePatientDetails(patient);
+      }
+    }
+  };
 
   return (
     <View
@@ -63,7 +84,7 @@ export const PatientsList: FC<PatientsListScreen> = ({
             <PatientDetailsRow
               patient={item}
               selected={displayPatientId === item.patientID}
-              onRowPress={AgentTrigger.triggerRetrievePatientDetails}
+              onRowPress={onPatientRowPress}
             />
           )}
           keyExtractor={(item) => item.patientID}
