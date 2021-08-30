@@ -4,10 +4,14 @@ import { ms, ScaledSheet } from "react-native-size-matters";
 import { RootState, select } from "util/useRedux";
 
 interface LoadingIndicatorProps {
+  overlayBackgroundColor?: boolean;
   flex?: number;
 }
 
-export const LoadingIndicator: FC<LoadingIndicatorProps> = ({ flex }) => {
+export const LoadingIndicator: FC<LoadingIndicatorProps> = ({
+  overlayBackgroundColor,
+  flex
+}) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
   }));
@@ -18,7 +22,11 @@ export const LoadingIndicator: FC<LoadingIndicatorProps> = ({ flex }) => {
     <View
       style={[
         styles.overlay,
-        { backgroundColor: colors.overlayColor },
+        {
+          backgroundColor: overlayBackgroundColor
+            ? colors.overlayColor
+            : "transparent"
+        },
         flexStyle
       ]}
     >
@@ -36,9 +44,7 @@ const styles = ScaledSheet.create({
     position: "absolute",
     justifyContent: "center",
     alignSelf: "center",
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0
+    height: "100%",
+    width: "100%"
   }
 });
