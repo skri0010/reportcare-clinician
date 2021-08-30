@@ -10,12 +10,10 @@ import { agentDTA } from "rc_agents/agents";
 import { Belief } from "agents-framework";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
-  Hospital,
   PatientAssignmentResolution,
   TodoInput,
   TodoStatus
 } from "rc_agents/model";
-import { Storage } from "rc_agents/storage";
 
 // HF-OTP-I
 // Triggers RetrievePatientsByRole of DTA
