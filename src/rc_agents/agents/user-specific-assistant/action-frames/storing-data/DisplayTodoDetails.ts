@@ -43,11 +43,9 @@ import { setTodoDetails } from "ic-redux/actions/agents/actionCreator";
           await super.doActivity(agent, [rule2]);
 
           const facts = agentAPI.getFacts();
-          // eslint-disable-next-line no-console
           try {
 
             // Get fact with todo details
-            // TODO: Change this from ClinicianAttributes.TODO to something else
             const todoDetails: string = agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.TODO_DETAILS];
             if (todoDetails) {
                 let todoDetail: Todo | undefined;

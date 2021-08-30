@@ -167,7 +167,8 @@ export enum ClinicianAttributes {
     // SRD-III - Todo Details
     RETRIEVE_TODO_DETAILS = "RetrieveTodoDetails",
     TODO_DETAILS = "TodoDetails",
-    DISPLAY_TODO_DETAILS = "DisplayTodoDetails"
+    DISPLAY_TODO_DETAILS = "DisplayTodoDetails",
+    TODO_DETAILS_RETRIEVED = "TodoDetailsRetrieved"
 }
 
 // Attributes for PATIENT key

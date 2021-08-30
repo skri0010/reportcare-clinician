@@ -15,21 +15,20 @@ import {
     ClinicianAttributes,
     ProcedureAttributes
   } from "rc_agents/clinician_framework";
-import { store } from "util/useRedux";
 import { Storage } from "rc_agents/storage";
 import { LocalTodo, TodoStatus } from "rc_agents/model";
 import { Todo } from "aws/API";
 import { getTodo } from "aws/TypedAPI/getQueries";
 // eslint-disable-next-line no-restricted-imports
 import { mapColorCodeToRiskLevel } from "rc_agents/agents/data-assistant/action-frames/triage-alert-hf-clinic/RetrievePendingAlertCount";
-import { setTodoDetails } from "ic-redux/actions/agents/actionCreator";
+
 
  /**
    * Class representing an activity that triggers the display of todo details.
    * This occurs in SRD-III 
    */
 
-  class DisplayTodoDetails extends Activity {
+  class RetrieveTodoDetails extends Activity {
     constructor() {
         super(ActionFrameIDs.DTA.RETRIEVE_TODO_DETAILS);
     }
@@ -93,10 +92,20 @@ import { setTodoDetails } from "ic-redux/actions/agents/actionCreator";
                       agentAPI.addFact(
                           new Belief(
                               BeliefKeys.CLINICIAN,
-                              ClinicianAttributes.DISPLAY_TODO_DETAILS,
+                              ClinicianAttributes.TODO_DETAILS,
                               todoToDispatch
                           ),
                           false
+                      );
+
+                      // Trigger request for UXSA to display
+
+                      agent.addBelief(
+                          new Belief(
+                              BeliefKeys.CLINICIAN,
+                              ClinicianAttributes.DISPLAY_TODO_DETAILS,
+                              true
+                          )
                       );
                   }
               } else {
@@ -107,15 +116,22 @@ import { setTodoDetails } from "ic-redux/actions/agents/actionCreator";
                       // move to front of the list
                       await Storage.setTodo(todoToDispatch[0]);
 
-                      // remove display todo details from 
                       agentAPI.addFact(
                           new Belief(
                               BeliefKeys.CLINICIAN,
-                              ClinicianAttributes.RETRIEVE_TODO_DETAILS,
+                              ClinicianAttributes.TODO_DETAILS,
                               todoToDispatch[0]
                           ),
                           false
                       );
+
+                      agent.addBelief(
+                        new Belief(
+                            BeliefKeys.CLINICIAN,
+                            ClinicianAttributes.DISPLAY_TODO_DETAILS,
+                            true
+                        )
+                    );
                   }
 
               }
@@ -154,8 +170,8 @@ const rule2 = new ResettablePrecondition(
     true
 );
 
-export const af_DisplayTodoDetails = new Actionframe(
+export const af_RetrieveTodoDetails = new Actionframe(
     `AF_${ActionFrameIDs.DTA.RETRIEVE_TODO_DETAILS}`,
     [rule1, rule2],
-    new DisplayTodoDetails()
+    new RetrieveTodoDetails()
 );
