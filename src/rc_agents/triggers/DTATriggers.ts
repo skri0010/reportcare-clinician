@@ -267,3 +267,20 @@ export const triggerGetHistoricalAlerts = (patientId: string): void => {
     )
   );
 };
+// SRD-IV: Triggers RetrieveClinicianContacts of DTA
+export const triggerRetrieveClinicianContacts = (): void => {
+  agentDTA.addBelief(
+    new Belief(
+      BeliefKeys.CLINICIAN,
+      ClinicianAttributes.RETRIEVE_CLINICIAN_CONTACTS,
+      true
+    )
+  );
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PROCEDURE,
+      ProcedureAttributes.SRD_IV,
+      ProcedureConst.ACTIVE
+    )
+  );
+};

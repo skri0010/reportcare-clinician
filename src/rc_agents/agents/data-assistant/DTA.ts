@@ -26,6 +26,8 @@ import { ClinicianAgent } from "rc_agents/clinician_framework/ClinicianAgent";
 import af_UpdateAlert from "./action-frames/triage-alert-hf-clinic/UpdateAlert";
 import { af_RetrieveAlertHistory } from "./action-frames/hf-outcome-trends/RetrieveAlertHistory";
 import { af_RequestDisplayAlertHistory } from "./action-frames/hf-outcome-trends/RequestDisplayAlertHistory";
+import { af_RetrieveClinicianContacts } from "./action-frames/storing-data/RetrieveClinicianContacts";
+import { af_RequestClinicianContactDisplay } from "./action-frames/storing-data/RequestClinicianContactsDisplay";
 import { af_ConfigurePatient } from "./action-frames/hf-outcome-trends/ConfigurePatient";
 
 // Initial Beliefs of Agent
@@ -71,7 +73,11 @@ const agentDTA = new ClinicianAgent(
     af_RetrieveTodos,
     af_CreateTodo,
     af_UpdateTodo,
-    af_RequestDisplayTodos
+    af_RequestDisplayTodos,
+
+    // SRD-IV
+    af_RetrieveClinicianContacts,
+    af_RequestClinicianContactDisplay
   ], // action frame
   [belief1], // beliefs
   agentAPI

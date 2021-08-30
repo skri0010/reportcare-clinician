@@ -61,41 +61,40 @@ export const PendingPatientAssignmentsCard: FC<PendingPatientAssignmentsCardProp
       <CardWrapper
         maxHeight={maxHeight}
         title={i18n.t("Home.PatientAssignments")}
+        noChildrenPaddingHorizontal={fetchingPendingPatientAssignments}
       >
-        {/* Loading indicator */}
-        {fetchingPendingPatientAssignments ? <LoadingIndicator /> : null}
-
-        {/* List of pending patient assignments */}
-        {pendingPatientAssignments ? (
-          pendingPatientAssignments.length > 0 ? (
-            <View style={styles.listContainer}>
-              <FlatList
-                style={
-                  fetchingPendingPatientAssignments
-                    ? styles.flatlistLoadingOpacity
-                    : {}
-                }
-                showsVerticalScrollIndicator={false}
-                ItemSeparatorComponent={() => <ItemSeparator />}
-                data={pendingPatientAssignments}
-                renderItem={({ item }) => {
-                  return (
-                    <PatientAssignmentRow
-                      patientName={item.patientName}
-                      onApprove={() => approvePatientAssignment(item)}
-                      onReassign={() => reassignPatientAssignment(item)}
-                    />
-                  );
-                }}
-                keyExtractor={(item) => item.id}
-              />
-            </View>
-          ) : (
-            // Display text to indicate no pending assignments
-            <EmptyListIndicator
-              text={i18n.t("Patient_Assignments.NoPendingAssignments")}
+        {fetchingPendingPatientAssignments ? (
+          // Pending patient assignments is being fetched
+          <LoadingIndicator />
+        ) : pendingPatientAssignments ? (
+          // List of pending patient assignments? (
+          <View style={styles.listContainer}>
+            <FlatList
+              style={
+                fetchingPendingPatientAssignments
+                  ? styles.flatlistLoadingOpacity
+                  : {}
+              }
+              showsVerticalScrollIndicator={false}
+              ItemSeparatorComponent={() => <ItemSeparator />}
+              ListEmptyComponent={() => (
+                <EmptyListIndicator
+                  text={i18n.t("Patient_Assignments.NoPendingAssignments")}
+                />
+              )}
+              data={pendingPatientAssignments}
+              renderItem={({ item }) => {
+                return (
+                  <PatientAssignmentRow
+                    patientName={item.patientName}
+                    onApprove={() => approvePatientAssignment(item)}
+                    onReassign={() => reassignPatientAssignment(item)}
+                  />
+                );
+              }}
+              keyExtractor={(item) => item.id}
             />
-          )
+          </View>
         ) : null}
       </CardWrapper>
     );

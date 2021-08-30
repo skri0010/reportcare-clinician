@@ -11,19 +11,7 @@ import { RiskLevel } from "models/RiskLevel";
 import { ScaledSheet } from "react-native-size-matters";
 import { ViewMedicalRecords } from "./PatientScreens/PatientDetailsScreen/PatientHistoryComponents/ViewMedicalRecord";
 import { AddMedicalRecord } from "./PatientScreens/PatientDetailsScreen/PatientHistoryComponents/AddMedicalRecord";
-import { agentDTA } from "rc_agents/agents";
-import { Belief } from "agents-framework";
-import { ProcedureConst } from "agents-framework/Enums";
-import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
-import {
-  BeliefKeys,
-  PatientAttributes,
-  ProcedureAttributes
-} from "rc_agents/clinician_framework";
-import {
-  setPatientDetails,
-  setProcedureOngoing
-} from "ic-redux/actions/agents/actionCreator";
+import { setPatientDetails } from "ic-redux/actions/agents/actionCreator";
 import { PatientDetailsTabNavigator } from "web/navigation/navigators/PatientDetailsTabNavigator";
 import { PatientHistoryModal } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientHistoryComponents/PatientHistoryModals";
 import { MainScreenProps } from "web/navigation/types";
@@ -127,39 +115,7 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
 
   // For add medical record modal visibility
   const [addMedicalRecord, setAddMedicalRecord] = useState<boolean>(false);
-
-  const [retrieving, setRetrieving] = useState(false); // used locally to indicate ongoing retrieval of details
   const [showGraph, setShowGraph] = useState(false); // used locally for graph display
-
-  // Triggers series of actions to retrieve details specific to a patient.
-  const getData = (patientId: string) => {
-    // Start of retrieval
-    dispatch(setProcedureOngoing(true));
-    setRetrieving(true);
-
-    agentDTA.addBelief(
-      new Belief(
-        BeliefKeys.PATIENT,
-        PatientAttributes.RETRIEVE_PATIENT_DETAILS,
-        true
-      )
-    );
-    agentAPI.addFact(
-      new Belief(
-        BeliefKeys.PATIENT,
-        PatientAttributes.PATIENT_TO_VIEW_DETAILS,
-        patientId
-      ),
-      false
-    );
-    agentAPI.addFact(
-      new Belief(
-        BeliefKeys.PROCEDURE,
-        ProcedureAttributes.HF_OTP_II,
-        ProcedureConst.ACTIVE
-      )
-    );
-  };
 
   // JH-TODO-NEW
   // // Detects completion of retrieval procedure
@@ -195,7 +151,7 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
               }}
             >
               {fetchingPatientDetails ? (
-                // : Patient details is being fetched
+                // Patient details is being fetched
                 <LoadingIndicator flex={1} />
               ) : patientDetails ? (
                 // Patient details is fetched and patient details is not null
