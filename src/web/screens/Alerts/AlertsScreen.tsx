@@ -126,7 +126,7 @@ export const AlertsScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
             flex: 2,
             backgroundColor: colors.primaryWebBackgroundColor
           }}
-        > 
+        >
           {!isEmptyAlert ? (
             <NavigationContainer independent>
               <AlertContext.Provider value={initialAlert}>
