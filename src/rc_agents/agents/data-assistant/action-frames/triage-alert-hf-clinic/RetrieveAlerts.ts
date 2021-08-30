@@ -79,16 +79,12 @@ class RetrieveAlerts extends Activity {
             alerts = await getAlertsByStatus(alertStatus);
           } else {
             // case when all alert is required
-            alerts = await getAlertsByStatus(AlertStatus.PENDING);
-            additionalAlerts = await getAlertsByStatus(AlertStatus.COMPLETED);
-            // Only two conditions, as by default it alerts list is used anyways
-            if (alerts && additionalAlerts) {
-              // If both list not empty
-              alerts = alerts.concat(additionalAlerts);
-            } else if (additionalAlerts) {
-              // case where completedAlerts are not empty
-              alerts = additionalAlerts;
-            }
+            // both pending and completed alerts must be concatenated
+            // default for each is empty list [] if undefined
+            alerts = (await getAlertsByStatus(AlertStatus.PENDING)) || [];
+            additionalAlerts =
+              (await getAlertsByStatus(AlertStatus.COMPLETED)) || [];
+            alerts = alerts.concat(additionalAlerts);
           }
 
           // Convert Alert[] to AlertInfo[]

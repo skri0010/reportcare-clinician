@@ -50,7 +50,7 @@ export const AlertScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
    * Trigger agent to fetch ALL alerts on initial load
    */
   useEffect(() => {
-    AgentTrigger.triggerRetriveAlerts(AlertStatus.ALL);
+    AgentTrigger.triggerRetrieveAlerts(AlertStatus.ALL);
   }, []);
 
   const [isEmptyAlert, setEmptyAlert] = useState(true);

@@ -18,6 +18,7 @@ import {
   ClinicianAttributes,
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
+import { AgentTrigger } from "rc_agents/trigger";
 
 interface RiskFilterPillListProps {
   patientScreen?: boolean;
@@ -48,49 +49,13 @@ export const RiskFilterPillList: FC<RiskFilterPillListProps> = ({
     if (patientScreen) {
       store.dispatch(setPatientRiskFilters(tempRiskFilters));
       // Trigger agents to retrieve filtered patients
-      agentDTA.addBelief(
-        new Belief(
-          BeliefKeys.CLINICIAN,
-          ClinicianAttributes.RETRIEVE_ROLE,
-          true
-        )
-      );
-      agentAPI.addFact(
-        new Belief(
-          BeliefKeys.PROCEDURE,
-          ProcedureAttributes.HF_OTP_I,
-          ProcedureConst.ACTIVE
-        )
-      );
+      AgentTrigger.triggerRetrievePatientsByRole();
     } else {
       // Trigger agents to set filtered alerts
       store.dispatch(setAlertRiskFilters(tempRiskFilters));
-      // Alert status is all to trigger filter for both pending and completed
-      // to be used by agents
-      agentAPI.addFact(
-        new Belief(
-          BeliefKeys.CLINICIAN,
-          ClinicianAttributes.ALERT_STATUS,
-          AlertStatus.ALL
-        ),
-        false
-      );
 
-      // Trigger DTA to retrieve alerts
-      agentDTA.addBelief(
-        new Belief(
-          BeliefKeys.CLINICIAN,
-          ClinicianAttributes.RETRIEVE_ALERTS,
-          true
-        )
-      );
-      agentAPI.addFact(
-        new Belief(
-          BeliefKeys.PROCEDURE,
-          ProcedureAttributes.AT_CP_I,
-          ProcedureConst.ACTIVE
-        )
-      );
+      // Trigger the DTA agent to retrieve alert status based on the alert status
+      AgentTrigger.triggerRetrieveAlerts(AlertStatus.ALL);
     }
   };
 

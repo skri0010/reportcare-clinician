@@ -4,10 +4,9 @@ import {
   PatientAssignmentResolution,
   PatientDetails
 } from "rc_agents/model";
-import { Alert, ClinicianInfo, PatientAssignment, PatientInfo } from "aws/API";
+import { ClinicianInfo, PatientAssignment, PatientInfo } from "aws/API";
 // eslint-disable-next-line no-restricted-imports
 import * as accessFunctions from "rc_agents/storage/accessFunctions";
-import { RiskLevel } from "models/RiskLevel";
 
 /**
  * AsyncStorage access functions (SET, GET and REMOVE) with types

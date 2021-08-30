@@ -26,6 +26,7 @@ import {
 } from "../triage-alert-hf-clinic/RetrieveAlerts";
 import { store } from "util/useRedux";
 import { setFetchingPatientAlertHistory } from "ic-redux/actions/agents/actionCreator";
+import { getAlertInfos } from "rc_agents/storage/getItem";
 
 /**
  * Class to represent the activity for retrieving alert history of a patient.
@@ -73,15 +74,40 @@ class RetrieveAlertHistory extends Activity {
             if (result && result.length > 0) {
               // Alert Info without vitals and symptoms
               const alertInfos = alertToAlertInfo(result);
+
+              // Get the current local alert history
+              let localAlertHistory = await Storage.getAlertInfos();
+
+              // If local alert history is null, add an empty object
+              if (!localAlertHistory) {
+                localAlertHistory = {};
+              }
+              // Retrieve the vitals and symptoms report
               await Promise.all(
                 alertInfos.map(async (alert) => {
-                  const alertInfo = await queryAlertInfo(alert);
-                  if (alertInfo) {
-                    alertDetails.push(alertInfo);
-                    await Storage.setAlertInfo(alertInfo);
-                  }
+                  const alertInfo = queryAlertInfo(alert);
+                  return alertInfo;
                 })
-              );
+              ).then((allAlertDetails) => {
+                allAlertDetails.forEach((alertDetail) => {
+                  if (alertDetail) {
+                    alertDetails.push(alertDetail);
+                    if (localAlertHistory) {
+                      // If there's no alert history for the patient, add an entry for the patient
+                      if (!localAlertHistory[alertDetail.patientID]) {
+                        localAlertHistory[alertDetail.patientID] = {};
+                      }
+                      // Update the patient's alert history
+                      localAlertHistory[alertDetail.patientID][alertDetail.id] =
+                        alertDetail;
+                    }
+                  }
+                });
+              });
+              // Store the updated alert histories into local storage
+              if (localAlertHistory) {
+                await Storage.setAlertInfos(localAlertHistory);
+              }
             }
           }
 

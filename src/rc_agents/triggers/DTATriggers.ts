@@ -192,7 +192,7 @@ export const triggerUpdateTodo = (input: TodoInput): void => {
 };
 
 // AT-CP-I: Trigger RetriveAlerts of DTA
-export const triggerRetriveAlerts = (alertStatus: AlertStatus): void => {
+export const triggerRetrieveAlerts = (alertStatus: AlertStatus): void => {
   agentAPI.addFact(
     new Belief(
       BeliefKeys.CLINICIAN,
