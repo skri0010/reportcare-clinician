@@ -40,6 +40,18 @@ export const getClinician = async (): Promise<
   return null;
 };
 
+export const getClinicianContacts = async (): Promise<
+  AsyncStorageType[AsyncStorageKeys.CLINICIAN_CONTACTS] | null
+> => {
+  const localData = await AsyncStorage.getItem(
+    AsyncStorageKeys.CLINICIAN_CONTACTS
+  );
+  if (localData) {
+    return JSON.parse(localData);
+  }
+  return null;
+};
+
 export const getPendingPatientAssignments = async (): Promise<
   AsyncStorageType[AsyncStorageKeys.PENDING_PATIENT_ASSIGNMENTS] | null
 > => {

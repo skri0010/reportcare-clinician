@@ -258,7 +258,9 @@
   },
   "Clinicians": {
     "SearchBarPlaceholder": "Cari pakar(contohnya John)",
-    "NoSelection": "Pilih salah satu pakar untuk melihat butirannya"
+    "NoSelection": "Pilih salah satu pakar untuk melihat butirannya",
+    "Role": "Peranan",
+    "HospitalName": "Nama Hospital"
   },
   "Alerts": {
     "SearchBarPlaceholder": "Cari amaran",

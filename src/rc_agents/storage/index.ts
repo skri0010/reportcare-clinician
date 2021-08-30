@@ -20,6 +20,7 @@ export enum AsyncStorageKeys {
   SIGN_UP_DETAILS = "SignUpDetails",
   USERNAME = "Username",
   CLINICIAN = "Clinician",
+  CLINICIAN_CONTACTS = "ClinicianContacts",
   PATIENTS = "Patients",
   ALL_PATIENT_DETAILS = "AllPatientDetails",
   ALERTS = "Alerts",
@@ -42,6 +43,7 @@ export type AsyncStorageType = {
   [AsyncStorageKeys.USERNAME]: string;
   [AsyncStorageKeys.CLINICIAN_ID]: string;
   [AsyncStorageKeys.CLINICIAN]: ClinicianInfo;
+  [AsyncStorageKeys.CLINICIAN_CONTACTS]: ClinicianInfo[];
   [AsyncStorageKeys.PENDING_PATIENT_ASSIGNMENTS]: PatientAssignment[];
   [AsyncStorageKeys.PATIENT_ASSIGNMENTS_RESOLUTIONS]: {
     [patientId: string]: PatientAssignmentResolution | undefined;

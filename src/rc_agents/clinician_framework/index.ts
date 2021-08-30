@@ -58,7 +58,11 @@ export const ActionFrameIDs = {
     RETRIEVE_TODOS: "RetrieveTodos",
     CREATE_TODO: "CreateTodo",
     UPDATE_TODO: "UpdateTodo",
-    REQUEST_DISPLAY_TODOS: "RequestDisplayTodos"
+    REQUEST_DISPLAY_TODOS: "RequestDisplayTodos",
+
+    // SRD-IV: Clinician Contacts
+    RETRIEVE_CLINICIAN_CONTACTS: "RetrieveClinicianContacts",
+    REQUEST_DISPLAY_CLINICIAN_CONTACTS: "RequestDisplayClinicianContacts"
   },
   UXSA: {
     // HF-OTP-I: ClinicianInfo and all patients (PatientInfo)
@@ -74,6 +78,9 @@ export const ActionFrameIDs = {
 
     // SRD-II: Todos
     DISPLAY_TODOS: "DisplayTodos",
+
+    // SRD-IV Clinician Contacts
+    DISPLAY_CLINICIAN_CONTACTS: "DisplayClinicianContacts",
 
     // AT-CP
     DISPLAY_PENDING_ALERT_COUNT: "DisplayPendingAlertCount",
@@ -128,6 +135,7 @@ export enum ProcedureAttributes {
   SRD_I = "SRD-I",
   SRD_II = "SRD-II",
   SRD_III = "SRD-III",
+  SRD_IV = "SRD_IV",
   AT_CP_I = "AT-CP-I",
   AT_CP_II = "AT-CP-II"
 }
@@ -167,7 +175,12 @@ export enum ClinicianAttributes {
   UPDATE_TODO = "UpdateTodo",
   TODO = "Todo",
   TODOS_UPDATED = "TodosUpdated",
-  DISPLAY_TODOS = "DisplayTodos"
+  DISPLAY_TODOS = "DisplayTodos",
+
+  //SRD-IV - Clinician Contacts
+  RETRIEVE_CLINICIAN_CONTACTS = "RetrieveClinicianContatcts",
+  CLINICIAN_CONTACTS_RETRIEVED = "ClinicianContactsRetrieved",
+  CLINICIAN_CONTACTS = "ClinicianContacts"
 }
 
 // Attributes for PATIENT key

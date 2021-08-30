@@ -23,6 +23,8 @@ import { af_RetrieveTodos } from "./action-frames/storing-data/RetrieveTodos";
 import { af_RequestDisplayTodos } from "./action-frames/storing-data/RequestDisplayTodos";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import { ClinicianAgent } from "rc_agents/clinician_framework/ClinicianAgent";
+import { af_RetrieveClinicianContacts } from "./action-frames/storing-data/RetrieveClinicianContacts";
+import { af_RequestClinicianContactDisplay } from "./action-frames/storing-data/RequestClinicianContactsDisplay";
 import { af_ConfigurePatient } from "./action-frames/hf-outcome-trends/ConfigurePatient";
 
 // Initial Beliefs of Agent
@@ -65,7 +67,11 @@ const agentDTA = new ClinicianAgent(
     af_RetrieveTodos,
     af_CreateTodo,
     af_UpdateTodo,
-    af_RequestDisplayTodos
+    af_RequestDisplayTodos,
+
+    // SRD-IV
+    af_RetrieveClinicianContacts,
+    af_RequestClinicianContactDisplay
   ], // action frame
   [belief1], // beliefs
   agentAPI

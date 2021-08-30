@@ -8,7 +8,7 @@ import {
   LocalTodo,
   RiskFilter
 } from "rc_agents/model";
-import { Alert, PatientAssignment, PatientInfo } from "aws/API";
+import { Alert, ClinicianInfo, PatientAssignment, PatientInfo } from "aws/API";
 import { RiskLevel } from "models/RiskLevel";
 
 interface AgentsState {
@@ -18,10 +18,13 @@ interface AgentsState {
   patients: PatientInfo[] | null;
   patientDetails: PatientDetails | null;
   pendingPatientAssignments: PatientAssignment[];
+  clinicianContacts: ClinicianInfo[] | null;
+  clinicianSelected: ClinicianInfo | null;
   patientAssignmentsSynced: boolean;
   fetchingPatients: boolean;
   fetchingPatientDetails: boolean;
   fetchingPendingPatientAssignments: boolean;
+  fetchingClinianContacts: boolean;
   configuringPatient: boolean;
   configurationSuccessful: boolean;
   riskFilters: RiskFilter;
@@ -44,9 +47,12 @@ const initialState: AgentsState = {
   patients: null,
   patientDetails: null,
   pendingPatientAssignments: [],
+  clinicianContacts: null,
+  clinicianSelected: null,
   fetchingPatients: false,
   fetchingPatientDetails: false,
   fetchingPendingPatientAssignments: false,
+  fetchingClinianContacts: false,
   patientAssignmentsSynced: false,
   configuringPatient: false,
   configurationSuccessful: false,
@@ -98,6 +104,22 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
         ...state,
         fetchingPendingPatientAssignments:
           action.payload.fetchingPendingPatientAssignments
+      };
+
+    case actionNames.SET_CLINICIAN_CONTACTS:
+      return {
+        ...state,
+        clinicianContacts: action.payload.clinicianContacts
+      };
+    case actionNames.SET_CLINICIAN_SELECTED:
+      return {
+        ...state,
+        clinicianSelected: action.payload.clinicianSelected
+      };
+    case actionNames.SET_FETCHING_CLINICIAN_CONTACTS:
+      return {
+        ...state,
+        fetchingClinianContacts: action.payload.fetchingClinianContacts
       };
     case actionNames.SET_PENDING_PATIENT_ASSIGNMENTS:
       return {
