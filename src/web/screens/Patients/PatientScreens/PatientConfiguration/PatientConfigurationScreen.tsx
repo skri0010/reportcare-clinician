@@ -17,12 +17,19 @@ import { ms, ScaledSheet } from "react-native-size-matters";
 import { CheckboxText } from "components/InputComponents/CheckboxText";
 import { H3 } from "components/Text";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
-import { RootState, select } from "util/useRedux";
+import { RootState, select, useDispatch } from "util/useRedux";
 import { Picker } from "@react-native-picker/picker";
 import { Hospital, NYHAClass } from "rc_agents/model";
 import { getPickerStyles } from "util/getStyles";
 import { Label } from "components/Text/Label";
 import { AuthButton } from "components/Buttons/AuthButton";
+import { triggerConfigurePatient } from "rc_agents/triggers";
+import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
+import { useToast } from "react-native-toast-notifications";
+import {
+  setConfigurationSuccessful,
+  setConfiguringPatient
+} from "ic-redux/actions/agents/actionCreator";
 
 interface PatientConfigurationScreenProps {
   info: PatientInfo;
@@ -31,10 +38,13 @@ interface PatientConfigurationScreenProps {
 export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
   ({ info }) => {
     // States
-    const { fonts, colors } = select((state: RootState) => ({
-      colors: state.settings.colors,
-      fonts: state.settings.fonts
-    }));
+    const { fonts, colors, configuringPatient, configurationSuccessful } =
+      select((state: RootState) => ({
+        colors: state.settings.colors,
+        fonts: state.settings.fonts,
+        configuringPatient: state.agents.configuringPatient,
+        configurationSuccessful: state.agents.configurationSuccessful
+      }));
     const [configInfo, setConfigInfo] = useState<PatientInfo>(() => {
       return cloneDeep(info);
     });
@@ -42,6 +52,12 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
     const [hasDevice, setHasDevice] = useState<boolean>(
       notEmptyString(info.deviceNo)
     );
+
+    // Used locally to keep track of ongoing configuration procedure
+    const [configuring, setConfiguring] = useState<boolean>(false);
+
+    const toast = useToast();
+    const dispatch = useDispatch();
 
     // Picker styles
     const {
@@ -123,9 +139,33 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
 
     // Proceed button onPress
     const onProceedPress = () => {
+      dispatch(setConfiguringPatient(true));
+      setConfiguring(true);
       const infoToUpdate = { ...configInfo, configured: true };
-      // Trigger agents here
+      triggerConfigurePatient(infoToUpdate);
     };
+
+    useEffect(() => {
+      if (configuring && !configuringPatient) {
+        setConfiguring(false);
+        if (configurationSuccessful) {
+          toast.show(i18n.t("Patient_Configuration.ConfigurationSuccessful"), {
+            type: "success"
+          });
+          dispatch(setConfigurationSuccessful(false));
+        } else {
+          toast.show(i18n.t("UnexpectedError"), {
+            type: "danger"
+          });
+        }
+      }
+    }, [
+      configuring,
+      configuringPatient,
+      configurationSuccessful,
+      toast,
+      dispatch
+    ]);
 
     return (
       <ScreenWrapper
@@ -135,7 +175,7 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
       >
         <H3 text={i18n.t("Patient_Configuration.Title")} style={styles.title} />
 
-        <ScrollView>
+        <ScrollView pointerEvents={configuring ? "none" : "auto"}>
           {/* Mandatory fields */}
           {/* Hospital name */}
           <Label text={i18n.t("Patient_Configuration.Label.HospitalName")} />
@@ -262,9 +302,11 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
         <AuthButton
           buttonTitle={i18n.t("Patient_Configuration.Proceed")}
           onPress={onProceedPress}
-          inputValid={allInputValid}
+          inputValid={allInputValid && !configuringPatient}
           noTextTransform
         />
+
+        {configuring && <LoadingIndicator />}
       </ScreenWrapper>
     );
   };

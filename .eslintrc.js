@@ -50,6 +50,9 @@ module.exports = {
     "no-console": "error",
     "arrow-parens": 0,
     "eol-last": 0,
+    "react/jsx-no-bind": ["warn"],
+    "react/no-unused-prop-types": ["warn"],
+    "react/require-default-props": 0,
     "react-native/no-unused-styles": 0,
     "react-native/split-platform-components": 0,
     "react-native/no-inline-styles": 0,
@@ -120,6 +123,10 @@ module.exports = {
           {
             name: "lodash",
             message: "Please import from lodash/xxx instead"
+          },
+          {
+            name: "rc_agents/storage/accessFunctions",
+            message: "Please import from rc_agents/storage instead"
           }
         ],
         patterns: [

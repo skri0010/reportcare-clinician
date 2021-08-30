@@ -190,7 +190,8 @@
       "TargetActivity": "Masukkan sasaran nombor langkah",
       "TargetWeight": "Masukkan sasaran berat badan (dalam kg)",
       "FluidIntakeGoal": "Masukkan sasaran pengambilan air (dalam ml)"
-    }
+    },
+    "ConfigurationSuccessful": "Pesakit telah berjaya dikonfigurasi"
   },
   "Patient_Overview": {
     "BloodPressure": "Tekanan Darah",
@@ -257,7 +258,9 @@
   },
   "Clinicians": {
     "SearchBarPlaceholder": "Cari pakar(contohnya John)",
-    "NoSelection": "Pilih salah satu pakar untuk melihat butirannya"
+    "NoSelection": "Pilih salah satu pakar untuk melihat butirannya",
+    "Role": "Peranan",
+    "HospitalName": "Nama Hospital"
   },
   "Alerts": {
     "SearchBarPlaceholder": "Cari amaran",

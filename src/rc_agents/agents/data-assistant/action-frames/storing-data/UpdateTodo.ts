@@ -171,10 +171,8 @@ const rule2 = new ResettablePrecondition(
 );
 
 // Actionframe
-const af_UpdateTodo = new Actionframe(
+export const af_UpdateTodo = new Actionframe(
   `AF_${ActionFrameIDs.DTA.UPDATE_TODO}`,
   [rule1, rule2],
   new UpdateTodo()
 );
-
-export default af_UpdateTodo;

@@ -169,10 +169,8 @@ const rule2 = new ResettablePrecondition(
 );
 
 // Actionframe
-const af_SyncCreateTodos = new Actionframe(
+export const af_SyncCreateTodos = new Actionframe(
   `AF_${ActionFrameIDs.NWA.SYNC_CREATE_TODOS}`,
   [rule1, rule2],
   new SyncCreateTodos()
 );
-
-export default af_SyncCreateTodos;

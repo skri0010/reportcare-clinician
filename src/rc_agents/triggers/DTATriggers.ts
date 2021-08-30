@@ -111,6 +111,28 @@ export const triggerResolvePendingAssignments = (
   );
 };
 
+// HF-OTP-II: Triggers ConfigurePatient of DTA
+export const triggerConfigurePatient = (input: PatientInfo): void => {
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PATIENT,
+      PatientAttributes.PATIENT_TO_CONFIGURE,
+      input
+    ),
+    false
+  );
+  agentDTA.addBelief(
+    new Belief(BeliefKeys.PATIENT, PatientAttributes.CONFIGURE_PATIENT, true)
+  );
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PROCEDURE,
+      ProcedureAttributes.HF_OTP_II,
+      ProcedureConst.ACTIVE
+    )
+  );
+};
+
 // SRD-II: Triggers RetrieveTodos of DTA
 export const triggerRetrieveTodos = (status: TodoStatus): void => {
   agentAPI.addFact(
@@ -160,6 +182,24 @@ export const triggerUpdateTodo = (input: TodoInput): void => {
     new Belief(
       BeliefKeys.PROCEDURE,
       ProcedureAttributes.SRD_III,
+      ProcedureConst.ACTIVE
+    )
+  );
+};
+
+// SRD-IV: Triggers RetrieveClinicianContacts of DTA
+export const triggerRetrieveClinicianContacts = (): void => {
+  agentDTA.addBelief(
+    new Belief(
+      BeliefKeys.CLINICIAN,
+      ClinicianAttributes.RETRIEVE_CLINICIAN_CONTACTS,
+      true
+    )
+  );
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PROCEDURE,
+      ProcedureAttributes.SRD_IV,
       ProcedureConst.ACTIVE
     )
   );
