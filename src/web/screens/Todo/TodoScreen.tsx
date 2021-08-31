@@ -18,7 +18,7 @@ import {
   setProcedureOngoing,
   setProcedureSuccessful,
   setSubmittingTodo,
-  setTodoDetails,
+  setFetchingTodoDetails,
   setUpdatedTodo
 } from "ic-redux/actions/agents/actionCreator";
 import { AgentTrigger } from "rc_agents/trigger";
@@ -90,12 +90,13 @@ export const TodoScreen: FC<MainScreenProps[ScreenName.TODO]> = ({
   // Function to save the selected todo details to be displayed in the right screen
   // JQ-TODO To be integrated with redux store for todo item details display on the right screen
   function onRowClick(item: LocalTodo) {
-    dispatch(setProcedureOngoing(true));
+    //dispatch(setProcedureOngoing(true));
     // dispatch(setTodoDetails(item));
+    dispatch(setFetchingTodoDetails(true));
     if (item.id) {
       AgentTrigger.triggerRetrieveTodoDetails(item.id);
     }
-    setTodoSelected(item);
+    //setTodoSelected(item);
   }
 
   // Compares dispatched updatedTodo with current Todo displayed in the TodoDetailsScreen

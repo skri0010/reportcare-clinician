@@ -11,9 +11,7 @@ import { Belief } from "agents-framework";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
   PatientAssignmentResolution,
-  TodoCreateInput,
-  TodoUpdateInput,
-  TodoDetails
+  TodoDetails,
   TodoInput,
   TodoStatus
 } from "rc_agents/model";

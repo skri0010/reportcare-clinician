@@ -142,17 +142,17 @@ export const setPendingTodos = createAction(
   })
 )();
 
-export const setTodoDetails = createAction(
-  actionNames.SET_TODO_DETAILS,
-  (todoDetails: LocalTodo) => ({
-    todoDetails: todoDetails
-  })
-)();
-
 export const setFetchingTodoDetails = createAction(
   actionNames.SET_FETCHING_TODO_DETAILS,
   (fetchingTodoDetails: boolean) => ({
     fetchingTodoDetails: fetchingTodoDetails
+  })
+)();
+
+export const setTodoDetails = createAction(
+  actionNames.SET_TODO_DETAILS,
+  (todoDetails: LocalTodo) => ({
+    todoDetails: todoDetails
   })
 )();
 
