@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from "react";
 import { View, FlatList, Button } from "react-native";
-import { ScreenWrapper } from "mobile/screens/ScreenWrapper";
+import { MobileScreenWrapper } from "mobile/screens/MobileScreenWrapper";
 import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { ScaledSheet } from "react-native-size-matters";
 import { PatientDetailsRow } from "components/RowComponents/PatientRows/PatientDetailsRow";
@@ -17,7 +17,7 @@ import {
 } from "rc_agents/clinician_framework";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { setProcedureOngoing } from "ic-redux/actions/agents/actionCreator";
-import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
+import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { useNetInfo } from "@react-native-community/netinfo";
 
 export const PatientsTab: FC = () => {
@@ -106,7 +106,7 @@ export const PatientsTab: FC = () => {
 
   // JH-TODO: Replace placeholder with i18n
   return (
-    <ScreenWrapper>
+    <MobileScreenWrapper>
       <View style={[styles.searchBarWrapper]}>
         <SearchBarComponent
           onUserInput={() => {
@@ -146,7 +146,7 @@ export const PatientsTab: FC = () => {
       {/* {showGraph && <ParameterGraphs data={patientDetails.vitalsReports} />} */}
 
       {(retrieving || procedureOngoing) && <LoadingIndicator />}
-    </ScreenWrapper>
+    </MobileScreenWrapper>
   );
 };
 

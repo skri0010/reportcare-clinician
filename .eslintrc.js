@@ -50,6 +50,9 @@ module.exports = {
     "no-console": "error",
     "arrow-parens": 0,
     "eol-last": 0,
+    "react/jsx-no-bind": ["warn"],
+    "react/no-unused-prop-types": ["warn"],
+    "react/require-default-props": 0,
     "react-native/no-unused-styles": 0,
     "react-native/split-platform-components": 0,
     "react-native/no-inline-styles": 0,
@@ -109,11 +112,6 @@ module.exports = {
               "Import only from libraries you are using (eg @aws-amplify/core)"
           },
           {
-            name: "@react-native-picker/picker",
-            message:
-              "Please import the component directly (eg @react-native-picker/picker/js/Picker.web)"
-          },
-          {
             name: "ic-redux/store",
             message: "Please import from util/useRedux instead"
           },
@@ -121,11 +119,19 @@ module.exports = {
             name: "agents-framework/AgentAPI",
             message:
               "Please import from rc_agents/clinician_framework/ClinicianAgentAPI instead"
+          },
+          {
+            name: "lodash",
+            message: "Please import from lodash/xxx instead"
+          },
+          {
+            name: "rc_agents/storage/accessFunctions",
+            message: "Please import from rc_agents/storage instead"
           }
         ],
         patterns: [
           {
-            group: ["aws/graphql/queries"],
+            group: ["aws/graphql/queries", "aws/graphql/mutations"],
             message:
               "Use exports from aws/graphql/TypedAPI files instead. If statements do not exists, create your own"
           },

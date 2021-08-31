@@ -10,7 +10,7 @@ import {
   AuthScreensProps,
   AuthState
 } from "mobile/auth_screens";
-import { ScreenWrapper } from "mobile/screens/ScreenWrapper";
+import { MobileScreenWrapper } from "mobile/screens/MobileScreenWrapper";
 import { validatePassword, validateUsername } from "util/validation";
 import { Belief } from "agents-framework";
 import { ProcedureConst } from "agents-framework/Enums";
@@ -18,7 +18,7 @@ import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import i18n from "util/language/i18n";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useToast } from "react-native-toast-notifications";
-import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
+import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { agentAPS } from "rc_agents/agents";
 import {
   BeliefKeys,
@@ -197,7 +197,7 @@ export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
   ];
 
   return (
-    <ScreenWrapper>
+    <MobileScreenWrapper>
       <SafeAreaView
         style={styles.safeAreaContainer}
         pointerEvents={signingIn ? "none" : "auto"}
@@ -291,7 +291,7 @@ export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
         </KeyboardAwareScrollView>
       </SafeAreaView>
       {(signingIn || connecting) && <LoadingIndicator />}
-    </ScreenWrapper>
+    </MobileScreenWrapper>
   );
 };
 

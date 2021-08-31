@@ -64,11 +64,7 @@ dist
 # Sandbox
 sandbox
 
-<<<<<<< HEAD
-#amplify
-=======
 #amplify-do-not-edit-begin
->>>>>>> 6c419cad43f4a728729fde68b6285af9bf6e35fd
 amplify/\#current-cloud-backend
 amplify/.config/local-*
 amplify/logs

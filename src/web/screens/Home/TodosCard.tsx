@@ -1,35 +1,30 @@
 import React, { FC, useEffect, useState } from "react";
 import { RootState, select } from "util/useRedux";
-import { View, TextStyle, FlatList } from "react-native";
+import { View, FlatList } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { TodoRow } from "components/RowComponents/TodoRow";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { RiskLevel } from "models/RiskLevel";
-import { H4 } from "components/Text/index";
+import { H4 } from "components/Text";
 import { CardWrapper } from "./CardWrapper";
-import { FloatingShowMoreButton } from "components/Buttons/FloatingShowMoreButton";
+import { FloatingBottomButton } from "components/Buttons/FloatingBottomButton";
 import i18n from "util/language/i18n";
-import { ScreenName } from "web/screens";
+import { ScreenName } from "web/navigation";
 import { TodoStatus } from "rc_agents/model";
-import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
+import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AgentTrigger } from "rc_agents/trigger";
-import { HomeNavigationProps } from "web/screens/WithSideTabsProps";
+import { HomeScreenNavigation } from "web/navigation/types/MainScreenProps";
 
 interface TodosCardProps {
   maxHeight: number;
-  navigation: HomeNavigationProps;
+  navigation: HomeScreenNavigation;
 }
 
 export const TodosCard: FC<TodosCardProps> = ({ maxHeight, navigation }) => {
-  const { colors, pendingTodos, fetchingTodos } = select(
-    (state: RootState) => ({
-      colors: state.settings.colors,
-      pendingTodos: state.agents.pendingTodos,
-      fetchingTodos: state.agents.fetchingTodos
-    })
-  );
-
-  const titleColor = { color: colors.primaryTextColor } as TextStyle;
+  const { pendingTodos, fetchingTodos } = select((state: RootState) => ({
+    pendingTodos: state.agents.pendingTodos,
+    fetchingTodos: state.agents.fetchingTodos
+  }));
 
   const [lastPatientIndex, setLastPatientIndex] = useState(-1);
 
@@ -45,12 +40,7 @@ export const TodosCard: FC<TodosCardProps> = ({ maxHeight, navigation }) => {
   }, [pendingTodos]);
 
   return (
-    <CardWrapper maxHeight={maxHeight}>
-      <View style={styles.titleContainer}>
-        <H4 text={i18n.t("Home.Todos")} style={[styles.title, titleColor]} />
-      </View>
-      {/* Loading indicator */}
-      {fetchingTodos && <LoadingIndicator />}
+    <CardWrapper maxHeight={maxHeight} title={i18n.t("Home.Todos")}>
       <View style={styles.listContainer}>
         <FlatList
           showsVerticalScrollIndicator={false}
@@ -68,11 +58,11 @@ export const TodosCard: FC<TodosCardProps> = ({ maxHeight, navigation }) => {
                   reduceOpacity
                   onCardPress={() => {
                     // Navigate to Todo screen
-                    navigation.navigate(ScreenName.TODO, item);
+                    navigation.navigate(ScreenName.TODO, { todoToShow: item });
                   }}
                 />
                 {/* Disable last row, display "Show More button" */}
-                <FloatingShowMoreButton />
+                <FloatingBottomButton />
               </>
             ) : (
               <TodoRow
@@ -82,7 +72,7 @@ export const TodosCard: FC<TodosCardProps> = ({ maxHeight, navigation }) => {
                 }
                 onCardPress={() => {
                   // Navigate to Todo screen
-                  navigation.navigate(ScreenName.TODO, item);
+                  navigation.navigate(ScreenName.TODO, { todoToShow: item });
                 }}
               />
             );
@@ -90,19 +80,15 @@ export const TodosCard: FC<TodosCardProps> = ({ maxHeight, navigation }) => {
           keyExtractor={(item) => item.createdAt}
         />
       </View>
+      {/* Loading indicator */}
+      {fetchingTodos && <LoadingIndicator />}
     </CardWrapper>
   );
 };
 
 const styles = ScaledSheet.create({
-  title: {
-    fontWeight: "bold",
-    paddingBottom: "5@ms",
-    paddingRight: "5@ms"
-  },
   listContainer: {
-    flex: 1,
-    paddingTop: "15@ms"
+    flex: 1
   },
   titleContainer: {
     display: "flex",

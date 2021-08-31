@@ -16,6 +16,13 @@ export const getSignUpDetails = async (): Promise<
   return null;
 };
 
+export const getUsername = async (): Promise<
+  AsyncStorageType[AsyncStorageKeys.USERNAME] | null
+> => {
+  const localData = await AsyncStorage.getItem(AsyncStorageKeys.USERNAME);
+  return localData;
+};
+
 export const getClinicianID = async (): Promise<
   AsyncStorageType[AsyncStorageKeys.CLINICIAN_ID] | null
 > => {
@@ -27,6 +34,18 @@ export const getClinician = async (): Promise<
   AsyncStorageType[AsyncStorageKeys.CLINICIAN] | null
 > => {
   const localData = await AsyncStorage.getItem(AsyncStorageKeys.CLINICIAN);
+  if (localData) {
+    return JSON.parse(localData);
+  }
+  return null;
+};
+
+export const getClinicianContacts = async (): Promise<
+  AsyncStorageType[AsyncStorageKeys.CLINICIAN_CONTACTS] | null
+> => {
+  const localData = await AsyncStorage.getItem(
+    AsyncStorageKeys.CLINICIAN_CONTACTS
+  );
   if (localData) {
     return JSON.parse(localData);
   }
@@ -189,12 +208,13 @@ export const getRiskOrStatusAlerts = async (
  * @returns AlertInfo corresponding to the input Alert if any, otherwise null
  */
 export const getSingleAlertInfo = async (
-  alert: Alert
+  alertId: string,
+  patientId: string
 ): Promise<AlertInfo | null> => {
   const localData = await getAlertInfos();
-  if (localData && localData[alert.patientID]) {
-    const patientAlertInfos = localData[alert.patientID];
-    return patientAlertInfos[alert.id];
+  if (localData && localData[patientId]) {
+    const patientAlertInfos = localData[patientId];
+    return patientAlertInfos[alertId];
   }
   return null;
 };
@@ -225,6 +245,22 @@ export const getPatientAlertInfos = async (
   if (localData && localData[patientId]) {
     const patientAlertInfos = localData[patientId];
     return Object.values(patientAlertInfos);
+  }
+  return null;
+};
+
+/**
+ * Gets patient configurations to be synced.
+ * @returns array of patient infos if any, otherwise null
+ */
+export const getPatientConfigurations = async (): Promise<
+  AsyncStorageType[AsyncStorageKeys.PATIENT_CONFIGURATIONS] | null
+> => {
+  const localData = await AsyncStorage.getItem(
+    AsyncStorageKeys.PATIENT_CONFIGURATIONS
+  );
+  if (localData) {
+    return JSON.parse(localData);
   }
   return null;
 };

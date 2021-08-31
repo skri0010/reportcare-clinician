@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import { TouchableOpacity, Platform, StyleProp, ViewStyle } from "react-native";
 import { RootState, select } from "util/useRedux";
 import { ScaledSheet, ms } from "react-native-size-matters";
-import { H3 } from "components/Text/index";
+import { H3 } from "components/Text";
 
 interface AuthButtonProps {
   inputValid: boolean;
   buttonTitle: string;
+  noTextTransform?: boolean;
   onPress?: () => void;
   style?: StyleProp<ViewStyle>;
 }
@@ -15,7 +16,8 @@ export const AuthButton: React.FC<AuthButtonProps> = ({
   inputValid,
   buttonTitle,
   onPress,
-  style
+  style,
+  noTextTransform
 }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
@@ -33,21 +35,23 @@ export const AuthButton: React.FC<AuthButtonProps> = ({
       style={[
         {
           backgroundColor: active
-            ? colors.primaryButtonColor
+            ? colors.acceptButtonColor
             : colors.primaryDeactivatedButtonColor
         },
         styles.button,
         style
       ]}
+      disabled={!inputValid}
     >
       <H3
         text={buttonTitle}
         style={[
+          styles.buttonText,
           {
             opacity: active ? 1 : 0.3,
-            color: colors.primaryContrastTextColor
-          },
-          styles.buttonText
+            color: colors.primaryContrastTextColor,
+            ...(noTextTransform ? { textTransform: "none" } : {})
+          }
         ]}
       />
     </TouchableOpacity>
@@ -56,8 +60,8 @@ export const AuthButton: React.FC<AuthButtonProps> = ({
 
 const styles = ScaledSheet.create({
   button: {
-    height: Platform.OS === "web" ? ms(40) : ms(45),
-    width: Platform.OS === "web" ? ms(200) : ms(250),
+    height: ms(35),
+    width: Platform.OS === "web" ? ms(150) : ms(200),
     marginTop: ms(15),
     borderRadius: "10@ms",
     justifyContent: "center",

@@ -1,15 +1,15 @@
 import React, { FC } from "react";
 import { View } from "react-native";
-import { ScreenWrapper } from "mobile/screens/ScreenWrapper";
+import { MobileScreenWrapper } from "mobile/screens/MobileScreenWrapper";
 import { MainTitle } from "components/Text";
 
 export const TodoCompletedTab: FC = () => {
   // JH-TODO Replace titles with i18n
   return (
-    <ScreenWrapper>
+    <MobileScreenWrapper>
       <View>
         <MainTitle title="Completed Todo" />
       </View>
-    </ScreenWrapper>
+    </MobileScreenWrapper>
   );
 };

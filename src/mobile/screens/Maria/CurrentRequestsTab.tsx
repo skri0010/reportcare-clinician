@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { View, FlatList } from "react-native";
-import { ScreenWrapper } from "mobile/screens/ScreenWrapper";
+import { MobileScreenWrapper } from "mobile/screens/MobileScreenWrapper";
 import { MainTitle } from "components/Text";
 import { PatientRequestRow } from "components/RowComponents/PatientRows/PatientRequestRow";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
@@ -12,7 +12,7 @@ export const CurrentRequestsTab: FC = () => {
   // JH-TODO: Replace titles with i18n
 
   return (
-    <ScreenWrapper>
+    <MobileScreenWrapper>
       <View>
         <MainTitle title="Requests by MARIA" />
 
@@ -30,6 +30,6 @@ export const CurrentRequestsTab: FC = () => {
           keyExtractor={(item) => item.patientID!}
         />
       </View>
-    </ScreenWrapper>
+    </MobileScreenWrapper>
   );
 };

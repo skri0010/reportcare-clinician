@@ -15,8 +15,7 @@ import {
   ProcedureAttributes,
   ActionFrameIDs
 } from "rc_agents/clinician_framework";
-import { AsyncStorageKeys, Storage } from "rc_agents/storage";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Storage } from "rc_agents/storage";
 
 /**
  * Class to represent the activity for associating clinician id with entry data.
@@ -38,33 +37,21 @@ class AssociateData extends Activity {
     super.doActivity(agent, [rule2]);
 
     try {
-      const [[, username], [, details]] = await AsyncStorage.multiGet([
-        AsyncStorageKeys.USERNAME,
-        AsyncStorageKeys.SIGN_UP_DETAILS
-      ]);
-      if (username) {
-        // Adds username as facts to be used by DTA later on
-        await Storage.removeItem(AsyncStorageKeys.USERNAME);
-        agentAPI.addFact(
-          new Belief(
-            BeliefKeys.CLINICIAN,
-            ClinicianAttributes.USERNAME,
-            username
-          ),
-          false
-        );
-      }
+      const signUpDetails = await Storage.getSignUpDetails();
+      const username = await Storage.getUsername();
 
-      if (details) {
-        // New user: broadcasts sign up details to be saved by DTA later on
+      // New user signs in for the first time
+      if (signUpDetails && username && signUpDetails.username === username) {
+        // Adds signUpDetails to facts to be stored by DTA later on
         agentAPI.addFact(
           new Belief(
             BeliefKeys.CLINICIAN,
             ClinicianAttributes.ENTRY_DATA,
-            JSON.parse(details)
+            signUpDetails
           ),
           false
         );
+
         // Precondition for StoreEntryData action frame of DTA
         agentAPI.addFact(
           new Belief(
@@ -73,8 +60,18 @@ class AssociateData extends Activity {
             false
           )
         );
-      } else {
-        // Existing user
+      }
+      // Existing user
+      else if (username) {
+        // Adds username as facts to be used by DTA later on
+        agentAPI.addFact(
+          new Belief(
+            BeliefKeys.CLINICIAN,
+            ClinicianAttributes.USERNAME,
+            username
+          ),
+          false
+        );
         // Precondition for RetrieveEntryData action frame of DTA
         agentAPI.addFact(
           new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.CONFIGURED, true)

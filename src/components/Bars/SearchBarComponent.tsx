@@ -14,7 +14,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 // Interface for Search bar component props
 interface SearchBarComponentProps {
   onUserInput: (newValue: string) => void;
-  onSearchClick: () => void;
+  onSearchClick?: () => void;
   placeholder?: string;
   containerStyle?: {
     backgroundColor?: string;

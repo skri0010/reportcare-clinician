@@ -1,9 +1,6 @@
 import React, { FC } from "react";
-import { RootState, select } from "util/useRedux";
-import { RiskLevel, getRiskLevelColor } from "models/RiskLevel";
 import { Alert } from "aws/API";
-import { View, Button, TouchableOpacity } from "react-native";
-import { ScaledSheet } from "react-native-size-matters";
+import { View, TouchableOpacity } from "react-native";
 import { H4, H5 } from "components/Text/index";
 
 interface AlertRowProps {
@@ -14,13 +11,9 @@ interface AlertRowProps {
 
 export const AlertRow: FC<AlertRowProps> = ({
   alertDetails,
-  onButtonPress = () => null,
+  onButtonPress,
   onCardPress
 }) => {
-  const { colors } = select((state: RootState) => ({
-    colors: state.settings.colors
-  }));
-
   return (
     <TouchableOpacity onPress={onCardPress} style={{ opacity: 1 }}>
       <View style={{ flexDirection: "row" }}>

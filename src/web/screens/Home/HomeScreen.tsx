@@ -1,7 +1,8 @@
 import React, { FC } from "react";
 import { View } from "react-native";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
-import { ScreenName, WithSideTabsProps } from "web/screens";
+import { MainScreenProps } from "web/navigation/types";
+import { PatientDetailsTabName, ScreenName } from "web/navigation";
 import { WelcomeCard } from "./WelcomeCard";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { RequestsByMariaCard } from "./RequestsByMariaCard";
@@ -9,13 +10,18 @@ import { AlertsCard } from "./AlertsCard";
 import { TodosCard } from "./TodosCard";
 import { PendingPatientAssignmentsCard } from "./PendingPatientAssignmentsCard";
 
-export const HomeScreen: FC<WithSideTabsProps[ScreenName.HOME]> = ({
+export const HomeScreen: FC<MainScreenProps[ScreenName.HOME]> = ({
   navigation
 }) => {
   // JH-TODO Replace titles with i18n
   // JH-TODO Replace welcome card name
-  const topMaxHeight = ms(150);
+  const topMaxHeight = ms(200);
   const maxHeight = ms(250);
+
+  // navigation.navigate(ScreenName.PATIENTS, {
+  //   displayPatientId: "testsiuloong",
+  //   selectedTab: PatientDetailsTabName.HISTORY
+  // });
 
   return (
     <ScreenWrapper padding>

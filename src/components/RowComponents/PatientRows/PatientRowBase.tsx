@@ -4,7 +4,7 @@ import { PatientImageContainer } from "./PatientImageContainer";
 import { ScaledSheet } from "react-native-size-matters";
 import { RootState, select } from "util/useRedux";
 import { RiskLevel } from "models/RiskLevel";
-import { H5, H6 } from "components/Text/index";
+import { H5, H6 } from "components/Text";
 
 interface SubtitleItemProps {
   label?: string;
@@ -88,7 +88,7 @@ export const PatientRowBase: React.FC<PatientRowBaseProps> = ({
                 onPress={onBottomButtonPress}
                 style={[
                   styles.bottomButton,
-                  { backgroundColor: colors.primaryButtonColor }
+                  { backgroundColor: colors.acceptButtonColor }
                 ]}
               >
                 {/* JH-TODO i18n for button label */}
@@ -121,7 +121,7 @@ const styles = ScaledSheet.create({
     flex: 1
   },
   titleTextStyle: {
-    fontWeight: "bold",
+    fontWeight: "600",
     paddingBottom: "7@ms"
   },
   subtitleContainer: {

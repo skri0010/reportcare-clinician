@@ -14,6 +14,11 @@ export const getAge = (birthDate: string): string => {
   return age;
 };
 
+export const getLocalDateTime = (datetime: string): string => {
+  const localDateTime = moment.utc(datetime).local();
+  return localDateTime.format("HH:mm DD-MM-YYYY");
+};
+
 export const capitalizeFirstLetter = (str: string): string => {
   try {
     return `${str[0].toUpperCase()}${str.substring(1).toLowerCase()}`;

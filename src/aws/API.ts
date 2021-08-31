@@ -22,6 +22,8 @@ export type CreatePatientInfoInput = {
   email: string,
   emergencyContactName: string,
   emergencyContactNumber: string,
+  fluidIntakeGoal: string,
+  configured: boolean,
   patientID: string,
   _version?: number | null,
 };
@@ -45,6 +47,8 @@ export type ModelPatientInfoConditionInput = {
   email?: ModelStringInput | null,
   emergencyContactName?: ModelStringInput | null,
   emergencyContactNumber?: ModelStringInput | null,
+  fluidIntakeGoal?: ModelStringInput | null,
+  configured?: ModelBooleanInput | null,
   and?: Array< ModelPatientInfoConditionInput | null > | null,
   or?: Array< ModelPatientInfoConditionInput | null > | null,
   not?: ModelPatientInfoConditionInput | null,
@@ -90,6 +94,13 @@ export type ModelSizeInput = {
   between?: Array< number | null > | null,
 };
 
+export type ModelBooleanInput = {
+  ne?: boolean | null,
+  eq?: boolean | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
+};
+
 export type PatientInfo = {
   __typename: "PatientInfo",
   id: string,
@@ -111,6 +122,8 @@ export type PatientInfo = {
   email: string,
   emergencyContactName: string,
   emergencyContactNumber: string,
+  fluidIntakeGoal: string,
+  configured: boolean,
   patientID: string,
   _version: number,
   _deleted?: boolean | null,
@@ -140,6 +153,8 @@ export type UpdatePatientInfoInput = {
   email?: string | null,
   emergencyContactName?: string | null,
   emergencyContactNumber?: string | null,
+  fluidIntakeGoal?: string | null,
+  configured?: boolean | null,
   patientID: string,
   _version?: number | null,
 };
@@ -291,13 +306,6 @@ export type ModelIDInput = {
   attributeExists?: boolean | null,
   attributeType?: ModelAttributeTypes | null,
   size?: ModelSizeInput | null,
-};
-
-export type ModelBooleanInput = {
-  ne?: boolean | null,
-  eq?: boolean | null,
-  attributeExists?: boolean | null,
-  attributeType?: ModelAttributeTypes | null,
 };
 
 export type MedCompliant = {
@@ -815,6 +823,8 @@ export type ModelPatientInfoFilterInput = {
   email?: ModelStringInput | null,
   emergencyContactName?: ModelStringInput | null,
   emergencyContactNumber?: ModelStringInput | null,
+  fluidIntakeGoal?: ModelStringInput | null,
+  configured?: ModelBooleanInput | null,
   patientID?: ModelStringInput | null,
   and?: Array< ModelPatientInfoFilterInput | null > | null,
   or?: Array< ModelPatientInfoFilterInput | null > | null,
@@ -1103,6 +1113,8 @@ export type CreatePatientInfoMutation = {
     email: string,
     emergencyContactName: string,
     emergencyContactNumber: string,
+    fluidIntakeGoal: string,
+    configured: boolean,
     patientID: string,
     _version: number,
     _deleted?: boolean | null,
@@ -1140,6 +1152,8 @@ export type UpdatePatientInfoMutation = {
     email: string,
     emergencyContactName: string,
     emergencyContactNumber: string,
+    fluidIntakeGoal: string,
+    configured: boolean,
     patientID: string,
     _version: number,
     _deleted?: boolean | null,
@@ -1177,6 +1191,8 @@ export type DeletePatientInfoMutation = {
     email: string,
     emergencyContactName: string,
     emergencyContactNumber: string,
+    fluidIntakeGoal: string,
+    configured: boolean,
     patientID: string,
     _version: number,
     _deleted?: boolean | null,
@@ -2343,6 +2359,8 @@ export type SyncPatientInfosQuery = {
       email: string,
       emergencyContactName: string,
       emergencyContactNumber: string,
+      fluidIntakeGoal: string,
+      configured: boolean,
       patientID: string,
       _version: number,
       _deleted?: boolean | null,
@@ -2382,6 +2400,8 @@ export type GetPatientInfoQuery = {
     email: string,
     emergencyContactName: string,
     emergencyContactNumber: string,
+    fluidIntakeGoal: string,
+    configured: boolean,
     patientID: string,
     _version: number,
     _deleted?: boolean | null,
@@ -2424,6 +2444,8 @@ export type ListPatientInfosQuery = {
       email: string,
       emergencyContactName: string,
       emergencyContactNumber: string,
+      fluidIntakeGoal: string,
+      configured: boolean,
       patientID: string,
       _version: number,
       _deleted?: boolean | null,
@@ -4070,6 +4092,8 @@ export type OnCreatePatientInfoSubscription = {
     email: string,
     emergencyContactName: string,
     emergencyContactNumber: string,
+    fluidIntakeGoal: string,
+    configured: boolean,
     patientID: string,
     _version: number,
     _deleted?: boolean | null,
@@ -4106,6 +4130,8 @@ export type OnUpdatePatientInfoSubscription = {
     email: string,
     emergencyContactName: string,
     emergencyContactNumber: string,
+    fluidIntakeGoal: string,
+    configured: boolean,
     patientID: string,
     _version: number,
     _deleted?: boolean | null,
@@ -4142,6 +4168,8 @@ export type OnDeletePatientInfoSubscription = {
     email: string,
     emergencyContactName: string,
     emergencyContactNumber: string,
+    fluidIntakeGoal: string,
+    configured: boolean,
     patientID: string,
     _version: number,
     _deleted?: boolean | null,

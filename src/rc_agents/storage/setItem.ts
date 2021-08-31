@@ -16,6 +16,8 @@ import {
   getAlerts,
   getAlertsSync,
   getAllPatientDetails,
+  getPatientConfigurations,
+  getPatientDetails,
   getSingleAlert,
   getSingleAlertInfo,
   getTodos
@@ -30,6 +32,12 @@ export const setSignUpDetails = async (
   );
 };
 
+export const setUsername = async (
+  username: AsyncStorageType[AsyncStorageKeys.USERNAME]
+): Promise<void> => {
+  await AsyncStorage.setItem(AsyncStorageKeys.USERNAME, username);
+};
+
 export const setClinicianID = async (
   clinicianID: AsyncStorageType[AsyncStorageKeys.CLINICIAN_ID]
 ): Promise<void> => {
@@ -42,6 +50,15 @@ export const setClinician = async (
   await AsyncStorage.setItem(
     AsyncStorageKeys.CLINICIAN,
     JSON.stringify(clinician)
+  );
+};
+
+export const setClinicianContacts = async (
+  clinicianContacts: AsyncStorageType[AsyncStorageKeys.CLINICIAN_CONTACTS]
+): Promise<void> => {
+  await AsyncStorage.setItem(
+    AsyncStorageKeys.CLINICIAN_CONTACTS,
+    JSON.stringify(clinicianContacts)
   );
 };
 
@@ -91,6 +108,21 @@ export const setPatients = async (
 };
 
 /**
+ * Stores as PatientDetails
+ * Performs local merging (saving only patientInfo)
+ */
+export const setPatient = async (patient: PatientInfo): Promise<void> => {
+  const localPatient = await getPatientDetails(patient.patientID);
+
+  await setPatientDetails({
+    patientInfo: patient,
+    activityInfos: localPatient?.activityInfos || {},
+    symptomReports: localPatient?.symptomReports || {},
+    vitalsReports: localPatient?.vitalsReports || {}
+  });
+};
+
+/**
  * Stores as AllPatientDetails
  * Performs local merging (saving all but PatientInfo)
  */
@@ -107,7 +139,7 @@ export const setPatientDetails = async (
   if (patient && patient.patientID && localPatients) {
     // Patient exists locally: Merge
     localPatients[patient.patientID] = {
-      patientInfo: localPatients[patient.patientID]?.patientInfo || patient,
+      patientInfo: patient,
       activityInfos: patientDetails.activityInfos,
       symptomReports: patientDetails.symptomReports,
       vitalsReports: patientDetails.vitalsReports
@@ -125,6 +157,30 @@ export const setAllPatientDetails = async (
   await AsyncStorage.setItem(
     AsyncStorageKeys.ALL_PATIENT_DETAILS,
     JSON.stringify(patientsDetails)
+  );
+};
+
+export const setPatientConfigurations = async (
+  configurations: PatientInfo[]
+): Promise<void> => {
+  let localData = await getPatientConfigurations();
+
+  configurations.forEach((configuration) => {
+    if (localData) {
+      // Removes existing patient configuration if any
+      const existIndex = localData.findIndex((p) => p.id === configuration.id);
+      if (existIndex >= 0) {
+        localData.splice(existIndex, 1);
+      }
+    } else {
+      localData = [];
+    }
+    localData.push(configuration);
+  });
+
+  await AsyncStorage.setItem(
+    AsyncStorageKeys.PATIENT_CONFIGURATIONS,
+    JSON.stringify(localData)
   );
 };
 
@@ -242,7 +298,10 @@ export const mergeAlertInfo = async (
   } else if ((alert as Alert).patientID) {
     // Input is of type Alert
     const currentAlert = alert as Alert;
-    const currentAlertInfo = await getSingleAlertInfo(currentAlert);
+    const currentAlertInfo = await getSingleAlertInfo(
+      currentAlert.id,
+      currentAlert.patientID
+    );
     if (currentAlertInfo) {
       currentAlertInfo.completed =
         currentAlert.completed === AlertStatus.COMPLETED;
@@ -291,113 +350,91 @@ export const setAlertsSync = async (
 };
 
 /**
- * Merge Todo during Todo creation
- * @param todo todo to be merged
+ * Insert a Todo to the beginning of the list or replace an existing one.
+ * @param todo Todo to be inserted
  */
-export const mergeTodo = async (todo: LocalTodo): Promise<void> => {
-  let localTodos = await getTodos();
-  if (localTodos) {
+export const setTodo = async (todo: LocalTodo | Todo): Promise<void> => {
+  let todoToStore: LocalTodo;
+
+  // Input is of type LocalTodo during usual merging
+  if ((todo as LocalTodo).toSync !== undefined) {
+    todoToStore = todo as LocalTodo;
+  }
+  // Input is of type Todo when resolving Todo's conflict
+  else {
+    const currentTodo = todo as Todo;
+
+    // Constructs Todo to be stored
+    todoToStore = {
+      id: currentTodo.id,
+      title: currentTodo.title,
+      patientName: currentTodo.patientName,
+      notes: currentTodo.notes,
+      completed: currentTodo.completed === TodoStatus.COMPLETED,
+      createdAt: currentTodo.createdAt,
+      lastModified: currentTodo.lastModified,
+      _version: currentTodo._version,
+      toSync: false
+    };
+
+    // If there is Alert associated with the Todo
+    if (currentTodo.alertID) {
+      todoToStore.alertId = currentTodo.alertID;
+    } else if (currentTodo.alert) {
+      todoToStore.patientId = currentTodo.alert.patientID;
+      todoToStore.riskLevel = mapColorCodeToRiskLevel(
+        currentTodo.alert.colorCode
+      );
+    }
+  }
+
+  let localData = await getTodos();
+
+  if (localData) {
+    let existIndex = -1;
     // For update Todo operation
-    if (todo.id) {
-      const existIndex = localTodos.findIndex((t) => t.id === todo.id);
-      // Todo exists
-      if (existIndex >= 0) {
-        localTodos.splice(existIndex, 1);
-      }
+    if (todoToStore.id) {
+      existIndex = localData.findIndex((t) => t.id === todoToStore.id);
     } else {
-      let existIndex: number;
-      if (todo.alertId) {
+      if (todoToStore.alertId) {
         // When attempts to create an existing Todo offline
-        existIndex = localTodos.findIndex((t) => t.alertId === todo.alertId);
+        existIndex = localData.findIndex(
+          (t) => t.alertId === todoToStore.alertId
+        );
       } else {
         // When attempts to update an unsynced Todo
-        existIndex = localTodos.findIndex(
-          (t) => t.createdAt === todo.createdAt
+        existIndex = localData.findIndex(
+          (t) => t.createdAt === todoToStore.createdAt
         );
       }
 
       // Existing Todo
       if (existIndex >= 0) {
-        const currentTodo = localTodos[existIndex];
+        const currentTodo = localData[existIndex];
         if (currentTodo.id) {
-          todo.id = currentTodo.id;
-          todo._version = currentTodo._version;
+          todoToStore.id = currentTodo.id;
+          todoToStore._version = currentTodo._version;
         }
-        todo.lastModified = todo.createdAt;
-        todo.createdAt = currentTodo.createdAt;
-        localTodos.splice(existIndex, 1);
       }
     }
-  } else {
-    localTodos = [];
-  }
-  localTodos.unshift(todo);
-  await setTodos(localTodos);
-};
 
-/**
- * Merge Todo conflict by replacing information in LocalTodo with those from input Todo
- * @param todo latest Todo
- */
-export const mergeTodoConflict = async (todo: Todo): Promise<void> => {
-  // Constructs Todo to be stored
-  const todoToStore: LocalTodo = {
-    id: todo.id,
-    title: todo.title,
-    patientName: todo.patientName,
-    notes: todo.notes,
-    completed: todo.completed === TodoStatus.COMPLETED,
-    createdAt: todo.createdAt,
-    lastModified: todo.lastModified,
-    _version: todo._version,
-    toSync: false
-  };
-
-  // If there is Alert associated with the Todo
-  if (todo.alertID) {
-    todoToStore.alertId = todo.alertID;
-  } else if (todo.alert) {
-    todoToStore.patientId = todo.alert.patientID;
-  }
-
-  let localTodos = await getTodos();
-
-  if (localTodos) {
-    // Replaces local Todo with current one if exists, otherwise add into the list
-    const existIndex = localTodos.findIndex((t) => t.id === todo.id);
+    // Removes existing Todo from the list
     if (existIndex >= 0) {
-      localTodos.splice(existIndex, 1);
-      localTodos.unshift(todoToStore);
-    } else {
-      localTodos.unshift(todoToStore);
-    }
-  } else {
-    localTodos = [todoToStore];
-  }
-
-  if (localTodos) {
-    await setTodos(localTodos);
-  }
-};
-
-/**
- * Insert a Todo to the beginning of the list or replace an existing one.
- * @param todo Todo to be inserted
- */
-export const setTodo = async (todo: LocalTodo): Promise<void> => {
-  let localData = await getTodos();
-
-  if (localData) {
-    // Removes existing Todo if any
-    const existIndex = localData.findIndex((t) => t.id === todo.id);
-    if (existIndex >= 0) {
+      // Retrieves alert related information if any
+      if (localData[existIndex].alertId) {
+        const currentTodo = localData[existIndex];
+        todoToStore.alertId = currentTodo.alertId;
+        todoToStore.patientId = currentTodo.patientId;
+        todoToStore.riskLevel = currentTodo.riskLevel;
+      }
       localData.splice(existIndex, 1);
     }
   } else {
     localData = [];
   }
+
   // Adds current Todo to the front of the list
-  localData.unshift(todo);
+  localData.unshift(todoToStore);
   await setTodos(localData);
 };
 

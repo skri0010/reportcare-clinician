@@ -7,8 +7,7 @@ import {
 } from "rc_agents/model";
 import { actionNames } from "ic-redux/actions/actionNames";
 import { createAction } from "typesafe-actions";
-import { Alert, PatientAssignment, PatientInfo } from "aws/API";
-import { RiskFilterPillProps } from "web/RiskFilterPill";
+import { Alert, PatientAssignment, PatientInfo, ClinicianInfo } from "aws/API";
 
 export const setProcedureOngoing = createAction(
   actionNames.SET_PROCEDURE_ONGOING,
@@ -33,7 +32,7 @@ export const setPatients = createAction(
 
 export const setPatientDetails = createAction(
   actionNames.SET_PATIENT_DETAILS,
-  (patientDetails: PatientDetails) => ({
+  (patientDetails: PatientDetails | null) => ({
     patientDetails: patientDetails
   })
 )();
@@ -59,6 +58,27 @@ export const setFetchingPendingPatientAssignments = createAction(
   })
 )();
 
+export const setClinicianContacts = createAction(
+  actionNames.SET_CLINICIAN_CONTACTS,
+  (clinicianContacts: ClinicianInfo[]) => ({
+    clinicianContacts: clinicianContacts
+  })
+)();
+
+export const setClinicianSelected = createAction(
+  actionNames.SET_CLINICIAN_SELECTED,
+  (clinicianSelected: ClinicianInfo) => ({
+    clinicianSelected: clinicianSelected
+  })
+)();
+
+export const setFetchingClinicianContacts = createAction(
+  actionNames.SET_FETCHING_CLINICIAN_CONTACTS,
+  (fetchingClinianContacts: boolean) => ({
+    fetchingClinianContacts: fetchingClinianContacts
+  })
+)();
+
 export const setPendingPatientAssignments = createAction(
   actionNames.SET_PENDING_PATIENT_ASSIGNMENTS,
   (pendingPatientAssignments: PatientAssignment[]) => ({
@@ -70,6 +90,20 @@ export const setPatientAssignmentsSynced = createAction(
   actionNames.SET_PATIENT_ASSIGNMENTS_SYNCED,
   (patientAssignmentsSynced: boolean) => ({
     patientAssignmentsSynced: patientAssignmentsSynced
+  })
+)();
+
+export const setConfiguringPatient = createAction(
+  actionNames.SET_CONFIGURING_PATIENT,
+  (configuringPatient: boolean) => ({
+    configuringPatient: configuringPatient
+  })
+)();
+
+export const setConfigurationSuccessful = createAction(
+  actionNames.SET_CONFIGURATION_SUCCESSFUL,
+  (configurationSuccessful: boolean) => ({
+    configurationSuccessful: configurationSuccessful
   })
 )();
 

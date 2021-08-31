@@ -59,7 +59,7 @@ class DisplayAlerts extends Activity {
     agentAPI.addFact(
       new Belief(
         BeliefKeys.PROCEDURE,
-        ProcedureAttributes.AT_CP,
+        ProcedureAttributes.AT_CP_I,
         ProcedureConst.INACTIVE
       ),
       true,
@@ -71,7 +71,7 @@ class DisplayAlerts extends Activity {
 // Preconditions for activating the DisplayAlerts class
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.AT_CP,
+  ProcedureAttributes.AT_CP_I,
   ProcedureConst.ACTIVE
 );
 const rule2 = new ResettablePrecondition(

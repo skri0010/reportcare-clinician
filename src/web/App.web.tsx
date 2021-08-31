@@ -1,16 +1,16 @@
 import React, { FC, useEffect, useState, useCallback } from "react";
 import { Provider } from "react-redux";
 import { store } from "util/useRedux";
-import { MainNavigationStack } from "./MainNavigationStack";
-import { AuthNavigationStack } from "./AuthNavigationStack";
+import { MainNavigationStack } from "web/MainNavigation";
+import { AuthNavigationStack } from "web/navigation/navigators/AuthStackNavigator";
 import awsconfig from "aws/aws-exports";
 import { Amplify } from "@aws-amplify/core";
 import { Auth } from "@aws-amplify/auth";
 import { AuthState } from "web/auth_screens";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import { Storage } from "rc_agents/storage";
-import { ToastProviderComponent } from "components/IndicatorComponents/ToastProvider";
-import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
+import { ToastProviderComponent } from "components/Indicators/ToastProvider";
+import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AgentIDs } from "rc_agents/clinician_framework";
 
 Amplify.configure(awsconfig);
@@ -83,7 +83,7 @@ const App: FC = () => {
           ) : null}
         </ToastProviderComponent>
       ) : (
-        <LoadingIndicator />
+        <LoadingIndicator overlayBackgroundColor />
       )}
     </Provider>
   );

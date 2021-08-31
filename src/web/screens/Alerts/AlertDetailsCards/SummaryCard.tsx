@@ -1,7 +1,6 @@
 import { H4, H5 } from "components/Text";
-import React, { FC, useState } from "react";
-import { ms, StringifiedStyles } from "react-native-size-matters";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import React, { FC } from "react";
+import { ms } from "react-native-size-matters";
 import i18n from "util/language/i18n";
 import { CardWrapper } from "web/screens/Home/CardWrapper";
 

@@ -11,7 +11,6 @@ import {
   BeliefKeys
 } from "rc_agents/clinician_framework";
 import { Storage, AsyncStorageKeys } from "rc_agents/storage";
-import { PatientAssignmentResolution } from "rc_agents/model";
 // eslint-disable-next-line no-restricted-imports
 import { resolvePatientAssignment } from "rc_agents/agents/data-assistant/action-frames/storing-data/ResolvePatientAssignment";
 

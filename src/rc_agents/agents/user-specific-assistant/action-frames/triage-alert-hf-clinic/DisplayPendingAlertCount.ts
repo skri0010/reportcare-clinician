@@ -108,7 +108,7 @@ class DisplayPendingAlertCount extends Activity {
     agentAPI.addFact(
       new Belief(
         BeliefKeys.PROCEDURE,
-        ProcedureAttributes.AT_CP,
+        ProcedureAttributes.AT_CP_I,
         ProcedureConst.INACTIVE
       )
     );
@@ -118,7 +118,7 @@ class DisplayPendingAlertCount extends Activity {
 // Preconditions for activating the DisplayPendingAlertCount class
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.AT_CP,
+  ProcedureAttributes.AT_CP_I,
   ProcedureConst.ACTIVE
 );
 const rule2 = new ResettablePrecondition(

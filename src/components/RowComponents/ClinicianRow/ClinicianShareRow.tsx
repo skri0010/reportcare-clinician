@@ -32,7 +32,7 @@ export const ClinicianShareRow: FC<ClinicanShareRowProps> = ({
         }}
       >
         {check ? (
-          <Icon name="check" color={colors.primaryButtonColor} size={ms(15)} />
+          <Icon name="check" color={colors.acceptButtonColor} size={ms(15)} />
         ) : null}
       </TouchableOpacity>
     );

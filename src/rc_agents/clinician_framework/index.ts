@@ -27,6 +27,7 @@ export const ActionFrameIDs = {
     REQUEST_RETRIEVE_ROLE: "RequestRetrieveRole",
     RETRIEVE_PATIENTS_BY_ROLE: "RetrievePatientsByRole",
     REQUEST_DISPLAY_PATIENTS: "RequestDisplayPatients",
+    CONFIGURE_PATIENT: "ConfigurePatient",
 
     // HF-OTP-II: Single patient's details
     RETRIEVE_PATIENT_DETAILS: "RetrievePatientDetails",
@@ -34,13 +35,16 @@ export const ActionFrameIDs = {
 
     RETRIEVE_ALERT_HISTORY: "RetrieveAlertHistory",
 
-    // AT-CP: Alerts
+    // AT-CP-I: Alerts
     RETRIEVE_PENDING_ALERT_COUNT: "RetrievePendingAlertCount",
     REQUEST_PENDING_ALERT_COUNT_DISPLAY: "RequestPendingAlertCountDisplay",
     RETRIEVE_ALERTS: "RetrieveAlerts",
     REQUEST_ALERTS_DISPLAY: "RequestAlertsDisplay",
+
+    // AT-CP-II: Single Alert's details (AlertInfo)
     RETRIEVE_ALERT_INFO: "RetrieveAlertInfo",
     REQUEST_ALERT_INFO_DISPLAY: "RequestAlertInfoDisplay",
+    UPDATE_ALERT: "UpdateAlert",
 
     // SRD-I: Patient Assignments
     RETRIEVE_PENDING_PATIENT_ASSIGNMENTS: "RetrievePendingPatientAssignments",
@@ -58,7 +62,10 @@ export const ActionFrameIDs = {
 
     // SRD-III: Todo Details
     RETRIEVE_TODO_DETAILS: "RetrieveTodoDetails",
-    REQUEST_DISPLAY_TODO_DETAILS: "RequestDisplayTodoDetails"
+    REQUEST_DISPLAY_TODO_DETAILS: "RequestDisplayTodoDetails",
+    // SRD-IV: Clinician Contacts
+    RETRIEVE_CLINICIAN_CONTACTS: "RetrieveClinicianContacts",
+    REQUEST_DISPLAY_CLINICIAN_CONTACTS: "RequestDisplayClinicianContacts"
   },
   UXSA: {
     // HF-OTP-I: ClinicianInfo and all patients (PatientInfo)
@@ -77,6 +84,9 @@ export const ActionFrameIDs = {
 
     // SRD -III : Todo Details
     DISPLAY_TODO_DETAILS: "DisplayTodoDetails",
+    // SRD-IV Clinician Contacts
+    DISPLAY_CLINICIAN_CONTACTS: "DisplayClinicianContacts",
+
     // AT-CP
     DISPLAY_PENDING_ALERT_COUNT: "DisplayPendingAlertCount",
     DISPLAY_ALERTS: "DisplayAlerts",
@@ -85,13 +95,18 @@ export const ActionFrameIDs = {
   NWA: {
     SYNC_PROTECTED_INFO: "SyncProtectedInfo",
 
+    // HF-OTP-II - Patient Configuration
+    SYNC_CONFIGURE_PATIENTS: "SyncConfigurePatients",
+
     // SRD-I - Patient Assignments
     SYNC_PATIENT_ASSIGNMENT_RESOLUTIONS: "SyncPatientAssignmentResolutions",
 
     // SRD-II - Todos
-    SYNC_TODOS_CREATE: "SyncTodosCreate",
-    SYNC_TODOS_UPDATE: "SyncTodosUpdate",
-    SYNC_ALERTS_UPDATE: "SyncAlertsUpdate"
+    SYNC_CREATE_TODOS: "SyncCreateTodos",
+    SYNC_UPDATE_TODOS: "SyncUpdateTodos",
+
+    // AT-CP-II - Alert's Details
+    SYNC_UPDATE_ALERTS: "SyncUpdateAlerts"
   },
   MHA: {},
   ALA: {}
@@ -111,9 +126,10 @@ export enum AppAttributes {
   ONLINE = "Online",
   SYNC_PROTECTED_INFO = "SyncProtectedInfo",
   SYNC_PATIENT_ASSIGNMENT_RESOLUTIONS = "SyncPatientAssignmentResolutions",
-  SYNC_TODOS_CREATE = "SyncTodosCreate",
-  SYNC_TODOS_UPDATE = "SyncTodosUpdate",
-  SYNC_ALERTS_UPDATE = "SyncAlertsUpdate"
+  SYNC_CONFIGURE_PATIENTS = "SyncConfigurePatients",
+  SYNC_CREATE_TODOS = "SyncCreateTodos",
+  SYNC_UPDATE_TODOS = "SyncUpdateTodos",
+  SYNC_UPDATE_ALERTS = "SyncUpdateAlerts"
 }
 
 // Attributes for PROCEDURE key
@@ -124,52 +140,60 @@ export enum ProcedureAttributes {
   SRD_I = "SRD-I",
   SRD_II = "SRD-II",
   SRD_III = "SRD-III",
-  AT_CP = "AT-CP"
+  SRD_IV = "SRD_IV",
+  AT_CP_I = "AT-CP-I",
+  AT_CP_II = "AT-CP-II"
 }
 
 // Attributes for CLINICIAN key
 
 export enum ClinicianAttributes {
-    USERNAME = "Username",
-    HAS_ENTRY = "HasEntry",
-    ENTRY_DATA = "EntryData",
-    CONFIGURED = "Configured",
-    RETRIEVE_ENTRY = "RetrieveEntry",
+  USERNAME = "Username",
+  HAS_ENTRY = "HasEntry",
+  ENTRY_DATA = "EntryData",
+  CONFIGURED = "Configured",
+  RETRIEVE_ENTRY = "RetrieveEntry",
 
-    // HF-OTP-I: ClinicianInfo and all patients (PatientInfo)
-    ROLE = "Role",
-    RETRIEVE_ROLE = "RetrieveRole",
-    ROLE_RETRIEVED = "RoleRetrieved",
+  // HF-OTP-I: ClinicianInfo and all patients (PatientInfo)
+  ROLE = "Role",
+  RETRIEVE_ROLE = "RetrieveRole",
+  ROLE_RETRIEVED = "RoleRetrieved",
 
-    // AT-CP: Alerts
-    RETRIEVE_PENDING_ALERT_COUNT = "RetrievePendingAlertCount",
-    PENDING_ALERT_COUNT_RETRIEVED = "PendingAlertCountRetrieved",
-    ALERT_STATUS = "AlertStatus",
-    ALERT_RISK_LEVEL = "AlertRiskLevel",
-    RETRIEVE_ALERTS = "RetrieveAlerts",
-    ALERTS = "Alerts",
-    ALERTS_RETRIEVED = "AlertsRetrieved",
-    ALERT = "Alert",
-    RETRIEVE_ALERT_INFO = "RetrieveAlertInfo",
-    ALERT_INFO = "AlertInfo",
-    ALERT_INFO_RETRIEVED = "AlertInfoRetrieved",
+  // SRD-III - Todo Details
+  RETRIEVE_TODO_DETAILS = "RetrieveTodoDetails",
+  TODO_DETAILS = "TodoDetails",
+  DISPLAY_TODO_DETAILS = "DisplayTodoDetails",
+  TODO_DETAILS_RETRIEVED = "TodoDetailsRetrieved",
+  TODO_ID = "TodoId",
+  
+  // AT-CP: Alerts
+  RETRIEVE_PENDING_ALERT_COUNT = "RetrievePendingAlertCount",
+  PENDING_ALERT_COUNT_RETRIEVED = "PendingAlertCountRetrieved",
+  ALERT_STATUS = "AlertStatus",
+  ALERT_RISK_LEVEL = "AlertRiskLevel",
+  RETRIEVE_ALERTS = "RetrieveAlerts",
+  ALERTS = "Alerts",
+  ALERTS_RETRIEVED = "AlertsRetrieved",
+  ALERT = "Alert",
+  RETRIEVE_ALERT_INFO = "RetrieveAlertInfo",
+  ALERT_INFO = "AlertInfo",
+  ALERT_INFO_RETRIEVED = "AlertInfoRetrieved",
+  UPDATE_ALERT = "UpdateAlert",
 
-    // SRD-II - Todos
-    RETRIEVE_TODOS = "RetrieveTodos",
-    TODOS = "Todos",
-    TODO_STATUS = "TodoStatus",
-    CREATE_TODO = "CreateTodo",
-    UPDATE_TODO = "UpdateTodo",
-    TODO = "Todo",
-    TODOS_UPDATED = "TodosUpdated",
-    DISPLAY_TODOS = "DisplayTodos",
+  // SRD-II - Todos
+  RETRIEVE_TODOS = "RetrieveTodos",
+  TODOS = "Todos",
+  TODO_STATUS = "TodoStatus",
+  CREATE_TODO = "CreateTodo",
+  UPDATE_TODO = "UpdateTodo",
+  TODO = "Todo",
+  TODOS_UPDATED = "TodosUpdated",
+  DISPLAY_TODOS = "DisplayTodos",
 
-    // SRD-III - Todo Details
-    RETRIEVE_TODO_DETAILS = "RetrieveTodoDetails",
-    TODO_DETAILS = "TodoDetails",
-    DISPLAY_TODO_DETAILS = "DisplayTodoDetails",
-    TODO_DETAILS_RETRIEVED = "TodoDetailsRetrieved",
-    TODO_ID = "TodoId"
+  //SRD-IV - Clinician Contacts
+  RETRIEVE_CLINICIAN_CONTACTS = "RetrieveClinicianContatcts",
+  CLINICIAN_CONTACTS_RETRIEVED = "ClinicianContactsRetrieved",
+  CLINICIAN_CONTACTS = "ClinicianContacts"
 }
 
 // Attributes for PATIENT key
@@ -185,6 +209,8 @@ export enum PatientAttributes {
   PATIENT_DETAILS_RETRIEVED = "PatientDetailsRetrieved",
   DISPLAY_PATIENT_DETAILS_REQUESTED = "DisplayPatientDetailsRequested",
   PATIENT_DETAILS = "PatientDetails",
+  PATIENT_TO_CONFIGURE = "PatientToConfigure",
+  CONFIGURE_PATIENT = "ConfigurePatient",
 
   // SRD-I: Patient Assignments
   PENDING_PATIENT_ASSIGNMENTS = "PendingPatientAssignments",

@@ -3,7 +3,6 @@ import { RootState, select } from "util/useRedux";
 import { View, TextStyle, FlatList } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
-import { H4 } from "components/Text/index";
 import { CardWrapper } from "./CardWrapper";
 import i18n from "util/language/i18n";
 import {
@@ -12,9 +11,9 @@ import {
 } from "rc_agents/model";
 import { PatientAssignment } from "aws/API";
 import { PatientAssignmentRow } from "components/RowComponents/PatientRows/PatientPendingAssignmentRow";
-import { LoadingIndicator } from "components/IndicatorComponents/LoadingIndicator";
+import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AgentTrigger } from "rc_agents/trigger";
-import { EmptyListIndicator } from "components/IndicatorComponents/EmptyListIndicator";
+import { EmptyListIndicator } from "components/Indicators/EmptyListIndicator";
 
 interface PendingPatientAssignmentsCardProps {
   maxHeight: number;
@@ -59,66 +58,53 @@ export const PendingPatientAssignmentsCard: FC<PendingPatientAssignmentsCardProp
     };
 
     return (
-      <CardWrapper maxHeight={maxHeight}>
-        <View style={styles.titleContainer}>
-          <H4
-            text={i18n.t("Home.PatientAssignments")}
-            style={[styles.title, titleColor]}
-          />
-        </View>
-        {/* Loading indicator */}
-        {fetchingPendingPatientAssignments ? <LoadingIndicator /> : null}
-
-        {/* List of pending patient assignments */}
-        {pendingPatientAssignments ? (
-          pendingPatientAssignments.length > 0 ? (
-            <View style={styles.listContainer}>
-              <FlatList
-                style={
-                  fetchingPendingPatientAssignments
-                    ? styles.flatlistLoadingOpacity
-                    : {}
-                }
-                showsVerticalScrollIndicator={false}
-                ItemSeparatorComponent={() => <ItemSeparator />}
-                data={pendingPatientAssignments}
-                renderItem={({ item }) => {
-                  return (
-                    <PatientAssignmentRow
-                      patientName={item.patientName}
-                      onApprove={() => approvePatientAssignment(item)}
-                      onReassign={() => reassignPatientAssignment(item)}
-                    />
-                  );
-                }}
-                keyExtractor={(item) => item.id}
-              />
-            </View>
-          ) : (
-            // Display text to indicate no pending assignments
-            <EmptyListIndicator
-              text={i18n.t("Patient_Assignments.NoPendingAssignments")}
+      <CardWrapper
+        maxHeight={maxHeight}
+        title={i18n.t("Home.PatientAssignments")}
+        noChildrenPaddingHorizontal={fetchingPendingPatientAssignments}
+      >
+        {fetchingPendingPatientAssignments ? (
+          // Pending patient assignments is being fetched
+          <LoadingIndicator />
+        ) : pendingPatientAssignments ? (
+          // List of pending patient assignments? (
+          <View style={styles.listContainer}>
+            <FlatList
+              style={
+                fetchingPendingPatientAssignments
+                  ? styles.flatlistLoadingOpacity
+                  : {}
+              }
+              showsVerticalScrollIndicator={false}
+              ItemSeparatorComponent={() => <ItemSeparator />}
+              ListEmptyComponent={() => (
+                <EmptyListIndicator
+                  text={i18n.t("Patient_Assignments.NoPendingAssignments")}
+                />
+              )}
+              data={pendingPatientAssignments}
+              renderItem={({ item }) => {
+                return (
+                  <PatientAssignmentRow
+                    patientName={item.patientName}
+                    onApprove={() => approvePatientAssignment(item)}
+                    onReassign={() => reassignPatientAssignment(item)}
+                  />
+                );
+              }}
+              keyExtractor={(item) => item.id}
             />
-          )
+          </View>
         ) : null}
       </CardWrapper>
     );
   };
 
 const styles = ScaledSheet.create({
-  title: {
-    fontWeight: "bold"
-  },
   listContainer: {
-    flex: 1,
-    paddingTop: "15@ms"
+    flex: 1
   },
   flatlistLoadingOpacity: {
     opacity: 0.5
-  },
-  titleContainer: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "baseline"
   }
 });

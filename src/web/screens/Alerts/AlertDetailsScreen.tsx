@@ -1,22 +1,16 @@
 import React, { FC, useContext } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
-import { ms, ScaledSheet } from "react-native-size-matters";
-import { H2, H3, H4, H5 } from "components/Text";
+import { View, TouchableOpacity } from "react-native";
+import { ScaledSheet } from "react-native-size-matters";
+import { H4 } from "components/Text";
 import { RootState, select } from "util/useRedux";
 import { ScreenWrapper } from "../ScreenWrapper";
-import { AlertContext } from "./AlertScreen";
-import { mockSymptomRecords } from "mock/mockSymptoms";
-import { mockVitals } from "mock/mockVitals";
-import { mockAlerts } from "mock/mockAlerts";
+import { AlertContext } from "./AlertsScreen";
 import { AlertDetails } from "./AlertDetails";
-import { CardWrapper } from "../Home/CardWrapper";
-import i18n from "util/language/i18n";
 import { mockAlertHistory } from "mock/mockPatientDetails";
 
 export const AlertDetailsScreen: FC = () => {
-  const { colors, fonts } = select((state: RootState) => ({
-    colors: state.settings.colors,
-    fonts: state.settings.fonts
+  const { colors } = select((state: RootState) => ({
+    colors: state.settings.colors
   }));
   const context = useContext(AlertContext);
   const findSymptoms = (id: string) => {

@@ -18,6 +18,7 @@ import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import { AlertStatus } from "rc_agents/model";
 import { agentDTA } from "rc_agents/agents";
 import { Alert } from "aws/API";
+import { isMobile } from "util/device";
 
 interface AlertsCardProps {
   flex?: number;
@@ -29,9 +30,6 @@ export const AlertsCard: FC<AlertsCardProps> = ({ flex = 1, maxHeight }) => {
     colors: state.settings.colors,
     pendingAlertCount: state.agents.pendingAlertCount
   }));
-
-  const titleColor = { color: colors.primaryTextColor } as TextStyle;
-  const detailsColors = { color: colors.secondaryTextColor } as TextStyle;
 
   const [remainingAlert, setRemainingAlert] = useState(0);
 
@@ -47,7 +45,7 @@ export const AlertsCard: FC<AlertsCardProps> = ({ flex = 1, maxHeight }) => {
     agentAPI.addFact(
       new Belief(
         BeliefKeys.PROCEDURE,
-        ProcedureAttributes.AT_CP,
+        ProcedureAttributes.AT_CP_I,
         ProcedureConst.ACTIVE
       )
     );
@@ -96,7 +94,7 @@ export const AlertsCard: FC<AlertsCardProps> = ({ flex = 1, maxHeight }) => {
     agentAPI.addFact(
       new Belief(
         BeliefKeys.PROCEDURE,
-        ProcedureAttributes.AT_CP,
+        ProcedureAttributes.AT_CP_I,
         ProcedureConst.ACTIVE
       )
     );
@@ -118,23 +116,21 @@ export const AlertsCard: FC<AlertsCardProps> = ({ flex = 1, maxHeight }) => {
     agentAPI.addFact(
       new Belief(
         BeliefKeys.PROCEDURE,
-        ProcedureAttributes.AT_CP,
+        ProcedureAttributes.AT_CP_II,
         ProcedureConst.ACTIVE
       )
     );
   };
 
-  const iconSize = ms(15);
+  const iconSize = isMobile ? ms(30) : ms(15); // Larger icon size for mobile
 
   return (
-    <CardWrapper flex={flex} maxHeight={maxHeight}>
-      <View style={styles.titleContainer}>
-        <H4 text={i18n.t("Home.Alerts")} style={[styles.title, titleColor]} />
-        <H6
-          text={`(${remainingAlert} remaining)`}
-          style={[styles.title, detailsColors]}
-        />
-      </View>
+    <CardWrapper
+      flex={flex}
+      maxHeight={maxHeight}
+      title={i18n.t("Home.Alerts")}
+      subtitle={`(${remainingAlert} ${i18n.t("Keywords.remaining")})`}
+    >
       {/* Alert Button Row */}
       <View style={styles.alertsContainer}>
         {/* JH-TODO: Remove hardcoding of alertCount */}
@@ -192,19 +188,11 @@ export const AlertsCard: FC<AlertsCardProps> = ({ flex = 1, maxHeight }) => {
 };
 
 const styles = ScaledSheet.create({
-  titleContainer: {
-    flexDirection: "row",
-    alignItems: "baseline"
-  },
-  title: {
-    fontWeight: "bold",
-    paddingRight: "5@ms"
-  },
   alertsContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
     alignSelf: "center",
     justifyContent: "center",
-    paddingTop: "15@ms"
+    paddingTop: "5@ms"
   }
 });
