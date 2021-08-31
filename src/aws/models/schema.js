@@ -229,8 +229,8 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "medname": {
-                    "name": "medname",
+                "name": {
+                    "name": "name",
                     "isArray": false,
                     "type": "String",
                     "isRequired": true,
@@ -239,7 +239,21 @@ export const schema = {
                 "dosage": {
                     "name": "dosage",
                     "isArray": false,
-                    "type": "String",
+                    "type": "Int",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "frequency": {
+                    "name": "frequency",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "records": {
+                    "name": "records",
+                    "isArray": false,
+                    "type": "AWSJSON",
                     "isRequired": true,
                     "attributes": []
                 },
@@ -247,6 +261,13 @@ export const schema = {
                     "name": "patientID",
                     "isArray": false,
                     "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "active": {
+                    "name": "active",
+                    "isArray": false,
+                    "type": "Boolean",
                     "isRequired": true,
                     "attributes": []
                 }
@@ -285,6 +306,16 @@ export const schema = {
                                 ]
                             },
                             {
+                                "provider": "userPools",
+                                "ownerField": "patientID",
+                                "allow": "owner",
+                                "operations": [
+                                    "read",
+                                    "update"
+                                ],
+                                "identityClaim": "cognito:username"
+                            },
+                            {
                                 "groupClaim": "cognito:groups",
                                 "provider": "userPools",
                                 "allow": "groups",
@@ -304,7 +335,8 @@ export const schema = {
                                 "allow": "groups",
                                 "groupsField": "patientID",
                                 "operations": [
-                                    "read"
+                                    "read",
+                                    "update"
                                 ],
                                 "groupField": "groups"
                             }
@@ -1747,5 +1779,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "519a5755c59526d66578090e79a8c203"
+    "version": "e90c1ae2d655751a81e32233a2fc0522"
 };
