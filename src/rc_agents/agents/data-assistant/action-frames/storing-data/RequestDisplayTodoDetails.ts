@@ -6,7 +6,8 @@ import {
     Precondition,
     ResettablePrecondition
   } from "agents-framework";
-  import { ProcedureConst, Performative, CommonAttributes } from "agents-framework/Enums";
+  import { ProcedureConst, Performative } from "agents-framework/Enums";
+import agentUXSA from "rc_agents/agents/user-specific-assistant/UXSA";
   import {
     ActionFrameIDs,
     AgentIDs,
@@ -33,7 +34,8 @@ import {
    */
    async doActivity(agent: Agent): Promise<void> {
     try {
-      console.log("comms");
+      console.log(agent.getBeliefs());
+      console.log(agentUXSA.getBeliefs());
       await super.doActivity(agent, [rule2]);
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -49,16 +51,15 @@ const rule1 = new Precondition(
   ProcedureConst.ACTIVE
 );
 
-
 const rule2 = new ResettablePrecondition(
   BeliefKeys.CLINICIAN,
-  ClinicianAttributes.DISPLAY_TODO_DETAILS,
+  ClinicianAttributes.TODO_DETAILS_RETRIEVED,
   true
 );
 
 // Actionframe
 export const af_RequestDisplayTodoDetails = new Actionframe(
-  `AF_${ActionFrameIDs.DTA.REQUEST_DISPLAY_TODOS}`,
+  `AF_${ActionFrameIDs.DTA.REQUEST_DISPLAY_TODO_DETAILS}`,
   [rule1, rule2],
   new RequestDisplayTodoDetails()
 );

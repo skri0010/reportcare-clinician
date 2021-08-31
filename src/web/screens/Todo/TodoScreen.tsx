@@ -115,7 +115,7 @@ export const TodoScreen: FC<WithSideTabsProps[ScreenName.TODO]> = ({
 
   useEffect(() => {
     if (todoDetails) {
-      console.log("Hena");
+      console.log(todoDetails);
       setTodoSelected(todoDetails);
     }
   }, [todoDetails]);

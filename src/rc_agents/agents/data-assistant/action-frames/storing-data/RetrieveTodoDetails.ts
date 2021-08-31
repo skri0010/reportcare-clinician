@@ -41,16 +41,13 @@ import { mapColorCodeToRiskLevel } from "rc_agents/agents/data-assistant/action-
         // reset preconditions
         await super.doActivity(agent, [rule2]);
 
-        // eslint-disable-next-line no-console
-        console.log("hena");
-
         const facts = agentAPI.getFacts();
         
         try {
 
           // Get fact with todo details
           // TODO: Change this from ClinicianAttributes.TODO to something else
-          const todoDetails: string = agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.TODO_DETAILS];
+          const todoDetails: string = agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.TODO_ID];
           if (todoDetails) {
               let todoDetail: Todo | undefined;
               // Check if device is online
@@ -91,7 +88,6 @@ import { mapColorCodeToRiskLevel } from "rc_agents/agents/data-assistant/action-
                       // Dispatch to front end using redux
                       // store.dispatch(setTodoDetails(todoToDispatch));
   
-                      // remove display todo details from facts
                       agentAPI.addFact(
                           new Belief(
                               BeliefKeys.CLINICIAN,
@@ -102,11 +98,10 @@ import { mapColorCodeToRiskLevel } from "rc_agents/agents/data-assistant/action-
                       );
 
                       // Trigger request for UXSA to display
-                      console.log("UXSA");
                       agent.addBelief(
                           new Belief(
                               BeliefKeys.CLINICIAN,
-                              ClinicianAttributes.DISPLAY_TODO_DETAILS,
+                              ClinicianAttributes.TODO_DETAILS_RETRIEVED,
                               true
                           )
                       );
@@ -131,7 +126,7 @@ import { mapColorCodeToRiskLevel } from "rc_agents/agents/data-assistant/action-
                       agent.addBelief(
                         new Belief(
                             BeliefKeys.CLINICIAN,
-                            ClinicianAttributes.DISPLAY_TODO_DETAILS,
+                            ClinicianAttributes.TODO_DETAILS_RETRIEVED,
                             true
                         )
                     );
@@ -146,16 +141,7 @@ import { mapColorCodeToRiskLevel } from "rc_agents/agents/data-assistant/action-
             console.log(error);
         }
 
-        // Stop procedure
-        agentAPI.addFact(
-            new Belief(
-                BeliefKeys.PROCEDURE,
-                ProcedureAttributes.SRD_III,
-                ProcedureConst.INACTIVE
-            ),
-            true,
-            true
-        );
+
     }
 }
 

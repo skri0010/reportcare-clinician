@@ -168,7 +168,8 @@ export enum ClinicianAttributes {
     RETRIEVE_TODO_DETAILS = "RetrieveTodoDetails",
     TODO_DETAILS = "TodoDetails",
     DISPLAY_TODO_DETAILS = "DisplayTodoDetails",
-    TODO_DETAILS_RETRIEVED = "TodoDetailsRetrieved"
+    TODO_DETAILS_RETRIEVED = "TodoDetailsRetrieved",
+    TODO_ID = "TodoId"
 }
 
 // Attributes for PATIENT key

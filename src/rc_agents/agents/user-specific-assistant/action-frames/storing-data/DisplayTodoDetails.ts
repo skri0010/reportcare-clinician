@@ -2,6 +2,7 @@ import {
     Actionframe,
     Activity,
     Agent,
+    Belief,
     Precondition,
     ResettablePrecondition
   } from "agents-framework";
@@ -36,12 +37,28 @@ import { setTodoDetails } from "ic-redux/actions/agents/actionCreator";
           // reset preconditions
           await super.doActivity(agent, [rule2]);
           try {
-
-            console.log("Hena");
             // Get fact with todo details
             const todoDetails: LocalTodo = agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.TODO_DETAILS];
+            if (todoDetails){
+              store.dispatch(setTodoDetails(todoDetails));
+            }
 
-            store.dispatch(setTodoDetails(todoDetails));
+            // Update Facts
+            agentAPI.addFact(
+              new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.TODO_DETAILS, null),
+              false
+            );
+
+            // End the procedure
+            agentAPI.addFact(
+              new Belief(
+                BeliefKeys.PROCEDURE,
+                ProcedureAttributes.SRD_III,
+                ProcedureConst.INACTIVE
+              ),
+              true,
+              true
+            );
           }
           catch(error) {
               // eslint-disable-next-line no-console
