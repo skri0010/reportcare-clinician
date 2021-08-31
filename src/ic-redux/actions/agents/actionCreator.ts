@@ -149,6 +149,13 @@ export const setTodoDetails = createAction(
   })
 )();
 
+export const setFetchingTodoDetails = createAction(
+  actionNames.SET_FETCHING_TODO_DETAILS,
+  (fetchingTodoDetails: boolean) => ({
+    fetchingTodoDetails: fetchingTodoDetails
+  })
+)();
+
 export const setCompletedTodos = createAction(
   actionNames.SET_COMPLETED_TODOS,
   (completedTodos: LocalTodo[]) => ({

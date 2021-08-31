@@ -93,7 +93,7 @@ export const TodoScreen: FC<MainScreenProps[ScreenName.TODO]> = ({
     dispatch(setProcedureOngoing(true));
     // dispatch(setTodoDetails(item));
     if (item.id) {
-      AgentTrigger.triggerRetrieveTodoDetails({ id: item.id });
+      AgentTrigger.triggerRetrieveTodoDetails(item.id);
     }
     setTodoSelected(item);
   }

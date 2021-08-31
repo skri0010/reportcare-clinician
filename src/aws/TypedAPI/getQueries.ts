@@ -140,7 +140,7 @@ export const getTodo = async (
 ): Promise<GetTodoResponse> => {
   return (await API.graphql({
     query: queries.getTodo,
-    variables: { id: variables.id }
+    variables: variables
   })) as GetTodoResponse;
 };
 
