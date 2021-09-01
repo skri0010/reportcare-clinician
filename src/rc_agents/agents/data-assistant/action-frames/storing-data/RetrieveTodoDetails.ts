@@ -46,7 +46,6 @@ import { mapColorCodeToRiskLevel } from "rc_agents/agents/data-assistant/action-
         try {
 
           // Get fact with todo details
-          // TODO: Change this from ClinicianAttributes.TODO to something else
           const todoDetails: string = agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.TODO_ID];
           if (todoDetails) {
               let todoDetail: Todo | undefined;
@@ -62,7 +61,7 @@ import { mapColorCodeToRiskLevel } from "rc_agents/agents/data-assistant/action-
                       }
                   }
                   if (todoDetail) {
-                      // Change todo fromat to LocalTodo for dispatch
+                      // Change todo format to LocalTodo for dispatch
                       const todoToDispatch: LocalTodo = {
                           id: todoDetail.id,
                           title: todoDetail.title,
@@ -111,7 +110,6 @@ import { mapColorCodeToRiskLevel } from "rc_agents/agents/data-assistant/action-
                   const todoToDispatch = await Storage.getTodo(todoDetails);
                   
                   if (todoToDispatch){
-                      // move to front of the list
                       await Storage.setTodo(todoToDispatch[0]);
 
                       agentAPI.addFact(

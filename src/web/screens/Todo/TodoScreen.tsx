@@ -15,7 +15,6 @@ import { LocalTodo } from "rc_agents/model";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { useToast } from "react-native-toast-notifications";
 import {
-  setProcedureOngoing,
   setProcedureSuccessful,
   setSubmittingTodo,
   setFetchingTodoDetails,
@@ -111,7 +110,6 @@ export const TodoScreen: FC<MainScreenProps[ScreenName.TODO]> = ({
 
   useEffect(() => {
     if (todoDetails) {
-      console.log(todoDetails);
       setTodoSelected(todoDetails);
     }
   }, [todoDetails]);

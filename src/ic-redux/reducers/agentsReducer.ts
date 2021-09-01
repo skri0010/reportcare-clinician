@@ -31,7 +31,6 @@ interface AgentsState {
   pendingAlertCount: PendingAlertCount;
   alerts: Alert[];
   alertInfo: AlertInfo | undefined;
-  todoDetails: LocalTodo | null;
   pendingTodos: LocalTodo[] | null;
   completedTodos: LocalTodo[] | null;
   fetchingTodos: boolean;
@@ -71,14 +70,13 @@ const initialState: AgentsState = {
   },
   alerts: [],
   alertInfo: undefined,
-  todoDetails: null,
+  todoDetails: undefined,
   pendingTodos: null,
   completedTodos: null,
   fetchingTodos: false,
   fetchingTodoDetails: false,
   submittingTodo: false,
-  updatedTodo: undefined,
-  todoDetails: undefined
+  updatedTodo: undefined
 };
 
 export const agentsDataReducer: Reducer<AgentsState, RootAction> = (

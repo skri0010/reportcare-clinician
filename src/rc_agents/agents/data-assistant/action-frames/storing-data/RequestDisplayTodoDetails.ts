@@ -7,7 +7,6 @@ import {
     ResettablePrecondition
   } from "agents-framework";
   import { ProcedureConst, Performative } from "agents-framework/Enums";
-import agentUXSA from "rc_agents/agents/user-specific-assistant/UXSA";
   import {
     ActionFrameIDs,
     AgentIDs,
@@ -34,8 +33,6 @@ import agentUXSA from "rc_agents/agents/user-specific-assistant/UXSA";
    */
    async doActivity(agent: Agent): Promise<void> {
     try {
-      console.log(agent.getBeliefs());
-      console.log(agentUXSA.getBeliefs());
       await super.doActivity(agent, [rule2]);
     } catch (error) {
       // eslint-disable-next-line no-console
