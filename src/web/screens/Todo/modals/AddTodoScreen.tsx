@@ -18,20 +18,22 @@ import {
 import { useToast } from "react-native-toast-notifications";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AgentTrigger } from "rc_agents/trigger";
+import { useRoute } from "@react-navigation/native";
+import { ScreenName } from "web/navigation";
 
 interface AddTodoScreenProps {
   setModalVisible: (state: boolean) => void;
 }
 
 export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
-  const { colors, fonts, procedureSuccessful, procedureOngoing } = select(
-    (state: RootState) => ({
+  const { colors, fonts, procedureSuccessful, procedureOngoing, alertInfo } =
+    select((state: RootState) => ({
       colors: state.settings.colors,
       fonts: state.settings.fonts,
       procedureOngoing: state.agents.procedureOngoing,
-      procedureSuccessful: state.agents.procedureSuccessful
-    })
-  );
+      procedureSuccessful: state.agents.procedureSuccessful,
+      alertInfo: state.agents.alertInfo
+    }));
 
   const shortTodoTextInputStyle: StyleProp<ViewStyle> = {
     backgroundColor: colors.primaryContrastTextColor,
@@ -57,16 +59,24 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
 
   const dispatch = useDispatch();
   const toast = useToast();
+  const route = useRoute();
 
   // Triggers CreateTodo procedure
   const createTodo = () => {
+    const inAlertScreen = route.name === ScreenName.ALERTS;
     const todoInput: TodoInput = {
       title: titleInput,
       patientName: patientInput,
       notes: noteInput,
       completed: false,
       createdAt: new Date().toISOString(),
-      _version: 1
+      _version: 1,
+      // When the todo is created in the Alert screen,
+      // include the patient info, alert info, alert id and risk level
+      patientId: inAlertScreen && alertInfo ? alertInfo.patientID : undefined,
+      alert: inAlertScreen && alertInfo ? alertInfo : undefined,
+      alertId: inAlertScreen && alertInfo ? alertInfo.id : undefined,
+      riskLevel: inAlertScreen && alertInfo ? alertInfo.riskLevel : undefined
     };
 
     dispatch(setProcedureOngoing(true));

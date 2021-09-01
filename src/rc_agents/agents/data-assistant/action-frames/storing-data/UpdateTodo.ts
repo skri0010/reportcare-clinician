@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import {
   Actionframe,
   Agent,
@@ -43,8 +44,16 @@ class UpdateTodo extends Activity {
 
     try {
       // Gets Todo details to be updated
-      const todoInput: TodoInput =
+      let todoInput: TodoInput =
         facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.TODO];
+
+      const alertTodoInput: TodoInput =
+        facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.ALERT_TODO];
+
+      // Todo associated with alert
+      if (alertTodoInput) {
+        todoInput = alertTodoInput;
+      }
 
       const isOnline: boolean = facts[BeliefKeys.APP]?.[AppAttributes.ONLINE];
 

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { FC, useEffect } from "react";
 import { FlatList } from "react-native";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";

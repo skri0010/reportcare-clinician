@@ -1,21 +1,22 @@
 import React, { FC } from "react";
 import { View, TouchableOpacity, ScrollView } from "react-native";
 import { RootState, select } from "util/useRedux";
-import { getRiskLevelColor } from "models/RiskLevel";
+import { getRiskLevelColor, RiskLevel } from "models/RiskLevel";
 import { H3, H4, H5 } from "components/Text";
 import { ScaledSheet, ms } from "react-native-size-matters";
-import { AlertHistory } from "mock/mockPatientDetails";
 import i18n from "util/language/i18n";
+import { AlertInfo } from "rc_agents/model";
+import moment from "moment";
 
 interface AlertHistoryModalProps {
   name: string; // patient name
-  alertHistory: AlertHistory;
+  alertHistory: AlertInfo;
   setModalAlertVisible: (state: boolean) => void;
 }
 
 interface AlertDetailsRowProps {
   detailTitle: string;
-  detailContent: number | string;
+  detailContent: number | string | undefined;
 }
 
 const AlertDetailsRow: FC<AlertDetailsRowProps> = ({
@@ -28,6 +29,24 @@ const AlertDetailsRow: FC<AlertDetailsRowProps> = ({
       <H5 text={`${detailContent}`} style={null} />
     </View>
   );
+};
+
+function getRiskName(risk: RiskLevel) {
+  let riskName: string = "Patient_History.Risk.Unassigned";
+
+  if (risk === RiskLevel.HIGH) {
+    riskName = "Patient_History.Risk.High";
+  } else if (risk === RiskLevel.MEDIUM) {
+    riskName = "Patient_History.Risk.Medium";
+  } else if (risk === RiskLevel.LOW) {
+    riskName = "Patient_History.Risk.Low";
+  }
+  return i18n.t(riskName);
+}
+
+const getLocalDateTime = (datetime: string) => {
+  const localDateTime = moment.utc(datetime).local();
+  return localDateTime.format("HH:mm DD-MM-YYYY");
 };
 
 export const AlertHistoryModal: FC<AlertHistoryModalProps> = ({
@@ -61,7 +80,7 @@ export const AlertHistoryModal: FC<AlertHistoryModalProps> = ({
             style={{ fontWeight: "bold" }}
           />
           {/* Alert summary description */}
-          <H5 text={`${alertHistory.description}`} style={null} />
+          <H5 text={`${alertHistory.summary}`} style={null} />
         </View>
         {/* Alert details */}
         <View style={{ paddingTop: ms(10) }}>
@@ -76,11 +95,11 @@ export const AlertHistoryModal: FC<AlertHistoryModalProps> = ({
               style={{ fontWeight: "bold" }}
             />
             <H5
-              text={`${alertHistory.risk}`}
+              text={`${getRiskName(alertHistory.riskLevel)}`}
               style={{
                 color: getRiskLevelColor(
                   colors.riskLevelSelectedBackgroundColors,
-                  alertHistory.risk
+                  alertHistory.riskLevel
                 )
               }}
             />
@@ -88,22 +107,22 @@ export const AlertHistoryModal: FC<AlertHistoryModalProps> = ({
           {/* HRV */}
           <AlertDetailsRow
             detailTitle={i18n.t("Patient_History.AlertSummaryCard.HRV")}
-            detailContent={alertHistory.HRV}
+            detailContent={89}
           />
           {/* BP */}
           <AlertDetailsRow
             detailTitle={i18n.t("Patient_History.AlertSummaryCard.BP")}
-            detailContent={alertHistory.BP}
+            detailContent={alertHistory.vitalsReport?.BPSys}
           />
           {/* Symptoms */}
           <AlertDetailsRow
             detailTitle={i18n.t("Patient_History.AlertSummaryCard.Symptom")}
-            detailContent={alertHistory.symptom}
+            detailContent={alertHistory.symptomReport?.Name}
           />
           {/* Signs */}
           <AlertDetailsRow
             detailTitle={i18n.t("Patient_History.AlertSummaryCard.Signs")}
-            detailContent={alertHistory.signs}
+            detailContent="Edema (Scale 3)"
           />
         </View>
         {/* Created datetime */}
@@ -113,7 +132,7 @@ export const AlertHistoryModal: FC<AlertHistoryModalProps> = ({
             style={{ fontWeight: "bold", color: colors.secondaryTextColor }}
           />
           <H5
-            text={`${alertHistory.date}`}
+            text={`${getLocalDateTime(alertHistory.dateTime)}`}
             style={{ color: colors.secondaryTextColor }}
           />
         </View>

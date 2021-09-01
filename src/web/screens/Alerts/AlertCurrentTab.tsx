@@ -1,43 +1,79 @@
-import React, { FC } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { View, FlatList } from "react-native";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { RootState, select } from "util/useRedux";
-import { Alert } from "aws/API";
-import { mockPendingAlerts } from "mock/mockAlerts";
 import { AlertRow } from "components/RowComponents/AlertRow";
-import { ScreenWrapper } from "../ScreenWrapper";
+import { RiskFilterPillList } from "components/Buttons/RiskFilterPillList";
+import { AlertInfo } from "rc_agents/model";
+import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
+import i18n from "util/language/i18n";
+import { NoListItemMessage } from "../Shared/NoListItemMessage";
+import { AgentTrigger } from "rc_agents/trigger";
 
 export interface AlertRowTabProps {
-  setAlertSelected: (item: Alert) => void;
+  setEmptyAlert: (state: boolean) => void;
 }
-export const AlertCurrentTab: FC<AlertRowTabProps> = ({ setAlertSelected }) => {
-  const { colors } = select((state: RootState) => ({
-    colors: state.settings.colors
-  }));
 
-  function onCardPress(item: Alert) {
-    setAlertSelected(item);
+export const AlertCurrentTab: FC<AlertRowTabProps> = ({ setEmptyAlert }) => {
+  const { colors, pendingAlerts, fetchingPendingAlerts, fetchingAlerts } =
+    select((state: RootState) => ({
+      colors: state.settings.colors,
+      pendingAlerts: state.agents.pendingAlerts,
+      fetchingPendingAlerts: state.agents.fetchingPendingAlerts,
+      alertRiskFilters: state.agents.alertRiskFilters,
+      fetchingAlerts: state.agents.fetchingAlerts
+    }));
+
+  const [noPendingAlertsNotice, setNoPendingAlertsNotice] =
+    useState<string>("");
+
+  // Prepare text notice to be displayed after fetching patients
+  useEffect(() => {
+    if (fetchingPendingAlerts || fetchingAlerts) {
+      if (pendingAlerts) {
+        // No patients found
+        setNoPendingAlertsNotice(i18n.t("Alert.AlertList.NoPendingAlerts"));
+      } else {
+        // Could not fetch patients
+        setNoPendingAlertsNotice(
+          i18n.t("Internet_Connection.FailedToRetrieveNotice")
+        );
+      }
+    }
+  }, [pendingAlerts, fetchingPendingAlerts, fetchingAlerts]);
+
+  // When the alert item is pressed, trigger the retrieval of alert info
+  function onCardPress(item: AlertInfo) {
+    AgentTrigger.triggerRetrieveAlertInfo(item);
+    setEmptyAlert(false);
   }
 
   return (
-    <ScreenWrapper style={{ backgroundColor: colors.primaryBackgroundColor }}>
-      <View style={{ flex: 1 }}>
-        <SearchBarComponent
-          onUserInput={() => {
-            null;
-          }}
-          onSearchClick={() => {
-            null;
-          }}
-          containerStyle={{ backgroundColor: colors.primaryContrastTextColor }}
-          placeholder="Search..."
-        />
+    <View style={{ flex: 1, backgroundColor: colors.primaryBackgroundColor }}>
+      <SearchBarComponent
+        onUserInput={() => {
+          null;
+        }}
+        onSearchClick={() => {
+          null;
+        }}
+        containerStyle={{ backgroundColor: colors.primaryContrastTextColor }}
+        placeholder="Search..."
+      />
 
+      {/* Filter for Pending Alerts */}
+      <RiskFilterPillList alertScreen />
+
+      {/* Show no alerts message if no alert found */}
+      {fetchingPendingAlerts || fetchingAlerts ? (
+        // Show loading indicator if fetching patients
+        <LoadingIndicator flex={1} />
+      ) : pendingAlerts && pendingAlerts.length > 0 ? (
         <FlatList
           showsVerticalScrollIndicator={false}
           ItemSeparatorComponent={() => <ItemSeparator />}
-          data={mockPendingAlerts}
+          data={pendingAlerts}
           renderItem={({ item }) => (
             <AlertRow
               alertDetails={item}
@@ -45,7 +81,9 @@ export const AlertCurrentTab: FC<AlertRowTabProps> = ({ setAlertSelected }) => {
             />
           )}
         />
-      </View>
-    </ScreenWrapper>
+      ) : (
+        <NoListItemMessage screenMessage={noPendingAlertsNotice} />
+      )}
+    </View>
   );
 };

@@ -8,7 +8,7 @@ import {
   LocalTodo,
   RiskFilter
 } from "rc_agents/model";
-import { Alert, ClinicianInfo, PatientAssignment, PatientInfo } from "aws/API";
+import { ClinicianInfo, PatientAssignment, PatientInfo } from "aws/API";
 import { RiskLevel } from "models/RiskLevel";
 
 interface AgentsState {
@@ -23,16 +23,26 @@ interface AgentsState {
   patientAssignmentsSynced: boolean;
   fetchingPatients: boolean;
   fetchingPatientDetails: boolean;
+  fetchingPatientAlertHistory: boolean;
   fetchingPendingPatientAssignments: boolean;
+  patientRiskFilters: RiskFilter;
+  alertRiskFilters: RiskFilter;
   fetchingClinianContacts: boolean;
   configuringPatient: boolean;
   configurationSuccessful: boolean;
   riskFilters: RiskFilter;
   pendingAlertCount: PendingAlertCount;
-  alerts: Alert[];
+  fetchingAlerts: boolean;
+  fetchingPendingAlerts: boolean;
+  fetchingCompletedAlerts: boolean;
+  updatePendingAlerts: boolean;
+  pendingAlerts: AlertInfo[] | undefined;
+  completedAlerts: AlertInfo[] | undefined;
+  fetchingAlertInfo: boolean;
   alertInfo: AlertInfo | undefined;
   pendingTodos: LocalTodo[] | null;
   completedTodos: LocalTodo[] | null;
+  alertHistory: AlertInfo[] | undefined;
   fetchingTodos: boolean;
   fetchingTodoDetails: boolean;
   submittingTodo: boolean;
@@ -51,9 +61,22 @@ const initialState: AgentsState = {
   clinicianSelected: null,
   fetchingPatients: false,
   fetchingPatientDetails: false,
+  fetchingPatientAlertHistory: false,
   fetchingPendingPatientAssignments: false,
   fetchingClinianContacts: false,
   patientAssignmentsSynced: false,
+  patientRiskFilters: {
+    [RiskLevel.HIGH]: false,
+    [RiskLevel.MEDIUM]: false,
+    [RiskLevel.LOW]: false,
+    [RiskLevel.UNASSIGNED]: false
+  },
+  alertRiskFilters: {
+    [RiskLevel.HIGH]: false,
+    [RiskLevel.MEDIUM]: false,
+    [RiskLevel.LOW]: false,
+    [RiskLevel.UNASSIGNED]: false
+  },
   configuringPatient: false,
   configurationSuccessful: false,
   riskFilters: {
@@ -68,11 +91,18 @@ const initialState: AgentsState = {
     lowRisk: 0,
     unassignedRisk: 0
   },
-  alerts: [],
+  fetchingAlerts: false,
+  fetchingPendingAlerts: false,
+  fetchingCompletedAlerts: false,
+  updatePendingAlerts: false,
+  pendingAlerts: undefined,
+  completedAlerts: undefined,
+  fetchingAlertInfo: false,
   alertInfo: undefined,
   todoDetails: undefined,
   pendingTodos: null,
   completedTodos: null,
+  alertHistory: undefined,
   fetchingTodos: false,
   fetchingTodoDetails: false,
   submittingTodo: false,
@@ -99,6 +129,13 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
         ...state,
         fetchingPatientDetails: action.payload.fetchingPatientDetails
       };
+    case actionNames.SET_FETCHING_PATIENT_ALERT_HISTORY:
+      return {
+        ...state,
+        fetchingPatientAlertHistory: action.payload.fetchingPatientAlertHistory
+      };
+    case actionNames.SET_ALERT_HISTORY:
+      return { ...state, alertHistory: action.payload.alertHistory };
     case actionNames.SET_FETCHING_PENDING_PATIENT_ASSIGNMENTS:
       return {
         ...state,
@@ -151,13 +188,53 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
         ...state,
         alerts: action.payload.alerts
       };
+    case actionNames.SET_FETCHING_PENDING_ALERTS:
+      return {
+        ...state,
+        fetchingPendingAlerts: action.payload.fetchingPendingAlerts
+      };
+    case actionNames.SET_FETCHING_COMPLETED_ALERTS:
+      return {
+        ...state,
+        fetchingCompletedAlerts: action.payload.fetchingCompletedAlerts
+      };
+    case actionNames.SET_UPDATE_PENDING_ALERTS:
+      return {
+        ...state,
+        updatePendingAlerts: action.payload.updatePendingAlerts
+      };
+    case actionNames.SET_FETCHING_ALERTS:
+      return {
+        ...state,
+        fetchingAlerts: action.payload.fetchingAlerts
+      };
+    case actionNames.SET_PENDING_ALERTS:
+      return {
+        ...state,
+        pendingAlerts: action.payload.pendingAlerts
+      };
+    case actionNames.SET_COMPLETED_ALERTS:
+      return {
+        ...state,
+        completedAlerts: action.payload.completedAlerts
+      };
+    case actionNames.SET_FETCHING_ALERT_INFO:
+      return {
+        ...state,
+        fetchingAlertInfo: action.payload.fetchingAlertInfo
+      };
     case actionNames.SET_ALERT_INFO:
       return {
         ...state,
         alertInfo: action.payload.alertInfo
       };
-    case actionNames.SET_RISK_FILTERS:
-      return { ...state, riskFilters: action.payload.riskFilters };
+    case actionNames.SET_PATIENT_RISK_FILTERS:
+      return {
+        ...state,
+        patientRiskFilters: action.payload.patientRiskFilters
+      };
+    case actionNames.SET_ALERT_RISK_FILTERS:
+      return { ...state, alertRiskFilters: action.payload.alertRiskFilters };
     case actionNames.SET_FETCHING_TODOS:
       return {
         ...state,

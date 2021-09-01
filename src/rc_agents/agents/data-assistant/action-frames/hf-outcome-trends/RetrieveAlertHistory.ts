@@ -18,9 +18,14 @@ import {
 import { Storage } from "rc_agents/storage";
 import { listPatientAlertsByDateTime } from "aws";
 import { AlertInfo } from "rc_agents/model";
-import { ModelSortDirection } from "aws/API";
+import { Alert, ModelSortDirection } from "aws/API";
 import { queryAlertInfo } from "../triage-alert-hf-clinic/RetrieveAlertInfo";
-import { sortAlertsByDateTime } from "../triage-alert-hf-clinic/RetrieveAlerts";
+import {
+  alertToAlertInfo,
+  sortAlertsByDateTime
+} from "../triage-alert-hf-clinic/RetrieveAlerts";
+import { store } from "util/useRedux";
+import { setFetchingPatientAlertHistory } from "ic-redux/actions/agents/actionCreator";
 
 /**
  * Class to represent the activity for retrieving alert history of a patient.
@@ -41,6 +46,9 @@ class RetrieveAlertHistory extends Activity {
   async doActivity(agent: Agent): Promise<void> {
     await super.doActivity(agent, [rule2]);
 
+    // Dispatch to frontend that the patient alert history is being fetched
+    store.dispatch(setFetchingPatientAlertHistory(true));
+
     try {
       const facts = agentAPI.getFacts();
 
@@ -49,7 +57,8 @@ class RetrieveAlertHistory extends Activity {
         facts[BeliefKeys.PATIENT]?.[PatientAttributes.ALERT_PATIENT_ID];
 
       if (patientId) {
-        const alertInfos: AlertInfo[] = [];
+        // Alert Infos with vital and symptom report
+        const alertDetails: AlertInfo[] = [];
 
         if (facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
           // Device is online: retrieves alerts of the current patient
@@ -59,22 +68,50 @@ class RetrieveAlertHistory extends Activity {
           });
 
           if (query.data.listPatientAlertsByDateTime?.items) {
-            const result = query.data.listPatientAlertsByDateTime.items;
+            const result = query.data.listPatientAlertsByDateTime
+              .items as Alert[];
             if (result && result.length > 0) {
+              // Alert Info without vitals and symptoms
+              const alertInfos = alertToAlertInfo(result);
+
+              // Get the current local alert history
+              let localAlertHistory = await Storage.getAlertInfos();
+
+              // If local alert history is null, add an empty object
+              if (!localAlertHistory) {
+                localAlertHistory = {};
+              }
+              // Retrieve the vitals and symptoms report
               await Promise.all(
-                result.map(async (alert) => {
-                  const alertInfo = await queryAlertInfo(alert!);
-                  if (alertInfo) {
-                    alertInfos.push(alertInfo);
-                    await Storage.setAlertInfo(alertInfo);
-                  }
+                alertInfos.map(async (alert) => {
+                  const alertInfo = queryAlertInfo(alert);
+                  return alertInfo;
                 })
-              );
+              ).then((allAlertDetails) => {
+                allAlertDetails.forEach((alertDetail) => {
+                  if (alertDetail) {
+                    alertDetails.push(alertDetail);
+                    if (localAlertHistory) {
+                      // If there's no alert history for the patient, add an entry for the patient
+                      if (!localAlertHistory[alertDetail.patientID]) {
+                        localAlertHistory[alertDetail.patientID] = {};
+                      }
+                      // Update the patient's alert history
+                      localAlertHistory[alertDetail.patientID][alertDetail.id] =
+                        alertDetail;
+                    }
+                  }
+                });
+              });
+              // Store the updated alert histories into local storage
+              if (localAlertHistory) {
+                await Storage.setAlertInfos(localAlertHistory);
+              }
             }
           }
 
-          if (alertInfos.length > 0) {
-            const sortedPatientAlerts = sortAlertsByDateTime(alertInfos);
+          if (alertDetails.length > 0) {
+            const sortedPatientAlerts = sortAlertsByDateTime(alertDetails);
             agentAPI.addFact(
               new Belief(
                 BeliefKeys.PATIENT,
@@ -100,6 +137,15 @@ class RetrieveAlertHistory extends Activity {
           }
         }
 
+        // Trigger request to dispatch alert history to UXSA for frontend display
+        agent.addBelief(
+          new Belief(
+            BeliefKeys.PATIENT,
+            PatientAttributes.PATIENT_ALERT_HISTORY_RETRIEVED,
+            true
+          )
+        );
+
         // Removes patientId from facts
         agentAPI.addFact(
           new Belief(
@@ -114,6 +160,8 @@ class RetrieveAlertHistory extends Activity {
       // eslint-disable-next-line no-console
       console.log(error);
     }
+    // Dispatch to frontend that the fetching of patient alert history has ended
+    store.dispatch(setFetchingPatientAlertHistory(false));
   }
 }
 

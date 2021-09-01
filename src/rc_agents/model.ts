@@ -42,7 +42,9 @@ export enum PatientAssignmentStatus {
 
 export enum AlertStatus {
   PENDING = "PENDING",
-  COMPLETED = "COMPLETED"
+  COMPLETED = "COMPLETED",
+  ALL = "ALL",
+  NONE = "NONE"
 }
 
 export enum AlertColorCode {
@@ -97,15 +99,17 @@ export interface PendingAlertCount {
 
 export interface AlertInfo {
   id: string;
-  patientId: string;
+  patientID: string;
   patientName: string;
   riskLevel: RiskLevel;
   NHYAClass?: string;
   diagnosis?: string;
   dateTime: string;
   summary: string;
-  vitals?: ReportVitals;
-  symptoms?: ReportSymptom;
+  vitalsReportID: string;
+  symptomReportID: string;
+  vitalsReport?: ReportVitals;
+  symptomReport?: ReportSymptom;
   lastMedication?: string;
   medicationQuantity?: string;
   activityDuringAlert?: string;

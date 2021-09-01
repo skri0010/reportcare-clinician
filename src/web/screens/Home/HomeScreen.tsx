@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { View } from "react-native";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { MainScreenProps } from "web/navigation/types";
-import { PatientDetailsTabName, ScreenName } from "web/navigation";
+import { ScreenName } from "web/navigation";
 import { WelcomeCard } from "./WelcomeCard";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { RequestsByMariaCard } from "./RequestsByMariaCard";
@@ -18,6 +18,9 @@ export const HomeScreen: FC<MainScreenProps[ScreenName.HOME]> = ({
   const topMaxHeight = ms(200);
   const maxHeight = ms(250);
 
+  const navigateToAlert = () => {
+    navigation.navigate(ScreenName.ALERTS);
+  };
   // navigation.navigate(ScreenName.PATIENTS, {
   //   displayPatientId: "testsiuloong",
   //   selectedTab: PatientDetailsTabName.HISTORY
@@ -26,7 +29,11 @@ export const HomeScreen: FC<MainScreenProps[ScreenName.HOME]> = ({
   return (
     <ScreenWrapper padding>
       <View style={styles.container}>
-        <AlertsCard maxHeight={topMaxHeight} flex={1.2} />
+        <AlertsCard
+          maxHeight={topMaxHeight}
+          flex={1.2}
+          navigateCallback={navigateToAlert}
+        />
         <WelcomeCard name="Nailah" maxHeight={topMaxHeight} flex={1.8} />
       </View>
       <View style={styles.container}>

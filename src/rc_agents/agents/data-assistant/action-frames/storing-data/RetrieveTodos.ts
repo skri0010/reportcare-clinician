@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import {
   Actionframe,
   Agent,
@@ -24,7 +25,8 @@ import {
 } from "ic-redux/actions/agents/actionCreator";
 import {
   listCompletedTodosByLastModifiedDate,
-  listPendingTodosByLastModifiedDate
+  listPendingTodosByLastModifiedDate,
+  getAlert
 } from "aws";
 import { ModelSortDirection, Todo } from "aws/API";
 import { LocalTodo, TodoStatus } from "rc_agents/model";
@@ -90,7 +92,7 @@ class RetrieveTodos extends Activity {
           if (todos) {
             // Maps retrieved Todos to LocalTodos for dispatching and local storage
             const todosToDispatch: LocalTodo[] = [];
-            todos.map((todo) => {
+            todos.map(async (todo) => {
               const currentTodo: LocalTodo = {
                 id: todo.id,
                 title: todo.title,
@@ -102,12 +104,18 @@ class RetrieveTodos extends Activity {
                 toSync: false,
                 _version: todo._version
               };
-              if (todo.alert) {
-                currentTodo.alertId = todo.alert.id;
-                currentTodo.patientId = todo.alert.patientID;
-                currentTodo.riskLevel = mapColorCodeToRiskLevel(
-                  todo.alert.colorCode
-                );
+              if (todo.alertID) {
+                const query = await getAlert({
+                  id: todo.alertID
+                });
+                if (query.data?.getAlert) {
+                  const result = query.data.getAlert;
+                  currentTodo.alertId = result.id;
+                  currentTodo.patientId = result.patientID;
+                  currentTodo.riskLevel = mapColorCodeToRiskLevel(
+                    result.colorCode
+                  );
+                }
               }
               todosToDispatch.push(currentTodo);
               return todo;
@@ -116,7 +124,6 @@ class RetrieveTodos extends Activity {
             // Saves mapped Todos to local storage
             await Storage.setMultipleTodos(todosToDispatch);
 
-            // Dispatches Todos according to status
             if (todoStatus === TodoStatus.PENDING) {
               store.dispatch(setPendingTodos(todosToDispatch));
             } else {

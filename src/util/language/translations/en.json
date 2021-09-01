@@ -119,7 +119,14 @@
     "HighRisk": "High Risk",
     "MediumRisk": "Medium Risk",
     "LowRisk": "Low Risk",
-    "UnassignedRisk": "Unassigned Risk"
+    "UnassignedRisk": "Unassigned Risk",
+    "AlertList": {
+      "NoPendingAlerts": "You have no pending alerts",
+      "NoCompletedAlerts": "You have no completed alerts"
+    },
+    "AlertVitals": {
+      "HeartRate": "Heart Rate"
+    }
   },
   "Todo": {
     "Current": "Current",
@@ -148,7 +155,8 @@
     "MarkAsDone": "MARK AS DONE",
     "UndoFromCompleted": "UNDO FROM COMPLETED",
     "Done": "DONE",
-    "Undo": "UNDO"
+    "Undo": "UNDO",
+    "NoPendingTodo": "All todos have been completed!"
   },
   "Patients": {
     "PatientsList": {
@@ -235,7 +243,8 @@
       "TitleInputPlaceholder": "Give the medical record a name (eg Family Background)",
       "Description": "Description",
       "DescriptionInputPlaceholder": "What is the content of the medical record?"
-    }
+    },
+    "NoAlertHistory": "The patient does not have any alert histories currently!"
   },
   "Patient_Info": {
     "Male": "Male",

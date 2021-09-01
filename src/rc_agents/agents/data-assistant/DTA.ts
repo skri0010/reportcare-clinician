@@ -25,6 +25,9 @@ import { af_RetrieveTodos } from "./action-frames/storing-data/RetrieveTodos";
 import { af_RequestDisplayTodos } from "./action-frames/storing-data/RequestDisplayTodos";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import { ClinicianAgent } from "rc_agents/clinician_framework/ClinicianAgent";
+import af_UpdateAlert from "./action-frames/triage-alert-hf-clinic/UpdateAlert";
+import { af_RetrieveAlertHistory } from "./action-frames/hf-outcome-trends/RetrieveAlertHistory";
+import { af_RequestDisplayAlertHistory } from "./action-frames/hf-outcome-trends/RequestDisplayAlertHistory";
 import { af_RetrieveClinicianContacts } from "./action-frames/storing-data/RetrieveClinicianContacts";
 import { af_RequestClinicianContactDisplay } from "./action-frames/storing-data/RequestClinicianContactsDisplay";
 import { af_ConfigurePatient } from "./action-frames/hf-outcome-trends/ConfigurePatient";
@@ -55,6 +58,8 @@ const agentDTA = new ClinicianAgent(
     // HF-OTP-II
     af_RetrievePatientDetails,
     af_RequestDisplayPatientDetails,
+    af_RetrieveAlertHistory,
+    af_RequestDisplayAlertHistory,
     af_ConfigurePatient,
 
     // AT-CP
@@ -64,6 +69,7 @@ const agentDTA = new ClinicianAgent(
     af_RequestAlertsDisplay,
     af_RetrieveAlertInfo,
     af_RequestAlertInfoDisplay,
+    af_UpdateAlert,
 
     // SRD-II
     af_RetrieveTodos,

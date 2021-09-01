@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import {
   Actionframe,
   Agent,
@@ -50,6 +51,7 @@ class CreateTodo extends Activity {
 
       // Gets locally stored clinicianId
       const clinicianId = await Storage.getClinicianID();
+      let alertTodoUpdate: boolean = false;
 
       if (todoInput && clinicianId) {
         let toSync: boolean | undefined;
@@ -155,10 +157,12 @@ class CreateTodo extends Activity {
                   : todoInput.createdAt;
                 todoInput.createdAt = existingTodo.createdAt;
 
+                // Add the Todo associated with an alert into facts
+                alertTodoUpdate = true;
                 agentAPI.addFact(
                   new Belief(
                     BeliefKeys.CLINICIAN,
-                    ClinicianAttributes.TODO,
+                    ClinicianAttributes.ALERT_TODO,
                     todoInput
                   ),
                   false
@@ -224,13 +228,17 @@ class CreateTodo extends Activity {
         // Dispatch to front end to indicate that procedure is successful
         store.dispatch(setProcedureSuccessful(true));
 
-        agent.addBelief(
-          new Belief(
-            BeliefKeys.CLINICIAN,
-            ClinicianAttributes.TODOS_UPDATED,
-            true
-          )
-        );
+        // Do not request for todo display yet when the todo is associated with an alert
+        // The display will only requested in update todo procedure for todos associated with an alert
+        if (!alertTodoUpdate) {
+          agent.addBelief(
+            new Belief(
+              BeliefKeys.CLINICIAN,
+              ClinicianAttributes.TODOS_UPDATED,
+              true
+            )
+          );
+        }
       }
     } catch (error) {
       // eslint-disable-next-line no-console

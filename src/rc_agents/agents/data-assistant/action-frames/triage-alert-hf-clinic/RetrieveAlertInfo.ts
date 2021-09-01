@@ -16,7 +16,7 @@ import {
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
 import { Storage } from "rc_agents/storage";
-import { AlertInfo, AlertStatus } from "rc_agents/model";
+import { AlertInfo } from "rc_agents/model";
 import {
   listMedCompliantsByDate,
   getMedicationInfo,
@@ -25,8 +25,9 @@ import {
   getReportSymptom,
   getPatientInfo
 } from "aws";
-import { Alert, ModelSortDirection } from "aws/API";
-import { mapColorCodeToRiskLevel } from "./RetrievePendingAlertCount";
+import { ModelSortDirection } from "aws/API";
+import { store } from "util/useRedux";
+import { setFetchingAlertInfo } from "ic-redux/actions/agents/actionCreator";
 
 /**
  * Class to represent an activity for retrieving patient's information associated with an alert.
@@ -44,11 +45,14 @@ class RetrieveAlertInfo extends Activity {
   async doActivity(agent: Agent): Promise<void> {
     await super.doActivity(agent, [rule2]);
 
+    // Dispatch to frontend that alert info is being fetched
+    store.dispatch(setFetchingAlertInfo(true));
+
     try {
       const facts = agentAPI.getFacts();
 
       // Retrieves alert from facts
-      const alert: Alert =
+      const alert: AlertInfo =
         facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.ALERT];
 
       if (alert) {
@@ -92,11 +96,14 @@ class RetrieveAlertInfo extends Activity {
       // eslint-disable-next-line no-console
       console.log(error);
     }
+
+    // Dispatch to frontend that the fetching of alert info has completed
+    store.dispatch(setFetchingAlertInfo(false));
   }
 }
 
 export const queryAlertInfo = async (
-  alert: Alert
+  alert: AlertInfo
 ): Promise<AlertInfo | null> => {
   // Ensures vitals and symptoms are present
   let alertVitals = alert.vitalsReport;
@@ -122,14 +129,16 @@ export const queryAlertInfo = async (
     // LS-TODO: To include HRV
     const alertInfo: AlertInfo = {
       id: alert.id,
-      patientId: alert.patientID,
+      patientID: alert.patientID,
       patientName: alert.patientName,
       dateTime: alert.dateTime,
+      vitalsReportID: alert.vitalsReportID,
+      symptomReportID: alert.symptomReportID,
       summary: alert.summary,
-      vitals: alertVitals,
-      symptoms: alertSymptoms,
-      completed: alert.completed === AlertStatus.COMPLETED,
-      riskLevel: mapColorCodeToRiskLevel(alert.colorCode),
+      vitalsReport: alertVitals,
+      symptomReport: alertSymptoms,
+      completed: alert.completed,
+      riskLevel: alert.riskLevel,
       _version: alert._version
     };
 
@@ -174,7 +183,7 @@ export const queryAlertInfo = async (
     if (alertSymptoms.ActivityInfo) {
       alertInfo.activityDuringAlert = alertSymptoms.ActivityInfo.Actname;
       // Prevents the entire ActivityInfo from being stored locally
-      delete alertInfo.symptoms?.ActivityInfo;
+      delete alertInfo.symptomReport?.ActivityInfo;
     } else {
       const activityInfoQuery = await getActivityInfo({
         id: alertSymptoms.ActId
