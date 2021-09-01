@@ -30,8 +30,6 @@ export const TodosCard: FC<TodosCardProps> = ({ maxHeight, navigation }) => {
 
   useEffect(() => {
     AgentTrigger.triggerRetrieveTodos(TodoStatus.PENDING);
-    // console.log("TODOS CARD PENDING TODO");
-    // console.log(pendingTodos);
   }, [pendingTodos]);
 
   useEffect(() => {

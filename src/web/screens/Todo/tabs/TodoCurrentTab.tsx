@@ -34,8 +34,6 @@ export const onDonePress = (item: LocalTodo): void => {
     completed: true,
     lastModified: new Date().toISOString()
   };
-  // console.log("TODO TO UPDATE IS:");
-  // console.log(todoToUpdate);
   AgentTrigger.triggerUpdateTodo(todoToUpdate);
 };
 

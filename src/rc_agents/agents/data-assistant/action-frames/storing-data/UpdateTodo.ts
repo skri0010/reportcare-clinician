@@ -44,11 +44,17 @@ class UpdateTodo extends Activity {
 
     try {
       // Gets Todo details to be updated
-      const todoInput: TodoInput =
+      let todoInput: TodoInput =
         facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.TODO];
 
-      console.log("TODO INPUT IS");
-      console.log(todoInput);
+      const alertTodoInput: TodoInput =
+        facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.ALERT_TODO];
+
+      // Todo associated with alert
+      if (alertTodoInput) {
+        todoInput = alertTodoInput;
+      }
+
       const isOnline: boolean = facts[BeliefKeys.APP]?.[AppAttributes.ONLINE];
 
       // Gets locally stored clinicianId
@@ -98,8 +104,6 @@ class UpdateTodo extends Activity {
               // Updates Todo
               const updateQuery = await updateTodo(todoToUpdate);
 
-              console.log("UPDATED TODO IS");
-              console.log(updateQuery.data.updateTodo);
               // Saves Todo locally
               if (updateQuery.data.updateTodo) {
                 // Updates to indicate that Todo is successfully updated
@@ -122,8 +126,6 @@ class UpdateTodo extends Activity {
             toSync: toSync
           };
 
-          console.log("TODO TO STORE IS");
-          console.log(todoToStore);
           // Updates Todo in local storage
           await Storage.setTodo(todoToStore);
 

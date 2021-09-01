@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import {
   Actionframe,
   Agent,
@@ -45,7 +46,7 @@ class UpdateAlert extends Activity {
     const facts = agentAPI.getFacts();
 
     try {
-      // Gets Todo details to be updated
+      // Gets alert details to be updated
       const alertInput: AlertInfo =
         facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.ALERT];
 

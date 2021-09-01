@@ -40,8 +40,18 @@ class DisplayTodos extends Activity {
     // Reset preconditions
     await super.doActivity(agent, [rule2]);
 
-    const updatedTodo: LocalTodo =
+    let updatedTodo: LocalTodo =
       agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.TODO];
+
+    // For Todo that is associated with alert
+    const updatedAlertTodo: LocalTodo =
+      agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[
+        ClinicianAttributes.ALERT_TODO
+      ];
+
+    if (updatedAlertTodo) {
+      updatedTodo = updatedAlertTodo;
+    }
 
     if (updatedTodo) {
       // Removes previous Todo from its existing list and adds it to the front of updated list
@@ -117,6 +127,18 @@ class DisplayTodos extends Activity {
         new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.TODO, null),
         false
       );
+
+      // Remove the Todo associated with alert from facts
+      if (updatedAlertTodo) {
+        agentAPI.addFact(
+          new Belief(
+            BeliefKeys.CLINICIAN,
+            ClinicianAttributes.ALERT_TODO,
+            null
+          ),
+          false
+        );
+      }
     }
 
     // Update Facts

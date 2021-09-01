@@ -60,8 +60,6 @@ class RetrieveTodos extends Activity {
       const todoStatus: TodoStatus =
         facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.TODO_STATUS];
 
-      // console.log("TODO STATUS IS");
-      // console.log(todoStatus);
       if (todoStatus && clinicianId) {
         if (facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
           // Device is online
@@ -75,8 +73,6 @@ class RetrieveTodos extends Activity {
               const result =
                 query.data.listPendingTodosByLastModifiedDate.items;
               if (result && result.length > 0) {
-                // console.log("ALL PENDING TODOS ARE:");
-                // console.log(result);
                 todos = result as Todo[];
               }
             }
@@ -90,8 +86,6 @@ class RetrieveTodos extends Activity {
                 query.data.listCompletedTodosByLastModifiedDate.items;
               if (result && result.length > 0) {
                 todos = result as Todo[];
-                // console.log("ALL COMPLETED TODOS ARE:");
-                // console.log(result);
               }
             }
           }
@@ -99,8 +93,6 @@ class RetrieveTodos extends Activity {
             // Maps retrieved Todos to LocalTodos for dispatching and local storage
             const todosToDispatch: LocalTodo[] = [];
             todos.map(async (todo) => {
-              // console.log("TODOS RETRIEVED");
-              // console.log(todo);
               const currentTodo: LocalTodo = {
                 id: todo.id,
                 title: todo.title,
@@ -125,8 +117,6 @@ class RetrieveTodos extends Activity {
                   );
                 }
               }
-              // console.log("CURRENT PENDING TODO");
-              // console.log(currentTodo);
               todosToDispatch.push(currentTodo);
               return todo;
             });
@@ -134,11 +124,7 @@ class RetrieveTodos extends Activity {
             // Saves mapped Todos to local storage
             await Storage.setMultipleTodos(todosToDispatch);
 
-            // console.log(todoStatus);
-            // Dispatches Todos according to status
             if (todoStatus === TodoStatus.PENDING) {
-              // console.log("TODO TO DISPATCH");
-              // console.log(todosToDispatch);
               store.dispatch(setPendingTodos(todosToDispatch));
             } else {
               store.dispatch(setCompletedTodos(todosToDispatch));

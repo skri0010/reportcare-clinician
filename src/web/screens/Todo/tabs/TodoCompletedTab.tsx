@@ -34,8 +34,6 @@ export const onUndoPress = (item: LocalTodo): void => {
     completed: false,
     lastModified: new Date().toISOString()
   };
-  // console.log("TODO TO UPDATE IS:");
-  // console.log(todoToUpdate);
   AgentTrigger.triggerUpdateTodo(todoToUpdate);
 };
 

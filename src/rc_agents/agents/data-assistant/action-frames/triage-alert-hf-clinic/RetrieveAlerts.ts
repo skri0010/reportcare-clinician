@@ -109,13 +109,6 @@ class RetrieveAlerts extends Activity {
           await dispatchFromMemory(AlertStatus.ALL);
         }
       }
-      // agent.addBelief(
-      //   new Belief(
-      //     BeliefKeys.CLINICIAN,
-      //     ClinicianAttributes.ALERTS_UPDATED,
-      //     true
-      //   )
-      // );
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);

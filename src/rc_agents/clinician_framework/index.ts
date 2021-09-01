@@ -180,6 +180,7 @@ export enum ClinicianAttributes {
   TODO = "Todo",
   TODOS_UPDATED = "TodosUpdated",
   DISPLAY_TODOS = "DisplayTodos",
+  ALERT_TODO = "AlertTodo",
 
   //SRD-IV - Clinician Contacts
   RETRIEVE_CLINICIAN_CONTACTS = "RetrieveClinicianContatcts",
