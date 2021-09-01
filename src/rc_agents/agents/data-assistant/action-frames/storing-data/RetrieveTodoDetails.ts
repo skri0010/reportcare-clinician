@@ -110,8 +110,6 @@ import { mapColorCodeToRiskLevel } from "rc_agents/agents/data-assistant/action-
                   const todoToDispatch = await Storage.getTodoDetails(todoDetails);
                   
                   if (todoToDispatch){
-                      
-                      await Storage.setTodo(todoToDispatch);
 
                       agentAPI.addFact(
                           new Belief(
