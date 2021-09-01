@@ -45,13 +45,9 @@ type MedicationInfo
   @auth(
     rules: [
       { allow: owner }
-      {
-        allow: owner,
-        ownerField: "patientID",
-        operations: [read, update]
-      }
+      { allow: owner, ownerField: "patientID", operations: [read, update] }
       { allow: groups, groups: ["Admin"] }
-      { allow: groups, groupsField: "patientID", operations: [read,update] }
+      { allow: groups, groupsField: "patientID", operations: [read, update] }
     ]
   )
   @key(
