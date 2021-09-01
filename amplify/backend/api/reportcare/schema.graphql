@@ -45,8 +45,13 @@ type MedicationInfo
   @auth(
     rules: [
       { allow: owner }
+      {
+        allow: owner,
+        ownerField: "patientID",
+        operations: [read, update]
+      }
       { allow: groups, groups: ["Admin"] }
-      { allow: groups, groupsField: "patientID", operations: [read] }
+      { allow: groups, groupsField: "patientID", operations: [read,update] }
     ]
   )
   @key(
@@ -55,9 +60,12 @@ type MedicationInfo
     queryField: "listMedicationInfosByPatientID"
   ) {
   id: ID!
-  medname: String!
-  dosage: String!
+  name: String!
+  dosage: Int!
+  frequency: Int!
+  records: AWSJSON!
   patientID: String!
+  active: Boolean!
 }
 
 type ActivityInfo

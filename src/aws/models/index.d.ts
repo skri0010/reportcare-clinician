@@ -33,9 +33,12 @@ export declare class PatientInfo {
 
 export declare class MedicationInfo {
   readonly id: string;
-  readonly medname: string;
-  readonly dosage: string;
+  readonly name: string;
+  readonly dosage: number;
+  readonly frequency: number;
+  readonly records: string;
   readonly patientID: string;
+  readonly active: boolean;
   constructor(init: ModelInit<MedicationInfo>);
   static copyOf(source: MedicationInfo, mutator: (draft: MutableModel<MedicationInfo>) => MutableModel<MedicationInfo> | void): MedicationInfo;
 }
