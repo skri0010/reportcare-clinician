@@ -296,3 +296,13 @@ export const getTodo = async (
   }
   return null;
 };
+
+export const getTodoDetails = async (
+  id: string
+): Promise<AsyncStorageType[AsyncStorageKeys.TODO_DETAILS] | undefined> => {
+  const localData = await getTodos();
+  if (localData) {
+    return localData.find((t)=>t.id===id);
+  }
+  return undefined;
+};

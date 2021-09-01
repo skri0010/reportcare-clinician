@@ -107,16 +107,17 @@ import { mapColorCodeToRiskLevel } from "rc_agents/agents/data-assistant/action-
                   }
               } else {
                   // check local storage for todo details
-                  const todoToDispatch = await Storage.getTodo(todoDetails);
+                  const todoToDispatch = await Storage.getTodoDetails(todoDetails);
                   
                   if (todoToDispatch){
-                      await Storage.setTodo(todoToDispatch[0]);
+                      
+                      await Storage.setTodo(todoToDispatch);
 
                       agentAPI.addFact(
                           new Belief(
                               BeliefKeys.CLINICIAN,
                               ClinicianAttributes.TODO_DETAILS,
-                              todoToDispatch[0]
+                              todoToDispatch
                           ),
                           false
                       );
