@@ -17,7 +17,7 @@ interface AgentsState {
   online: boolean;
   patients: PatientInfo[] | null;
   patientDetails: PatientDetails | null;
-  pendingPatientAssignments: PatientAssignment[];
+  pendingPatientAssignments: PatientAssignment[] | null;
   clinicianContacts: ClinicianInfo[] | null;
   clinicianSelected: ClinicianInfo | null;
   patientAssignmentsSynced: boolean;
@@ -56,7 +56,7 @@ const initialState: AgentsState = {
   online: false,
   patients: null,
   patientDetails: null,
-  pendingPatientAssignments: [],
+  pendingPatientAssignments: null,
   clinicianContacts: null,
   clinicianSelected: null,
   fetchingPatients: false,

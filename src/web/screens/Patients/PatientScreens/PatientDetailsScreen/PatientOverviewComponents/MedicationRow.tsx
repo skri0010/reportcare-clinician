@@ -20,7 +20,7 @@ export const MedicationRow: FC<MedicationRowProps> = ({ medicationInfo }) => {
       {/* JQ-TODO Add a checking here to see if the patient has taken the medicine */}
       {/* ie {medicineTaken?(<Icon name="check" color={colors.acceptButtonColor} size={ms(15)} />):(<View style={{ paddingLeft: ms(15) }} />)} */}
       <Icon name="check" color={colors.acceptButtonColor} size={ms(15)} />
-      <H4 text={`  ${medicationInfo.medname}`} style={null} />
+      <H4 text={`  ${medicationInfo.name}`} style={null} />
     </View>
   );
 };

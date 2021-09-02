@@ -120,9 +120,12 @@ export const createMedicationInfo = /* GraphQL */ `
   ) {
     createMedicationInfo(input: $input, condition: $condition) {
       id
-      medname
+      name
       dosage
+      frequency
+      records
       patientID
+      active
       _version
       _deleted
       _lastChangedAt
@@ -139,9 +142,12 @@ export const updateMedicationInfo = /* GraphQL */ `
   ) {
     updateMedicationInfo(input: $input, condition: $condition) {
       id
-      medname
+      name
       dosage
+      frequency
+      records
       patientID
+      active
       _version
       _deleted
       _lastChangedAt
@@ -158,9 +164,12 @@ export const deleteMedicationInfo = /* GraphQL */ `
   ) {
     deleteMedicationInfo(input: $input, condition: $condition) {
       id
-      medname
+      name
       dosage
+      frequency
+      records
       patientID
+      active
       _version
       _deleted
       _lastChangedAt
@@ -246,9 +255,12 @@ export const createMedCompliant = /* GraphQL */ `
       MedId
       MedicationInfo {
         id
-        medname
+        name
         dosage
+        frequency
+        records
         patientID
+        active
         _version
         _deleted
         _lastChangedAt
@@ -278,9 +290,12 @@ export const updateMedCompliant = /* GraphQL */ `
       MedId
       MedicationInfo {
         id
-        medname
+        name
         dosage
+        frequency
+        records
         patientID
+        active
         _version
         _deleted
         _lastChangedAt
@@ -310,9 +325,12 @@ export const deleteMedCompliant = /* GraphQL */ `
       MedId
       MedicationInfo {
         id
-        medname
+        name
         dosage
+        frequency
+        records
         patientID
+        active
         _version
         _deleted
         _lastChangedAt
