@@ -430,3 +430,28 @@ type Todo
   completed: String
   owner: String!
 }
+
+type AlertNotification
+  @model
+  @auth(
+    rules: [
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groups: ["Patients"], operations: [create, read] }
+      {
+        allow: groups
+        groups: [
+          "EPs"
+          "Nurses"
+          "HFSpecialists"
+          "MedicalOfficers"
+          "Pharmacists"
+        ]
+        operations: [read]
+      }
+    ]
+  ) {
+  id: ID!
+  patientID: String!
+  alertID: ID!
+  owner: String!
+}

@@ -106,7 +106,11 @@ export const ActionFrameIDs = {
     SYNC_UPDATE_ALERTS: "SyncUpdateAlerts"
   },
   MHA: {},
-  ALA: {}
+  ALA: {
+    // AT-CP-III - Alert Notifications
+    PROCESS_ALERT_NOTIFICATION: "ProcessAlertNotification",
+    SORT_NEW_ALERT: "SortNewAlert"
+  }
 };
 
 // Keys for agents' belief / precondition / fact
@@ -139,7 +143,8 @@ export enum ProcedureAttributes {
   SRD_III = "SRD-III",
   SRD_IV = "SRD_IV",
   AT_CP_I = "AT-CP-I",
-  AT_CP_II = "AT-CP-II"
+  AT_CP_II = "AT-CP-II",
+  AT_CP_III = "AT-CP-III"
 }
 
 // Attributes for CLINICIAN key
@@ -170,6 +175,12 @@ export enum ClinicianAttributes {
   ALERT_INFO_RETRIEVED = "AlertInfoRetrieved",
   UPDATE_ALERT = "UpdateAlert",
   ALERTS_UPDATED = "AlertsUpdated",
+
+  // AT-CP-III - Alert Notifications
+  ALERT_NOTIFICATION = "AlertNotification",
+  PROCESS_ALERT_NOTIFICATION = "ProcessAlertNotification",
+  ALERT_ID_TO_SORT = "AlertIdToSort",
+  SORT_NEW_ALERT = "SortNewAlert",
 
   // SRD-II - Todos
   RETRIEVE_TODOS = "RetrieveTodos",

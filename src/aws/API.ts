@@ -166,26 +166,47 @@ export type DeletePatientInfoInput = {
 
 export type CreateMedicationInfoInput = {
   id?: string | null,
-  medname: string,
-  dosage: string,
+  name: string,
+  dosage: number,
+  frequency: number,
+  records: string,
   patientID: string,
+  active: boolean,
   _version?: number | null,
 };
 
 export type ModelMedicationInfoConditionInput = {
-  medname?: ModelStringInput | null,
-  dosage?: ModelStringInput | null,
+  name?: ModelStringInput | null,
+  dosage?: ModelIntInput | null,
+  frequency?: ModelIntInput | null,
+  records?: ModelStringInput | null,
+  active?: ModelBooleanInput | null,
   and?: Array< ModelMedicationInfoConditionInput | null > | null,
   or?: Array< ModelMedicationInfoConditionInput | null > | null,
   not?: ModelMedicationInfoConditionInput | null,
 };
 
+export type ModelIntInput = {
+  ne?: number | null,
+  eq?: number | null,
+  le?: number | null,
+  lt?: number | null,
+  ge?: number | null,
+  gt?: number | null,
+  between?: Array< number | null > | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
+};
+
 export type MedicationInfo = {
   __typename: "MedicationInfo",
   id: string,
-  medname: string,
-  dosage: string,
+  name: string,
+  dosage: number,
+  frequency: number,
+  records: string,
   patientID: string,
+  active: boolean,
   _version: number,
   _deleted?: boolean | null,
   _lastChangedAt: number,
@@ -196,9 +217,12 @@ export type MedicationInfo = {
 
 export type UpdateMedicationInfoInput = {
   id: string,
-  medname?: string | null,
-  dosage?: string | null,
+  name?: string | null,
+  dosage?: number | null,
+  frequency?: number | null,
+  records?: string | null,
   patientID?: string | null,
+  active?: boolean | null,
   _version?: number | null,
 };
 
@@ -227,18 +251,6 @@ export type ModelActivityInfoConditionInput = {
   and?: Array< ModelActivityInfoConditionInput | null > | null,
   or?: Array< ModelActivityInfoConditionInput | null > | null,
   not?: ModelActivityInfoConditionInput | null,
-};
-
-export type ModelIntInput = {
-  ne?: number | null,
-  eq?: number | null,
-  le?: number | null,
-  lt?: number | null,
-  ge?: number | null,
-  gt?: number | null,
-  between?: Array< number | null > | null,
-  attributeExists?: boolean | null,
-  attributeType?: ModelAttributeTypes | null,
 };
 
 export type ActivityInfo = {
@@ -803,6 +815,49 @@ export type DeleteTodoInput = {
   _version?: number | null,
 };
 
+export type CreateAlertNotificationInput = {
+  id?: string | null,
+  patientID: string,
+  alertID: string,
+  owner: string,
+  _version?: number | null,
+};
+
+export type ModelAlertNotificationConditionInput = {
+  patientID?: ModelStringInput | null,
+  alertID?: ModelIDInput | null,
+  owner?: ModelStringInput | null,
+  and?: Array< ModelAlertNotificationConditionInput | null > | null,
+  or?: Array< ModelAlertNotificationConditionInput | null > | null,
+  not?: ModelAlertNotificationConditionInput | null,
+};
+
+export type AlertNotification = {
+  __typename: "AlertNotification",
+  id: string,
+  patientID: string,
+  alertID: string,
+  owner: string,
+  _version: number,
+  _deleted?: boolean | null,
+  _lastChangedAt: number,
+  createdAt: string,
+  updatedAt: string,
+};
+
+export type UpdateAlertNotificationInput = {
+  id: string,
+  patientID?: string | null,
+  alertID?: string | null,
+  owner?: string | null,
+  _version?: number | null,
+};
+
+export type DeleteAlertNotificationInput = {
+  id: string,
+  _version?: number | null,
+};
+
 export type ModelPatientInfoFilterInput = {
   id?: ModelIDInput | null,
   name?: ModelStringInput | null,
@@ -846,9 +901,12 @@ export enum ModelSortDirection {
 
 export type ModelMedicationInfoFilterInput = {
   id?: ModelIDInput | null,
-  medname?: ModelStringInput | null,
-  dosage?: ModelStringInput | null,
+  name?: ModelStringInput | null,
+  dosage?: ModelIntInput | null,
+  frequency?: ModelIntInput | null,
+  records?: ModelStringInput | null,
   patientID?: ModelStringInput | null,
+  active?: ModelBooleanInput | null,
   and?: Array< ModelMedicationInfoFilterInput | null > | null,
   or?: Array< ModelMedicationInfoFilterInput | null > | null,
   not?: ModelMedicationInfoFilterInput | null,
@@ -1076,6 +1134,23 @@ export type ModelTodoConnection = {
   startedAt?: number | null,
 };
 
+export type ModelAlertNotificationFilterInput = {
+  id?: ModelIDInput | null,
+  patientID?: ModelStringInput | null,
+  alertID?: ModelIDInput | null,
+  owner?: ModelStringInput | null,
+  and?: Array< ModelAlertNotificationFilterInput | null > | null,
+  or?: Array< ModelAlertNotificationFilterInput | null > | null,
+  not?: ModelAlertNotificationFilterInput | null,
+};
+
+export type ModelAlertNotificationConnection = {
+  __typename: "ModelAlertNotificationConnection",
+  items?:  Array<AlertNotification | null > | null,
+  nextToken?: string | null,
+  startedAt?: number | null,
+};
+
 export type ModelIDKeyConditionInput = {
   eq?: string | null,
   le?: string | null,
@@ -1212,9 +1287,12 @@ export type CreateMedicationInfoMutation = {
   createMedicationInfo?:  {
     __typename: "MedicationInfo",
     id: string,
-    medname: string,
-    dosage: string,
+    name: string,
+    dosage: number,
+    frequency: number,
+    records: string,
     patientID: string,
+    active: boolean,
     _version: number,
     _deleted?: boolean | null,
     _lastChangedAt: number,
@@ -1233,9 +1311,12 @@ export type UpdateMedicationInfoMutation = {
   updateMedicationInfo?:  {
     __typename: "MedicationInfo",
     id: string,
-    medname: string,
-    dosage: string,
+    name: string,
+    dosage: number,
+    frequency: number,
+    records: string,
     patientID: string,
+    active: boolean,
     _version: number,
     _deleted?: boolean | null,
     _lastChangedAt: number,
@@ -1254,9 +1335,12 @@ export type DeleteMedicationInfoMutation = {
   deleteMedicationInfo?:  {
     __typename: "MedicationInfo",
     id: string,
-    medname: string,
-    dosage: string,
+    name: string,
+    dosage: number,
+    frequency: number,
+    records: string,
     patientID: string,
+    active: boolean,
     _version: number,
     _deleted?: boolean | null,
     _lastChangedAt: number,
@@ -1351,9 +1435,12 @@ export type CreateMedCompliantMutation = {
     MedicationInfo?:  {
       __typename: "MedicationInfo",
       id: string,
-      medname: string,
-      dosage: string,
+      name: string,
+      dosage: number,
+      frequency: number,
+      records: string,
       patientID: string,
+      active: boolean,
       _version: number,
       _deleted?: boolean | null,
       _lastChangedAt: number,
@@ -1386,9 +1473,12 @@ export type UpdateMedCompliantMutation = {
     MedicationInfo?:  {
       __typename: "MedicationInfo",
       id: string,
-      medname: string,
-      dosage: string,
+      name: string,
+      dosage: number,
+      frequency: number,
+      records: string,
       patientID: string,
+      active: boolean,
       _version: number,
       _deleted?: boolean | null,
       _lastChangedAt: number,
@@ -1421,9 +1511,12 @@ export type DeleteMedCompliantMutation = {
     MedicationInfo?:  {
       __typename: "MedicationInfo",
       id: string,
-      medname: string,
-      dosage: string,
+      name: string,
+      dosage: number,
+      frequency: number,
+      records: string,
       patientID: string,
+      active: boolean,
       _version: number,
       _deleted?: boolean | null,
       _lastChangedAt: number,
@@ -2328,6 +2421,66 @@ export type DeleteTodoMutation = {
   } | null,
 };
 
+export type CreateAlertNotificationMutationVariables = {
+  input: CreateAlertNotificationInput,
+  condition?: ModelAlertNotificationConditionInput | null,
+};
+
+export type CreateAlertNotificationMutation = {
+  createAlertNotification?:  {
+    __typename: "AlertNotification",
+    id: string,
+    patientID: string,
+    alertID: string,
+    owner: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateAlertNotificationMutationVariables = {
+  input: UpdateAlertNotificationInput,
+  condition?: ModelAlertNotificationConditionInput | null,
+};
+
+export type UpdateAlertNotificationMutation = {
+  updateAlertNotification?:  {
+    __typename: "AlertNotification",
+    id: string,
+    patientID: string,
+    alertID: string,
+    owner: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteAlertNotificationMutationVariables = {
+  input: DeleteAlertNotificationInput,
+  condition?: ModelAlertNotificationConditionInput | null,
+};
+
+export type DeleteAlertNotificationMutation = {
+  deleteAlertNotification?:  {
+    __typename: "AlertNotification",
+    id: string,
+    patientID: string,
+    alertID: string,
+    owner: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type SyncPatientInfosQueryVariables = {
   filter?: ModelPatientInfoFilterInput | null,
   limit?: number | null,
@@ -2472,9 +2625,12 @@ export type SyncMedicationInfosQuery = {
     items?:  Array< {
       __typename: "MedicationInfo",
       id: string,
-      medname: string,
-      dosage: string,
+      name: string,
+      dosage: number,
+      frequency: number,
+      records: string,
       patientID: string,
+      active: boolean,
       _version: number,
       _deleted?: boolean | null,
       _lastChangedAt: number,
@@ -2495,9 +2651,12 @@ export type GetMedicationInfoQuery = {
   getMedicationInfo?:  {
     __typename: "MedicationInfo",
     id: string,
-    medname: string,
-    dosage: string,
+    name: string,
+    dosage: number,
+    frequency: number,
+    records: string,
     patientID: string,
+    active: boolean,
     _version: number,
     _deleted?: boolean | null,
     _lastChangedAt: number,
@@ -2519,9 +2678,12 @@ export type ListMedicationInfosQuery = {
     items?:  Array< {
       __typename: "MedicationInfo",
       id: string,
-      medname: string,
-      dosage: string,
+      name: string,
+      dosage: number,
+      frequency: number,
+      records: string,
       patientID: string,
+      active: boolean,
       _version: number,
       _deleted?: boolean | null,
       _lastChangedAt: number,
@@ -2659,9 +2821,12 @@ export type GetMedCompliantQuery = {
     MedicationInfo?:  {
       __typename: "MedicationInfo",
       id: string,
-      medname: string,
-      dosage: string,
+      name: string,
+      dosage: number,
+      frequency: number,
+      records: string,
       patientID: string,
+      active: boolean,
       _version: number,
       _deleted?: boolean | null,
       _lastChangedAt: number,
@@ -3500,6 +3665,78 @@ export type ListTodosQuery = {
   } | null,
 };
 
+export type SyncAlertNotificationsQueryVariables = {
+  filter?: ModelAlertNotificationFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  lastSync?: number | null,
+};
+
+export type SyncAlertNotificationsQuery = {
+  syncAlertNotifications?:  {
+    __typename: "ModelAlertNotificationConnection",
+    items?:  Array< {
+      __typename: "AlertNotification",
+      id: string,
+      patientID: string,
+      alertID: string,
+      owner: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
+export type GetAlertNotificationQueryVariables = {
+  id: string,
+};
+
+export type GetAlertNotificationQuery = {
+  getAlertNotification?:  {
+    __typename: "AlertNotification",
+    id: string,
+    patientID: string,
+    alertID: string,
+    owner: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListAlertNotificationsQueryVariables = {
+  filter?: ModelAlertNotificationFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListAlertNotificationsQuery = {
+  listAlertNotifications?:  {
+    __typename: "ModelAlertNotificationConnection",
+    items?:  Array< {
+      __typename: "AlertNotification",
+      id: string,
+      patientID: string,
+      alertID: string,
+      owner: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
 export type ListMedicationInfosByPatientIDQueryVariables = {
   patientID?: string | null,
   sortDirection?: ModelSortDirection | null,
@@ -3514,9 +3751,12 @@ export type ListMedicationInfosByPatientIDQuery = {
     items?:  Array< {
       __typename: "MedicationInfo",
       id: string,
-      medname: string,
-      dosage: string,
+      name: string,
+      dosage: number,
+      frequency: number,
+      records: string,
       patientID: string,
+      active: boolean,
       _version: number,
       _deleted?: boolean | null,
       _lastChangedAt: number,
@@ -4182,15 +4422,19 @@ export type OnDeletePatientInfoSubscription = {
 
 export type OnCreateMedicationInfoSubscriptionVariables = {
   owner?: string | null,
+  patientID?: string | null,
 };
 
 export type OnCreateMedicationInfoSubscription = {
   onCreateMedicationInfo?:  {
     __typename: "MedicationInfo",
     id: string,
-    medname: string,
-    dosage: string,
+    name: string,
+    dosage: number,
+    frequency: number,
+    records: string,
     patientID: string,
+    active: boolean,
     _version: number,
     _deleted?: boolean | null,
     _lastChangedAt: number,
@@ -4202,15 +4446,19 @@ export type OnCreateMedicationInfoSubscription = {
 
 export type OnUpdateMedicationInfoSubscriptionVariables = {
   owner?: string | null,
+  patientID?: string | null,
 };
 
 export type OnUpdateMedicationInfoSubscription = {
   onUpdateMedicationInfo?:  {
     __typename: "MedicationInfo",
     id: string,
-    medname: string,
-    dosage: string,
+    name: string,
+    dosage: number,
+    frequency: number,
+    records: string,
     patientID: string,
+    active: boolean,
     _version: number,
     _deleted?: boolean | null,
     _lastChangedAt: number,
@@ -4222,15 +4470,19 @@ export type OnUpdateMedicationInfoSubscription = {
 
 export type OnDeleteMedicationInfoSubscriptionVariables = {
   owner?: string | null,
+  patientID?: string | null,
 };
 
 export type OnDeleteMedicationInfoSubscription = {
   onDeleteMedicationInfo?:  {
     __typename: "MedicationInfo",
     id: string,
-    medname: string,
-    dosage: string,
+    name: string,
+    dosage: number,
+    frequency: number,
+    records: string,
     patientID: string,
+    active: boolean,
     _version: number,
     _deleted?: boolean | null,
     _lastChangedAt: number,
@@ -4321,9 +4573,12 @@ export type OnCreateMedCompliantSubscription = {
     MedicationInfo?:  {
       __typename: "MedicationInfo",
       id: string,
-      medname: string,
-      dosage: string,
+      name: string,
+      dosage: number,
+      frequency: number,
+      records: string,
       patientID: string,
+      active: boolean,
       _version: number,
       _deleted?: boolean | null,
       _lastChangedAt: number,
@@ -4355,9 +4610,12 @@ export type OnUpdateMedCompliantSubscription = {
     MedicationInfo?:  {
       __typename: "MedicationInfo",
       id: string,
-      medname: string,
-      dosage: string,
+      name: string,
+      dosage: number,
+      frequency: number,
+      records: string,
       patientID: string,
+      active: boolean,
       _version: number,
       _deleted?: boolean | null,
       _lastChangedAt: number,
@@ -4389,9 +4647,12 @@ export type OnDeleteMedCompliantSubscription = {
     MedicationInfo?:  {
       __typename: "MedicationInfo",
       id: string,
-      medname: string,
-      dosage: string,
+      name: string,
+      dosage: number,
+      frequency: number,
+      records: string,
       patientID: string,
+      active: boolean,
       _version: number,
       _deleted?: boolean | null,
       _lastChangedAt: number,
@@ -5269,6 +5530,51 @@ export type OnDeleteTodoSubscription = {
     } | null,
     pending?: string | null,
     completed?: string | null,
+    owner: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateAlertNotificationSubscription = {
+  onCreateAlertNotification?:  {
+    __typename: "AlertNotification",
+    id: string,
+    patientID: string,
+    alertID: string,
+    owner: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateAlertNotificationSubscription = {
+  onUpdateAlertNotification?:  {
+    __typename: "AlertNotification",
+    id: string,
+    patientID: string,
+    alertID: string,
+    owner: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteAlertNotificationSubscription = {
+  onDeleteAlertNotification?:  {
+    __typename: "AlertNotification",
+    id: string,
+    patientID: string,
+    alertID: string,
     owner: string,
     _version: number,
     _deleted?: boolean | null,

@@ -173,3 +173,12 @@ export declare class Todo {
   constructor(init: ModelInit<Todo>);
   static copyOf(source: Todo, mutator: (draft: MutableModel<Todo>) => MutableModel<Todo> | void): Todo;
 }
+
+export declare class AlertNotification {
+  readonly id: string;
+  readonly patientID: string;
+  readonly alertID: string;
+  readonly owner: string;
+  constructor(init: ModelInit<AlertNotification>);
+  static copyOf(source: AlertNotification, mutator: (draft: MutableModel<AlertNotification>) => MutableModel<AlertNotification> | void): AlertNotification;
+}
