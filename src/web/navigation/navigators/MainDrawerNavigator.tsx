@@ -6,9 +6,9 @@ import {
 import { HomeScreen } from "web/screens/Home/HomeScreen";
 import { CliniciansScreen } from "web/screens/Clinicians/CliniciansScreen";
 import { PatientsScreen } from "web/screens/Patients/PatientsScreen";
-import { ChatScreen } from "web/screens/Chat/ChatScreen";
+// import { ChatScreen } from "web/screens/Chat/ChatScreen";
 import { TodoScreen } from "web/screens/Todo/TodoScreen";
-import { MariaScreen } from "web/screens/Maria/MariaScreen";
+// import { MariaScreen } from "web/screens/Maria/MariaScreen";
 import { SettingsScreen } from "web/screens/Setting/SettingsScreen";
 import { MainScreenTabButton } from "components/Buttons/MainScreenTabButton";
 import { ScreenName, MainScreenParamList } from "web/navigation";

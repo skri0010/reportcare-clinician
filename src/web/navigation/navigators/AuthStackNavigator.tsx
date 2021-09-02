@@ -1,7 +1,6 @@
 import React, { FC } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { AuthStackParamList, AuthScreenName } from "../../auth_screens";
 import { RootState, select } from "util/useRedux";
 import { SignIn } from "../../auth_screens/SignIn";
 import { RegisterAccount } from "../../auth_screens/RegisterAccount";
@@ -9,12 +8,14 @@ import { ForgotPassword } from "../../auth_screens/ForgotPassword";
 import { ConfirmRegistration } from "../../auth_screens/ConfirmRegistration";
 import { getMainScreenHeaderStyle } from "util/getStyles";
 import i18n from "util/language/i18n";
+import { AuthenticationStackParamList } from "..";
+import { AuthenticationScreenName } from "../navigatorScreenNames";
 
 interface AuthNavigationStackProps {
   setAuthState: (state: string) => void;
 }
 
-const Stack = createStackNavigator<AuthStackParamList>();
+const Stack = createStackNavigator<AuthenticationStackParamList>();
 
 export const AuthNavigationStack: FC<AuthNavigationStackProps> = ({
   setAuthState
@@ -34,7 +35,7 @@ export const AuthNavigationStack: FC<AuthNavigationStackProps> = ({
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
-          name={AuthScreenName.SIGN_IN}
+          name={AuthenticationScreenName.SIGN_IN}
           options={{ headerShown: false }}
         >
           {(screenProps) => (
@@ -46,7 +47,7 @@ export const AuthNavigationStack: FC<AuthNavigationStackProps> = ({
           )}
         </Stack.Screen>
         <Stack.Screen
-          name={AuthScreenName.REGISTER}
+          name={AuthenticationScreenName.REGISTRATION}
           component={RegisterAccount}
           options={{
             headerStyle: screenHeaderStyle,
@@ -57,7 +58,7 @@ export const AuthNavigationStack: FC<AuthNavigationStackProps> = ({
           }}
         />
         <Stack.Screen
-          name={AuthScreenName.CONFIRM_REGISTER}
+          name={AuthenticationScreenName.CONFIRM_REGISTRATION}
           component={ConfirmRegistration}
           options={{
             headerStyle: screenHeaderStyle,
@@ -68,7 +69,7 @@ export const AuthNavigationStack: FC<AuthNavigationStackProps> = ({
           }}
         />
         <Stack.Screen
-          name={AuthScreenName.FORGOT_PW}
+          name={AuthenticationScreenName.FORGET_PASSWORD}
           component={ForgotPassword}
           options={{
             headerStyle: screenHeaderStyle,

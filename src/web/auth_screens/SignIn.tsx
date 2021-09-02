@@ -5,7 +5,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { RootState, select, useDispatch } from "util/useRedux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AuthScreenName, AuthScreensProps, AuthState } from "web/auth_screens";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { validatePassword, validateUsername } from "util/validation";
 import i18n from "util/language/i18n";
@@ -27,8 +26,11 @@ import { setProcedureOngoing } from "ic-redux/actions/agents/actionCreator";
 import { AuthButton } from "components/Buttons/AuthButton";
 import { TextField } from "components/InputComponents/TextField";
 import { H1, H4 } from "components/Text";
+import { AuthScreenProps } from "web/navigation/types/AuthenticationStackProps";
+import { AuthenticationScreenName } from "web/navigation";
+import { AuthState } from ".";
 
-export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
+export const SignIn: FC<AuthScreenProps[AuthenticationScreenName.SIGN_IN]> = ({
   navigation,
   setAuthState
 }) => {
@@ -109,7 +111,7 @@ export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
           toast.show(i18n.t("Auth_SignIn.ResendConfirmCode"), {
             type: "warning"
           });
-          navigation.navigate(AuthScreenName.CONFIRM_REGISTER, {
+          navigation.navigate(AuthenticationScreenName.CONFIRM_REGISTRATION, {
             username: username
           });
         } else {
@@ -236,7 +238,9 @@ export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
 
             {/* Forgot Password */}
             <TouchableOpacity
-              onPress={() => navigation.navigate(AuthScreenName.FORGOT_PW)}
+              onPress={() =>
+                navigation.navigate(AuthenticationScreenName.FORGET_PASSWORD)
+              }
             >
               <H4
                 text={i18n.t("Auth_SignIn.ForgotPassword")}
@@ -262,7 +266,9 @@ export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
               ]}
             />
             <TouchableOpacity
-              onPress={() => navigation.navigate(AuthScreenName.REGISTER)}
+              onPress={() =>
+                navigation.navigate(AuthenticationScreenName.REGISTRATION)
+              }
             >
               <H4
                 text={i18n.t("Auth_SignIn.RedirectToRegister")}
