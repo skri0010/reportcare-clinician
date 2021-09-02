@@ -19,8 +19,8 @@ import { af_RetrievePendingAlertCount } from "./action-frames/triage-alert-hf-cl
 import { af_RequestPendingAlertCountDisplay } from "./action-frames/triage-alert-hf-clinic/RequestPendingAlertCountDisplay";
 import { af_RetrieveTodoDetails } from "./action-frames/storing-data/RetrieveTodoDetails";
 import { af_RequestDisplayTodoDetails } from "./action-frames/storing-data/RequestDisplayTodoDetails";
-import  { af_CreateTodo }  from "./action-frames/storing-data/CreateTodo";
-import  { af_UpdateTodo }  from "./action-frames/storing-data/UpdateTodo";
+import { af_CreateTodo } from "./action-frames/storing-data/CreateTodo";
+import { af_UpdateTodo } from "./action-frames/storing-data/UpdateTodo";
 import { af_RetrieveTodos } from "./action-frames/storing-data/RetrieveTodos";
 import { af_RequestDisplayTodos } from "./action-frames/storing-data/RequestDisplayTodos";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";

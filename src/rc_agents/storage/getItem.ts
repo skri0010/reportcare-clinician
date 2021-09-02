@@ -302,7 +302,7 @@ export const getTodoDetails = async (
 ): Promise<AsyncStorageType[AsyncStorageKeys.TODO_DETAILS] | undefined> => {
   const localData = await getTodos();
   if (localData) {
-    return localData.find((t)=>t.id===id);
+    return localData.find((t) => t.id === id);
   }
   return undefined;
 };

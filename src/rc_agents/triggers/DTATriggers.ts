@@ -292,7 +292,11 @@ export const triggerRetrieveTodoDetails = (input: string): void => {
     false
   );
   agentDTA.addBelief(
-    new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.RETRIEVE_TODO_DETAILS, true)
+    new Belief(
+      BeliefKeys.CLINICIAN,
+      ClinicianAttributes.RETRIEVE_TODO_DETAILS,
+      true
+    )
   );
   agentAPI.addFact(
     new Belief(

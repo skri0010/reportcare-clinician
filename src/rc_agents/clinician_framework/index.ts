@@ -167,7 +167,7 @@ export enum ClinicianAttributes {
   DISPLAY_TODO_DETAILS = "DisplayTodoDetails",
   TODO_DETAILS_RETRIEVED = "TodoDetailsRetrieved",
   TODO_ID = "TodoId",
-  
+
   // AT-CP: Alerts
   RETRIEVE_PENDING_ALERT_COUNT = "RetrievePendingAlertCount",
   PENDING_ALERT_COUNT_RETRIEVED = "PendingAlertCountRetrieved",
