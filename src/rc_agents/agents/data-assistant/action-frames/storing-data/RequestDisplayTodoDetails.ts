@@ -1,37 +1,41 @@
 import {
-    Actionframe,
-    Communicate,
-    Agent,
-    Belief,
-    Precondition,
-    ResettablePrecondition
-  } from "agents-framework";
-  import { ProcedureConst, Performative } from "agents-framework/Enums";
-  import {
-    ActionFrameIDs,
-    AgentIDs,
-    BeliefKeys,
-    ClinicianAttributes,
-    ProcedureAttributes
-  } from "rc_agents/clinician_framework";
+  Actionframe,
+  Communicate,
+  Agent,
+  Belief,
+  Precondition,
+  ResettablePrecondition
+} from "agents-framework";
+import { ProcedureConst, Performative } from "agents-framework/Enums";
+import {
+  ActionFrameIDs,
+  AgentIDs,
+  BeliefKeys,
+  ClinicianAttributes,
+  ProcedureAttributes
+} from "rc_agents/clinician_framework";
 
-  class RequestDisplayTodoDetails extends Communicate {
-    // Constructor
-    constructor() {
-      super(
-        ActionFrameIDs.DTA.REQUEST_DISPLAY_TODO_DETAILS,
-        Performative.REQUEST,
-        // Triggers DisplayTodoDetails action frame of UXSA
-        new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.DISPLAY_TODO_DETAILS, true),
-        [AgentIDs.UXSA]
-      );
-    }
+class RequestDisplayTodoDetails extends Communicate {
+  // Constructor
+  constructor() {
+    super(
+      ActionFrameIDs.DTA.REQUEST_DISPLAY_TODO_DETAILS,
+      Performative.REQUEST,
+      // Triggers DisplayTodoDetails action frame of UXSA
+      new Belief(
+        BeliefKeys.CLINICIAN,
+        ClinicianAttributes.DISPLAY_TODO_DETAILS,
+        true
+      ),
+      [AgentIDs.UXSA]
+    );
+  }
 
   /**
    * Perform the activity
    * @param {Agent} agent - agent executing the activity
    */
-   async doActivity(agent: Agent): Promise<void> {
+  async doActivity(agent: Agent): Promise<void> {
     try {
       await super.doActivity(agent, [rule2]);
     } catch (error) {

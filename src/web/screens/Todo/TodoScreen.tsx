@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React, { FC, useEffect, useState } from "react";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { MainScreenProps } from "web/navigation/types";
@@ -87,15 +86,11 @@ export const TodoScreen: FC<MainScreenProps[ScreenName.TODO]> = ({
   }, [todoDetails]);
 
   // Function to save the selected todo details to be displayed in the right screen
-  // JQ-TODO To be integrated with redux store for todo item details display on the right screen
   function onRowClick(item: LocalTodo) {
-    //dispatch(setProcedureOngoing(true));
-    // dispatch(setTodoDetails(item));
     dispatch(setFetchingTodoDetails(true));
     if (item.id) {
       AgentTrigger.triggerRetrieveTodoDetails(item.id);
     }
-    //setTodoSelected(item);
   }
 
   // Compares dispatched updatedTodo with current Todo displayed in the TodoDetailsScreen
