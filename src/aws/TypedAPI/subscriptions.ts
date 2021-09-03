@@ -1,7 +1,7 @@
 import API from "@aws-amplify/api-graphql";
 import { BaseResponse } from "aws";
 import { triggerProcessAlertNotification } from "rc_agents/triggers";
-import { Observable, ZenObservable } from "zen-observable-ts";
+import { Observable } from "zen-observable-ts";
 
 // Override default subscription otherwise null data error will be thrown
 // Requested fields should be exactly identical to CreateAlert input fields excluding owner
@@ -25,8 +25,8 @@ interface onCreateAlertNotificationResponse extends BaseResponse {
   value: { data: { onCreateAlertNotification: AlertNotification } };
 }
 
-export const subscribeAlertNotification = (): ZenObservable.Subscription => {
-  return (
+export const subscribeAlertNotification = (): void => {
+  (
     API.graphql({
       query: onCreateAlertNotification
     }) as Observable<any>
