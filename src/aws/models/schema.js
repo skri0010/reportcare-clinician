@@ -229,8 +229,8 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "medname": {
-                    "name": "medname",
+                "name": {
+                    "name": "name",
                     "isArray": false,
                     "type": "String",
                     "isRequired": true,
@@ -239,7 +239,21 @@ export const schema = {
                 "dosage": {
                     "name": "dosage",
                     "isArray": false,
-                    "type": "String",
+                    "type": "Int",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "frequency": {
+                    "name": "frequency",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "records": {
+                    "name": "records",
+                    "isArray": false,
+                    "type": "AWSJSON",
                     "isRequired": true,
                     "attributes": []
                 },
@@ -247,6 +261,13 @@ export const schema = {
                     "name": "patientID",
                     "isArray": false,
                     "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "active": {
+                    "name": "active",
+                    "isArray": false,
+                    "type": "Boolean",
                     "isRequired": true,
                     "attributes": []
                 }
@@ -285,6 +306,16 @@ export const schema = {
                                 ]
                             },
                             {
+                                "provider": "userPools",
+                                "ownerField": "patientID",
+                                "allow": "owner",
+                                "operations": [
+                                    "read",
+                                    "update"
+                                ],
+                                "identityClaim": "cognito:username"
+                            },
+                            {
                                 "groupClaim": "cognito:groups",
                                 "provider": "userPools",
                                 "allow": "groups",
@@ -304,7 +335,8 @@ export const schema = {
                                 "allow": "groups",
                                 "groupsField": "patientID",
                                 "operations": [
-                                    "read"
+                                    "read",
+                                    "update"
                                 ],
                                 "groupField": "groups"
                             }
@@ -716,35 +748,42 @@ export const schema = {
                     "name": "Weight",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": true,
+                    "isRequired": false,
                     "attributes": []
                 },
                 "BPSys": {
                     "name": "BPSys",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": true,
+                    "isRequired": false,
                     "attributes": []
                 },
                 "BPDi": {
                     "name": "BPDi",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": true,
+                    "isRequired": false,
                     "attributes": []
                 },
                 "NoSteps": {
                     "name": "NoSteps",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": true,
+                    "isRequired": false,
                     "attributes": []
                 },
                 "OxySat": {
                     "name": "OxySat",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": true,
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "FluidIntake": {
+                    "name": "FluidIntake",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
                     "attributes": []
                 },
                 "DateTime": {
@@ -1743,9 +1782,98 @@ export const schema = {
                     }
                 }
             ]
+        },
+        "AlertNotification": {
+            "name": "AlertNotification",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "patientID": {
+                    "name": "patientID",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "alertID": {
+                    "name": "alertID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "owner": {
+                    "name": "owner",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                }
+            },
+            "syncable": true,
+            "pluralName": "AlertNotifications",
+            "attributes": [
+                {
+                    "type": "model",
+                    "properties": {}
+                },
+                {
+                    "type": "auth",
+                    "properties": {
+                        "rules": [
+                            {
+                                "groupClaim": "cognito:groups",
+                                "provider": "userPools",
+                                "allow": "groups",
+                                "groups": [
+                                    "Admin"
+                                ],
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
+                            },
+                            {
+                                "groupClaim": "cognito:groups",
+                                "provider": "userPools",
+                                "allow": "groups",
+                                "groups": [
+                                    "Patients"
+                                ],
+                                "operations": [
+                                    "create",
+                                    "read"
+                                ]
+                            },
+                            {
+                                "groupClaim": "cognito:groups",
+                                "provider": "userPools",
+                                "allow": "groups",
+                                "groups": [
+                                    "EPs",
+                                    "Nurses",
+                                    "HFSpecialists",
+                                    "MedicalOfficers",
+                                    "Pharmacists"
+                                ],
+                                "operations": [
+                                    "read"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
         }
     },
     "enums": {},
     "nonModels": {},
-    "version": "519a5755c59526d66578090e79a8c203"
+    "version": "a4139e89fa8ca87ea04ea3b48e1e234d"
 };

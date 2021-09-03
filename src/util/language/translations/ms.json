@@ -82,6 +82,8 @@
     "OxygenSaturationUnit": "(%)",
     "Weight": "Berat Badan ",
     "WeightUnit": "(kg)",
+    "FluidIntake": "Pengambiulan Air ",
+    "FluidUnit": "(ml)",
     "NoData": "Tiada data dijumpai",
     "Days": {
       "Sunday": "Ahad",

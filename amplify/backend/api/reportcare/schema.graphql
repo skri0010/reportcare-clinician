@@ -45,8 +45,9 @@ type MedicationInfo
   @auth(
     rules: [
       { allow: owner }
+      { allow: owner, ownerField: "patientID", operations: [read, update] }
       { allow: groups, groups: ["Admin"] }
-      { allow: groups, groupsField: "patientID", operations: [read] }
+      { allow: groups, groupsField: "patientID", operations: [read, update] }
     ]
   )
   @key(
@@ -55,9 +56,12 @@ type MedicationInfo
     queryField: "listMedicationInfosByPatientID"
   ) {
   id: ID!
-  medname: String!
-  dosage: String!
+  name: String!
+  dosage: Int!
+  frequency: Int!
+  records: AWSJSON!
   patientID: String!
+  active: Boolean!
 }
 
 type ActivityInfo
@@ -160,11 +164,12 @@ type ReportVitals
   id: ID!
   Temperature: String
   Humidity: String
-  Weight: String!
-  BPSys: String!
-  BPDi: String!
-  NoSteps: String!
-  OxySat: String!
+  Weight: String
+  BPSys: String
+  BPDi: String
+  NoSteps: String
+  OxySat: String
+  FluidIntake: String
   DateTime: AWSDateTime!
   patientID: String!
 }
@@ -424,5 +429,30 @@ type Todo
   alert: Alert @connection(fields: ["alertID"])
   pending: String
   completed: String
+  owner: String!
+}
+
+type AlertNotification
+  @model
+  @auth(
+    rules: [
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groups: ["Patients"], operations: [create, read] }
+      {
+        allow: groups
+        groups: [
+          "EPs"
+          "Nurses"
+          "HFSpecialists"
+          "MedicalOfficers"
+          "Pharmacists"
+        ]
+        operations: [read]
+      }
+    ]
+  ) {
+  id: ID!
+  patientID: String!
+  alertID: ID!
   owner: String!
 }

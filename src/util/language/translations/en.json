@@ -82,6 +82,8 @@
     "OxygenSaturationUnit": "(%)",
     "Weight": "Weight ",
     "WeightUnit": "(kg)",
+    "FluidIntake": "Fluid Intake ",
+    "FluidUnit": "(ml)",
     "NoData": "No data was found",
     "Days": {
       "Sunday": "Sun",

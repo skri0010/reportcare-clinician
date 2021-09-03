@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { ReportVitals } from "aws/API";
 import i18n from "util/language/i18n";
 
@@ -23,6 +22,7 @@ export interface ParameterStats {
   systolic: Stat;
   weight: Stat;
   oxygenSaturation: Stat;
+  fluid: Stat;
   date: Date;
 }
 
@@ -37,6 +37,7 @@ export interface FullChartData {
   systolic: ChartData;
   weight: ChartData;
   oxygenSaturation: ChartData;
+  fluid: ChartData;
 }
 
 export interface ParameterGraphsProps {
@@ -76,23 +77,28 @@ export const getParameterStatFromOneVitalsReport = (
 
     // Diastolic BP
     const diastolicBPVitals: number[] = vitalsData
-      .filter((data) => parseFloat(data.BPDi))
-      .map((data) => parseFloat(data.BPDi));
+      .filter((data) => parseFloat(data.BPDi!))
+      .map((data) => parseFloat(data.BPDi!));
 
     // Systolic BP
     const systolicBPVitals: number[] = vitalsData
-      .filter((data) => parseFloat(data.BPSys))
-      .map((data) => parseFloat(data.BPSys));
+      .filter((data) => parseFloat(data.BPSys!))
+      .map((data) => parseFloat(data.BPSys!));
 
     // Oxygen saturation
     const oxygenSaturation: number[] = vitalsData
-      .filter((data) => parseFloat(data.OxySat))
-      .map((data) => parseFloat(data.OxySat));
+      .filter((data) => parseFloat(data.OxySat!))
+      .map((data) => parseFloat(data.OxySat!));
 
     // Weight
     const weightVitals: number[] = vitalsData
-      .filter((data) => parseFloat(data.Weight))
-      .map((data) => parseFloat(data.Weight));
+      .filter((data) => parseFloat(data.Weight!))
+      .map((data) => parseFloat(data.Weight!));
+
+    // Fluid
+    const fluidVitals: number[] = vitalsData
+      .filter((data) => parseFloat(data.FluidIntake!))
+      .map((data) => parseFloat(data.FluidIntake!));
 
     // Stats
     stats = {
@@ -100,10 +106,10 @@ export const getParameterStatFromOneVitalsReport = (
       systolic: getStat(systolicBPVitals),
       weight: getStat(oxygenSaturation),
       oxygenSaturation: getStat(weightVitals),
+      fluid: getStat(fluidVitals),
       date: new Date(localeDateString)
     };
   }
-  console.log(stats);
   return stats;
 };
 
@@ -132,6 +138,11 @@ export const obtainFullChartData = (
       rename
         .filter((data) => data.oxygenSaturation && data.date)
         .map((data) => ({ parameter: data.oxygenSaturation, date: data.date }))
+    ),
+    fluid: subParameterStatsToChartData(
+      rename
+        .filter((data) => data.fluid && data.date)
+        .map((data) => ({ parameter: data.fluid, date: data.date }))
     )
   };
 };
