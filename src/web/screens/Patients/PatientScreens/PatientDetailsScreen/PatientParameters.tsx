@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { FC, useState, useEffect } from "react";
 import { Dimensions, View } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
@@ -30,6 +31,7 @@ export const PatientParameters: FC<PatientParametersProps> = ({ details }) => {
   // JH-TODO: Uncomment following line and remove line with mock local report vitals
   // const { vitalsReports } = details;
   const vitalsReports = mockLocalReportVitals;
+  console.log(vitalsReports);
 
   const [fullChartData, setFullChartData] = useState<FullChartData | null>(
     null
@@ -68,6 +70,7 @@ export const PatientParameters: FC<PatientParametersProps> = ({ details }) => {
       // ie for each parameter, like systolic => min[], max[], average[], dates[]
       const tempFullChartData = obtainFullChartData(tempParameterStats);
 
+      console.log(tempFullChartData);
       setFullChartData(tempFullChartData);
     }
   }, [vitalsReports]);

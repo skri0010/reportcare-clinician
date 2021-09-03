@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { ReportVitals } from "aws/API";
 import i18n from "util/language/i18n";
 
@@ -57,12 +58,19 @@ export const getParameterStatFromOneVitalsReport = (
   let stats: ParameterStats | null = null;
   if (vitalsData.length > 0) {
     // Utility functions
-    const average = (array: number[]) =>
-      array.reduce((a, b) => a + b) / array.length;
+    const average = (array: number[]) => {
+      // Handles case where no records were recorded for a day
+      try {
+        return array.reduce((a, b) => a + b) / array.length;
+      } catch (err) {
+        return 0;
+      }
+    };
 
     const getStat = (array: number[]) => ({
-      min: Math.min(...array),
-      max: Math.max(...array),
+      // Handles case where no records were recorded for a day
+      min: Math.min(...array) === Infinity ? 0 : Math.min(...array),
+      max: Math.max(...array) === -Infinity ? 0 : Math.max(...array),
       average: average(array)
     });
 
@@ -95,6 +103,7 @@ export const getParameterStatFromOneVitalsReport = (
       date: new Date(localeDateString)
     };
   }
+  console.log(stats);
   return stats;
 };
 
