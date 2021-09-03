@@ -77,27 +77,27 @@ export const getParameterStatFromOneVitalsReport = (
 
     // Diastolic BP
     const diastolicBPVitals: number[] = vitalsData
-      .filter((data) => parseFloat(data.BPDi!))
+      .filter((data) => data.BPDi && parseFloat(data.BPDi))
       .map((data) => parseFloat(data.BPDi!));
 
     // Systolic BP
     const systolicBPVitals: number[] = vitalsData
-      .filter((data) => parseFloat(data.BPSys!))
+      .filter((data) => data.BPSys && parseFloat(data.BPSys))
       .map((data) => parseFloat(data.BPSys!));
 
     // Oxygen saturation
     const oxygenSaturation: number[] = vitalsData
-      .filter((data) => parseFloat(data.OxySat!))
+      .filter((data) => data.OxySat && parseFloat(data.OxySat))
       .map((data) => parseFloat(data.OxySat!));
 
     // Weight
     const weightVitals: number[] = vitalsData
-      .filter((data) => parseFloat(data.Weight!))
+      .filter((data) => data.Weight && parseFloat(data.Weight))
       .map((data) => parseFloat(data.Weight!));
 
     // Fluid
     const fluidVitals: number[] = vitalsData
-      .filter((data) => parseFloat(data.FluidIntake!))
+      .filter((data) => data.FluidIntake && parseFloat(data.FluidIntake))
       .map((data) => parseFloat(data.FluidIntake!));
 
     // Stats
