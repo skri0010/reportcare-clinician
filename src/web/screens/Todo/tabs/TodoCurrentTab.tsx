@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React, { FC, useEffect } from "react";
 import { FlatList } from "react-native";
 import { TodoRow } from "components/RowComponents/TodoRow";

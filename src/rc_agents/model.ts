@@ -111,7 +111,7 @@ export interface AlertInfo {
   vitalsReport?: ReportVitals;
   symptomReport?: ReportSymptom;
   lastMedication?: string;
-  medicationQuantity?: string;
+  medicationQuantity?: number;
   activityDuringAlert?: string;
   completed: boolean;
   _version: number;
@@ -145,4 +145,8 @@ export interface LocalTodo {
   lastModified?: string;
   toSync: boolean;
   _version: number;
+}
+
+export interface TodoDetails {
+  id: string;
 }

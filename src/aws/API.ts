@@ -166,26 +166,47 @@ export type DeletePatientInfoInput = {
 
 export type CreateMedicationInfoInput = {
   id?: string | null,
-  medname: string,
-  dosage: string,
+  name: string,
+  dosage: number,
+  frequency: number,
+  records: string,
   patientID: string,
+  active: boolean,
   _version?: number | null,
 };
 
 export type ModelMedicationInfoConditionInput = {
-  medname?: ModelStringInput | null,
-  dosage?: ModelStringInput | null,
+  name?: ModelStringInput | null,
+  dosage?: ModelIntInput | null,
+  frequency?: ModelIntInput | null,
+  records?: ModelStringInput | null,
+  active?: ModelBooleanInput | null,
   and?: Array< ModelMedicationInfoConditionInput | null > | null,
   or?: Array< ModelMedicationInfoConditionInput | null > | null,
   not?: ModelMedicationInfoConditionInput | null,
 };
 
+export type ModelIntInput = {
+  ne?: number | null,
+  eq?: number | null,
+  le?: number | null,
+  lt?: number | null,
+  ge?: number | null,
+  gt?: number | null,
+  between?: Array< number | null > | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
+};
+
 export type MedicationInfo = {
   __typename: "MedicationInfo",
   id: string,
-  medname: string,
-  dosage: string,
+  name: string,
+  dosage: number,
+  frequency: number,
+  records: string,
   patientID: string,
+  active: boolean,
   _version: number,
   _deleted?: boolean | null,
   _lastChangedAt: number,
@@ -196,9 +217,12 @@ export type MedicationInfo = {
 
 export type UpdateMedicationInfoInput = {
   id: string,
-  medname?: string | null,
-  dosage?: string | null,
+  name?: string | null,
+  dosage?: number | null,
+  frequency?: number | null,
+  records?: string | null,
   patientID?: string | null,
+  active?: boolean | null,
   _version?: number | null,
 };
 
@@ -227,18 +251,6 @@ export type ModelActivityInfoConditionInput = {
   and?: Array< ModelActivityInfoConditionInput | null > | null,
   or?: Array< ModelActivityInfoConditionInput | null > | null,
   not?: ModelActivityInfoConditionInput | null,
-};
-
-export type ModelIntInput = {
-  ne?: number | null,
-  eq?: number | null,
-  le?: number | null,
-  lt?: number | null,
-  ge?: number | null,
-  gt?: number | null,
-  between?: Array< number | null > | null,
-  attributeExists?: boolean | null,
-  attributeType?: ModelAttributeTypes | null,
 };
 
 export type ActivityInfo = {
@@ -846,9 +858,12 @@ export enum ModelSortDirection {
 
 export type ModelMedicationInfoFilterInput = {
   id?: ModelIDInput | null,
-  medname?: ModelStringInput | null,
-  dosage?: ModelStringInput | null,
+  name?: ModelStringInput | null,
+  dosage?: ModelIntInput | null,
+  frequency?: ModelIntInput | null,
+  records?: ModelStringInput | null,
   patientID?: ModelStringInput | null,
+  active?: ModelBooleanInput | null,
   and?: Array< ModelMedicationInfoFilterInput | null > | null,
   or?: Array< ModelMedicationInfoFilterInput | null > | null,
   not?: ModelMedicationInfoFilterInput | null,
@@ -1212,9 +1227,12 @@ export type CreateMedicationInfoMutation = {
   createMedicationInfo?:  {
     __typename: "MedicationInfo",
     id: string,
-    medname: string,
-    dosage: string,
+    name: string,
+    dosage: number,
+    frequency: number,
+    records: string,
     patientID: string,
+    active: boolean,
     _version: number,
     _deleted?: boolean | null,
     _lastChangedAt: number,
@@ -1233,9 +1251,12 @@ export type UpdateMedicationInfoMutation = {
   updateMedicationInfo?:  {
     __typename: "MedicationInfo",
     id: string,
-    medname: string,
-    dosage: string,
+    name: string,
+    dosage: number,
+    frequency: number,
+    records: string,
     patientID: string,
+    active: boolean,
     _version: number,
     _deleted?: boolean | null,
     _lastChangedAt: number,
@@ -1254,9 +1275,12 @@ export type DeleteMedicationInfoMutation = {
   deleteMedicationInfo?:  {
     __typename: "MedicationInfo",
     id: string,
-    medname: string,
-    dosage: string,
+    name: string,
+    dosage: number,
+    frequency: number,
+    records: string,
     patientID: string,
+    active: boolean,
     _version: number,
     _deleted?: boolean | null,
     _lastChangedAt: number,
@@ -1351,9 +1375,12 @@ export type CreateMedCompliantMutation = {
     MedicationInfo?:  {
       __typename: "MedicationInfo",
       id: string,
-      medname: string,
-      dosage: string,
+      name: string,
+      dosage: number,
+      frequency: number,
+      records: string,
       patientID: string,
+      active: boolean,
       _version: number,
       _deleted?: boolean | null,
       _lastChangedAt: number,
@@ -1386,9 +1413,12 @@ export type UpdateMedCompliantMutation = {
     MedicationInfo?:  {
       __typename: "MedicationInfo",
       id: string,
-      medname: string,
-      dosage: string,
+      name: string,
+      dosage: number,
+      frequency: number,
+      records: string,
       patientID: string,
+      active: boolean,
       _version: number,
       _deleted?: boolean | null,
       _lastChangedAt: number,
@@ -1421,9 +1451,12 @@ export type DeleteMedCompliantMutation = {
     MedicationInfo?:  {
       __typename: "MedicationInfo",
       id: string,
-      medname: string,
-      dosage: string,
+      name: string,
+      dosage: number,
+      frequency: number,
+      records: string,
       patientID: string,
+      active: boolean,
       _version: number,
       _deleted?: boolean | null,
       _lastChangedAt: number,
@@ -2472,9 +2505,12 @@ export type SyncMedicationInfosQuery = {
     items?:  Array< {
       __typename: "MedicationInfo",
       id: string,
-      medname: string,
-      dosage: string,
+      name: string,
+      dosage: number,
+      frequency: number,
+      records: string,
       patientID: string,
+      active: boolean,
       _version: number,
       _deleted?: boolean | null,
       _lastChangedAt: number,
@@ -2495,9 +2531,12 @@ export type GetMedicationInfoQuery = {
   getMedicationInfo?:  {
     __typename: "MedicationInfo",
     id: string,
-    medname: string,
-    dosage: string,
+    name: string,
+    dosage: number,
+    frequency: number,
+    records: string,
     patientID: string,
+    active: boolean,
     _version: number,
     _deleted?: boolean | null,
     _lastChangedAt: number,
@@ -2519,9 +2558,12 @@ export type ListMedicationInfosQuery = {
     items?:  Array< {
       __typename: "MedicationInfo",
       id: string,
-      medname: string,
-      dosage: string,
+      name: string,
+      dosage: number,
+      frequency: number,
+      records: string,
       patientID: string,
+      active: boolean,
       _version: number,
       _deleted?: boolean | null,
       _lastChangedAt: number,
@@ -2659,9 +2701,12 @@ export type GetMedCompliantQuery = {
     MedicationInfo?:  {
       __typename: "MedicationInfo",
       id: string,
-      medname: string,
-      dosage: string,
+      name: string,
+      dosage: number,
+      frequency: number,
+      records: string,
       patientID: string,
+      active: boolean,
       _version: number,
       _deleted?: boolean | null,
       _lastChangedAt: number,
@@ -3514,9 +3559,12 @@ export type ListMedicationInfosByPatientIDQuery = {
     items?:  Array< {
       __typename: "MedicationInfo",
       id: string,
-      medname: string,
-      dosage: string,
+      name: string,
+      dosage: number,
+      frequency: number,
+      records: string,
       patientID: string,
+      active: boolean,
       _version: number,
       _deleted?: boolean | null,
       _lastChangedAt: number,
@@ -4182,15 +4230,19 @@ export type OnDeletePatientInfoSubscription = {
 
 export type OnCreateMedicationInfoSubscriptionVariables = {
   owner?: string | null,
+  patientID?: string | null,
 };
 
 export type OnCreateMedicationInfoSubscription = {
   onCreateMedicationInfo?:  {
     __typename: "MedicationInfo",
     id: string,
-    medname: string,
-    dosage: string,
+    name: string,
+    dosage: number,
+    frequency: number,
+    records: string,
     patientID: string,
+    active: boolean,
     _version: number,
     _deleted?: boolean | null,
     _lastChangedAt: number,
@@ -4202,15 +4254,19 @@ export type OnCreateMedicationInfoSubscription = {
 
 export type OnUpdateMedicationInfoSubscriptionVariables = {
   owner?: string | null,
+  patientID?: string | null,
 };
 
 export type OnUpdateMedicationInfoSubscription = {
   onUpdateMedicationInfo?:  {
     __typename: "MedicationInfo",
     id: string,
-    medname: string,
-    dosage: string,
+    name: string,
+    dosage: number,
+    frequency: number,
+    records: string,
     patientID: string,
+    active: boolean,
     _version: number,
     _deleted?: boolean | null,
     _lastChangedAt: number,
@@ -4222,15 +4278,19 @@ export type OnUpdateMedicationInfoSubscription = {
 
 export type OnDeleteMedicationInfoSubscriptionVariables = {
   owner?: string | null,
+  patientID?: string | null,
 };
 
 export type OnDeleteMedicationInfoSubscription = {
   onDeleteMedicationInfo?:  {
     __typename: "MedicationInfo",
     id: string,
-    medname: string,
-    dosage: string,
+    name: string,
+    dosage: number,
+    frequency: number,
+    records: string,
     patientID: string,
+    active: boolean,
     _version: number,
     _deleted?: boolean | null,
     _lastChangedAt: number,
@@ -4321,9 +4381,12 @@ export type OnCreateMedCompliantSubscription = {
     MedicationInfo?:  {
       __typename: "MedicationInfo",
       id: string,
-      medname: string,
-      dosage: string,
+      name: string,
+      dosage: number,
+      frequency: number,
+      records: string,
       patientID: string,
+      active: boolean,
       _version: number,
       _deleted?: boolean | null,
       _lastChangedAt: number,
@@ -4355,9 +4418,12 @@ export type OnUpdateMedCompliantSubscription = {
     MedicationInfo?:  {
       __typename: "MedicationInfo",
       id: string,
-      medname: string,
-      dosage: string,
+      name: string,
+      dosage: number,
+      frequency: number,
+      records: string,
       patientID: string,
+      active: boolean,
       _version: number,
       _deleted?: boolean | null,
       _lastChangedAt: number,
@@ -4389,9 +4455,12 @@ export type OnDeleteMedCompliantSubscription = {
     MedicationInfo?:  {
       __typename: "MedicationInfo",
       id: string,
-      medname: string,
-      dosage: string,
+      name: string,
+      dosage: number,
+      frequency: number,
+      records: string,
       patientID: string,
+      active: boolean,
       _version: number,
       _deleted?: boolean | null,
       _lastChangedAt: number,

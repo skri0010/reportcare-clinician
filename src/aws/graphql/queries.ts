@@ -149,9 +149,12 @@ export const syncMedicationInfos = /* GraphQL */ `
     ) {
       items {
         id
-        medname
+        name
         dosage
+        frequency
+        records
         patientID
+        active
         _version
         _deleted
         _lastChangedAt
@@ -168,9 +171,12 @@ export const getMedicationInfo = /* GraphQL */ `
   query GetMedicationInfo($id: ID!) {
     getMedicationInfo(id: $id) {
       id
-      medname
+      name
       dosage
+      frequency
+      records
       patientID
+      active
       _version
       _deleted
       _lastChangedAt
@@ -189,9 +195,12 @@ export const listMedicationInfos = /* GraphQL */ `
     listMedicationInfos(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        medname
+        name
         dosage
+        frequency
+        records
         patientID
+        active
         _version
         _deleted
         _lastChangedAt
@@ -321,9 +330,12 @@ export const getMedCompliant = /* GraphQL */ `
       MedId
       MedicationInfo {
         id
-        medname
+        name
         dosage
+        frequency
+        records
         patientID
+        active
         _version
         _deleted
         _lastChangedAt
@@ -1154,9 +1166,12 @@ export const listMedicationInfosByPatientID = /* GraphQL */ `
     ) {
       items {
         id
-        medname
+        name
         dosage
+        frequency
+        records
         patientID
+        active
         _version
         _deleted
         _lastChangedAt

@@ -284,3 +284,25 @@ export const triggerRetrieveClinicianContacts = (): void => {
     )
   );
 };
+
+// SRD-III: Triggers RetrieveTodoDetails of DTA
+export const triggerRetrieveTodoDetails = (input: string): void => {
+  agentAPI.addFact(
+    new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.TODO_ID, input),
+    false
+  );
+  agentDTA.addBelief(
+    new Belief(
+      BeliefKeys.CLINICIAN,
+      ClinicianAttributes.RETRIEVE_TODO_DETAILS,
+      true
+    )
+  );
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PROCEDURE,
+      ProcedureAttributes.SRD_III,
+      ProcedureConst.ACTIVE
+    )
+  );
+};

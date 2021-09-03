@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React, { FC, useEffect, useState } from "react";
 import { RootState, select } from "util/useRedux";
 import { View, FlatList } from "react-native";
