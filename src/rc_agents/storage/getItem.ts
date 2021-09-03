@@ -302,3 +302,19 @@ export const getAlertNotifications = async (): Promise<
   }
   return null;
 };
+
+/**
+ * Gets locally stored PatientAssignmentSubscriptions to be processed
+ * @returns array of PatientAssignmentSubscriptions
+ */
+export const getPatientAssignmentSubscriptions = async (): Promise<
+  AsyncStorageType[AsyncStorageKeys.PATIENT_ASSIGNMENT_SUBSCRIPTIONS] | null
+> => {
+  const localData = await AsyncStorage.getItem(
+    AsyncStorageKeys.PATIENT_ASSIGNMENT_SUBSCRIPTIONS
+  );
+  if (localData) {
+    return JSON.parse(localData);
+  }
+  return null;
+};

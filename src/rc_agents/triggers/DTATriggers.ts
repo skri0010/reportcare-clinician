@@ -16,7 +16,10 @@ import {
   TodoInput,
   TodoStatus
 } from "rc_agents/model";
-import { AlertNotification } from "aws/TypedAPI/subscriptions";
+import {
+  AlertNotification,
+  PatientAssignmentSubscription
+} from "aws/TypedAPI/subscriptions";
 
 // HF-OTP-I
 // Triggers RetrievePatientsByRole of DTA
@@ -79,6 +82,36 @@ export const triggerRetrievePendingAssignments = (): void => {
     new Belief(
       BeliefKeys.PROCEDURE,
       ProcedureAttributes.SRD_I,
+      ProcedureConst.ACTIVE
+    )
+  );
+};
+
+// SRD-V: Triggers ProcessPatientAssignmentSubscription of DTA
+export const triggerProcessPatientAssignmentSubscription = (
+  patientAssignmentSubscription: PatientAssignmentSubscription
+): void => {
+  // Adds input to facts
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PATIENT,
+      PatientAttributes.PATIENT_ASSIGNMENT_SUBSCRIPTION,
+      patientAssignmentSubscription
+    ),
+    false
+  );
+  // Triggers DTA to process subscription
+  agentDTA.addBelief(
+    new Belief(
+      BeliefKeys.PATIENT,
+      PatientAttributes.PROCESS_PATIENT_ASSIGNMENT_SUBSCRIPTION,
+      true
+    )
+  );
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PROCEDURE,
+      ProcedureAttributes.SRD_V,
       ProcedureConst.ACTIVE
     )
   );

@@ -1205,16 +1205,6 @@ export const schema = {
                     }
                 },
                 {
-                    "type": "key",
-                    "properties": {
-                        "name": "patientMappingsByClinicianID",
-                        "fields": [
-                            "clinicianID"
-                        ],
-                        "queryField": "listPatientMappingsByClinicianID"
-                    }
-                },
-                {
                     "type": "auth",
                     "properties": {
                         "rules": [
@@ -1878,5 +1868,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "e2279288708f599e9adaa723caad19f7"
+    "version": "c756e1a3ef3a7dea6d3d732a3b6b7365"
 };
