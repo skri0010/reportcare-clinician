@@ -103,7 +103,10 @@ export const ActionFrameIDs = {
     SYNC_UPDATE_TODOS: "SyncUpdateTodos",
 
     // AT-CP-II - Alert's Details
-    SYNC_UPDATE_ALERTS: "SyncUpdateAlerts"
+    SYNC_UPDATE_ALERTS: "SyncUpdateAlerts",
+
+    // AT-CP-III - Alert Notifications
+    SYNC_PROCESS_ALERT_NOTIFICATIONS: "SyncProcessAlertNotifications"
   },
   MHA: {},
   ALA: {
@@ -130,7 +133,8 @@ export enum AppAttributes {
   SYNC_CONFIGURE_PATIENTS = "SyncConfigurePatients",
   SYNC_CREATE_TODOS = "SyncCreateTodos",
   SYNC_UPDATE_TODOS = "SyncUpdateTodos",
-  SYNC_UPDATE_ALERTS = "SyncUpdateAlerts"
+  SYNC_UPDATE_ALERTS = "SyncUpdateAlerts",
+  SYNC_PROCESS_ALERT_NOTIFICATIONS = "SyncProcessAlertNotifications"
 }
 
 // Attributes for PROCEDURE key

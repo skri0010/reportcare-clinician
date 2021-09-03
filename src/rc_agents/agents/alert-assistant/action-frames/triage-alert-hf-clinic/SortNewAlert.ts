@@ -53,6 +53,16 @@ class SortNewAlert extends Activity {
         ];
 
       if (alertId) {
+        // Removes alert id from facts
+        agentAPI.addFact(
+          new Belief(
+            BeliefKeys.CLINICIAN,
+            ClinicianAttributes.ALERT_ID_TO_SORT,
+            null
+          ),
+          false
+        );
+
         // Retrieves Alert using alert Id
         const alertQuery = await getAlert({ id: alertId });
 
@@ -81,6 +91,8 @@ class SortNewAlert extends Activity {
             default:
               break;
           }
+
+          // Dispatch updated alert counts
           store.dispatch(setPendingAlertCount(currentPendingAlertCounts));
 
           // Adds alert into the list of pending alerts
@@ -90,21 +102,12 @@ class SortNewAlert extends Activity {
           } else {
             currentPendingAlerts = [alertToDispatch];
           }
+          // Dispatch updated list of pending alerts
           store.dispatch(setPendingAlerts(currentPendingAlerts));
 
           // Stores alert locally
           await Storage.setAlert(alertToDispatch);
         }
-
-        // Removes alert id from facts
-        agentAPI.addFact(
-          new Belief(
-            BeliefKeys.CLINICIAN,
-            ClinicianAttributes.ALERT_ID_TO_SORT,
-            null
-          ),
-          false
-        );
       }
       // Stops the procedure
       agentAPI.addFact(

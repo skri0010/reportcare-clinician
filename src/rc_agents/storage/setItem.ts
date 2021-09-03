@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Alert, PatientInfo, Todo } from "aws/API";
+import { AlertNotification } from "aws/TypedAPI/subscriptions";
 // eslint-disable-next-line no-restricted-imports
 import { mapColorCodeToRiskLevel } from "rc_agents/agents/data-assistant/action-frames/triage-alert-hf-clinic/RetrievePendingAlertCount";
 import {
@@ -12,6 +13,7 @@ import {
 import { AsyncStorageKeys, AsyncStorageType } from ".";
 import {
   getAlertInfos,
+  getAlertNotifications,
   getAlerts,
   getAlertsSync,
   getAllPatientDetails,
@@ -482,4 +484,35 @@ export const setTodos = async (
   todos: AsyncStorageType[AsyncStorageKeys.TODOS]
 ): Promise<void> => {
   await AsyncStorage.setItem(AsyncStorageKeys.TODOS, JSON.stringify(todos));
+};
+
+/**
+ * Insert an alert notification
+ * @param alertNotification alert notification to be inserted
+ */
+export const setAlertNotification = async (
+  alertNotification: AlertNotification
+): Promise<void> => {
+  let localData = await getAlertNotifications();
+  if (!localData) {
+    localData = [];
+  }
+  localData.push(alertNotification);
+  await AsyncStorage.setItem(
+    AsyncStorageKeys.ALERT_NOTIFICATIONS,
+    JSON.stringify(localData)
+  );
+};
+
+/**
+ * Replaces the existing array of alert notifications
+ * @param alertNotifications array of alert notifications
+ */
+export const setAlertNotifications = async (
+  alertNotifications: AlertNotification[]
+): Promise<void> => {
+  await AsyncStorage.setItem(
+    AsyncStorageKeys.ALERT_NOTIFICATIONS,
+    JSON.stringify(alertNotifications)
+  );
 };

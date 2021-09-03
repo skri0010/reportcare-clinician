@@ -10,14 +10,16 @@ import { ProcedureConst } from "agents-framework/Enums";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
   ActionFrameIDs,
+  AppAttributes,
   BeliefKeys,
   ClinicianAttributes,
   ProcedureAttributes,
   setRetryLaterTimeout
 } from "rc_agents/clinician_framework";
 import { AlertNotification } from "aws/TypedAPI/subscriptions";
-import { listClinicianMappingsByPatientID } from "aws";
+import { getClinicianPatientMap } from "aws";
 import { Storage } from "rc_agents/storage";
+import { agentNWA } from "rc_agents/agents";
 
 /**
  * Class to represent the activity for processing an alert notification.
@@ -39,67 +41,86 @@ class ProcessAlertNotification extends Activity {
     await super.doActivity(agent, [rule2]);
 
     try {
+      const facts = agentAPI.getFacts();
+
       // Gets alert notification from facts
       const alertNotification: AlertNotification =
-        agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[
-          ClinicianAttributes.ALERT_NOTIFICATION
-        ];
+        facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.ALERT_NOTIFICATION];
 
       // Retrieves locally stored ClinicianID
       const clinicianID = await Storage.getClinicianID();
 
       if (alertNotification && clinicianID) {
-        // Retrieves PatientIDs from ClinicianPatientMap
-        const patientResults = await listClinicianMappingsByPatientID({
-          patientID: alertNotification.patientID,
-          clinicianID: { eq: clinicianID }
-        });
+        if (facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
+          // Retrieves PatientIDs from ClinicianPatientMap
+          const patientMap = await getClinicianPatientMap({
+            clinicianID: clinicianID,
+            patientID: alertNotification.patientID
+          });
 
-        // Removes alert notification from facts
-        agentAPI.addFact(
-          new Belief(
-            BeliefKeys.CLINICIAN,
-            ClinicianAttributes.ALERT_NOTIFICATION,
-            null
-          ),
-          false
-        );
+          if (patientMap && patientMap.data.getClinicianPatientMap) {
+            // Clinician has access to current patient
+            // Removes alert notification from facts
+            agentAPI.addFact(
+              new Belief(
+                BeliefKeys.CLINICIAN,
+                ClinicianAttributes.ALERT_NOTIFICATION,
+                null
+              ),
+              false
+            );
 
-        if (
-          patientResults &&
-          patientResults.data.listClinicianMappingsByPatientID?.items &&
-          patientResults.data.listClinicianMappingsByPatientID.items.length > 0
-        ) {
-          // Clinician has access to current patient
+            // Adds alert Id to facts to be retrieved and sorted
+            agentAPI.addFact(
+              new Belief(
+                BeliefKeys.CLINICIAN,
+                ClinicianAttributes.ALERT_ID_TO_SORT,
+                alertNotification.alertID
+              ),
+              false
+            );
 
-          // Adds alert Id to facts to be retrieved and sorted
-          agentAPI.addFact(
+            // Triggers SortNewAlert action frame
+            agent.addBelief(
+              new Belief(
+                BeliefKeys.CLINICIAN,
+                ClinicianAttributes.SORT_NEW_ALERT,
+                true
+              )
+            );
+          } else {
+            // Clinician has no access to current patient: stops the procedure
+            // Removes alert notification from facts
+            agentAPI.addFact(
+              new Belief(
+                BeliefKeys.CLINICIAN,
+                ClinicianAttributes.ALERT_NOTIFICATION,
+                null
+              ),
+              false
+            );
+
+            agentAPI.addFact(
+              new Belief(
+                BeliefKeys.PROCEDURE,
+                ProcedureAttributes.AT_CP_III,
+                ProcedureConst.INACTIVE
+              ),
+              true,
+              true
+            );
+          }
+        } else {
+          // Saves alert notification locally to be processed later
+          await Storage.setAlertNotification(alertNotification);
+
+          // Notifies NWA agent
+          agentNWA.addBelief(
             new Belief(
-              BeliefKeys.CLINICIAN,
-              ClinicianAttributes.ALERT_ID_TO_SORT,
-              alertNotification.alertID
-            ),
-            false
-          );
-
-          // Triggers SortNewAlert action frame
-          agent.addBelief(
-            new Belief(
-              BeliefKeys.CLINICIAN,
-              ClinicianAttributes.SORT_NEW_ALERT,
+              BeliefKeys.APP,
+              AppAttributes.SYNC_PROCESS_ALERT_NOTIFICATIONS,
               true
             )
-          );
-        } else {
-          // Clinician has no access to current patient: stops the procedure
-          agentAPI.addFact(
-            new Belief(
-              BeliefKeys.PROCEDURE,
-              ProcedureAttributes.AT_CP_III,
-              ProcedureConst.INACTIVE
-            ),
-            true,
-            true
           );
         }
       }
