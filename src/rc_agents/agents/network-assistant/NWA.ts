@@ -9,7 +9,7 @@ import { af_SyncUpdateAlerts } from "./action-frames/SyncUpdateAlerts";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import { ClinicianAgent } from "rc_agents/clinician_framework/ClinicianAgent";
 import { af_SyncConfigurePatients } from "./action-frames/SyncConfigurePatients";
-import { af_SyncProcessAlertNotifications } from "./action-frames/SyncProcessAlertNotification";
+import { af_SyncProcessAlertNotifications } from "./action-frames/SyncProcessAlertNotifications";
 
 // Initial Beliefs of Agent
 const belief1 = new Belief(AgentIDs.NWA, CommonAttributes.LAST_ACTIVITY, null);

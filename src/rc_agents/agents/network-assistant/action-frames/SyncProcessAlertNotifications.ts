@@ -146,7 +146,7 @@ class SyncProcessAlertNotifications extends Activity {
             await Storage.removeItem(AsyncStorageKeys.ALERT_NOTIFICATIONS);
           }
 
-          // Store alert notifications that failed to be updated
+          // Store alert notifications that failed to be processed
           else if (processedIndices.length > 0) {
             await Storage.setAlertNotifications(
               alertNotifications.filter(
