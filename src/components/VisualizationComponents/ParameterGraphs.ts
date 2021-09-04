@@ -70,35 +70,37 @@ export const getParameterStatFromOneVitalsReport = (
 
     const getStat = (array: number[]) => ({
       // Handles case where no records were recorded for a day
-      min: Math.min(...array) === Infinity ? 0 : Math.min(...array),
-      max: Math.max(...array) === -Infinity ? 0 : Math.max(...array),
+      min: array.length > 0 ? Math.min(...array) : 0,
+      max: array.length > 0 ? Math.max(...array) : 0,
       average: average(array)
     });
 
     // Diastolic BP
-    const diastolicBPVitals: number[] = vitalsData
-      .filter((data) => data.BPDi && parseFloat(data.BPDi))
-      .map((data) => parseFloat(data.BPDi!));
+    const diastolicBPVitals: number[] = vitalsData.flatMap((data) =>
+      data.BPDi && parseFloat(data.BPDi) ? [parseFloat(data.BPDi)] : []
+    );
 
     // Systolic BP
-    const systolicBPVitals: number[] = vitalsData
-      .filter((data) => data.BPSys && parseFloat(data.BPSys))
-      .map((data) => parseFloat(data.BPSys!));
+    const systolicBPVitals: number[] = vitalsData.flatMap((data) =>
+      data.BPSys && parseFloat(data.BPSys) ? [parseFloat(data.BPSys)] : []
+    );
 
     // Oxygen saturation
-    const oxygenSaturation: number[] = vitalsData
-      .filter((data) => data.OxySat && parseFloat(data.OxySat))
-      .map((data) => parseFloat(data.OxySat!));
+    const oxygenSaturation: number[] = vitalsData.flatMap((data) =>
+      data.OxySat && parseFloat(data.OxySat) ? [parseFloat(data.OxySat)] : []
+    );
 
     // Weight
-    const weightVitals: number[] = vitalsData
-      .filter((data) => data.Weight && parseFloat(data.Weight))
-      .map((data) => parseFloat(data.Weight!));
+    const weightVitals: number[] = vitalsData.flatMap((data) =>
+      data.Weight && parseFloat(data.Weight) ? [parseFloat(data.Weight)] : []
+    );
 
     // Fluid
-    const fluidVitals: number[] = vitalsData
-      .filter((data) => data.FluidIntake && parseFloat(data.FluidIntake))
-      .map((data) => parseFloat(data.FluidIntake!));
+    const fluidVitals: number[] = vitalsData.flatMap((data) =>
+      data.FluidIntake && parseFloat(data.FluidIntake)
+        ? [parseFloat(data.FluidIntake)]
+        : []
+    );
 
     // Stats
     stats = {
