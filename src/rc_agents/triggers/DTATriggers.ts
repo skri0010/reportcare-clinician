@@ -206,6 +206,7 @@ export const triggerRetrieveAlerts = (
   agentDTA.addBelief(
     new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.RETRIEVE_ALERTS, true)
   );
+
   agentAPI.addFact(
     new Belief(
       BeliefKeys.PROCEDURE,

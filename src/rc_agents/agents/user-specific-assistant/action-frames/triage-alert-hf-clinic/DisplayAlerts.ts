@@ -51,7 +51,7 @@ class DisplayAlerts extends Activity {
     // OPTIONAL: Get pending alert count
     const pendingAlertsCount: AlertsCount | null =
       agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[
-        ClinicianAttributes.PENDING_ALERTS
+        ClinicianAttributes.PENDING_ALERTS_COUNT
       ];
 
     // OPTIONAL: Get completed AlertInfo[]

@@ -133,7 +133,7 @@ export type AlertInfo = {
 } & Alert;
 
 export type ProcessedAlertInfos = {
-  [patientID: string]: AlertInfo[];
+  [patientID: string]: AlertInfo[] | undefined;
 };
 
 export interface TodoInput {

@@ -23,10 +23,12 @@ export const getAlertInfos = async (): Promise<AlertInfo[] | null> => {
   if (localData) {
     alertInfos = [];
     Object.values(localData).forEach((patientAlertInfos) => {
-      if (!alertInfos) {
-        alertInfos = [];
+      if (patientAlertInfos) {
+        if (!alertInfos) {
+          alertInfos = [];
+        }
+        alertInfos.concat(patientAlertInfos);
       }
-      alertInfos.concat(patientAlertInfos);
     });
     if (alertInfos) {
       return alertInfos;
@@ -57,7 +59,10 @@ export const getAlertInfosByPatientId = async (
 ): Promise<AlertInfo[] | null> => {
   const localData = await getProcessedAlertInfos();
   if (localData && localData[patientId]) {
-    return localData[patientId];
+    const localAlertInfos = localData[patientId];
+    if (localAlertInfos) {
+      return localAlertInfos;
+    }
   }
   return null;
 };
@@ -69,11 +74,14 @@ export const getAlertInfoByPatientId = async (
 ): Promise<AlertInfo | null> => {
   const localData = await getProcessedAlertInfos();
   if (localData && localData[patientId]) {
-    const alertInfo: AlertInfo | undefined = localData[patientId].find(
-      (info) => info.id === alertId
-    );
-    if (alertInfo) {
-      return alertInfo;
+    const localAlertInfos = localData[patientId];
+    if (localAlertInfos) {
+      const alertInfo: AlertInfo | undefined = localAlertInfos.find(
+        (info) => info.id === alertId
+      );
+      if (alertInfo) {
+        return alertInfo;
+      }
     }
   }
   return null;

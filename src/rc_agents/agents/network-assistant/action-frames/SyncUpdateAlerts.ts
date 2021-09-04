@@ -108,7 +108,7 @@ class SyncUpdateAlerts extends Activity {
           await Promise.all(
             successfulIds.map((id) => {
               const index = alerts.findIndex((alert) => alert.id === id);
-              if (index) {
+              if (index >= 0) {
                 delete alerts[index];
               }
               return id;

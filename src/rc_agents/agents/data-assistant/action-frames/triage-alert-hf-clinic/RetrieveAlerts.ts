@@ -69,8 +69,8 @@ class RetrieveAlerts extends Activity {
 
         if (isOnline) {
           // Device is online
-          let pendingAlerts: Alert[] | undefined;
-          let completedAlerts: Alert[] | undefined;
+          let pendingAlerts: Alert[] | undefined | null;
+          let completedAlerts: Alert[] | undefined | null;
 
           if (fetchAlertsMode === FetchAlertsMode.ALL) {
             // Retrieve all pending and completed alerts
@@ -85,20 +85,20 @@ class RetrieveAlerts extends Activity {
             pendingAlerts = await this.getAlertsByFetchAlertsMode(
               fetchAlertsMode
             );
-            if (pendingAlerts) {
-              pendingAlertInfos = convertAlertsToAlertInfos(pendingAlerts);
-              // Store pending AlertInfo[]
-              await Storage.setAlertInfos(pendingAlertInfos);
-            }
           } else if (fetchAlertsMode === FetchAlertsMode.COMPLETED) {
             completedAlerts = await this.getAlertsByFetchAlertsMode(
               fetchAlertsMode
             );
-            if (completedAlerts) {
-              completedAlertInfos = convertAlertsToAlertInfos(completedAlerts);
-              // Store completed AlertInfo[]
-              await Storage.setAlertInfos(completedAlertInfos);
-            }
+          }
+
+          // Store pending / completed AlertInfo[]
+          if (pendingAlerts) {
+            pendingAlertInfos = convertAlertsToAlertInfos(pendingAlerts);
+            await Storage.setAlertInfos(pendingAlertInfos);
+          }
+          if (completedAlerts) {
+            completedAlertInfos = convertAlertsToAlertInfos(completedAlerts);
+            await Storage.setAlertInfos(completedAlertInfos);
           }
         } else {
           // Device is offline
@@ -211,8 +211,9 @@ class RetrieveAlerts extends Activity {
   // Query based on fetch alerts mode
   getAlertsByFetchAlertsMode = async (
     fetchAlertsMode: FetchAlertsMode
-  ): Promise<Alert[] | undefined> => {
-    let alerts: Alert[] | undefined;
+  ): Promise<Alert[] | null> => {
+    let alerts: Alert[] = [];
+    let querySuccessful = false; // If query is not successful, return null
 
     // Query
     if (fetchAlertsMode === FetchAlertsMode.PENDING) {
@@ -221,13 +222,14 @@ class RetrieveAlerts extends Activity {
       });
       // Process pending risk alerts
       if (query.data.listPendingRiskAlerts?.items) {
+        querySuccessful = true;
         const { items } = query.data.listPendingRiskAlerts;
+        if (!alerts) {
+          alerts = [];
+        }
         if (items) {
           items.forEach((item) => {
             if (item) {
-              if (!alerts) {
-                alerts = [];
-              }
               alerts.push(item);
             }
           });
@@ -239,6 +241,7 @@ class RetrieveAlerts extends Activity {
       });
       // Process completed risk alerts
       if (query.data.listCompletedRiskAlerts?.items) {
+        querySuccessful = true;
         const { items } = query.data.listCompletedRiskAlerts;
         if (items) {
           items.forEach((item) => {
@@ -251,6 +254,10 @@ class RetrieveAlerts extends Activity {
           });
         }
       }
+    }
+
+    if (!querySuccessful && alerts.length === 0) {
+      return null;
     }
 
     return alerts;

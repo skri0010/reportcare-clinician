@@ -32,19 +32,22 @@ export const setAlertInfos = async (alertInfos: AlertInfo[]): Promise<void> => {
   if (localProcessedAlertInfos) {
     alertInfos.forEach((alertInfo) => {
       if (localProcessedAlertInfos) {
-        const localAlertInfosForPatient =
-          localProcessedAlertInfos[alertInfo.patientID];
+        const { patientID } = alertInfo;
 
-        // Create new index if patient does not exist
+        // Use a temporary list
+        let localAlertInfosForPatient = localProcessedAlertInfos[patientID];
+
+        // Create new list if patient does not exist
         if (!localAlertInfosForPatient) {
-          localProcessedAlertInfos[alertInfo.patientID] = [];
+          localAlertInfosForPatient = [];
         }
 
         // Merge if patient exists
         const index: number | undefined = localAlertInfosForPatient.findIndex(
           (info) => info.id === alertInfo.id
         );
-        if (index) {
+
+        if (index >= 0) {
           const localAlertInfo: AlertInfo = localAlertInfosForPatient[index];
 
           // Merge based on alert's _version
@@ -57,7 +60,7 @@ export const setAlertInfos = async (alertInfos: AlertInfo[]): Promise<void> => {
             // Set PENDING if not completed
             const pending = completed ? null : AlertStatus.PENDING;
 
-            localProcessedAlertInfos[alertInfo.patientID][index] = {
+            localAlertInfosForPatient[index] = {
               ...localAlertInfo, // Local AlertInfo
               ...alertInfo, // Overwritten by new AlertInfo
               // Modify alert in new AlertInfo
@@ -65,7 +68,13 @@ export const setAlertInfos = async (alertInfos: AlertInfo[]): Promise<void> => {
               completed: completed
             };
           }
+        } else {
+          // Push into list
+          localAlertInfosForPatient.push(alertInfo);
         }
+
+        // Replace the original list
+        localProcessedAlertInfos[patientID] = localAlertInfosForPatient;
       }
     });
     await setProcessedAlertInfos(localProcessedAlertInfos);

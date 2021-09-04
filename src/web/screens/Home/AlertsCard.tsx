@@ -6,19 +6,11 @@ import { ms, ScaledSheet } from "react-native-size-matters";
 import { AlertButton } from "components/Buttons/AlertButton";
 import { CardWrapper } from "./CardWrapper";
 import i18n from "util/language/i18n";
-import { RiskFilter } from "rc_agents/model";
-import { agentDTA } from "rc_agents/agents";
+import { FetchAlertsMode, RiskFilter } from "rc_agents/model";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { setAlertRiskFilters } from "ic-redux/actions/agents/actionCreator";
-import {
-  BeliefKeys,
-  ClinicianAttributes,
-  ProcedureAttributes
-} from "rc_agents/clinician_framework";
-import { Belief } from "agents-framework";
-import { ProcedureConst } from "agents-framework/Enums";
-import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import { isMobile } from "util/device";
+import { AgentTrigger } from "rc_agents/trigger";
 
 interface AlertsCardProps {
   flex?: number;
@@ -39,6 +31,10 @@ export const AlertsCard: FC<AlertsCardProps> = ({
   );
 
   const [remainingAlert, setRemainingAlert] = useState(0);
+
+  useEffect(() => {
+    AgentTrigger.triggerRetrieveAlerts(FetchAlertsMode.PENDING);
+  }, []);
 
   useEffect(() => {
     setRemainingAlert(
