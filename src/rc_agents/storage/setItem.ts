@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Alert, PatientInfo, Todo } from "aws/API";
+import { Alert, MedicationInfo, PatientInfo, Todo } from "aws/API";
 // eslint-disable-next-line no-restricted-imports
 import { mapColorCodeToRiskLevel } from "rc_agents/agents/data-assistant/action-frames/triage-alert-hf-clinic/RetrievePendingAlertCount";
 import {
@@ -7,7 +7,8 @@ import {
   AlertStatus,
   LocalTodo,
   PatientDetails,
-  TodoStatus
+  TodoStatus,
+  MedInput
 } from "rc_agents/model";
 import { AsyncStorageKeys, AsyncStorageType } from ".";
 import {
@@ -99,7 +100,8 @@ export const setPatients = async (
         patientInfo: patient,
         activityInfos: localPatients[patient.patientID]?.activityInfos || {},
         symptomReports: localPatients[patient.patientID]?.symptomReports || {},
-        vitalsReports: localPatients[patient.patientID]?.vitalsReports || {}
+        vitalsReports: localPatients[patient.patientID]?.vitalsReports || {},
+        medicationInfo: localPatients[patient.patientID]?.medicationInfo || []
       };
     }
   });
@@ -117,8 +119,31 @@ export const setPatient = async (patient: PatientInfo): Promise<void> => {
     patientInfo: patient,
     activityInfos: localPatient?.activityInfos || {},
     symptomReports: localPatient?.symptomReports || {},
-    vitalsReports: localPatient?.vitalsReports || {}
+    vitalsReports: localPatient?.vitalsReports || {},
+    medicationInfo: localPatient?.medicationInfo || []
   });
+};
+
+/**
+ * Stores the medication infos of the patient (as PatientDetails)
+ * @param medicationInfo an array of medication info
+ * @param patientID patient ID
+ */
+export const setPatientMedInfo = async (
+  medicationInfo: MedicationInfo[] | MedInput[],
+  patientID: string
+): Promise<void> => {
+  const localPatient = await getPatientDetails(patientID);
+
+  if (localPatient?.patientInfo) {
+    await setPatientDetails({
+      patientInfo: localPatient?.patientInfo,
+      activityInfos: localPatient?.activityInfos || {},
+      symptomReports: localPatient?.symptomReports || {},
+      vitalsReports: localPatient?.vitalsReports || {},
+      medicationInfo: medicationInfo
+    });
+  }
 };
 
 /**
@@ -141,7 +166,8 @@ export const setPatientDetails = async (
       patientInfo: patient,
       activityInfos: patientDetails.activityInfos,
       symptomReports: patientDetails.symptomReports,
-      vitalsReports: patientDetails.vitalsReports
+      vitalsReports: patientDetails.vitalsReports,
+      medicationInfo: patientDetails.medicationInfo
     };
   }
   await AsyncStorage.setItem(
@@ -180,6 +206,19 @@ export const setPatientConfigurations = async (
   await AsyncStorage.setItem(
     AsyncStorageKeys.PATIENT_CONFIGURATIONS,
     JSON.stringify(localData)
+  );
+};
+
+/**
+ * Stores the medication configuration to be synced
+ * @param patientMedConfig an object with an array of medication configurations mapped to a patient
+ */
+export const setPatientMedicationConfigurations = async (
+  patientMedConfig: AsyncStorageType[AsyncStorageKeys.MEDICATION_CONFIGURATIONS]
+): Promise<void> => {
+  await AsyncStorage.setItem(
+    AsyncStorageKeys.MEDICATION_CONFIGURATIONS,
+    JSON.stringify(patientMedConfig)
   );
 };
 

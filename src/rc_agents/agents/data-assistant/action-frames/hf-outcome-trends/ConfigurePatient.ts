@@ -16,8 +16,13 @@ import {
   PatientAttributes,
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
-import { getPatientInfo, updatePatientInfo } from "aws";
-import { PatientInfo, UpdatePatientInfoInput } from "aws/API";
+import { getPatientInfo, updatePatientInfo, createMedicationInfo } from "aws";
+import {
+  PatientInfo,
+  UpdatePatientInfoInput,
+  CreateMedicationInfoInput,
+  MedicationInfo
+} from "aws/API";
 import { Storage } from "rc_agents/storage";
 import {
   setConfigurationSuccessful,
@@ -25,6 +30,7 @@ import {
 } from "ic-redux/actions/agents/actionCreator";
 import { store } from "util/useRedux";
 import { agentNWA } from "rc_agents/agents";
+import { MedInput } from "rc_agents/model";
 
 /**
  * Class to represent an activity for configuring a patient.
@@ -49,13 +55,20 @@ class ConfigurePatient extends Activity {
         agentAPI.getFacts()[BeliefKeys.PATIENT]?.[
           PatientAttributes.PATIENT_TO_CONFIGURE
         ];
+
+      // Get medication configuration from facts
+      const medConfiguration: MedInput[] =
+        agentAPI.getFacts()[BeliefKeys.PATIENT]?.[
+          PatientAttributes.MEDICATION_TO_CONFIGURE
+        ];
+
       // Get online status from facts
       const isOnline =
         agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE];
 
-      if (configuration) {
-        // Indicator of whether configuration is successful
-        let configurationSuccessful = false;
+      if (configuration && medConfiguration) {
+        let configurationSuccessful = false; // Indicator of patient configuration is successful
+        let medConfigurationSuccessful = false; // Indicator of medication configuration is successful
 
         // Device is online
         if (isOnline) {
@@ -63,15 +76,61 @@ class ConfigurePatient extends Activity {
           configurationSuccessful = await updatePatientConfiguration(
             configuration
           );
+
+          // Creates medication info(s) from medConfiguration
+          medConfigurationSuccessful = await createMedicationConfiguration(
+            medConfiguration,
+            configuration.patientID
+          );
         }
         // Device is offline: store patient configuration locally and update local patient details
         else if (!isOnline) {
+          // Add patient ID to each MedInput received from frontend
+          // then save the MedInput into the list of medication infos to sync
+          const allMedInfoToSync: MedInput[] = [];
+          medConfiguration.forEach((medInfo) => {
+            const medInfoToSync: MedInput = {
+              ...medInfo,
+              patientID: configuration.patientID
+            };
+            allMedInfoToSync.push(medInfoToSync);
+          });
+
           // Update local patient details
           await Storage.setPatient(configuration);
 
+          //  Update local medication info for the patient
+          await Storage.setPatientMedInfo(
+            allMedInfoToSync,
+            configuration.patientID
+          );
+
           // Store patient configuration to be synced later on
           await Storage.setPatientConfigurations([configuration]);
+
+          // Get all the current local medication infos to be synced
+          let localMedConfiguration =
+            await Storage.getPatientMedicationConfigurations();
+
+          // If there is no local medication infos to be synced, add a new object for them
+          if (!localMedConfiguration) {
+            localMedConfiguration = {};
+          }
+
+          // If the patient doesn't have an entry in the local medication infos to be synced,
+          // add an entry for the patient
+          if (!localMedConfiguration[configuration.patientID]) {
+            localMedConfiguration[configuration.patientID] = [];
+          }
+
+          // Save the medication infos to be synced into local storage
+          localMedConfiguration[configuration.patientID] = allMedInfoToSync;
+          await Storage.setPatientMedicationConfigurations(
+            localMedConfiguration
+          );
+
           configurationSuccessful = true;
+          medConfigurationSuccessful = true;
 
           // Notifies NWA of the configuration to sync
           agentNWA.addBelief(
@@ -83,7 +142,7 @@ class ConfigurePatient extends Activity {
           );
         }
 
-        if (configurationSuccessful) {
+        if (configurationSuccessful && medConfigurationSuccessful) {
           // Add configuration to facts to be used for retrieving details
           agentAPI.addFact(
             new Belief(
@@ -218,6 +277,51 @@ export const updatePatientConfiguration = async (
   await Storage.setPatient(configuration);
 
   return updateSuccessful;
+};
+
+/**
+ * Creates medication infos for the patient
+ * @param medicationInfos a list of medication input from the frontend (can be an empty list)
+ * @param patientID patient ID
+ * @returns a boolean indicating the success or failure of the medication info creation
+ */
+export const createMedicationConfiguration = async (
+  medicationInfos: MedInput[],
+  patientID: string
+): Promise<boolean> => {
+  let createMedInfoSuccessful = false;
+
+  const allMedInfos: MedicationInfo[] = [];
+
+  // Save each medication input into the DB
+  const allMedInfoCreation = await Promise.all(
+    medicationInfos.map(async (medInfo) => {
+      const medInfoToInsert: CreateMedicationInfoInput = {
+        name: medInfo.name,
+        dosage: parseFloat(medInfo.dosage),
+        frequency: parseFloat(medInfo.frequency),
+        records: JSON.stringify("{}"),
+        patientID: patientID,
+        active: true
+      };
+
+      const createMedInfoResponse = createMedicationInfo(medInfoToInsert);
+      return createMedInfoResponse;
+    })
+  );
+
+  if (allMedInfoCreation) {
+    allMedInfoCreation.forEach((medInfo) => {
+      if (medInfo.data.createMedicationInfo)
+        allMedInfos.push(medInfo.data.createMedicationInfo);
+    });
+    createMedInfoSuccessful = true;
+  }
+
+  // Save the created medication infos into local storage
+  await Storage.setPatientMedInfo(allMedInfos, patientID);
+
+  return createMedInfoSuccessful;
 };
 
 // Preconditions

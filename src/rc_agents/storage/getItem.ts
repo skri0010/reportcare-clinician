@@ -240,6 +240,23 @@ export const getPatientConfigurations = async (): Promise<
 };
 
 /**
+ * Get the medication configurations to be synced
+ * @returns an object with an array of medication configurations mapped to a patient ID
+ */
+export const getPatientMedicationConfigurations = async (): Promise<
+  AsyncStorageType[AsyncStorageKeys.MEDICATION_CONFIGURATIONS] | null
+> => {
+  const localData = await AsyncStorage.getItem(
+    AsyncStorageKeys.MEDICATION_CONFIGURATIONS
+  );
+
+  if (localData) {
+    return JSON.parse(localData);
+  }
+  return null;
+};
+
+/**
  * Gets Alerts with updated to be synced.
  * @returns array of Alerts if any, otherwise null
  */

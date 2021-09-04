@@ -2,7 +2,8 @@ import {
   ActivityInfo,
   ReportSymptom,
   ReportVitals,
-  PatientInfo
+  PatientInfo,
+  MedicationInfo
 } from "aws/API";
 import { RiskLevel } from "models/RiskLevel";
 
@@ -67,6 +68,7 @@ export interface PatientDetails {
   activityInfos: LocalActivityInfos;
   symptomReports: LocalReportSymptoms;
   vitalsReports: LocalReportVitals;
+  medicationInfo: MedicationInfo[] | MedInput[];
 }
 
 export type LocalActivityInfos = {
@@ -149,4 +151,12 @@ export interface LocalTodo {
 
 export interface TodoDetails {
   id: string;
+}
+
+export interface MedInput {
+  id?: string;
+  name: string;
+  dosage: string;
+  frequency: string;
+  patientID?: string;
 }

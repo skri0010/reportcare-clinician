@@ -182,22 +182,32 @@
       "DeviceNo": "Device number",
       "TargetActivity": "Target number of steps",
       "TargetWeight": "Target weight (in kg)",
-      "FluidIntakeGoal": "Fluid intake goal (in ml)"
+      "FluidIntakeGoal": "Fluid intake goal (in ml)",
+      "MedName": "Name of medicine",
+      "Dosage": "Dosage (in mg)",
+      "Frequency": "Frequency (in times per day)"
     },
     "Prompt": {
-      "DeviceNo": "Does this patient have a device?"
+      "DeviceNo": "Does this patient have a device?",
+      "MedInfo": "Does this patient take any medicines?"
     },
     "Error": {
       "TargetActivity": "Please input a valid target number of steps",
       "TargetWeight": "Please input a valid target weight (in kg)",
-      "FluidIntakeGoal": "Please input a valid fluid intake goal (in ml)"
+      "FluidIntakeGoal": "Please input a valid fluid intake goal (in ml)",
+      "MedName": "Please input a valid medicine name",
+      "Dosage": "Please input a valid medication dosage(in mg)",
+      "Frequency": "Please input a valid medication frequency (in times per day)"
     },
     "Placeholder": {
       "DiagnosisInfo": "Enter diagnosis information",
       "DeviceNo": "Enter device number",
       "TargetActivity": "Enter target number of steps",
       "TargetWeight": "Enter target weight (in kg)",
-      "FluidIntakeGoal": "Enter fluid intake goal (in ml)"
+      "FluidIntakeGoal": "Enter fluid intake goal (in ml)",
+      "MedName": "Enter medicine name",
+      "Dosage": "Enter medication dosage (in mg)",
+      "Frequency": "Enter medication frequency (in times per day)"
     },
     "ConfigurationSuccessful": "Patient has been successfully configured"
   },

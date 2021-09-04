@@ -12,7 +12,9 @@ import {
   Todo,
   CreateTodoInput,
   PatientAssignment,
-  CreatePatientAssignmentInput
+  CreatePatientAssignmentInput,
+  MedicationInfo,
+  CreateMedicationInfoInput
 } from "aws/API";
 
 interface CreateClinicianInfoResponse extends BaseResponse {
@@ -77,4 +79,17 @@ export const createPatientAssignment = async (
     query: mutations.createPatientAssignment,
     variables: { input: input }
   })) as CreatePatientAssignmentResponse;
+};
+
+interface CreateMedicationInfoResponse extends BaseResponse {
+  data: { createMedicationInfo?: MedicationInfo };
+}
+
+export const createMedicationInfo = async (
+  input: CreateMedicationInfoInput
+): Promise<CreateMedicationInfoResponse> => {
+  return (await API.graphql({
+    query: mutations.createMedicationInfo,
+    variables: { input: input }
+  })) as CreateMedicationInfoResponse;
 };

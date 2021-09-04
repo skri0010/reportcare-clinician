@@ -68,7 +68,8 @@ class RetrievePatientDetails extends Activity {
           patientInfo: patientInfo,
           activityInfos: {},
           symptomReports: {},
-          vitalsReports: {}
+          vitalsReports: {},
+          medicationInfo: []
         };
         let patientDetailsRetrieved = false;
 

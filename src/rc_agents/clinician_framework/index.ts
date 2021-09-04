@@ -217,6 +217,7 @@ export enum PatientAttributes {
   PATIENT_ALERT_HISTORY_RETRIEVED = "PatientAlertHistoryRetrieved",
   PATIENT_TO_CONFIGURE = "PatientToConfigure",
   CONFIGURE_PATIENT = "ConfigurePatient",
+  MEDICATION_TO_CONFIGURE = "MedicationToConfigure",
 
   // SRD-I: Patient Assignments
   PENDING_PATIENT_ASSIGNMENTS = "PendingPatientAssignments",

@@ -65,6 +65,37 @@ export const validateFluidIntakeGoal = (fluidIntakeGoal: string): boolean => {
   );
 };
 
+export const validateMedName = (medName: string): boolean => {
+  // Assumed medicine name's length
+  const minMedNameLength = 0;
+  const maxMedNameLength = 200;
+  return (
+    medName.length > minMedNameLength && medName.length <= maxMedNameLength
+  );
+};
+
+export const validateMedDosage = (dosage: string): boolean => {
+  // Assumed medication dosage (in mg)
+  const minDosage = 0;
+  const maxDosage = 1000;
+  return (
+    validateNumber(dosage) &&
+    parseFloat(dosage) > minDosage &&
+    parseFloat(dosage) <= maxDosage
+  );
+};
+
+export const validateMedFreq = (frequency: string): boolean => {
+  // Assumed medication frquency (in times per day)
+  const minFrequency = 0;
+  const maxFrequency = 10;
+  return (
+    validateNumber(frequency) &&
+    parseFloat(frequency) > minFrequency &&
+    parseFloat(frequency) <= maxFrequency
+  );
+};
+
 export const notEmptyString = (testString: string): boolean => {
   return testString.length > 0;
 };

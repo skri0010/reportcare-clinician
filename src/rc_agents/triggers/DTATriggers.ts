@@ -15,7 +15,8 @@ import {
   Hospital,
   PatientAssignmentResolution,
   TodoInput,
-  TodoStatus
+  TodoStatus,
+  MedInput
 } from "rc_agents/model";
 
 // HF-OTP-I
@@ -115,15 +116,28 @@ export const triggerResolvePendingAssignments = (
 };
 
 // HF-OTP-II: Triggers ConfigurePatient of DTA
-export const triggerConfigurePatient = (input: PatientInfo): void => {
+export const triggerConfigurePatient = (
+  patientInput: PatientInfo,
+  medInput: MedInput[]
+): void => {
   agentAPI.addFact(
     new Belief(
       BeliefKeys.PATIENT,
       PatientAttributes.PATIENT_TO_CONFIGURE,
-      input
+      patientInput
     ),
     false
   );
+
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PATIENT,
+      PatientAttributes.MEDICATION_TO_CONFIGURE,
+      medInput
+    ),
+    false
+  );
+
   agentDTA.addBelief(
     new Belief(BeliefKeys.PATIENT, PatientAttributes.CONFIGURE_PATIENT, true)
   );
