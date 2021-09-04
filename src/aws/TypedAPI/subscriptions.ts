@@ -7,8 +7,8 @@ import {
 import { Observable } from "zen-observable-ts";
 import { Storage } from "rc_agents/storage";
 
-// Override default subscription otherwise null data error will be thrown
-// Requested fields should be exactly identical to CreateAlert input fields excluding owner
+// Override default subscription otherwise null data will be received
+// Requested fields should be a subset of CreateAlertNotification input fields
 const onCreateAlertNotification = /* GraphQL */ `
   subscription OnCreateAlertNotification {
     onCreateAlertNotification {
@@ -48,7 +48,6 @@ export const subscribeAlertNotification = (): void => {
 const onCreatePatientAssignment = /* GraphQL */ `
   subscription OnCreatePatientAssignment($clinicianID: String) {
     onCreatePatientAssignment(clinicianID: $clinicianID) {
-      id
       patientID
       clinicianID
     }
@@ -56,7 +55,6 @@ const onCreatePatientAssignment = /* GraphQL */ `
 `;
 
 export type PatientAssignmentSubscription = {
-  id: string;
   patientID: string;
   clinicianID: string;
 };
