@@ -8,7 +8,7 @@ import {
   setAlertRiskFilters,
   setPatientRiskFilters
 } from "ic-redux/actions/agents/actionCreator";
-import { AlertStatus, RiskFilter } from "rc_agents/model";
+import { FetchAlertsMode, RiskFilter } from "rc_agents/model";
 import { AgentTrigger } from "rc_agents/trigger";
 
 interface RiskFilterPillListProps {
@@ -46,7 +46,7 @@ export const RiskFilterPillList: FC<RiskFilterPillListProps> = ({
       store.dispatch(setAlertRiskFilters(tempRiskFilters));
 
       // Trigger the DTA agent to retrieve alert status based on the alert status
-      AgentTrigger.triggerRetrieveAlerts(AlertStatus.ALL);
+      AgentTrigger.triggerRetrieveAlerts(FetchAlertsMode.ALL);
     }
   };
 

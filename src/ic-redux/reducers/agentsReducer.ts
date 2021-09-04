@@ -4,7 +4,7 @@ import { Reducer } from "redux";
 import {
   AlertInfo,
   PatientDetails,
-  PendingAlertCount,
+  AlertsCount,
   LocalTodo,
   RiskFilter
 } from "rc_agents/model";
@@ -31,8 +31,7 @@ interface AgentsState {
   configuringPatient: boolean;
   configurationSuccessful: boolean;
   riskFilters: RiskFilter;
-  pendingAlertCount: PendingAlertCount;
-  fetchingAlerts: boolean;
+  pendingAlertCount: AlertsCount;
   fetchingPendingAlerts: boolean;
   fetchingCompletedAlerts: boolean;
   updatePendingAlerts: boolean;
@@ -91,7 +90,6 @@ const initialState: AgentsState = {
     lowRisk: 0,
     unassignedRisk: 0
   },
-  fetchingAlerts: false,
   fetchingPendingAlerts: false,
   fetchingCompletedAlerts: false,
   updatePendingAlerts: false,
@@ -206,7 +204,8 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
     case actionNames.SET_FETCHING_ALERTS:
       return {
         ...state,
-        fetchingAlerts: action.payload.fetchingAlerts
+        fetchingPendingAlerts: action.payload.fetchingPendingAlerts,
+        fetchingCompletedAlerts: action.payload.fetchingCompletedAlerts
       };
     case actionNames.SET_PENDING_ALERTS:
       return {

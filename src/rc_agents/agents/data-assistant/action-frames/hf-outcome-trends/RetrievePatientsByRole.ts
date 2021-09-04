@@ -50,7 +50,7 @@ class RetrievePatientsByRole extends Activity {
     try {
       if (role) {
         const patients = await this.queryPatients(role);
-        // Update Facts and Beliefs
+        // Update Facts
         // Remove item
         agentAPI.addFact(
           new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.ROLE, null),

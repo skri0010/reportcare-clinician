@@ -3,7 +3,8 @@ import {
   Communicate,
   Agent,
   Belief,
-  Precondition
+  Precondition,
+  ResettablePrecondition
 } from "agents-framework";
 import {
   ProcedureConst,
@@ -22,13 +23,10 @@ import {
  * Class to represent the activity for requesting display of alerts.
  * This happens in Procedure Triage Alert HF Clinic (AT-CP).
  */
-class RequestAlertsDisplay extends Communicate {
-  /**
-   * Constructor for the RequestAlertsDisplay class
-   */
+class RequestDisplayAlerts extends Communicate {
   constructor() {
     super(
-      ActionFrameIDs.DTA.REQUEST_ALERTS_DISPLAY,
+      ActionFrameIDs.DTA.REQUEST_DISPLAY_ALERTS,
       Performative.REQUEST,
       // Triggers DisplayAlerts action frame of UXSA
       new Belief(
@@ -46,7 +44,7 @@ class RequestAlertsDisplay extends Communicate {
    */
   async doActivity(agent: Agent): Promise<void> {
     try {
-      await super.doActivity(agent);
+      await super.doActivity(agent, [rule3]);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
@@ -65,10 +63,15 @@ const rule2 = new Precondition(
   CommonAttributes.LAST_ACTIVITY,
   ActionFrameIDs.DTA.RETRIEVE_ALERTS
 );
+const rule3 = new ResettablePrecondition(
+  BeliefKeys.CLINICIAN,
+  ClinicianAttributes.ALERTS_RETRIEVED,
+  true
+);
 
 // Actionframe
-export const af_RequestAlertsDisplay = new Actionframe(
-  `AF_${ActionFrameIDs.DTA.REQUEST_ALERTS_DISPLAY}`,
+export const af_RequestDisplayAlerts = new Actionframe(
+  `AF_${ActionFrameIDs.DTA.REQUEST_DISPLAY_ALERTS}`,
   [rule1, rule2],
-  new RequestAlertsDisplay()
+  new RequestDisplayAlerts()
 );

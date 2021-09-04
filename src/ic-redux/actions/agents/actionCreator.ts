@@ -1,7 +1,7 @@
 import {
   AlertInfo,
   PatientDetails,
-  PendingAlertCount,
+  AlertsCount,
   LocalTodo,
   RiskFilter as RiskFilters
 } from "rc_agents/model";
@@ -123,7 +123,7 @@ export const setConfigurationSuccessful = createAction(
 
 export const setPendingAlertCount = createAction(
   actionNames.SET_PENDING_ALERT_COUNT,
-  (pendingAlertCount: PendingAlertCount) => ({
+  (pendingAlertCount: AlertsCount) => ({
     pendingAlertCount: pendingAlertCount
   })
 )();
@@ -131,7 +131,8 @@ export const setPendingAlertCount = createAction(
 export const setFetchingAlerts = createAction(
   actionNames.SET_FETCHING_ALERTS,
   (fetchingAlerts: boolean) => ({
-    fetchingAlerts: fetchingAlerts
+    fetchingPendingAlerts: fetchingAlerts,
+    fetchingCompletedAlerts: fetchingAlerts
   })
 )();
 

@@ -42,23 +42,20 @@ class DisplayAlertInfo extends Activity {
 
       if (alertInfo) {
         store.dispatch(setAlertInfo(alertInfo));
-
-        // Removes alert info from facts
-        agentAPI.addFact(
-          new Belief(
-            BeliefKeys.CLINICIAN,
-            ClinicianAttributes.ALERT_INFO,
-            null
-          ),
-          false
-        );
       }
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
     }
 
-    // Stops the procedure
+    // Update Facts
+    // Remove item
+    agentAPI.addFact(
+      new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.ALERT_INFO, null),
+      false
+    );
+
+    // End the procedure
     agentAPI.addFact(
       new Belief(
         BeliefKeys.PROCEDURE,

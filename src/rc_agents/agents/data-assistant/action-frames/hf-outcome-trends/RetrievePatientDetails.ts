@@ -162,7 +162,7 @@ class RetrievePatientDetails extends Activity {
         }
 
         if (patientDetailsRetrieved) {
-          // Update Facts and Beliefs
+          // Update Facts
           // Store items
           agentAPI.addFact(
             new Belief(
@@ -182,7 +182,7 @@ class RetrievePatientDetails extends Activity {
           );
         }
 
-        // Removes patientInfo from facts
+        // Remove item
         agentAPI.addFact(
           new Belief(
             BeliefKeys.PATIENT,

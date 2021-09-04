@@ -11,8 +11,7 @@ import { Belief } from "agents-framework";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
   AlertInfo,
-  AlertStatus,
-  Hospital,
+  FetchAlertsMode,
   PatientAssignmentResolution,
   TodoInput,
   TodoStatus
@@ -191,12 +190,14 @@ export const triggerUpdateTodo = (input: TodoInput): void => {
 };
 
 // AT-CP-I: Trigger RetriveAlerts of DTA
-export const triggerRetrieveAlerts = (alertStatus: AlertStatus): void => {
+export const triggerRetrieveAlerts = (
+  fetchAlertsMode: FetchAlertsMode
+): void => {
   agentAPI.addFact(
     new Belief(
       BeliefKeys.CLINICIAN,
-      ClinicianAttributes.ALERT_STATUS,
-      alertStatus
+      ClinicianAttributes.FETCH_ALERTS_MODE,
+      fetchAlertsMode
     ),
     false
   );
@@ -215,10 +216,10 @@ export const triggerRetrieveAlerts = (alertStatus: AlertStatus): void => {
 };
 
 // AT-CP-II Triggers RetrieveAlertInfo of DTA
-export const triggerRetrieveAlertInfo = (input: AlertInfo): void => {
+export const triggerRetrieveAlertInfo = (alertInfo: AlertInfo): void => {
   // Add alert as facts
   agentAPI.addFact(
-    new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.ALERT, input),
+    new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.ALERT_INFO, alertInfo),
     false
   );
 

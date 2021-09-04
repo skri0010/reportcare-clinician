@@ -22,9 +22,10 @@ import {
   setUpdatePendingAlerts
 } from "ic-redux/actions/agents/actionCreator";
 import { agentNWA } from "rc_agents/agents";
-import { getAlert, updateAlert } from "aws";
-import { AlertInfo, AlertStatus } from "rc_agents/model";
+import { getFullAlert, updateAlert } from "aws";
+import { AlertInfo, AlertStatus, FetchAlertsMode } from "rc_agents/model";
 import { Alert, UpdateAlertInput } from "aws/API";
+import { convertAlertToAlertInfo } from "util/utilityFunctions";
 
 /**
  * Class to represent an activity for updating a patient's Alert.
@@ -47,7 +48,7 @@ class UpdateAlert extends Activity {
     try {
       // Gets alert details to be updated
       const alertInput: AlertInfo =
-        facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.ALERT];
+        facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.ALERT_INFO];
 
       if (alertInput) {
         let toSync = false;
@@ -55,7 +56,7 @@ class UpdateAlert extends Activity {
 
         if (facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
           // Device is online: queries the latest alert
-          const alertQuery = await getAlert({ id: alertInput.id });
+          const alertQuery = await getFullAlert({ id: alertInput.id });
           if (alertQuery.data.getAlert) {
             const latestAlert = alertQuery.data.getAlert;
 
@@ -102,8 +103,7 @@ class UpdateAlert extends Activity {
         }
 
         if (alertToStore) {
-          await Storage.mergeAlert(alertToStore);
-          await Storage.mergeAlertInfo(alertToStore);
+          await Storage.setAlertInfo(convertAlertToAlertInfo(alertToStore));
         }
 
         if (toSync) {
@@ -120,8 +120,8 @@ class UpdateAlert extends Activity {
         agentAPI.addFact(
           new Belief(
             BeliefKeys.CLINICIAN,
-            ClinicianAttributes.ALERT_STATUS,
-            AlertStatus.ALL
+            ClinicianAttributes.FETCH_ALERTS_MODE,
+            FetchAlertsMode.ALL
           ),
           false
         );

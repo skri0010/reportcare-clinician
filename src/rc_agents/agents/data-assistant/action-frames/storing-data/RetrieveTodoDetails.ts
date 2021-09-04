@@ -16,10 +16,13 @@ import {
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
 import { Storage } from "rc_agents/storage";
-import { LocalTodo, TodoStatus } from "rc_agents/model";
+import {
+  LocalTodo,
+  mapColorCodeToRiskLevel,
+  TodoStatus
+} from "rc_agents/model";
 import { Todo } from "aws/API";
 import { getTodo } from "aws/TypedAPI/getQueries";
-import { mapColorCodeToRiskLevel } from "../triage-alert-hf-clinic/RetrievePendingAlertCount";
 
 /**
  * Class representing an activity that triggers the display of todo details.

@@ -13,13 +13,13 @@ import { AgentTrigger } from "rc_agents/trigger";
 import { AlertInfo } from "rc_agents/model";
 
 export const AlertCompletedTab: FC<AlertRowTabProps> = ({ setEmptyAlert }) => {
-  const { colors, completedAlerts, fetchingCompletedAlerts, fetchingAlerts } =
-    select((state: RootState) => ({
+  const { colors, completedAlerts, fetchingCompletedAlerts } = select(
+    (state: RootState) => ({
       colors: state.settings.colors,
       completedAlerts: state.agents.completedAlerts,
-      fetchingCompletedAlerts: state.agents.fetchingCompletedAlerts,
-      fetchingAlerts: state.agents.fetchingAlerts
-    }));
+      fetchingCompletedAlerts: state.agents.fetchingCompletedAlerts
+    })
+  );
 
   const [noCompletedAlertsNotice, setNoCompletedAlertsNotice] =
     useState<string>("");
@@ -32,7 +32,7 @@ export const AlertCompletedTab: FC<AlertRowTabProps> = ({ setEmptyAlert }) => {
 
   // Prepare text notice to be displayed after fetching patients
   useEffect(() => {
-    if (fetchingCompletedAlerts || fetchingAlerts) {
+    if (fetchingCompletedAlerts) {
       if (completedAlerts) {
         // No patients found
         setNoCompletedAlertsNotice(i18n.t("Alert.AlertList.NoCompletedAlerts"));
@@ -43,7 +43,7 @@ export const AlertCompletedTab: FC<AlertRowTabProps> = ({ setEmptyAlert }) => {
         );
       }
     }
-  }, [completedAlerts, fetchingCompletedAlerts, fetchingAlerts]);
+  }, [completedAlerts, fetchingCompletedAlerts]);
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.primaryBackgroundColor }}>
@@ -62,7 +62,7 @@ export const AlertCompletedTab: FC<AlertRowTabProps> = ({ setEmptyAlert }) => {
       <RiskFilterPillList alertScreen />
 
       {/* Show loading if alerts is still being fetched */}
-      {fetchingCompletedAlerts || fetchingAlerts ? (
+      {fetchingCompletedAlerts ? (
         <LoadingIndicator flex={1} />
       ) : completedAlerts && completedAlerts.length > 0 ? (
         <FlatList

@@ -23,6 +23,15 @@ export const ActionFrameIDs = {
     RETRIEVE_ENTRY_DATA: "RetrieveEntryData",
     STORE_ENTRY_DATA: "StoreEntryData",
 
+    // AT-CP-I: Alerts
+    RETRIEVE_ALERTS: "RetrieveAlerts",
+    REQUEST_DISPLAY_ALERTS: "RequestDisplayAlerts",
+
+    // AT-CP-II: Single Alert's details (AlertInfo)
+    RETRIEVE_ALERT_INFO: "RetrieveAlertInfo",
+    REQUEST_DISPLAY_ALERT_INFO: "RequestDisplayAlertInfo",
+    UPDATE_ALERT: "UpdateAlert",
+
     // HF-OTP-I: ClinicianInfo and all patients (PatientInfo)
     REQUEST_RETRIEVE_ROLE: "RequestRetrieveRole",
     RETRIEVE_PATIENTS_BY_ROLE: "RetrievePatientsByRole",
@@ -35,17 +44,6 @@ export const ActionFrameIDs = {
 
     RETRIEVE_ALERT_HISTORY: "RetrieveAlertHistory",
     REQUEST_DISPLAY_ALERT_HISTORY: "RequestDisplayAlertHistory",
-
-    // AT-CP-I: Alerts
-    RETRIEVE_PENDING_ALERT_COUNT: "RetrievePendingAlertCount",
-    REQUEST_PENDING_ALERT_COUNT_DISPLAY: "RequestPendingAlertCountDisplay",
-    RETRIEVE_ALERTS: "RetrieveAlerts",
-    REQUEST_ALERTS_DISPLAY: "RequestAlertsDisplay",
-
-    // AT-CP-II: Single Alert's details (AlertInfo)
-    RETRIEVE_ALERT_INFO: "RetrieveAlertInfo",
-    REQUEST_ALERT_INFO_DISPLAY: "RequestAlertInfoDisplay",
-    UPDATE_ALERT: "UpdateAlert",
 
     // SRD-I: Patient Assignments
     RETRIEVE_PENDING_PATIENT_ASSIGNMENTS: "RetrievePendingPatientAssignments",
@@ -69,6 +67,12 @@ export const ActionFrameIDs = {
     REQUEST_DISPLAY_CLINICIAN_CONTACTS: "RequestDisplayClinicianContacts"
   },
   UXSA: {
+    // AT-CP-I: Alerts
+    DISPLAY_ALERTS: "DisplayAlerts",
+
+    // AT-CP-II: Alerts
+    DISPLAY_ALERT_INFO: "DisplayAlertInfo",
+
     // HF-OTP-I: ClinicianInfo and all patients (PatientInfo)
     RETRIEVE_ROLE: "RetrieveRole",
     REQUEST_RETRIEVE_PATIENTS: "RequestRetrievePatients",
@@ -86,29 +90,25 @@ export const ActionFrameIDs = {
 
     // SRD -III : Todo Details
     DISPLAY_TODO_DETAILS: "DisplayTodoDetails",
-    // SRD-IV Clinician Contacts
-    DISPLAY_CLINICIAN_CONTACTS: "DisplayClinicianContacts",
 
-    // AT-CP
-    DISPLAY_PENDING_ALERT_COUNT: "DisplayPendingAlertCount",
-    DISPLAY_ALERTS: "DisplayAlerts",
-    DISPLAY_ALERT_INFO: "DisplayAlertInfo"
+    // SRD-IV Clinician Contacts
+    DISPLAY_CLINICIAN_CONTACTS: "DisplayClinicianContacts"
   },
   NWA: {
+    // AT-CP-II: Alert's Details
+    SYNC_UPDATE_ALERTS: "SyncUpdateAlerts",
+
     SYNC_PROTECTED_INFO: "SyncProtectedInfo",
 
-    // HF-OTP-II - Patient Configuration
+    // HF-OTP-II: Patient Configuration
     SYNC_CONFIGURE_PATIENTS: "SyncConfigurePatients",
 
-    // SRD-I - Patient Assignments
+    // SRD-I: Patient Assignments
     SYNC_PATIENT_ASSIGNMENT_RESOLUTIONS: "SyncPatientAssignmentResolutions",
 
-    // SRD-II - Todos
+    // SRD-II: Todos
     SYNC_CREATE_TODOS: "SyncCreateTodos",
-    SYNC_UPDATE_TODOS: "SyncUpdateTodos",
-
-    // AT-CP-II - Alert's Details
-    SYNC_UPDATE_ALERTS: "SyncUpdateAlerts"
+    SYNC_UPDATE_TODOS: "SyncUpdateTodos"
   },
   MHA: {},
   ALA: {}
@@ -168,16 +168,18 @@ export enum ClinicianAttributes {
   TODO_DETAILS_RETRIEVED = "TodoDetailsRetrieved",
   TODO_ID = "TodoId",
 
-  // AT-CP: Alerts
-  RETRIEVE_PENDING_ALERT_COUNT = "RetrievePendingAlertCount",
-  PENDING_ALERT_COUNT_RETRIEVED = "PendingAlertCountRetrieved",
-  ALERT_STATUS = "AlertStatus",
+  // AT-CP-I: Alerts
+  FETCH_ALERTS_MODE = "FetchAlertsMode",
   ALERT_RISK_LEVEL = "AlertRiskLevel",
+
   RETRIEVE_ALERTS = "RetrieveAlerts",
   ALERTS = "Alerts",
   PENDING_ALERTS = "PendingAlerts",
+  PENDING_ALERTS_COUNT = "PendingAlertsCount",
+  COMPLETED_ALERTS = "CompletedAlerts",
   ALERTS_RETRIEVED = "AlertsRetrieved",
-  ALERT = "Alert",
+
+  // AT-CP-II: AlertInfo
   RETRIEVE_ALERT_INFO = "RetrieveAlertInfo",
   ALERT_INFO = "AlertInfo",
   ALERT_INFO_RETRIEVED = "AlertInfoRetrieved",

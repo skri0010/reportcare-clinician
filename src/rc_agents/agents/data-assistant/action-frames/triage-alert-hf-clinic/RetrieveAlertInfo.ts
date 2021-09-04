@@ -13,21 +13,16 @@ import {
   AppAttributes,
   BeliefKeys,
   ClinicianAttributes,
-  ProcedureAttributes
+  ProcedureAttributes,
+  setRetryLaterTimeout
 } from "rc_agents/clinician_framework";
 import { Storage } from "rc_agents/storage";
 import { AlertInfo } from "rc_agents/model";
-import {
-  listMedCompliantsByDate,
-  getMedicationInfo,
-  getActivityInfo,
-  getReportVitals,
-  getReportSymptom,
-  getPatientInfo
-} from "aws";
-import { ModelSortDirection } from "aws/API";
+import { getFullAlert, getPatientInfo } from "aws";
 import { store } from "util/useRedux";
 import { setFetchingAlertInfo } from "ic-redux/actions/agents/actionCreator";
+import { Alert } from "aws/API";
+import { convertAlertToAlertInfo } from "util/utilityFunctions";
 
 /**
  * Class to represent an activity for retrieving patient's information associated with an alert.
@@ -53,28 +48,32 @@ class RetrieveAlertInfo extends Activity {
 
       // Retrieves alert from facts
       const alert: AlertInfo =
-        facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.ALERT];
+        facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.ALERT_INFO];
+
+      // Get online status from facts
+      const isOnline: boolean = facts[BeliefKeys.APP]?.[AppAttributes.ONLINE];
 
       if (alert) {
         let alertInfo: AlertInfo | null | undefined;
 
-        if (facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
-          // Device is online: queries information associated with the alert
+        if (isOnline) {
+          // Device is online
+          // Query information associated with alert
           const queryResult = await queryAlertInfo(alert);
           if (queryResult) {
-            alertInfo = queryResult;
-            await Storage.setAlertInfo(queryResult);
+            await Storage.setAlertInfo(convertAlertToAlertInfo(queryResult));
           }
         } else {
-          // Device is offline: get alert info from local storage
-          alertInfo = await Storage.getSingleAlertInfo(
+          // Device is offline
+          alertInfo = await Storage.getAlertInfoByPatientId(
             alert.id,
             alert.patientID
           );
         }
 
         if (alertInfo) {
-          // Adds alert info to facts to be retrieved in DisplayAlertInfo action frame of UXSA
+          // Update Facts
+          // Store item
           agentAPI.addFact(
             new Belief(
               BeliefKeys.CLINICIAN,
@@ -83,120 +82,94 @@ class RetrieveAlertInfo extends Activity {
             ),
             false
           );
+
+          // Trigger request to Communicate to USXA
+          agent.addBelief(
+            new Belief(
+              BeliefKeys.CLINICIAN,
+              ClinicianAttributes.ALERT_INFO_RETRIEVED,
+              true
+            )
+          );
         }
       }
 
       // Update Facts
-      // Removes alert from facts
+      // Remove item
       agentAPI.addFact(
-        new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.ALERT, null),
+        new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.ALERT_INFO, null),
         false
       );
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
-    }
+      // Set to retry later
+      setRetryLaterTimeout(() => {
+        agent.addBelief(
+          new Belief(
+            BeliefKeys.PATIENT,
+            ClinicianAttributes.RETRIEVE_ALERT_INFO,
+            true
+          )
+        );
+        agentAPI.addFact(
+          new Belief(
+            BeliefKeys.PROCEDURE,
+            ProcedureAttributes.AT_CP_II,
+            ProcedureConst.ACTIVE
+          )
+        );
+      });
 
-    // Dispatch to frontend that the fetching of alert info has completed
-    store.dispatch(setFetchingAlertInfo(false));
+      // Update Facts
+      // End the procedure
+      agentAPI.addFact(
+        new Belief(
+          BeliefKeys.PROCEDURE,
+          ProcedureAttributes.AT_CP_II,
+          ProcedureConst.INACTIVE
+        )
+      );
+
+      // Dispatch to store to indicate fetching has ended
+      store.dispatch(setFetchingAlertInfo(false));
+    }
   }
 }
 
-export const queryAlertInfo = async (
-  alert: AlertInfo
-): Promise<AlertInfo | null> => {
-  // Ensures vitals and symptoms are present
-  let alertVitals = alert.vitalsReport;
-  let alertSymptoms = alert.symptomReport;
+export const queryAlertInfo = async (alert: Alert): Promise<Alert | null> => {
+  let alertInfo: AlertInfo = convertAlertToAlertInfo(alert);
+  const alertQuery = await getFullAlert({ id: alert.id });
 
-  // Retrieves vitals
-  if (!alertVitals) {
-    const query = await getReportVitals({ id: alert.vitalsReportID });
-    if (query.data && query.data.getReportVitals) {
-      alertVitals = query.data.getReportVitals;
-    }
+  // Get alert with full details
+  if (alertQuery.data.getAlert) {
+    const alertWithDetails = alertQuery.data.getAlert;
+    alertInfo = convertAlertToAlertInfo(alertWithDetails);
   }
 
-  // Retrieves symptoms
-  if (!alertSymptoms) {
-    const query = await getReportSymptom({ id: alert.symptomReportID });
-    if (query.data && query.data.getReportSymptom) {
-      alertSymptoms = query.data.getReportSymptom;
-    }
+  // Get PatientInfo -> Get diagnosis and NYHA class
+  const patientInfoQuery = await getPatientInfo({
+    patientID: alert.patientID
+  });
+
+  if (patientInfoQuery.data.getPatientInfo) {
+    const patientInfo = patientInfoQuery.data.getPatientInfo;
+    alertInfo.diagnosis = patientInfo.diagnosisInfo;
+    alertInfo.NYHAClass = patientInfo.NHYAclass;
   }
 
-  if (alertVitals && alertSymptoms) {
-    // LS-TODO: To include HRV
-    const alertInfo: AlertInfo = {
-      id: alert.id,
-      patientID: alert.patientID,
-      patientName: alert.patientName,
-      dateTime: alert.dateTime,
-      vitalsReportID: alert.vitalsReportID,
-      symptomReportID: alert.symptomReportID,
-      summary: alert.summary,
-      vitalsReport: alertVitals,
-      symptomReport: alertSymptoms,
-      completed: alert.completed,
-      riskLevel: alert.riskLevel,
-      _version: alert._version
-    };
+  // Get MedCompliant
+  // JH-TODO-MED: New MedCompliant version
 
-    // Queries patientInfo to get diagnosis and NHYA class
-    const patientInfoQuery = await getPatientInfo({
-      patientID: alert.patientID
-    });
-
-    if (patientInfoQuery.data && patientInfoQuery.data.getPatientInfo) {
-      const patientInfo = patientInfoQuery.data.getPatientInfo;
-      alertInfo.diagnosis = patientInfo.diagnosisInfo;
-      alertInfo.NHYAClass = patientInfo.NHYAclass;
-    }
-
-    // Queries verified medication intake in descending order of date to get latest medication
-    const medCompliantQuery = await listMedCompliantsByDate({
-      sortDirection: ModelSortDirection.DESC,
-      patientID: alert.patientID,
-      filter: { Verification: { eq: true } }
-    });
-
-    if (medCompliantQuery.data) {
-      const results = medCompliantQuery.data.listMedCompliantsByDate?.items;
-      if (results && results.length > 0) {
-        const latestMedCompliant = results[0];
-
-        // Queries medication and dosage
-        if (latestMedCompliant) {
-          const medicationInfoQuery = await getMedicationInfo({
-            id: latestMedCompliant.MedId
-          });
-          if (medicationInfoQuery.data) {
-            const medicationInfo = medicationInfoQuery.data.getMedicationInfo;
-            alertInfo.lastMedication = medicationInfo?.name;
-            alertInfo.medicationQuantity = medicationInfo?.dosage;
-          }
-        }
-      }
-    }
-
-    // Queries activity associated with symptom report
-    if (alertSymptoms.ActivityInfo) {
-      alertInfo.activityDuringAlert = alertSymptoms.ActivityInfo.Actname;
-      // Prevents the entire ActivityInfo from being stored locally
-      delete alertInfo.symptomReport?.ActivityInfo;
-    } else {
-      const activityInfoQuery = await getActivityInfo({
-        id: alertSymptoms.ActId
-      });
-      if (activityInfoQuery.data) {
-        const activityInfo = activityInfoQuery.data.getActivityInfo;
-        alertInfo.activityDuringAlert = activityInfo?.Actname;
-      }
-    }
-
-    return alertInfo;
+  // Queries activity associated with symptom report
+  if (alertInfo.symptomReport?.ActivityInfo?.Actname) {
+    alertInfo.activityDuringAlert =
+      alertInfo.symptomReport.ActivityInfo.Actname;
+    // Prevent storing full activity info
+    delete alertInfo.symptomReport.ActivityInfo;
   }
-  return null;
+
+  return alertInfo;
 };
 
 // Preconditions

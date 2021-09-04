@@ -41,25 +41,6 @@ export const AlertsCard: FC<AlertsCardProps> = ({
   const [remainingAlert, setRemainingAlert] = useState(0);
 
   useEffect(() => {
-    // Triggers DTA to get count of pending alerts
-    agentDTA.addBelief(
-      new Belief(
-        BeliefKeys.CLINICIAN,
-        ClinicianAttributes.RETRIEVE_PENDING_ALERT_COUNT,
-        true
-      )
-    );
-    agentAPI.addFact(
-      new Belief(
-        BeliefKeys.PROCEDURE,
-        ProcedureAttributes.AT_CP_I,
-        ProcedureConst.ACTIVE
-      )
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
     setRemainingAlert(
       pendingAlertCount.highRisk +
         pendingAlertCount.mediumRisk +

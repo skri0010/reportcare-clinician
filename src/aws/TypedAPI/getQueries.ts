@@ -26,6 +26,7 @@ import {
   GetClinicianPatientMapQuery,
   GetClinicianPatientMapQueryVariables
 } from "aws/API";
+import * as Override from "./override";
 
 interface GetClinicianInfoResponse extends BaseResponse {
   data: GetClinicianInfoQuery;
@@ -122,11 +123,11 @@ interface GetAlertResponse extends BaseResponse {
   data: GetAlertQuery;
 }
 
-export const getAlert = async (
+export const getFullAlert = async (
   variables: GetAlertQueryVariables
 ): Promise<GetAlertResponse> => {
   return (await API.graphql({
-    query: queries.getAlert,
+    query: Override.getFullAlert,
     variables: variables
   })) as GetAlertResponse;
 };

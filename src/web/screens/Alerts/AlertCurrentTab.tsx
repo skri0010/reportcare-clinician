@@ -16,21 +16,21 @@ export interface AlertRowTabProps {
 }
 
 export const AlertCurrentTab: FC<AlertRowTabProps> = ({ setEmptyAlert }) => {
-  const { colors, pendingAlerts, fetchingPendingAlerts, fetchingAlerts } =
-    select((state: RootState) => ({
+  const { colors, pendingAlerts, fetchingPendingAlerts } = select(
+    (state: RootState) => ({
       colors: state.settings.colors,
       pendingAlerts: state.agents.pendingAlerts,
       fetchingPendingAlerts: state.agents.fetchingPendingAlerts,
-      alertRiskFilters: state.agents.alertRiskFilters,
-      fetchingAlerts: state.agents.fetchingAlerts
-    }));
+      alertRiskFilters: state.agents.alertRiskFilters
+    })
+  );
 
   const [noPendingAlertsNotice, setNoPendingAlertsNotice] =
     useState<string>("");
 
   // Prepare text notice to be displayed after fetching patients
   useEffect(() => {
-    if (fetchingPendingAlerts || fetchingAlerts) {
+    if (fetchingPendingAlerts) {
       if (pendingAlerts) {
         // No patients found
         setNoPendingAlertsNotice(i18n.t("Alert.AlertList.NoPendingAlerts"));
@@ -41,7 +41,7 @@ export const AlertCurrentTab: FC<AlertRowTabProps> = ({ setEmptyAlert }) => {
         );
       }
     }
-  }, [pendingAlerts, fetchingPendingAlerts, fetchingAlerts]);
+  }, [pendingAlerts, fetchingPendingAlerts]);
 
   // When the alert item is pressed, trigger the retrieval of alert info
   function onCardPress(item: AlertInfo) {
@@ -66,7 +66,7 @@ export const AlertCurrentTab: FC<AlertRowTabProps> = ({ setEmptyAlert }) => {
       <RiskFilterPillList alertScreen />
 
       {/* Show no alerts message if no alert found */}
-      {fetchingPendingAlerts || fetchingAlerts ? (
+      {fetchingPendingAlerts ? (
         // Show loading indicator if fetching patients
         <LoadingIndicator flex={1} />
       ) : pendingAlerts && pendingAlerts.length > 0 ? (

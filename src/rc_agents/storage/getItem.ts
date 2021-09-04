@@ -1,8 +1,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { PatientInfo } from "aws/API";
-import { RiskLevel } from "models/RiskLevel";
-import { AlertInfo, PatientDetails } from "rc_agents/model";
+import { PatientDetails } from "rc_agents/model";
 import { AsyncStorageKeys, AsyncStorageType } from ".";
+
+export * from "rc_agents/storage/get/alerts";
 
 export const getSignUpDetails = async (): Promise<
   AsyncStorageType[AsyncStorageKeys.SIGN_UP_DETAILS] | null
@@ -121,109 +122,6 @@ export const getAllPatientDetails = async (): Promise<
 };
 
 /**
- * Gets a single Alert.
- * @param alertId alert's Id
- * @param riskLevel riskLevel of the alert
- * @returns Alert if any, otherwise null
- */
-// Why do we need riskLevel is Id is unique
-export const getSingleAlert = async (
-  alertId: string,
-  riskLevel: RiskLevel
-): Promise<AlertInfo | null> => {
-  const localData = await getAlerts();
-  if (localData) {
-    for (let i = 0; i < localData.length; i++) {
-      if (localData[i].id === alertId && localData[i].riskLevel === riskLevel) {
-        return localData[i];
-      }
-    }
-  }
-  return null;
-};
-
-/**
- * Base function for getting all Alerts.
- * @returns alert object if exist, otherwise null
- */
-export const getAlerts = async (): Promise<
-  AsyncStorageType[AsyncStorageKeys.ALERTS] | null
-> => {
-  const localData = await AsyncStorage.getItem(AsyncStorageKeys.ALERTS);
-  if (localData) {
-    return JSON.parse(localData);
-  }
-  return null;
-};
-
-export const getPendingAlerts = async (): Promise<
-  AsyncStorageType[AsyncStorageKeys.ALERTS] | null
-> => {
-  const localData = await getAlerts();
-  if (localData) {
-    return localData.filter((t) => t.completed === false);
-  }
-  return null;
-};
-
-export const getCompletedAlerts = async (): Promise<
-  AsyncStorageType[AsyncStorageKeys.ALERTS] | null
-> => {
-  const localData = await getAlerts();
-  if (localData) {
-    return localData.filter((t) => t.completed === true);
-  }
-  return null;
-};
-
-/**
- * Get a single AlertInfo from Alert
- * @param alert alert
- * @returns AlertInfo corresponding to the input Alert if any, otherwise null
- */
-export const getSingleAlertInfo = async (
-  alertId: string,
-  patientId: string
-): Promise<AlertInfo | null> => {
-  const localData = await getAlertInfos();
-  if (localData && localData[patientId]) {
-    const patientAlertInfos = localData[patientId];
-    return patientAlertInfos[alertId];
-  }
-  return null;
-};
-
-/**
- * Base function for getting all AlertInfos.
- * @returns AlertInfo object if any, otherwise null
- */
-export const getAlertInfos = async (): Promise<
-  AsyncStorageType[AsyncStorageKeys.ALERT_INFOS] | null
-> => {
-  const localData = await AsyncStorage.getItem(AsyncStorageKeys.ALERT_INFOS);
-  if (localData) {
-    return JSON.parse(localData);
-  }
-  return null;
-};
-
-/**
- * Gets all AlertInfos of a patient
- * @param patientId patient's Id
- * @returns array of AlertInfo of the input patientId if any, otherwise null
- */
-export const getPatientAlertInfos = async (
-  patientId: string
-): Promise<AlertInfo[] | null> => {
-  const localData = await getAlertInfos();
-  if (localData && localData[patientId]) {
-    const patientAlertInfos = localData[patientId];
-    return Object.values(patientAlertInfos);
-  }
-  return null;
-};
-
-/**
  * Gets patient configurations to be synced.
  * @returns array of patient infos if any, otherwise null
  */
@@ -233,20 +131,6 @@ export const getPatientConfigurations = async (): Promise<
   const localData = await AsyncStorage.getItem(
     AsyncStorageKeys.PATIENT_CONFIGURATIONS
   );
-  if (localData) {
-    return JSON.parse(localData);
-  }
-  return null;
-};
-
-/**
- * Gets Alerts with updated to be synced.
- * @returns array of Alerts if any, otherwise null
- */
-export const getAlertsSync = async (): Promise<
-  AsyncStorageType[AsyncStorageKeys.ALERTS_SYNC] | null
-> => {
-  const localData = await AsyncStorage.getItem(AsyncStorageKeys.ALERTS_SYNC);
   if (localData) {
     return JSON.parse(localData);
   }

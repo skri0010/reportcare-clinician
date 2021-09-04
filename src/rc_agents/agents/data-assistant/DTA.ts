@@ -8,15 +8,13 @@ import { af_RequestDisplayPatientDetails } from "./action-frames/hf-outcome-tren
 import { af_RetrievePatientsByRole } from "./action-frames/hf-outcome-trends/RetrievePatientsByRole";
 import { af_RequestDisplayPatients } from "./action-frames/hf-outcome-trends/RequestDisplayPatients";
 import { af_RetrieveAlerts } from "./action-frames/triage-alert-hf-clinic/RetrieveAlerts";
-import { af_RequestAlertsDisplay } from "./action-frames/triage-alert-hf-clinic/RequestAlertsDisplay";
+import { af_RequestDisplayAlerts } from "./action-frames/triage-alert-hf-clinic/RequestDisplayAlerts";
 import { af_RetrieveAlertInfo } from "./action-frames/triage-alert-hf-clinic/RetrieveAlertInfo";
-import { af_RequestAlertInfoDisplay } from "./action-frames/triage-alert-hf-clinic/RequestAlertInfoDisplay";
+import { af_RequestDisplayAlertInfo } from "./action-frames/triage-alert-hf-clinic/RequestDisplayAlertInfo";
 import { af_RetrievePendingPatientAssignments } from "./action-frames/storing-data/RetrievePendingPatientAssignments";
 import { af_RequestDisplayPendingPatientAssignments } from "./action-frames/storing-data/RequestDisplayPendingPatientAssignments";
 import { af_ResolvePatientAssignment } from "./action-frames/storing-data/ResolvePatientAssignment";
 import { af_RequestSyncPatientAssignmentResolutions } from "./action-frames/storing-data/RequestSyncPatientAssignmentResolutions";
-import { af_RetrievePendingAlertCount } from "./action-frames/triage-alert-hf-clinic/RetrievePendingAlertCount";
-import { af_RequestPendingAlertCountDisplay } from "./action-frames/triage-alert-hf-clinic/RequestPendingAlertCountDisplay";
 import { af_RetrieveTodoDetails } from "./action-frames/storing-data/RetrieveTodoDetails";
 import { af_RequestDisplayTodoDetails } from "./action-frames/storing-data/RequestDisplayTodoDetails";
 import { af_CreateTodo } from "./action-frames/storing-data/CreateTodo";
@@ -62,13 +60,13 @@ const agentDTA = new ClinicianAgent(
     af_RequestDisplayAlertHistory,
     af_ConfigurePatient,
 
-    // AT-CP
-    af_RetrievePendingAlertCount,
-    af_RequestPendingAlertCountDisplay,
+    // AT-CP-I
     af_RetrieveAlerts,
-    af_RequestAlertsDisplay,
+    af_RequestDisplayAlerts,
+
+    // AT-CP-II
     af_RetrieveAlertInfo,
-    af_RequestAlertInfoDisplay,
+    af_RequestDisplayAlertInfo,
     af_UpdateAlert,
 
     // SRD-II
