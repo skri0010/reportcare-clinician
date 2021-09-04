@@ -15,7 +15,11 @@ export type AuthScreenProps = {
 };
 
 type SignInScreenProps = {
-  navigation: SignInScreenNavigation;
+  navigation: StackNavigationProp<
+    AuthenticationStackParamList,
+    AuthenticationScreenName.SIGN_IN
+  >;
+
   route: RouteProp<
     AuthenticationStackParamList,
     AuthenticationScreenName.SIGN_IN
@@ -24,45 +28,32 @@ type SignInScreenProps = {
 };
 
 type RegistrationScreenProps = {
-  navigation: SignInScreenNavigation;
+  navigation: StackNavigationProp<
+    AuthenticationStackParamList,
+    AuthenticationScreenName.REGISTRATION
+  >;
   route: RouteProp<
     AuthenticationStackParamList,
     AuthenticationScreenName.REGISTRATION
   >;
 };
 type ConfirmRegistrationScreenProps = {
-  navigation: SignInScreenNavigation;
+  navigation: StackNavigationProp<
+    AuthenticationStackParamList,
+    AuthenticationScreenName.CONFIRM_REGISTRATION
+  >;
   route: RouteProp<
     AuthenticationStackParamList,
     AuthenticationScreenName.CONFIRM_REGISTRATION
   >;
 };
 type ForgetPasswordScreenProps = {
-  navigation: SignInScreenNavigation;
+  navigation: StackNavigationProp<
+    AuthenticationStackParamList,
+    AuthenticationScreenName.FORGET_PASSWORD
+  >;
   route: RouteProp<
     AuthenticationStackParamList,
     AuthenticationScreenName.FORGET_PASSWORD
   >;
 };
-
-// Navigation declared to be used in this module as well as exported to other props
-
-export type SignInScreenNavigation = StackNavigationProp<
-  AuthenticationStackParamList,
-  AuthenticationScreenName.SIGN_IN
->;
-
-export type RegistrationScreenNavigation = StackNavigationProp<
-  AuthenticationStackParamList,
-  AuthenticationScreenName.REGISTRATION
->;
-
-export type ConfirmRegistrationScreenNavigation = StackNavigationProp<
-  AuthenticationStackParamList,
-  AuthenticationScreenName.CONFIRM_REGISTRATION
->;
-
-export type ForgetPasswordScreenNavigation = StackNavigationProp<
-  AuthenticationStackParamList,
-  AuthenticationScreenName.FORGET_PASSWORD
->;

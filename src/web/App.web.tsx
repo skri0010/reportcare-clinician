@@ -2,7 +2,7 @@ import React, { FC, useEffect, useState, useCallback } from "react";
 import { Provider } from "react-redux";
 import { store } from "util/useRedux";
 import { MainNavigationStack } from "web/MainNavigation";
-import { AuthNavigationStack } from "web/navigation/navigators/AuthStackNavigator";
+import { AuthStackNavigator } from "web/navigation/navigators/AuthStackNavigator";
 import awsconfig from "aws/aws-exports";
 import { Amplify } from "@aws-amplify/core";
 import { Auth } from "@aws-amplify/auth";
@@ -79,7 +79,7 @@ const App: FC = () => {
           {authState === AuthState.SIGNED_IN ? (
             <MainNavigationStack setAuthState={setAuthState} />
           ) : authState === AuthState.SIGNED_OUT ? (
-            <AuthNavigationStack setAuthState={setAuthState} />
+            <AuthStackNavigator setAuthState={setAuthState} />
           ) : null}
         </ToastProviderComponent>
       ) : (

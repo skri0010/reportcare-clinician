@@ -9,7 +9,7 @@ export type CurrentTabProps = {
   navigation: CompositeNavigationProp<
     MaterialTopTabNavigationProp<
       AlertListTabParamList,
-      AlertListTabName.COMPLETED
+      AlertListTabName.CURRENT
     >,
     AlertScreenNavigation
   >;

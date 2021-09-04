@@ -3,12 +3,10 @@ import {
   ScreenName,
   PatientDetailsTabName,
   TodoListTabName,
-  TodoDetailsStackScreenName
-} from "web/navigation";
-import {
+  TodoDetailsStackScreenName,
   AlertListTabName,
   AuthenticationScreenName
-} from "./navigatorScreenNames";
+} from "web/navigation";
 
 // Main screen parameters
 export type MainScreenParamList = {
