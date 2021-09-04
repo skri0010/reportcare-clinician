@@ -748,35 +748,42 @@ export const schema = {
                     "name": "Weight",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": true,
+                    "isRequired": false,
                     "attributes": []
                 },
                 "BPSys": {
                     "name": "BPSys",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": true,
+                    "isRequired": false,
                     "attributes": []
                 },
                 "BPDi": {
                     "name": "BPDi",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": true,
+                    "isRequired": false,
                     "attributes": []
                 },
                 "NoSteps": {
                     "name": "NoSteps",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": true,
+                    "isRequired": false,
                     "attributes": []
                 },
                 "OxySat": {
                     "name": "OxySat",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": true,
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "FluidIntake": {
+                    "name": "FluidIntake",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
                     "attributes": []
                 },
                 "DateTime": {
@@ -1362,7 +1369,6 @@ export const schema = {
                                 "ownerField": "clinicianID",
                                 "allow": "owner",
                                 "operations": [
-                                    "read",
                                     "update"
                                 ],
                                 "identityClaim": "cognito:username"
@@ -1378,6 +1384,21 @@ export const schema = {
                                     "create",
                                     "update",
                                     "delete",
+                                    "read"
+                                ]
+                            },
+                            {
+                                "groupClaim": "cognito:groups",
+                                "provider": "userPools",
+                                "allow": "groups",
+                                "groups": [
+                                    "EPs",
+                                    "Nurses",
+                                    "HFSpecialists",
+                                    "MedicalOfficers",
+                                    "Pharmacists"
+                                ],
+                                "operations": [
                                     "read"
                                 ]
                             }
@@ -1868,5 +1889,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "c756e1a3ef3a7dea6d3d732a3b6b7365"
+    "version": "a4139e89fa8ca87ea04ea3b48e1e234d"
 };

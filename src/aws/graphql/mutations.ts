@@ -472,6 +472,7 @@ export const createReportVitals = /* GraphQL */ `
       BPDi
       NoSteps
       OxySat
+      FluidIntake
       DateTime
       patientID
       _version
@@ -497,6 +498,7 @@ export const updateReportVitals = /* GraphQL */ `
       BPDi
       NoSteps
       OxySat
+      FluidIntake
       DateTime
       patientID
       _version
@@ -522,6 +524,7 @@ export const deleteReportVitals = /* GraphQL */ `
       BPDi
       NoSteps
       OxySat
+      FluidIntake
       DateTime
       patientID
       _version
@@ -894,6 +897,7 @@ export const createAlert = /* GraphQL */ `
         BPDi
         NoSteps
         OxySat
+        FluidIntake
         DateTime
         patientID
         _version
@@ -951,6 +955,7 @@ export const updateAlert = /* GraphQL */ `
         BPDi
         NoSteps
         OxySat
+        FluidIntake
         DateTime
         patientID
         _version
@@ -1008,6 +1013,7 @@ export const deleteAlert = /* GraphQL */ `
         BPDi
         NoSteps
         OxySat
+        FluidIntake
         DateTime
         patientID
         _version

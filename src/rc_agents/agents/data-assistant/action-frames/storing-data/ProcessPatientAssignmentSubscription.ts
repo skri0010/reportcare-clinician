@@ -22,6 +22,7 @@ import { store } from "util/useRedux";
 import { PatientAssignmentSubscription } from "aws/TypedAPI/subscriptions";
 import { agentNWA } from "rc_agents/agents";
 import { setPendingPatientAssignments } from "ic-redux/actions/agents/actionCreator";
+import { PatientAssignment } from "aws/API";
 
 /**
  * Class to represent an activity for processing patient assignment subscription.
@@ -47,7 +48,14 @@ class ProcessPatientAssignmentSubscription extends Activity {
           PatientAttributes.PATIENT_ASSIGNMENT_SUBSCRIPTION
         ];
 
-      if (patientAssignmentSubscription) {
+      // Get clinician Id
+      const clinicianId = await Storage.getClinicianID();
+
+      if (
+        patientAssignmentSubscription &&
+        clinicianId &&
+        patientAssignmentSubscription.clinicianID === clinicianId
+      ) {
         if (facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
           // Device is online: retrieves patient assignment
           const query = await getPatientAssignment({
@@ -63,19 +71,25 @@ class ProcessPatientAssignmentSubscription extends Activity {
             );
 
             // Adds to the front of current list of pending patient assignments
-            let currentPendingPatientAssignments =
-              store.getState().agents.pendingPatientAssignments;
-            if (!currentPendingPatientAssignments) {
-              currentPendingPatientAssignments = [];
+            let patientAssignmentExists: PatientAssignment | undefined;
+            let { pendingPatientAssignments } = store.getState().agents;
+            if (pendingPatientAssignments) {
+              // Check if patient assignment already exists
+              patientAssignmentExists = pendingPatientAssignments.find(
+                (item) =>
+                  item.patientID === patientAssignmentSubscription.patientID
+              );
+            } else {
+              pendingPatientAssignments = [];
             }
-            currentPendingPatientAssignments.unshift(
-              patientAssignmentToDispatch
-            );
 
-            // Dispatch updated list of pending patient assignments
-            store.dispatch(
-              setPendingPatientAssignments(currentPendingPatientAssignments)
-            );
+            if (!patientAssignmentExists) {
+              pendingPatientAssignments.unshift(patientAssignmentToDispatch);
+              // Dispatch updated list of pending patient assignments
+              store.dispatch(
+                setPendingPatientAssignments(pendingPatientAssignments)
+              );
+            }
           }
         } else {
           // Device is offline: Store patient assignment subscription locally

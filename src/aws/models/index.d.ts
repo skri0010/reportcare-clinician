@@ -82,11 +82,12 @@ export declare class ReportVitals {
   readonly id: string;
   readonly Temperature?: string;
   readonly Humidity?: string;
-  readonly Weight: string;
-  readonly BPSys: string;
-  readonly BPDi: string;
-  readonly NoSteps: string;
-  readonly OxySat: string;
+  readonly Weight?: string;
+  readonly BPSys?: string;
+  readonly BPDi?: string;
+  readonly NoSteps?: string;
+  readonly OxySat?: string;
+  readonly FluidIntake?: string;
   readonly DateTime: string;
   readonly patientID: string;
   constructor(init: ModelInit<ReportVitals>);

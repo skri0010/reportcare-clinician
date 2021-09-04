@@ -493,6 +493,7 @@ export const syncReportVitals = /* GraphQL */ `
         BPDi
         NoSteps
         OxySat
+        FluidIntake
         DateTime
         patientID
         _version
@@ -518,6 +519,7 @@ export const getReportVitals = /* GraphQL */ `
       BPDi
       NoSteps
       OxySat
+      FluidIntake
       DateTime
       patientID
       _version
@@ -545,6 +547,7 @@ export const listReportVitalss = /* GraphQL */ `
         BPDi
         NoSteps
         OxySat
+        FluidIntake
         DateTime
         patientID
         _version
@@ -981,6 +984,7 @@ export const getAlert = /* GraphQL */ `
         BPDi
         NoSteps
         OxySat
+        FluidIntake
         DateTime
         patientID
         _version
@@ -1452,6 +1456,7 @@ export const listReportVitalsByPatientID = /* GraphQL */ `
         BPDi
         NoSteps
         OxySat
+        FluidIntake
         DateTime
         patientID
         _version
@@ -1492,6 +1497,7 @@ export const listReportVitalsByDateTime = /* GraphQL */ `
         BPDi
         NoSteps
         OxySat
+        FluidIntake
         DateTime
         patientID
         _version
