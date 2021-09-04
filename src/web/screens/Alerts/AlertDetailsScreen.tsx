@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React, { FC } from "react";
 import { View, TouchableOpacity } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";

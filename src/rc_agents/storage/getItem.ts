@@ -287,6 +287,26 @@ export const getCompletedTodos = async (): Promise<
   return null;
 };
 
+export const getTodo = async (
+  id: string
+): Promise<AsyncStorageType[AsyncStorageKeys.TODOS] | null> => {
+  const localData = await getTodos();
+  if (localData) {
+    return localData.filter((t) => t.id === id);
+  }
+  return null;
+};
+
+export const getTodoDetails = async (
+  id: string
+): Promise<AsyncStorageType[AsyncStorageKeys.TODO_DETAILS] | undefined> => {
+  const localData = await getTodos();
+  if (localData) {
+    return localData.find((t) => t.id === id);
+  }
+  return undefined;
+};
+
 /**
  * Gets locally stored AlertNotifications to be processed
  * @returns array of AlertNotifications

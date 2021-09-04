@@ -40,7 +40,6 @@ interface AgentsState {
   completedAlerts: AlertInfo[] | undefined;
   fetchingAlertInfo: boolean;
   alertInfo: AlertInfo | undefined;
-  todoDetails: LocalTodo | null;
   pendingTodos: LocalTodo[] | null;
   completedTodos: LocalTodo[] | null;
   alertHistory: AlertInfo[] | undefined;
@@ -48,6 +47,7 @@ interface AgentsState {
   fetchingTodoDetails: boolean;
   submittingTodo: boolean;
   updatedTodo: LocalTodo | undefined;
+  todoDetails: LocalTodo | undefined;
 }
 
 const initialState: AgentsState = {
@@ -99,7 +99,7 @@ const initialState: AgentsState = {
   completedAlerts: undefined,
   fetchingAlertInfo: false,
   alertInfo: undefined,
-  todoDetails: null,
+  todoDetails: undefined,
   pendingTodos: null,
   completedTodos: null,
   alertHistory: undefined,
@@ -248,6 +248,8 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
       return { ...state, submittingTodo: action.payload.submittingTodo };
     case actionNames.SET_UPDATED_TODO:
       return { ...state, updatedTodo: action.payload.updatedTodo };
+    case actionNames.SET_TODO_DETAILS:
+      return { ...state, todoDetails: action.payload.todoDetails };
     default:
       return state;
   }

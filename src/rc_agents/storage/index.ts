@@ -30,6 +30,7 @@ export enum AsyncStorageKeys {
   PATIENT_CONFIGURATIONS = "PatientConfigurations",
   TODOS = "Todos",
   ALERTS_SYNC = "AlertsSync",
+  TODO_DETAILS = "TodoDetails",
   ALERT_NOTIFICATIONS = "AlertNotifications"
 }
 
@@ -58,6 +59,7 @@ export type AsyncStorageType = {
     [key: string]: { [key: string]: AlertInfo };
   };
   [AsyncStorageKeys.TODOS]: LocalTodo[];
+  [AsyncStorageKeys.TODO_DETAILS]: LocalTodo;
   [AsyncStorageKeys.ALERTS_SYNC]: { [key: string]: AlertInfo };
   [AsyncStorageKeys.ALERT_NOTIFICATIONS]: AlertNotification[];
 };

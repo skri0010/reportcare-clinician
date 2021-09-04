@@ -61,6 +61,9 @@ export const ActionFrameIDs = {
     UPDATE_TODO: "UpdateTodo",
     REQUEST_DISPLAY_TODOS: "RequestDisplayTodos",
 
+    // SRD-III: Todo Details
+    RETRIEVE_TODO_DETAILS: "RetrieveTodoDetails",
+    REQUEST_DISPLAY_TODO_DETAILS: "RequestDisplayTodoDetails",
     // SRD-IV: Clinician Contacts
     RETRIEVE_CLINICIAN_CONTACTS: "RetrieveClinicianContacts",
     REQUEST_DISPLAY_CLINICIAN_CONTACTS: "RequestDisplayClinicianContacts"
@@ -81,6 +84,8 @@ export const ActionFrameIDs = {
     // SRD-II: Todos
     DISPLAY_TODOS: "DisplayTodos",
 
+    // SRD -III : Todo Details
+    DISPLAY_TODO_DETAILS: "DisplayTodoDetails",
     // SRD-IV Clinician Contacts
     DISPLAY_CLINICIAN_CONTACTS: "DisplayClinicianContacts",
 
@@ -152,6 +157,7 @@ export enum ProcedureAttributes {
 }
 
 // Attributes for CLINICIAN key
+
 export enum ClinicianAttributes {
   USERNAME = "Username",
   HAS_ENTRY = "HasEntry",
@@ -163,6 +169,13 @@ export enum ClinicianAttributes {
   ROLE = "Role",
   RETRIEVE_ROLE = "RetrieveRole",
   ROLE_RETRIEVED = "RoleRetrieved",
+
+  // SRD-III - Todo Details
+  RETRIEVE_TODO_DETAILS = "RetrieveTodoDetails",
+  TODO_DETAILS = "TodoDetails",
+  DISPLAY_TODO_DETAILS = "DisplayTodoDetails",
+  TODO_DETAILS_RETRIEVED = "TodoDetailsRetrieved",
+  TODO_ID = "TodoId",
 
   // AT-CP: Alerts
   RETRIEVE_PENDING_ALERT_COUNT = "RetrievePendingAlertCount",
