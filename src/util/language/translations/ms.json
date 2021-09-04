@@ -84,6 +84,8 @@
     "WeightUnit": "(kg)",
     "FluidIntake": "Pengambiulan Air ",
     "FluidUnit": "(ml)",
+    "Steps": "Jumlah Langkah",
+    "StepsUnit": "(langkah)",
     "NoData": "Tiada data dijumpai",
     "Days": {
       "Sunday": "Ahad",

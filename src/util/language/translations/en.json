@@ -84,6 +84,8 @@
     "WeightUnit": "(kg)",
     "FluidIntake": "Fluid Intake ",
     "FluidUnit": "(ml)",
+    "Steps": "Steps Counter",
+    "StepsUnit": "(step)",
     "NoData": "No data was found",
     "Days": {
       "Sunday": "Sun",
