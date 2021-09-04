@@ -17,7 +17,7 @@ import {
 import i18n from "util/language/i18n";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AlertListTabNavigator } from "web/navigation/navigators/AlertListTabNavigator";
-import { AlertDetailsStackNavigator } from "web/navigation/navigators/AlertDetailsStackNavigation";
+import { AlertDetailsScreen } from "./AlertDetailsScreen";
 
 export const AlertScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
   const {
@@ -82,7 +82,7 @@ export const AlertScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
           {fetchingAlertInfo ? (
             <LoadingIndicator flex={1} />
           ) : !isEmptyAlert ? (
-            <AlertDetailsStackNavigator setModalVisible={setModalVisible} />
+            <AlertDetailsScreen setModalVisible={setModalVisible} />
           ) : (
             <NoSelectionScreen
               screenName={ScreenName.ALERTS}

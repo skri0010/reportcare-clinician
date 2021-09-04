@@ -10,12 +10,16 @@ import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import i18n from "util/language/i18n";
 import { NoListItemMessage } from "../Shared/NoListItemMessage";
 import { AgentTrigger } from "rc_agents/trigger";
+import { AlertRowTabProps } from "web/navigation/navigators/AlertListTabNavigator";
+import { AlertListTabsProps } from "web/navigation/types";
 
-export interface AlertRowTabProps {
-  setEmptyAlert: (state: boolean) => void;
-}
+interface AlertCurrentTabProps
+  extends AlertRowTabProps,
+    AlertListTabsProps.CurrentTabProps {}
 
-export const AlertCurrentTab: FC<AlertRowTabProps> = ({ setEmptyAlert }) => {
+export const AlertCurrentTab: FC<AlertCurrentTabProps> = ({
+  setEmptyAlert
+}) => {
   const { colors, pendingAlerts, fetchingPendingAlerts, fetchingAlerts } =
     select((state: RootState) => ({
       colors: state.settings.colors,

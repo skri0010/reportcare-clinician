@@ -4,15 +4,22 @@ import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { RootState, select } from "util/useRedux";
 import { AlertRow } from "components/RowComponents/AlertRow";
-import { AlertRowTabProps } from "./AlertCurrentTab";
 import { RiskFilterPillList } from "components/Buttons/RiskFilterPillList";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import i18n from "util/language/i18n";
 import { NoListItemMessage } from "../Shared/NoListItemMessage";
 import { AgentTrigger } from "rc_agents/trigger";
 import { AlertInfo } from "rc_agents/model";
+import { AlertRowTabProps } from "web/navigation/navigators/AlertListTabNavigator";
+import { AlertListTabsProps } from "web/navigation/types";
 
-export const AlertCompletedTab: FC<AlertRowTabProps> = ({ setEmptyAlert }) => {
+interface AlertCompletedTabProps
+  extends AlertRowTabProps,
+    AlertListTabsProps.CompletedTabProps {}
+
+export const AlertCompletedTab: FC<AlertCompletedTabProps> = ({
+  setEmptyAlert
+}) => {
   const { colors, completedAlerts, fetchingCompletedAlerts, fetchingAlerts } =
     select((state: RootState) => ({
       colors: state.settings.colors,

@@ -39,7 +39,3 @@ export enum AlertListTabName {
   CURRENT = "Current",
   COMPLETED = "Completed"
 }
-
-export enum AlertDetailsStackScreenName {
-  VIEWALERT = "ViewAlert"
-}

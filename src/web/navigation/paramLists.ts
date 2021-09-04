@@ -6,7 +6,6 @@ import {
   TodoDetailsStackScreenName
 } from "web/navigation";
 import {
-  AlertDetailsStackScreenName,
   AlertListTabName,
   AuthenticationScreenName
 } from "./navigatorScreenNames";
@@ -63,9 +62,4 @@ export type AuthenticationStackParamList = {
 export type AlertListTabParamList = {
   [AlertListTabName.CURRENT]: undefined;
   [AlertListTabName.COMPLETED]: undefined;
-};
-
-// Alert Details parameters
-export type AlertDetailsStackParamList = {
-  [AlertDetailsStackScreenName.VIEWALERT]: undefined;
 };
