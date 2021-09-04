@@ -148,3 +148,7 @@ export interface LocalTodo {
   toSync: boolean;
   _version: number;
 }
+
+export interface TodoDetails {
+  id: string;
+}

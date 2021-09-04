@@ -65,10 +65,10 @@ const App: FC = () => {
       if (clinicianId) {
         setAuthState(AuthState.SIGNED_IN);
       } else {
-        setAuthState(AuthState.SIGNED_IN);
+        setAuthState(AuthState.SIGNED_OUT);
       }
     } catch (err) {
-      setAuthState(AuthState.SIGNED_IN);
+      setAuthState(AuthState.SIGNED_OUT);
     }
   };
 
