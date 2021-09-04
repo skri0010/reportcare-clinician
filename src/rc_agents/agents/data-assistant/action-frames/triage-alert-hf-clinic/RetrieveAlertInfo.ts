@@ -163,8 +163,8 @@ export const queryAlertInfo = async (
           });
           if (medicationInfoQuery.data) {
             const medicationInfo = medicationInfoQuery.data.getMedicationInfo;
-            alertInfo.lastMedication = medicationInfo?.medname;
-            alertInfo.medicationQuantity = medicationInfo?.dosage;
+            alertInfo.lastMedication = medicationInfo?.name;
+            alertInfo.medicationQuantity = medicationInfo?.dosage.toString();
           }
         }
       }

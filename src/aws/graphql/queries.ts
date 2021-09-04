@@ -149,9 +149,12 @@ export const syncMedicationInfos = /* GraphQL */ `
     ) {
       items {
         id
-        medname
+        name
         dosage
+        frequency
+        records
         patientID
+        active
         _version
         _deleted
         _lastChangedAt
@@ -168,9 +171,12 @@ export const getMedicationInfo = /* GraphQL */ `
   query GetMedicationInfo($id: ID!) {
     getMedicationInfo(id: $id) {
       id
-      medname
+      name
       dosage
+      frequency
+      records
       patientID
+      active
       _version
       _deleted
       _lastChangedAt
@@ -189,9 +195,12 @@ export const listMedicationInfos = /* GraphQL */ `
     listMedicationInfos(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        medname
+        name
         dosage
+        frequency
+        records
         patientID
+        active
         _version
         _deleted
         _lastChangedAt
@@ -321,9 +330,12 @@ export const getMedCompliant = /* GraphQL */ `
       MedId
       MedicationInfo {
         id
-        medname
+        name
         dosage
+        frequency
+        records
         patientID
+        active
         _version
         _deleted
         _lastChangedAt
@@ -481,6 +493,7 @@ export const syncReportVitals = /* GraphQL */ `
         BPDi
         NoSteps
         OxySat
+        FluidIntake
         DateTime
         patientID
         _version
@@ -506,6 +519,7 @@ export const getReportVitals = /* GraphQL */ `
       BPDi
       NoSteps
       OxySat
+      FluidIntake
       DateTime
       patientID
       _version
@@ -533,6 +547,7 @@ export const listReportVitalss = /* GraphQL */ `
         BPDi
         NoSteps
         OxySat
+        FluidIntake
         DateTime
         patientID
         _version
@@ -969,6 +984,7 @@ export const getAlert = /* GraphQL */ `
         BPDi
         NoSteps
         OxySat
+        FluidIntake
         DateTime
         patientID
         _version
@@ -1137,6 +1153,77 @@ export const listTodos = /* GraphQL */ `
     }
   }
 `;
+export const syncAlertNotifications = /* GraphQL */ `
+  query SyncAlertNotifications(
+    $filter: ModelAlertNotificationFilterInput
+    $limit: Int
+    $nextToken: String
+    $lastSync: AWSTimestamp
+  ) {
+    syncAlertNotifications(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      lastSync: $lastSync
+    ) {
+      items {
+        id
+        patientID
+        alertID
+        owner
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const getAlertNotification = /* GraphQL */ `
+  query GetAlertNotification($id: ID!) {
+    getAlertNotification(id: $id) {
+      id
+      patientID
+      alertID
+      owner
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listAlertNotifications = /* GraphQL */ `
+  query ListAlertNotifications(
+    $filter: ModelAlertNotificationFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listAlertNotifications(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        patientID
+        alertID
+        owner
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
 export const listMedicationInfosByPatientID = /* GraphQL */ `
   query ListMedicationInfosByPatientID(
     $patientID: String
@@ -1154,9 +1241,12 @@ export const listMedicationInfosByPatientID = /* GraphQL */ `
     ) {
       items {
         id
-        medname
+        name
         dosage
+        frequency
+        records
         patientID
+        active
         _version
         _deleted
         _lastChangedAt
@@ -1366,6 +1456,7 @@ export const listReportVitalsByPatientID = /* GraphQL */ `
         BPDi
         NoSteps
         OxySat
+        FluidIntake
         DateTime
         patientID
         _version
@@ -1406,6 +1497,7 @@ export const listReportVitalsByDateTime = /* GraphQL */ `
         BPDi
         NoSteps
         OxySat
+        FluidIntake
         DateTime
         patientID
         _version

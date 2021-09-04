@@ -120,9 +120,12 @@ export const createMedicationInfo = /* GraphQL */ `
   ) {
     createMedicationInfo(input: $input, condition: $condition) {
       id
-      medname
+      name
       dosage
+      frequency
+      records
       patientID
+      active
       _version
       _deleted
       _lastChangedAt
@@ -139,9 +142,12 @@ export const updateMedicationInfo = /* GraphQL */ `
   ) {
     updateMedicationInfo(input: $input, condition: $condition) {
       id
-      medname
+      name
       dosage
+      frequency
+      records
       patientID
+      active
       _version
       _deleted
       _lastChangedAt
@@ -158,9 +164,12 @@ export const deleteMedicationInfo = /* GraphQL */ `
   ) {
     deleteMedicationInfo(input: $input, condition: $condition) {
       id
-      medname
+      name
       dosage
+      frequency
+      records
       patientID
+      active
       _version
       _deleted
       _lastChangedAt
@@ -246,9 +255,12 @@ export const createMedCompliant = /* GraphQL */ `
       MedId
       MedicationInfo {
         id
-        medname
+        name
         dosage
+        frequency
+        records
         patientID
+        active
         _version
         _deleted
         _lastChangedAt
@@ -278,9 +290,12 @@ export const updateMedCompliant = /* GraphQL */ `
       MedId
       MedicationInfo {
         id
-        medname
+        name
         dosage
+        frequency
+        records
         patientID
+        active
         _version
         _deleted
         _lastChangedAt
@@ -310,9 +325,12 @@ export const deleteMedCompliant = /* GraphQL */ `
       MedId
       MedicationInfo {
         id
-        medname
+        name
         dosage
+        frequency
+        records
         patientID
+        active
         _version
         _deleted
         _lastChangedAt
@@ -454,6 +472,7 @@ export const createReportVitals = /* GraphQL */ `
       BPDi
       NoSteps
       OxySat
+      FluidIntake
       DateTime
       patientID
       _version
@@ -479,6 +498,7 @@ export const updateReportVitals = /* GraphQL */ `
       BPDi
       NoSteps
       OxySat
+      FluidIntake
       DateTime
       patientID
       _version
@@ -504,6 +524,7 @@ export const deleteReportVitals = /* GraphQL */ `
       BPDi
       NoSteps
       OxySat
+      FluidIntake
       DateTime
       patientID
       _version
@@ -876,6 +897,7 @@ export const createAlert = /* GraphQL */ `
         BPDi
         NoSteps
         OxySat
+        FluidIntake
         DateTime
         patientID
         _version
@@ -933,6 +955,7 @@ export const updateAlert = /* GraphQL */ `
         BPDi
         NoSteps
         OxySat
+        FluidIntake
         DateTime
         patientID
         _version
@@ -990,6 +1013,7 @@ export const deleteAlert = /* GraphQL */ `
         BPDi
         NoSteps
         OxySat
+        FluidIntake
         DateTime
         patientID
         _version
@@ -1142,6 +1166,60 @@ export const deleteTodo = /* GraphQL */ `
       }
       pending
       completed
+      owner
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createAlertNotification = /* GraphQL */ `
+  mutation CreateAlertNotification(
+    $input: CreateAlertNotificationInput!
+    $condition: ModelAlertNotificationConditionInput
+  ) {
+    createAlertNotification(input: $input, condition: $condition) {
+      id
+      patientID
+      alertID
+      owner
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateAlertNotification = /* GraphQL */ `
+  mutation UpdateAlertNotification(
+    $input: UpdateAlertNotificationInput!
+    $condition: ModelAlertNotificationConditionInput
+  ) {
+    updateAlertNotification(input: $input, condition: $condition) {
+      id
+      patientID
+      alertID
+      owner
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteAlertNotification = /* GraphQL */ `
+  mutation DeleteAlertNotification(
+    $input: DeleteAlertNotificationInput!
+    $condition: ModelAlertNotificationConditionInput
+  ) {
+    deleteAlertNotification(input: $input, condition: $condition) {
+      id
+      patientID
+      alertID
       owner
       _version
       _deleted

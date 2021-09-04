@@ -105,12 +105,15 @@ export const onDeletePatientInfo = /* GraphQL */ `
   }
 `;
 export const onCreateMedicationInfo = /* GraphQL */ `
-  subscription OnCreateMedicationInfo($owner: String) {
-    onCreateMedicationInfo(owner: $owner) {
+  subscription OnCreateMedicationInfo($owner: String, $patientID: String) {
+    onCreateMedicationInfo(owner: $owner, patientID: $patientID) {
       id
-      medname
+      name
       dosage
+      frequency
+      records
       patientID
+      active
       _version
       _deleted
       _lastChangedAt
@@ -121,12 +124,15 @@ export const onCreateMedicationInfo = /* GraphQL */ `
   }
 `;
 export const onUpdateMedicationInfo = /* GraphQL */ `
-  subscription OnUpdateMedicationInfo($owner: String) {
-    onUpdateMedicationInfo(owner: $owner) {
+  subscription OnUpdateMedicationInfo($owner: String, $patientID: String) {
+    onUpdateMedicationInfo(owner: $owner, patientID: $patientID) {
       id
-      medname
+      name
       dosage
+      frequency
+      records
       patientID
+      active
       _version
       _deleted
       _lastChangedAt
@@ -137,12 +143,15 @@ export const onUpdateMedicationInfo = /* GraphQL */ `
   }
 `;
 export const onDeleteMedicationInfo = /* GraphQL */ `
-  subscription OnDeleteMedicationInfo($owner: String) {
-    onDeleteMedicationInfo(owner: $owner) {
+  subscription OnDeleteMedicationInfo($owner: String, $patientID: String) {
+    onDeleteMedicationInfo(owner: $owner, patientID: $patientID) {
       id
-      medname
+      name
       dosage
+      frequency
+      records
       patientID
+      active
       _version
       _deleted
       _lastChangedAt
@@ -216,9 +225,12 @@ export const onCreateMedCompliant = /* GraphQL */ `
       MedId
       MedicationInfo {
         id
-        medname
+        name
         dosage
+        frequency
+        records
         patientID
+        active
         _version
         _deleted
         _lastChangedAt
@@ -245,9 +257,12 @@ export const onUpdateMedCompliant = /* GraphQL */ `
       MedId
       MedicationInfo {
         id
-        medname
+        name
         dosage
+        frequency
+        records
         patientID
+        active
         _version
         _deleted
         _lastChangedAt
@@ -274,9 +289,12 @@ export const onDeleteMedCompliant = /* GraphQL */ `
       MedId
       MedicationInfo {
         id
-        medname
+        name
         dosage
+        frequency
+        records
         patientID
+        active
         _version
         _deleted
         _lastChangedAt
@@ -406,6 +424,7 @@ export const onCreateReportVitals = /* GraphQL */ `
       BPDi
       NoSteps
       OxySat
+      FluidIntake
       DateTime
       patientID
       _version
@@ -428,6 +447,7 @@ export const onUpdateReportVitals = /* GraphQL */ `
       BPDi
       NoSteps
       OxySat
+      FluidIntake
       DateTime
       patientID
       _version
@@ -450,6 +470,7 @@ export const onDeleteReportVitals = /* GraphQL */ `
       BPDi
       NoSteps
       OxySat
+      FluidIntake
       DateTime
       patientID
       _version
@@ -783,6 +804,7 @@ export const onCreateAlert = /* GraphQL */ `
         BPDi
         NoSteps
         OxySat
+        FluidIntake
         DateTime
         patientID
         _version
@@ -837,6 +859,7 @@ export const onUpdateAlert = /* GraphQL */ `
         BPDi
         NoSteps
         OxySat
+        FluidIntake
         DateTime
         patientID
         _version
@@ -891,6 +914,7 @@ export const onDeleteAlert = /* GraphQL */ `
         BPDi
         NoSteps
         OxySat
+        FluidIntake
         DateTime
         patientID
         _version
@@ -1034,6 +1058,51 @@ export const onDeleteTodo = /* GraphQL */ `
       }
       pending
       completed
+      owner
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateAlertNotification = /* GraphQL */ `
+  subscription OnCreateAlertNotification {
+    onCreateAlertNotification {
+      id
+      patientID
+      alertID
+      owner
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateAlertNotification = /* GraphQL */ `
+  subscription OnUpdateAlertNotification {
+    onUpdateAlertNotification {
+      id
+      patientID
+      alertID
+      owner
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteAlertNotification = /* GraphQL */ `
+  subscription OnDeleteAlertNotification {
+    onDeleteAlertNotification {
+      id
+      patientID
+      alertID
       owner
       _version
       _deleted
