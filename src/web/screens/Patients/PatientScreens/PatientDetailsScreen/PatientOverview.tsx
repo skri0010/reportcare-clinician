@@ -40,18 +40,20 @@ export const PatientOverview: FC<PatientOverviewProps> = ({ details }) => {
       }
 
       // Get sum of fluid taken
-      const fluidIntakeList: number[] = vitalsReportsOnDate
-        .filter((data) => data.FluidIntake)
-        .map((data) => parseFloat(data.FluidIntake!));
-
+      const fluidIntakeList: number[] = vitalsReportsOnDate.flatMap((data) =>
+        data.FluidIntake && parseFloat(data.FluidIntake)
+          ? [parseFloat(data.FluidIntake)]
+          : []
+      );
       // set total fluid taken
       setSumFluidIntake(fluidIntakeList.reduce((a, b) => a + b, 0));
 
       // Get sum of steps taken
-      const stepsTakenList: number[] = vitalsReportsOnDate
-        .filter((data) => data.NoSteps)
-        .map((data) => parseFloat(data.NoSteps!));
-
+      const stepsTakenList: number[] = vitalsReportsOnDate.flatMap((data) =>
+        data.NoSteps && parseFloat(data.NoSteps)
+          ? [parseFloat(data.NoSteps)]
+          : []
+      );
       // set total fluid taken
       setSumStepsTaken(stepsTakenList.reduce((a, b) => a + b, 0));
     }
@@ -89,6 +91,20 @@ export const PatientOverview: FC<PatientOverviewProps> = ({ details }) => {
         </View>
 
         <View style={[styles.container]}>
+          {/* Fluid and activity card */}
+          <FluidIntakeCard
+            fluidRequired={details.patientInfo.fluidIntakeGoal}
+            fluidTaken={sumFluidIntake.toString()}
+            minHeight={cardHeight}
+          />
+          <ActivityCard
+            stepsTaken={sumStepsTaken.toString()}
+            stepsRequired={details.patientInfo.targetActivity}
+            minHeight={cardHeight}
+          />
+        </View>
+
+        <View style={[styles.container, { paddingBottom: ms(10) }]}>
           {/* Medication and symptoms card */}
           {/* JH-TODO-NEW: Current data type does not support this */}
           <MedicationTakenCard
@@ -99,19 +115,6 @@ export const PatientOverview: FC<PatientOverviewProps> = ({ details }) => {
           <SymptomsCard
             symptoms={symptoms}
             maxHeight={cardHeight}
-            minHeight={cardHeight}
-          />
-        </View>
-        <View style={[styles.container, { paddingBottom: ms(10) }]}>
-          {/* Fluid and activity card */}
-          <FluidIntakeCard
-            fluidRequired={details.patientInfo.fluidIntakeGoal}
-            fluidTaken={sumFluidIntake.toString()}
-            minHeight={cardHeight}
-          />
-          <ActivityCard
-            stepsTaken={sumStepsTaken.toString()}
-            stepsRequired={details.patientInfo.targetActivity}
             minHeight={cardHeight}
           />
         </View>
