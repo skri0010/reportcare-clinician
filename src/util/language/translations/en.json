@@ -175,6 +175,19 @@
   "Patient_Configuration": {
     "Title": "Configure details",
     "Proceed": "Proceed",
+    "Save": "Save",
+    "Cancel": "Cancel",
+    "AddNewMedicationInfo": "Add new medication info",
+    "MedicationsAddedCurrently": "Medications added currently:",
+    "Unit": {
+      "Dosage": "mg",
+      "Frequency": "time(s) per day"
+    },
+    "MedicationRow": {
+      "Name": "Name: ",
+      "Dosage": "Dosage: ",
+      "Frequency": "Frequency: "
+    },
     "Label": {
       "HospitalName": "Hospital name",
       "NYHAClass": "NYHA class",
@@ -183,7 +196,7 @@
       "TargetActivity": "Target number of steps",
       "TargetWeight": "Target weight (in kg)",
       "FluidIntakeGoal": "Fluid intake goal (in ml)",
-      "MedName": "Name of medicine",
+      "MedName": "Medicine name",
       "Dosage": "Dosage (in mg)",
       "Frequency": "Frequency (in times per day)"
     },

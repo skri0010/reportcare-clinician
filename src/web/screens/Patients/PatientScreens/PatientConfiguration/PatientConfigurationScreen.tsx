@@ -1,9 +1,9 @@
 import React, { FC, useState, useEffect, useCallback } from "react";
-import { View, ScrollView } from "react-native";
+import { View, ScrollView, TouchableOpacity, FlatList } from "react-native";
 import { TextField } from "components/InputComponents/TextField";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import i18n from "util/language/i18n";
-import { PatientInfo } from "aws/API";
+import { PatientInfo, MedicationInfo } from "aws/API";
 import cloneDeep from "lodash/cloneDeep";
 import {
   notEmptyString,
@@ -11,15 +11,18 @@ import {
   validateHospitalName,
   validateNYHAClass,
   validateTargetActivity,
-  validateTargetWeight
+  validateTargetWeight,
+  validateMedName,
+  validateMedDosage,
+  validateMedFreq
 } from "util/validation";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { CheckboxText } from "components/InputComponents/CheckboxText";
-import { H3 } from "components/Text";
+import { H3, H4, H5 } from "components/Text";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { Picker } from "@react-native-picker/picker";
-import { Hospital, NYHAClass } from "rc_agents/model";
+import { Hospital, NYHAClass, MedInput } from "rc_agents/model";
 import { getPickerStyles } from "util/getStyles";
 import { Label } from "components/Text/Label";
 import { AuthButton } from "components/Buttons/AuthButton";
@@ -30,6 +33,9 @@ import {
   setConfigurationSuccessful,
   setConfiguringPatient
 } from "ic-redux/actions/agents/actionCreator";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { MedicationConfigForm } from "./MedicationConfigForm";
+import { MedicationRow } from "./MedicationRow";
 
 interface PatientConfigurationScreenProps {
   info: PatientInfo;
@@ -48,10 +54,34 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
     const [configInfo, setConfigInfo] = useState<PatientInfo>(() => {
       return cloneDeep(info);
     });
+
+    const [configMedInfo, setConfigMedInfo] = useState<MedInput>({
+      name: "",
+      dosage: "",
+      frequency: ""
+    });
+
     const [allInputValid, setAllInputValid] = useState<boolean>(false);
     const [hasDevice, setHasDevice] = useState<boolean>(
       notEmptyString(info.deviceNo)
     );
+
+    // To track all the medication infos that have been added locally
+    const [medInfos, setMedInfos] = useState<MedInput[]>([]);
+
+    // Determines whether to show the add medication form or not
+    // const [hasMedInfo, setHasMedInfo] = useState<boolean>(false);
+    const [hasMedInfo, setHasMedInfo] = useState<boolean>(medInfos.length > 0);
+    // Checks if the add medication info button should be active or not
+    const [addMedInfo, setAddMedInfo] = useState<boolean>(false);
+
+    const [newMedInfoAdded, setNewMedInfoAdded] = useState<boolean>(false);
+
+    const [medInfoToDelete, setMedInfoToDelete] = useState<MedInput>({
+      name: "",
+      dosage: "",
+      frequency: ""
+    });
 
     // Used locally to keep track of ongoing configuration procedure
     const [configuring, setConfiguring] = useState<boolean>(false);
@@ -112,12 +142,41 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
       });
     };
 
+    const saveMedInput = (medInput: MedInput) => {
+      const currentMedInfos: MedInput[] = medInfos;
+      currentMedInfos.unshift(medInput);
+      setMedInfos(currentMedInfos);
+      setNewMedInfoAdded(true);
+      setAddMedInfo(false);
+      setConfigMedInfo({
+        name: "",
+        dosage: "",
+        frequency: ""
+      });
+    };
+
+    useEffect(() => {
+      const currentMedInfos: MedInput[] = medInfos;
+      currentMedInfos.splice(medInfos.indexOf(medInfoToDelete), 1);
+      setMedInfos(currentMedInfos);
+      if (currentMedInfos.length === 0) {
+        setNewMedInfoAdded(false);
+      }
+    }, [medInfoToDelete, medInfos]);
+
     // Side effects when optional fields change
     useEffect(() => {
       if (!hasDevice && notEmptyString(configInfo.deviceNo)) {
         updateDeviceNumber("");
       }
     }, [hasDevice, configInfo, updateDeviceNumber]);
+
+    useEffect(() => {
+      if (!hasMedInfo) {
+        setMedInfos([]);
+        setNewMedInfoAdded(false);
+      }
+    }, [hasMedInfo]);
 
     // Side effect for final validation
     useEffect(() => {
@@ -130,19 +189,20 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
         validateFluidIntakeGoal(configInfo.fluidIntakeGoal)) as boolean;
 
       // Validation for optional fields
-      const optional = (!hasDevice || configInfo.deviceNo) as boolean;
+      const optional = ((!hasDevice || configInfo.deviceNo) &&
+        (!hasMedInfo || newMedInfoAdded)) as boolean;
 
       const valid = mandatory && optional;
 
       setAllInputValid(valid);
-    }, [configInfo, hasDevice]);
+    }, [configInfo, hasDevice, hasMedInfo, newMedInfoAdded]);
 
     // Proceed button onPress
     const onProceedPress = () => {
       dispatch(setConfiguringPatient(true));
       setConfiguring(true);
       const infoToUpdate = { ...configInfo, configured: true };
-      triggerConfigurePatient(infoToUpdate);
+      triggerConfigurePatient(infoToUpdate, medInfos);
     };
 
     useEffect(() => {
@@ -296,6 +356,85 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
             }
             errorMessage={i18n.t("Patient_Configuration.Error.FluidIntakeGoal")}
           />
+
+          {/* Separator */}
+          <ItemSeparator topSpacing={ms(15)} bottomSpacing={ms(8)} />
+
+          {/* Optional fields */}
+          {/* Medication Info */}
+          <CheckboxText
+            text={i18n.t("Patient_Configuration.Prompt.MedInfo")}
+            containerStyle={styles.promptTextContainer}
+            fontSize={fonts.h6Size}
+            checked={hasMedInfo}
+            onPress={() => setHasMedInfo(!hasMedInfo)}
+          />
+          {hasMedInfo ? (
+            <View>
+              <View style={{ alignItems: "center", paddingVertical: ms(10) }}>
+                <TouchableOpacity
+                  disabled={addMedInfo}
+                  onPress={() => setAddMedInfo(true)}
+                  style={[
+                    styles.addNewMedInfo,
+                    {
+                      backgroundColor: addMedInfo
+                        ? colors.primaryDeactivatedButtonColor
+                        : colors.acceptButtonColor
+                    }
+                  ]}
+                >
+                  <H4
+                    text={i18n.t("Patient_Configuration.AddNewMedicationInfo")}
+                    style={{ color: colors.primaryContrastTextColor }}
+                  />
+                </TouchableOpacity>
+              </View>
+              {addMedInfo ? (
+                <MedicationConfigForm
+                  configMedInfo={configMedInfo}
+                  setConfigMedInfo={setConfigMedInfo}
+                  saveMedInput={saveMedInput}
+                  setAddMedInfo={setAddMedInfo}
+                />
+              ) : null}
+
+              {newMedInfoAdded ? (
+                <View style={{ paddingTop: ms(10) }}>
+                  <View
+                    style={[
+                      styles.medicationsAddedHeader,
+                      { backgroundColor: colors.primaryBarColor }
+                    ]}
+                  >
+                    <H4
+                      text={i18n.t(
+                        "Patient_Configuration.MedicationsAddedCurrently"
+                      )}
+                      style={{
+                        color: colors.primaryContrastTextColor,
+                        paddingVertical: ms(5)
+                      }}
+                    />
+                  </View>
+                  <View style={{ maxHeight: ms(300) }}>
+                    <FlatList
+                      style={{ flex: 1 }}
+                      ItemSeparatorComponent={() => <ItemSeparator />}
+                      data={medInfos}
+                      renderItem={({ item }) => (
+                        <MedicationRow
+                          medicationItem={item}
+                          setMedInfoToDelete={setMedInfoToDelete}
+                        />
+                      )}
+                      keyExtractor={(item) => item.name}
+                    />
+                  </View>
+                </View>
+              ) : null}
+            </View>
+          ) : null}
         </ScrollView>
 
         {/* Proceed button */}
@@ -318,5 +457,18 @@ const styles = ScaledSheet.create({
   },
   promptTextContainer: {
     marginTop: "10@ms"
+  },
+  addNewMedInfo: {
+    width: "200@ms",
+    height: "30@ms",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingBottom: "2@ms",
+    borderRadius: "5@ms"
+  },
+  medicationsAddedHeader: {
+    borderTopLeftRadius: "6@ms",
+    borderTopRightRadius: "6@ms",
+    paddingLeft: "15@ms"
   }
 });

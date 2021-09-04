@@ -175,6 +175,19 @@
   "Patient_Configuration": {
     "Title": "Konfigurasikan butiran",
     "Proceed": "Selesai",
+    "Save": "Simpan",
+    "Cancel": "Batal",
+    "AddNewMedicationInfo": "Tambah informasi ubat baharu",
+    "MedicationsAddedCurrently": "Ubatan yang telah ditambah:",
+    "Unit": {
+      "Dosage": "mg",
+      "Frequency": "kali per hari"
+    },
+    "MedicationRow": {
+      "Name": "Nama: ",
+      "Dosage": "Dos: ",
+      "Frequency": "Kekerapan: "
+    },
     "Label": {
       "HospitalName": "Nama hospital",
       "NYHAClass": "Kelas NYHA",
