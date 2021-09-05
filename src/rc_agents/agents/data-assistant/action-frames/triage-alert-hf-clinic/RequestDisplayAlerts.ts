@@ -72,6 +72,6 @@ const rule3 = new ResettablePrecondition(
 // Actionframe
 export const af_RequestDisplayAlerts = new Actionframe(
   `AF_${ActionFrameIDs.DTA.REQUEST_DISPLAY_ALERTS}`,
-  [rule1, rule2],
+  [rule1, rule2, rule3],
   new RequestDisplayAlerts()
 );

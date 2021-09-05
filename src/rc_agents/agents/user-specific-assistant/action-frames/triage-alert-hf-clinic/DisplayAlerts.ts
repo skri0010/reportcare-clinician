@@ -148,7 +148,9 @@ class DisplayAlerts extends Activity {
         BeliefKeys.PROCEDURE,
         ProcedureAttributes.AT_CP_I,
         ProcedureConst.INACTIVE
-      )
+      ),
+      true,
+      true
     );
   }
 }

@@ -38,7 +38,6 @@ export const AlertScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
     procedureSuccessful,
     submittingTodo,
     fetchingAlertInfo,
-    processedAlertNotification,
     alertInfo
   } = select((state: RootState) => ({
     colors: state.settings.colors, // Used to detect completion of updateTodo procedure
@@ -47,7 +46,6 @@ export const AlertScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
     procedureSuccessful: state.agents.procedureSuccessful,
     submittingTodo: state.agents.submittingTodo,
     fetchingAlertInfo: state.agents.fetchingAlertInfo,
-    processedAlertNotification: state.agents.processedAlertNotification,
     alertInfo: state.agents.alertInfo
   }));
 
@@ -64,32 +62,6 @@ export const AlertScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
       fetchAlertsMode: FetchAlertsMode.ALL
     });
   }, []);
-
-  /**
-   * Trigger agent to fetch either pending or completed alerts when a new alert is processed
-   */
-  useEffect(() => {
-    if (processedAlertNotification) {
-      dispatch(setProcessedAlertNotification(null));
-
-      const newAlertInfo = processedAlertNotification;
-
-      // Obtain fetch alerts mode
-      const fetchAlertsMode: FetchAlertsMode | null =
-        newAlertInfo.pending === AlertStatus.PENDING
-          ? FetchAlertsMode.PENDING
-          : newAlertInfo.completed === AlertStatus.COMPLETED
-          ? FetchAlertsMode.COMPLETED
-          : null;
-
-      if (fetchAlertsMode) {
-        AgentTrigger.triggerRetrieveAlerts({
-          fetchAlertsMode: fetchAlertsMode,
-          fetchAlertsLocally: true
-        });
-      }
-    }
-  }, [processedAlertNotification, dispatch]);
 
   const [isEmptyAlert, setEmptyAlert] = useState(true);
 

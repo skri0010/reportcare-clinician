@@ -129,7 +129,9 @@ class RetrieveDetailedAlertInfo extends Activity {
           BeliefKeys.PROCEDURE,
           ProcedureAttributes.AT_CP_II,
           ProcedureConst.INACTIVE
-        )
+        ),
+        true,
+        true
       );
 
       // Dispatch to store to indicate fetching has ended
