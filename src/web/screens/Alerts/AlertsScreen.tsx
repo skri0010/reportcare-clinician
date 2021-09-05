@@ -14,12 +14,11 @@ import { NoSelectionScreen } from "../Shared/NoSelectionScreen";
 import { AlertDetailsScreen } from "./AlertDetailsScreen";
 import { MainScreenProps } from "web/navigation/types";
 import { AgentTrigger } from "rc_agents/trigger";
-import { AlertStatus, FetchAlertsMode } from "rc_agents/model";
+import { FetchAlertsMode } from "rc_agents/model";
 import { AddTodoScreen } from "web/screens/Todo/modals/AddTodoScreen";
 import { useToast } from "react-native-toast-notifications";
 import {
   setProcedureSuccessful,
-  setProcessedAlertNotification,
   setSubmittingTodo
 } from "ic-redux/actions/agents/actionCreator";
 import i18n from "util/language/i18n";
@@ -58,9 +57,7 @@ export const AlertScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
    * Trigger agent to fetch ALL alerts on initial load
    */
   useEffect(() => {
-    AgentTrigger.triggerRetrieveAlerts({
-      fetchAlertsMode: FetchAlertsMode.ALL
-    });
+    AgentTrigger.triggerRetrieveAlerts(FetchAlertsMode.ALL);
   }, []);
 
   const [isEmptyAlert, setEmptyAlert] = useState(true);

@@ -21,8 +21,7 @@ import { listClinicianPatientMaps, getDetailedAlert } from "aws";
 import { Storage } from "rc_agents/storage";
 import { agentNWA } from "rc_agents/agents";
 import { convertAlertToAlertInfo } from "util/utilityFunctions";
-import { setProcessedAlertNotification } from "ic-redux/actions/agents/actionCreator";
-import { store } from "util/useRedux";
+import { AlertStatus, FetchAlertsMode } from "rc_agents/model";
 
 /**
  * Class to represent the activity for processing an alert notification.
@@ -74,8 +73,49 @@ class ProcessAlertNotification extends Activity {
                 const alertInfo = convertAlertToAlertInfo(alert);
                 await Storage.setAlertInfo(alertInfo);
 
-                // Dispatch to store to indicate that processing was successful
-                store.dispatch(setProcessedAlertNotification(alertInfo));
+                // Obtain fetch alerts mode
+                const fetchAlertsMode: FetchAlertsMode | null =
+                  alertInfo.pending === AlertStatus.PENDING
+                    ? FetchAlertsMode.PENDING
+                    : alertInfo.completed === AlertStatus.COMPLETED
+                    ? FetchAlertsMode.COMPLETED
+                    : null;
+
+                // Update Facts
+                // Add item
+                if (fetchAlertsMode === FetchAlertsMode.PENDING) {
+                  // Pending AlertInfo[]
+                  agentAPI.addFact(
+                    new Belief(
+                      BeliefKeys.CLINICIAN,
+                      ClinicianAttributes.REFRESHED_PENDING_ALERTS,
+                      await Storage.getPendingAlertInfos()
+                    ),
+                    false
+                  );
+                }
+
+                // Add item
+                if (fetchAlertsMode === FetchAlertsMode.COMPLETED) {
+                  // Pending AlertInfo[]
+                  agentAPI.addFact(
+                    new Belief(
+                      BeliefKeys.CLINICIAN,
+                      ClinicianAttributes.REFRESHED_COMPLETED_ALERTS,
+                      await Storage.getCompletedAlertInfos()
+                    ),
+                    false
+                  );
+                }
+
+                // Trigger request to Communicate to USXA
+                agent.addBelief(
+                  new Belief(
+                    BeliefKeys.CLINICIAN,
+                    ClinicianAttributes.REFRESHED_ALERTS_RETRIEVED,
+                    true
+                  )
+                );
               }
             }
           }
@@ -113,6 +153,17 @@ class ProcessAlertNotification extends Activity {
           )
         );
       });
+
+      // End the procedure
+      agentAPI.addFact(
+        new Belief(
+          BeliefKeys.PROCEDURE,
+          ProcedureAttributes.AT_CP_III,
+          ProcedureConst.INACTIVE
+        ),
+        true,
+        true
+      );
     }
 
     // Update Facts
@@ -124,17 +175,6 @@ class ProcessAlertNotification extends Activity {
         null
       ),
       false
-    );
-
-    // End the procedure
-    agentAPI.addFact(
-      new Belief(
-        BeliefKeys.PROCEDURE,
-        ProcedureAttributes.AT_CP_III,
-        ProcedureConst.INACTIVE
-      ),
-      true,
-      true
     );
   }
 }

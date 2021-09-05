@@ -171,13 +171,6 @@ export const setCompletedAlerts = createAction(
   })
 )();
 
-export const setProcessedAlertNotification = createAction(
-  actionNames.SET_PROCESSED_ALERT_NOTIFICATION,
-  (processedAlertNotification: AlertInfo | null) => ({
-    processedAlertNotification: processedAlertNotification
-  })
-)();
-
 export const setAlerts = createAction(
   actionNames.SET_ALERTS,
   (alerts: AlertInfo[]) => ({

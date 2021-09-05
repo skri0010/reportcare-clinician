@@ -224,10 +224,9 @@ export const triggerUpdateTodo = (input: TodoInput): void => {
 };
 
 // AT-CP-I: Trigger RetriveAlerts of DTA
-export const triggerRetrieveAlerts: (input: {
-  fetchAlertsMode: FetchAlertsMode;
-  fetchAlertsLocally?: boolean; // AT-CP-III: Alerts notifications
-}) => void = ({ fetchAlertsMode, fetchAlertsLocally }) => {
+export const triggerRetrieveAlerts = (
+  fetchAlertsMode: FetchAlertsMode
+): void => {
   agentAPI.addFact(
     new Belief(
       BeliefKeys.CLINICIAN,
@@ -236,17 +235,6 @@ export const triggerRetrieveAlerts: (input: {
     ),
     false
   );
-
-  if (fetchAlertsLocally) {
-    agentAPI.addFact(
-      new Belief(
-        BeliefKeys.CLINICIAN,
-        ClinicianAttributes.FETCH_ALERTS_LOCALLY,
-        fetchAlertsLocally
-      ),
-      false
-    );
-  }
 
   // Trigger DTA to retrieve alerts
   agentDTA.addBelief(

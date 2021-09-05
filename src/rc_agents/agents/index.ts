@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-imports */
 export { default as agentALA } from "./alert-assistant/ALA";
 export { default as agentAPS } from "./app-configuration-assistant/APS";
 export { default as agentDTA } from "./data-assistant/DTA";

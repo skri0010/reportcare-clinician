@@ -58,12 +58,6 @@ class RetrieveAlerts extends Activity {
     // Get online status from facts
     const isOnline: boolean = facts[BeliefKeys.APP]?.[AppAttributes.ONLINE];
 
-    // Get fetch alerts locally boolean from facts
-    // AT-CP-III: Alert notifications requires fetching locally
-    const fetchAlertsLocally: boolean =
-      facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.FETCH_ALERTS_LOCALLY];
-    fetchAlertsLocally;
-
     // Dispatch to store to indicate fetching
     if (fetchAlertsMode) {
       this.dispatchFetching(fetchAlertsMode, true);
@@ -74,29 +68,31 @@ class RetrieveAlerts extends Activity {
         let pendingAlertInfos: AlertInfo[] | undefined | null;
         let completedAlertInfos: AlertInfo[] | undefined | null;
 
-        if (isOnline && !fetchAlertsLocally) {
+        if (isOnline) {
           // Device is online and not do not need to fetch alerts locally
           let pendingAlerts: Alert[] | undefined | null;
           let completedAlerts: Alert[] | undefined | null;
 
-          if (fetchAlertsMode === FetchAlertsMode.ALL) {
-            // Retrieve all pending and completed alerts
+          // Retrieve alerts based on fetchAlertsMode
+          if (
+            fetchAlertsMode === FetchAlertsMode.PENDING ||
+            fetchAlertsMode === FetchAlertsMode.ALL
+          ) {
             pendingAlerts = await this.getAlertsByFetchAlertsMode(
               FetchAlertsMode.PENDING
             );
+          }
+          if (
+            fetchAlertsMode === FetchAlertsMode.COMPLETED ||
+            fetchAlertsMode === FetchAlertsMode.ALL
+          ) {
             completedAlerts = await this.getAlertsByFetchAlertsMode(
               FetchAlertsMode.COMPLETED
             );
-          } else if (fetchAlertsMode === FetchAlertsMode.PENDING) {
-            // Retrieve either pending or completed alerts
-            pendingAlerts = await this.getAlertsByFetchAlertsMode(
-              fetchAlertsMode
-            );
-          } else if (fetchAlertsMode === FetchAlertsMode.COMPLETED) {
-            completedAlerts = await this.getAlertsByFetchAlertsMode(
-              fetchAlertsMode
-            );
           }
+
+          // Flush locally store info
+          await Storage.flushAlertInfos();
 
           // Store pending / completed AlertInfo[]
           if (pendingAlerts) {
@@ -108,14 +104,18 @@ class RetrieveAlerts extends Activity {
             await Storage.setAlertInfos(completedAlertInfos);
           }
         } else {
-          // Device is offline or fetch locally
+          // Device is offline or fetch locally based on fetchAlertsMode
           // eslint-disable-next-line no-lonely-if
-          if (fetchAlertsMode === FetchAlertsMode.ALL) {
+          if (
+            fetchAlertsMode === FetchAlertsMode.PENDING ||
+            fetchAlertsMode === FetchAlertsMode.ALL
+          ) {
             pendingAlertInfos = await Storage.getPendingAlertInfos();
-            completedAlertInfos = await Storage.getCompletedAlertInfos();
-          } else if (fetchAlertsMode === FetchAlertsMode.PENDING) {
-            pendingAlertInfos = await Storage.getPendingAlertInfos();
-          } else if (fetchAlertsMode === FetchAlertsMode.COMPLETED) {
+          }
+          if (
+            fetchAlertsMode === FetchAlertsMode.COMPLETED ||
+            fetchAlertsMode === FetchAlertsMode.ALL
+          ) {
             completedAlertInfos = await Storage.getCompletedAlertInfos();
           }
         }
@@ -172,14 +172,6 @@ class RetrieveAlerts extends Activity {
           new Belief(
             BeliefKeys.CLINICIAN,
             ClinicianAttributes.FETCH_ALERTS_MODE,
-            null
-          ),
-          false
-        );
-        agentAPI.addFact(
-          new Belief(
-            BeliefKeys.CLINICIAN,
-            ClinicianAttributes.FETCH_ALERTS_LOCALLY,
             null
           ),
           false

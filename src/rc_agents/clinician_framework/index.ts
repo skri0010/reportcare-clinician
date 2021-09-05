@@ -23,11 +23,11 @@ export const ActionFrameIDs = {
     RETRIEVE_ENTRY_DATA: "RetrieveEntryData",
     STORE_ENTRY_DATA: "StoreEntryData",
 
-    // AT-CP-I: Alerts
+    // AT-CP-I: AlertInfo[]
     RETRIEVE_ALERTS: "RetrieveAlerts",
     REQUEST_DISPLAY_ALERTS: "RequestDisplayAlerts",
 
-    // AT-CP-II: AlertInfo with details
+    // AT-CP-II: Detailed AlertInfo
     RETRIEVE_DETAILED_ALERT_INFO: "RetrieveDetailedAlertInfo",
     REQUEST_DISPLAY_DETAILED_ALERT_INFO: "RequestDisplayDetailedAlertInfo",
     UPDATE_ALERT: "UpdateAlert",
@@ -69,11 +69,14 @@ export const ActionFrameIDs = {
     REQUEST_DISPLAY_CLINICIAN_CONTACTS: "RequestDisplayClinicianContacts"
   },
   UXSA: {
-    // AT-CP-I: Alerts
+    // AT-CP-I: AlertInfo[]
     DISPLAY_ALERTS: "DisplayAlerts",
 
-    // AT-CP-II: Alerts
+    // AT-CP-II: Detailed AlertInfo
     DISPLAY_DETAILED_ALERT_INFO: "DisplayDetailedAlertInfo",
+
+    // AT-CP-III: Alert Notifications and refreshed AlertInfo[]
+    DISPLAY_REFRESHED_ALERTS: "DisplayRefreshedAlerts",
 
     // HF-OTP-I: ClinicianInfo and all patients (PatientInfo)
     RETRIEVE_ROLE: "RetrieveRole",
@@ -111,16 +114,17 @@ export const ActionFrameIDs = {
     SYNC_CREATE_TODOS: "SyncCreateTodos",
     SYNC_UPDATE_TODOS: "SyncUpdateTodos",
 
-    // AT-CP-II - Alert's Details
+    // AT-CP-II: Detailed AlertInfo
     SYNC_UPDATE_ALERTS: "SyncUpdateAlerts",
 
-    // AT-CP-III - Alert Notifications
+    // AT_CP_III: Alert Notifications and refreshed AlertInfo[]
     SYNC_PROCESS_ALERT_NOTIFICATIONS: "SyncProcessAlertNotifications"
   },
   MHA: {},
   ALA: {
-    // AT-CP-III - Alert Notifications
-    PROCESS_ALERT_NOTIFICATION: "ProcessAlertNotification"
+    // AT_CP_III: Alert Notifications and refreshed AlertInfo[]
+    PROCESS_ALERT_NOTIFICATION: "ProcessAlertNotification",
+    REQUEST_DISPLAY_REFRESHED_ALERTS: "RequestDisplayRefreshedAlerts"
   }
 };
 
@@ -182,9 +186,8 @@ export enum ClinicianAttributes {
   TODO_DETAILS_RETRIEVED = "TodoDetailsRetrieved",
   TODO_ID = "TodoId",
 
-  // AT-CP-I: Alerts
+  // AT-CP-I: AlertInfo[]
   FETCH_ALERTS_MODE = "FetchAlertsMode",
-  FETCH_ALERTS_LOCALLY = "FetchAlertsLocally",
   ALERT_RISK_LEVEL = "AlertRiskLevel",
 
   RETRIEVE_ALERTS = "RetrieveAlerts",
@@ -194,7 +197,7 @@ export enum ClinicianAttributes {
   COMPLETED_ALERTS = "CompletedAlerts",
   ALERTS_RETRIEVED = "AlertsRetrieved",
 
-  // AT-CP-II: AlertInfo
+  // AT-CP-II: Detailed AlertInfo
   ALERT_INFO = "AlertInfo",
   DETAILED_ALERT_INFO = "DetailedAlertInfo",
   RETRIEVE_DETAILED_ALERT_INFO = "RetrieveDetailedAlertInfo",
@@ -202,9 +205,12 @@ export enum ClinicianAttributes {
   UPDATE_ALERT = "UpdateAlert",
   ALERTS_UPDATED = "AlertsUpdated",
 
-  // AT-CP-III - Alert Notifications
+  // AT_CP_III: Alert Notifications and refreshed AlertInfo[]
   ALERT_NOTIFICATION = "AlertNotification",
   PROCESS_ALERT_NOTIFICATION = "ProcessAlertNotification",
+  REFRESHED_PENDING_ALERTS = "RefreshedPendingAlerts",
+  REFRESHED_COMPLETED_ALERTS = "RefreshedCompletedAlerts",
+  REFRESHED_ALERTS_RETRIEVED = "RefreshedAlertsRetrieved",
 
   // SRD-II - Todos
   RETRIEVE_TODOS = "RetrieveTodos",

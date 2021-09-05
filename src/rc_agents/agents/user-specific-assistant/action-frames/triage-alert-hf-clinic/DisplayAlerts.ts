@@ -60,64 +60,13 @@ class DisplayAlerts extends Activity {
         ClinicianAttributes.COMPLETED_ALERTS
       ];
 
-    let filteredPendingAlerts: AlertInfo[] = [];
-    let filteredCompletedAlerts: AlertInfo[] = [];
-
     try {
-      const { alertRiskFilters } = store.getState().agents;
-      let shouldFilter = false;
-
-      // If one of the risk filters is true, we must proceed to filter
-      Object.values(alertRiskFilters).forEach((value) => {
-        if (value) {
-          shouldFilter = true;
-        }
+      // Display alerts
+      displayAlerts({
+        pendingAlertInfos: pendingAlertInfos,
+        pendingAlertsCount: pendingAlertsCount,
+        completedAlertInfos: completedAlertInfos
       });
-
-      // Pending AlertInfo[] exist
-      if (pendingAlertInfos) {
-        filteredPendingAlerts =
-          sortAlertInfoByDescendingDateTime(pendingAlertInfos);
-
-        if (shouldFilter) {
-          // Filter pending alerts
-          filteredPendingAlerts = pendingAlertInfos.filter(
-            (alert) =>
-              alertRiskFilters[alert.riskLevel] &&
-              alert.pending === AlertStatus.PENDING
-          );
-        }
-
-        // Dispatch pending alerts to store
-        store.dispatch(setPendingAlerts(filteredPendingAlerts));
-      }
-
-      // Pending alerts count exist
-      if (pendingAlertsCount) {
-        // Dispatch pending alerts count to store
-        store.dispatch(setPendingAlertCount(pendingAlertsCount));
-      }
-
-      // Completed AlertInfo[] exist
-      if (completedAlertInfos) {
-        filteredCompletedAlerts =
-          sortAlertInfoByDescendingDateTime(completedAlertInfos);
-
-        if (shouldFilter) {
-          // Filter completed alerts
-          filteredCompletedAlerts = completedAlertInfos.filter(
-            (alert) =>
-              alertRiskFilters[alert.riskLevel] &&
-              alert.completed === AlertStatus.COMPLETED
-          );
-        }
-
-        // Dispatch completed alerts to store
-        store.dispatch(setCompletedAlerts(filteredCompletedAlerts));
-      }
-
-      // Dispatch to store to indicate fetching has ended
-      store.dispatch(setFetchingAlerts(false));
 
       // Update Facts
       // Remove item
@@ -154,6 +103,74 @@ class DisplayAlerts extends Activity {
     );
   }
 }
+
+export const displayAlerts: (input: {
+  pendingAlertInfos?: AlertInfo[] | null;
+  pendingAlertsCount?: AlertsCount | null;
+  completedAlertInfos?: AlertInfo[] | null;
+}) => void = ({
+  pendingAlertInfos,
+  pendingAlertsCount,
+  completedAlertInfos
+}) => {
+  let filteredPendingAlerts: AlertInfo[] = [];
+  let filteredCompletedAlerts: AlertInfo[] = [];
+
+  const { alertRiskFilters } = store.getState().agents;
+  let shouldFilter = false;
+
+  // If one of the risk filters is true, we must proceed to filter
+  Object.values(alertRiskFilters).forEach((value) => {
+    if (value) {
+      shouldFilter = true;
+    }
+  });
+
+  // Pending AlertInfo[] exist
+  if (pendingAlertInfos) {
+    filteredPendingAlerts =
+      sortAlertInfoByDescendingDateTime(pendingAlertInfos);
+
+    if (shouldFilter) {
+      // Filter pending alerts
+      filteredPendingAlerts = pendingAlertInfos.filter(
+        (alert) =>
+          alertRiskFilters[alert.riskLevel] &&
+          alert.pending === AlertStatus.PENDING
+      );
+    }
+
+    // Dispatch pending alerts to store
+    store.dispatch(setPendingAlerts(filteredPendingAlerts));
+  }
+
+  // Pending alerts count exist
+  if (pendingAlertsCount) {
+    // Dispatch pending alerts count to store
+    store.dispatch(setPendingAlertCount(pendingAlertsCount));
+  }
+
+  // Completed AlertInfo[] exist
+  if (completedAlertInfos) {
+    filteredCompletedAlerts =
+      sortAlertInfoByDescendingDateTime(completedAlertInfos);
+
+    if (shouldFilter) {
+      // Filter completed alerts
+      filteredCompletedAlerts = completedAlertInfos.filter(
+        (alert) =>
+          alertRiskFilters[alert.riskLevel] &&
+          alert.completed === AlertStatus.COMPLETED
+      );
+    }
+
+    // Dispatch completed alerts to store
+    store.dispatch(setCompletedAlerts(filteredCompletedAlerts));
+  }
+
+  // Dispatch to store to indicate fetching has ended
+  store.dispatch(setFetchingAlerts(false));
+};
 
 // Preconditions
 const rule1 = new Precondition(

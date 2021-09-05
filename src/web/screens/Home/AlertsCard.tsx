@@ -33,9 +33,7 @@ export const AlertsCard: FC<AlertsCardProps> = ({
   const [remainingAlert, setRemainingAlert] = useState(0);
 
   useEffect(() => {
-    AgentTrigger.triggerRetrieveAlerts({
-      fetchAlertsMode: FetchAlertsMode.PENDING
-    });
+    AgentTrigger.triggerRetrieveAlerts(FetchAlertsMode.PENDING);
   }, []);
 
   useEffect(() => {
