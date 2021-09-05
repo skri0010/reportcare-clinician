@@ -424,6 +424,7 @@ export const onCreateReportVitals = /* GraphQL */ `
       BPDi
       NoSteps
       OxySat
+      FluidIntake
       DateTime
       patientID
       _version
@@ -446,6 +447,7 @@ export const onUpdateReportVitals = /* GraphQL */ `
       BPDi
       NoSteps
       OxySat
+      FluidIntake
       DateTime
       patientID
       _version
@@ -468,6 +470,7 @@ export const onDeleteReportVitals = /* GraphQL */ `
       BPDi
       NoSteps
       OxySat
+      FluidIntake
       DateTime
       patientID
       _version
@@ -729,8 +732,8 @@ export const onDeleteClinicianPatientMap = /* GraphQL */ `
   }
 `;
 export const onCreatePatientAssignment = /* GraphQL */ `
-  subscription OnCreatePatientAssignment($owner: String, $clinicianID: String) {
-    onCreatePatientAssignment(owner: $owner, clinicianID: $clinicianID) {
+  subscription OnCreatePatientAssignment($owner: String) {
+    onCreatePatientAssignment(owner: $owner) {
       id
       patientID
       clinicianID
@@ -747,8 +750,8 @@ export const onCreatePatientAssignment = /* GraphQL */ `
   }
 `;
 export const onUpdatePatientAssignment = /* GraphQL */ `
-  subscription OnUpdatePatientAssignment($owner: String, $clinicianID: String) {
-    onUpdatePatientAssignment(owner: $owner, clinicianID: $clinicianID) {
+  subscription OnUpdatePatientAssignment($owner: String) {
+    onUpdatePatientAssignment(owner: $owner) {
       id
       patientID
       clinicianID
@@ -765,8 +768,8 @@ export const onUpdatePatientAssignment = /* GraphQL */ `
   }
 `;
 export const onDeletePatientAssignment = /* GraphQL */ `
-  subscription OnDeletePatientAssignment($owner: String, $clinicianID: String) {
-    onDeletePatientAssignment(owner: $owner, clinicianID: $clinicianID) {
+  subscription OnDeletePatientAssignment($owner: String) {
+    onDeletePatientAssignment(owner: $owner) {
       id
       patientID
       clinicianID
@@ -801,6 +804,7 @@ export const onCreateAlert = /* GraphQL */ `
         BPDi
         NoSteps
         OxySat
+        FluidIntake
         DateTime
         patientID
         _version
@@ -855,6 +859,7 @@ export const onUpdateAlert = /* GraphQL */ `
         BPDi
         NoSteps
         OxySat
+        FluidIntake
         DateTime
         patientID
         _version
@@ -909,6 +914,7 @@ export const onDeleteAlert = /* GraphQL */ `
         BPDi
         NoSteps
         OxySat
+        FluidIntake
         DateTime
         patientID
         _version
@@ -1052,6 +1058,51 @@ export const onDeleteTodo = /* GraphQL */ `
       }
       pending
       completed
+      owner
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateAlertNotification = /* GraphQL */ `
+  subscription OnCreateAlertNotification {
+    onCreateAlertNotification {
+      id
+      patientID
+      alertID
+      owner
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateAlertNotification = /* GraphQL */ `
+  subscription OnUpdateAlertNotification {
+    onUpdateAlertNotification {
+      id
+      patientID
+      alertID
+      owner
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteAlertNotification = /* GraphQL */ `
+  subscription OnDeleteAlertNotification {
+    onDeleteAlertNotification {
+      id
+      patientID
+      alertID
       owner
       _version
       _deleted

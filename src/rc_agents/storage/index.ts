@@ -8,6 +8,10 @@ import {
 import { ClinicianInfo, PatientAssignment, PatientInfo } from "aws/API";
 // eslint-disable-next-line no-restricted-imports
 import * as accessFunctions from "rc_agents/storage/accessFunctions";
+import {
+  AlertNotification,
+  PatientAssignmentSubscription
+} from "aws/TypedAPI/subscriptions";
 
 /**
  * AsyncStorage access functions (SET, GET and REMOVE) with types
@@ -30,8 +34,10 @@ export enum AsyncStorageKeys {
   PATIENT_CONFIGURATIONS = "PatientConfigurations",
   MEDICATION_CONFIGURATIONS = "MedicationConfigurations",
   TODOS = "Todos",
+  ALERTS_SYNC = "AlertsSync",
   TODO_DETAILS = "TodoDetails",
-  ALERTS_SYNC = "AlertsSync"
+  ALERT_NOTIFICATIONS = "AlertNotifications",
+  PATIENT_ASSIGNMENT_SUBSCRIPTIONS = "PatientAssignmentSubscriptions"
 }
 
 // Types for storing data locally in AsyncStorage
@@ -62,4 +68,6 @@ export type AsyncStorageType = {
   [AsyncStorageKeys.TODOS]: LocalTodo[];
   [AsyncStorageKeys.TODO_DETAILS]: LocalTodo;
   [AsyncStorageKeys.ALERTS_SYNC]: { [key: string]: AlertInfo };
+  [AsyncStorageKeys.ALERT_NOTIFICATIONS]: AlertNotification[];
+  [AsyncStorageKeys.PATIENT_ASSIGNMENT_SUBSCRIPTIONS]: PatientAssignmentSubscription[];
 };

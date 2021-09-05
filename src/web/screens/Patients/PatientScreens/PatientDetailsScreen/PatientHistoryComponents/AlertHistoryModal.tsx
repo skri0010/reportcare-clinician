@@ -112,7 +112,7 @@ export const AlertHistoryModal: FC<AlertHistoryModalProps> = ({
           {/* BP */}
           <AlertDetailsRow
             detailTitle={i18n.t("Patient_History.AlertSummaryCard.BP")}
-            detailContent={alertHistory.vitalsReport?.BPSys}
+            detailContent={alertHistory.vitalsReport?.BPSys?.toString()}
           />
           {/* Symptoms */}
           <AlertDetailsRow

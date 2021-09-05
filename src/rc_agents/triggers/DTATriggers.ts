@@ -6,18 +6,21 @@ import {
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
 import { ProcedureConst } from "agents-framework/Enums";
-import { agentDTA } from "rc_agents/agents";
+import { agentALA, agentDTA } from "rc_agents/agents";
 import { Belief } from "agents-framework";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
   AlertInfo,
   AlertStatus,
-  Hospital,
   PatientAssignmentResolution,
   TodoInput,
   TodoStatus,
   MedInput
 } from "rc_agents/model";
+import {
+  AlertNotification,
+  PatientAssignmentSubscription
+} from "aws/TypedAPI/subscriptions";
 
 // HF-OTP-I
 // Triggers RetrievePatientsByRole of DTA
@@ -80,6 +83,36 @@ export const triggerRetrievePendingAssignments = (): void => {
     new Belief(
       BeliefKeys.PROCEDURE,
       ProcedureAttributes.SRD_I,
+      ProcedureConst.ACTIVE
+    )
+  );
+};
+
+// SRD-V: Triggers ProcessPatientAssignmentSubscription of DTA
+export const triggerProcessPatientAssignmentSubscription = (
+  patientAssignmentSubscription: PatientAssignmentSubscription
+): void => {
+  // Adds input to facts
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PATIENT,
+      PatientAttributes.PATIENT_ASSIGNMENT_SUBSCRIPTION,
+      patientAssignmentSubscription
+    ),
+    false
+  );
+  // Triggers DTA to process subscription
+  agentDTA.addBelief(
+    new Belief(
+      BeliefKeys.PATIENT,
+      PatientAttributes.PROCESS_PATIENT_ASSIGNMENT_SUBSCRIPTION,
+      true
+    )
+  );
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PROCEDURE,
+      ProcedureAttributes.SRD_V,
       ProcedureConst.ACTIVE
     )
   );
@@ -248,6 +281,37 @@ export const triggerRetrieveAlertInfo = (input: AlertInfo): void => {
     new Belief(
       BeliefKeys.PROCEDURE,
       ProcedureAttributes.AT_CP_II,
+      ProcedureConst.ACTIVE
+    )
+  );
+};
+
+// AT-CP-III: Triggers ProcessAlertNotification of ALA
+export const triggerProcessAlertNotification = (
+  alertNotification: AlertNotification
+): void => {
+  // Adds alert notification to facts
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.CLINICIAN,
+      ClinicianAttributes.ALERT_NOTIFICATION,
+      alertNotification
+    ),
+    false
+  );
+
+  // Triggers ALA to process AlertNotification
+  agentALA.addBelief(
+    new Belief(
+      BeliefKeys.CLINICIAN,
+      ClinicianAttributes.PROCESS_ALERT_NOTIFICATION,
+      true
+    )
+  );
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PROCEDURE,
+      ProcedureAttributes.AT_CP_III,
       ProcedureConst.ACTIVE
     )
   );

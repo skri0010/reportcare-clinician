@@ -493,6 +493,7 @@ export const syncReportVitals = /* GraphQL */ `
         BPDi
         NoSteps
         OxySat
+        FluidIntake
         DateTime
         patientID
         _version
@@ -518,6 +519,7 @@ export const getReportVitals = /* GraphQL */ `
       BPDi
       NoSteps
       OxySat
+      FluidIntake
       DateTime
       patientID
       _version
@@ -545,6 +547,7 @@ export const listReportVitalss = /* GraphQL */ `
         BPDi
         NoSteps
         OxySat
+        FluidIntake
         DateTime
         patientID
         _version
@@ -981,6 +984,7 @@ export const getAlert = /* GraphQL */ `
         BPDi
         NoSteps
         OxySat
+        FluidIntake
         DateTime
         patientID
         _version
@@ -1137,6 +1141,77 @@ export const listTodos = /* GraphQL */ `
         alertID
         pending
         completed
+        owner
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const syncAlertNotifications = /* GraphQL */ `
+  query SyncAlertNotifications(
+    $filter: ModelAlertNotificationFilterInput
+    $limit: Int
+    $nextToken: String
+    $lastSync: AWSTimestamp
+  ) {
+    syncAlertNotifications(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      lastSync: $lastSync
+    ) {
+      items {
+        id
+        patientID
+        alertID
+        owner
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const getAlertNotification = /* GraphQL */ `
+  query GetAlertNotification($id: ID!) {
+    getAlertNotification(id: $id) {
+      id
+      patientID
+      alertID
+      owner
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listAlertNotifications = /* GraphQL */ `
+  query ListAlertNotifications(
+    $filter: ModelAlertNotificationFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listAlertNotifications(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        patientID
+        alertID
         owner
         _version
         _deleted
@@ -1381,6 +1456,7 @@ export const listReportVitalsByPatientID = /* GraphQL */ `
         BPDi
         NoSteps
         OxySat
+        FluidIntake
         DateTime
         patientID
         _version
@@ -1421,6 +1497,7 @@ export const listReportVitalsByDateTime = /* GraphQL */ `
         BPDi
         NoSteps
         OxySat
+        FluidIntake
         DateTime
         patientID
         _version

@@ -164,11 +164,12 @@ type ReportVitals
   id: ID!
   Temperature: String
   Humidity: String
-  Weight: String!
-  BPSys: String!
-  BPDi: String!
-  NoSteps: String!
-  OxySat: String!
+  Weight: String
+  BPSys: String
+  BPDi: String
+  NoSteps: String
+  OxySat: String
+  FluidIntake: String
   DateTime: AWSDateTime!
   patientID: String!
 }
@@ -303,15 +304,27 @@ type ClinicianPatientMap
 """
 Authorization
 1. Everyone can create and read their own records
-2. Clinicians can read and update records containing themselves
+2. Clinicians can read all records
+3. Clinicians can update records containing themselves
 """
 type PatientAssignment
   @model
   @auth(
     rules: [
       { allow: owner, operations: [create, read] }
-      { allow: owner, ownerField: "clinicianID", operations: [read, update] }
+      { allow: owner, ownerField: "clinicianID", operations: [update] }
       { allow: groups, groups: ["Admin"] }
+      {
+        allow: groups
+        groups: [
+          "EPs"
+          "Nurses"
+          "HFSpecialists"
+          "MedicalOfficers"
+          "Pharmacists"
+        ]
+        operations: [read]
+      }
     ]
   )
   @key(fields: ["patientID", "clinicianID"])
@@ -428,5 +441,30 @@ type Todo
   alert: Alert @connection(fields: ["alertID"])
   pending: String
   completed: String
+  owner: String!
+}
+
+type AlertNotification
+  @model
+  @auth(
+    rules: [
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groups: ["Patients"], operations: [create, read] }
+      {
+        allow: groups
+        groups: [
+          "EPs"
+          "Nurses"
+          "HFSpecialists"
+          "MedicalOfficers"
+          "Pharmacists"
+        ]
+        operations: [read]
+      }
+    ]
+  ) {
+  id: ID!
+  patientID: String!
+  alertID: ID!
   owner: String!
 }

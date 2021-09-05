@@ -4,7 +4,7 @@ import { schema } from './schema';
 
 
 
-const { PatientInfo, MedicationInfo, ActivityInfo, MedCompliant, ReportSymptom, ReportVitals, ClinicianInfo, ClinicianProtectedInfo, ClinicianPatientMap, PatientAssignment, Alert, Todo } = initSchema(schema);
+const { PatientInfo, MedicationInfo, ActivityInfo, MedCompliant, ReportSymptom, ReportVitals, ClinicianInfo, ClinicianProtectedInfo, ClinicianPatientMap, PatientAssignment, Alert, Todo, AlertNotification } = initSchema(schema);
 
 export {
   PatientInfo,
@@ -18,5 +18,6 @@ export {
   ClinicianPatientMap,
   PatientAssignment,
   Alert,
-  Todo
+  Todo,
+  AlertNotification
 };

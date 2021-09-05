@@ -125,10 +125,12 @@ export interface TodoInput {
   patientName: string;
   notes: string;
   completed: boolean;
+  // Attributes for associated Alert
   alert?: AlertInfo;
   alertId?: string;
   patientId?: string;
   riskLevel?: RiskLevel;
+  // End of attributes for associated Alert
   createdAt: string;
   lastModified?: string;
   _version: number;

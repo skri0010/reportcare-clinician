@@ -82,11 +82,12 @@ export declare class ReportVitals {
   readonly id: string;
   readonly Temperature?: string;
   readonly Humidity?: string;
-  readonly Weight: string;
-  readonly BPSys: string;
-  readonly BPDi: string;
-  readonly NoSteps: string;
-  readonly OxySat: string;
+  readonly Weight?: string;
+  readonly BPSys?: string;
+  readonly BPDi?: string;
+  readonly NoSteps?: string;
+  readonly OxySat?: string;
+  readonly FluidIntake?: string;
   readonly DateTime: string;
   readonly patientID: string;
   constructor(init: ModelInit<ReportVitals>);
@@ -172,4 +173,13 @@ export declare class Todo {
   readonly owner: string;
   constructor(init: ModelInit<Todo>);
   static copyOf(source: Todo, mutator: (draft: MutableModel<Todo>) => MutableModel<Todo> | void): Todo;
+}
+
+export declare class AlertNotification {
+  readonly id: string;
+  readonly patientID: string;
+  readonly alertID: string;
+  readonly owner: string;
+  constructor(init: ModelInit<AlertNotification>);
+  static copyOf(source: AlertNotification, mutator: (draft: MutableModel<AlertNotification>) => MutableModel<AlertNotification> | void): AlertNotification;
 }
