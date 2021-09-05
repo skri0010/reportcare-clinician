@@ -21,17 +21,14 @@ import { listClinicianPatientMaps, getDetailedAlert } from "aws";
 import { Storage } from "rc_agents/storage";
 import { agentNWA } from "rc_agents/agents";
 import { convertAlertToAlertInfo } from "util/utilityFunctions";
-import { AgentTrigger } from "rc_agents/trigger";
-import { AlertStatus, FetchAlertsMode } from "rc_agents/model";
+import { setProcessedAlertNotification } from "ic-redux/actions/agents/actionCreator";
+import { store } from "util/useRedux";
 
 /**
  * Class to represent the activity for processing an alert notification.
  * This happens in Procedure Triage Alert HF Clinic (AT-CP).
  */
 class ProcessAlertNotification extends Activity {
-  /**
-   * Constructor
-   */
   constructor() {
     super(ActionFrameIDs.ALA.PROCESS_ALERT_NOTIFICATION);
   }
@@ -65,6 +62,7 @@ class ProcessAlertNotification extends Activity {
               mapQuery.data.listClinicianPatientMaps.items.flatMap((item) =>
                 item ? [item.patientID] : []
               );
+
             if (patientIds.includes(alertNotification.patientID)) {
               // Get detailed alert
               const alertQuery = await getDetailedAlert({
@@ -76,18 +74,8 @@ class ProcessAlertNotification extends Activity {
                 const alertInfo = convertAlertToAlertInfo(alert);
                 await Storage.setAlertInfo(alertInfo);
 
-                // Trigger AT-CP-I procedure
-                if (alert.pending === AlertStatus.PENDING) {
-                  AgentTrigger.triggerRetrieveAlerts({
-                    fetchAlertsMode: FetchAlertsMode.PENDING,
-                    fetchAlertsLocally: true
-                  });
-                } else if (alert.completed === AlertStatus.COMPLETED) {
-                  AgentTrigger.triggerRetrieveAlerts({
-                    fetchAlertsMode: FetchAlertsMode.PENDING,
-                    fetchAlertsLocally: true
-                  });
-                }
+                // Dispatch to store to indicate that processing was successful
+                store.dispatch(setProcessedAlertNotification(alertInfo));
               }
             }
           }
@@ -125,19 +113,8 @@ class ProcessAlertNotification extends Activity {
           )
         );
       });
-
-      // Update Facts
-      // Stops the procedure
-      agentAPI.addFact(
-        new Belief(
-          BeliefKeys.PROCEDURE,
-          ProcedureAttributes.AT_CP_III,
-          ProcedureConst.INACTIVE
-        ),
-        true,
-        true
-      );
     }
+
     // Update Facts
     // Remove item
     agentAPI.addFact(
@@ -148,6 +125,7 @@ class ProcessAlertNotification extends Activity {
       ),
       false
     );
+
     // End the procedure
     agentAPI.addFact(
       new Belief(

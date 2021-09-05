@@ -14,11 +14,12 @@ import { NoSelectionScreen } from "../Shared/NoSelectionScreen";
 import { AlertDetailsScreen } from "./AlertDetailsScreen";
 import { MainScreenProps } from "web/navigation/types";
 import { AgentTrigger } from "rc_agents/trigger";
-import { FetchAlertsMode } from "rc_agents/model";
+import { AlertStatus, FetchAlertsMode } from "rc_agents/model";
 import { AddTodoScreen } from "web/screens/Todo/modals/AddTodoScreen";
 import { useToast } from "react-native-toast-notifications";
 import {
   setProcedureSuccessful,
+  setProcessedAlertNotification,
   setSubmittingTodo
 } from "ic-redux/actions/agents/actionCreator";
 import i18n from "util/language/i18n";
@@ -35,6 +36,7 @@ export const AlertScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
     procedureSuccessful,
     submittingTodo,
     fetchingAlertInfo,
+    processedAlertNotification,
     alertInfo
   } = select((state: RootState) => ({
     colors: state.settings.colors, // Used to detect completion of updateTodo procedure
@@ -43,8 +45,14 @@ export const AlertScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
     procedureSuccessful: state.agents.procedureSuccessful,
     submittingTodo: state.agents.submittingTodo,
     fetchingAlertInfo: state.agents.fetchingAlertInfo,
+    processedAlertNotification: state.agents.processedAlertNotification,
     alertInfo: state.agents.alertInfo
   }));
+
+  // For pointer events
+  const [modalVisible, setModalVisible] = useState(false);
+  const toast = useToast();
+  const dispatch = useDispatch();
 
   /**
    * Trigger agent to fetch ALL alerts on initial load
@@ -55,12 +63,33 @@ export const AlertScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
     });
   }, []);
 
-  const [isEmptyAlert, setEmptyAlert] = useState(true);
+  /**
+   * Trigger agent to fetch either pending or completed alerts when a new alert is processed
+   */
+  useEffect(() => {
+    if (processedAlertNotification) {
+      dispatch(setProcessedAlertNotification(null));
 
-  // For pointer events
-  const [modalVisible, setModalVisible] = useState(false);
-  const toast = useToast();
-  const dispatch = useDispatch();
+      const newAlertInfo = processedAlertNotification;
+
+      // Obtain fetch alerts mode
+      const fetchAlertsMode: FetchAlertsMode | null =
+        newAlertInfo.pending === AlertStatus.PENDING
+          ? FetchAlertsMode.PENDING
+          : newAlertInfo.completed === AlertStatus.COMPLETED
+          ? FetchAlertsMode.COMPLETED
+          : null;
+
+      if (fetchAlertsMode) {
+        AgentTrigger.triggerRetrieveAlerts({
+          fetchAlertsMode: fetchAlertsMode,
+          fetchAlertsLocally: true
+        });
+      }
+    }
+  }, [processedAlertNotification, dispatch]);
+
+  const [isEmptyAlert, setEmptyAlert] = useState(true);
 
   // Detects completion of UpdateTodo procedure and shows the appropriate toast.
   useEffect(() => {

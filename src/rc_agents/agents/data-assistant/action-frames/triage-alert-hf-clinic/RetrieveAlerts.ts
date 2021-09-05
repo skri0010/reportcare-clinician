@@ -49,6 +49,7 @@ class RetrieveAlerts extends Activity {
    */
   async doActivity(agent: Agent): Promise<void> {
     await super.doActivity(agent, [rule2]);
+
     const facts = agentAPI.getFacts();
     // Get fetch alert mode from facts
     const fetchAlertsMode: FetchAlertsMode | undefined =
@@ -107,7 +108,7 @@ class RetrieveAlerts extends Activity {
             await Storage.setAlertInfos(completedAlertInfos);
           }
         } else {
-          // Device is offline
+          // Device is offline or fetch locally
           // eslint-disable-next-line no-lonely-if
           if (fetchAlertsMode === FetchAlertsMode.ALL) {
             pendingAlertInfos = await Storage.getPendingAlertInfos();

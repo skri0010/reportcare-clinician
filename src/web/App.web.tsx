@@ -16,6 +16,7 @@ import {
   subscribeAlertNotification,
   subscribePatientAssignment
 } from "aws/TypedAPI/subscriptions";
+import { setProcessedAlertNotification } from "ic-redux/actions/agents/actionCreator";
 
 Amplify.configure(awsconfig);
 Auth.configure(awsconfig);

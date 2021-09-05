@@ -27,7 +27,7 @@ export const getAlertInfos = async (): Promise<AlertInfo[] | null> => {
         if (!alertInfos) {
           alertInfos = [];
         }
-        alertInfos.concat(patientAlertInfos);
+        alertInfos = alertInfos.concat(patientAlertInfos);
       }
     });
     if (alertInfos) {
