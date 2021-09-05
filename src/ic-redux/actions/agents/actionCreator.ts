@@ -150,10 +150,11 @@ export const setFetchingCompletedAlerts = createAction(
   })
 )();
 
-export const setUpdatePendingAlerts = createAction(
-  actionNames.SET_UPDATE_PENDING_ALERTS,
-  (updatePendingAlerts: boolean) => ({
-    updatePendingAlerts: updatePendingAlerts
+export const setUpdatingAlertIndicators = createAction(
+  actionNames.SET_UPDATING_ALERT_INDICATORS,
+  (indicators: { updatingAlert: boolean; alertUpdated: boolean }) => ({
+    updatingAlert: indicators.updatingAlert,
+    alertUpdated: indicators.alertUpdated
   })
 )();
 

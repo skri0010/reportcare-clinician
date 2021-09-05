@@ -13,13 +13,9 @@ import {
   BeliefKeys
 } from "rc_agents/clinician_framework";
 import { AsyncStorageKeys, Storage } from "rc_agents/storage";
-import { getDetailedAlert } from "aws/TypedAPI/getQueries";
-import { updateAlert } from "aws";
-import { Alert, UpdateAlertInput } from "aws/API";
 import { agentNWA } from "rc_agents/agents";
-import { AlertInfo, AlertStatus } from "rc_agents/model";
-import { convertAlertToAlertInfo } from "util/utilityFunctions";
 import { setAlertsSync } from "rc_agents/storage/setItem";
+import { updateAlertInfo } from "rc_agents/agents/data-assistant/action-frames/triage-alert-hf-clinic/UpdateAlert";
 
 // LS-TODO: To be tested once integrated with Alert.
 
@@ -52,54 +48,17 @@ class SyncUpdateAlerts extends Activity {
         // Indicator of whether all pending updates have been synced
         const successfulIds: string[] = [];
 
-        await Promise.all(
+        const promises = await Promise.all(
           Object.values(alerts).map(async (alert) => {
-            // Queries current alert
-            const alertQuery = await getDetailedAlert({ id: alert.id });
-            if (alertQuery.data.getAlert) {
-              let alertToStore: Alert | AlertInfo | undefined;
-
-              const latestAlert = alertQuery.data.getAlert;
-
-              // Latest Alert has higher version than local alert
-              if (latestAlert._version > alert._version) {
-                // Replace local alert and alert info with information from latest alert
-                alertToStore = latestAlert;
-              } else {
-                // This alert will be used for local merging later on
-                latestAlert.pending = null;
-                latestAlert.completed = AlertStatus.COMPLETED;
-
-                // Constructs alert object to be updated
-                const alertToUpdate: UpdateAlertInput = {
-                  id: latestAlert.id,
-                  completed: latestAlert.completed,
-                  pending: latestAlert.pending,
-                  _version: latestAlert._version
-                };
-                const updateResponse = await updateAlert(alertToUpdate);
-
-                // Updates to indicate that alert is successfully updated
-                if (updateResponse.data.updateAlert) {
-                  latestAlert._version =
-                    updateResponse.data.updateAlert._version;
-                } else {
-                  successfulIds.push(alert.id);
-                }
-
-                // Updates locally stored alert and alert info
-                // Input is of type Alert
-                alertToStore = latestAlert;
-              }
-
-              if (alertToStore) {
-                await Storage.setAlertInfo(
-                  convertAlertToAlertInfo(alertToStore)
-                );
-              }
-            }
+            return updateAlertInfo(alert);
           })
         );
+
+        promises.forEach((item) => {
+          if (item.successful) {
+            successfulIds.push(item.alertInfo.id);
+          }
+        });
 
         // Removes entry if all alerts are synced
         if (successfulIds.length === Object.values(alerts).length) {
@@ -111,7 +70,6 @@ class SyncUpdateAlerts extends Activity {
             if (index >= 0) {
               delete alerts[index];
             }
-            return id;
           });
 
           // Store locally

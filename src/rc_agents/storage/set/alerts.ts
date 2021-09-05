@@ -100,7 +100,7 @@ export const setAlertsSync = async (
 
   await AsyncStorage.setItem(
     AsyncStorageKeys.ALERTS_SYNC,
-    JSON.stringify(alertsSync)
+    JSON.stringify(localAlertsSync)
   );
 };
 
