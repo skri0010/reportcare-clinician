@@ -28,9 +28,9 @@ import { convertAlertToAlertInfo } from "util/utilityFunctions";
  * Class to represent an activity for retrieving patient's information associated with an alert.
  * This happens in Procedure Triage Alert HF Clinic (AT-CP).
  */
-class RetrieveAlertInfo extends Activity {
+class RetrieveDetailedAlertInfo extends Activity {
   constructor() {
-    super(ActionFrameIDs.DTA.RETRIEVE_ALERT_INFO);
+    super(ActionFrameIDs.DTA.RETRIEVE_DETAILED_ALERT_INFO);
   }
 
   /**
@@ -78,7 +78,7 @@ class RetrieveAlertInfo extends Activity {
           agentAPI.addFact(
             new Belief(
               BeliefKeys.CLINICIAN,
-              ClinicianAttributes.ALERT_INFO,
+              ClinicianAttributes.DETAILED_ALERT_INFO,
               alertInfo
             ),
             false
@@ -88,12 +88,19 @@ class RetrieveAlertInfo extends Activity {
           agent.addBelief(
             new Belief(
               BeliefKeys.CLINICIAN,
-              ClinicianAttributes.ALERT_INFO_RETRIEVED,
+              ClinicianAttributes.DETAILED_ALERT_INFO_RETRIEVED,
               true
             )
           );
         }
       }
+
+      // Update Facts
+      // Remove item
+      agentAPI.addFact(
+        new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.ALERT_INFO, null),
+        false
+      );
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
@@ -102,7 +109,7 @@ class RetrieveAlertInfo extends Activity {
         agent.addBelief(
           new Belief(
             BeliefKeys.PATIENT,
-            ClinicianAttributes.RETRIEVE_ALERT_INFO,
+            ClinicianAttributes.RETRIEVE_DETAILED_ALERT_INFO,
             true
           )
         );
@@ -174,13 +181,13 @@ const rule1 = new Precondition(
 );
 const rule2 = new ResettablePrecondition(
   BeliefKeys.CLINICIAN,
-  ClinicianAttributes.RETRIEVE_ALERT_INFO,
+  ClinicianAttributes.RETRIEVE_DETAILED_ALERT_INFO,
   true
 );
 
 // Actionframe
-export const af_RetrieveAlertInfo = new Actionframe(
-  `AF_${ActionFrameIDs.DTA.RETRIEVE_ALERT_INFO}`,
+export const af_RetrieveDetailedAlertInfo = new Actionframe(
+  `AF_${ActionFrameIDs.DTA.RETRIEVE_DETAILED_ALERT_INFO}`,
   [rule1, rule2],
-  new RetrieveAlertInfo()
+  new RetrieveDetailedAlertInfo()
 );

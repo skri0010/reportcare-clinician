@@ -9,8 +9,8 @@ import { af_RetrievePatientsByRole } from "./action-frames/hf-outcome-trends/Ret
 import { af_RequestDisplayPatients } from "./action-frames/hf-outcome-trends/RequestDisplayPatients";
 import { af_RetrieveAlerts } from "./action-frames/triage-alert-hf-clinic/RetrieveAlerts";
 import { af_RequestDisplayAlerts } from "./action-frames/triage-alert-hf-clinic/RequestDisplayAlerts";
-import { af_RetrieveAlertInfo } from "./action-frames/triage-alert-hf-clinic/RetrieveAlertInfo";
-import { af_RequestDisplayAlertInfo } from "./action-frames/triage-alert-hf-clinic/RequestDisplayAlertInfo";
+import { af_RetrieveDetailedAlertInfo } from "./action-frames/triage-alert-hf-clinic/RetrieveDetailedAlertInfo";
+import { af_RequestDisplayDetailedAlertInfo } from "./action-frames/triage-alert-hf-clinic/RequestDisplayDetailedAlertInfo";
 import { af_RetrievePendingPatientAssignments } from "./action-frames/storing-data/RetrievePendingPatientAssignments";
 import { af_RequestDisplayPendingPatientAssignments } from "./action-frames/storing-data/RequestDisplayPendingPatientAssignments";
 import { af_ResolvePatientAssignment } from "./action-frames/storing-data/ResolvePatientAssignment";
@@ -65,8 +65,8 @@ const agentDTA = new ClinicianAgent(
     af_RequestDisplayAlerts,
 
     // AT-CP-II
-    af_RetrieveAlertInfo,
-    af_RequestDisplayAlertInfo,
+    af_RetrieveDetailedAlertInfo,
+    af_RequestDisplayDetailedAlertInfo,
     af_UpdateAlert,
 
     // SRD-II

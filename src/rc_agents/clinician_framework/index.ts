@@ -27,9 +27,9 @@ export const ActionFrameIDs = {
     RETRIEVE_ALERTS: "RetrieveAlerts",
     REQUEST_DISPLAY_ALERTS: "RequestDisplayAlerts",
 
-    // AT-CP-II: Single Alert's details (AlertInfo)
-    RETRIEVE_ALERT_INFO: "RetrieveAlertInfo",
-    REQUEST_DISPLAY_ALERT_INFO: "RequestDisplayAlertInfo",
+    // AT-CP-II: AlertInfo with details
+    RETRIEVE_DETAILED_ALERT_INFO: "RetrieveDetailedAlertInfo",
+    REQUEST_DISPLAY_DETAILED_ALERT_INFO: "RequestDisplayDetailedAlertInfo",
     UPDATE_ALERT: "UpdateAlert",
 
     // HF-OTP-I: ClinicianInfo and all patients (PatientInfo)
@@ -71,7 +71,7 @@ export const ActionFrameIDs = {
     DISPLAY_ALERTS: "DisplayAlerts",
 
     // AT-CP-II: Alerts
-    DISPLAY_ALERT_INFO: "DisplayAlertInfo",
+    DISPLAY_DETAILED_ALERT_INFO: "DisplayDetailedAlertInfo",
 
     // HF-OTP-I: ClinicianInfo and all patients (PatientInfo)
     RETRIEVE_ROLE: "RetrieveRole",
@@ -180,9 +180,10 @@ export enum ClinicianAttributes {
   ALERTS_RETRIEVED = "AlertsRetrieved",
 
   // AT-CP-II: AlertInfo
-  RETRIEVE_ALERT_INFO = "RetrieveAlertInfo",
   ALERT_INFO = "AlertInfo",
-  ALERT_INFO_RETRIEVED = "AlertInfoRetrieved",
+  DETAILED_ALERT_INFO = "DetailedAlertInfo",
+  RETRIEVE_DETAILED_ALERT_INFO = "RetrieveDetailedAlertInfo",
+  DETAILED_ALERT_INFO_RETRIEVED = "DetailedAlertInfoRetrieved",
   UPDATE_ALERT = "UpdateAlert",
   ALERTS_UPDATED = "AlertsUpdated",
 

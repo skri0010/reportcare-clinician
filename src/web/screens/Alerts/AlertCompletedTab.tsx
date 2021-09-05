@@ -26,7 +26,7 @@ export const AlertCompletedTab: FC<AlertRowTabProps> = ({ setEmptyAlert }) => {
 
   // Trigger the retrieval of alert info when the alert item is selected
   function onCardPress(item: AlertInfo) {
-    AgentTrigger.triggerRetrieveAlertInfo(item);
+    AgentTrigger.triggerRetrieveDetailedAlertInfo(item);
     setEmptyAlert(false);
   }
 

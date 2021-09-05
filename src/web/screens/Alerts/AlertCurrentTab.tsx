@@ -45,7 +45,7 @@ export const AlertCurrentTab: FC<AlertRowTabProps> = ({ setEmptyAlert }) => {
 
   // When the alert item is pressed, trigger the retrieval of alert info
   function onCardPress(item: AlertInfo) {
-    AgentTrigger.triggerRetrieveAlertInfo(item);
+    AgentTrigger.triggerRetrieveDetailedAlertInfo(item);
     setEmptyAlert(false);
   }
 

@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AlertInfo } from "rc_agents/model";
 import { AsyncStorageKeys, AsyncStorageType } from "rc_agents/storage";
 
-// Get ProcessedAlertInfo[]
+// Get ProcessedAlertInfo
 export const getProcessedAlertInfos = async (): Promise<
   AsyncStorageType[AsyncStorageKeys.ALERT_INFOS] | null
 > => {

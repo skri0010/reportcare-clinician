@@ -23,15 +23,15 @@ import {
  * Class to represent the activity for requesting display of information associated with an alert.
  * This happens in Procedure Triage Alert HF Clinic (AT-CP).
  */
-class RequestDisplayAlertInfo extends Communicate {
+class RequestDisplayDetailedAlertInfo extends Communicate {
   constructor() {
     super(
-      ActionFrameIDs.DTA.REQUEST_DISPLAY_ALERT_INFO,
+      ActionFrameIDs.DTA.REQUEST_DISPLAY_DETAILED_ALERT_INFO,
       Performative.REQUEST,
       // Triggers DisplayAlertInfo action frame of UXSA
       new Belief(
         BeliefKeys.CLINICIAN,
-        ClinicianAttributes.ALERT_INFO_RETRIEVED,
+        ClinicianAttributes.DETAILED_ALERT_INFO_RETRIEVED,
         true
       ),
       [AgentIDs.UXSA]
@@ -61,17 +61,17 @@ const rule1 = new Precondition(
 const rule2 = new Precondition(
   AgentIDs.DTA,
   CommonAttributes.LAST_ACTIVITY,
-  ActionFrameIDs.DTA.RETRIEVE_ALERT_INFO
+  ActionFrameIDs.DTA.RETRIEVE_DETAILED_ALERT_INFO
 );
 const rule3 = new ResettablePrecondition(
   BeliefKeys.CLINICIAN,
-  ClinicianAttributes.ALERT_INFO_RETRIEVED,
+  ClinicianAttributes.DETAILED_ALERT_INFO_RETRIEVED,
   true
 );
 
 // Actionframe
-export const af_RequestDisplayAlertInfo = new Actionframe(
-  `AF_${ActionFrameIDs.DTA.REQUEST_DISPLAY_ALERT_INFO}`,
+export const af_RequestDisplayDetailedAlertInfo = new Actionframe(
+  `AF_${ActionFrameIDs.DTA.REQUEST_DISPLAY_DETAILED_ALERT_INFO}`,
   [rule1, rule2],
-  new RequestDisplayAlertInfo()
+  new RequestDisplayDetailedAlertInfo()
 );

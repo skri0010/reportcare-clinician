@@ -9,7 +9,7 @@ import {
 /**
  * DO NOT EXPORT THIS FUNCTION
  * THIS IS USED AS THE LAST CALL, IT HAS NO MERGING
- * Insert ProcessedAlertInfo[]
+ * Insert ProcessedAlertInfo
  */
 const setProcessedAlertInfos = async (
   processedAlertInfos: AsyncStorageType[AsyncStorageKeys.ALERT_INFOS]

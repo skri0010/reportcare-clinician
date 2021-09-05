@@ -216,8 +216,10 @@ export const triggerRetrieveAlerts = (
   );
 };
 
-// AT-CP-II Triggers RetrieveAlertInfo of DTA
-export const triggerRetrieveAlertInfo = (alertInfo: AlertInfo): void => {
+// AT-CP-II Triggers RetrieveDetailedAlertInfo of DTA
+export const triggerRetrieveDetailedAlertInfo = (
+  alertInfo: AlertInfo
+): void => {
   // Add alert as facts
   agentAPI.addFact(
     new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.ALERT_INFO, alertInfo),
@@ -227,7 +229,7 @@ export const triggerRetrieveAlertInfo = (alertInfo: AlertInfo): void => {
   agentDTA.addBelief(
     new Belief(
       BeliefKeys.CLINICIAN,
-      ClinicianAttributes.RETRIEVE_ALERT_INFO,
+      ClinicianAttributes.RETRIEVE_DETAILED_ALERT_INFO,
       true
     )
   );

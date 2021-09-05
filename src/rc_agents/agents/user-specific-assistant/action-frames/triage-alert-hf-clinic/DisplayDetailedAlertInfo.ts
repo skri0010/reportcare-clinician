@@ -22,12 +22,12 @@ import {
 import { AlertInfo } from "rc_agents/model";
 
 /**
- * Class to represent an activity for triggering the display of alert info.
+ * Class to represent an activity for triggering the display of alert with patient's information.
  * This happens in Procedure Triage Alert HF Clinic (AT-CP-II).
  */
-class DisplayAlertInfo extends Activity {
+class DisplayDetailedAlertInfo extends Activity {
   constructor() {
-    super(ActionFrameIDs.UXSA.DISPLAY_ALERT_INFO);
+    super(ActionFrameIDs.UXSA.DISPLAY_DETAILED_ALERT_INFO);
   }
 
   /**
@@ -40,7 +40,7 @@ class DisplayAlertInfo extends Activity {
     try {
       const alertInfo: AlertInfo =
         agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[
-          ClinicianAttributes.ALERT_INFO
+          ClinicianAttributes.DETAILED_ALERT_INFO
         ];
 
       if (alertInfo) {
@@ -54,7 +54,11 @@ class DisplayAlertInfo extends Activity {
     // Update Facts
     // Remove item
     agentAPI.addFact(
-      new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.ALERT_INFO, null),
+      new Belief(
+        BeliefKeys.CLINICIAN,
+        ClinicianAttributes.DETAILED_ALERT_INFO,
+        null
+      ),
       false
     );
 
@@ -74,7 +78,7 @@ class DisplayAlertInfo extends Activity {
   }
 }
 
-// Preconditions for activating the DisplayAlertInfo class
+// Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
   ProcedureAttributes.AT_CP_II,
@@ -82,13 +86,13 @@ const rule1 = new Precondition(
 );
 const rule2 = new ResettablePrecondition(
   BeliefKeys.CLINICIAN,
-  ClinicianAttributes.ALERT_INFO_RETRIEVED,
+  ClinicianAttributes.DETAILED_ALERT_INFO_RETRIEVED,
   true
 );
 
-// Action Frame for DisplayAlertInfo class
-export const af_DisplayAlertInfo = new Actionframe(
-  `AF_${ActionFrameIDs.UXSA.DISPLAY_ALERT_INFO}`,
+// Actionframe
+export const af_DisplayDetailedAlertInfo = new Actionframe(
+  `AF_${ActionFrameIDs.UXSA.DISPLAY_DETAILED_ALERT_INFO}`,
   [rule1, rule2],
-  new DisplayAlertInfo()
+  new DisplayDetailedAlertInfo()
 );

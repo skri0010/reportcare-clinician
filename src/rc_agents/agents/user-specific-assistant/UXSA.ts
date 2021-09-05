@@ -7,7 +7,7 @@ import { af_DisplayPendingPatientAssignments } from "./action-frames/storing-dat
 import { af_DisplayTodoDetails } from "./action-frames/storing-data/DisplayTodoDetails";
 import { AgentIDs } from "rc_agents/clinician_framework";
 import { CommonAttributes } from "agents-framework/Enums";
-import { af_DisplayAlertInfo } from "./action-frames/triage-alert-hf-clinic/DisplayAlertInfo";
+import { af_DisplayDetailedAlertInfo } from "./action-frames/triage-alert-hf-clinic/DisplayDetailedAlertInfo";
 import { af_DisplayPatientsByFilter } from "./action-frames/hf-outcome-trends/DisplayPatientsByFilter";
 import { af_DisplayTodos } from "./action-frames/storing-data/DisplayTodos";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
@@ -44,7 +44,7 @@ const agentUXSA = new ClinicianAgent(
 
     // AT-CP
     af_DisplayAlerts,
-    af_DisplayAlertInfo
+    af_DisplayDetailedAlertInfo
   ], // action frame
   [belief1], // beliefs
   agentAPI

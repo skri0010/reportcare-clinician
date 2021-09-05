@@ -20,7 +20,7 @@ import { Storage } from "rc_agents/storage";
 import { listPatientAlertsByDateTime } from "aws";
 import { AlertInfo } from "rc_agents/model";
 import { Alert, ModelSortDirection } from "aws/API";
-import { queryAlertInfo } from "../triage-alert-hf-clinic/RetrieveAlertInfo";
+import { queryAlertInfo } from "../triage-alert-hf-clinic/RetrieveDetailedAlertInfo";
 import { store } from "util/useRedux";
 import { setFetchingPatientAlertHistory } from "ic-redux/actions/agents/actionCreator";
 import { convertAlertsToAlertInfos } from "util/utilityFunctions";
