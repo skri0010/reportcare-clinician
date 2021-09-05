@@ -15,7 +15,10 @@ import {
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
 import { store } from "util/useRedux";
-import { setAlertInfo } from "ic-redux/actions/agents/actionCreator";
+import {
+  setAlertInfo,
+  setFetchingAlertInfo
+} from "ic-redux/actions/agents/actionCreator";
 import { AlertInfo } from "rc_agents/model";
 
 /**
@@ -65,6 +68,9 @@ class DisplayAlertInfo extends Activity {
       true,
       true
     );
+
+    // Dispatch to store that fetching has ended
+    store.dispatch(setFetchingAlertInfo(false));
   }
 }
 

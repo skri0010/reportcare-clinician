@@ -59,9 +59,10 @@ class RetrieveAlertInfo extends Activity {
         if (isOnline) {
           // Device is online
           // Query information associated with alert
-          const queryResult = await queryAlertInfo(alert);
-          if (queryResult) {
-            await Storage.setAlertInfo(convertAlertToAlertInfo(queryResult));
+          const info = await queryAlertInfo(alert);
+          if (info) {
+            alertInfo = convertAlertToAlertInfo(info);
+            await Storage.setAlertInfo(alertInfo);
           }
         } else {
           // Device is offline
@@ -93,13 +94,6 @@ class RetrieveAlertInfo extends Activity {
           );
         }
       }
-
-      // Update Facts
-      // Remove item
-      agentAPI.addFact(
-        new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.ALERT_INFO, null),
-        false
-      );
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
