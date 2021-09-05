@@ -25,7 +25,7 @@ import {
 import {
   listCompletedTodosByLastModifiedDate,
   listPendingTodosByLastModifiedDate,
-  getFullAlert
+  getDetailedAlert
 } from "aws";
 import { ModelSortDirection, Todo } from "aws/API";
 import {
@@ -107,7 +107,7 @@ class RetrieveTodos extends Activity {
                 _version: todo._version
               };
               if (todo.alertID) {
-                const query = await getFullAlert({
+                const query = await getDetailedAlert({
                   id: todo.alertID
                 });
                 if (query.data?.getAlert) {
@@ -171,7 +171,9 @@ class RetrieveTodos extends Activity {
         BeliefKeys.PROCEDURE,
         ProcedureAttributes.SRD_II,
         ProcedureConst.INACTIVE
-      )
+      ),
+      true,
+      true
     );
 
     // Dispatch to front end that procedure has been completed

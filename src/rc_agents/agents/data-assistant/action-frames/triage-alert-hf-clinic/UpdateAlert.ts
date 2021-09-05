@@ -22,7 +22,7 @@ import {
   setUpdatePendingAlerts
 } from "ic-redux/actions/agents/actionCreator";
 import { agentNWA } from "rc_agents/agents";
-import { getFullAlert, updateAlert } from "aws";
+import { getDetailedAlert, updateAlert } from "aws";
 import { AlertInfo, AlertStatus, FetchAlertsMode } from "rc_agents/model";
 import { Alert, UpdateAlertInput } from "aws/API";
 import { convertAlertToAlertInfo } from "util/utilityFunctions";
@@ -56,7 +56,7 @@ class UpdateAlert extends Activity {
 
         if (facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
           // Device is online: queries the latest alert
-          const alertQuery = await getFullAlert({ id: alertInput.id });
+          const alertQuery = await getDetailedAlert({ id: alertInput.id });
           if (alertQuery.data.getAlert) {
             const latestAlert = alertQuery.data.getAlert;
 

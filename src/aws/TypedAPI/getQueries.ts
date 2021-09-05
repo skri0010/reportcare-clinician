@@ -123,7 +123,7 @@ interface GetAlertResponse extends BaseResponse {
   data: GetAlertQuery;
 }
 
-export const getFullAlert = async (
+export const getDetailedAlert = async (
   variables: GetAlertQueryVariables
 ): Promise<GetAlertResponse> => {
   return (await API.graphql({

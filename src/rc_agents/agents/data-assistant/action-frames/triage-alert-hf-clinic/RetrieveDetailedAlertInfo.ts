@@ -18,7 +18,7 @@ import {
 } from "rc_agents/clinician_framework";
 import { Storage } from "rc_agents/storage";
 import { AlertInfo } from "rc_agents/model";
-import { getFullAlert, getPatientInfo } from "aws";
+import { getDetailedAlert, getPatientInfo } from "aws";
 import { store } from "util/useRedux";
 import { setFetchingAlertInfo } from "ic-redux/actions/agents/actionCreator";
 import { Alert } from "aws/API";
@@ -140,7 +140,7 @@ class RetrieveDetailedAlertInfo extends Activity {
 
 export const queryAlertInfo = async (alert: Alert): Promise<Alert | null> => {
   let alertInfo: AlertInfo = convertAlertToAlertInfo(alert);
-  const alertQuery = await getFullAlert({ id: alert.id });
+  const alertQuery = await getDetailedAlert({ id: alert.id });
 
   // Get alert with full details
   if (alertQuery.data.getAlert) {

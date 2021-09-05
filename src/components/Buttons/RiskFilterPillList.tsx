@@ -46,7 +46,9 @@ export const RiskFilterPillList: FC<RiskFilterPillListProps> = ({
       store.dispatch(setAlertRiskFilters(tempRiskFilters));
 
       // Trigger the DTA agent to retrieve alert status based on the alert status
-      AgentTrigger.triggerRetrieveAlerts(FetchAlertsMode.ALL);
+      AgentTrigger.triggerRetrieveAlerts({
+        fetchAlertsMode: FetchAlertsMode.ALL
+      });
     }
   };
 

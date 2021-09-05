@@ -13,12 +13,13 @@ import {
   BeliefKeys
 } from "rc_agents/clinician_framework";
 import { AsyncStorageKeys, Storage } from "rc_agents/storage";
-import { getFullAlert } from "aws/TypedAPI/getQueries";
+import { getDetailedAlert } from "aws/TypedAPI/getQueries";
 import { updateAlert } from "aws";
 import { Alert, UpdateAlertInput } from "aws/API";
 import { agentNWA } from "rc_agents/agents";
 import { AlertInfo, AlertStatus } from "rc_agents/model";
 import { convertAlertToAlertInfo } from "util/utilityFunctions";
+import { setAlertsSync } from "rc_agents/storage/setItem";
 
 // LS-TODO: To be tested once integrated with Alert.
 
@@ -54,7 +55,7 @@ class SyncUpdateAlerts extends Activity {
         await Promise.all(
           Object.values(alerts).map(async (alert) => {
             // Queries current alert
-            const alertQuery = await getFullAlert({ id: alert.id });
+            const alertQuery = await getDetailedAlert({ id: alert.id });
             if (alertQuery.data.getAlert) {
               let alertToStore: Alert | AlertInfo | undefined;
 
@@ -105,15 +106,16 @@ class SyncUpdateAlerts extends Activity {
           await Storage.removeItem(AsyncStorageKeys.ALERTS_SYNC);
         } else {
           // Removes successfully synced alerts
-          await Promise.all(
-            successfulIds.map((id) => {
-              const index = alerts.findIndex((alert) => alert.id === id);
-              if (index >= 0) {
-                delete alerts[index];
-              }
-              return id;
-            })
-          );
+          successfulIds.forEach((id) => {
+            const index = alerts.findIndex((alert) => alert.id === id);
+            if (index >= 0) {
+              delete alerts[index];
+            }
+            return id;
+          });
+
+          // Store locally
+          await setAlertsSync(alerts);
 
           setRetryLaterTimeout(() => {
             agentNWA.addBelief(

@@ -148,14 +148,12 @@ class DisplayAlerts extends Activity {
         BeliefKeys.PROCEDURE,
         ProcedureAttributes.AT_CP_I,
         ProcedureConst.INACTIVE
-      ),
-      true,
-      true
+      )
     );
   }
 }
 
-// Preconditions for activating the DisplayAlerts class
+// Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
   ProcedureAttributes.AT_CP_I,
@@ -167,7 +165,7 @@ const rule2 = new ResettablePrecondition(
   true
 );
 
-// Action Frame for DisplayAlerts class
+// Actionframe
 export const af_DisplayAlerts = new Actionframe(
   `AF_${ActionFrameIDs.UXSA.DISPLAY_ALERTS}`,
   [rule1, rule2],

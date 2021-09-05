@@ -90,7 +90,7 @@ export const setAlertInfo = async (alertInfo: AlertInfo): Promise<void> => {
 export const setAlertsSync = async (
   alertsSync: AsyncStorageType[AsyncStorageKeys.ALERTS_SYNC]
 ): Promise<void> => {
-  let localAlertsSync: AlertInfo[] | null = await getAlertInfosSync();
+  let localAlertsSync = await getAlertInfosSync();
 
   if (!localAlertsSync) {
     localAlertsSync = [];

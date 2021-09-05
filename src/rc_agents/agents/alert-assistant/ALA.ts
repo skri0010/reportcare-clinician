@@ -3,6 +3,7 @@ import { AgentIDs } from "rc_agents/clinician_framework";
 import { CommonAttributes } from "agents-framework/Enums";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import { ClinicianAgent } from "rc_agents/clinician_framework/ClinicianAgent";
+import { af_ProcessAlertNotification } from "./action-frames/triage-alert-hf-clinic/ProcessAlertNotification";
 
 // Initial Beliefs of Agent
 const belief1 = new Belief(AgentIDs.ALA, CommonAttributes.LAST_ACTIVITY, null);
@@ -10,7 +11,10 @@ const belief1 = new Belief(AgentIDs.ALA, CommonAttributes.LAST_ACTIVITY, null);
 // Alert Assistant Agent
 const agentALA = new ClinicianAgent(
   AgentIDs.ALA,
-  [], // action frame
+  [
+    // AT-CP-III - Alert Notifications
+    af_ProcessAlertNotification
+  ], // action frame
   [belief1], // beliefs
   agentAPI
 );
