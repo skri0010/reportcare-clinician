@@ -37,7 +37,9 @@ import {
   ListClinicianMappingsByPatientIDQuery,
   ListClinicianMappingsByPatientIDQueryVariables,
   ListClinicianPatientMapsQuery,
-  ListClinicianPatientMapsQueryVariables
+  ListClinicianPatientMapsQueryVariables,
+  ListMedCompliantsByPatientIDQueryVariables,
+  ListMedCompliantsByPatientIDQuery
 } from "aws/API";
 
 interface ListClinicianInfosResponse extends BaseResponse {
@@ -104,6 +106,18 @@ export const listReportVitalsByPatientID = async (
     variables: variables
   })) as ListReportVitalsByPatientIDQueryResponse;
 };
+
+
+interface ListMedCompliantsByPatientIDQueryResponse extends BaseResponse {
+  data: ListMedCompliantsByPatientIDQuery;
+}
+export const listMedCompliantsByPatientID = async (
+  variables: ListMedCompliantsByPatientIDQueryVariables): Promise<ListMedCompliantsByPatientIDQueryResponse> => {
+    return (await API.graphql({
+      query: queries.listMedCompliantsByPatientID,
+      variables: variables
+    })) as ListMedCompliantsByPatientIDQueryResponse;
+  };
 
 interface ListMedCompliantsQueryResponse extends BaseResponse {
   data: ListMedCompliantsQuery;

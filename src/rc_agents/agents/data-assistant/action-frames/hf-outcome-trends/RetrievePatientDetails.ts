@@ -20,7 +20,8 @@ import { PatientDetails } from "rc_agents/model";
 import {
   listActivityInfosByPatientID,
   listReportSymptomsByPatientID,
-  listReportVitalsByPatientID
+  listReportVitalsByPatientID,
+  listMedCompliantsByPatientID
 } from "aws";
 import {
   ActivityInfo,
@@ -86,6 +87,12 @@ class RetrievePatientDetails extends Activity {
             patientID: patientId
           });
 
+          const medCompliantsQuery = await listMedCompliantsByPatientID({
+            patientID: patientId
+          });
+
+          console.log(medCompliantsQuery);
+
           // Store activity infos in patient details
           if (activityInfoQuery.data.listActivityInfosByPatientID?.items) {
             const infos =
@@ -141,6 +148,7 @@ class RetrievePatientDetails extends Activity {
           // Save retrieved patient
           await Storage.setPatientDetails(patientDetails);
           patientDetailsRetrieved = true;
+          console.log(patientDetails);
         }
         // Device is offline: Retrieve locally stored data (if any)
         else if (!isOnline) {

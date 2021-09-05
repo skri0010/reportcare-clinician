@@ -9,6 +9,7 @@ import { RequestsByMariaCard } from "./RequestsByMariaCard";
 import { AlertsCard } from "./AlertsCard";
 import { TodosCard } from "./TodosCard";
 import { PendingPatientAssignmentsCard } from "./PendingPatientAssignmentsCard";
+import Auth from "@aws-amplify/auth";
 
 export const HomeScreen: FC<MainScreenProps[ScreenName.HOME]> = ({
   navigation

@@ -23,6 +23,7 @@ import { listPatientInfos } from "aws";
 import { Role } from "rc_agents/model";
 import { store } from "util/useRedux";
 import { setFetchingPatients } from "ic-redux/actions/agents/actionCreator";
+import Auth from "@aws-amplify/auth";
 
 /**
  * Class to represent an activity for retrieving patients according to role.
@@ -39,7 +40,6 @@ class RetrievePatientsByRole extends Activity {
    */
   async doActivity(agent: Agent): Promise<void> {
     await super.doActivity(agent, [rule2]);
-
     // Dispatch to store to indicate fetching
     store.dispatch(setFetchingPatients(true));
 
