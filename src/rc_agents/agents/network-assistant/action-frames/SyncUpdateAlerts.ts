@@ -14,8 +14,10 @@ import {
 } from "rc_agents/clinician_framework";
 import { AsyncStorageKeys, Storage } from "rc_agents/storage";
 import { agentNWA } from "rc_agents/agents";
-import { setAlertsSync } from "rc_agents/storage/setItem";
+import { replaceAlertsSync } from "rc_agents/storage/setItem";
 import { updateAlertInfo } from "rc_agents/agents/data-assistant/action-frames/triage-alert-hf-clinic/UpdateAlert";
+import { AgentTrigger } from "rc_agents/trigger";
+import { FetchAlertsMode } from "rc_agents/model";
 
 // LS-TODO: To be tested once integrated with Alert.
 
@@ -61,7 +63,7 @@ class SyncUpdateAlerts extends Activity {
         });
 
         // Removes entry if all alerts are synced
-        if (successfulIds.length === Object.values(alerts).length) {
+        if (successfulIds.length === alerts.length) {
           await Storage.removeItem(AsyncStorageKeys.ALERTS_SYNC);
         } else {
           // Removes successfully synced alerts
@@ -73,13 +75,17 @@ class SyncUpdateAlerts extends Activity {
           });
 
           // Store locally
-          await setAlertsSync(alerts);
+          await replaceAlertsSync(alerts);
 
           setRetryLaterTimeout(() => {
             agentNWA.addBelief(
               new Belief(BeliefKeys.APP, AppAttributes.SYNC_UPDATE_ALERTS, true)
             );
           });
+        }
+        if (successfulIds.length > 0) {
+          // Trigger procedure to retrieve alerts online
+          AgentTrigger.triggerRetrieveAlerts(FetchAlertsMode.ALL);
         }
       }
     } catch (error) {

@@ -192,22 +192,6 @@ export const getTodoDetails = async (
 };
 
 /**
- * Gets locally stored AlertNotifications to be processed
- * @returns array of AlertNotifications
- */
-export const getAlertNotifications = async (): Promise<
-  AsyncStorageType[AsyncStorageKeys.ALERT_NOTIFICATIONS] | null
-> => {
-  const localData = await AsyncStorage.getItem(
-    AsyncStorageKeys.ALERT_NOTIFICATIONS
-  );
-  if (localData) {
-    return JSON.parse(localData);
-  }
-  return null;
-};
-
-/**
  * Gets locally stored PatientAssignmentSubscriptions to be processed
  * @returns array of PatientAssignmentSubscriptions
  */

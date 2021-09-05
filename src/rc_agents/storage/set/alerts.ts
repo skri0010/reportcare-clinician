@@ -1,9 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AlertNotification } from "aws/TypedAPI/subscriptions";
 import { AlertInfo, AlertStatus } from "rc_agents/model";
 import { AsyncStorageKeys, AsyncStorageType } from "rc_agents/storage";
 import {
   getProcessedAlertInfos,
-  getAlertInfosSync
+  getAlertInfosSync,
+  getAlertNotifications
 } from "rc_agents/storage/get/alerts";
 
 /**
@@ -86,25 +88,68 @@ export const setAlertInfo = async (alertInfo: AlertInfo): Promise<void> => {
   await setAlertInfos([alertInfo]);
 };
 
-// Insert AlertInfo[] to be synced, merge directly
+// Insert AlertInfo[] to be synced, merges with existing data
 export const setAlertsSync = async (
-  alertsSync: AsyncStorageType[AsyncStorageKeys.ALERTS_SYNC]
+  alertsSync: AsyncStorageType[AsyncStorageKeys.ALERTS_SYNC],
+  overwrite = false
 ): Promise<void> => {
-  let localAlertsSync = await getAlertInfosSync();
-
-  if (!localAlertsSync) {
-    localAlertsSync = [];
+  let localData: AlertInfo[] | null = null;
+  if (overwrite) {
+    localData = [];
+  } else {
+    localData = (await getAlertInfosSync()) || [];
   }
 
-  localAlertsSync = localAlertsSync.concat(alertsSync);
+  localData = localData.concat(alertsSync);
 
   await AsyncStorage.setItem(
     AsyncStorageKeys.ALERTS_SYNC,
-    JSON.stringify(localAlertsSync)
+    JSON.stringify(localData)
   );
 };
 
 // Insert AlertInfo to be synced, merge directly
 export const setAlertSync = async (alertInfo: AlertInfo): Promise<void> => {
-  await setAlertsSync([alertInfo]);
+  await replaceAlertsSync([alertInfo]);
+};
+
+// Replace AlertInfo[] to be synced by overwriting
+export const replaceAlertsSync = async (
+  alertsSync: AsyncStorageType[AsyncStorageKeys.ALERTS_SYNC]
+): Promise<void> => {
+  await setAlertsSync(alertsSync, true);
+};
+
+// Insert AlertNotification[] to be synced , merge directly
+export const setAlertNotifications = async (
+  alertNotifications: AlertNotification[],
+  overwrite = false
+): Promise<void> => {
+  let localData: AlertNotification[] | null = null;
+  if (overwrite) {
+    localData = [];
+  } else {
+    localData = (await getAlertNotifications()) || [];
+  }
+
+  localData = localData.concat(alertNotifications);
+
+  await AsyncStorage.setItem(
+    AsyncStorageKeys.ALERT_NOTIFICATIONS,
+    JSON.stringify(localData)
+  );
+};
+
+// Insert AlertNotification[] to be synced
+export const setAlertNotification = async (
+  alertNotification: AlertNotification
+): Promise<void> => {
+  await setAlertNotifications([alertNotification]);
+};
+
+// Replace AlertNotification[] to be synced by overwriting
+export const replaceAlertNotifications = async (
+  alertNotifications: AlertNotification[]
+): Promise<void> => {
+  await setAlertNotifications(alertNotifications, true);
 };
