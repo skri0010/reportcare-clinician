@@ -84,7 +84,7 @@ class DisplayAlerts extends Activity {
           filteredPendingAlerts = pendingAlertInfos.filter(
             (alert) =>
               alertRiskFilters[alert.riskLevel] &&
-              alert.completed === AlertStatus.PENDING
+              alert.pending === AlertStatus.PENDING
           );
         }
 
