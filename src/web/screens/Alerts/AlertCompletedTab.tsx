@@ -47,20 +47,6 @@ export const AlertCompletedTab: FC<AlertRowTabProps> = ({ setEmptyAlert }) => {
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.primaryBackgroundColor }}>
-      <SearchBarComponent
-        onSearchClick={() => {
-          null;
-        }}
-        onUserInput={() => {
-          null;
-        }}
-        containerStyle={{ backgroundColor: colors.primaryContrastTextColor }}
-        placeholder="Search..."
-      />
-
-      {/* Filter for Completed Alerts */}
-      <RiskFilterPillList alertScreen />
-
       {/* Show loading if alerts is still being fetched */}
       {fetchingCompletedAlerts ? (
         <LoadingIndicator flex={1} />

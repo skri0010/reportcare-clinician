@@ -24,6 +24,8 @@ import {
 } from "ic-redux/actions/agents/actionCreator";
 import i18n from "util/language/i18n";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
+import { SearchBarComponent } from "components/Bars/SearchBarComponent";
+import { RiskFilterPillList } from "components/Buttons/RiskFilterPillList";
 
 const Tab = createMaterialTopTabNavigator();
 const Stack = createStackNavigator();
@@ -113,6 +115,21 @@ export const AlertScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
         pointerEvents={modalVisible || submittingTodo ? "none" : "auto"}
       >
         <View style={styles.rowSelection}>
+          <SearchBarComponent
+            onUserInput={() => {
+              null;
+            }}
+            onSearchClick={() => {
+              null;
+            }}
+            containerStyle={{
+              backgroundColor: colors.primaryContrastTextColor
+            }}
+            placeholder="Search..."
+          />
+
+          {/* Filter for Pending Alerts */}
+          <RiskFilterPillList alertScreen />
           <Tab.Navigator
             screenOptions={getTopTabBarOptions({
               colors: colors,

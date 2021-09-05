@@ -50,21 +50,7 @@ export const AlertCurrentTab: FC<AlertRowTabProps> = ({ setEmptyAlert }) => {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.primaryBackgroundColor }}>
-      <SearchBarComponent
-        onUserInput={() => {
-          null;
-        }}
-        onSearchClick={() => {
-          null;
-        }}
-        containerStyle={{ backgroundColor: colors.primaryContrastTextColor }}
-        placeholder="Search..."
-      />
-
-      {/* Filter for Pending Alerts */}
-      <RiskFilterPillList alertScreen />
-
+    <View style={{ flex: 1, backgroundColor: colors.primaryContrastTextColor }}>
       {/* Show no alerts message if no alert found */}
       {fetchingPendingAlerts ? (
         // Show loading indicator if fetching patients
