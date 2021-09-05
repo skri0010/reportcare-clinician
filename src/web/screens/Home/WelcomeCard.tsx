@@ -1,29 +1,39 @@
-import React, { FC } from "react";
+/* eslint-disable no-console */
+import React, { FC, useEffect, useState } from "react";
 import { RootState, select } from "util/useRedux";
 import { View, TextStyle, Image } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { H3, H5 } from "components/Text";
 import { CardWrapper } from "./CardWrapper";
 import i18n from "util/language/i18n";
+import { getClinician } from "rc_agents/storage/getItem";
 
 interface WelcomeCardProps {
-  name: string;
   flex?: number;
   maxHeight: number;
 }
 
-export const WelcomeCard: FC<WelcomeCardProps> = ({
-  name,
-  flex = 1,
-  maxHeight
-}) => {
+export const WelcomeCard: FC<WelcomeCardProps> = ({ flex = 1, maxHeight }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
   }));
 
+  const [username, setUsername] = useState<string>("");
+
   const cardTextColor = {
     color: colors.primaryTextColor
   } as TextStyle;
+
+  useEffect(() => {
+    async function fetchUsername() {
+      const clinician = await getClinician();
+      console.log(clinician);
+      if (clinician) {
+        setUsername(clinician.name);
+      }
+    }
+    fetchUsername();
+  }, []);
 
   return (
     <CardWrapper
@@ -41,7 +51,7 @@ export const WelcomeCard: FC<WelcomeCardProps> = ({
           <View style={styles.messageContainer}>
             {/* Welcome title */}
             <H3
-              text={`${i18n.t("Home.Welcome")}${name}`}
+              text={`${i18n.t("Home.Welcome")}${username}`}
               style={[styles.username, cardTextColor]}
             />
             {/* Welcome message */}
