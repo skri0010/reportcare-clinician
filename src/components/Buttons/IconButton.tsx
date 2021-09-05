@@ -23,6 +23,8 @@ export interface IconButtonProps {
   onPress: () => void;
   size?: number;
   containerStyle?: StyleProp<ViewStyle>;
+  containerBorderColor?: string;
+  containerBackgroundColor?: string;
   iconStyle?: StyleProp<TextStyle>;
 }
 
@@ -32,6 +34,8 @@ export const IconButton: FC<IconButtonProps> = ({
   onPress,
   size,
   containerStyle,
+  containerBorderColor,
+  containerBackgroundColor,
   iconStyle
 }) => {
   const { colors, fonts } = select((state: RootState) => ({
@@ -63,8 +67,8 @@ export const IconButton: FC<IconButtonProps> = ({
       onPress={onPress}
       style={[
         {
-          borderColor: colors.acceptButtonColor,
-          backgroundColor: colors.acceptButtonColor
+          borderColor: containerBorderColor || colors.acceptButtonColor,
+          backgroundColor: containerBackgroundColor || colors.acceptButtonColor
         },
         containerStyle
       ]}

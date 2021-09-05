@@ -1,11 +1,11 @@
 import React, { FC } from "react";
 import { View } from "react-native";
 import i18n from "util/language/i18n";
-import { ms, ScaledSheet } from "react-native-size-matters";
+import { ScaledSheet } from "react-native-size-matters";
 import { H5 } from "components/Text";
 import { RootState, select } from "util/useRedux";
 import { MedInput } from "rc_agents/model";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { IconButton, IconType } from "components/Buttons/IconButton";
 
 interface MedicationRowProps {
   medicationItem: MedInput;
@@ -30,19 +30,19 @@ export const MedicationRow: FC<MedicationRowProps> = ({
   medicationItem,
   setMedInfoToDelete
 }) => {
-  const { colors } = select((state: RootState) => ({
-    colors: state.settings.colors
+  const { colors, fonts } = select((state: RootState) => ({
+    colors: state.settings.colors,
+    fonts: state.settings.fonts
   }));
 
   return (
     <View
-      style={{
-        flexDirection: "row",
-        backgroundColor: colors.primaryBackgroundColor,
-        paddingLeft: ms(20),
-        paddingVertical: ms(10)
-      }}
+      style={[
+        styles.container,
+        { backgroundColor: colors.primaryBackgroundColor }
+      ]}
     >
+      {/* Medicatio info */}
       <View style={{ flex: 6 }}>
         <MedicationInfoRow
           title={i18n.t("Patient_Configuration.MedicationRow.Name")}
@@ -61,20 +61,31 @@ export const MedicationRow: FC<MedicationRowProps> = ({
           )}`}
         />
       </View>
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "flex-end"
-        }}
-      >
-        <Icon.Button
-          name="minus-circle"
-          color="red"
-          backgroundColor="#FFFFFF00"
-          onPress={() => setMedInfoToDelete(medicationItem)}
-        />
-      </View>
+
+      {/* Delete button */}
+      <IconButton
+        name="minus-circle"
+        type={IconType.MATERIAL_COMMUNITY}
+        onPress={() => setMedInfoToDelete(medicationItem)}
+        size={fonts.h4Size}
+        containerStyle={styles.deleteIconContainer}
+        containerBackgroundColor={colors.deleteIconBackgroundColor}
+        iconStyle={{ color: colors.deleteIconColor }}
+      />
     </View>
   );
 };
+
+const styles = ScaledSheet.create({
+  container: {
+    flexDirection: "row",
+    paddingLeft: "20@ms",
+    paddingVertical: "10@ms"
+  },
+  deleteIconContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "flex-end",
+    paddingRight: "15@ms"
+  }
+});

@@ -11,6 +11,11 @@ interface RowButtonProps {
   fontSize?: number;
   backgroundColor?: string;
   textColor?: string;
+  borderColor?: string;
+  borderWidth?: number;
+  disabled?: boolean;
+  width?: number;
+  height?: number;
 }
 
 export const RowButton: FC<RowButtonProps> = ({
@@ -18,7 +23,12 @@ export const RowButton: FC<RowButtonProps> = ({
   onPress,
   fontSize,
   backgroundColor,
-  textColor
+  textColor,
+  borderColor,
+  borderWidth,
+  disabled,
+  width,
+  height
 }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
@@ -30,10 +40,15 @@ export const RowButton: FC<RowButtonProps> = ({
         style={[
           styles.button,
           {
-            backgroundColor: backgroundColor || colors.primaryButtonColor
+            backgroundColor: backgroundColor || colors.primaryButtonColor,
+            ...(borderColor ? { borderColor: borderColor } : {}),
+            ...(borderWidth ? { borderWidth: borderWidth } : {}),
+            ...(width ? { width: width } : {}),
+            ...(height ? { height: height } : {})
           }
         ]}
         onPress={onPress}
+        disabled={disabled}
       >
         <H5
           text={i18n.t(title)}

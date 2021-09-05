@@ -1,5 +1,5 @@
 import React, { FC, useState, useEffect } from "react";
-import { View, TouchableOpacity } from "react-native";
+import { View } from "react-native";
 import { TextField } from "components/InputComponents/TextField";
 import i18n from "util/language/i18n";
 import {
@@ -9,9 +9,9 @@ import {
   validateMedFreq
 } from "util/validation";
 import { ms, ScaledSheet } from "react-native-size-matters";
-import { H5 } from "components/Text";
 import { RootState, select } from "util/useRedux";
 import { MedInput } from "rc_agents/model";
+import { RowButton } from "components/Buttons/TextButton";
 
 interface MedicationConfigFormProps {
   configMedInfo: MedInput;
@@ -30,21 +30,25 @@ export const MedicationConfigForm: FC<MedicationConfigFormProps> = ({
     colors: state.settings.colors
   }));
 
+  // Checks for validity of medication info inputs
   const [allMedInputValid, setAllMedInputValid] = useState<boolean>(false);
 
-  // Medication info
+  // Update medicine name
   const updateMedName = (medName: string) => {
     setConfigMedInfo({ ...configMedInfo, name: medName });
   };
 
+  // Update dosage
   const updateMedDosage = (dosage: string) => {
     setConfigMedInfo({ ...configMedInfo, dosage: dosage });
   };
 
+  // Update frequency
   const updateMedFreq = (frequency: string) => {
     setConfigMedInfo({ ...configMedInfo, frequency: frequency });
   };
 
+  // Input validations to see if the save button should be enabled or not
   useEffect(() => {
     const medInput =
       validateMedName(configMedInfo.name) &&
@@ -55,12 +59,12 @@ export const MedicationConfigForm: FC<MedicationConfigFormProps> = ({
 
   return (
     <View
-      style={{
-        backgroundColor: colors.primaryBackgroundColor,
-        paddingHorizontal: ms(20),
-        paddingTop: ms(5),
-        borderRadius: ms(3)
-      }}
+      style={[
+        styles.form,
+        {
+          backgroundColor: colors.primaryBackgroundColor
+        }
+      ]}
     >
       <View>
         {/* Medicine name */}
@@ -87,6 +91,7 @@ export const MedicationConfigForm: FC<MedicationConfigFormProps> = ({
           }
           errorMessage={i18n.t("Patient_Configuration.Error.Dosage")}
         />
+        {/* Medicine Frequency */}
         <TextField
           label={i18n.t("Patient_Configuration.Label.Frequency")}
           value={configMedInfo.frequency}
@@ -99,56 +104,50 @@ export const MedicationConfigForm: FC<MedicationConfigFormProps> = ({
           errorMessage={i18n.t("Patient_Configuration.Error.Frequency")}
         />
       </View>
-      <View
-        style={{
-          flexDirection: "row",
-          paddingVertical: ms(10),
-          flexWrap: "wrap",
-          justifyContent: "space-evenly",
-          alignItems: "center",
-          paddingHorizontal: ms(60)
-        }}
-      >
-        <TouchableOpacity
-          // on save, add the medication into medication list and display, clear the previous input
+
+      <View style={styles.buttonContainer}>
+        {/* Save button */}
+        <RowButton
+          title="Patient_Configuration.Save"
           onPress={() => saveMedInput(configMedInfo)}
-          disabled={!allMedInputValid}
-          style={{
-            backgroundColor: allMedInputValid
+          backgroundColor={
+            allMedInputValid
               ? colors.acceptButtonColor
-              : colors.primaryDeactivatedButtonColor,
-            height: ms(20),
-            width: ms(50),
-            borderRadius: ms(5),
-            justifyContent: "center",
-            alignItems: "center"
-          }}
-        >
-          <H5
-            text={i18n.t("Patient_Configuration.Save")}
-            style={{ color: colors.primaryContrastTextColor }}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          // on save, add the medication into medication list and display, clear the previous input
+              : colors.primaryDeactivatedButtonColor
+          }
+          disabled={!allMedInputValid}
+          width={ms(50)}
+          height={ms(20)}
+        />
+
+        {/* Cancel button */}
+        <RowButton
+          title="Patient_Configuration.Cancel"
           onPress={() => setAddMedInfo(false)}
-          style={{
-            backgroundColor: colors.primaryBackgroundColor,
-            borderColor: colors.secondaryBorderColor,
-            height: ms(20),
-            width: ms(50),
-            borderRadius: ms(5),
-            borderWidth: ms(1),
-            justifyContent: "center",
-            alignItems: "center"
-          }}
-        >
-          <H5
-            text={i18n.t("Patient_Configuration.Cancel")}
-            style={{ color: colors.primaryTextColor }}
-          />
-        </TouchableOpacity>
+          backgroundColor={colors.primaryBackgroundColor}
+          textColor={colors.primaryTextColor}
+          borderColor={colors.secondaryBorderColor}
+          borderWidth={ms(1)}
+          width={ms(50)}
+          height={ms(20)}
+        />
       </View>
     </View>
   );
 };
+
+const styles = ScaledSheet.create({
+  buttonContainer: {
+    flexDirection: "row",
+    paddingVertical: "10@ms",
+    flexWrap: "wrap",
+    justifyContent: "space-evenly",
+    alignItems: "center",
+    paddingHorizontal: "60@ms"
+  },
+  form: {
+    paddingHorizontal: "20@ms",
+    paddingTop: "5@ms",
+    borderRadius: "3@ms"
+  }
+});

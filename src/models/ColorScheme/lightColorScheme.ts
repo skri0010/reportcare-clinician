@@ -53,6 +53,10 @@ export const lightColorScheme: ColorScheme = {
   primaryContrastIconColor: "#FFFFFF",
   selectedIconColor: "#00ffff",
   acceptIconColor: "#6AC574",
+  deleteIconColor: "#ff1e00",
+
+  // Icon background
+  deleteIconBackgroundColor: "#ffffff00",
 
   // Others
   riskLevelBackgroundColors: riskLevelBackgroundColors,
