@@ -1,21 +1,22 @@
 import React, { FC, useEffect, useState } from "react";
 import { View, FlatList } from "react-native";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
-import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { RootState, select } from "util/useRedux";
 import { AlertRow } from "components/RowComponents/AlertRow";
-import { RiskFilterPillList } from "components/Buttons/RiskFilterPillList";
 import { AlertInfo } from "rc_agents/model";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import i18n from "util/language/i18n";
 import { NoListItemMessage } from "../Shared/NoListItemMessage";
-import { AgentTrigger } from "rc_agents/trigger";
 
 export interface AlertRowTabProps {
-  setEmptyAlert: (state: boolean) => void;
+  displayedAlertInfoId?: string;
+  onRowPress: (alert: AlertInfo) => void;
 }
 
-export const AlertCurrentTab: FC<AlertRowTabProps> = ({ setEmptyAlert }) => {
+export const AlertCurrentTab: FC<AlertRowTabProps> = ({
+  displayedAlertInfoId,
+  onRowPress
+}) => {
   const { colors, pendingAlerts, fetchingPendingAlerts } = select(
     (state: RootState) => ({
       colors: state.settings.colors,
@@ -33,7 +34,7 @@ export const AlertCurrentTab: FC<AlertRowTabProps> = ({ setEmptyAlert }) => {
     if (fetchingPendingAlerts) {
       if (pendingAlerts) {
         // No patients found
-        setNoPendingAlertsNotice(i18n.t("Alert.AlertList.NoPendingAlerts"));
+        setNoPendingAlertsNotice(i18n.t("Alerts.AlertList.NoPendingAlerts"));
       } else {
         // Could not fetch patients
         setNoPendingAlertsNotice(
@@ -42,12 +43,6 @@ export const AlertCurrentTab: FC<AlertRowTabProps> = ({ setEmptyAlert }) => {
       }
     }
   }, [pendingAlerts, fetchingPendingAlerts]);
-
-  // When the alert item is pressed, trigger the retrieval of alert info
-  function onCardPress(item: AlertInfo) {
-    AgentTrigger.triggerRetrieveDetailedAlertInfo(item);
-    setEmptyAlert(false);
-  }
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.primaryContrastTextColor }}>
@@ -63,7 +58,8 @@ export const AlertCurrentTab: FC<AlertRowTabProps> = ({ setEmptyAlert }) => {
           renderItem={({ item }) => (
             <AlertRow
               alertDetails={item}
-              onCardPress={() => onCardPress(item)}
+              onCardPress={() => onRowPress(item)}
+              selected={displayedAlertInfoId === item.id}
             />
           )}
         />

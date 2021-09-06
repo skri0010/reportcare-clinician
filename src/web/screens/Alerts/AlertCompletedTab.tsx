@@ -1,18 +1,17 @@
 import React, { FC, useEffect, useState } from "react";
 import { FlatList, View } from "react-native";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
-import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { RootState, select } from "util/useRedux";
 import { AlertRow } from "components/RowComponents/AlertRow";
 import { AlertRowTabProps } from "./AlertCurrentTab";
-import { RiskFilterPillList } from "components/Buttons/RiskFilterPillList";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import i18n from "util/language/i18n";
 import { NoListItemMessage } from "../Shared/NoListItemMessage";
-import { AgentTrigger } from "rc_agents/trigger";
-import { AlertInfo } from "rc_agents/model";
 
-export const AlertCompletedTab: FC<AlertRowTabProps> = ({ setEmptyAlert }) => {
+export const AlertCompletedTab: FC<AlertRowTabProps> = ({
+  displayedAlertInfoId,
+  onRowPress
+}) => {
   const { colors, completedAlerts, fetchingCompletedAlerts } = select(
     (state: RootState) => ({
       colors: state.settings.colors,
@@ -24,18 +23,14 @@ export const AlertCompletedTab: FC<AlertRowTabProps> = ({ setEmptyAlert }) => {
   const [noCompletedAlertsNotice, setNoCompletedAlertsNotice] =
     useState<string>("");
 
-  // Trigger the retrieval of alert info when the alert item is selected
-  function onCardPress(item: AlertInfo) {
-    AgentTrigger.triggerRetrieveDetailedAlertInfo(item);
-    setEmptyAlert(false);
-  }
-
   // Prepare text notice to be displayed after fetching patients
   useEffect(() => {
     if (fetchingCompletedAlerts) {
       if (completedAlerts) {
         // No patients found
-        setNoCompletedAlertsNotice(i18n.t("Alert.AlertList.NoCompletedAlerts"));
+        setNoCompletedAlertsNotice(
+          i18n.t("Alerts.AlertList.NoCompletedAlerts")
+        );
       } else {
         // Could not fetch patients
         setNoCompletedAlertsNotice(
@@ -58,7 +53,8 @@ export const AlertCompletedTab: FC<AlertRowTabProps> = ({ setEmptyAlert }) => {
           renderItem={({ item }) => (
             <AlertRow
               alertDetails={item}
-              onCardPress={() => onCardPress(item)}
+              onCardPress={() => onRowPress(item)}
+              selected={displayedAlertInfoId === item.id}
             />
           )}
           keyExtractor={(item) => item.id}

@@ -14,10 +14,11 @@ import { NoSelectionScreen } from "../Shared/NoSelectionScreen";
 import { AlertDetailsScreen } from "./AlertDetailsScreen";
 import { MainScreenProps } from "web/navigation/types";
 import { AgentTrigger } from "rc_agents/trigger";
-import { FetchAlertsMode } from "rc_agents/model";
+import { AlertInfo, FetchAlertsMode } from "rc_agents/model";
 import { AddTodoScreen } from "web/screens/Todo/modals/AddTodoScreen";
 import { useToast } from "react-native-toast-notifications";
 import {
+  setAlertInfo,
   setProcedureSuccessful,
   setSubmittingTodo
 } from "ic-redux/actions/agents/actionCreator";
@@ -61,6 +62,15 @@ export const AlertScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
   }, []);
 
   const [isEmptyAlert, setEmptyAlert] = useState(true);
+
+  // When the alert item is pressed, trigger the retrieval of alert info
+  const onAlertRowPress = (alert: AlertInfo) => {
+    if (alert) {
+      dispatch(setAlertInfo(alert));
+      AgentTrigger.triggerRetrieveDetailedAlertInfo(alert);
+      setEmptyAlert(false);
+    }
+  };
 
   // Detects completion of UpdateTodo procedure and shows the appropriate toast.
   useEffect(() => {
@@ -106,10 +116,20 @@ export const AlertScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
             })}
           >
             <Tab.Screen name="Pending">
-              {() => <AlertCurrentTab setEmptyAlert={setEmptyAlert} />}
+              {() => (
+                <AlertCurrentTab
+                  displayedAlertInfoId={alertInfo?.id}
+                  onRowPress={onAlertRowPress}
+                />
+              )}
             </Tab.Screen>
             <Tab.Screen name="Completed">
-              {() => <AlertCompletedTab setEmptyAlert={setEmptyAlert} />}
+              {() => (
+                <AlertCompletedTab
+                  displayedAlertInfoId={alertInfo?.id}
+                  onRowPress={onAlertRowPress}
+                />
+              )}
             </Tab.Screen>
           </Tab.Navigator>
         </View>

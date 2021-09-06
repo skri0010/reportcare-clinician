@@ -21,7 +21,7 @@ export const HRVCard: FC<HRVCardProps> = ({ HRV, maxHeight, minHeight }) => {
     <CardWrapper flex={1} maxHeight={maxHeight} minHeight={minHeight}>
       <Icon name="heart-pulse" size={iconSize} />
       <H5
-        text={i18n.t("Alert.AlertVitals.HeartRate")}
+        text={i18n.t("Alerts.AlertVitals.HeartRate")}
         style={{ paddingLeft: ms(5), paddingBottom: ms(5), fontWeight: "bold" }}
       />
       <H4 text={str} style={{ paddingLeft: ms(5) }} />
