@@ -1,9 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { PatientAssignment, PatientInfo, Todo } from "aws/API";
-import {
-  AlertNotification,
-  PatientAssignmentSubscription
-} from "aws/TypedAPI/subscriptions";
+import { PatientAssignmentSubscription } from "aws/TypedAPI/subscriptions";
 // eslint-disable-next-line no-restricted-imports
 import {
   LocalTodo,
@@ -13,7 +10,6 @@ import {
 } from "rc_agents/model";
 import { AsyncStorageKeys, AsyncStorageType } from ".";
 import {
-  getAlertNotifications,
   getAllPatientDetails,
   getPatientAssignmentSubscriptions,
   getPatientConfigurations,
@@ -342,34 +338,6 @@ export const setTodos = async (
   todos: AsyncStorageType[AsyncStorageKeys.TODOS]
 ): Promise<void> => {
   await AsyncStorage.setItem(AsyncStorageKeys.TODOS, JSON.stringify(todos));
-};
-
-/**
- * Insert an alert notification
- * @param alertNotification alert notification to be inserted
- */
-export const setAlertNotification = async (
-  alertNotification: AlertNotification
-): Promise<void> => {
-  let localData = await getAlertNotifications();
-  if (!localData) {
-    localData = [];
-  }
-  localData.push(alertNotification);
-  await setAlertNotifications(localData);
-};
-
-/**
- * Replaces the existing array of alert notifications
- * @param alertNotifications array of alert notifications
- */
-export const setAlertNotifications = async (
-  alertNotifications: AlertNotification[]
-): Promise<void> => {
-  await AsyncStorage.setItem(
-    AsyncStorageKeys.ALERT_NOTIFICATIONS,
-    JSON.stringify(alertNotifications)
-  );
 };
 
 /**

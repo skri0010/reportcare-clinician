@@ -115,3 +115,16 @@ export const getAlertInfosSync = async (): Promise<
   }
   return null;
 };
+
+// Get AlertNotifications[] to be synced
+export const getAlertNotifications = async (): Promise<
+  AsyncStorageType[AsyncStorageKeys.ALERT_NOTIFICATIONS] | null
+> => {
+  const localData = await AsyncStorage.getItem(
+    AsyncStorageKeys.ALERT_NOTIFICATIONS
+  );
+  if (localData) {
+    return JSON.parse(localData);
+  }
+  return null;
+};

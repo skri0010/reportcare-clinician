@@ -58,6 +58,12 @@ class RetrieveAlerts extends Activity {
     // Get online status from facts
     const isOnline: boolean = facts[BeliefKeys.APP]?.[AppAttributes.ONLINE];
 
+    // Get retrieve locally boolean from facts
+    const retrieveAlertsLocally =
+      facts[BeliefKeys.CLINICIAN]?.[
+        ClinicianAttributes.RETRIEVE_ALERTS_LOCALLY
+      ];
+
     // Dispatch to store to indicate fetching
     if (fetchAlertsMode) {
       this.dispatchFetching(fetchAlertsMode, true);
@@ -68,7 +74,7 @@ class RetrieveAlerts extends Activity {
         let pendingAlertInfos: AlertInfo[] | undefined | null;
         let completedAlertInfos: AlertInfo[] | undefined | null;
 
-        if (isOnline) {
+        if (isOnline && !retrieveAlertsLocally) {
           // Device is online and not do not need to fetch alerts locally
           let pendingAlerts: Alert[] | undefined | null;
           let completedAlerts: Alert[] | undefined | null;
@@ -172,6 +178,14 @@ class RetrieveAlerts extends Activity {
           new Belief(
             BeliefKeys.CLINICIAN,
             ClinicianAttributes.FETCH_ALERTS_MODE,
+            null
+          ),
+          false
+        );
+        agentAPI.addFact(
+          new Belief(
+            BeliefKeys.CLINICIAN,
+            ClinicianAttributes.RETRIEVE_ALERTS_LOCALLY,
             null
           ),
           false
