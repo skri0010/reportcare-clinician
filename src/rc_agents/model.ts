@@ -68,7 +68,7 @@ export interface PatientDetails {
   activityInfos: LocalActivityInfos;
   symptomReports: LocalReportSymptoms;
   vitalsReports: LocalReportVitals;
-  medicationInfo: MedicationInfo[] | MedInput[];
+  medicationInfo: MedicationInfo[];
 }
 
 export type LocalActivityInfos = {

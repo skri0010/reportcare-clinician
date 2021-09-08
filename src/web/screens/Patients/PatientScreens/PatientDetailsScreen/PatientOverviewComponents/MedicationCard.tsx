@@ -14,11 +14,10 @@ interface MedicationTakenProps {
 }
 
 export const MedicationTakenCard: FC<MedicationTakenProps> = ({
+  medications,
   maxHeight,
   minHeight
 }) => {
-  const [mockMedications] = useState(mockMedicationRecord);
-
   return (
     <CardWrapper
       maxHeight={maxHeight}
@@ -29,7 +28,7 @@ export const MedicationTakenCard: FC<MedicationTakenProps> = ({
       <FlatList
         style={{ paddingLeft: ms(10), paddingTop: ms(5) }}
         showsVerticalScrollIndicator={false}
-        data={mockMedications}
+        data={medications}
         renderItem={({ item }) => <MedicationRow medicationInfo={item} />}
         keyExtractor={(item) => item.id}
       />

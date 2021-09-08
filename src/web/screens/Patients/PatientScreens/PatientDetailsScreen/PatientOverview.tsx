@@ -7,7 +7,7 @@ import { OxygenSaturationCard } from "./PatientOverviewComponents/OxygenSaturati
 import { WeightCard } from "./PatientOverviewComponents/WeightCard";
 import { SymptomsCard } from "./PatientOverviewComponents/SymptomsCard";
 import { Dimensions, View } from "react-native";
-import { ReportSymptom, ReportVitals } from "aws/API";
+import { MedicationInfo, ReportSymptom, ReportVitals } from "aws/API";
 import i18n from "util/language/i18n";
 import { PatientDetailsTabProps } from "web/navigation/types";
 import { PatientDetails } from "rc_agents/model";
@@ -21,6 +21,7 @@ export const PatientOverview: FC<PatientOverviewProps> = ({ details }) => {
 
   const [vitals, setVitals] = useState<ReportVitals | null>(null);
   const [symptoms, setSymptoms] = useState<ReportSymptom[]>([]);
+  const [medications, setMedications] = useState<MedicationInfo[]>([]);
 
   useEffect(() => {
     // TODO: This code needs to be modified for changing days
@@ -45,6 +46,11 @@ export const PatientOverview: FC<PatientOverviewProps> = ({ details }) => {
     const symptomsOnDate = details.symptomReports[date];
     if (symptomsOnDate) {
       setSymptoms(symptomsOnDate);
+    }
+
+    const medInfo = details.medicationInfo;
+    if (medInfo) {
+      setMedications(medInfo);
     }
   }, [details]);
 
@@ -77,7 +83,7 @@ export const PatientOverview: FC<PatientOverviewProps> = ({ details }) => {
           {/* Medication and symptoms card */}
           {/* JH-TODO-NEW: Current data type does not support this */}
           <MedicationTakenCard
-            medications={[]}
+            medications={medications}
             maxHeight={cardHeight}
             minHeight={cardHeight}
           />

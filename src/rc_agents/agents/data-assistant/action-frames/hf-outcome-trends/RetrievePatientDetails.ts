@@ -21,10 +21,12 @@ import {
   listActivityInfosByPatientID,
   listReportSymptomsByPatientID,
   listReportVitalsByPatientID,
-  listMedCompliantsByPatientID
+  listMedCompliantsByPatientID,
+  listMedicationInfosByPatientID
 } from "aws";
 import {
   ActivityInfo,
+  MedicationInfo,
   PatientInfo,
   ReportSymptom,
   ReportVitals
@@ -32,7 +34,6 @@ import {
 import { Storage } from "rc_agents/storage";
 import { setFetchingPatientDetails } from "ic-redux/actions/agents/actionCreator";
 import { store } from "util/useRedux";
-
 /**
  * Class to represent an activity for retrieving details of a specific patient.
  * This happens in Procedure HF Outcome Trends (HF-OTP-II).
@@ -77,9 +78,13 @@ class RetrievePatientDetails extends Activity {
         // Device is online
         if (isOnline) {
           // Query for activity infos, symptom reports and vitals reports
-          const activityInfoQuery = await listActivityInfosByPatientID({
+          const medicationInfoQuery = await listMedicationInfosByPatientID({
             patientID: patientId
           });
+
+          /*           const activityInfoQuery = await listActivityInfosByPatientID({
+            patientID: patientId
+          }); */
           const symptomReportsQuery = await listReportSymptomsByPatientID({
             patientID: patientId
           });
@@ -87,14 +92,8 @@ class RetrievePatientDetails extends Activity {
             patientID: patientId
           });
 
-          const medCompliantsQuery = await listMedCompliantsByPatientID({
-            patientID: patientId
-          });
-
-          console.log(medCompliantsQuery);
-
           // Store activity infos in patient details
-          if (activityInfoQuery.data.listActivityInfosByPatientID?.items) {
+          /*           if (activityInfoQuery.data.listActivityInfosByPatientID?.items) {
             const infos =
               activityInfoQuery.data.listActivityInfosByPatientID.items;
 
@@ -103,7 +102,7 @@ class RetrievePatientDetails extends Activity {
                 patientDetails.activityInfos[info.id] = info;
               }
             });
-          }
+          } */
 
           // Store symptom reports in patient details
           if (symptomReportsQuery.data.listReportSymptomsByPatientID?.items) {
@@ -145,10 +144,20 @@ class RetrievePatientDetails extends Activity {
             });
           }
 
+          if (medicationInfoQuery.data.listMedicationInfosByPatientID?.items) {
+            const medicationInfos =
+              medicationInfoQuery.data.listMedicationInfosByPatientID?.items;
+
+            medicationInfos.forEach((medication: MedicationInfo | null) => {
+              if (medication) {
+                patientDetails.medicationInfo.push(medication);
+              }
+            });
+          }
+          console.log(patientDetails);
           // Save retrieved patient
           await Storage.setPatientDetails(patientDetails);
           patientDetailsRetrieved = true;
-          console.log(patientDetails);
         }
         // Device is offline: Retrieve locally stored data (if any)
         else if (!isOnline) {
