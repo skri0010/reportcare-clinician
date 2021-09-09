@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { RootState, select } from "util/useRedux";
 import { View } from "react-native";
 import { ms } from "react-native-size-matters";
@@ -15,11 +15,25 @@ export const MedicationRow: FC<MedicationRowProps> = ({ medicationInfo }) => {
     colors: state.settings.colors
   }));
 
+  function validateMeds() {
+    const recordObject = JSON.parse(medicationInfo.records);
+    const dateKey = new Date().toDateString();
+    if (recordObject[dateKey].length === medicationInfo.dosage) {
+      return true;
+    }
+  }
+
+  const medicineTaken = validateMeds();
+
+  console.log(medicineTaken);
+
   return (
     <View style={{ flexDirection: "row", alignItems: "center" }}>
-      {/* JQ-TODO Add a checking here to see if the patient has taken the medicine */}
-      {/* ie {medicineTaken?(<Icon name="check" color={colors.acceptButtonColor} size={ms(15)} />):(<View style={{ paddingLeft: ms(15) }} />)} */}
-      <Icon name="check" color={colors.acceptButtonColor} size={ms(15)} />
+      {medicineTaken ? (
+        <Icon name="check" color={colors.acceptButtonColor} size={ms(15)} />
+      ) : (
+        <Icon name="close" color={colors.deleteIconColor} size={ms(15)} />
+      )}
       <H4 text={`  ${medicationInfo.name}`} style={null} />
     </View>
   );
