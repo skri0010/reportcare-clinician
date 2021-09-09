@@ -18,17 +18,14 @@ export const MedicationRow: FC<MedicationRowProps> = ({ medicationInfo }) => {
   function validateMeds() {
     const recordObject = JSON.parse(medicationInfo.records);
     const meds = recordObject[new Date().toDateString()] as string[] | null;
-
     if (meds) {
-      if (meds.length === medicationInfo.dosage) {
+      if (meds.length === medicationInfo.frequency) {
         return true;
       }
     }
   }
 
   const medicineTaken = validateMeds();
-
-  console.log(medicineTaken);
 
   return (
     <View style={{ flexDirection: "row", alignItems: "center" }}>
