@@ -10,7 +10,7 @@ import { Dimensions, View } from "react-native";
 import { MedicationInfo, ReportSymptom, ReportVitals } from "aws/API";
 import i18n from "util/language/i18n";
 import { PatientDetailsTabProps } from "web/navigation/types";
-import { PatientDetails } from "rc_agents/model";
+import { MedInput, PatientDetails } from "rc_agents/model";
 
 interface PatientOverviewProps extends PatientDetailsTabProps.OverviewTabProps {
   details: PatientDetails;
@@ -47,9 +47,10 @@ export const PatientOverview: FC<PatientOverviewProps> = ({ details }) => {
     if (symptomsOnDate) {
       setSymptoms(symptomsOnDate);
     }
-
+    //console.log(details);
     const medInfo = details.medicationInfo;
     if (medInfo) {
+      //console.log(medInfo);
       setMedications(medInfo);
     }
   }, [details]);

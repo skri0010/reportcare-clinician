@@ -21,7 +21,6 @@ import {
   listActivityInfosByPatientID,
   listReportSymptomsByPatientID,
   listReportVitalsByPatientID,
-  listMedCompliantsByPatientID,
   listMedicationInfosByPatientID
 } from "aws";
 import {
@@ -73,7 +72,7 @@ class RetrievePatientDetails extends Activity {
           vitalsReports: {},
           medicationInfo: []
         };
-        let patientDetailsRetrieved = false;
+        //let patientDetailsRetrieved = false;
 
         // Device is online
         if (isOnline) {
@@ -154,32 +153,10 @@ class RetrievePatientDetails extends Activity {
               }
             });
           }
-          console.log(patientDetails);
           // Save retrieved patient
           await Storage.setPatientDetails(patientDetails);
-          patientDetailsRetrieved = true;
-        }
-        // Device is offline: Retrieve locally stored data (if any)
-        else if (!isOnline) {
-          // Get local patients' details
-          const localPatientDetails = await Storage.getPatientDetails(
-            patientInfo.patientID
-          );
+          //patientDetailsRetrieved = true;
 
-          if (localPatientDetails) {
-            agentAPI.addFact(
-              new Belief(
-                BeliefKeys.PATIENT,
-                PatientAttributes.PATIENT_DETAILS,
-                localPatientDetails
-              ),
-              false
-            );
-            patientDetailsRetrieved = true;
-          }
-        }
-
-        if (patientDetailsRetrieved) {
           // Update Facts and Beliefs
           // Store items
           agentAPI.addFact(
@@ -190,26 +167,46 @@ class RetrievePatientDetails extends Activity {
             ),
             false
           );
-          // Trigger request to Communicate to USXA
-          agent.addBelief(
-            new Belief(
-              BeliefKeys.PATIENT,
-              PatientAttributes.PATIENT_DETAILS_RETRIEVED,
-              true
-            )
+        }
+        // Device is offline: Retrieve locally stored data (if any)
+        else if (!isOnline) {
+          // Get local patients' details
+          const localPatientDetails = await Storage.getPatientDetails(
+            patientInfo.patientID
           );
+          // Update Facts and Beliefs
+          // Store items
+          if (localPatientDetails) {
+            agentAPI.addFact(
+              new Belief(
+                BeliefKeys.PATIENT,
+                PatientAttributes.PATIENT_DETAILS,
+                localPatientDetails
+              ),
+              false
+            );
+          }
         }
 
-        // Removes patientInfo from facts
-        agentAPI.addFact(
+        // Trigger request to Communicate to USXA
+        agent.addBelief(
           new Belief(
             BeliefKeys.PATIENT,
-            PatientAttributes.PATIENT_TO_VIEW_DETAILS,
-            null
-          ),
-          false
+            PatientAttributes.PATIENT_DETAILS_RETRIEVED,
+            true
+          )
         );
       }
+
+      // Removes patientInfo from facts
+      agentAPI.addFact(
+        new Belief(
+          BeliefKeys.PATIENT,
+          PatientAttributes.PATIENT_TO_VIEW_DETAILS,
+          null
+        ),
+        false
+      );
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);

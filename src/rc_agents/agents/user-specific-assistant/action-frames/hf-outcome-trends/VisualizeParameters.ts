@@ -46,6 +46,8 @@ class VisualizeParameters extends Activity {
     if (patientDetails) {
       // LS-TODO-NEW: Perform filtering on data according to roles
       // Dispatch patient details to front end
+      //console.log("UXSA");
+      console.log(patientDetails);
       store.dispatch(setPatientDetails(patientDetails));
 
       // Update Facts
