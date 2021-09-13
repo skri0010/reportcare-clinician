@@ -47,9 +47,10 @@ export declare class ActivityInfo {
   readonly id: string;
   readonly Actname: string;
   readonly Location: string;
-  readonly Frequency: number;
-  readonly Days: string[];
-  readonly time: string;
+  readonly expectedFrequency?: number;
+  readonly expectedDays?: string[];
+  readonly expectedDurationMinutes?: number;
+  readonly recordDateTime?: string;
   readonly patientID: string;
   constructor(init: ModelInit<ActivityInfo>);
   static copyOf(source: ActivityInfo, mutator: (draft: MutableModel<ActivityInfo>) => MutableModel<ActivityInfo> | void): ActivityInfo;
@@ -73,6 +74,7 @@ export declare class ReportSymptom {
   readonly Name: string;
   readonly Severity: string;
   readonly DateTime: string;
+  readonly Summary?: string;
   readonly patientID: string;
   constructor(init: ModelInit<ReportSymptom>);
   static copyOf(source: ReportSymptom, mutator: (draft: MutableModel<ReportSymptom>) => MutableModel<ReportSymptom> | void): ReportSymptom;
@@ -82,11 +84,12 @@ export declare class ReportVitals {
   readonly id: string;
   readonly Temperature?: string;
   readonly Humidity?: string;
-  readonly Weight: string;
-  readonly BPSys: string;
-  readonly BPDi: string;
-  readonly NoSteps: string;
-  readonly OxySat: string;
+  readonly Weight?: string;
+  readonly BPSys?: string;
+  readonly BPDi?: string;
+  readonly NoSteps?: string;
+  readonly OxySat?: string;
+  readonly FluidIntake?: string;
   readonly DateTime: string;
   readonly patientID: string;
   constructor(init: ModelInit<ReportVitals>);
@@ -172,4 +175,13 @@ export declare class Todo {
   readonly owner: string;
   constructor(init: ModelInit<Todo>);
   static copyOf(source: Todo, mutator: (draft: MutableModel<Todo>) => MutableModel<Todo> | void): Todo;
+}
+
+export declare class AlertNotification {
+  readonly id: string;
+  readonly patientID: string;
+  readonly alertID: string;
+  readonly owner: string;
+  constructor(init: ModelInit<AlertNotification>);
+  static copyOf(source: AlertNotification, mutator: (draft: MutableModel<AlertNotification>) => MutableModel<AlertNotification> | void): AlertNotification;
 }

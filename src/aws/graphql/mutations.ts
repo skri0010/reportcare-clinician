@@ -188,9 +188,10 @@ export const createActivityInfo = /* GraphQL */ `
       id
       Actname
       Location
-      Frequency
-      Days
-      time
+      expectedFrequency
+      expectedDays
+      expectedDurationMinutes
+      recordDateTime
       patientID
       _version
       _deleted
@@ -210,9 +211,10 @@ export const updateActivityInfo = /* GraphQL */ `
       id
       Actname
       Location
-      Frequency
-      Days
-      time
+      expectedFrequency
+      expectedDays
+      expectedDurationMinutes
+      recordDateTime
       patientID
       _version
       _deleted
@@ -232,9 +234,10 @@ export const deleteActivityInfo = /* GraphQL */ `
       id
       Actname
       Location
-      Frequency
-      Days
-      time
+      expectedFrequency
+      expectedDays
+      expectedDurationMinutes
+      recordDateTime
       patientID
       _version
       _deleted
@@ -362,9 +365,10 @@ export const createReportSymptom = /* GraphQL */ `
         id
         Actname
         Location
-        Frequency
-        Days
-        time
+        expectedFrequency
+        expectedDays
+        expectedDurationMinutes
+        recordDateTime
         patientID
         _version
         _deleted
@@ -376,6 +380,7 @@ export const createReportSymptom = /* GraphQL */ `
       Name
       Severity
       DateTime
+      Summary
       patientID
       _version
       _deleted
@@ -398,9 +403,10 @@ export const updateReportSymptom = /* GraphQL */ `
         id
         Actname
         Location
-        Frequency
-        Days
-        time
+        expectedFrequency
+        expectedDays
+        expectedDurationMinutes
+        recordDateTime
         patientID
         _version
         _deleted
@@ -412,6 +418,7 @@ export const updateReportSymptom = /* GraphQL */ `
       Name
       Severity
       DateTime
+      Summary
       patientID
       _version
       _deleted
@@ -434,9 +441,10 @@ export const deleteReportSymptom = /* GraphQL */ `
         id
         Actname
         Location
-        Frequency
-        Days
-        time
+        expectedFrequency
+        expectedDays
+        expectedDurationMinutes
+        recordDateTime
         patientID
         _version
         _deleted
@@ -448,6 +456,7 @@ export const deleteReportSymptom = /* GraphQL */ `
       Name
       Severity
       DateTime
+      Summary
       patientID
       _version
       _deleted
@@ -472,6 +481,7 @@ export const createReportVitals = /* GraphQL */ `
       BPDi
       NoSteps
       OxySat
+      FluidIntake
       DateTime
       patientID
       _version
@@ -497,6 +507,7 @@ export const updateReportVitals = /* GraphQL */ `
       BPDi
       NoSteps
       OxySat
+      FluidIntake
       DateTime
       patientID
       _version
@@ -522,6 +533,7 @@ export const deleteReportVitals = /* GraphQL */ `
       BPDi
       NoSteps
       OxySat
+      FluidIntake
       DateTime
       patientID
       _version
@@ -894,6 +906,7 @@ export const createAlert = /* GraphQL */ `
         BPDi
         NoSteps
         OxySat
+        FluidIntake
         DateTime
         patientID
         _version
@@ -910,6 +923,7 @@ export const createAlert = /* GraphQL */ `
         Name
         Severity
         DateTime
+        Summary
         patientID
         _version
         _deleted
@@ -951,6 +965,7 @@ export const updateAlert = /* GraphQL */ `
         BPDi
         NoSteps
         OxySat
+        FluidIntake
         DateTime
         patientID
         _version
@@ -967,6 +982,7 @@ export const updateAlert = /* GraphQL */ `
         Name
         Severity
         DateTime
+        Summary
         patientID
         _version
         _deleted
@@ -1008,6 +1024,7 @@ export const deleteAlert = /* GraphQL */ `
         BPDi
         NoSteps
         OxySat
+        FluidIntake
         DateTime
         patientID
         _version
@@ -1024,6 +1041,7 @@ export const deleteAlert = /* GraphQL */ `
         Name
         Severity
         DateTime
+        Summary
         patientID
         _version
         _deleted
@@ -1160,6 +1178,60 @@ export const deleteTodo = /* GraphQL */ `
       }
       pending
       completed
+      owner
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createAlertNotification = /* GraphQL */ `
+  mutation CreateAlertNotification(
+    $input: CreateAlertNotificationInput!
+    $condition: ModelAlertNotificationConditionInput
+  ) {
+    createAlertNotification(input: $input, condition: $condition) {
+      id
+      patientID
+      alertID
+      owner
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateAlertNotification = /* GraphQL */ `
+  mutation UpdateAlertNotification(
+    $input: UpdateAlertNotificationInput!
+    $condition: ModelAlertNotificationConditionInput
+  ) {
+    updateAlertNotification(input: $input, condition: $condition) {
+      id
+      patientID
+      alertID
+      owner
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteAlertNotification = /* GraphQL */ `
+  mutation DeleteAlertNotification(
+    $input: DeleteAlertNotificationInput!
+    $condition: ModelAlertNotificationConditionInput
+  ) {
+    deleteAlertNotification(input: $input, condition: $condition) {
+      id
+      patientID
+      alertID
       owner
       _version
       _deleted

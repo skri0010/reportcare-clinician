@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React, { FC, useEffect, useState } from "react";
 import { RootState, select } from "util/useRedux";
 import { View, TextStyle, Image } from "react-native";
@@ -6,7 +5,7 @@ import { ScaledSheet } from "react-native-size-matters";
 import { H3, H5 } from "components/Text";
 import { CardWrapper } from "./CardWrapper";
 import i18n from "util/language/i18n";
-import { getClinician } from "rc_agents/storage/getItem";
+import { Storage } from "rc_agents/storage";
 
 interface WelcomeCardProps {
   flex?: number;
@@ -25,15 +24,15 @@ export const WelcomeCard: FC<WelcomeCardProps> = ({ flex = 1, maxHeight }) => {
   } as TextStyle;
 
   useEffect(() => {
-    async function fetchUsername() {
-      const clinician = await getClinician();
-      console.log(clinician);
-      if (clinician) {
-        setUsername(clinician.name);
-      }
-    }
     fetchUsername();
   }, []);
+
+  const fetchUsername = async () => {
+    const clinician = await Storage.getClinician();
+    if (clinician) {
+      setUsername(clinician.name);
+    }
+  };
 
   return (
     <CardWrapper
