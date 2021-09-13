@@ -54,6 +54,8 @@ export const ActionFrameIDs = {
     RESOLVE_PATIENT_ASSIGNMENT: "ResolvePatientAssignment",
     REQUEST_SYNC_PATIENT_ASSIGNMENT_RESOLUTIONS:
       "RequestSyncPatientAssignmentResolutions",
+    PROCESS_PATIENT_ASSIGNMENT_SUBSCRIPTION:
+      "ProcessPatientAssignmentSubscription",
 
     // SRD-II: Todos
     RETRIEVE_TODOS: "RetrieveTodos",
@@ -102,16 +104,25 @@ export const ActionFrameIDs = {
 
     // SRD-I - Patient Assignments
     SYNC_PATIENT_ASSIGNMENT_RESOLUTIONS: "SyncPatientAssignmentResolutions",
+    SYNC_PROCESS_PATIENT_ASSIGNMENT_SUBSCRIPTIONS:
+      "SyncProcessPatientAssignmentSubscriptions",
 
     // SRD-II - Todos
     SYNC_CREATE_TODOS: "SyncCreateTodos",
     SYNC_UPDATE_TODOS: "SyncUpdateTodos",
 
     // AT-CP-II - Alert's Details
-    SYNC_UPDATE_ALERTS: "SyncUpdateAlerts"
+    SYNC_UPDATE_ALERTS: "SyncUpdateAlerts",
+
+    // AT-CP-III - Alert Notifications
+    SYNC_PROCESS_ALERT_NOTIFICATIONS: "SyncProcessAlertNotifications"
   },
   MHA: {},
-  ALA: {}
+  ALA: {
+    // AT-CP-III - Alert Notifications
+    PROCESS_ALERT_NOTIFICATION: "ProcessAlertNotification",
+    SORT_NEW_ALERT: "SortNewAlert"
+  }
 };
 
 // Keys for agents' belief / precondition / fact
@@ -131,7 +142,9 @@ export enum AppAttributes {
   SYNC_CONFIGURE_PATIENTS = "SyncConfigurePatients",
   SYNC_CREATE_TODOS = "SyncCreateTodos",
   SYNC_UPDATE_TODOS = "SyncUpdateTodos",
-  SYNC_UPDATE_ALERTS = "SyncUpdateAlerts"
+  SYNC_UPDATE_ALERTS = "SyncUpdateAlerts",
+  SYNC_PROCESS_ALERT_NOTIFICATIONS = "SyncProcessAlertNotifications",
+  SYNC_PROCESS_PATIENT_ASSIGNMENT_SUBSCRIPTIONS = "SyncProcessPatientAssignmentSubscriptions"
 }
 
 // Attributes for PROCEDURE key
@@ -142,9 +155,11 @@ export enum ProcedureAttributes {
   SRD_I = "SRD-I",
   SRD_II = "SRD-II",
   SRD_III = "SRD-III",
-  SRD_IV = "SRD_IV",
+  SRD_IV = "SRD-IV",
+  SRD_V = "SRD-V",
   AT_CP_I = "AT-CP-I",
-  AT_CP_II = "AT-CP-II"
+  AT_CP_II = "AT-CP-II",
+  AT_CP_III = "AT-CP-III"
 }
 
 // Attributes for CLINICIAN key
@@ -183,6 +198,12 @@ export enum ClinicianAttributes {
   ALERT_INFO_RETRIEVED = "AlertInfoRetrieved",
   UPDATE_ALERT = "UpdateAlert",
   ALERTS_UPDATED = "AlertsUpdated",
+
+  // AT-CP-III - Alert Notifications
+  ALERT_NOTIFICATION = "AlertNotification",
+  PROCESS_ALERT_NOTIFICATION = "ProcessAlertNotification",
+  ALERT_ID_TO_SORT = "AlertIdToSort",
+  SORT_NEW_ALERT = "SortNewAlert",
 
   // SRD-II - Todos
   RETRIEVE_TODOS = "RetrieveTodos",
@@ -225,6 +246,8 @@ export enum PatientAttributes {
   PATIENT_ASSIGNMENT_RESOLUTION = "PatientAssignmentResolution",
   PATIENT_ASSIGNMENT_RESOLVED = "PatientAssignmentResolved",
   RESOLVE_PATIENT_ASSIGNMENT = "ResolvePatientAssignment",
+  PATIENT_ASSIGNMENT_SUBSCRIPTION = "PatientAssignmentSubscription",
+  PROCESS_PATIENT_ASSIGNMENT_SUBSCRIPTION = "ProcessPatientAssignmentSubscription",
 
   // AT-CP: Alerts
   ALERT_PATIENT_ID = "AlertPatientId",

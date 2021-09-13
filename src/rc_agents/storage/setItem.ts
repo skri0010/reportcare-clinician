@@ -1,5 +1,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Alert, PatientInfo, Todo } from "aws/API";
+import { Alert, PatientAssignment, PatientInfo, Todo } from "aws/API";
+import {
+  AlertNotification,
+  PatientAssignmentSubscription
+} from "aws/TypedAPI/subscriptions";
 // eslint-disable-next-line no-restricted-imports
 import { mapColorCodeToRiskLevel } from "rc_agents/agents/data-assistant/action-frames/triage-alert-hf-clinic/RetrievePendingAlertCount";
 import {
@@ -12,11 +16,14 @@ import {
 import { AsyncStorageKeys, AsyncStorageType } from ".";
 import {
   getAlertInfos,
+  getAlertNotifications,
   getAlerts,
   getAlertsSync,
   getAllPatientDetails,
+  getPatientAssignmentSubscriptions,
   getPatientConfigurations,
   getPatientDetails,
+  getPendingPatientAssignments,
   getSingleAlert,
   getSingleAlertInfo,
   getTodos
@@ -61,6 +68,21 @@ export const setClinicianContacts = async (
   );
 };
 
+/**
+ * Inserts a pending patient assignment
+ * @param pendingPatientAssignment pending patient assignment to be inserted
+ */
+export const setPendingPatientAssignment = async (
+  pendingPatientAssignment: PatientAssignment
+): Promise<void> => {
+  let localData = await getPendingPatientAssignments();
+  if (!localData) {
+    localData = [];
+  }
+  localData.push(pendingPatientAssignment);
+  await setPendingPatientAssignments(localData);
+};
+
 export const setPendingPatientAssignments = async (
   pendingPatientAssignments: AsyncStorageType[AsyncStorageKeys.PENDING_PATIENT_ASSIGNMENTS]
 ): Promise<void> => {
@@ -68,6 +90,21 @@ export const setPendingPatientAssignments = async (
     AsyncStorageKeys.PENDING_PATIENT_ASSIGNMENTS,
     JSON.stringify(pendingPatientAssignments)
   );
+};
+
+/**
+ * Inserts patient assignments into the existing list
+ * @param pendingPatientAssignments array of patient assignments to be inserted
+ */
+export const insertPendingPatientAssignments = async (
+  pendingPatientAssignments: AsyncStorageType[AsyncStorageKeys.PENDING_PATIENT_ASSIGNMENTS]
+): Promise<void> => {
+  let localData = await getPendingPatientAssignments();
+  if (!localData) {
+    localData = [];
+  }
+  localData = localData.concat(pendingPatientAssignments);
+  await setPendingPatientAssignments(localData);
 };
 
 export const setPatientAssignmentResolutions = async (
@@ -482,4 +519,60 @@ export const setTodos = async (
   todos: AsyncStorageType[AsyncStorageKeys.TODOS]
 ): Promise<void> => {
   await AsyncStorage.setItem(AsyncStorageKeys.TODOS, JSON.stringify(todos));
+};
+
+/**
+ * Insert an alert notification
+ * @param alertNotification alert notification to be inserted
+ */
+export const setAlertNotification = async (
+  alertNotification: AlertNotification
+): Promise<void> => {
+  let localData = await getAlertNotifications();
+  if (!localData) {
+    localData = [];
+  }
+  localData.push(alertNotification);
+  await setAlertNotifications(localData);
+};
+
+/**
+ * Replaces the existing array of alert notifications
+ * @param alertNotifications array of alert notifications
+ */
+export const setAlertNotifications = async (
+  alertNotifications: AlertNotification[]
+): Promise<void> => {
+  await AsyncStorage.setItem(
+    AsyncStorageKeys.ALERT_NOTIFICATIONS,
+    JSON.stringify(alertNotifications)
+  );
+};
+
+/**
+ * Insert an patient assignment subscription
+ * @param patientAssignmentSubscription patient assignment subscription to be inserted
+ */
+export const setPatientAssignmentSubscription = async (
+  patientAssignmentSubscription: PatientAssignmentSubscription
+): Promise<void> => {
+  let localData = await getPatientAssignmentSubscriptions();
+  if (!localData) {
+    localData = [];
+  }
+  localData.push(patientAssignmentSubscription);
+  await setPatientAssignmentSubscriptions(localData);
+};
+
+/**
+ * Replaces the existing array of patient assignment subscriptions
+ * @param patientAssignmentSubscriptions array of patient assignment subscriptions
+ */
+export const setPatientAssignmentSubscriptions = async (
+  patientAssignmentSubscriptions: PatientAssignmentSubscription[]
+): Promise<void> => {
+  await AsyncStorage.setItem(
+    AsyncStorageKeys.PATIENT_ASSIGNMENT_SUBSCRIPTIONS,
+    JSON.stringify(patientAssignmentSubscriptions)
+  );
 };

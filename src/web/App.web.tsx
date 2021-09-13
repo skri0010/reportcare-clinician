@@ -12,6 +12,10 @@ import { Storage } from "rc_agents/storage";
 import { ToastProviderComponent } from "components/Indicators/ToastProvider";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AgentIDs } from "rc_agents/clinician_framework";
+import {
+  subscribeAlertNotification,
+  subscribePatientAssignment
+} from "aws/TypedAPI/subscriptions";
 
 Amplify.configure(awsconfig);
 Auth.configure(awsconfig);
@@ -69,7 +73,14 @@ const App: FC = () => {
   };
 
   useEffect(() => {
+    // Checks for authentication state
     checkAuthState();
+
+    // Subscribes to AlertNotification table
+    subscribeAlertNotification();
+
+    // Subscribes to PatientAssignment table
+    subscribePatientAssignment();
   }, []);
 
   return (

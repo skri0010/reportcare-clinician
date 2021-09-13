@@ -31,6 +31,7 @@ import { af_RequestDisplayAlertHistory } from "./action-frames/hf-outcome-trends
 import { af_RetrieveClinicianContacts } from "./action-frames/storing-data/RetrieveClinicianContacts";
 import { af_RequestClinicianContactDisplay } from "./action-frames/storing-data/RequestClinicianContactsDisplay";
 import { af_ConfigurePatient } from "./action-frames/hf-outcome-trends/ConfigurePatient";
+import { af_ProcessPatientAssignmentSubscription } from "./action-frames/storing-data/ProcessPatientAssignmentSubscription";
 
 // Initial Beliefs of Agent
 
@@ -82,7 +83,10 @@ const agentDTA = new ClinicianAgent(
     af_RequestDisplayTodoDetails,
     // SRD-IV
     af_RetrieveClinicianContacts,
-    af_RequestClinicianContactDisplay
+    af_RequestClinicianContactDisplay,
+
+    // SRD-V
+    af_ProcessPatientAssignmentSubscription
   ], // action frame
   [belief1], // beliefs
   agentAPI

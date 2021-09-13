@@ -33,7 +33,11 @@ import {
   ListPendingTodosByLastModifiedDateQuery,
   ListPendingTodosByLastModifiedDateQueryVariables,
   ListCompletedTodosByLastModifiedDateQuery,
-  ListCompletedTodosByLastModifiedDateQueryVariables
+  ListCompletedTodosByLastModifiedDateQueryVariables,
+  ListClinicianMappingsByPatientIDQuery,
+  ListClinicianMappingsByPatientIDQueryVariables,
+  ListClinicianPatientMapsQuery,
+  ListClinicianPatientMapsQueryVariables
 } from "aws/API";
 
 interface ListClinicianInfosResponse extends BaseResponse {
@@ -241,4 +245,30 @@ export const listCompletedTodosByLastModifiedDate = async (
     query: queries.listCompletedTodosByLastModifiedDate,
     variables: variables
   })) as ListCompletedTodosByLastModifiedDateResponse;
+};
+
+interface ListClinicianMappingsByPatientIDResponse extends BaseResponse {
+  data: ListClinicianMappingsByPatientIDQuery;
+}
+
+export const listClinicianMappingsByPatientID = async (
+  variables: ListClinicianMappingsByPatientIDQueryVariables
+): Promise<ListClinicianMappingsByPatientIDResponse> => {
+  return (await API.graphql({
+    query: queries.listClinicianMappingsByPatientID,
+    variables: variables
+  })) as ListClinicianMappingsByPatientIDResponse;
+};
+
+interface ListClinicianPatientMapsResponse extends BaseResponse {
+  data: ListClinicianPatientMapsQuery;
+}
+
+export const listClinicianPatientMaps = async (
+  variables: ListClinicianPatientMapsQueryVariables
+): Promise<ListClinicianPatientMapsResponse> => {
+  return (await API.graphql({
+    query: queries.listClinicianPatientMaps,
+    variables: variables
+  })) as ListClinicianPatientMapsResponse;
 };
