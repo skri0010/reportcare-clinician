@@ -230,9 +230,10 @@ export const syncActivityInfos = /* GraphQL */ `
         id
         Actname
         Location
-        Frequency
-        Days
-        time
+        expectedFrequency
+        expectedDays
+        expectedDurationMinutes
+        recordDateTime
         patientID
         _version
         _deleted
@@ -252,9 +253,10 @@ export const getActivityInfo = /* GraphQL */ `
       id
       Actname
       Location
-      Frequency
-      Days
-      time
+      expectedFrequency
+      expectedDays
+      expectedDurationMinutes
+      recordDateTime
       patientID
       _version
       _deleted
@@ -276,9 +278,10 @@ export const listActivityInfos = /* GraphQL */ `
         id
         Actname
         Location
-        Frequency
-        Days
-        time
+        expectedFrequency
+        expectedDays
+        expectedDurationMinutes
+        recordDateTime
         patientID
         _version
         _deleted
@@ -399,6 +402,7 @@ export const syncReportSymptoms = /* GraphQL */ `
         Name
         Severity
         DateTime
+        Summary
         patientID
         _version
         _deleted
@@ -421,9 +425,10 @@ export const getReportSymptom = /* GraphQL */ `
         id
         Actname
         Location
-        Frequency
-        Days
-        time
+        expectedFrequency
+        expectedDays
+        expectedDurationMinutes
+        recordDateTime
         patientID
         _version
         _deleted
@@ -435,6 +440,7 @@ export const getReportSymptom = /* GraphQL */ `
       Name
       Severity
       DateTime
+      Summary
       patientID
       _version
       _deleted
@@ -458,6 +464,7 @@ export const listReportSymptoms = /* GraphQL */ `
         Name
         Severity
         DateTime
+        Summary
         patientID
         _version
         _deleted
@@ -1001,6 +1008,7 @@ export const getAlert = /* GraphQL */ `
         Name
         Severity
         DateTime
+        Summary
         patientID
         _version
         _deleted
@@ -1278,9 +1286,10 @@ export const listActivityInfosByPatientID = /* GraphQL */ `
         id
         Actname
         Location
-        Frequency
-        Days
-        time
+        expectedFrequency
+        expectedDays
+        expectedDurationMinutes
+        recordDateTime
         patientID
         _version
         _deleted
@@ -1383,6 +1392,7 @@ export const listReportSymptomsByPatientID = /* GraphQL */ `
         Name
         Severity
         DateTime
+        Summary
         patientID
         _version
         _deleted
@@ -1419,6 +1429,7 @@ export const listReportSymptomsByDateTime = /* GraphQL */ `
         Name
         Severity
         DateTime
+        Summary
         patientID
         _version
         _deleted

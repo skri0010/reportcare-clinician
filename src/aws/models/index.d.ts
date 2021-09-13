@@ -47,9 +47,10 @@ export declare class ActivityInfo {
   readonly id: string;
   readonly Actname: string;
   readonly Location: string;
-  readonly Frequency: number;
-  readonly Days: string[];
-  readonly time: string;
+  readonly expectedFrequency?: number;
+  readonly expectedDays?: string[];
+  readonly expectedDurationMinutes?: number;
+  readonly recordDateTime?: string;
   readonly patientID: string;
   constructor(init: ModelInit<ActivityInfo>);
   static copyOf(source: ActivityInfo, mutator: (draft: MutableModel<ActivityInfo>) => MutableModel<ActivityInfo> | void): ActivityInfo;
@@ -73,6 +74,7 @@ export declare class ReportSymptom {
   readonly Name: string;
   readonly Severity: string;
   readonly DateTime: string;
+  readonly Summary?: string;
   readonly patientID: string;
   constructor(init: ModelInit<ReportSymptom>);
   static copyOf(source: ReportSymptom, mutator: (draft: MutableModel<ReportSymptom>) => MutableModel<ReportSymptom> | void): ReportSymptom;

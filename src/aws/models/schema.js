@@ -369,26 +369,33 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "Frequency": {
-                    "name": "Frequency",
+                "expectedFrequency": {
+                    "name": "expectedFrequency",
                     "isArray": false,
                     "type": "Int",
-                    "isRequired": true,
+                    "isRequired": false,
                     "attributes": []
                 },
-                "Days": {
-                    "name": "Days",
+                "expectedDays": {
+                    "name": "expectedDays",
                     "isArray": true,
                     "type": "String",
                     "isRequired": true,
                     "attributes": [],
-                    "isArrayNullable": false
+                    "isArrayNullable": true
                 },
-                "time": {
-                    "name": "time",
+                "expectedDurationMinutes": {
+                    "name": "expectedDurationMinutes",
                     "isArray": false,
-                    "type": "String",
-                    "isRequired": true,
+                    "type": "Int",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "recordDateTime": {
+                    "name": "recordDateTime",
+                    "isArray": false,
+                    "type": "AWSJSON",
+                    "isRequired": false,
                     "attributes": []
                 },
                 "patientID": {
@@ -637,6 +644,13 @@ export const schema = {
                     "isArray": false,
                     "type": "AWSDateTime",
                     "isRequired": true,
+                    "attributes": []
+                },
+                "Summary": {
+                    "name": "Summary",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
                     "attributes": []
                 },
                 "patientID": {
@@ -1369,7 +1383,6 @@ export const schema = {
                                 "ownerField": "clinicianID",
                                 "allow": "owner",
                                 "operations": [
-                                    "read",
                                     "update"
                                 ],
                                 "identityClaim": "cognito:username"
@@ -1385,6 +1398,21 @@ export const schema = {
                                     "create",
                                     "update",
                                     "delete",
+                                    "read"
+                                ]
+                            },
+                            {
+                                "groupClaim": "cognito:groups",
+                                "provider": "userPools",
+                                "allow": "groups",
+                                "groups": [
+                                    "EPs",
+                                    "Nurses",
+                                    "HFSpecialists",
+                                    "MedicalOfficers",
+                                    "Pharmacists"
+                                ],
+                                "operations": [
                                     "read"
                                 ]
                             }
@@ -1875,5 +1903,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "a4139e89fa8ca87ea04ea3b48e1e234d"
+    "version": "3ef2ea70ac9105a96c02d86ceeac35c1"
 };

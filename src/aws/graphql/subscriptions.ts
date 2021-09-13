@@ -167,9 +167,10 @@ export const onCreateActivityInfo = /* GraphQL */ `
       id
       Actname
       Location
-      Frequency
-      Days
-      time
+      expectedFrequency
+      expectedDays
+      expectedDurationMinutes
+      recordDateTime
       patientID
       _version
       _deleted
@@ -186,9 +187,10 @@ export const onUpdateActivityInfo = /* GraphQL */ `
       id
       Actname
       Location
-      Frequency
-      Days
-      time
+      expectedFrequency
+      expectedDays
+      expectedDurationMinutes
+      recordDateTime
       patientID
       _version
       _deleted
@@ -205,9 +207,10 @@ export const onDeleteActivityInfo = /* GraphQL */ `
       id
       Actname
       Location
-      Frequency
-      Days
-      time
+      expectedFrequency
+      expectedDays
+      expectedDurationMinutes
+      recordDateTime
       patientID
       _version
       _deleted
@@ -323,9 +326,10 @@ export const onCreateReportSymptom = /* GraphQL */ `
         id
         Actname
         Location
-        Frequency
-        Days
-        time
+        expectedFrequency
+        expectedDays
+        expectedDurationMinutes
+        recordDateTime
         patientID
         _version
         _deleted
@@ -337,6 +341,7 @@ export const onCreateReportSymptom = /* GraphQL */ `
       Name
       Severity
       DateTime
+      Summary
       patientID
       _version
       _deleted
@@ -356,9 +361,10 @@ export const onUpdateReportSymptom = /* GraphQL */ `
         id
         Actname
         Location
-        Frequency
-        Days
-        time
+        expectedFrequency
+        expectedDays
+        expectedDurationMinutes
+        recordDateTime
         patientID
         _version
         _deleted
@@ -370,6 +376,7 @@ export const onUpdateReportSymptom = /* GraphQL */ `
       Name
       Severity
       DateTime
+      Summary
       patientID
       _version
       _deleted
@@ -389,9 +396,10 @@ export const onDeleteReportSymptom = /* GraphQL */ `
         id
         Actname
         Location
-        Frequency
-        Days
-        time
+        expectedFrequency
+        expectedDays
+        expectedDurationMinutes
+        recordDateTime
         patientID
         _version
         _deleted
@@ -403,6 +411,7 @@ export const onDeleteReportSymptom = /* GraphQL */ `
       Name
       Severity
       DateTime
+      Summary
       patientID
       _version
       _deleted
@@ -732,8 +741,8 @@ export const onDeleteClinicianPatientMap = /* GraphQL */ `
   }
 `;
 export const onCreatePatientAssignment = /* GraphQL */ `
-  subscription OnCreatePatientAssignment($owner: String, $clinicianID: String) {
-    onCreatePatientAssignment(owner: $owner, clinicianID: $clinicianID) {
+  subscription OnCreatePatientAssignment($owner: String) {
+    onCreatePatientAssignment(owner: $owner) {
       id
       patientID
       clinicianID
@@ -750,8 +759,8 @@ export const onCreatePatientAssignment = /* GraphQL */ `
   }
 `;
 export const onUpdatePatientAssignment = /* GraphQL */ `
-  subscription OnUpdatePatientAssignment($owner: String, $clinicianID: String) {
-    onUpdatePatientAssignment(owner: $owner, clinicianID: $clinicianID) {
+  subscription OnUpdatePatientAssignment($owner: String) {
+    onUpdatePatientAssignment(owner: $owner) {
       id
       patientID
       clinicianID
@@ -768,8 +777,8 @@ export const onUpdatePatientAssignment = /* GraphQL */ `
   }
 `;
 export const onDeletePatientAssignment = /* GraphQL */ `
-  subscription OnDeletePatientAssignment($owner: String, $clinicianID: String) {
-    onDeletePatientAssignment(owner: $owner, clinicianID: $clinicianID) {
+  subscription OnDeletePatientAssignment($owner: String) {
+    onDeletePatientAssignment(owner: $owner) {
       id
       patientID
       clinicianID
@@ -821,6 +830,7 @@ export const onCreateAlert = /* GraphQL */ `
         Name
         Severity
         DateTime
+        Summary
         patientID
         _version
         _deleted
@@ -876,6 +886,7 @@ export const onUpdateAlert = /* GraphQL */ `
         Name
         Severity
         DateTime
+        Summary
         patientID
         _version
         _deleted
@@ -931,6 +942,7 @@ export const onDeleteAlert = /* GraphQL */ `
         Name
         Severity
         DateTime
+        Summary
         patientID
         _version
         _deleted
