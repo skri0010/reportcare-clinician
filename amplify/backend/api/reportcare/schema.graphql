@@ -81,9 +81,10 @@ type ActivityInfo
   id: ID!
   Actname: String!
   Location: String!
-  Frequency: Int!
-  Days: [String!]!
-  time: String!
+  expectedFrequency: Int
+  expectedDays: [String!]
+  expectedDurationMinutes: Int
+  recordDateTime: AWSJSON
   patientID: String!
 }
 
@@ -139,6 +140,7 @@ type ReportSymptom
   Name: String!
   Severity: String!
   DateTime: AWSDateTime!
+  Summary: String
   patientID: String!
 }
 

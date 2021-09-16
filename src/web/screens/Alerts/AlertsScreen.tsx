@@ -3,45 +3,31 @@ import { RootState, select, useDispatch } from "util/useRedux";
 import { ScreenName } from "web/navigation";
 import { View, Modal } from "react-native";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
-import { ms, ScaledSheet } from "react-native-size-matters";
-import { createStackNavigator } from "@react-navigation/stack";
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { getTopTabBarOptions } from "util/getStyles";
-import { AlertCurrentTab } from "./AlertCurrentTab";
-import { AlertCompletedTab } from "./AlertCompletedTab";
-import { NavigationContainer } from "@react-navigation/native";
+import { ScaledSheet } from "react-native-size-matters";
 import { NoSelectionScreen } from "../Shared/NoSelectionScreen";
-import { AlertDetailsScreen } from "./AlertDetailsScreen";
 import { MainScreenProps } from "web/navigation/types";
 import { AgentTrigger } from "rc_agents/trigger";
-import { AlertInfo, FetchAlertsMode } from "rc_agents/model";
+import { FetchAlertsMode } from "rc_agents/model";
 import { AddTodoScreen } from "web/screens/Todo/modals/AddTodoScreen";
 import { useToast } from "react-native-toast-notifications";
 import {
-  setAlertInfo,
   setProcedureSuccessful,
   setSubmittingTodo
 } from "ic-redux/actions/agents/actionCreator";
 import i18n from "util/language/i18n";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
-import { SearchBarComponent } from "components/Bars/SearchBarComponent";
-import { RiskFilterPillList } from "components/Buttons/RiskFilterPillList";
-
-const Tab = createMaterialTopTabNavigator();
-const Stack = createStackNavigator();
+import { AlertListTabNavigator } from "web/navigation/navigators/AlertListTabNavigator";
+import { AlertDetailsScreen } from "./AlertDetailsScreen";
 
 export const AlertScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
   const {
     colors,
-    fonts,
     procedureOngoing,
     procedureSuccessful,
     submittingTodo,
-    fetchingAlertInfo,
-    alertInfo
+    fetchingAlertInfo
   } = select((state: RootState) => ({
     colors: state.settings.colors, // Used to detect completion of updateTodo procedure
-    fonts: state.settings.fonts,
     procedureOngoing: state.agents.procedureOngoing,
     procedureSuccessful: state.agents.procedureSuccessful,
     submittingTodo: state.agents.submittingTodo,
@@ -61,16 +47,7 @@ export const AlertScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
     AgentTrigger.triggerRetrieveAlerts(FetchAlertsMode.ALL);
   }, []);
 
-  const [isEmptyAlert, setEmptyAlert] = useState(true);
-
-  // When the alert item is pressed, trigger the retrieval of alert info
-  const onAlertRowPress = (alert: AlertInfo) => {
-    if (alert) {
-      dispatch(setAlertInfo(alert));
-      AgentTrigger.triggerRetrieveDetailedAlertInfo(alert);
-      setEmptyAlert(false);
-    }
-  };
+  const [isEmptyAlert, setIsEmptyAlert] = useState(true);
 
   // Detects completion of UpdateTodo procedure and shows the appropriate toast.
   useEffect(() => {
@@ -94,44 +71,7 @@ export const AlertScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
         pointerEvents={modalVisible || submittingTodo ? "none" : "auto"}
       >
         <View style={styles.rowSelection}>
-          <SearchBarComponent
-            onUserInput={() => {
-              null;
-            }}
-            onSearchClick={() => {
-              null;
-            }}
-            containerStyle={{
-              backgroundColor: colors.primaryContrastTextColor
-            }}
-            placeholder="Search..."
-          />
-
-          {/* Filter for Pending Alerts */}
-          <RiskFilterPillList alertScreen />
-          <Tab.Navigator
-            screenOptions={getTopTabBarOptions({
-              colors: colors,
-              fonts: fonts
-            })}
-          >
-            <Tab.Screen name="Pending">
-              {() => (
-                <AlertCurrentTab
-                  displayedAlertInfoId={alertInfo?.id}
-                  onRowPress={onAlertRowPress}
-                />
-              )}
-            </Tab.Screen>
-            <Tab.Screen name="Completed">
-              {() => (
-                <AlertCompletedTab
-                  displayedAlertInfoId={alertInfo?.id}
-                  onRowPress={onAlertRowPress}
-                />
-              )}
-            </Tab.Screen>
-          </Tab.Navigator>
+          <AlertListTabNavigator setIsEmptyAlert={setIsEmptyAlert} />
         </View>
         <View
           style={{
@@ -142,28 +82,7 @@ export const AlertScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
           {fetchingAlertInfo ? (
             <LoadingIndicator flex={1} />
           ) : !isEmptyAlert ? (
-            <NavigationContainer independent>
-              <Stack.Navigator>
-                <Stack.Screen
-                  name="ViewAlert"
-                  options={() => ({
-                    title: alertInfo?.patientName,
-                    headerStyle: {
-                      height: ms(45)
-                    },
-                    headerTitleStyle: {
-                      fontWeight: "bold",
-                      fontSize: ms(20),
-                      paddingLeft: ms(15)
-                    }
-                  })}
-                >
-                  {() => (
-                    <AlertDetailsScreen setModalVisible={setModalVisible} />
-                  )}
-                </Stack.Screen>
-              </Stack.Navigator>
-            </NavigationContainer>
+            <AlertDetailsScreen setModalVisible={setModalVisible} />
           ) : (
             <NoSelectionScreen
               screenName={ScreenName.ALERTS}

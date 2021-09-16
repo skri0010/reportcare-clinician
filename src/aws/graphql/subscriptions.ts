@@ -167,9 +167,10 @@ export const onCreateActivityInfo = /* GraphQL */ `
       id
       Actname
       Location
-      Frequency
-      Days
-      time
+      expectedFrequency
+      expectedDays
+      expectedDurationMinutes
+      recordDateTime
       patientID
       _version
       _deleted
@@ -186,9 +187,10 @@ export const onUpdateActivityInfo = /* GraphQL */ `
       id
       Actname
       Location
-      Frequency
-      Days
-      time
+      expectedFrequency
+      expectedDays
+      expectedDurationMinutes
+      recordDateTime
       patientID
       _version
       _deleted
@@ -205,9 +207,10 @@ export const onDeleteActivityInfo = /* GraphQL */ `
       id
       Actname
       Location
-      Frequency
-      Days
-      time
+      expectedFrequency
+      expectedDays
+      expectedDurationMinutes
+      recordDateTime
       patientID
       _version
       _deleted
@@ -323,9 +326,10 @@ export const onCreateReportSymptom = /* GraphQL */ `
         id
         Actname
         Location
-        Frequency
-        Days
-        time
+        expectedFrequency
+        expectedDays
+        expectedDurationMinutes
+        recordDateTime
         patientID
         _version
         _deleted
@@ -337,6 +341,7 @@ export const onCreateReportSymptom = /* GraphQL */ `
       Name
       Severity
       DateTime
+      Summary
       patientID
       _version
       _deleted
@@ -356,9 +361,10 @@ export const onUpdateReportSymptom = /* GraphQL */ `
         id
         Actname
         Location
-        Frequency
-        Days
-        time
+        expectedFrequency
+        expectedDays
+        expectedDurationMinutes
+        recordDateTime
         patientID
         _version
         _deleted
@@ -370,6 +376,7 @@ export const onUpdateReportSymptom = /* GraphQL */ `
       Name
       Severity
       DateTime
+      Summary
       patientID
       _version
       _deleted
@@ -389,9 +396,10 @@ export const onDeleteReportSymptom = /* GraphQL */ `
         id
         Actname
         Location
-        Frequency
-        Days
-        time
+        expectedFrequency
+        expectedDays
+        expectedDurationMinutes
+        recordDateTime
         patientID
         _version
         _deleted
@@ -403,6 +411,7 @@ export const onDeleteReportSymptom = /* GraphQL */ `
       Name
       Severity
       DateTime
+      Summary
       patientID
       _version
       _deleted
@@ -821,6 +830,7 @@ export const onCreateAlert = /* GraphQL */ `
         Name
         Severity
         DateTime
+        Summary
         patientID
         _version
         _deleted
@@ -876,6 +886,7 @@ export const onUpdateAlert = /* GraphQL */ `
         Name
         Severity
         DateTime
+        Summary
         patientID
         _version
         _deleted
@@ -931,6 +942,7 @@ export const onDeleteAlert = /* GraphQL */ `
         Name
         Severity
         DateTime
+        Summary
         patientID
         _version
         _deleted

@@ -3,17 +3,17 @@ import { View, FlatList } from "react-native";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { RootState, select } from "util/useRedux";
 import { AlertRow } from "components/RowComponents/AlertRow";
-import { AlertInfo } from "rc_agents/model";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import i18n from "util/language/i18n";
 import { NoListItemMessage } from "../Shared/NoListItemMessage";
+import { AlertRowTabProps } from "web/navigation/navigators/AlertListTabNavigator";
+import { AlertListTabsProps } from "web/navigation/types";
 
-export interface AlertRowTabProps {
-  displayedAlertInfoId?: string;
-  onRowPress: (alert: AlertInfo) => void;
-}
+interface AlertCurrentTabProps
+  extends AlertRowTabProps,
+    AlertListTabsProps.CurrentTabProps {}
 
-export const AlertCurrentTab: FC<AlertRowTabProps> = ({
+export const AlertCurrentTab: FC<AlertCurrentTabProps> = ({
   displayedAlertInfoId,
   onRowPress
 }) => {

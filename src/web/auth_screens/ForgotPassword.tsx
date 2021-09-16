@@ -3,7 +3,6 @@ import { View, Dimensions } from "react-native";
 import { Auth } from "@aws-amplify/auth";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ms, ScaledSheet } from "react-native-size-matters";
-import { AuthScreenName, AuthScreensProps } from "web/auth_screens";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import {
   validateCode,
@@ -15,10 +14,12 @@ import { useToast } from "react-native-toast-notifications";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AuthButton } from "components/Buttons/AuthButton";
 import { TextField } from "components/InputComponents/TextField";
+import { AuthenticationScreenName } from "web/navigation";
+import { AuthScreenProps } from "web/navigation/types/AuthenticationStackProps";
 
-export const ForgotPassword: FC<AuthScreensProps[AuthScreenName.FORGOT_PW]> = ({
-  navigation
-}) => {
+export const ForgotPassword: FC<
+  AuthScreenProps[AuthenticationScreenName.FORGET_PASSWORD]
+> = ({ navigation }) => {
   // Local states
   const [username, setUsername] = useState("");
   const [code, setCode] = useState("");
@@ -58,7 +59,7 @@ export const ForgotPassword: FC<AuthScreensProps[AuthScreenName.FORGOT_PW]> = ({
         toast.show(i18n.t("Auth_ForgotPassword.ResetPasswordSuccessful"), {
           type: "success"
         });
-        navigation.navigate(AuthScreenName.SIGN_IN);
+        navigation.navigate(AuthenticationScreenName.SIGN_IN);
       })
       .catch((error: { code: string; message: string; name: string }) => {
         // eslint-disable-next-line no-console

@@ -28,7 +28,7 @@ export const HomeScreen: FC<MainScreenProps[ScreenName.HOME]> = ({
           flex={1.2}
           navigateCallback={navigateToAlert}
         />
-        <WelcomeCard name="Nailah" maxHeight={topMaxHeight} flex={1.8} />
+        <WelcomeCard maxHeight={topMaxHeight} flex={1.8} />
       </View>
       <View style={styles.container}>
         <RequestsByMariaCard maxHeight={maxHeight} />
