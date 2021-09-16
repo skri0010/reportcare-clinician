@@ -1,4 +1,4 @@
-import { Agent, Belief, Actionframe, Engine } from "agents-framework";
+import { Agent, Belief, Actionframe, Engine, Fact } from "agents-framework";
 import { getClinicianProtectedInfo } from "aws";
 import { AppAttributes, BeliefKeys } from "./index";
 import { CommonAttributes } from "agents-framework/Enums";
@@ -6,6 +6,8 @@ import { Storage } from "../storage";
 import { ClinicianProtectedInfo } from "aws/API";
 // eslint-disable-next-line no-restricted-imports
 import AgentAPI from "agents-framework/AgentAPI";
+import cloneDeep from "lodash/cloneDeep";
+import { ClinicianAgentAPI } from "./ClinicianAgentAPI";
 
 /**
  * Class representing the Agent
@@ -13,14 +15,27 @@ import AgentAPI from "agents-framework/AgentAPI";
 export class ClinicianAgent extends Agent {
   private initialized: boolean;
 
+  // To indicate that action of the agent has been completed,
+  // i.e. beliefs can be updated to the cloud database
+  private actionCompleted: boolean;
+
+  // List of attributes that should be stored in the cloud database
+  private storableAttributes: string[] = [CommonAttributes.LAST_ACTIVITY];
+
   constructor(
     id: string,
     actionFrames: Actionframe[],
     beliefs: Belief[],
-    agentAPI: AgentAPI
+    agentAPI: AgentAPI,
+    storableAttributes?: string[]
   ) {
     super(id, actionFrames, beliefs, agentAPI);
     this.initialized = false;
+    this.actionCompleted = true;
+    if (storableAttributes) {
+      this.storableAttributes =
+        this.storableAttributes.concat(storableAttributes);
+    }
   }
 
   /**
@@ -35,6 +50,20 @@ export class ClinicianAgent extends Agent {
    */
   setInitialized(initialized: boolean): void {
     this.initialized = initialized;
+  }
+
+  /**
+   * Get agent actionCompleted boolean
+   */
+  getActionCompleted(): boolean {
+    return this.actionCompleted;
+  }
+
+  /**
+   * Set agent actionCompleted boolean
+   */
+  setActionCompleted(actionCompleted: boolean): void {
+    this.actionCompleted = actionCompleted;
   }
 
   /**
@@ -119,6 +148,68 @@ export class ClinicianAgent extends Agent {
       // eslint-disable-next-line no-console
       console.log(error);
     }
+  }
+
+  /**
+   * Gets beliefs that should be stored in the cloud database
+   * @returns storableBeliefs
+   */
+  getStorableBeliefs(): Fact {
+    // Create a copy of current state of beliefs
+    const storableBeliefs = cloneDeep(this.beliefs);
+
+    // Gets storable keys from agentAPI
+    let storableKeys: string[] | undefined;
+    if (this.agentAPI instanceof ClinicianAgentAPI) {
+      storableKeys = this.agentAPI.getStorableKeys();
+    }
+
+    // Removes attributes that don't exist in the list of storable attributes
+    Object.entries(storableBeliefs).forEach(([key, innerObj]) => {
+      // Excludes all attributes of keys that exist in storable keys
+      if (!storableKeys || !storableKeys.includes(key)) {
+        Object.keys(innerObj).forEach((attribute) => {
+          if (!this.storableAttributes.includes(attribute)) {
+            delete storableBeliefs[key][attribute];
+          }
+        });
+      }
+    });
+
+    return storableBeliefs;
+  }
+
+  /**
+   * Work on available activities
+   */
+  override async startActivity(): Promise<void> {
+    if (this.availableActions.length > 0) {
+      // If working, do activity and set belief for last activity
+      this.working = true;
+      this.setActionCompleted(false);
+      const activityNode = this.availableActions.shift()!;
+      const activity = activityNode.getActivity();
+      await activity.doActivity(this);
+
+      // Updates last activity in the current state of belief
+      this.addBelief(
+        new Belief(
+          this.getID(),
+          CommonAttributes.LAST_ACTIVITY,
+          activity.getID()
+        )
+      );
+      this.setActionCompleted(true);
+    }
+    this.working = false;
+
+    while (this.messageQueue.length > 0) {
+      const message = this.messageQueue.shift()!;
+      this.addBelief(message.getContent());
+    }
+
+    // Do Inference
+    await this.inference();
   }
 
   /**

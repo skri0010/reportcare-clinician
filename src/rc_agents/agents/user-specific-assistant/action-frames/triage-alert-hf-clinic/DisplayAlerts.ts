@@ -150,7 +150,9 @@ class DisplayAlerts extends Activity {
         BeliefKeys.PROCEDURE,
         ProcedureAttributes.AT_CP_I,
         ProcedureConst.INACTIVE
-      )
+      ),
+      true,
+      true
     );
 
     // Prepare to trigger the update of pending alert counts in home tab

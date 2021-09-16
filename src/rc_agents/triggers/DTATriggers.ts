@@ -6,7 +6,7 @@ import {
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
 import { ProcedureConst } from "agents-framework/Enums";
-import { agentALA, agentDTA } from "rc_agents/agents";
+import { agentALA, agentDTA, agentUXSA } from "rc_agents/agents";
 import { Belief } from "agents-framework";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
@@ -24,7 +24,7 @@ import {
 // HF-OTP-I
 // Triggers RetrievePatientsByRole of DTA
 export const triggerRetrievePatientsByRole = (): void => {
-  agentDTA.addBelief(
+  agentUXSA.addBelief(
     new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.RETRIEVE_ROLE, true)
   );
 

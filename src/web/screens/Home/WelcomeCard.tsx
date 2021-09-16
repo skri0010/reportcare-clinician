@@ -17,20 +17,20 @@ export const WelcomeCard: FC<WelcomeCardProps> = ({ flex = 1, maxHeight }) => {
     colors: state.settings.colors
   }));
 
-  const [username, setUsername] = useState<string>("");
+  const [clinicianName, setClinicianName] = useState<string>("");
 
   const cardTextColor = {
     color: colors.primaryTextColor
   } as TextStyle;
 
   useEffect(() => {
-    fetchUsername();
+    fetchClinician();
   }, []);
 
-  const fetchUsername = async () => {
+  const fetchClinician = async () => {
     const clinician = await Storage.getClinician();
     if (clinician) {
-      setUsername(clinician.name);
+      setClinicianName(clinician.name);
     }
   };
 
@@ -50,7 +50,7 @@ export const WelcomeCard: FC<WelcomeCardProps> = ({ flex = 1, maxHeight }) => {
           <View style={styles.messageContainer}>
             {/* Welcome title */}
             <H3
-              text={`${i18n.t("Home.Welcome")}${username}`}
+              text={`${i18n.t("Home.Welcome")}${clinicianName}`}
               style={[styles.username, cardTextColor]}
             />
             {/* Welcome message */}
