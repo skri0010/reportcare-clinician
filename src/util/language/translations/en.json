@@ -95,7 +95,9 @@
       "Thursday": "Thu",
       "Friday": "Fri",
       "Saturday": "Sat"
-    }
+    },
+    "ViewBy": "View By: ",
+    "Information": "Any gap in the line chart that exist between dates signifies that the patient has no recorded vital for the specific day."
   },
   "ScreenName": {
     "Home": "Home",

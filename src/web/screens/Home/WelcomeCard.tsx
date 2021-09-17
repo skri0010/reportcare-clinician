@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
 import { View, TextStyle, Image } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
-import { H1, H3, H5 } from "components/Text";
+import { H3, H5 } from "components/Text";
 import { CardWrapper } from "./CardWrapper";
 import i18n from "util/language/i18n";
 

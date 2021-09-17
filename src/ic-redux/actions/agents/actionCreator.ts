@@ -8,6 +8,7 @@ import {
 import { actionNames } from "ic-redux/actions/actionNames";
 import { createAction } from "typesafe-actions";
 import { Alert, PatientAssignment, PatientInfo, ClinicianInfo } from "aws/API";
+import { ChartFilter } from "models/ChartViewTypes";
 
 export const setProcedureOngoing = createAction(
   actionNames.SET_PROCEDURE_ONGOING,
@@ -167,5 +168,12 @@ export const setRiskFilters = createAction(
   actionNames.SET_RISK_FILTERS,
   (riskFilters: RiskFilters) => ({
     riskFilters: riskFilters
+  })
+)();
+
+export const setChartFilters = createAction(
+  actionNames.SET_CHART_FILTERS,
+  (chartFilters: ChartFilter) => ({
+    chartFilters: chartFilters
   })
 )();

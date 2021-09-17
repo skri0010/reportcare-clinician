@@ -10,6 +10,7 @@ import {
 } from "rc_agents/model";
 import { Alert, ClinicianInfo, PatientAssignment, PatientInfo } from "aws/API";
 import { RiskLevel } from "models/RiskLevel";
+import { ChartFilter, ChartViewTypes } from "models/ChartViewTypes";
 
 interface AgentsState {
   procedureSuccessful: boolean;
@@ -28,6 +29,7 @@ interface AgentsState {
   configuringPatient: boolean;
   configurationSuccessful: boolean;
   riskFilters: RiskFilter;
+  chartFilters: ChartFilter;
   pendingAlertCount: PendingAlertCount;
   alerts: Alert[];
   alertInfo: AlertInfo | undefined;
@@ -61,6 +63,12 @@ const initialState: AgentsState = {
     [RiskLevel.MEDIUM]: false,
     [RiskLevel.LOW]: false,
     [RiskLevel.UNASSIGNED]: false
+  },
+  chartFilters: {
+    [ChartViewTypes.ALL]: true,
+    [ChartViewTypes.MIN]: false,
+    [ChartViewTypes.MAX]: false,
+    [ChartViewTypes.AVERAGE]: false
   },
   pendingAlertCount: {
     highRisk: 0,
@@ -158,6 +166,8 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
       };
     case actionNames.SET_RISK_FILTERS:
       return { ...state, riskFilters: action.payload.riskFilters };
+    case actionNames.SET_CHART_FILTERS:
+      return { ...state, chartFilters: action.payload.chartFilters };
     case actionNames.SET_FETCHING_TODOS:
       return {
         ...state,

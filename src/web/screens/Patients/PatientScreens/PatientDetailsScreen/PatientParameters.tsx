@@ -17,13 +17,16 @@ import {
 } from "components/VisualizationComponents/ParameterGraphs";
 import { mockLocalReportVitals } from "mock/mockVitals";
 import { FluidIntakeChartCard } from "./PatientParameterComponents/FluidIntakeChart";
+import { InformationBlock } from "components/InfoComponents/InformationBlock";
+import { ChartFilterPillList } from "components/Buttons/ChartFilterPillList";
+import i18n from "util/language/i18n";
 
 interface PatientParametersProps
   extends PatientDetailsTabProps.ParametersTabProps {
   details: PatientDetails;
 }
 
-export const PatientParameters: FC<PatientParametersProps> = ({ details }) => {
+export const PatientParameters: FC<PatientParametersProps> = () => {
   const cardMaxHeight = Math.max(
     ms(200),
     Dimensions.get("window").height * 0.8
@@ -77,6 +80,10 @@ export const PatientParameters: FC<PatientParametersProps> = ({ details }) => {
     <ScreenWrapper padding>
       {fullChartData ? (
         <>
+          <InformationBlock
+            information={i18n.t("Parameter_Graphs.Information")}
+          />
+          <ChartFilterPillList />
           <View style={styles.container}>
             {/* Diastolic Blood Graph */}
             <DiastolicBPChartCard
@@ -101,7 +108,7 @@ export const PatientParameters: FC<PatientParametersProps> = ({ details }) => {
               maxHeight={cardMaxHeight}
             />
           </View>
-          <View style={styles.container}>
+          <View style={[styles.container]}>
             {/* Fluid Intake graph */}
             <FluidIntakeChartCard
               data={fullChartData.oxygenSaturation}

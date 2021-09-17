@@ -1,15 +1,15 @@
 import { ReportVitals } from "aws/API";
 import i18n from "util/language/i18n";
 
-enum days {
-  "Sunday" = 0,
-  "Monday" = 1,
-  "Tuesday" = 2,
-  "Wednesday" = 3,
-  "Thursday" = 4,
-  "Friday" = 5,
-  "Saturday" = 6
-}
+// enum days {
+//   "Sunday" = 0,
+//   "Monday" = 1,
+//   "Tuesday" = 2,
+//   "Wednesday" = 3,
+//   "Thursday" = 4,
+//   "Friday" = 5,
+//   "Saturday" = 6
+// }
 
 export interface Stat {
   min: number;
@@ -106,8 +106,8 @@ export const getParameterStatFromOneVitalsReport = (
     stats = {
       diastolic: getStat(diastolicBPVitals),
       systolic: getStat(systolicBPVitals),
-      weight: getStat(oxygenSaturation),
-      oxygenSaturation: getStat(weightVitals),
+      weight: getStat(weightVitals),
+      oxygenSaturation: getStat(oxygenSaturation),
       fluid: getStat(fluidVitals),
       date: new Date(localeDateString)
     };
