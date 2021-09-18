@@ -1,8 +1,8 @@
 export enum ChartViewTypes {
-  ALL = "All",
-  MIN = "Min",
-  MAX = "Max",
-  AVERAGE = "Avg"
+  ALL = "all",
+  MIN = "min",
+  MAX = "max",
+  AVERAGE = "average"
 }
 
 export type ChartFilter = { [chartFilters in ChartViewTypes]: boolean };

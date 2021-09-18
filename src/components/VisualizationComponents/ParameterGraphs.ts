@@ -1,4 +1,5 @@
 import { ReportVitals } from "aws/API";
+import { ChartViewTypes } from "models/ChartViewTypes";
 import i18n from "util/language/i18n";
 
 // enum days {
@@ -174,4 +175,27 @@ export const getXLabels = (averageStats: {
     i18n.t(`Parameter_Graphs.Days.${key}`)
   );
   return xLabels;
+};
+
+export const getVictoryChartData = (
+  data: ChartData,
+  type: ChartViewTypes.MIN | ChartViewTypes.MAX | ChartViewTypes.AVERAGE
+): { x: string; y: number }[][] => {
+  const compiledData: { x: string; y: number }[][] = [];
+  let temp: { x: string; y: number }[] = [];
+
+  for (let i = 0; i < data.xLabels.length; i++) {
+    if (data[type][i] > 0) {
+      temp.push({ x: data.xLabels[i], y: data[type][i] });
+      if (i === data.xLabels.length - 1) {
+        if (temp.length > 0) {
+          compiledData.push(temp);
+        }
+      }
+    } else {
+      compiledData.push(temp);
+      temp = [];
+    }
+  }
+  return compiledData;
 };
