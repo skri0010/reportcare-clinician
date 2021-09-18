@@ -10,8 +10,6 @@ export const DiastolicBPChart: FC<ParameterGraphsProps> = ({ data }) => {
       graphTitle={i18n.t("Parameter_Graphs.DiastolicBP")}
       graphSubtitle={i18n.t("Parameter_Graphs.BPUnit")}
       data={data}
-      // lower than 60 mm Hg is a warning
-      minDomainY={40}
     />
   ) : (
     <LoadingIndicator />

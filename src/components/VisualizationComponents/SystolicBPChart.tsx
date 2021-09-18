@@ -10,8 +10,6 @@ export const SystolicBPChart: FC<ParameterGraphsProps> = ({ data }) => {
       graphTitle={i18n.t("Parameter_Graphs.SystolicBP")}
       graphSubtitle={i18n.t("Parameter_Graphs.BPUnit")}
       data={data}
-      // lower than 90 mm Hg systolic is a warning
-      minDomainY={50}
     />
   ) : (
     <LoadingIndicator />
