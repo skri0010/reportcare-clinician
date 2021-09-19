@@ -13,6 +13,11 @@
     "lint": "tsc && eslint . --ext .js,.jsx,.ts,.tsx,.web.js,.web.jsx,.web.ts,.web.tsx",
     "format": "prettier --write ."
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run format &&  npm run lint"
+    }
+  },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.15.5",
     "@react-native-community/masked-view": "^0.1.11",
