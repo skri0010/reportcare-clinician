@@ -15,7 +15,7 @@ import {
   ActionFrameIDs,
   ClinicianAttributes
 } from "rc_agents/clinician_framework";
-import { Storage } from "rc_agents/storage";
+import { LocalStorage } from "rc_agents/storage";
 import { store } from "util/useRedux";
 import {
   setProcedureSuccessful,
@@ -102,13 +102,13 @@ class UpdateAlert extends Activity {
         }
 
         if (alertToStore) {
-          await Storage.mergeAlert(alertToStore);
-          await Storage.mergeAlertInfo(alertToStore);
+          await LocalStorage.mergeAlert(alertToStore);
+          await LocalStorage.mergeAlertInfo(alertToStore);
         }
 
         if (toSync) {
           // Stores alert to the list of alerts to be synced
-          await Storage.setAlertSync(alertInput);
+          await LocalStorage.setAlertSync(alertInput);
 
           // Notifies NWA
           agentNWA.addBelief(

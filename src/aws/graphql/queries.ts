@@ -569,6 +569,76 @@ export const listReportVitalss = /* GraphQL */ `
     }
   }
 `;
+export const syncMedicalRecords = /* GraphQL */ `
+  query SyncMedicalRecords(
+    $filter: ModelMedicalRecordFilterInput
+    $limit: Int
+    $nextToken: String
+    $lastSync: AWSTimestamp
+  ) {
+    syncMedicalRecords(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      lastSync: $lastSync
+    ) {
+      items {
+        id
+        patientID
+        title
+        fileKey
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const getMedicalRecord = /* GraphQL */ `
+  query GetMedicalRecord($id: ID!) {
+    getMedicalRecord(id: $id) {
+      id
+      patientID
+      title
+      fileKey
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listMedicalRecords = /* GraphQL */ `
+  query ListMedicalRecords(
+    $filter: ModelMedicalRecordFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listMedicalRecords(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        patientID
+        title
+        fileKey
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
 export const syncClinicianInfos = /* GraphQL */ `
   query SyncClinicianInfos(
     $filter: ModelClinicianInfoFilterInput
@@ -1511,6 +1581,38 @@ export const listReportVitalsByDateTime = /* GraphQL */ `
         FluidIntake
         DateTime
         patientID
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const listMedicalRecordsByPatientID = /* GraphQL */ `
+  query ListMedicalRecordsByPatientID(
+    $patientID: String
+    $sortDirection: ModelSortDirection
+    $filter: ModelMedicalRecordFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listMedicalRecordsByPatientID(
+      patientID: $patientID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        patientID
+        title
+        fileKey
         _version
         _deleted
         _lastChangedAt

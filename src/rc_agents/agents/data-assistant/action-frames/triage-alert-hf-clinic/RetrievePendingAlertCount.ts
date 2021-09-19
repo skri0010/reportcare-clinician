@@ -15,7 +15,7 @@ import {
   ClinicianAttributes,
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
-import { Storage } from "rc_agents/storage";
+import { LocalStorage } from "rc_agents/storage";
 import { Alert, ModelSortDirection } from "aws/API";
 import { listPendingAlertsByDateTime } from "aws";
 import { AlertColorCode, AlertInfo, AlertStatus } from "rc_agents/model";
@@ -82,11 +82,11 @@ class RetrievePendingAlertCount extends Activity {
             ),
             false
           );
-          await Storage.setMultipleAlerts(pendingAlerts);
+          await LocalStorage.setMultipleAlerts(pendingAlerts);
         }
       } else {
         // Device is offline
-        const localPendingAlerts = await Storage.getPendingAlerts();
+        const localPendingAlerts = await LocalStorage.getPendingAlerts();
         if (localPendingAlerts) {
           agentAPI.addFact(
             new Belief(

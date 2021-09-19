@@ -481,6 +481,49 @@ export type DeleteReportVitalsInput = {
   _version?: number | null,
 };
 
+export type CreateMedicalRecordInput = {
+  id?: string | null,
+  patientID: string,
+  title: string,
+  fileKey: string,
+  _version?: number | null,
+};
+
+export type ModelMedicalRecordConditionInput = {
+  title?: ModelStringInput | null,
+  fileKey?: ModelStringInput | null,
+  and?: Array< ModelMedicalRecordConditionInput | null > | null,
+  or?: Array< ModelMedicalRecordConditionInput | null > | null,
+  not?: ModelMedicalRecordConditionInput | null,
+};
+
+export type MedicalRecord = {
+  __typename: "MedicalRecord",
+  id: string,
+  patientID: string,
+  title: string,
+  fileKey: string,
+  _version: number,
+  _deleted?: boolean | null,
+  _lastChangedAt: number,
+  createdAt: string,
+  updatedAt: string,
+  owner?: string | null,
+};
+
+export type UpdateMedicalRecordInput = {
+  id: string,
+  patientID?: string | null,
+  title?: string | null,
+  fileKey?: string | null,
+  _version?: number | null,
+};
+
+export type DeleteMedicalRecordInput = {
+  id: string,
+  _version?: number | null,
+};
+
 export type CreateClinicianInfoInput = {
   id?: string | null,
   name: string,
@@ -1010,6 +1053,23 @@ export type ModelReportVitalsFilterInput = {
 export type ModelReportVitalsConnection = {
   __typename: "ModelReportVitalsConnection",
   items?:  Array<ReportVitals | null > | null,
+  nextToken?: string | null,
+  startedAt?: number | null,
+};
+
+export type ModelMedicalRecordFilterInput = {
+  id?: ModelIDInput | null,
+  patientID?: ModelStringInput | null,
+  title?: ModelStringInput | null,
+  fileKey?: ModelStringInput | null,
+  and?: Array< ModelMedicalRecordFilterInput | null > | null,
+  or?: Array< ModelMedicalRecordFilterInput | null > | null,
+  not?: ModelMedicalRecordFilterInput | null,
+};
+
+export type ModelMedicalRecordConnection = {
+  __typename: "ModelMedicalRecordConnection",
+  items?:  Array<MedicalRecord | null > | null,
   nextToken?: string | null,
   startedAt?: number | null,
 };
@@ -1752,6 +1812,69 @@ export type DeleteReportVitalsMutation = {
     FluidIntake?: string | null,
     DateTime: string,
     patientID: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type CreateMedicalRecordMutationVariables = {
+  input: CreateMedicalRecordInput,
+  condition?: ModelMedicalRecordConditionInput | null,
+};
+
+export type CreateMedicalRecordMutation = {
+  createMedicalRecord?:  {
+    __typename: "MedicalRecord",
+    id: string,
+    patientID: string,
+    title: string,
+    fileKey: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type UpdateMedicalRecordMutationVariables = {
+  input: UpdateMedicalRecordInput,
+  condition?: ModelMedicalRecordConditionInput | null,
+};
+
+export type UpdateMedicalRecordMutation = {
+  updateMedicalRecord?:  {
+    __typename: "MedicalRecord",
+    id: string,
+    patientID: string,
+    title: string,
+    fileKey: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type DeleteMedicalRecordMutationVariables = {
+  input: DeleteMedicalRecordInput,
+  condition?: ModelMedicalRecordConditionInput | null,
+};
+
+export type DeleteMedicalRecordMutation = {
+  deleteMedicalRecord?:  {
+    __typename: "MedicalRecord",
+    id: string,
+    patientID: string,
+    title: string,
+    fileKey: string,
     _version: number,
     _deleted?: boolean | null,
     _lastChangedAt: number,
@@ -3107,6 +3230,81 @@ export type ListReportVitalssQuery = {
   } | null,
 };
 
+export type SyncMedicalRecordsQueryVariables = {
+  filter?: ModelMedicalRecordFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  lastSync?: number | null,
+};
+
+export type SyncMedicalRecordsQuery = {
+  syncMedicalRecords?:  {
+    __typename: "ModelMedicalRecordConnection",
+    items?:  Array< {
+      __typename: "MedicalRecord",
+      id: string,
+      patientID: string,
+      title: string,
+      fileKey: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null > | null,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
+export type GetMedicalRecordQueryVariables = {
+  id: string,
+};
+
+export type GetMedicalRecordQuery = {
+  getMedicalRecord?:  {
+    __typename: "MedicalRecord",
+    id: string,
+    patientID: string,
+    title: string,
+    fileKey: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type ListMedicalRecordsQueryVariables = {
+  filter?: ModelMedicalRecordFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListMedicalRecordsQuery = {
+  listMedicalRecords?:  {
+    __typename: "ModelMedicalRecordConnection",
+    items?:  Array< {
+      __typename: "MedicalRecord",
+      id: string,
+      patientID: string,
+      title: string,
+      fileKey: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null > | null,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
 export type SyncClinicianInfosQueryVariables = {
   filter?: ModelClinicianInfoFilterInput | null,
   limit?: number | null,
@@ -4046,6 +4244,35 @@ export type ListReportVitalsByDateTimeQuery = {
   } | null,
 };
 
+export type ListMedicalRecordsByPatientIDQueryVariables = {
+  patientID?: string | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelMedicalRecordFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListMedicalRecordsByPatientIDQuery = {
+  listMedicalRecordsByPatientID?:  {
+    __typename: "ModelMedicalRecordConnection",
+    items?:  Array< {
+      __typename: "MedicalRecord",
+      id: string,
+      patientID: string,
+      title: string,
+      fileKey: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null > | null,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
 export type ListClinicianMappingsByPatientIDQueryVariables = {
   patientID?: string | null,
   clinicianID?: ModelStringKeyConditionInput | null,
@@ -4917,6 +5144,69 @@ export type OnDeleteReportVitalsSubscription = {
     FluidIntake?: string | null,
     DateTime: string,
     patientID: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnCreateMedicalRecordSubscriptionVariables = {
+  owner?: string | null,
+  patientID?: string | null,
+};
+
+export type OnCreateMedicalRecordSubscription = {
+  onCreateMedicalRecord?:  {
+    __typename: "MedicalRecord",
+    id: string,
+    patientID: string,
+    title: string,
+    fileKey: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnUpdateMedicalRecordSubscriptionVariables = {
+  owner?: string | null,
+  patientID?: string | null,
+};
+
+export type OnUpdateMedicalRecordSubscription = {
+  onUpdateMedicalRecord?:  {
+    __typename: "MedicalRecord",
+    id: string,
+    patientID: string,
+    title: string,
+    fileKey: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnDeleteMedicalRecordSubscriptionVariables = {
+  owner?: string | null,
+  patientID?: string | null,
+};
+
+export type OnDeleteMedicalRecordSubscription = {
+  onDeleteMedicalRecord?:  {
+    __typename: "MedicalRecord",
+    id: string,
+    patientID: string,
+    title: string,
+    fileKey: string,
     _version: number,
     _deleted?: boolean | null,
     _lastChangedAt: number,

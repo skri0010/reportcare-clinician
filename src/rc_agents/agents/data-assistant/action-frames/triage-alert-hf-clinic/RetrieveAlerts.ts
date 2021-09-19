@@ -15,7 +15,7 @@ import {
   ClinicianAttributes,
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
-import { Storage } from "rc_agents/storage";
+import { LocalStorage } from "rc_agents/storage";
 import { listCompletedRiskAlerts, listPendingRiskAlerts } from "aws";
 import { AlertInfo, AlertStatus } from "rc_agents/model";
 import { Alert } from "aws/API";
@@ -92,7 +92,7 @@ class RetrieveAlerts extends Activity {
 
           if (alerts) {
             // Merges newly retrieved alerts into locally stored alerts
-            await Storage.setMultipleAlerts(alertsToDispatch);
+            await LocalStorage.setMultipleAlerts(alertsToDispatch);
 
             // add to fact for displayAlert to retrieve
             agentAPI.addFact(
@@ -126,11 +126,11 @@ export const dispatchFromMemory = async (
   let alertsToDispatch: AlertInfo[] | null = null;
 
   if (alertStatus === AlertStatus.PENDING) {
-    alertsToDispatch = await Storage.getPendingAlerts();
+    alertsToDispatch = await LocalStorage.getPendingAlerts();
   } else if (alertStatus === AlertStatus.COMPLETED) {
-    alertsToDispatch = await Storage.getCompletedAlerts();
+    alertsToDispatch = await LocalStorage.getCompletedAlerts();
   } else if (alertStatus === AlertStatus.ALL) {
-    alertsToDispatch = await Storage.getAlerts();
+    alertsToDispatch = await LocalStorage.getAlerts();
   }
   if (alertsToDispatch) {
     agentAPI.addFact(

@@ -12,7 +12,7 @@ import {
   AppAttributes,
   BeliefKeys
 } from "rc_agents/clinician_framework";
-import { AsyncStorageKeys, Storage } from "rc_agents/storage";
+import { AsyncStorageKeys, LocalStorage } from "rc_agents/storage";
 import { getAlert } from "aws/TypedAPI/getQueries";
 import { updateAlert } from "aws";
 import { Alert, UpdateAlertInput } from "aws/API";
@@ -41,10 +41,10 @@ class SyncUpdateAlerts extends Activity {
 
     try {
       // Gets locally stored clinicianId
-      const clinicianId = await Storage.getClinicianID();
+      const clinicianId = await LocalStorage.getClinicianID();
 
       // Gets alerts to be synced
-      const alerts = await Storage.getAlertsSync();
+      const alerts = await LocalStorage.getAlertsSync();
 
       if (alerts && clinicianId) {
         // Indicator of whether all pending updates have been synced
@@ -91,8 +91,8 @@ class SyncUpdateAlerts extends Activity {
               }
 
               if (alertToStore) {
-                await Storage.mergeAlert(alertToStore);
-                await Storage.mergeAlertInfo(alertToStore);
+                await LocalStorage.mergeAlert(alertToStore);
+                await LocalStorage.mergeAlertInfo(alertToStore);
               }
             }
           })
@@ -100,7 +100,7 @@ class SyncUpdateAlerts extends Activity {
 
         // Removes entry if all alerts are synced
         if (successfulIds.length === Object.values(alerts).length) {
-          await Storage.removeItem(AsyncStorageKeys.ALERTS_SYNC);
+          await LocalStorage.removeItem(AsyncStorageKeys.ALERTS_SYNC);
         } else {
           // Removes successfully synced alerts
           await Promise.all(

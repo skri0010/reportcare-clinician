@@ -1,5 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Alert, PatientAssignment, PatientInfo, Todo } from "aws/API";
+import {
+  Alert,
+  MedicalRecord,
+  PatientAssignment,
+  PatientInfo,
+  Todo
+} from "aws/API";
 import {
   AlertNotification,
   PatientAssignmentSubscription
@@ -136,7 +142,8 @@ export const setPatients = async (
         patientInfo: patient,
         activityInfos: localPatients[patient.patientID]?.activityInfos || {},
         symptomReports: localPatients[patient.patientID]?.symptomReports || {},
-        vitalsReports: localPatients[patient.patientID]?.vitalsReports || {}
+        vitalsReports: localPatients[patient.patientID]?.vitalsReports || {},
+        medicalRecords: localPatients[patient.patientID]?.medicalRecords || {}
       };
     }
   });
@@ -154,7 +161,8 @@ export const setPatient = async (patient: PatientInfo): Promise<void> => {
     patientInfo: patient,
     activityInfos: localPatient?.activityInfos || {},
     symptomReports: localPatient?.symptomReports || {},
-    vitalsReports: localPatient?.vitalsReports || {}
+    vitalsReports: localPatient?.vitalsReports || {},
+    medicalRecords: localPatient?.medicalRecords || {}
   });
 };
 
@@ -178,7 +186,8 @@ export const setPatientDetails = async (
       patientInfo: patient,
       activityInfos: patientDetails.activityInfos,
       symptomReports: patientDetails.symptomReports,
-      vitalsReports: patientDetails.vitalsReports
+      vitalsReports: patientDetails.vitalsReports,
+      medicalRecords: patientDetails.medicalRecords
     };
   }
   await AsyncStorage.setItem(
@@ -194,6 +203,16 @@ export const setAllPatientDetails = async (
     AsyncStorageKeys.ALL_PATIENT_DETAILS,
     JSON.stringify(patientsDetails)
   );
+};
+
+export const setPatientMedicalRecord = async (
+  medicalRecord: MedicalRecord
+): Promise<void> => {
+  const localPatient = await getPatientDetails(medicalRecord.patientID);
+  if (localPatient) {
+    localPatient.medicalRecords[medicalRecord.id] = medicalRecord;
+    await setPatientDetails(localPatient);
+  }
 };
 
 export const setPatientConfigurations = async (

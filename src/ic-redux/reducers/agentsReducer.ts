@@ -48,6 +48,8 @@ interface AgentsState {
   submittingTodo: boolean;
   updatedTodo: LocalTodo | undefined;
   todoDetails: LocalTodo | undefined;
+  creatingMedicalRecord: boolean;
+  createMedicalRecordSuccessful: boolean;
 }
 
 const initialState: AgentsState = {
@@ -106,7 +108,9 @@ const initialState: AgentsState = {
   fetchingTodos: false,
   fetchingTodoDetails: false,
   submittingTodo: false,
-  updatedTodo: undefined
+  updatedTodo: undefined,
+  creatingMedicalRecord: false,
+  createMedicalRecordSuccessful: false
 };
 
 export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
@@ -177,6 +181,17 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
       return {
         ...state,
         configurationSuccessful: action.payload.configurationSuccessful
+      };
+    case actionNames.SET_CREATING_MEDICAL_RECORD:
+      return {
+        ...state,
+        creatingMedicalRecord: action.payload.creatingMedicalRecord
+      };
+    case actionNames.SET_CREATE_MEDICAL_RECORD_SUCCESSFUL:
+      return {
+        ...state,
+        createMedicalRecordSuccessful:
+          action.payload.createMedicalRecordSuccessful
       };
     case actionNames.SET_PENDING_ALERT_COUNT:
       return {

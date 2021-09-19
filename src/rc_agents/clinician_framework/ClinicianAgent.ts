@@ -2,7 +2,7 @@ import { Agent, Belief, Actionframe, Engine, Fact } from "agents-framework";
 import { getClinicianProtectedInfo } from "aws";
 import { AppAttributes, BeliefKeys } from "./index";
 import { CommonAttributes } from "agents-framework/Enums";
-import { Storage } from "../storage";
+import { LocalStorage } from "../storage";
 import { ClinicianProtectedInfo } from "aws/API";
 // eslint-disable-next-line no-restricted-imports
 import AgentAPI from "agents-framework/AgentAPI";
@@ -107,7 +107,7 @@ export class ClinicianAgent extends Agent {
 
     try {
       // Retrieves local clinician
-      const localClinician = await Storage.getClinician();
+      const localClinician = await LocalStorage.getClinician();
       if (localClinician) {
         // Device is online
         if (this.agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
@@ -120,7 +120,7 @@ export class ClinicianAgent extends Agent {
 
             // Updates local storage
             localClinician.protectedInfo = result;
-            await Storage.setClinician(localClinician);
+            await LocalStorage.setClinician(localClinician);
           }
         } else {
           protectedInfo = localClinician.protectedInfo;

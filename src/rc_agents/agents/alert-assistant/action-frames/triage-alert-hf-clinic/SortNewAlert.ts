@@ -16,7 +16,7 @@ import {
   setRetryLaterTimeout
 } from "rc_agents/clinician_framework";
 import { getAlert } from "aws";
-import { Storage } from "rc_agents/storage";
+import { LocalStorage } from "rc_agents/storage";
 // eslint-disable-next-line no-restricted-imports
 import { alertToAlertInfo } from "rc_agents/agents/data-assistant/action-frames/triage-alert-hf-clinic/RetrieveAlerts";
 import { store } from "util/useRedux";
@@ -106,7 +106,7 @@ class SortNewAlert extends Activity {
           store.dispatch(setPendingAlerts(currentPendingAlerts));
 
           // Stores alert locally
-          await Storage.setAlert(alertToDispatch);
+          await LocalStorage.setAlert(alertToDispatch);
         }
       }
       // Stops the procedure

@@ -15,7 +15,7 @@ import {
   ClinicianAttributes,
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
-import { Storage } from "rc_agents/storage";
+import { LocalStorage } from "rc_agents/storage";
 import { LocalTodo, TodoStatus } from "rc_agents/model";
 import { Todo } from "aws/API";
 import { getTodo } from "aws/TypedAPI/getQueries";
@@ -82,7 +82,7 @@ class RetrieveTodoDetails extends Activity {
               );
             }
             // Save to local storage
-            await Storage.setTodo(todoToDispatch);
+            await LocalStorage.setTodo(todoToDispatch);
 
             agentAPI.addFact(
               new Belief(
@@ -104,7 +104,7 @@ class RetrieveTodoDetails extends Activity {
           }
         } else {
           // check local storage for todo details
-          const todoToDispatch = await Storage.getTodoDetails(todoDetails);
+          const todoToDispatch = await LocalStorage.getTodoDetails(todoDetails);
 
           if (todoToDispatch) {
             agentAPI.addFact(

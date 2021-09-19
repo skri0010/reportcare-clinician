@@ -15,7 +15,7 @@ import {
   PatientAttributes,
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
-import { Storage } from "rc_agents/storage";
+import { LocalStorage } from "rc_agents/storage";
 import { listPatientAlertsByDateTime } from "aws";
 import { AlertInfo } from "rc_agents/model";
 import { Alert, ModelSortDirection } from "aws/API";
@@ -75,7 +75,7 @@ class RetrieveAlertHistory extends Activity {
               const alertInfos = alertToAlertInfo(result);
 
               // Get the current local alert history
-              let localAlertHistory = await Storage.getAlertInfos();
+              let localAlertHistory = await LocalStorage.getAlertInfos();
 
               // If local alert history is null, add an empty object
               if (!localAlertHistory) {
@@ -105,7 +105,7 @@ class RetrieveAlertHistory extends Activity {
               });
               // Store the updated alert histories into local storage
               if (localAlertHistory) {
-                await Storage.setAlertInfos(localAlertHistory);
+                await LocalStorage.setAlertInfos(localAlertHistory);
               }
             }
           }
@@ -123,7 +123,9 @@ class RetrieveAlertHistory extends Activity {
           }
         } else {
           // Device is offline: get alert infos of current patient from local storage
-          const patientAlerts = await Storage.getPatientAlertInfos(patientId);
+          const patientAlerts = await LocalStorage.getPatientAlertInfos(
+            patientId
+          );
           if (patientAlerts) {
             const sortedPatientAlerts = sortAlertsByDateTime(patientAlerts);
             agentAPI.addFact(

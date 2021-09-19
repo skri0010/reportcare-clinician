@@ -15,7 +15,7 @@ import {
   ClinicianAttributes,
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
-import { Storage } from "rc_agents/storage";
+import { LocalStorage } from "rc_agents/storage";
 import { AlertInfo } from "rc_agents/model";
 import {
   listMedCompliantsByDate,
@@ -63,11 +63,11 @@ class RetrieveAlertInfo extends Activity {
           const queryResult = await queryAlertInfo(alert);
           if (queryResult) {
             alertInfo = queryResult;
-            await Storage.setAlertInfo(queryResult);
+            await LocalStorage.setAlertInfo(queryResult);
           }
         } else {
           // Device is offline: get alert info from local storage
-          alertInfo = await Storage.getSingleAlertInfo(
+          alertInfo = await LocalStorage.getSingleAlertInfo(
             alert.id,
             alert.patientID
           );

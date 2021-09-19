@@ -545,6 +545,63 @@ export const deleteReportVitals = /* GraphQL */ `
     }
   }
 `;
+export const createMedicalRecord = /* GraphQL */ `
+  mutation CreateMedicalRecord(
+    $input: CreateMedicalRecordInput!
+    $condition: ModelMedicalRecordConditionInput
+  ) {
+    createMedicalRecord(input: $input, condition: $condition) {
+      id
+      patientID
+      title
+      fileKey
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const updateMedicalRecord = /* GraphQL */ `
+  mutation UpdateMedicalRecord(
+    $input: UpdateMedicalRecordInput!
+    $condition: ModelMedicalRecordConditionInput
+  ) {
+    updateMedicalRecord(input: $input, condition: $condition) {
+      id
+      patientID
+      title
+      fileKey
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deleteMedicalRecord = /* GraphQL */ `
+  mutation DeleteMedicalRecord(
+    $input: DeleteMedicalRecordInput!
+    $condition: ModelMedicalRecordConditionInput
+  ) {
+    deleteMedicalRecord(input: $input, condition: $condition) {
+      id
+      patientID
+      title
+      fileKey
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
 export const createClinicianInfo = /* GraphQL */ `
   mutation CreateClinicianInfo(
     $input: CreateClinicianInfoInput!

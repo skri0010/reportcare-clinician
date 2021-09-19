@@ -12,6 +12,7 @@ import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
   AlertInfo,
   AlertStatus,
+  MedicalRecordInput,
   PatientAssignmentResolution,
   TodoInput,
   TodoStatus
@@ -366,6 +367,32 @@ export const triggerRetrieveTodoDetails = (input: string): void => {
     new Belief(
       BeliefKeys.PROCEDURE,
       ProcedureAttributes.SRD_III,
+      ProcedureConst.ACTIVE
+    )
+  );
+};
+
+// HF-OTP-II: Triggers CreateMedicalRecord of DTA
+export const triggerCreateMedicalRecord = (input: MedicalRecordInput): void => {
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PATIENT,
+      PatientAttributes.MEDICAL_RECORD_TO_CREATE,
+      input
+    ),
+    false
+  );
+  agentDTA.addBelief(
+    new Belief(
+      BeliefKeys.PATIENT,
+      PatientAttributes.CREATE_MEDICAL_RECORD,
+      true
+    )
+  );
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PROCEDURE,
+      ProcedureAttributes.HF_OTP_II,
       ProcedureConst.ACTIVE
     )
   );

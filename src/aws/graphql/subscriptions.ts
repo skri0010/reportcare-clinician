@@ -491,6 +491,54 @@ export const onDeleteReportVitals = /* GraphQL */ `
     }
   }
 `;
+export const onCreateMedicalRecord = /* GraphQL */ `
+  subscription OnCreateMedicalRecord($owner: String, $patientID: String) {
+    onCreateMedicalRecord(owner: $owner, patientID: $patientID) {
+      id
+      patientID
+      title
+      fileKey
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onUpdateMedicalRecord = /* GraphQL */ `
+  subscription OnUpdateMedicalRecord($owner: String, $patientID: String) {
+    onUpdateMedicalRecord(owner: $owner, patientID: $patientID) {
+      id
+      patientID
+      title
+      fileKey
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onDeleteMedicalRecord = /* GraphQL */ `
+  subscription OnDeleteMedicalRecord($owner: String, $patientID: String) {
+    onDeleteMedicalRecord(owner: $owner, patientID: $patientID) {
+      id
+      patientID
+      title
+      fileKey
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
 export const onCreateClinicianInfo = /* GraphQL */ `
   subscription OnCreateClinicianInfo($owner: String) {
     onCreateClinicianInfo(owner: $owner) {

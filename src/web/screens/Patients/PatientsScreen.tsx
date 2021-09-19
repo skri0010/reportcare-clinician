@@ -227,7 +227,10 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
             setAddMedicalRecord(false);
           }}
         >
-          <AddMedicalRecord setAddMedicalRecord={setAddMedicalRecord} />
+          <AddMedicalRecord
+            setAddMedicalRecord={setAddMedicalRecord}
+            patientID={patientDetails?.patientInfo.patientID}
+          />
         </PatientHistoryModal>
       </View>
     </ScreenWrapper>

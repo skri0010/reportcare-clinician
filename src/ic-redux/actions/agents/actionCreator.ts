@@ -121,6 +121,20 @@ export const setConfigurationSuccessful = createAction(
   })
 )();
 
+export const setCreatingMedicalRecord = createAction(
+  actionNames.SET_CREATING_MEDICAL_RECORD,
+  (creatingMedicalRecord: boolean) => ({
+    creatingMedicalRecord: creatingMedicalRecord
+  })
+)();
+
+export const setCreateMedicalRecordSuccessful = createAction(
+  actionNames.SET_CREATE_MEDICAL_RECORD_SUCCESSFUL,
+  (createMedicalRecordSuccessful: boolean) => ({
+    createMedicalRecordSuccessful: createMedicalRecordSuccessful
+  })
+)();
+
 export const setPendingAlertCount = createAction(
   actionNames.SET_PENDING_ALERT_COUNT,
   (pendingAlertCount: PendingAlertCount) => ({

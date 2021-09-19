@@ -16,7 +16,7 @@ import {
   PatientAttributes,
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
-import { Storage } from "rc_agents/storage";
+import { LocalStorage } from "rc_agents/storage";
 import { getPatientAssignment } from "aws";
 import { store } from "util/useRedux";
 import { PatientAssignmentSubscription } from "aws/TypedAPI/subscriptions";
@@ -49,7 +49,7 @@ class ProcessPatientAssignmentSubscription extends Activity {
         ];
 
       // Get clinician Id
-      const clinicianId = await Storage.getClinicianID();
+      const clinicianId = await LocalStorage.getClinicianID();
 
       if (
         patientAssignmentSubscription &&
@@ -66,7 +66,7 @@ class ProcessPatientAssignmentSubscription extends Activity {
           if (query.data.getPatientAssignment) {
             const patientAssignmentToDispatch = query.data.getPatientAssignment;
             // Saves patient assignment locally
-            await Storage.setPendingPatientAssignment(
+            await LocalStorage.setPendingPatientAssignment(
               patientAssignmentToDispatch
             );
 
@@ -93,7 +93,7 @@ class ProcessPatientAssignmentSubscription extends Activity {
           }
         } else {
           // Device is offline: Store patient assignment subscription locally
-          await Storage.setPatientAssignmentSubscription(
+          await LocalStorage.setPatientAssignmentSubscription(
             patientAssignmentSubscription
           );
           // Notifies NWA

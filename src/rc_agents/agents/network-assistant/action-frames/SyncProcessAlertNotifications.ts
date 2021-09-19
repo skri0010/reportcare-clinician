@@ -12,7 +12,7 @@ import {
   BeliefKeys,
   setRetryLaterTimeout
 } from "rc_agents/clinician_framework";
-import { Storage, AsyncStorageKeys } from "rc_agents/storage";
+import { LocalStorage, AsyncStorageKeys } from "rc_agents/storage";
 import { agentNWA } from "rc_agents/agents";
 import { getAlert, listClinicianPatientMaps } from "aws";
 import { store } from "util/useRedux";
@@ -46,10 +46,10 @@ class SyncProcessAlertNotifications extends Activity {
 
     try {
       // Get locally stored alert notifications
-      const alertNotifications = await Storage.getAlertNotifications();
+      const alertNotifications = await LocalStorage.getAlertNotifications();
 
       // Get locally stored clinicianID
-      const clinicianID = await Storage.getClinicianID();
+      const clinicianID = await LocalStorage.getClinicianID();
 
       if (alertNotifications) {
         // Retrieves all patient mappings of clinician
@@ -101,7 +101,7 @@ class SyncProcessAlertNotifications extends Activity {
               alertToAlertInfo(retrievedAlerts);
 
             // Stores alerts locally
-            await Storage.setMultipleAlerts(alertsToDispatch);
+            await LocalStorage.setMultipleAlerts(alertsToDispatch);
 
             // Accesses current state
             const currentState = store.getState().agents;
@@ -143,12 +143,12 @@ class SyncProcessAlertNotifications extends Activity {
 
           // Remove AsyncStorage entry if all alert notifications are processed
           if (processSuccessful) {
-            await Storage.removeItem(AsyncStorageKeys.ALERT_NOTIFICATIONS);
+            await LocalStorage.removeItem(AsyncStorageKeys.ALERT_NOTIFICATIONS);
           }
 
           // Store alert notifications that failed to be processed
           else if (processedIndices.length > 0) {
-            await Storage.setAlertNotifications(
+            await LocalStorage.setAlertNotifications(
               alertNotifications.filter(
                 (_, index) => !processedIndices.includes(index)
               )

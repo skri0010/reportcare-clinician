@@ -241,8 +241,15 @@
     "AddMedicalRecordCard": {
       "Title": "Tajuk",
       "TitleInputPlaceholder": "Berikan nama kepada rekod perubatan ini (contohnya latar belakang)",
+      "TitleError": "Sila berikan tajuk yang sah",
       "Description": "Deskripsi",
-      "DescriptionInputPlaceholder": "Apakah isi-isi deskripsi ini?"
+      "DescriptionInputPlaceholder": "Apakah isi-isi deskripsi ini?",
+      "FileUpload": "Fail Muat Naik",
+      "DragAndDropFile": "Seret and Lepas fail",
+      "DropFileHere": "Lepaskan fail di sini",
+      "Or": "Atau",
+      "BrowseFiles": "Semak fail",
+      "MedicalRecordSavedSuccessfully": "Rekod perubatan telah berjaya disimpan"
     },
     "NoAlertHistory": "Pesakit ini belum mempunyai sejarah amaran!"
   },

@@ -5,7 +5,7 @@ import {
   ClinicianProtectedInfo
 } from "aws/API";
 import { AgentIDs, AppAttributes, BeliefKeys } from "./index";
-import { Storage } from "rc_agents/storage";
+import { LocalStorage } from "rc_agents/storage";
 import AgentManagement from "agents-framework/management/AgentManagement";
 import { ClinicianAgent } from "./ClinicianAgent";
 import cloneDeep from "lodash/cloneDeep";
@@ -40,7 +40,7 @@ export class ClinicianAgentManagement extends AgentManagement {
     const timer = setInterval(async () => {
       try {
         // Retrieves local clinician
-        const localClinician = await Storage.getClinician();
+        const localClinician = await LocalStorage.getClinician();
         if (localClinician) {
           // Device is online
           if (this.facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
@@ -52,7 +52,7 @@ export class ClinicianAgentManagement extends AgentManagement {
 
               // Updates local storage
               localClinician.protectedInfo = protectedInfo;
-              await Storage.setClinician(localClinician);
+              await LocalStorage.setClinician(localClinician);
             }
           } else {
             // Device is offline
@@ -197,7 +197,7 @@ export class ClinicianAgentManagement extends AgentManagement {
    */
   async updateProtectedInfo(): Promise<void> {
     // Retrieves locally stored clinician
-    const localClinician = await Storage.getClinician();
+    const localClinician = await LocalStorage.getClinician();
     if (localClinician) {
       const isOnline = this.facts[BeliefKeys.APP]?.[AppAttributes.ONLINE];
       let protectedInfo: ClinicianProtectedInfo | undefined;
@@ -320,7 +320,7 @@ export class ClinicianAgentManagement extends AgentManagement {
         }
 
         // Updates local storage
-        await Storage.setClinician(localClinician);
+        await LocalStorage.setClinician(localClinician);
       }
     }
   }

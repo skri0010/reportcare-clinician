@@ -10,7 +10,7 @@ import {
   AppAttributes,
   BeliefKeys
 } from "rc_agents/clinician_framework";
-import { Storage } from "rc_agents/storage";
+import { LocalStorage } from "rc_agents/storage";
 import { updateClinicianProtectedInfo } from "aws/TypedAPI/updateMutations";
 import { UpdateClinicianProtectedInfoInput } from "aws/API";
 import { getClinicianProtectedInfo } from "aws/TypedAPI/getQueries";
@@ -35,7 +35,7 @@ class SyncProtectedInfo extends Activity {
 
     try {
       // Retrieves local clinician
-      const localClinician = await Storage.getClinician();
+      const localClinician = await LocalStorage.getClinician();
       if (localClinician) {
         if (localClinician.protectedInfo) {
           // Query protectedInfo to get the latest version

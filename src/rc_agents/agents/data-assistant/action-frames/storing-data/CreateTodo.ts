@@ -15,7 +15,7 @@ import {
   ActionFrameIDs,
   ClinicianAttributes
 } from "rc_agents/clinician_framework";
-import { Storage } from "rc_agents/storage";
+import { LocalStorage } from "rc_agents/storage";
 import { store } from "util/useRedux";
 import { setProcedureSuccessful } from "ic-redux/actions/agents/actionCreator";
 import { agentNWA } from "rc_agents/agents";
@@ -49,7 +49,7 @@ class CreateTodo extends Activity {
         facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.TODO];
 
       // Gets locally stored clinicianId
-      const clinicianId = await Storage.getClinicianID();
+      const clinicianId = await LocalStorage.getClinicianID();
       let alertTodoUpdate: boolean = false;
 
       if (todoInput && clinicianId) {
@@ -88,7 +88,7 @@ class CreateTodo extends Activity {
           // When attempts to update an unsynced Todo
           else if (todoInput.alertId && todoInput.patientId) {
             // Query current AlertInfo from local storage
-            const alertInfo = await Storage.getSingleAlertInfo(
+            const alertInfo = await LocalStorage.getSingleAlertInfo(
               todoInput.alertId,
               todoInput.patientId
             );
@@ -203,7 +203,7 @@ class CreateTodo extends Activity {
           };
 
           // Updates local Todos
-          await Storage.setTodo(todoToStore);
+          await LocalStorage.setTodo(todoToStore);
 
           // Notifies NWA to sync update or create Todo
           if (toSync) {

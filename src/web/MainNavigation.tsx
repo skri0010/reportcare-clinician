@@ -9,7 +9,7 @@ import { useNetInfo } from "@react-native-community/netinfo";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import { Belief } from "agents-framework";
 import { AppAttributes, BeliefKeys } from "rc_agents/clinician_framework";
-import { Storage } from "rc_agents/storage";
+import { LocalStorage } from "rc_agents/storage";
 
 interface MainNavigationStackProps {
   setAuthState: (state: string) => void;
@@ -28,7 +28,7 @@ export const MainNavigationStack: FC<MainNavigationStackProps> = ({
   // Sign out function
   const signOut = async (): Promise<void> => {
     await Auth.signOut().then(async () => {
-      await Storage.removeAll();
+      await LocalStorage.removeAll();
       toast.show(i18n.t("Auth_SignOut.SignOutSuccessful"), { type: "success" });
       setAuthState(AuthState.SIGNED_OUT);
     });

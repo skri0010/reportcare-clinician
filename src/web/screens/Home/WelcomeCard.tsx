@@ -5,7 +5,7 @@ import { ScaledSheet } from "react-native-size-matters";
 import { H3, H5 } from "components/Text";
 import { CardWrapper } from "./CardWrapper";
 import i18n from "util/language/i18n";
-import { Storage } from "rc_agents/storage";
+import { LocalStorage } from "rc_agents/storage";
 
 interface WelcomeCardProps {
   flex?: number;
@@ -28,7 +28,7 @@ export const WelcomeCard: FC<WelcomeCardProps> = ({ flex = 1, maxHeight }) => {
   }, []);
 
   const fetchClinician = async () => {
-    const clinician = await Storage.getClinician();
+    const clinician = await LocalStorage.getClinician();
     if (clinician) {
       setClinicianName(clinician.name);
     }

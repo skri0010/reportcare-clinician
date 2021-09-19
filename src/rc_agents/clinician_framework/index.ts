@@ -36,6 +36,8 @@ export const ActionFrameIDs = {
     RETRIEVE_ALERT_HISTORY: "RetrieveAlertHistory",
     REQUEST_DISPLAY_ALERT_HISTORY: "RequestDisplayAlertHistory",
 
+    CREATE_MEDICAL_RECORD: "CreateMedicalRecord",
+
     // AT-CP-I: Alerts
     RETRIEVE_PENDING_ALERT_COUNT: "RetrievePendingAlertCount",
     REQUEST_PENDING_ALERT_COUNT_DISPLAY: "RequestPendingAlertCountDisplay",
@@ -144,7 +146,8 @@ export enum AppAttributes {
   SYNC_UPDATE_TODOS = "SyncUpdateTodos",
   SYNC_UPDATE_ALERTS = "SyncUpdateAlerts",
   SYNC_PROCESS_ALERT_NOTIFICATIONS = "SyncProcessAlertNotifications",
-  SYNC_PROCESS_PATIENT_ASSIGNMENT_SUBSCRIPTIONS = "SyncProcessPatientAssignmentSubscriptions"
+  SYNC_PROCESS_PATIENT_ASSIGNMENT_SUBSCRIPTIONS = "SyncProcessPatientAssignmentSubscriptions",
+  SYNC_CREATE_MEDICAL_RECORDS = "SyncCreateMedicalRecords"
 }
 
 // Attributes for PROCEDURE key
@@ -238,6 +241,8 @@ export enum PatientAttributes {
   PATIENT_ALERT_HISTORY_RETRIEVED = "PatientAlertHistoryRetrieved",
   PATIENT_TO_CONFIGURE = "PatientToConfigure",
   CONFIGURE_PATIENT = "ConfigurePatient",
+  CREATE_MEDICAL_RECORD = "CreateMedicalRecord",
+  MEDICAL_RECORD_TO_CREATE = "MedicalRecordToCreate",
 
   // SRD-I: Patient Assignments
   PENDING_PATIENT_ASSIGNMENTS = "PendingPatientAssignments",

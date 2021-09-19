@@ -16,7 +16,7 @@ import {
   PatientAttributes,
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
-import { Storage } from "rc_agents/storage";
+import { LocalStorage } from "rc_agents/storage";
 import { PatientAssignmentStatus } from "rc_agents/model";
 import { listPendingPatientAssignments } from "aws";
 import { PatientAssignment } from "aws/API";
@@ -46,7 +46,7 @@ class RetrievePendingPatientAssignments extends Activity {
     let pendingPatientAssignments: PatientAssignment[] | null | undefined;
     try {
       // Get locally stored clinicianId
-      const clinicianId = await Storage.getClinicianID();
+      const clinicianId = await LocalStorage.getClinicianID();
       // Get online status from facts
       const isOnline =
         agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE];
@@ -64,7 +64,7 @@ class RetrievePendingPatientAssignments extends Activity {
             pendingPatientAssignments = query.data.listPendingPatientAssignments
               .items as PatientAssignment[];
             // Save retrieved data locally
-            await Storage.setPendingPatientAssignments(
+            await LocalStorage.setPendingPatientAssignments(
               pendingPatientAssignments
             );
           }
@@ -72,7 +72,7 @@ class RetrievePendingPatientAssignments extends Activity {
         // Device is offline: Retrieve locally stored data (if any)
         else {
           pendingPatientAssignments =
-            await Storage.getPendingPatientAssignments();
+            await LocalStorage.getPendingPatientAssignments();
         }
       }
 

@@ -18,7 +18,7 @@ import {
 } from "rc_agents/clinician_framework";
 import { AlertNotification } from "aws/TypedAPI/subscriptions";
 import { getClinicianPatientMap } from "aws";
-import { Storage } from "rc_agents/storage";
+import { LocalStorage } from "rc_agents/storage";
 import { agentNWA } from "rc_agents/agents";
 
 /**
@@ -48,7 +48,7 @@ class ProcessAlertNotification extends Activity {
         facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.ALERT_NOTIFICATION];
 
       // Retrieves locally stored ClinicianID
-      const clinicianID = await Storage.getClinicianID();
+      const clinicianID = await LocalStorage.getClinicianID();
 
       if (alertNotification && clinicianID) {
         if (facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
@@ -112,7 +112,7 @@ class ProcessAlertNotification extends Activity {
           }
         } else {
           // Saves alert notification locally to be processed later
-          await Storage.setAlertNotification(alertNotification);
+          await LocalStorage.setAlertNotification(alertNotification);
 
           // Notifies NWA agent
           agentNWA.addBelief(
