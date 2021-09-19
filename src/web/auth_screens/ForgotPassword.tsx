@@ -148,7 +148,7 @@ export const ForgotPassword: FC<
           }
         />
       </SafeAreaView>
-      {loading && <LoadingIndicator />}
+      {loading && <LoadingIndicator overlayBackgroundColor />}
     </ScreenWrapper>
   );
 };

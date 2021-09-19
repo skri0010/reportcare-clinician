@@ -147,7 +147,7 @@ export const ForgotPassword: FC<AuthScreensProps[AuthScreenName.FORGOT_PW]> = ({
           }
         />
       </SafeAreaView>
-      {loading && <LoadingIndicator />}
+      {loading && <LoadingIndicator overlayBackgroundColor />}
     </MobileScreenWrapper>
   );
 };

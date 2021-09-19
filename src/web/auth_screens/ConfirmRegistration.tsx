@@ -97,7 +97,7 @@ export const ConfirmRegistration: FC<
           onPress={inputValid ? confirm : () => null}
         />
       </SafeAreaView>
-      {confirming && <LoadingIndicator />}
+      {confirming && <LoadingIndicator overlayBackgroundColor />}
     </ScreenWrapper>
   );
 };
