@@ -33,6 +33,9 @@ export const CliniciansList: FC<CliniciansListScreen> = ({ flex = 1 }) => {
         onUserInput={() => {
           null;
         }}
+        onSearchClick={() => {
+          null;
+        }}
         containerStyle={{
           backgroundColor: colors.primaryContrastTextColor
         }}

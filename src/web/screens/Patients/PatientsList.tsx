@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { FlatList, View } from "react-native";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
@@ -11,6 +11,7 @@ import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { NoItemsTextIndicator } from "components/Indicators/NoItemsTextIndicator";
 import { setPatientDetails } from "ic-redux/actions/agents/actionCreator";
 import { PatientInfo } from "aws/API";
+import Fuse from "fuse.js";
 
 interface PatientsListScreen {
   displayPatientId?: string;
@@ -46,6 +47,9 @@ export const PatientsList: FC<PatientsListScreen> = ({
     }
   };
 
+  const [searching, setSearching] = useState<boolean>(false);
+  const [searchedSubset, setSubset] = useState<PatientInfo[]>([]);
+
   return (
     <View
       style={{
@@ -54,7 +58,7 @@ export const PatientsList: FC<PatientsListScreen> = ({
       }}
     >
       {/* Search bar*/}
-      <SearchBarComponent
+      {/*       <SearchBarComponent
         onUserInput={() => {
           null;
         }}
@@ -62,9 +66,9 @@ export const PatientsList: FC<PatientsListScreen> = ({
           backgroundColor: colors.primaryContrastTextColor
         }}
         placeholder={i18n.t("Patients.SearchBarPlaceholder")}
-      />
+      /> */}
       {/* Risk filter pills */}
-      <RiskFilterPillList patientScreen />
+      {/*       <RiskFilterPillList patientScreen /> */}
       {/* Risk filter pills and List of patients */}
       {fetchingPatients ? (
         // Show loading indicator if fetching patients
@@ -76,29 +80,68 @@ export const PatientsList: FC<PatientsListScreen> = ({
             onUserInput={() => {
               null;
             }}
+            onSearchClick={(searchString: string) => {
+              if (searchString.length === 0) {
+                setSearching(false);
+              } else {
+                const options = {
+                  includeScore: true,
+                  keys: ["name"]
+                };
+                const fuse = new Fuse(patients, options);
+
+                const result = fuse.search(searchString);
+                const searchResults: PatientInfo[] = [];
+                result.forEach((item) => searchResults.push(item.item));
+                setSearching(true);
+                setSubset(searchResults);
+              }
+            }}
             containerStyle={{
               backgroundColor: colors.primaryContrastTextColor
             }}
             placeholder={i18n.t("Patients.SearchBarPlaceholder")}
           />
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            ListEmptyComponent={() => (
-              <NoItemsTextIndicator
-                text={i18n.t("Patients.PatientsList.NoPatients")}
-              />
-            )}
-            ItemSeparatorComponent={() => <ItemSeparator />}
-            data={patients}
-            renderItem={({ item }) => (
-              <PatientDetailsRow
-                patient={item}
-                selected={displayPatientId === item.patientID}
-                onRowPress={onPatientRowPress}
-              />
-            )}
-            keyExtractor={(item) => item.patientID}
-          />
+          <RiskFilterPillList patientScreen />
+          {searching ? (
+            <FlatList
+              showsVerticalScrollIndicator={false}
+              ListEmptyComponent={() => (
+                <NoItemsTextIndicator
+                  text={i18n.t("Patients.PatientsList.NoPatients")}
+                />
+              )}
+              ItemSeparatorComponent={() => <ItemSeparator />}
+              data={searchedSubset}
+              renderItem={({ item }) => (
+                <PatientDetailsRow
+                  patient={item}
+                  selected={displayPatientId === item.patientID}
+                  onRowPress={onPatientRowPress}
+                />
+              )}
+              keyExtractor={(item) => item.patientID}
+            />
+          ) : (
+            <FlatList
+              showsVerticalScrollIndicator={false}
+              ListEmptyComponent={() => (
+                <NoItemsTextIndicator
+                  text={i18n.t("Patients.PatientsList.NoPatients")}
+                />
+              )}
+              ItemSeparatorComponent={() => <ItemSeparator />}
+              data={patients}
+              renderItem={({ item }) => (
+                <PatientDetailsRow
+                  patient={item}
+                  selected={displayPatientId === item.patientID}
+                  onRowPress={onPatientRowPress}
+                />
+              )}
+              keyExtractor={(item) => item.patientID}
+            />
+          )}
         </View>
       ) : null}
     </View>

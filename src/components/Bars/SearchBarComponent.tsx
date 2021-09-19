@@ -11,11 +11,12 @@ import {
 import { ScaledSheet, ms } from "react-native-size-matters";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Fuse from "fuse.js";
+import { PatientInfo } from "aws/API";
 
 // Interface for Search bar component props
 interface SearchBarComponentProps {
   onUserInput: (newValue: string) => void;
-  onSearchClick?: () => void;
+  onSearchClick: (searchString: string) => void;
   placeholder?: string;
   containerStyle?: {
     backgroundColor?: string;
@@ -55,6 +56,10 @@ export const SearchBarComponent: FC<SearchBarComponentProps> = ({
     onUserInput(newValue);
   };
 
+  const onSearch = () => {
+    onSearchClick(input);
+  };
+
   // JH-TODO: Replace placeholder with i18n
   return (
     <View style={{ backgroundColor: colors.primaryBackgroundColor }}>
@@ -77,7 +82,7 @@ export const SearchBarComponent: FC<SearchBarComponentProps> = ({
             } as any)
           ]}
         />
-        <TouchableOpacity onPress={onSearchClick} style={styles.button}>
+        <TouchableOpacity onPress={onSearch} style={styles.button}>
           <Icon
             name="magnify"
             style={[searchBarTextStyle, { fontSize: fonts.h4Size }]}
