@@ -56,7 +56,6 @@ class SyncProtectedInfo extends Activity {
               NWA: localClinician.protectedInfo.NWA,
               ALA: localClinician.protectedInfo.ALA,
               MHA: localClinician.protectedInfo.MHA,
-              owner: localClinician.clinicianID,
               _version: latestProtectedInfo?._version
             };
             await updateClinicianProtectedInfo(updatedProtectedInfo);
