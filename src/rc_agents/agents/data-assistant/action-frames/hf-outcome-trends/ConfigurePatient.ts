@@ -57,7 +57,7 @@ class ConfigurePatient extends Activity {
         ];
 
       // Get medication configuration from facts
-      const medConfiguration: MedInput[] =
+      const medConfiguration: MedicationInfo[] =
         agentAPI.getFacts()[BeliefKeys.PATIENT]?.[
           PatientAttributes.MEDICATION_TO_CONFIGURE
         ];
@@ -87,9 +87,9 @@ class ConfigurePatient extends Activity {
         else if (!isOnline) {
           // Add patient ID to each MedInput received from frontend
           // then save the MedInput into the list of medication infos to sync
-          const allMedInfoToSync: MedInput[] = [];
+          const allMedInfoToSync: MedicationInfo[] = [];
           medConfiguration.forEach((medInfo) => {
-            const medInfoToSync: MedInput = {
+            const medInfoToSync: MedicationInfo = {
               ...medInfo,
               patientID: configuration.patientID
             };
@@ -286,7 +286,7 @@ export const updatePatientConfiguration = async (
  * @returns a boolean indicating the success or failure of the medication info creation
  */
 export const createMedicationConfiguration = async (
-  medicationInfos: MedInput[],
+  medicationInfos: MedicationInfo[],
   patientID: string
 ): Promise<boolean> => {
   let createMedInfoSuccessful = false;
@@ -298,8 +298,8 @@ export const createMedicationConfiguration = async (
     medicationInfos.map(async (medInfo) => {
       const medInfoToInsert: CreateMedicationInfoInput = {
         name: medInfo.name,
-        dosage: parseFloat(medInfo.dosage),
-        frequency: parseFloat(medInfo.frequency),
+        dosage: medInfo.dosage,
+        frequency: medInfo.frequency,
         records: JSON.stringify("{}"),
         patientID: patientID,
         active: true

@@ -5,7 +5,12 @@ import {
   PatientDetails,
   MedInput
 } from "rc_agents/model";
-import { ClinicianInfo, PatientAssignment, PatientInfo } from "aws/API";
+import {
+  ClinicianInfo,
+  MedicationInfo,
+  PatientAssignment,
+  PatientInfo
+} from "aws/API";
 // eslint-disable-next-line no-restricted-imports
 import * as accessFunctions from "rc_agents/storage/accessFunctions";
 import {
@@ -61,7 +66,9 @@ export type AsyncStorageType = {
   };
   [AsyncStorageKeys.ALERTS]: AlertInfo[];
   [AsyncStorageKeys.PATIENT_CONFIGURATIONS]: PatientInfo[];
-  [AsyncStorageKeys.MEDICATION_CONFIGURATIONS]: { [key: string]: MedInput[] };
+  [AsyncStorageKeys.MEDICATION_CONFIGURATIONS]: {
+    [key: string]: MedicationInfo[];
+  };
   [AsyncStorageKeys.ALERT_INFOS]: {
     [key: string]: { [key: string]: AlertInfo };
   };
