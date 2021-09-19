@@ -284,7 +284,7 @@ export const SignIn: FC<AuthScreenProps[AuthenticationScreenName.SIGN_IN]> = ({
           </View>
         </View>
       </SafeAreaView>
-      {(signingIn || connecting) && <LoadingIndicator />}
+      {(signingIn || connecting) && <LoadingIndicator overlayBackgroundColor />}
     </ScreenWrapper>
   );
 };

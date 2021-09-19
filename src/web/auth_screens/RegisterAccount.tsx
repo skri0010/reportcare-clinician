@@ -236,7 +236,7 @@ export const RegisterAccount: FC<
           onPress={inputValid ? register : () => null}
         />
       </SafeAreaView>
-      {registering && <LoadingIndicator />}
+      {registering && <LoadingIndicator overlayBackgroundColor />}
     </ScreenWrapper>
   );
 };

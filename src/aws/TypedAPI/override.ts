@@ -36,9 +36,10 @@ export const getFullAlert = /* GraphQL */ `
           id
           Actname
           Location
-          Frequency
-          Days
-          time
+          expectedFrequency
+          expectedDays
+          expectedDurationMinutes
+          recordDateTime
           patientID
           _version
           _deleted

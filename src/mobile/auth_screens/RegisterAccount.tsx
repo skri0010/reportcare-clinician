@@ -247,7 +247,7 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
           />
         </KeyboardAwareScrollView>
       </SafeAreaView>
-      {registering && <LoadingIndicator />}
+      {registering && <LoadingIndicator overlayBackgroundColor />}
     </MobileScreenWrapper>
   );
 };
