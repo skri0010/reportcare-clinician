@@ -10,8 +10,6 @@ import {
 } from "react-native";
 import { ScaledSheet, ms } from "react-native-size-matters";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import Fuse from "fuse.js";
-import { PatientInfo } from "aws/API";
 
 // Interface for Search bar component props
 interface SearchBarComponentProps {
@@ -29,6 +27,7 @@ interface SearchBarComponentProps {
 export const SearchBarComponent: FC<SearchBarComponentProps> = ({
   onUserInput,
   onSearchClick,
+
   placeholder,
   containerStyle
 }) => {
