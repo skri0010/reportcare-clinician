@@ -14,17 +14,11 @@ import {
 } from "rc_agents/clinician_framework";
 import { LocalStorage, AsyncStorageKeys } from "rc_agents/storage";
 import { agentNWA } from "rc_agents/agents";
-import { getAlert, listClinicianPatientMaps } from "aws";
-import { store } from "util/useRedux";
-import { AlertInfo } from "rc_agents/model";
-import { Alert } from "aws/API";
-// eslint-disable-next-line no-restricted-imports
-import { alertToAlertInfo } from "rc_agents/agents/data-assistant/action-frames/triage-alert-hf-clinic/RetrieveAlerts";
-import { RiskLevel } from "models/RiskLevel";
-import {
-  setPendingAlertCount,
-  setPendingAlerts
-} from "ic-redux/actions/agents/actionCreator";
+import { getDetailedAlert, listClinicianPatientMaps } from "aws";
+import { AlertInfo, FetchAlertsMode } from "rc_agents/model";
+import { convertAlertToAlertInfo } from "util/utilityFunctions";
+import { replaceAlertNotifications } from "rc_agents/storage/setItem";
+import { AgentTrigger } from "rc_agents/trigger";
 
 /**
  * Class to represent the activity for processing local alert notifications.
@@ -46,7 +40,7 @@ class SyncProcessAlertNotifications extends Activity {
 
     try {
       // Get locally stored alert notifications
-      const alertNotifications = await LocalStorage.getAlertNotifications();
+      let alertNotifications = await LocalStorage.getAlertNotifications();
 
       // Get locally stored clinicianID
       const clinicianID = await LocalStorage.getClinicianID();
@@ -63,96 +57,66 @@ class SyncProcessAlertNotifications extends Activity {
         ) {
           // Maps mappings into array of patientIDs
           const patientIDs =
-            patientMappings.data.listClinicianPatientMaps.items.map(
-              (mapping) => mapping?.patientID
+            patientMappings.data.listClinicianPatientMaps.items.flatMap(
+              (item) => (item ? [item.patientID] : [])
             );
 
-          // Indicator of whether all alert notifications have been processed
-          let processSuccessful = true;
+          // Filter alert notifications that the clinician has no access to
+          alertNotifications = alertNotifications.flatMap((notification) =>
+            patientIDs.includes(notification.patientID) ? [notification] : []
+          );
 
-          // Keeps track of alertNotifications that have been processed
-          const processedIndices: number[] = [];
+          // Indicator of whether alert notifications have been synced (alerts have been retrieved)
+          const successfulIds: string[] = [];
 
-          // Stores retrieved alerts
-          const retrievedAlerts: Alert[] = [];
+          // Alerts that will be stored
+          const retrievedAlerts: AlertInfo[] = [];
 
-          await Promise.all(
+          // Get new alerts
+          const promises = await Promise.all(
             alertNotifications.map(async (notification) => {
-              if (patientIDs.includes(notification.patientID)) {
-                // Clinician has access to patient: retrieve and sort alert
-                const alertQuery = await getAlert({ id: notification.alertID });
-                if (alertQuery.data.getAlert) {
-                  // Alert retrieved: stores alert into list and pushes the corresponding alert notification index
-                  retrievedAlerts.push(alertQuery.data.getAlert);
-                  processedIndices.push(
-                    alertNotifications.indexOf(notification)
-                  );
-                } else {
-                  // Failed to retrieve alert: update indicator
-                  processSuccessful = false;
-                }
+              try {
+                // Retrieve alert
+                return getDetailedAlert({
+                  id: notification.alertID
+                });
+              } catch (error) {
+                // eslint-disable-next-line no-console
+                console.log(error);
               }
             })
           );
 
-          if (retrievedAlerts.length > 0) {
-            // Converts retrieved alerts to AlertInfo type
-            const alertsToDispatch: AlertInfo[] =
-              alertToAlertInfo(retrievedAlerts);
+          // Collect retrieved alerts and successful ids
+          for (let i = 0; i < promises.length; i++) {
+            const index = i;
+            const item = promises[index];
+            if (item?.data.getAlert) {
+              const alertInfo = convertAlertToAlertInfo(item.data.getAlert);
+              retrievedAlerts.push(alertInfo);
+              successfulIds.push(alertInfo.id);
+            }
+          }
 
-            // Stores alerts locally
-            await LocalStorage.setMultipleAlerts(alertsToDispatch);
-
-            // Accesses current state
-            const currentState = store.getState().agents;
-
-            // Adds on to pending alert count according to alerts' risk levels
-            const currentPendingAlertCounts = currentState.pendingAlertCount;
-            alertsToDispatch.forEach((alert) => {
-              switch (alert.riskLevel) {
-                case RiskLevel.HIGH:
-                  currentPendingAlertCounts.highRisk += 1;
-                  break;
-                case RiskLevel.MEDIUM:
-                  currentPendingAlertCounts.mediumRisk += 1;
-                  break;
-                case RiskLevel.LOW:
-                  currentPendingAlertCounts.lowRisk += 1;
-                  break;
-                case RiskLevel.UNASSIGNED:
-                  currentPendingAlertCounts.unassignedRisk += 1;
-                  break;
-                default:
-                  break;
+          // Remove notifications based on indices
+          if (successfulIds.length === alertNotifications.length) {
+            await LocalStorage.removeItem(AsyncStorageKeys.ALERT_NOTIFICATIONS);
+          } else {
+            // Removes successfully sync alert notifications (retrieved alerts)
+            successfulIds.forEach((id) => {
+              if (alertNotifications) {
+                const index = alertNotifications.findIndex(
+                  (notification) => notification.id === id
+                );
+                if (index >= 0) {
+                  delete alertNotifications[index];
+                }
               }
             });
-            // Dispatch updated alert counts
-            store.dispatch(setPendingAlertCount(currentPendingAlertCounts));
 
-            let currentPendingAlerts = currentState.pendingAlerts;
-            if (currentPendingAlerts) {
-              currentPendingAlerts =
-                alertsToDispatch.concat(currentPendingAlerts);
-            } else {
-              currentPendingAlerts = alertsToDispatch;
-            }
+            // Store locally
+            await replaceAlertNotifications(alertNotifications);
 
-            // Dispatch updated list of pending alerts
-            store.dispatch(setPendingAlerts(currentPendingAlerts));
-          }
-
-          // Remove AsyncStorage entry if all alert notifications are processed
-          if (processSuccessful) {
-            await LocalStorage.removeItem(AsyncStorageKeys.ALERT_NOTIFICATIONS);
-          }
-
-          // Store alert notifications that failed to be processed
-          else if (processedIndices.length > 0) {
-            await LocalStorage.setAlertNotifications(
-              alertNotifications.filter(
-                (_, index) => !processedIndices.includes(index)
-              )
-            );
             setRetryLaterTimeout(() => {
               agentNWA.addBelief(
                 new Belief(
@@ -162,6 +126,14 @@ class SyncProcessAlertNotifications extends Activity {
                 )
               );
             });
+          }
+
+          // Store retrieved alerts
+          await LocalStorage.setAlertInfos(retrievedAlerts);
+
+          if (successfulIds.length > 0) {
+            // Trigger procedure to retrieve alerts locally
+            AgentTrigger.triggerRetrieveAlerts(FetchAlertsMode.ALL, true);
           }
         }
       }

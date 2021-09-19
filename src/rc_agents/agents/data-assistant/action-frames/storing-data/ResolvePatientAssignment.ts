@@ -182,8 +182,7 @@ const approvePatientAssignment: (params: {
   try {
     await createClinicianPatientMap({
       patientID: assignment.patientID,
-      clinicianID: assignment.clinicianID,
-      owner: assignment.clinicianID
+      clinicianID: assignment.clinicianID
     });
     createSuccessful = true;
   } catch (error) {

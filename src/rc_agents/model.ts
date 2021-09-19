@@ -3,7 +3,8 @@ import {
   ReportSymptom,
   ReportVitals,
   PatientInfo,
-  MedicalRecord
+  MedicalRecord,
+  Alert
 } from "aws/API";
 import { RiskLevel } from "models/RiskLevel";
 
@@ -43,6 +44,11 @@ export enum PatientAssignmentStatus {
 
 export enum AlertStatus {
   PENDING = "PENDING",
+  COMPLETED = "COMPLETED"
+}
+
+export enum FetchAlertsMode {
+  PENDING = "PENDING",
   COMPLETED = "COMPLETED",
   ALL = "ALL",
   NONE = "NONE"
@@ -54,6 +60,26 @@ export enum AlertColorCode {
   LOW = "green",
   UNASSIGNED = "white"
 }
+
+/**
+ * Maps alert's color code to risk level.
+ * @param colorCode alert's color code
+ * @returns risk level corresponding to the color code
+ */
+export const mapColorCodeToRiskLevel = (colorCode: string): RiskLevel => {
+  switch (colorCode) {
+    case AlertColorCode.HIGH:
+      return RiskLevel.HIGH;
+    case AlertColorCode.MEDIUM:
+      return RiskLevel.MEDIUM;
+    case AlertColorCode.LOW:
+      return RiskLevel.LOW;
+    case AlertColorCode.UNASSIGNED:
+      return RiskLevel.UNASSIGNED;
+    default:
+      return RiskLevel.UNASSIGNED;
+  }
+};
 
 export type RiskFilter = { [riskLevel in RiskLevel]: boolean };
 
@@ -103,32 +129,25 @@ export interface PatientAssignmentResolution {
   _version: number;
 }
 
-export interface PendingAlertCount {
+export interface AlertsCount {
   highRisk: number;
   mediumRisk: number;
   lowRisk: number;
   unassignedRisk: number;
 }
 
-export interface AlertInfo {
-  id: string;
-  patientID: string;
-  patientName: string;
+export type AlertInfo = {
   riskLevel: RiskLevel;
-  NHYAClass?: string;
   diagnosis?: string;
-  dateTime: string;
-  summary: string;
-  vitalsReportID: string;
-  symptomReportID: string;
-  vitalsReport?: ReportVitals;
-  symptomReport?: ReportSymptom;
+  NYHAClass?: string;
   lastMedication?: string;
   medicationQuantity?: number;
   activityDuringAlert?: string;
-  completed: boolean;
-  _version: number;
-}
+} & Alert;
+
+export type ProcessedAlertInfos = {
+  [patientID: string]: AlertInfo[] | undefined;
+};
 
 export interface TodoInput {
   id?: string;

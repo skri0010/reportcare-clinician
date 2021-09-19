@@ -11,11 +11,11 @@ import { Belief } from "agents-framework";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
   AlertInfo,
-  AlertStatus,
-  MedicalRecordInput,
+  FetchAlertsMode,
   PatientAssignmentResolution,
   TodoInput,
-  TodoStatus
+  TodoStatus,
+  MedicalRecordInput
 } from "rc_agents/model";
 import {
   AlertNotification,
@@ -225,12 +225,24 @@ export const triggerUpdateTodo = (input: TodoInput): void => {
 };
 
 // AT-CP-I: Trigger RetriveAlerts of DTA
-export const triggerRetrieveAlerts = (alertStatus: AlertStatus): void => {
+export const triggerRetrieveAlerts = (
+  fetchAlertsMode: FetchAlertsMode,
+  retrieveAlertsLocally = false
+): void => {
   agentAPI.addFact(
     new Belief(
       BeliefKeys.CLINICIAN,
-      ClinicianAttributes.ALERT_STATUS,
-      alertStatus
+      ClinicianAttributes.FETCH_ALERTS_MODE,
+      fetchAlertsMode
+    ),
+    false
+  );
+
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.CLINICIAN,
+      ClinicianAttributes.RETRIEVE_ALERTS_LOCALLY,
+      retrieveAlertsLocally
     ),
     false
   );
@@ -239,6 +251,7 @@ export const triggerRetrieveAlerts = (alertStatus: AlertStatus): void => {
   agentDTA.addBelief(
     new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.RETRIEVE_ALERTS, true)
   );
+
   agentAPI.addFact(
     new Belief(
       BeliefKeys.PROCEDURE,
@@ -248,18 +261,20 @@ export const triggerRetrieveAlerts = (alertStatus: AlertStatus): void => {
   );
 };
 
-// AT-CP-II Triggers RetrieveAlertInfo of DTA
-export const triggerRetrieveAlertInfo = (input: AlertInfo): void => {
+// AT-CP-II Triggers RetrieveDetailedAlertInfo of DTA
+export const triggerRetrieveDetailedAlertInfo = (
+  alertInfo: AlertInfo
+): void => {
   // Add alert as facts
   agentAPI.addFact(
-    new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.ALERT, input),
+    new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.ALERT_INFO, alertInfo),
     false
   );
 
   agentDTA.addBelief(
     new Belief(
       BeliefKeys.CLINICIAN,
-      ClinicianAttributes.RETRIEVE_ALERT_INFO,
+      ClinicianAttributes.RETRIEVE_DETAILED_ALERT_INFO,
       true
     )
   );

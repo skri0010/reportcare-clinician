@@ -6,6 +6,8 @@ import { AsyncStorageKeys } from ".";
  */
 export * from "./getItem";
 export * from "./setItem";
+export * from "./flushItem";
+
 export const removeItem = async (key: AsyncStorageKeys): Promise<void> => {
   await AsyncStorage.removeItem(key);
 };

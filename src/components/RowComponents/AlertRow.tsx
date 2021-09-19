@@ -1,40 +1,60 @@
 import React, { FC } from "react";
 import { View, TouchableOpacity } from "react-native";
-import { H4, H5 } from "components/Text/index";
+import { H4, H6 } from "components/Text/index";
 import { AlertInfo } from "rc_agents/model";
-import moment from "moment";
+import { RootState, select } from "util/useRedux";
+import { getRiskLevelColor } from "models/RiskLevel";
+import { ScaledSheet } from "react-native-size-matters";
 
 interface AlertRowProps {
   alertDetails: AlertInfo;
-  onCardPress?: () => void;
+  selected?: boolean;
+  onCardPress?: (alert: AlertInfo) => void;
 }
 
-const getLocalDateTime = (datetime: string) => {
-  const localDateTime = moment.utc(datetime).local();
-  return localDateTime.format("HH:mm DD-MM-YYYY");
-};
+export const AlertRow: FC<AlertRowProps> = ({
+  alertDetails,
+  selected,
+  onCardPress
+}) => {
+  const { colors } = select((state: RootState) => ({
+    colors: state.settings.colors
+  }));
 
-export const AlertRow: FC<AlertRowProps> = ({ alertDetails, onCardPress }) => {
   return (
-    <TouchableOpacity onPress={onCardPress} style={{ opacity: 1 }}>
+    <TouchableOpacity
+      style={{
+        opacity: selected ? 0.5 : 1,
+        backgroundColor: getRiskLevelColor(
+          colors.riskLevelBackgroundColors,
+          alertDetails.riskLevel
+        )
+      }}
+      disabled={selected || !onCardPress}
+      onPress={
+        onCardPress && !selected ? () => onCardPress(alertDetails) : undefined
+      }
+    >
       <View style={{ flexDirection: "row" }}>
-        <View style={{ paddingVertical: "3@ms", flex: 1 }}>
-          <View style={{ padding: "10@ms" }}>
-            <H4
-              text={alertDetails.patientName}
-              style={{ fontWeight: "bold", paddingBottom: "10@ms" }}
-            />
-            <H5
-              text={alertDetails.summary}
-              style={{ paddingBottom: "10@ms " }}
-            />
-            <H5
-              text={getLocalDateTime(alertDetails.dateTime)}
-              style={{ paddingBottom: "10@ms" }}
-            />
-          </View>
+        <View style={styles.container}>
+          <H4 text={alertDetails.patientName} style={styles.mainItem} />
+          <H6 text={alertDetails.summary} style={styles.subItem} />
+          <H6
+            text={`${new Date(alertDetails.dateTime).toLocaleString()}`}
+            style={styles.subItem}
+          />
         </View>
       </View>
     </TouchableOpacity>
   );
 };
+
+const styles = ScaledSheet.create({
+  container: {
+    padding: "5@ms"
+  },
+  mainItem: { fontWeight: "600", paddingBottom: "5@ms" },
+  subItem: {
+    paddingBottom: "1@ms"
+  }
+});

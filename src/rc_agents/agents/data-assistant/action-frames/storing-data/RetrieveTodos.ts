@@ -25,11 +25,14 @@ import {
 import {
   listCompletedTodosByLastModifiedDate,
   listPendingTodosByLastModifiedDate,
-  getAlert
+  getDetailedAlert
 } from "aws";
 import { ModelSortDirection, Todo } from "aws/API";
-import { LocalTodo, TodoStatus } from "rc_agents/model";
-import { mapColorCodeToRiskLevel } from "../triage-alert-hf-clinic/RetrievePendingAlertCount";
+import {
+  LocalTodo,
+  mapColorCodeToRiskLevel,
+  TodoStatus
+} from "rc_agents/model";
 
 /**
  * Class to represent an activity for creating an entry to clinician's Todo table.
@@ -104,7 +107,7 @@ class RetrieveTodos extends Activity {
                 _version: todo._version
               };
               if (todo.alertID) {
-                const query = await getAlert({
+                const query = await getDetailedAlert({
                   id: todo.alertID
                 });
                 if (query.data?.getAlert) {

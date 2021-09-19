@@ -13,31 +13,32 @@ import {
   AppAttributes,
   BeliefKeys,
   ClinicianAttributes,
-  ProcedureAttributes
+  ProcedureAttributes,
+  setRetryLaterTimeout
 } from "rc_agents/clinician_framework";
 import { LocalStorage } from "rc_agents/storage";
 import { listCompletedRiskAlerts, listPendingRiskAlerts } from "aws";
-import { AlertInfo, AlertStatus } from "rc_agents/model";
-import { Alert } from "aws/API";
+import {
+  AlertInfo,
+  FetchAlertsMode,
+  AlertsCount,
+  AlertStatus
+} from "rc_agents/model";
 import { store } from "util/useRedux";
 import {
   setFetchingAlerts,
   setFetchingCompletedAlerts,
   setFetchingPendingAlerts
 } from "ic-redux/actions/agents/actionCreator";
-import { mapColorCodeToRiskLevel } from "./RetrievePendingAlertCount";
-
-// LS-TODO: To be tested with actual Alerts.
-// NOTE: This is originally MHA's action frame.
+import { Alert } from "aws/API";
+import { RiskLevel } from "models/RiskLevel";
+import { convertAlertsToAlertInfos } from "util/utilityFunctions";
 
 /**
  * Class to represent the activity for retrieving alerts.
  * This happens in Procedure Triage Alert HF Clinic (AT-CP).
  */
 class RetrieveAlerts extends Activity {
-  /**
-   * Constructor for the RetrieveAlerts class
-   */
   constructor() {
     super(ActionFrameIDs.DTA.RETRIEVE_ALERTS);
   }
@@ -49,175 +50,288 @@ class RetrieveAlerts extends Activity {
   async doActivity(agent: Agent): Promise<void> {
     await super.doActivity(agent, [rule2]);
 
+    const facts = agentAPI.getFacts();
+    // Get fetch alert mode from facts
+    const fetchAlertsMode: FetchAlertsMode | undefined =
+      facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.FETCH_ALERTS_MODE];
+
+    // Get online status from facts
+    const isOnline: boolean = facts[BeliefKeys.APP]?.[AppAttributes.ONLINE];
+
+    // Get retrieve locally boolean from facts
+    const retrieveAlertsLocally =
+      facts[BeliefKeys.CLINICIAN]?.[
+        ClinicianAttributes.RETRIEVE_ALERTS_LOCALLY
+      ];
+
+    // Dispatch to store to indicate fetching
+    if (fetchAlertsMode) {
+      this.dispatchFetching(fetchAlertsMode, true);
+    }
+
     try {
-      const facts = agentAPI.getFacts();
+      if (fetchAlertsMode) {
+        let pendingAlertInfos: AlertInfo[] | undefined | null;
+        let completedAlertInfos: AlertInfo[] | undefined | null;
 
-      // Gets alert status and risk level from facts
-      const alertStatus: AlertStatus =
-        facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.ALERT_STATUS];
+        if (isOnline && !retrieveAlertsLocally) {
+          // Device is online and not do not need to fetch alerts locally
+          let pendingAlerts: Alert[] | undefined | null;
+          let completedAlerts: Alert[] | undefined | null;
 
-      // Dispatch to store to indicate fetching of Alerts
-      if (alertStatus === AlertStatus.PENDING) {
-        store.dispatch(setFetchingPendingAlerts(true));
-      } else if (alertStatus === AlertStatus.COMPLETED) {
-        store.dispatch(setFetchingCompletedAlerts(true));
-      } else if (alertStatus === AlertStatus.ALL) {
-        store.dispatch(setFetchingAlerts(true));
-      }
-
-      if (alertStatus) {
-        if (facts[BeliefKeys.APP][AppAttributes.ONLINE]) {
-          // Device is online
-          let alerts: Alert[] | undefined;
-          let additionalAlerts: Alert[] | undefined;
-
+          // Retrieve alerts based on fetchAlertsMode
           if (
-            alertStatus === AlertStatus.PENDING ||
-            alertStatus === AlertStatus.COMPLETED
+            fetchAlertsMode === FetchAlertsMode.PENDING ||
+            fetchAlertsMode === FetchAlertsMode.ALL
           ) {
-            // retrieve alerts by status
-            alerts = await getAlertsByStatus(alertStatus);
-          } else {
-            // case when all alert is required
-            // both pending and completed alerts must be concatenated
-            // default for each is empty list [] if undefined
-            alerts = (await getAlertsByStatus(AlertStatus.PENDING)) || [];
-            additionalAlerts =
-              (await getAlertsByStatus(AlertStatus.COMPLETED)) || [];
-            alerts = alerts.concat(additionalAlerts);
+            pendingAlerts = await this.getAlertsByFetchAlertsMode(
+              FetchAlertsMode.PENDING
+            );
+          }
+          if (
+            fetchAlertsMode === FetchAlertsMode.COMPLETED ||
+            fetchAlertsMode === FetchAlertsMode.ALL
+          ) {
+            completedAlerts = await this.getAlertsByFetchAlertsMode(
+              FetchAlertsMode.COMPLETED
+            );
           }
 
-          // Convert Alert[] to AlertInfo[]
-          const alertsToDispatch = alertToAlertInfo(alerts);
+          // Flush locally store info
+          await LocalStorage.flushAlertInfos();
 
-          if (alerts) {
-            // Merges newly retrieved alerts into locally stored alerts
-            await LocalStorage.setMultipleAlerts(alertsToDispatch);
+          // Store pending / completed AlertInfo[]
+          if (pendingAlerts) {
+            pendingAlertInfos = convertAlertsToAlertInfos(pendingAlerts);
+            await LocalStorage.setAlertInfos(pendingAlertInfos);
+          }
+          if (completedAlerts) {
+            completedAlertInfos = convertAlertsToAlertInfos(completedAlerts);
+            await LocalStorage.setAlertInfos(completedAlertInfos);
+          }
+        } else {
+          // Device is offline or fetch locally based on fetchAlertsMode
+          // eslint-disable-next-line no-lonely-if
+          if (
+            fetchAlertsMode === FetchAlertsMode.PENDING ||
+            fetchAlertsMode === FetchAlertsMode.ALL
+          ) {
+            pendingAlertInfos = await LocalStorage.getPendingAlertInfos();
+          }
+          if (
+            fetchAlertsMode === FetchAlertsMode.COMPLETED ||
+            fetchAlertsMode === FetchAlertsMode.ALL
+          ) {
+            completedAlertInfos = await LocalStorage.getCompletedAlertInfos();
+          }
+        }
 
-            // add to fact for displayAlert to retrieve
+        if (pendingAlertInfos || completedAlertInfos) {
+          // Update Facts
+          // Store items
+          if (pendingAlertInfos) {
+            // Pending AlertInfo[]
             agentAPI.addFact(
               new Belief(
                 BeliefKeys.CLINICIAN,
-                ClinicianAttributes.ALERTS,
-                alertsToDispatch
+                ClinicianAttributes.PENDING_ALERTS,
+                pendingAlertInfos
+              ),
+              false
+            );
+
+            // Pending alerts count
+            const pendingAlertsCount = getAlertsCount(pendingAlertInfos);
+            agentAPI.addFact(
+              new Belief(
+                BeliefKeys.CLINICIAN,
+                ClinicianAttributes.PENDING_ALERTS_COUNT,
+                pendingAlertsCount
               ),
               false
             );
           }
-        } else {
-          // Device is offline need to add get pending
-          await dispatchFromMemory(AlertStatus.ALL);
+
+          if (completedAlertInfos) {
+            agentAPI.addFact(
+              new Belief(
+                BeliefKeys.CLINICIAN,
+                ClinicianAttributes.COMPLETED_ALERTS,
+                completedAlertInfos
+              ),
+              false
+            );
+          }
+
+          // Trigger request to Communicate to USXA
+          agent.addBelief(
+            new Belief(
+              BeliefKeys.CLINICIAN,
+              ClinicianAttributes.ALERTS_RETRIEVED,
+              true
+            )
+          );
         }
+
+        // Remove item
+        agentAPI.addFact(
+          new Belief(
+            BeliefKeys.CLINICIAN,
+            ClinicianAttributes.FETCH_ALERTS_MODE,
+            null
+          ),
+          false
+        );
+        agentAPI.addFact(
+          new Belief(
+            BeliefKeys.CLINICIAN,
+            ClinicianAttributes.RETRIEVE_ALERTS_LOCALLY,
+            null
+          ),
+          false
+        );
       }
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
+      // Set to retry later
+      setRetryLaterTimeout(() => {
+        agent.addBelief(
+          new Belief(
+            BeliefKeys.PATIENT,
+            ClinicianAttributes.RETRIEVE_ALERTS,
+            true
+          )
+        );
+        agentAPI.addFact(
+          new Belief(
+            BeliefKeys.PROCEDURE,
+            ProcedureAttributes.AT_CP_I,
+            ProcedureConst.ACTIVE
+          )
+        );
+      });
+
+      // Update Facts
+      // End the procedure
+      agentAPI.addFact(
+        new Belief(
+          BeliefKeys.PROCEDURE,
+          ProcedureAttributes.AT_CP_I,
+          ProcedureConst.INACTIVE
+        ),
+        true,
+        true
+      );
+
+      // Dispatch to store to indicate fetching has ended
+      if (fetchAlertsMode) {
+        this.dispatchFetching(fetchAlertsMode, false);
+      }
+    }
+  }
+
+  // Query based on fetch alerts mode
+  getAlertsByFetchAlertsMode = async (
+    fetchAlertsMode: FetchAlertsMode
+  ): Promise<Alert[] | null> => {
+    let alerts: Alert[] = [];
+    let querySuccessful = false; // If query is not successful, return null
+
+    // Query
+    if (fetchAlertsMode === FetchAlertsMode.PENDING) {
+      const query = await listPendingRiskAlerts({
+        pending: AlertStatus.PENDING
+      });
+      // Process pending risk alerts
+      if (query.data.listPendingRiskAlerts?.items) {
+        querySuccessful = true;
+        const { items } = query.data.listPendingRiskAlerts;
+        if (!alerts) {
+          alerts = [];
+        }
+        if (items) {
+          items.forEach((item) => {
+            if (item) {
+              alerts.push(item);
+            }
+          });
+        }
+      }
+    } else {
+      const query = await listCompletedRiskAlerts({
+        completed: AlertStatus.COMPLETED
+      });
+      // Process completed risk alerts
+      if (query.data.listCompletedRiskAlerts?.items) {
+        querySuccessful = true;
+        const { items } = query.data.listCompletedRiskAlerts;
+        if (items) {
+          items.forEach((item) => {
+            if (item) {
+              if (!alerts) {
+                alerts = [];
+              }
+              alerts.push(item);
+            }
+          });
+        }
+      }
+    }
+
+    if (!querySuccessful && alerts.length === 0) {
+      return null;
+    }
+
+    return alerts;
+  };
+
+  // Dispatch to Redux store based on fetch alerts mode
+  // eslint-disable-next-line class-methods-use-this
+  dispatchFetching(fetchAlertsMode: FetchAlertsMode, value: boolean) {
+    if (fetchAlertsMode === FetchAlertsMode.PENDING) {
+      store.dispatch(setFetchingPendingAlerts(value));
+    } else if (fetchAlertsMode === FetchAlertsMode.COMPLETED) {
+      store.dispatch(setFetchingCompletedAlerts(value));
+    } else if (fetchAlertsMode === FetchAlertsMode.ALL) {
+      store.dispatch(setFetchingAlerts(value));
     }
   }
 }
 
-/**
- * Gets locally stored alerts, pending or completed, and dispatch to redux
- * @param alertStatus status of alerts, pending or completed
- */
-export const dispatchFromMemory = async (
-  alertStatus: AlertStatus
-): Promise<void> => {
-  let alertsToDispatch: AlertInfo[] | null = null;
+// eslint-disable-next-line class-methods-use-this
+export const getAlertsCount: (alerts: AlertInfo[]) => AlertsCount = (
+  alerts
+) => {
+  // Pending alerts count
+  const alertsCount: AlertsCount = {
+    highRisk: 0,
+    mediumRisk: 0,
+    lowRisk: 0,
+    unassignedRisk: 0
+  };
 
-  if (alertStatus === AlertStatus.PENDING) {
-    alertsToDispatch = await LocalStorage.getPendingAlerts();
-  } else if (alertStatus === AlertStatus.COMPLETED) {
-    alertsToDispatch = await LocalStorage.getCompletedAlerts();
-  } else if (alertStatus === AlertStatus.ALL) {
-    alertsToDispatch = await LocalStorage.getAlerts();
-  }
-  if (alertsToDispatch) {
-    agentAPI.addFact(
-      new Belief(
-        BeliefKeys.CLINICIAN,
-        ClinicianAttributes.ALERTS,
-        alertsToDispatch
-      ),
-      false
-    );
-  }
-};
-
-/**
- * Convert lit of Alerts to AlertInfo
- * @param alerts list of alerts
- * @returns list of alert Infos
- */
-export const alertToAlertInfo = (alerts: Alert[] | undefined): AlertInfo[] => {
-  const alertsToDispatch: AlertInfo[] = [];
-  if (alerts) {
-    alerts.map((alert) => {
-      const currentAlert: AlertInfo = {
-        id: alert.id,
-        patientID: alert.patientID,
-        patientName: alert.patientName,
-        vitalsReportID: alert.vitalsReportID,
-        symptomReportID: alert.symptomReportID,
-        riskLevel: mapColorCodeToRiskLevel(alert.colorCode),
-        dateTime: alert.dateTime,
-        summary: alert.summary,
-        completed: alert.completed === AlertStatus.COMPLETED,
-        _version: alert._version
-      };
-
-      alertsToDispatch.push(currentAlert);
-      return null;
-    });
-  }
-  return alertsToDispatch;
-};
-
-/**
- * Gets list of alerts by status
- * @param alertStatus status of alert, Pending or Completed
- * @returns list of Alerts if found
- */
-export const getAlertsByStatus = async (
-  alertStatus: AlertStatus
-): Promise<Alert[] | undefined> => {
-  let alerts: Alert[] | undefined;
-
-  if (alertStatus === AlertStatus.PENDING) {
-    const query = await listPendingRiskAlerts({
-      pending: AlertStatus.PENDING
-    });
-    if (query.data && query.data.listPendingRiskAlerts) {
-      const result = query.data.listPendingRiskAlerts.items;
-      if (result && result.length > 0) {
-        alerts = result as Alert[];
-      }
+  alerts.forEach((alert) => {
+    // Alert type is received if device is online or offline
+    switch ((alert as AlertInfo).riskLevel) {
+      case RiskLevel.HIGH:
+        alertsCount.highRisk += 1;
+        break;
+      case RiskLevel.MEDIUM:
+        alertsCount.mediumRisk += 1;
+        break;
+      case RiskLevel.LOW:
+        alertsCount.lowRisk += 1;
+        break;
+      case RiskLevel.UNASSIGNED:
+        alertsCount.unassignedRisk += 1;
+        break;
+      default:
+        break;
     }
-  } else {
-    const query = await listCompletedRiskAlerts({
-      completed: AlertStatus.COMPLETED
-    });
-    if (query.data && query.data.listCompletedRiskAlerts) {
-      const result = query.data.listCompletedRiskAlerts.items;
-      if (result && result.length > 0) {
-        alerts = result as Alert[];
-      }
-    }
-  }
-  return alerts;
-};
-
-/**
- * Sorts alerts / alert infos in descending order of datetime.
- * @param alerts List of alerts / alert infos to be sorted
- * @returns list of sorted alerts / alert infos
- */
-export const sortAlertsByDateTime = (alerts: AlertInfo[]): AlertInfo[] => {
-  return alerts.sort((a, b) => {
-    const date1 = new Date(a.dateTime);
-    const date2 = new Date(b.dateTime);
-    return date2.getTime() - date1.getTime();
   });
+
+  return alertsCount;
 };
 
 // Preconditions

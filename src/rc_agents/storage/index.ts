@@ -1,5 +1,6 @@
 import {
   AlertInfo,
+  ProcessedAlertInfos,
   LocalTodo,
   PatientAssignmentResolution,
   PatientDetails
@@ -57,14 +58,11 @@ export type AsyncStorageType = {
   [AsyncStorageKeys.ALL_PATIENT_DETAILS]: {
     [patientId: string]: PatientDetails | undefined;
   };
-  [AsyncStorageKeys.ALERTS]: AlertInfo[];
   [AsyncStorageKeys.PATIENT_CONFIGURATIONS]: PatientInfo[];
-  [AsyncStorageKeys.ALERT_INFOS]: {
-    [key: string]: { [key: string]: AlertInfo };
-  };
+  [AsyncStorageKeys.ALERT_INFOS]: ProcessedAlertInfos;
   [AsyncStorageKeys.TODOS]: LocalTodo[];
   [AsyncStorageKeys.TODO_DETAILS]: LocalTodo;
-  [AsyncStorageKeys.ALERTS_SYNC]: { [key: string]: AlertInfo };
+  [AsyncStorageKeys.ALERTS_SYNC]: AlertInfo[];
   [AsyncStorageKeys.ALERT_NOTIFICATIONS]: AlertNotification[];
   [AsyncStorageKeys.PATIENT_ASSIGNMENT_SUBSCRIPTIONS]: PatientAssignmentSubscription[];
 };

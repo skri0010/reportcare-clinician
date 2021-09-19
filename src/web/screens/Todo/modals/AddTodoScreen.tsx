@@ -11,29 +11,27 @@ import { H3 } from "components/Text";
 import { RootState, select, useDispatch } from "util/useRedux";
 import i18n from "util/language/i18n";
 import { TodoInput } from "rc_agents/model";
-import {
-  setProcedureOngoing,
-  setProcedureSuccessful
-} from "ic-redux/actions/agents/actionCreator";
 import { useToast } from "react-native-toast-notifications";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AgentTrigger } from "rc_agents/trigger";
 import { useRoute } from "@react-navigation/native";
 import { ScreenName } from "web/navigation";
+import { setUpdatingAlertIndicators } from "ic-redux/actions/agents/actionCreator";
 
 interface AddTodoScreenProps {
   setModalVisible: (state: boolean) => void;
 }
 
 export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
-  const { colors, fonts, procedureSuccessful, procedureOngoing, alertInfo } =
-    select((state: RootState) => ({
+  const { colors, fonts, alertInfo, updatingAlert, alertUpdated } = select(
+    (state: RootState) => ({
       colors: state.settings.colors,
       fonts: state.settings.fonts,
-      procedureOngoing: state.agents.procedureOngoing,
-      procedureSuccessful: state.agents.procedureSuccessful,
-      alertInfo: state.agents.alertInfo
-    }));
+      alertInfo: state.agents.alertInfo,
+      updatingAlert: state.agents.updatingAlert,
+      alertUpdated: state.agents.alertUpdated
+    })
+  );
 
   const shortTodoTextInputStyle: StyleProp<ViewStyle> = {
     backgroundColor: colors.primaryContrastTextColor,
@@ -42,9 +40,10 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
   };
 
   const [titleInput, setTitleInput] = useState<string>(""); // Title input
-  const [patientInput, setPatientInput] = useState<string>(""); // Patient name input
+  const [patientInput, setPatientInput] = useState<string>(
+    alertInfo?.patientName || ""
+  ); // Patient name input
   const [noteInput, setNoteInput] = useState<string>(""); // Notes input
-  const [creating, setCreating] = useState(false); // Used locally for detecting ongoing procedure
 
   // Functions that allow user inputs to be shown in the text inputs
   const onChangeTitle = (newTitle: string) => {
@@ -79,34 +78,25 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
       riskLevel: inAlertScreen && alertInfo ? alertInfo.riskLevel : undefined
     };
 
-    dispatch(setProcedureOngoing(true));
-    setCreating(true);
     AgentTrigger.triggerCreateTodo(todoInput);
   };
 
   // Detects completion of CreateTodo procedure and shows the appropriate toast.
   useEffect(() => {
-    if (creating && !procedureOngoing) {
-      setCreating(false);
-      setModalVisible(false);
+    if (!updatingAlert && alertUpdated) {
+      // Dispatch to store to reset indicators
+      dispatch(
+        setUpdatingAlertIndicators({
+          updatingAlert: false,
+          alertUpdated: false
+        })
+      );
 
-      if (procedureSuccessful) {
-        // Operation successful
-        toast.show(i18n.t("Todo.TodoCreateSuccessful"), { type: "success" });
-        dispatch(setProcedureSuccessful(false));
-      } else {
-        // Operation failed
-        toast.show(i18n.t("UnexpectedError"), { type: "danger" });
-      }
+      // Operation should always be successful since it works offline
+      toast.show(i18n.t("Todo.TodoCreateSuccessful"), { type: "success" });
+      setModalVisible(false);
     }
-  }, [
-    dispatch,
-    creating,
-    procedureOngoing,
-    procedureSuccessful,
-    setModalVisible,
-    toast
-  ]);
+  }, [updatingAlert, alertUpdated, dispatch, setModalVisible, toast]);
 
   return (
     <View
@@ -139,6 +129,8 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
           shortTodoTextInputStyle,
           { fontSize: fonts.h4Size }
         ]}
+        editable={false}
+        selectTextOnFocus={false}
         onChangeText={onChangePatient}
       />
       {/* Notes input */}
@@ -195,7 +187,7 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
       </View>
 
       {/* Loading Indicator while Todo is being created */}
-      {creating && <LoadingIndicator />}
+      {updatingAlert && <LoadingIndicator />}
     </View>
   );
 };
