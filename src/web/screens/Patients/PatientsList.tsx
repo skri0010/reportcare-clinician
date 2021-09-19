@@ -47,7 +47,10 @@ export const PatientsList: FC<PatientsListScreen> = ({
     }
   };
 
+  // Check if the search is being used
   const [searching, setSearching] = useState<boolean>(false);
+
+  // Store results of fuzzy search
   const [searchedSubset, setSubset] = useState<PatientInfo[]>([]);
 
   return (
@@ -58,51 +61,39 @@ export const PatientsList: FC<PatientsListScreen> = ({
       }}
     >
       {/* Search bar*/}
-      {/*       <SearchBarComponent
+      <SearchBarComponent
         onUserInput={() => {
           null;
+        }}
+        onSearchClick={(searchString: string) => {
+          if (searchString.length === 0) {
+            setSearching(false);
+          } else if (patients) {
+            const options = {
+              includeScore: true,
+              keys: ["name"]
+            };
+            const fuse = new Fuse(patients, options);
+
+            const result = fuse.search(searchString);
+            const searchResults: PatientInfo[] = [];
+            result.forEach((item) => searchResults.push(item.item));
+            setSearching(true);
+            setSubset(searchResults);
+          }
         }}
         containerStyle={{
           backgroundColor: colors.primaryContrastTextColor
         }}
         placeholder={i18n.t("Patients.SearchBarPlaceholder")}
-      /> */}
-      {/* Risk filter pills */}
-      {/*       <RiskFilterPillList patientScreen /> */}
-      {/* Risk filter pills and List of patients */}
+      />
+      <RiskFilterPillList patientScreen />
       {fetchingPatients ? (
         // Show loading indicator if fetching patients
         <LoadingIndicator flex={1} />
       ) : patients ? (
         // Show patients if list exists
         <View>
-          <SearchBarComponent
-            onUserInput={() => {
-              null;
-            }}
-            onSearchClick={(searchString: string) => {
-              if (searchString.length === 0) {
-                setSearching(false);
-              } else {
-                const options = {
-                  includeScore: true,
-                  keys: ["name"]
-                };
-                const fuse = new Fuse(patients, options);
-
-                const result = fuse.search(searchString);
-                const searchResults: PatientInfo[] = [];
-                result.forEach((item) => searchResults.push(item.item));
-                setSearching(true);
-                setSubset(searchResults);
-              }
-            }}
-            containerStyle={{
-              backgroundColor: colors.primaryContrastTextColor
-            }}
-            placeholder={i18n.t("Patients.SearchBarPlaceholder")}
-          />
-          <RiskFilterPillList patientScreen />
           {searching ? (
             <FlatList
               showsVerticalScrollIndicator={false}

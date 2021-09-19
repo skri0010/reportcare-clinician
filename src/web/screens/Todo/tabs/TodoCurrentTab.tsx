@@ -1,5 +1,5 @@
-import React, { FC, useEffect } from "react";
-import { FlatList } from "react-native";
+import React, { FC, useEffect, useState } from "react";
+import { FlatList, View } from "react-native";
 import { TodoRow } from "components/RowComponents/TodoRow";
 import { RiskLevel } from "models/RiskLevel";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
@@ -17,6 +17,7 @@ import { TodoListTabsProps } from "web/navigation/types";
 import { TodoRowTabProps } from "web/navigation/navigators/TodoListTabNavigator";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { NoItemsTextIndicator } from "components/Indicators/NoItemsTextIndicator";
+import Fuse from "fuse.js";
 
 interface TodoCurrentTabProps
   extends TodoRowTabProps,
@@ -57,6 +58,12 @@ export const TodoCurrentTab: FC<TodoCurrentTabProps> = ({
     AgentTrigger.triggerRetrieveTodos(TodoStatus.PENDING);
   }, []);
 
+  // Check if the search is being used
+  const [searching, setSearching] = useState<boolean>(false);
+
+  // Store results of fuzzy search
+  const [searchedSubset, setSubset] = useState<LocalTodo[]>([]);
+
   return (
     <ScreenWrapper
       style={{ backgroundColor: colors.secondaryWebBackgroundColor }}
@@ -66,8 +73,23 @@ export const TodoCurrentTab: FC<TodoCurrentTabProps> = ({
         onUserInput={() => {
           null;
         }}
-        onSearchClick={() => {
-          null;
+        onSearchClick={(searchString: string) => {
+          if (searchString.length === 0) {
+            setSearching(false);
+          } else if (pendingTodos) {
+            const options = {
+              includeScore: true,
+              keys: ["title"]
+            };
+
+            const fuse = new Fuse(pendingTodos, options);
+
+            const result = fuse.search(searchString);
+            const searchResults: LocalTodo[] = [];
+            result.forEach((item) => searchResults.push(item.item));
+            setSearching(true);
+            setSubset(searchResults);
+          }
         }}
         containerStyle={{ backgroundColor: colors.primaryContrastTextColor }}
         placeholder={i18n.t("Todo.SearchBarCurrentPlaceholder")}
@@ -77,25 +99,51 @@ export const TodoCurrentTab: FC<TodoCurrentTabProps> = ({
         // Show loading indicator if fetching pending todos
         <LoadingIndicator flex={1} />
       ) : pendingTodos ? (
-        // Show pending todos
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          ListEmptyComponent={() => (
-            <NoItemsTextIndicator text={i18n.t("Todo.NoTodos")} />
-          )}
-          ItemSeparatorComponent={() => <ItemSeparator />}
-          data={pendingTodos}
-          renderItem={({ item }) => (
-            <TodoRow
-              todoDetails={item}
-              riskLevel={item.riskLevel ? item.riskLevel : RiskLevel.UNASSIGNED}
-              onCardPress={() => onCardPress(item)}
-              onButtonPress={() => onDonePress(item)}
+        <View>
+          {searching ? (
+            <FlatList
+              showsVerticalScrollIndicator={false}
+              ListEmptyComponent={() => (
+                <NoItemsTextIndicator text={i18n.t("Todo.NoTodos")} />
+              )}
+              ItemSeparatorComponent={() => <ItemSeparator />}
+              data={searchedSubset}
+              renderItem={({ item }) => (
+                <TodoRow
+                  todoDetails={item}
+                  riskLevel={
+                    item.riskLevel ? item.riskLevel : RiskLevel.UNASSIGNED
+                  }
+                  onCardPress={() => onCardPress(item)}
+                  onButtonPress={() => onDonePress(item)}
+                />
+              )}
+              keyExtractor={(item) => item.createdAt}
+              pointerEvents={fetchingTodos ? "none" : "auto"}
+            />
+          ) : (
+            <FlatList
+              showsVerticalScrollIndicator={false}
+              ListEmptyComponent={() => (
+                <NoItemsTextIndicator text={i18n.t("Todo.NoTodos")} />
+              )}
+              ItemSeparatorComponent={() => <ItemSeparator />}
+              data={pendingTodos}
+              renderItem={({ item }) => (
+                <TodoRow
+                  todoDetails={item}
+                  riskLevel={
+                    item.riskLevel ? item.riskLevel : RiskLevel.UNASSIGNED
+                  }
+                  onCardPress={() => onCardPress(item)}
+                  onButtonPress={() => onDonePress(item)}
+                />
+              )}
+              keyExtractor={(item) => item.createdAt}
+              pointerEvents={fetchingTodos ? "none" : "auto"}
             />
           )}
-          keyExtractor={(item) => item.createdAt}
-          pointerEvents={fetchingTodos ? "none" : "auto"}
-        />
+        </View>
       ) : null}
     </ScreenWrapper>
   );

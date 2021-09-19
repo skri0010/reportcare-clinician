@@ -23,7 +23,10 @@ export const CliniciansList: FC<CliniciansListScreen> = ({ flex = 1 }) => {
     })
   );
 
+  // Check if the search is being used
   const [searching, setSearching] = useState<boolean>(false);
+
+  // Store results of fuzzy search
   const [searchedSubset, setSubset] = useState<ClinicianInfo[]>([]);
 
   return (
@@ -34,37 +37,37 @@ export const CliniciansList: FC<CliniciansListScreen> = ({ flex = 1 }) => {
       }}
     >
       {/* Search bar*/}
+      <SearchBarComponent
+        onUserInput={() => {
+          null;
+        }}
+        onSearchClick={(searchString: string) => {
+          if (searchString.length === 0) {
+            setSearching(false);
+          } else if (clinicians) {
+            const options = {
+              includeScore: true,
+              keys: ["name"]
+            };
+            const fuse = new Fuse(clinicians, options);
+
+            const result = fuse.search(searchString);
+            const searchResults: ClinicianInfo[] = [];
+            result.forEach((item) => searchResults.push(item.item));
+            setSearching(true);
+            setSubset(searchResults);
+          }
+        }}
+        containerStyle={{
+          backgroundColor: colors.primaryContrastTextColor
+        }}
+        placeholder={i18n.t("Clinicians.SearchBarPlaceholder")}
+      />
       {fetchingClinicians ? (
         // Show loading indicator if fetching clinicians
         <LoadingIndicator flex={1} />
       ) : clinicians ? (
         <View>
-          <SearchBarComponent
-            onUserInput={() => {
-              null;
-            }}
-            onSearchClick={(searchString: string) => {
-              if (searchString.length === 0) {
-                setSearching(false);
-              } else {
-                const options = {
-                  includeScore: true,
-                  keys: ["name"]
-                };
-                const fuse = new Fuse(clinicians, options);
-
-                const result = fuse.search(searchString);
-                const searchResults: ClinicianInfo[] = [];
-                result.forEach((item) => searchResults.push(item.item));
-                setSearching(true);
-                setSubset(searchResults);
-              }
-            }}
-            containerStyle={{
-              backgroundColor: colors.primaryContrastTextColor
-            }}
-            placeholder={i18n.t("Clinicians.SearchBarPlaceholder")}
-          />
           {searching ? (
             <FlatList
               showsVerticalScrollIndicator={false}
