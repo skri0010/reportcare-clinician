@@ -358,7 +358,17 @@ type PatientAssignment
   patientName: String!
   pending: String
   resolution: String
-  reassignedClinicianID: String
+  reassignToClinicianID: String
+  adminReassignFromClinicianID: String
+    @auth(
+      rules: [
+        {
+          allow: groups
+          groups: ["Admin"]
+          operations: [create, update, delete]
+        }
+      ]
+    )
   adminCompleted: Boolean
     @auth(
       rules: [

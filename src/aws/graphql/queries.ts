@@ -929,7 +929,8 @@ export const syncPatientAssignments = /* GraphQL */ `
         patientName
         pending
         resolution
-        reassignedClinicianID
+        reassignToClinicianID
+        adminReassignFromClinicianID
         adminCompleted
         _version
         _deleted
@@ -951,7 +952,8 @@ export const getPatientAssignment = /* GraphQL */ `
       patientName
       pending
       resolution
-      reassignedClinicianID
+      reassignToClinicianID
+      adminReassignFromClinicianID
       adminCompleted
       _version
       _deleted
@@ -985,7 +987,8 @@ export const listPatientAssignments = /* GraphQL */ `
         patientName
         pending
         resolution
-        reassignedClinicianID
+        reassignToClinicianID
+        adminReassignFromClinicianID
         adminCompleted
         _version
         _deleted
@@ -1673,7 +1676,8 @@ export const listPendingPatientAssignments = /* GraphQL */ `
         patientName
         pending
         resolution
-        reassignedClinicianID
+        reassignToClinicianID
+        adminReassignFromClinicianID
         adminCompleted
         _version
         _deleted
