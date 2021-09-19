@@ -71,24 +71,35 @@ export const PatientsList: FC<PatientsListScreen> = ({
         <LoadingIndicator flex={1} />
       ) : patients ? (
         // Show patients if list exists
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          ListEmptyComponent={() => (
-            <NoItemsTextIndicator
-              text={i18n.t("Patients.PatientsList.NoPatients")}
-            />
-          )}
-          ItemSeparatorComponent={() => <ItemSeparator />}
-          data={patients}
-          renderItem={({ item }) => (
-            <PatientDetailsRow
-              patient={item}
-              selected={displayPatientId === item.patientID}
-              onRowPress={onPatientRowPress}
-            />
-          )}
-          keyExtractor={(item) => item.patientID}
-        />
+        <View>
+          <SearchBarComponent
+            onUserInput={() => {
+              null;
+            }}
+            containerStyle={{
+              backgroundColor: colors.primaryContrastTextColor
+            }}
+            placeholder={i18n.t("Patients.SearchBarPlaceholder")}
+          />
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            ListEmptyComponent={() => (
+              <NoItemsTextIndicator
+                text={i18n.t("Patients.PatientsList.NoPatients")}
+              />
+            )}
+            ItemSeparatorComponent={() => <ItemSeparator />}
+            data={patients}
+            renderItem={({ item }) => (
+              <PatientDetailsRow
+                patient={item}
+                selected={displayPatientId === item.patientID}
+                onRowPress={onPatientRowPress}
+              />
+            )}
+            keyExtractor={(item) => item.patientID}
+          />
+        </View>
       ) : null}
     </View>
   );
