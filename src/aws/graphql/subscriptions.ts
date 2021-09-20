@@ -542,13 +542,11 @@ export const onDeleteMedicalRecord = /* GraphQL */ `
 export const onCreateClinicianInfo = /* GraphQL */ `
   subscription OnCreateClinicianInfo($clinicianID: String) {
     onCreateClinicianInfo(clinicianID: $clinicianID) {
-      id
       clinicianID
       name
       hospitalName
       role
       protectedInfo {
-        id
         clinicianID
         facts
         APS
@@ -574,13 +572,11 @@ export const onCreateClinicianInfo = /* GraphQL */ `
 export const onUpdateClinicianInfo = /* GraphQL */ `
   subscription OnUpdateClinicianInfo($clinicianID: String) {
     onUpdateClinicianInfo(clinicianID: $clinicianID) {
-      id
       clinicianID
       name
       hospitalName
       role
       protectedInfo {
-        id
         clinicianID
         facts
         APS
@@ -606,13 +602,11 @@ export const onUpdateClinicianInfo = /* GraphQL */ `
 export const onDeleteClinicianInfo = /* GraphQL */ `
   subscription OnDeleteClinicianInfo($clinicianID: String) {
     onDeleteClinicianInfo(clinicianID: $clinicianID) {
-      id
       clinicianID
       name
       hospitalName
       role
       protectedInfo {
-        id
         clinicianID
         facts
         APS
@@ -638,7 +632,6 @@ export const onDeleteClinicianInfo = /* GraphQL */ `
 export const onCreateClinicianProtectedInfo = /* GraphQL */ `
   subscription OnCreateClinicianProtectedInfo($clinicianID: String) {
     onCreateClinicianProtectedInfo(clinicianID: $clinicianID) {
-      id
       clinicianID
       facts
       APS
@@ -658,7 +651,6 @@ export const onCreateClinicianProtectedInfo = /* GraphQL */ `
 export const onUpdateClinicianProtectedInfo = /* GraphQL */ `
   subscription OnUpdateClinicianProtectedInfo($clinicianID: String) {
     onUpdateClinicianProtectedInfo(clinicianID: $clinicianID) {
-      id
       clinicianID
       facts
       APS
@@ -678,7 +670,6 @@ export const onUpdateClinicianProtectedInfo = /* GraphQL */ `
 export const onDeleteClinicianProtectedInfo = /* GraphQL */ `
   subscription OnDeleteClinicianProtectedInfo($clinicianID: String) {
     onDeleteClinicianProtectedInfo(clinicianID: $clinicianID) {
-      id
       clinicianID
       facts
       APS
@@ -704,11 +695,9 @@ export const onCreateClinicianPatientMap = /* GraphQL */ `
       clinicianID: $clinicianID
       patientID: $patientID
     ) {
-      id
       clinicianID
       patientID
       clinicianInfo {
-        id
         clinicianID
         name
         hospitalName
@@ -736,11 +725,9 @@ export const onUpdateClinicianPatientMap = /* GraphQL */ `
       clinicianID: $clinicianID
       patientID: $patientID
     ) {
-      id
       clinicianID
       patientID
       clinicianInfo {
-        id
         clinicianID
         name
         hospitalName
@@ -768,11 +755,9 @@ export const onDeleteClinicianPatientMap = /* GraphQL */ `
       clinicianID: $clinicianID
       patientID: $patientID
     ) {
-      id
       clinicianID
       patientID
       clinicianInfo {
-        id
         clinicianID
         name
         hospitalName
@@ -800,7 +785,6 @@ export const onCreatePatientAssignment = /* GraphQL */ `
       patientID: $patientID
       clinicianID: $clinicianID
     ) {
-      id
       patientID
       clinicianID
       patientName
@@ -826,7 +810,6 @@ export const onUpdatePatientAssignment = /* GraphQL */ `
       patientID: $patientID
       clinicianID: $clinicianID
     ) {
-      id
       patientID
       clinicianID
       patientName
@@ -852,7 +835,6 @@ export const onDeletePatientAssignment = /* GraphQL */ `
       patientID: $patientID
       clinicianID: $clinicianID
     ) {
-      id
       patientID
       clinicianID
       patientName
