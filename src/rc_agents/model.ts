@@ -61,6 +61,22 @@ export enum AlertColorCode {
   UNASSIGNED = "white"
 }
 
+export enum MedicationNames {
+  ASPIRIN = "Aspirin",
+  BENAZEPRIL = "Benazepril",
+  SACUBITRIL = "Sacubitril"
+}
+
+type Dosage = {
+  min: number;
+  max: number;
+};
+
+export type MedDosage = {
+  name: MedicationNames;
+  dosage: Dosage;
+};
+
 /**
  * Maps alert's color code to risk level.
  * @param colorCode alert's color code

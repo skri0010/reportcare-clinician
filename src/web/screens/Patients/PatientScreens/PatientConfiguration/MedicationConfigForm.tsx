@@ -52,7 +52,7 @@ export const MedicationConfigForm: FC<MedicationConfigFormProps> = ({
   useEffect(() => {
     const medInput =
       validateMedName(configMedInfo.name) &&
-      validateMedDosage(configMedInfo.dosage) &&
+      validateMedDosage(configMedInfo.name, configMedInfo.dosage) &&
       validateMedFreq(configMedInfo.frequency);
     setAllMedInputValid(medInput);
   }, [configMedInfo]);
@@ -87,7 +87,7 @@ export const MedicationConfigForm: FC<MedicationConfigFormProps> = ({
           placeholder={i18n.t("Patient_Configuration.Placeholder.Dosage")}
           error={
             notEmptyString(configMedInfo.dosage) &&
-            !validateMedDosage(configMedInfo.dosage)
+            !validateMedDosage(configMedInfo.name, configMedInfo.dosage)
           }
           errorMessage={i18n.t("Patient_Configuration.Error.Dosage")}
         />
