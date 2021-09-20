@@ -16,7 +16,7 @@ interface AlertHistoryModalProps {
 
 interface AlertDetailsRowProps {
   detailTitle: string;
-  detailContent: number | string | undefined;
+  detailContent: number | string | undefined | null;
 }
 
 const AlertDetailsRow: FC<AlertDetailsRowProps> = ({

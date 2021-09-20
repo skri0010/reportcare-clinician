@@ -27,3 +27,15 @@ export enum TodoDetailsStackScreenName {
   VIEW_TODO = "ViewTodo",
   EDIT_TODO = "EditTodo"
 }
+
+export enum AuthenticationScreenName {
+  SIGN_IN = "SignIn",
+  FORGET_PASSWORD = "ForgetPassword",
+  REGISTRATION = "Registration",
+  CONFIRM_REGISTRATION = "ConfirmRegistration"
+}
+
+export enum AlertListTabName {
+  CURRENT = "Current",
+  COMPLETED = "Completed"
+}

@@ -115,19 +115,6 @@
     "ItemsRemaining": "remaining",
     "ShowMoreButton": "SHOW MORE"
   },
-  "Alert": {
-    "HighRisk": "High Risk",
-    "MediumRisk": "Medium Risk",
-    "LowRisk": "Low Risk",
-    "UnassignedRisk": "Unassigned Risk",
-    "AlertList": {
-      "NoPendingAlerts": "You have no pending alerts",
-      "NoCompletedAlerts": "You have no completed alerts"
-    },
-    "AlertVitals": {
-      "HeartRate": "Heart Rate"
-    }
-  },
   "Todo": {
     "Current": "Current",
     "Completed": "Completed",
@@ -298,7 +285,18 @@
     "SearchBarPlaceholder": "Search alerts",
     "NoSelection": "Select an alert to view more details",
     "Symptoms": "Symptoms",
-    "Signs": "Signs"
+    "Signs": "Signs",
+    "HighRisk": "High Risk",
+    "MediumRisk": "Medium Risk",
+    "LowRisk": "Low Risk",
+    "UnassignedRisk": "Unassigned Risk",
+    "AlertList": {
+      "NoPendingAlerts": "You have no pending alerts",
+      "NoCompletedAlerts": "You have no completed alerts"
+    },
+    "AlertVitals": {
+      "HeartRate": "Heart Rate"
+    }
   },
   "MobileMessage": {
     "ViewList": "View List",

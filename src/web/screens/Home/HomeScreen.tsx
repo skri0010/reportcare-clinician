@@ -13,18 +13,12 @@ import { PendingPatientAssignmentsCard } from "./PendingPatientAssignmentsCard";
 export const HomeScreen: FC<MainScreenProps[ScreenName.HOME]> = ({
   navigation
 }) => {
-  // JH-TODO Replace titles with i18n
-  // JH-TODO Replace welcome card name
   const topMaxHeight = ms(200);
   const maxHeight = ms(250);
 
   const navigateToAlert = () => {
     navigation.navigate(ScreenName.ALERTS);
   };
-  // navigation.navigate(ScreenName.PATIENTS, {
-  //   displayPatientId: "testsiuloong",
-  //   selectedTab: PatientDetailsTabName.HISTORY
-  // });
 
   return (
     <ScreenWrapper padding>
@@ -34,7 +28,7 @@ export const HomeScreen: FC<MainScreenProps[ScreenName.HOME]> = ({
           flex={1.2}
           navigateCallback={navigateToAlert}
         />
-        <WelcomeCard name="Nailah" maxHeight={topMaxHeight} flex={1.8} />
+        <WelcomeCard maxHeight={topMaxHeight} flex={1.8} />
       </View>
       <View style={styles.container}>
         <RequestsByMariaCard maxHeight={maxHeight} />

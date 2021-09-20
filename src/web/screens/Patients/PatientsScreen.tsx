@@ -23,7 +23,7 @@ import i18n from "util/language/i18n";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AdaptiveTwoScreenWrapper } from "web/screens/AdaptiveTwoScreenWrapper";
 import { PatientConfigurationScreen } from "web/screens/Patients/PatientScreens/PatientConfiguration/PatientConfigurationScreen";
-import { AlertInfo } from "rc_agents/model";
+import { AlertColorCode, AlertInfo, AlertStatus } from "rc_agents/model";
 
 export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
   route
@@ -73,6 +73,7 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
 
   // Initial alert history details for the modal
   const initialAlertHistory: AlertInfo = {
+    __typename: "Alert",
     id: "",
     patientID: "",
     patientName: "",
@@ -81,8 +82,14 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
     symptomReportID: "",
     dateTime: "",
     summary: "",
-    completed: false,
-    _version: -1
+    colorCode: AlertColorCode.UNASSIGNED,
+    pending: AlertStatus.PENDING,
+    completed: null,
+    _version: -1,
+    _lastChangedAt: new Date().getTime(),
+    createdAt: "",
+    updatedAt: "",
+    owner: ""
   };
 
   // Inital medical record details for the modal

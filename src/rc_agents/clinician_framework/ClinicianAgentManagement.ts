@@ -153,7 +153,6 @@ export class ClinicianAgentManagement extends AgentManagement {
           NWA: protectedInfo.NWA,
           ALA: protectedInfo.ALA,
           MHA: protectedInfo.MHA,
-          owner: localClinician.clinicianID,
           _version: protectedInfo._version
         };
 

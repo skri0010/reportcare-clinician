@@ -6,12 +6,12 @@ import { ScaledSheet, ms } from "react-native-size-matters";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { H5, H6 } from "components/Text";
 import i18n from "util/language/i18n";
-import { AlertStatus } from "rc_agents/model";
+import { FetchAlertsMode } from "rc_agents/model";
 
 interface LongAlertButtonProps {
   riskLevel: RiskLevel;
   alertCount?: number;
-  onPress?: (alertStatus: AlertStatus, riskLevel: RiskLevel) => void;
+  onPress?: (fetchAlertsMode: FetchAlertsMode, riskLevel: RiskLevel) => void;
 }
 
 export const LongAlertButton: React.FC<LongAlertButtonProps> = ({
@@ -55,7 +55,7 @@ export const LongAlertButton: React.FC<LongAlertButtonProps> = ({
         }
       ]}
       onPress={
-        onPress ? () => onPress(AlertStatus.PENDING, riskLevel) : undefined
+        onPress ? () => onPress(FetchAlertsMode.PENDING, riskLevel) : undefined
       }
     >
       <H5
