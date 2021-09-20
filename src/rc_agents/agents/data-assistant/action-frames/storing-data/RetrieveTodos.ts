@@ -24,11 +24,15 @@ import {
 } from "ic-redux/actions/agents/actionCreator";
 import {
   listCompletedTodosByLastModifiedDate,
-  listPendingTodosByLastModifiedDate
+  listPendingTodosByLastModifiedDate,
+  getDetailedAlert
 } from "aws";
 import { ModelSortDirection, Todo } from "aws/API";
-import { LocalTodo, TodoStatus } from "rc_agents/model";
-import { mapColorCodeToRiskLevel } from "../triage-alert-hf-clinic/RetrievePendingAlertCount";
+import {
+  LocalTodo,
+  mapColorCodeToRiskLevel,
+  TodoStatus
+} from "rc_agents/model";
 
 /**
  * Class to represent an activity for creating an entry to clinician's Todo table.
@@ -90,7 +94,7 @@ class RetrieveTodos extends Activity {
           if (todos) {
             // Maps retrieved Todos to LocalTodos for dispatching and local storage
             const todosToDispatch: LocalTodo[] = [];
-            todos.map((todo) => {
+            todos.map(async (todo) => {
               const currentTodo: LocalTodo = {
                 id: todo.id,
                 title: todo.title,
@@ -102,12 +106,18 @@ class RetrieveTodos extends Activity {
                 toSync: false,
                 _version: todo._version
               };
-              if (todo.alert) {
-                currentTodo.alertId = todo.alert.id;
-                currentTodo.patientId = todo.alert.patientID;
-                currentTodo.riskLevel = mapColorCodeToRiskLevel(
-                  todo.alert.colorCode
-                );
+              if (todo.alertID) {
+                const query = await getDetailedAlert({
+                  id: todo.alertID
+                });
+                if (query.data?.getAlert) {
+                  const result = query.data.getAlert;
+                  currentTodo.alertId = result.id;
+                  currentTodo.patientId = result.patientID;
+                  currentTodo.riskLevel = mapColorCodeToRiskLevel(
+                    result.colorCode
+                  );
+                }
               }
               todosToDispatch.push(currentTodo);
               return todo;
@@ -116,7 +126,6 @@ class RetrieveTodos extends Activity {
             // Saves mapped Todos to local storage
             await Storage.setMultipleTodos(todosToDispatch);
 
-            // Dispatches Todos according to status
             if (todoStatus === TodoStatus.PENDING) {
               store.dispatch(setPendingTodos(todosToDispatch));
             } else {
@@ -162,7 +171,9 @@ class RetrieveTodos extends Activity {
         BeliefKeys.PROCEDURE,
         ProcedureAttributes.SRD_II,
         ProcedureConst.INACTIVE
-      )
+      ),
+      true,
+      true
     );
 
     // Dispatch to front end that procedure has been completed

@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React, { FC } from "react";
 import {
   ChartData,
@@ -37,26 +36,28 @@ export const LineChartComponent: FC<LineChartProps> = ({
   }));
 
   // Store min max and avg to a form that is accepted by Victory
-  let minData: { x: string; y: number }[][] = [];
-  let maxData: { x: string; y: number }[][] = [];
-  let avgData: { x: string; y: number }[][] = [];
+  let minDataLine: { x: string; y: number }[][] = [];
+  let maxDataLine: { x: string; y: number }[][] = [];
+  let avgDataLine: { x: string; y: number }[][] = [];
 
   // Obtain multiple sets of data for each measure to plot discontinuous lines
-  minData = getVictoryChartData(data, ChartViewTypes.MIN);
-  maxData = getVictoryChartData(data, ChartViewTypes.MAX);
-  avgData = getVictoryChartData(data, ChartViewTypes.AVERAGE);
+  minDataLine = getVictoryChartData(data, ChartViewTypes.MIN);
+  maxDataLine = getVictoryChartData(data, ChartViewTypes.MAX);
+  avgDataLine = getVictoryChartData(data, ChartViewTypes.AVERAGE);
 
+  // Styles needed for charts
   const avgStyle = {
     data: {
       stroke: colors.avgLineColor,
-      strokeWidth: 5,
+      strokeWidth: 3,
       opacity: !(chartFilter.average || chartFilter.all) ? 0.1 : 1
     }
   };
+
   const minStyle = {
     data: {
       stroke: colors.minLineColor,
-      strokeWidth: 5,
+      strokeWidth: 3,
       opacity: !(chartFilter.min || chartFilter.all) ? 0.1 : 1
     }
   };
@@ -64,7 +65,28 @@ export const LineChartComponent: FC<LineChartProps> = ({
   const maxStyle = {
     data: {
       stroke: colors.maxLineColor,
-      strokeWidth: 5,
+      strokeWidth: 3,
+      opacity: !(chartFilter.max || chartFilter.all) ? 0.1 : 1
+    }
+  };
+
+  const avgStyleScatter = {
+    data: {
+      fill: colors.avgLineColor,
+      opacity: !(chartFilter.average || chartFilter.all) ? 0.1 : 1
+    }
+  };
+
+  const minStyleScatter = {
+    data: {
+      fill: colors.minLineColor,
+      opacity: !(chartFilter.min || chartFilter.all) ? 0.1 : 1
+    }
+  };
+
+  const maxStyleScatter = {
+    data: {
+      fill: colors.maxLineColor,
       opacity: !(chartFilter.max || chartFilter.all) ? 0.1 : 1
     }
   };
@@ -104,68 +126,52 @@ export const LineChartComponent: FC<LineChartProps> = ({
             min max and average are their own respective line components.
             Lines have been configure to show label and have higher opacity compared to the rest when chosen specifically
             */}
-        {/* plot each discontinued line */}
-        {minData.map((minLines) =>
-          minLines.length === 1 ? (
-            <VictoryScatter
-              data={minLines}
-              style={minStyle}
-              labels={chartFilter.min ? ({ datum }) => datum.y : undefined}
-              labelComponent={chartFilter.min ? <VictoryLabel /> : undefined}
-              key={minLines[0].x}
-            />
-          ) : (
-            <VictoryLine
-              data={minLines}
-              style={minStyle}
-              labels={chartFilter.min ? ({ datum }) => datum.y : undefined}
-              labelComponent={chartFilter.min ? <VictoryLabel /> : undefined}
-              key={minLines[0].x}
-            />
-          )
-        )}
-        {maxData.map((maxLines) =>
-          maxLines.length === 1 ? (
-            <VictoryScatter
-              data={maxLines}
-              style={maxStyle}
-              labels={chartFilter.max ? ({ datum }) => datum.y : undefined}
-              labelComponent={chartFilter.max ? <VictoryLabel /> : undefined}
-              key={maxLines[0].x}
-            />
-          ) : (
-            <VictoryLine
-              data={maxLines}
-              style={maxStyle}
-              labels={chartFilter.max ? ({ datum }) => datum.y : undefined}
-              labelComponent={chartFilter.max ? <VictoryLabel /> : undefined}
-              key={maxLines[0].x}
-            />
-          )
-        )}
-        {avgData.map((avgLines) =>
-          avgLines.length === 1 ? (
-            <VictoryScatter
-              data={avgLines}
-              style={avgStyle}
-              labels={chartFilter.average ? ({ datum }) => datum.y : undefined}
-              labelComponent={
-                chartFilter.average ? <VictoryLabel /> : undefined
-              }
-              key={avgLines[0].x}
-            />
-          ) : (
-            <VictoryLine
-              data={avgLines}
-              style={avgStyle}
-              labels={chartFilter.average ? ({ datum }) => datum.y : undefined}
-              labelComponent={
-                chartFilter.average ? <VictoryLabel /> : undefined
-              }
-              key={avgLines[0].x}
-            />
-          )
-        )}
+        {/* Victory plot for each discontinued line */}
+        {minDataLine.map((minLines) => (
+          <VictoryScatter
+            data={minLines}
+            size={5}
+            style={minStyleScatter}
+            labels={chartFilter.min ? ({ datum }) => datum.y : undefined}
+            labelComponent={chartFilter.min ? <VictoryLabel /> : undefined}
+            key={minLines[0].x}
+          />
+        ))}
+
+        {maxDataLine.map((maxLines) => (
+          <VictoryScatter
+            data={maxLines}
+            size={5}
+            style={maxStyleScatter}
+            labels={chartFilter.max ? ({ datum }) => datum.y : undefined}
+            labelComponent={chartFilter.max ? <VictoryLabel /> : undefined}
+            key={maxLines[0].x}
+          />
+        ))}
+
+        {avgDataLine.map((avgLines) => (
+          <VictoryScatter
+            data={avgLines}
+            size={5}
+            style={avgStyleScatter}
+            labels={chartFilter.average ? ({ datum }) => datum.y : undefined}
+            labelComponent={chartFilter.average ? <VictoryLabel /> : undefined}
+            key={avgLines[0].x}
+          />
+        ))}
+
+        {/* Plot Scatter plot */}
+        {minDataLine.map((minLines) => (
+          <VictoryLine data={minLines} style={minStyle} key={minLines[0].x} />
+        ))}
+
+        {maxDataLine.map((maxLines) => (
+          <VictoryLine data={maxLines} style={maxStyle} key={maxLines[0].x} />
+        ))}
+
+        {avgDataLine.map((avgLines) => (
+          <VictoryLine data={avgLines} style={avgStyle} key={avgLines[0].x} />
+        ))}
       </VictoryChart>
     </View>
   );

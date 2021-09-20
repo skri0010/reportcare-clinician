@@ -2,7 +2,7 @@ import React, { FC, useEffect, useState, useCallback } from "react";
 import { Provider } from "react-redux";
 import { store } from "util/useRedux";
 import { MainNavigationStack } from "web/MainNavigation";
-import { AuthNavigationStack } from "web/navigation/navigators/AuthStackNavigator";
+import { AuthStackNavigator } from "web/navigation/navigators/AuthStackNavigator";
 import awsconfig from "aws/aws-exports";
 import { Amplify } from "@aws-amplify/core";
 import { Auth } from "@aws-amplify/auth";
@@ -12,6 +12,10 @@ import { Storage } from "rc_agents/storage";
 import { ToastProviderComponent } from "components/Indicators/ToastProvider";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AgentIDs } from "rc_agents/clinician_framework";
+import {
+  subscribeAlertNotification,
+  subscribePatientAssignment
+} from "aws/TypedAPI/subscriptions";
 
 Amplify.configure(awsconfig);
 Auth.configure(awsconfig);
@@ -61,15 +65,22 @@ const App: FC = () => {
       if (clinicianId) {
         setAuthState(AuthState.SIGNED_IN);
       } else {
-        setAuthState(AuthState.SIGNED_IN);
+        setAuthState(AuthState.SIGNED_OUT);
       }
     } catch (err) {
-      setAuthState(AuthState.SIGNED_IN);
+      setAuthState(AuthState.SIGNED_OUT);
     }
   };
 
   useEffect(() => {
+    // Checks for authentication state
     checkAuthState();
+
+    // Subscribes to AlertNotification table
+    subscribeAlertNotification();
+
+    // Subscribes to PatientAssignment table
+    subscribePatientAssignment();
   }, []);
 
   return (
@@ -79,7 +90,7 @@ const App: FC = () => {
           {authState === AuthState.SIGNED_IN ? (
             <MainNavigationStack setAuthState={setAuthState} />
           ) : authState === AuthState.SIGNED_OUT ? (
-            <AuthNavigationStack setAuthState={setAuthState} />
+            <AuthStackNavigator setAuthState={setAuthState} />
           ) : null}
         </ToastProviderComponent>
       ) : (

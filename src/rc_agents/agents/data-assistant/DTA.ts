@@ -8,24 +8,28 @@ import { af_RequestDisplayPatientDetails } from "./action-frames/hf-outcome-tren
 import { af_RetrievePatientsByRole } from "./action-frames/hf-outcome-trends/RetrievePatientsByRole";
 import { af_RequestDisplayPatients } from "./action-frames/hf-outcome-trends/RequestDisplayPatients";
 import { af_RetrieveAlerts } from "./action-frames/triage-alert-hf-clinic/RetrieveAlerts";
-import { af_RequestAlertsDisplay } from "./action-frames/triage-alert-hf-clinic/RequestAlertsDisplay";
-import { af_RetrieveAlertInfo } from "./action-frames/triage-alert-hf-clinic/RetrieveAlertInfo";
-import { af_RequestAlertInfoDisplay } from "./action-frames/triage-alert-hf-clinic/RequestAlertInfoDisplay";
+import { af_RequestDisplayAlerts } from "./action-frames/triage-alert-hf-clinic/RequestDisplayAlerts";
+import { af_RetrieveDetailedAlertInfo } from "./action-frames/triage-alert-hf-clinic/RetrieveDetailedAlertInfo";
+import { af_RequestDisplayDetailedAlertInfo } from "./action-frames/triage-alert-hf-clinic/RequestDisplayDetailedAlertInfo";
 import { af_RetrievePendingPatientAssignments } from "./action-frames/storing-data/RetrievePendingPatientAssignments";
 import { af_RequestDisplayPendingPatientAssignments } from "./action-frames/storing-data/RequestDisplayPendingPatientAssignments";
 import { af_ResolvePatientAssignment } from "./action-frames/storing-data/ResolvePatientAssignment";
 import { af_RequestSyncPatientAssignmentResolutions } from "./action-frames/storing-data/RequestSyncPatientAssignmentResolutions";
-import { af_RetrievePendingAlertCount } from "./action-frames/triage-alert-hf-clinic/RetrievePendingAlertCount";
-import { af_RequestPendingAlertCountDisplay } from "./action-frames/triage-alert-hf-clinic/RequestPendingAlertCountDisplay";
+import { af_RetrieveTodoDetails } from "./action-frames/storing-data/RetrieveTodoDetails";
+import { af_RequestDisplayTodoDetails } from "./action-frames/storing-data/RequestDisplayTodoDetails";
 import { af_CreateTodo } from "./action-frames/storing-data/CreateTodo";
 import { af_UpdateTodo } from "./action-frames/storing-data/UpdateTodo";
 import { af_RetrieveTodos } from "./action-frames/storing-data/RetrieveTodos";
 import { af_RequestDisplayTodos } from "./action-frames/storing-data/RequestDisplayTodos";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import { ClinicianAgent } from "rc_agents/clinician_framework/ClinicianAgent";
+import af_UpdateAlert from "./action-frames/triage-alert-hf-clinic/UpdateAlert";
+import { af_RetrieveAlertHistory } from "./action-frames/hf-outcome-trends/RetrieveAlertHistory";
+import { af_RequestDisplayAlertHistory } from "./action-frames/hf-outcome-trends/RequestDisplayAlertHistory";
 import { af_RetrieveClinicianContacts } from "./action-frames/storing-data/RetrieveClinicianContacts";
 import { af_RequestClinicianContactDisplay } from "./action-frames/storing-data/RequestClinicianContactsDisplay";
 import { af_ConfigurePatient } from "./action-frames/hf-outcome-trends/ConfigurePatient";
+import { af_ProcessPatientAssignmentSubscription } from "./action-frames/storing-data/ProcessPatientAssignmentSubscription";
 
 // Initial Beliefs of Agent
 
@@ -53,15 +57,18 @@ const agentDTA = new ClinicianAgent(
     // HF-OTP-II
     af_RetrievePatientDetails,
     af_RequestDisplayPatientDetails,
+    af_RetrieveAlertHistory,
+    af_RequestDisplayAlertHistory,
     af_ConfigurePatient,
 
-    // AT-CP
-    af_RetrievePendingAlertCount,
-    af_RequestPendingAlertCountDisplay,
+    // AT-CP-I
     af_RetrieveAlerts,
-    af_RequestAlertsDisplay,
-    af_RetrieveAlertInfo,
-    af_RequestAlertInfoDisplay,
+    af_RequestDisplayAlerts,
+
+    // AT-CP-II
+    af_RetrieveDetailedAlertInfo,
+    af_RequestDisplayDetailedAlertInfo,
+    af_UpdateAlert,
 
     // SRD-II
     af_RetrieveTodos,
@@ -69,9 +76,15 @@ const agentDTA = new ClinicianAgent(
     af_UpdateTodo,
     af_RequestDisplayTodos,
 
+    // SRD-III
+    af_RetrieveTodoDetails,
+    af_RequestDisplayTodoDetails,
     // SRD-IV
     af_RetrieveClinicianContacts,
-    af_RequestClinicianContactDisplay
+    af_RequestClinicianContactDisplay,
+
+    // SRD-V
+    af_ProcessPatientAssignmentSubscription
   ], // action frame
   [belief1], // beliefs
   agentAPI

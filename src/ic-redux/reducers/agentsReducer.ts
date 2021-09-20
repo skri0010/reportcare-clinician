@@ -4,11 +4,11 @@ import { Reducer } from "redux";
 import {
   AlertInfo,
   PatientDetails,
-  PendingAlertCount,
+  AlertsCount,
   LocalTodo,
   RiskFilter
 } from "rc_agents/model";
-import { Alert, ClinicianInfo, PatientAssignment, PatientInfo } from "aws/API";
+import { ClinicianInfo, PatientAssignment, PatientInfo } from "aws/API";
 import { RiskLevel } from "models/RiskLevel";
 import { ChartFilter, ChartViewTypes } from "models/ChartViewTypes";
 
@@ -24,22 +24,32 @@ interface AgentsState {
   patientAssignmentsSynced: boolean;
   fetchingPatients: boolean;
   fetchingPatientDetails: boolean;
+  fetchingPatientAlertHistory: boolean;
   fetchingPendingPatientAssignments: boolean;
+  patientRiskFilters: RiskFilter;
+  alertRiskFilters: RiskFilter;
   fetchingClinianContacts: boolean;
   configuringPatient: boolean;
   configurationSuccessful: boolean;
   riskFilters: RiskFilter;
   chartFilters: ChartFilter;
-  pendingAlertCount: PendingAlertCount;
-  alerts: Alert[];
+  pendingAlertCount: AlertsCount;
+  fetchingPendingAlerts: boolean;
+  fetchingCompletedAlerts: boolean;
+  updatingAlert: boolean;
+  alertUpdated: boolean;
+  pendingAlerts: AlertInfo[] | undefined;
+  completedAlerts: AlertInfo[] | undefined;
+  fetchingAlertInfo: boolean;
   alertInfo: AlertInfo | undefined;
-  todoDetails: LocalTodo | null;
   pendingTodos: LocalTodo[] | null;
   completedTodos: LocalTodo[] | null;
+  alertHistory: AlertInfo[] | undefined;
   fetchingTodos: boolean;
   fetchingTodoDetails: boolean;
   submittingTodo: boolean;
   updatedTodo: LocalTodo | undefined;
+  todoDetails: LocalTodo | undefined;
 }
 
 const initialState: AgentsState = {
@@ -53,9 +63,22 @@ const initialState: AgentsState = {
   clinicianSelected: null,
   fetchingPatients: false,
   fetchingPatientDetails: false,
+  fetchingPatientAlertHistory: false,
   fetchingPendingPatientAssignments: false,
   fetchingClinianContacts: false,
   patientAssignmentsSynced: false,
+  patientRiskFilters: {
+    [RiskLevel.HIGH]: false,
+    [RiskLevel.MEDIUM]: false,
+    [RiskLevel.LOW]: false,
+    [RiskLevel.UNASSIGNED]: false
+  },
+  alertRiskFilters: {
+    [RiskLevel.HIGH]: false,
+    [RiskLevel.MEDIUM]: false,
+    [RiskLevel.LOW]: false,
+    [RiskLevel.UNASSIGNED]: false
+  },
   configuringPatient: false,
   configurationSuccessful: false,
   riskFilters: {
@@ -76,11 +99,18 @@ const initialState: AgentsState = {
     lowRisk: 0,
     unassignedRisk: 0
   },
-  alerts: [],
+  fetchingPendingAlerts: false,
+  fetchingCompletedAlerts: false,
+  updatingAlert: false,
+  alertUpdated: false,
+  pendingAlerts: undefined,
+  completedAlerts: undefined,
+  fetchingAlertInfo: false,
   alertInfo: undefined,
-  todoDetails: null,
+  todoDetails: undefined,
   pendingTodos: null,
   completedTodos: null,
+  alertHistory: undefined,
   fetchingTodos: false,
   fetchingTodoDetails: false,
   submittingTodo: false,
@@ -107,6 +137,13 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
         ...state,
         fetchingPatientDetails: action.payload.fetchingPatientDetails
       };
+    case actionNames.SET_FETCHING_PATIENT_ALERT_HISTORY:
+      return {
+        ...state,
+        fetchingPatientAlertHistory: action.payload.fetchingPatientAlertHistory
+      };
+    case actionNames.SET_ALERT_HISTORY:
+      return { ...state, alertHistory: action.payload.alertHistory };
     case actionNames.SET_FETCHING_PENDING_PATIENT_ASSIGNMENTS:
       return {
         ...state,
@@ -159,15 +196,57 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
         ...state,
         alerts: action.payload.alerts
       };
+    case actionNames.SET_FETCHING_PENDING_ALERTS:
+      return {
+        ...state,
+        fetchingPendingAlerts: action.payload.fetchingPendingAlerts
+      };
+    case actionNames.SET_FETCHING_COMPLETED_ALERTS:
+      return {
+        ...state,
+        fetchingCompletedAlerts: action.payload.fetchingCompletedAlerts
+      };
+    case actionNames.SET_UPDATING_ALERT_INDICATORS:
+      return {
+        ...state,
+        updatingAlert: action.payload.updatingAlert,
+        alertUpdated: action.payload.alertUpdated
+      };
+    case actionNames.SET_FETCHING_ALERTS:
+      return {
+        ...state,
+        fetchingPendingAlerts: action.payload.fetchingPendingAlerts,
+        fetchingCompletedAlerts: action.payload.fetchingCompletedAlerts
+      };
+    case actionNames.SET_PENDING_ALERTS:
+      return {
+        ...state,
+        pendingAlerts: action.payload.pendingAlerts
+      };
+    case actionNames.SET_COMPLETED_ALERTS:
+      return {
+        ...state,
+        completedAlerts: action.payload.completedAlerts
+      };
+    case actionNames.SET_FETCHING_ALERT_INFO:
+      return {
+        ...state,
+        fetchingAlertInfo: action.payload.fetchingAlertInfo
+      };
     case actionNames.SET_ALERT_INFO:
       return {
         ...state,
         alertInfo: action.payload.alertInfo
       };
-    case actionNames.SET_RISK_FILTERS:
-      return { ...state, riskFilters: action.payload.riskFilters };
     case actionNames.SET_CHART_FILTERS:
       return { ...state, chartFilters: action.payload.chartFilters };
+    case actionNames.SET_PATIENT_RISK_FILTERS:
+      return {
+        ...state,
+        patientRiskFilters: action.payload.patientRiskFilters
+      };
+    case actionNames.SET_ALERT_RISK_FILTERS:
+      return { ...state, alertRiskFilters: action.payload.alertRiskFilters };
     case actionNames.SET_FETCHING_TODOS:
       return {
         ...state,
@@ -181,6 +260,8 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
       return { ...state, submittingTodo: action.payload.submittingTodo };
     case actionNames.SET_UPDATED_TODO:
       return { ...state, updatedTodo: action.payload.updatedTodo };
+    case actionNames.SET_TODO_DETAILS:
+      return { ...state, todoDetails: action.payload.todoDetails };
     default:
       return state;
   }

@@ -153,87 +153,88 @@ export class ClinicianAgentManagement extends AgentManagement {
           NWA: protectedInfo.NWA,
           ALA: protectedInfo.ALA,
           MHA: protectedInfo.MHA,
-          owner: localClinician.clinicianID,
           _version: protectedInfo._version
         };
 
         // Updates facts and beliefs of each agent
         updatedProtectedInfo.facts = JSON.stringify(this.facts);
 
-        // JH-TODO: Document what's going on here
-        this.agents.forEach((agent) => {
-          switch (agent.getID()) {
-            case AgentIDs.APS: {
-              const updatedBeliefs = JSON.stringify(agent.getBeliefs());
-              updatedProtectedInfo[AgentIDs.APS] = updatedBeliefs;
-              if (localClinician.protectedInfo) {
-                localClinician.protectedInfo[AgentIDs.APS] = updatedBeliefs;
+        // Wait for 3 seconds before updating to avoid race condition
+        setTimeout(async () => {
+          this.agents.forEach((agent) => {
+            switch (agent.getID()) {
+              case AgentIDs.APS: {
+                const updatedBeliefs = JSON.stringify(agent.getBeliefs());
+                updatedProtectedInfo[AgentIDs.APS] = updatedBeliefs;
+                if (localClinician.protectedInfo) {
+                  localClinician.protectedInfo[AgentIDs.APS] = updatedBeliefs;
+                }
+                break;
               }
-              break;
-            }
-            case AgentIDs.DTA: {
-              const updatedBeliefs = JSON.stringify(agent.getBeliefs());
-              updatedProtectedInfo[AgentIDs.DTA] = updatedBeliefs;
-              if (localClinician.protectedInfo) {
-                localClinician.protectedInfo[AgentIDs.DTA] = updatedBeliefs;
+              case AgentIDs.DTA: {
+                const updatedBeliefs = JSON.stringify(agent.getBeliefs());
+                updatedProtectedInfo[AgentIDs.DTA] = updatedBeliefs;
+                if (localClinician.protectedInfo) {
+                  localClinician.protectedInfo[AgentIDs.DTA] = updatedBeliefs;
+                }
+                break;
               }
-              break;
-            }
-            case AgentIDs.UXSA: {
-              const updatedBeliefs = JSON.stringify(agent.getBeliefs());
-              updatedProtectedInfo[AgentIDs.UXSA] = updatedBeliefs;
-              if (localClinician.protectedInfo) {
-                localClinician.protectedInfo[AgentIDs.UXSA] = updatedBeliefs;
+              case AgentIDs.UXSA: {
+                const updatedBeliefs = JSON.stringify(agent.getBeliefs());
+                updatedProtectedInfo[AgentIDs.UXSA] = updatedBeliefs;
+                if (localClinician.protectedInfo) {
+                  localClinician.protectedInfo[AgentIDs.UXSA] = updatedBeliefs;
+                }
+                break;
               }
-              break;
-            }
-            case AgentIDs.NWA: {
-              const updatedBeliefs = JSON.stringify(agent.getBeliefs());
-              updatedProtectedInfo[AgentIDs.NWA] = updatedBeliefs;
-              if (localClinician.protectedInfo) {
-                localClinician.protectedInfo[AgentIDs.NWA] = updatedBeliefs;
+              case AgentIDs.NWA: {
+                const updatedBeliefs = JSON.stringify(agent.getBeliefs());
+                updatedProtectedInfo[AgentIDs.NWA] = updatedBeliefs;
+                if (localClinician.protectedInfo) {
+                  localClinician.protectedInfo[AgentIDs.NWA] = updatedBeliefs;
+                }
+                break;
               }
-              break;
-            }
-            case AgentIDs.ALA: {
-              const updatedBeliefs = JSON.stringify(agent.getBeliefs());
-              updatedProtectedInfo[AgentIDs.ALA] = updatedBeliefs;
-              if (localClinician.protectedInfo) {
-                localClinician.protectedInfo[AgentIDs.ALA] = updatedBeliefs;
+              case AgentIDs.ALA: {
+                const updatedBeliefs = JSON.stringify(agent.getBeliefs());
+                updatedProtectedInfo[AgentIDs.ALA] = updatedBeliefs;
+                if (localClinician.protectedInfo) {
+                  localClinician.protectedInfo[AgentIDs.ALA] = updatedBeliefs;
+                }
+                break;
               }
-              break;
-            }
-            case AgentIDs.MHA: {
-              const updatedBeliefs = JSON.stringify(agent.getBeliefs());
-              updatedProtectedInfo[AgentIDs.MHA] = updatedBeliefs;
-              if (localClinician.protectedInfo) {
-                localClinician.protectedInfo[AgentIDs.MHA] = updatedBeliefs;
+              case AgentIDs.MHA: {
+                const updatedBeliefs = JSON.stringify(agent.getBeliefs());
+                updatedProtectedInfo[AgentIDs.MHA] = updatedBeliefs;
+                if (localClinician.protectedInfo) {
+                  localClinician.protectedInfo[AgentIDs.MHA] = updatedBeliefs;
+                }
+                break;
               }
-              break;
+              default: {
+                break;
+              }
             }
-            default: {
-              break;
+          });
+
+          if (isOnline) {
+            await updateClinicianProtectedInfo(updatedProtectedInfo);
+          } else {
+            const agentNWA = this.getAgent(AgentIDs.NWA);
+            if (agentNWA) {
+              agentNWA.addBelief(
+                new Belief(
+                  BeliefKeys.APP,
+                  AppAttributes.SYNC_PROTECTED_INFO,
+                  true
+                )
+              );
             }
           }
-        });
 
-        if (isOnline) {
-          await updateClinicianProtectedInfo(updatedProtectedInfo);
-        } else {
-          const agentNWA = this.getAgent(AgentIDs.NWA);
-          if (agentNWA) {
-            agentNWA.addBelief(
-              new Belief(
-                BeliefKeys.APP,
-                AppAttributes.SYNC_PROTECTED_INFO,
-                true
-              )
-            );
-          }
-        }
-
-        // Updates local storage
-        await Storage.setClinician(localClinician);
+          // Updates local storage
+          await Storage.setClinician(localClinician);
+        }, 3000);
       }
     }
   }

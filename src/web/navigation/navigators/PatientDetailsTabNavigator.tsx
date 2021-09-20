@@ -4,7 +4,6 @@ import { select, RootState } from "util/useRedux";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { PatientOverview } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientOverview";
 import { PatientParameters } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientParameters";
-import { PatientICDCRT } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientICDCRT";
 import { PatientHistory } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientHistory";
 import { PatientInformation } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientInformation";
 import { PatientDetailsTabProps } from "web/navigation/types";
@@ -13,16 +12,17 @@ import {
   PatientDetailsTabParamList
 } from "web/navigation";
 import i18n from "util/language/i18n";
-import { AlertHistory, MedicalRecords } from "mock/mockPatientDetails";
-import { PatientDetails } from "rc_agents/model";
+import { MedicalRecords } from "mock/mockPatientDetails";
+import { AlertInfo, PatientDetails } from "rc_agents/model";
 import { getTopTabBarOptions } from "util/getStyles";
+import { PatientICDCRT } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientICDCRT";
 
 const Tab = createMaterialTopTabNavigator<PatientDetailsTabParamList>();
 
 export interface PatientDetailsTabNavigatorProps {
   details: PatientDetails;
   selectedTab?: PatientDetailsTabName;
-  setDisplayHistory: (state: AlertHistory) => void; // alert history details to be shown
+  setDisplayHistory: (state: AlertInfo) => void; // alert history details to be shown
   setModalAlertVisible: (state: boolean) => void; // alert modal visibility
   setViewMedicalModal: (state: boolean) => void; // medical record modal visibility
   setDisplayMedicalRecord: (state: MedicalRecords) => void; // medical record details to be shown

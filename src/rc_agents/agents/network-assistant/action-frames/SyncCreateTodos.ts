@@ -11,15 +11,17 @@ import {
   ActionFrameIDs,
   AppAttributes,
   BeliefKeys,
-  ClinicianAttributes
+  ClinicianAttributes,
+  ProcedureAttributes
 } from "rc_agents/clinician_framework";
 import { Storage } from "rc_agents/storage";
 import { createTodo } from "aws/TypedAPI/createMutations";
 import { CreateTodoInput } from "aws/API";
 import { listTodosByAlertID } from "aws";
-import { agentNWA } from "rc_agents/agents";
+import { agentDTA, agentNWA } from "rc_agents/agents";
 import { TodoStatus } from "rc_agents/model";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
+import { ProcedureConst } from "agents-framework/Enums";
 
 /**
  * Class to represent the activity for syncing local creation of new Todos.
@@ -53,9 +55,8 @@ class SyncCreateTodos extends Activity {
         // Todo to be inserted have null id and toSync set to true
         await Promise.all(
           localTodos.map(async (todo) => {
-            if (!todo.id && todo.toSync) {
-              let alertTodoExists = false;
-
+            // Sync changes for existing Todo that is associated with alerts
+            if (todo.id && todo.toSync) {
               if (todo.alertId) {
                 // Queries existing Todo with the same Alert
                 const query = await listTodosByAlertID({
@@ -65,7 +66,7 @@ class SyncCreateTodos extends Activity {
                 if (query.data.listTodosByAlertID?.items) {
                   const results = query.data.listTodosByAlertID?.items;
                   if (results && results.length > 0) {
-                    alertTodoExists = true;
+                    // alertTodoExists = true;
                     const existingTodo = results[0]!;
 
                     // Updates input to be used for updating Todo
@@ -85,49 +86,58 @@ class SyncCreateTodos extends Activity {
                     );
 
                     // Triggers UpdateTodo
-                    agent.addBelief(
+                    agentDTA.addBelief(
                       new Belief(
                         BeliefKeys.CLINICIAN,
                         ClinicianAttributes.UPDATE_TODO,
                         true
                       )
                     );
+
+                    agentAPI.addFact(
+                      new Belief(
+                        BeliefKeys.PROCEDURE,
+                        ProcedureAttributes.SRD_III,
+                        ProcedureConst.ACTIVE
+                      )
+                    );
                   }
                 }
               }
+            }
+            // Syncing for completely new todos
+            else if (!todo.id && todo.toSync) {
+              // Inserts Todo
+              const todoToInsert: CreateTodoInput = {
+                clinicianID: clinicianId,
+                title: todo.title,
+                patientName: todo.patientName,
+                notes: todo.notes,
+                lastModified: todo.createdAt,
+                owner: clinicianId
+              };
 
-              if (!alertTodoExists) {
-                // Inserts Todo
-                const todoToInsert: CreateTodoInput = {
-                  clinicianID: clinicianId,
-                  title: todo.title,
-                  patientName: todo.patientName,
-                  notes: todo.notes,
-                  lastModified: todo.createdAt,
-                  owner: clinicianId
-                };
+              if (todo.completed) {
+                todoToInsert.completed = TodoStatus.COMPLETED;
+              } else {
+                todoToInsert.pending = TodoStatus.PENDING;
+              }
 
-                if (todo.completed) {
-                  todoToInsert.completed = TodoStatus.COMPLETED;
-                } else {
-                  todoToInsert.pending = TodoStatus.PENDING;
-                }
+              if (todo.alertId) {
+                todoToInsert.alertID = todo.alertId;
+              }
 
-                if (todo.alertId) {
-                  todoToInsert.alertID = todo.alertId;
-                }
-                // Inserts Todo
-                const createResponse = await createTodo(todoToInsert);
+              // Inserts Todo
+              const createResponse = await createTodo(todoToInsert);
 
-                if (createResponse.data.createTodo) {
-                  // Updates current local Todo
-                  todo.id = createResponse.data.createTodo.id;
-                  todo.toSync = false;
+              if (createResponse.data.createTodo) {
+                // Updates current local Todo
+                todo.id = createResponse.data.createTodo.id;
+                todo.toSync = false;
 
-                  // Alert update will be handled by SyncAlertsUpdate action frame.
-                } else {
-                  createSuccessful = false;
-                }
+                // Alert update will be handled by SyncAlertsUpdate action frame.
+              } else {
+                createSuccessful = false;
               }
             }
             return todo;

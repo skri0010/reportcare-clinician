@@ -888,6 +888,109 @@ export const schema = {
                 }
             ]
         },
+        "MedicalRecord": {
+            "name": "MedicalRecord",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "patientID": {
+                    "name": "patientID",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "title": {
+                    "name": "title",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "fileKey": {
+                    "name": "fileKey",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                }
+            },
+            "syncable": true,
+            "pluralName": "MedicalRecords",
+            "attributes": [
+                {
+                    "type": "model",
+                    "properties": {}
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "medicalRecordsByPatientID",
+                        "fields": [
+                            "patientID"
+                        ],
+                        "queryField": "listMedicalRecordsByPatientID"
+                    }
+                },
+                {
+                    "type": "auth",
+                    "properties": {
+                        "rules": [
+                            {
+                                "provider": "userPools",
+                                "ownerField": "owner",
+                                "allow": "owner",
+                                "identityClaim": "cognito:username",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
+                            },
+                            {
+                                "provider": "userPools",
+                                "ownerField": "patientID",
+                                "allow": "owner",
+                                "operations": [
+                                    "read"
+                                ],
+                                "identityClaim": "cognito:username"
+                            },
+                            {
+                                "groupClaim": "cognito:groups",
+                                "provider": "userPools",
+                                "allow": "groups",
+                                "groups": [
+                                    "Admin"
+                                ],
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
+                            },
+                            {
+                                "groupClaim": "cognito:groups",
+                                "provider": "userPools",
+                                "allow": "groups",
+                                "groupsField": "patientID",
+                                "operations": [
+                                    "read"
+                                ],
+                                "groupField": "groups"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
         "ClinicianInfo": {
             "name": "ClinicianInfo",
             "fields": {
@@ -895,6 +998,13 @@ export const schema = {
                     "name": "id",
                     "isArray": false,
                     "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "clinicianID": {
+                    "name": "clinicianID",
+                    "isArray": false,
+                    "type": "String",
                     "isRequired": true,
                     "attributes": []
                 },
@@ -919,13 +1029,6 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "clinicianID": {
-                    "name": "clinicianID",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": true,
-                    "attributes": []
-                },
                 "protectedInfo": {
                     "name": "protectedInfo",
                     "isArray": false,
@@ -939,13 +1042,6 @@ export const schema = {
                         "associatedWith": "clinicianID",
                         "targetName": "clinicianID"
                     }
-                },
-                "owner": {
-                    "name": "owner",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": true,
-                    "attributes": []
                 }
             },
             "syncable": true,
@@ -969,27 +1065,14 @@ export const schema = {
                         "rules": [
                             {
                                 "provider": "userPools",
-                                "ownerField": "owner",
+                                "ownerField": "clinicianID",
                                 "allow": "owner",
                                 "operations": [
+                                    "create",
                                     "read",
                                     "update"
                                 ],
                                 "identityClaim": "cognito:username"
-                            },
-                            {
-                                "groupClaim": "cognito:groups",
-                                "provider": "userPools",
-                                "allow": "groups",
-                                "groups": [
-                                    "Admin"
-                                ],
-                                "operations": [
-                                    "create",
-                                    "update",
-                                    "delete",
-                                    "read"
-                                ]
                             },
                             {
                                 "groupClaim": "cognito:groups",
@@ -1014,7 +1097,20 @@ export const schema = {
                                     "Pharmacists"
                                 ],
                                 "operations": [
+                                    "read"
+                                ]
+                            },
+                            {
+                                "groupClaim": "cognito:groups",
+                                "provider": "userPools",
+                                "allow": "groups",
+                                "groups": [
+                                    "Admin"
+                                ],
+                                "operations": [
                                     "create",
+                                    "update",
+                                    "delete",
                                     "read"
                                 ]
                             }
@@ -1030,6 +1126,13 @@ export const schema = {
                     "name": "id",
                     "isArray": false,
                     "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "clinicianID": {
+                    "name": "clinicianID",
+                    "isArray": false,
+                    "type": "String",
                     "isRequired": true,
                     "attributes": []
                 },
@@ -1081,20 +1184,6 @@ export const schema = {
                     "type": "String",
                     "isRequired": true,
                     "attributes": []
-                },
-                "clinicianID": {
-                    "name": "clinicianID",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "owner": {
-                    "name": "owner",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": true,
-                    "attributes": []
                 }
             },
             "syncable": true,
@@ -1118,9 +1207,10 @@ export const schema = {
                         "rules": [
                             {
                                 "provider": "userPools",
-                                "ownerField": "owner",
+                                "ownerField": "clinicianID",
                                 "allow": "owner",
                                 "operations": [
+                                    "create",
                                     "read",
                                     "update"
                                 ],
@@ -1138,21 +1228,6 @@ export const schema = {
                                     "update",
                                     "delete",
                                     "read"
-                                ]
-                            },
-                            {
-                                "groupClaim": "cognito:groups",
-                                "provider": "userPools",
-                                "allow": "groups",
-                                "groups": [
-                                    "EPs",
-                                    "Nurses",
-                                    "HFSpecialists",
-                                    "MedicalOfficers",
-                                    "Pharmacists"
-                                ],
-                                "operations": [
-                                    "create"
                                 ]
                             }
                         ]
@@ -1189,13 +1264,6 @@ export const schema = {
                         "connectionType": "BELONGS_TO",
                         "targetName": "clinicianID"
                     }
-                },
-                "owner": {
-                    "name": "owner",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": true,
-                    "attributes": []
                 }
             },
             "syncable": true,
@@ -1231,7 +1299,7 @@ export const schema = {
                         "rules": [
                             {
                                 "provider": "userPools",
-                                "ownerField": "owner",
+                                "ownerField": "clinicianID",
                                 "allow": "owner",
                                 "operations": [
                                     "read"
@@ -1251,20 +1319,6 @@ export const schema = {
                                 "groupClaim": "cognito:groups",
                                 "provider": "userPools",
                                 "allow": "groups",
-                                "groups": [
-                                    "Admin"
-                                ],
-                                "operations": [
-                                    "create",
-                                    "update",
-                                    "delete",
-                                    "read"
-                                ]
-                            },
-                            {
-                                "groupClaim": "cognito:groups",
-                                "provider": "userPools",
-                                "allow": "groups",
                                 "groupsField": "patientID",
                                 "operations": [
                                     "read"
@@ -1276,14 +1330,13 @@ export const schema = {
                                 "provider": "userPools",
                                 "allow": "groups",
                                 "groups": [
-                                    "EPs",
-                                    "Nurses",
-                                    "HFSpecialists",
-                                    "MedicalOfficers",
-                                    "Pharmacists"
+                                    "Admin"
                                 ],
                                 "operations": [
-                                    "create"
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
                                 ]
                             }
                         ]
@@ -1315,6 +1368,13 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
+                "patientName": {
+                    "name": "patientName",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
                 "pending": {
                     "name": "pending",
                     "isArray": false,
@@ -1329,11 +1389,18 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "patientName": {
-                    "name": "patientName",
+                "reassignedClinicianID": {
+                    "name": "reassignedClinicianID",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": true,
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "adminCompleted": {
+                    "name": "adminCompleted",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
                     "attributes": []
                 }
             },
@@ -1370,7 +1437,7 @@ export const schema = {
                         "rules": [
                             {
                                 "provider": "userPools",
-                                "ownerField": "owner",
+                                "ownerField": "patientID",
                                 "allow": "owner",
                                 "operations": [
                                     "create",
@@ -1386,6 +1453,21 @@ export const schema = {
                                     "update"
                                 ],
                                 "identityClaim": "cognito:username"
+                            },
+                            {
+                                "groupClaim": "cognito:groups",
+                                "provider": "userPools",
+                                "allow": "groups",
+                                "groups": [
+                                    "EPs",
+                                    "Nurses",
+                                    "HFSpecialists",
+                                    "MedicalOfficers",
+                                    "Pharmacists"
+                                ],
+                                "operations": [
+                                    "read"
+                                ]
                             },
                             {
                                 "groupClaim": "cognito:groups",
@@ -1903,5 +1985,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "3ef2ea70ac9105a96c02d86ceeac35c1"
+    "version": "1442b022224e2a27caee7cd4c7e3bb56"
 };

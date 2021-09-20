@@ -17,11 +17,13 @@ import {
 } from "rc_agents/clinician_framework";
 import { Storage } from "rc_agents/storage";
 import { store } from "util/useRedux";
-import { setProcedureSuccessful } from "ic-redux/actions/agents/actionCreator";
+import { setUpdatingAlertIndicators } from "ic-redux/actions/agents/actionCreator";
 import { agentNWA } from "rc_agents/agents";
-import { getAlert, updateAlert } from "aws";
-import { AlertInfo, AlertStatus } from "rc_agents/model";
+import { getDetailedAlert, updateAlert } from "aws";
+import { AlertInfo, AlertStatus, FetchAlertsMode } from "rc_agents/model";
 import { Alert, UpdateAlertInput } from "aws/API";
+import { convertAlertToAlertInfo } from "util/utilityFunctions";
+import { AgentTrigger } from "rc_agents/trigger";
 
 /**
  * Class to represent an activity for updating a patient's Alert.
@@ -41,98 +43,135 @@ class UpdateAlert extends Activity {
 
     const facts = agentAPI.getFacts();
 
+    // Get alert to be updated
+    const alertInfoInput: AlertInfo =
+      facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.ALERT_INFO];
+
+    // Get online status from facts
+    const isOnline: boolean = facts[BeliefKeys.APP]?.[AppAttributes.ONLINE];
+
+    let toSync = false;
+    let alertToStore: Alert | AlertInfo | undefined;
+
+    // Convert from pending to completed
+    alertInfoInput.completed = AlertStatus.COMPLETED;
+    alertInfoInput.pending = null;
+
+    // Dispatch to store to indicate updating
+    store.dispatch(
+      setUpdatingAlertIndicators({ updatingAlert: true, alertUpdated: false })
+    );
+
     try {
-      // Gets Todo details to be updated
-      const alertInput: AlertInfo =
-        facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.ALERT];
-
-      if (alertInput) {
-        let toSync = false;
-        let alertToStore: Alert | AlertInfo | undefined;
-
-        if (facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
-          // Device is online: queries the latest alert
-          const alertQuery = await getAlert({ id: alertInput.id });
-          if (alertQuery.data.getAlert) {
-            const latestAlert = alertQuery.data.getAlert;
-
-            // Latest Alert has higher version than local alert
-            if (
-              alertInput._version &&
-              latestAlert._version > alertInput._version
-            ) {
-              alertToStore = latestAlert;
-            } else {
-              // This alert will be used for local storing later on
-              if (alertInput.completed) {
-                latestAlert.pending = null;
-                latestAlert.completed = AlertStatus.COMPLETED;
-              } else {
-                latestAlert.completed = null;
-                latestAlert.pending = AlertStatus.PENDING;
-              }
-
-              // Constructs alert object to be updated
-              const alertToUpdate: UpdateAlertInput = {
-                id: latestAlert.id,
-                completed: latestAlert.completed,
-                pending: latestAlert.pending,
-                _version: latestAlert._version
-              };
-              const updateResponse = await updateAlert(alertToUpdate);
-
-              // Updates to indicate that alert is successfully updated
-              if (updateResponse.data.updateAlert) {
-                latestAlert._version = updateResponse.data.updateAlert._version;
-              } else {
-                // Failed to update alert
-                toSync = true;
-              }
-
-              alertToStore = latestAlert;
-            }
+      if (alertInfoInput) {
+        // Fallback to input
+        alertToStore = alertInfoInput;
+        if (isOnline) {
+          // Either use online alert or updated alert depending on return AlertInfo
+          const { alertInfo, successful } = await updateAlertInfo(
+            alertInfoInput
+          );
+          if (successful) {
+            alertToStore = alertInfo;
+          } else {
+            // Queries did not occur
+            // Alert must be synced
+            toSync = true;
           }
         } else {
-          // Device is offline: alert update is to be synced
+          // Device is offline
+          // Alert must be synced
           toSync = true;
-          alertToStore = alertInput;
-        }
-
-        if (alertToStore) {
-          await Storage.mergeAlert(alertToStore);
-          await Storage.mergeAlertInfo(alertToStore);
-        }
-
-        if (toSync) {
-          // Stores alert to the list of alerts to be synced
-          await Storage.setAlertSync(alertInput);
-
-          // Notifies NWA
-          agentNWA.addBelief(
-            new Belief(BeliefKeys.APP, AppAttributes.SYNC_UPDATE_ALERTS, true)
-          );
         }
       }
-
-      // Dispatch to front end to indicate that procedure is successful
-      store.dispatch(setProcedureSuccessful(true));
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
-      // Dispatch to front end to indicate that procedure is successful
-      store.dispatch(setProcedureSuccessful(false));
+
+      // Alert must be synced
+      toSync = true;
     }
 
-    // Ends the procedure
+    if (alertToStore) {
+      // Store alert locally
+      await Storage.setAlertInfo(convertAlertToAlertInfo(alertToStore));
+    }
+
+    if (toSync) {
+      // Stores alert to the list of alerts to be synced
+      await Storage.setAlertSync(alertInfoInput);
+
+      // Notifies NWA
+      agentNWA.addBelief(
+        new Belief(BeliefKeys.APP, AppAttributes.SYNC_UPDATE_ALERTS, true)
+      );
+    }
+
+    // Trigger procedure to retrieve alerts locally
+    AgentTrigger.triggerRetrieveAlerts(FetchAlertsMode.ALL, true);
+
+    // Dispatch to front end to indicate updating has ended
+    store.dispatch(
+      setUpdatingAlertIndicators({ updatingAlert: false, alertUpdated: true })
+    );
+
+    // End the procedure
     agentAPI.addFact(
       new Belief(
         BeliefKeys.PROCEDURE,
         ProcedureAttributes.AT_CP_II,
         ProcedureConst.INACTIVE
-      )
+      ),
+      true,
+      true
     );
   }
 }
+
+export const updateAlertInfo = async (
+  alertInfoInput: AlertInfo
+): Promise<{ alertInfo: AlertInfo; successful: boolean }> => {
+  let returnAlertInfo = alertInfoInput;
+  let successful = false;
+  try {
+    // Device is online: queries the latest alert
+    const alertQuery = await getDetailedAlert({ id: alertInfoInput.id });
+    if (alertQuery.data.getAlert) {
+      const onlineAlert = alertQuery.data.getAlert;
+
+      if (
+        alertInfoInput._version &&
+        onlineAlert._version > alertInfoInput._version
+      ) {
+        // If online alert has higher version than local alert, store online alert
+        // Result 1: Online AlertInfo is returned
+        returnAlertInfo = convertAlertToAlertInfo(onlineAlert);
+      } else {
+        // Construct Alert to be updated
+        const alertToUpdate: UpdateAlertInput = {
+          id: alertInfoInput.id,
+          completed: alertInfoInput.completed,
+          pending: alertInfoInput.pending,
+          _version: alertInfoInput._version
+        };
+        const updateResponse = await updateAlert(alertToUpdate);
+
+        // Updates to indicate that alert is successfully updated
+        if (updateResponse.data.updateAlert) {
+          // Result 2: Updated AlertInfo is returned
+          const updatedAlert = updateResponse.data.updateAlert;
+          returnAlertInfo = convertAlertToAlertInfo(updatedAlert);
+        }
+      }
+
+      // Always successful because query was made and error is not thrown
+      successful = true;
+    }
+  } catch (error) {
+    successful = false;
+  }
+  return { alertInfo: returnAlertInfo, successful: successful };
+};
 
 // Preconditions
 const rule1 = new Precondition(

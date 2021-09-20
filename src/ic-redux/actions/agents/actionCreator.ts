@@ -1,14 +1,14 @@
 import {
   AlertInfo,
   PatientDetails,
-  PendingAlertCount,
+  AlertsCount,
   LocalTodo,
   RiskFilter as RiskFilters
 } from "rc_agents/model";
 import { actionNames } from "ic-redux/actions/actionNames";
 import { createAction } from "typesafe-actions";
-import { Alert, PatientAssignment, PatientInfo, ClinicianInfo } from "aws/API";
 import { ChartFilter } from "models/ChartViewTypes";
+import { PatientAssignment, PatientInfo, ClinicianInfo } from "aws/API";
 
 export const setProcedureOngoing = createAction(
   actionNames.SET_PROCEDURE_ONGOING,
@@ -31,6 +31,13 @@ export const setPatients = createAction(
   })
 )();
 
+export const setAlertHistory = createAction(
+  actionNames.SET_ALERT_HISTORY,
+  (alertHistory: AlertInfo[]) => ({
+    alertHistory: alertHistory
+  })
+)();
+
 export const setPatientDetails = createAction(
   actionNames.SET_PATIENT_DETAILS,
   (patientDetails: PatientDetails | null) => ({
@@ -49,6 +56,13 @@ export const setFetchingPatientDetails = createAction(
   actionNames.SET_FETCHING_PATIENT_DETAILS,
   (fetchingPatientDetails: boolean) => ({
     fetchingPatientDetails: fetchingPatientDetails
+  })
+)();
+
+export const setFetchingPatientAlertHistory = createAction(
+  actionNames.SET_FETCHING_PATIENT_ALERT_HISTORY,
+  (fetchingPatientAlertHistory: boolean) => ({
+    fetchingPatientAlertHistory: fetchingPatientAlertHistory
   })
 )();
 
@@ -110,15 +124,66 @@ export const setConfigurationSuccessful = createAction(
 
 export const setPendingAlertCount = createAction(
   actionNames.SET_PENDING_ALERT_COUNT,
-  (pendingAlertCount: PendingAlertCount) => ({
+  (pendingAlertCount: AlertsCount) => ({
     pendingAlertCount: pendingAlertCount
+  })
+)();
+
+export const setFetchingAlerts = createAction(
+  actionNames.SET_FETCHING_ALERTS,
+  (fetchingAlerts: boolean) => ({
+    fetchingPendingAlerts: fetchingAlerts,
+    fetchingCompletedAlerts: fetchingAlerts
+  })
+)();
+
+export const setFetchingPendingAlerts = createAction(
+  actionNames.SET_FETCHING_PENDING_ALERTS,
+  (fetchingPendingAlerts: boolean) => ({
+    fetchingPendingAlerts: fetchingPendingAlerts
+  })
+)();
+
+export const setFetchingCompletedAlerts = createAction(
+  actionNames.SET_FETCHING_COMPLETED_ALERTS,
+  (fetchingCompletedAlerts: boolean) => ({
+    fetchingCompletedAlerts: fetchingCompletedAlerts
+  })
+)();
+
+export const setUpdatingAlertIndicators = createAction(
+  actionNames.SET_UPDATING_ALERT_INDICATORS,
+  (indicators: { updatingAlert: boolean; alertUpdated: boolean }) => ({
+    updatingAlert: indicators.updatingAlert,
+    alertUpdated: indicators.alertUpdated
+  })
+)();
+
+export const setPendingAlerts = createAction(
+  actionNames.SET_PENDING_ALERTS,
+  (pendingAlerts: AlertInfo[]) => ({
+    pendingAlerts: pendingAlerts
+  })
+)();
+
+export const setCompletedAlerts = createAction(
+  actionNames.SET_COMPLETED_ALERTS,
+  (completedAlerts: AlertInfo[]) => ({
+    completedAlerts: completedAlerts
   })
 )();
 
 export const setAlerts = createAction(
   actionNames.SET_ALERTS,
-  (alerts: Alert[]) => ({
+  (alerts: AlertInfo[]) => ({
     alerts: alerts
+  })
+)();
+
+export const setFetchingAlertInfo = createAction(
+  actionNames.SET_FETCHING_ALERT_INFO,
+  (fetchingAlertInfo: boolean) => ({
+    fetchingAlertInfo: fetchingAlertInfo
   })
 )();
 
@@ -143,6 +208,20 @@ export const setPendingTodos = createAction(
   })
 )();
 
+export const setFetchingTodoDetails = createAction(
+  actionNames.SET_FETCHING_TODO_DETAILS,
+  (fetchingTodoDetails: boolean) => ({
+    fetchingTodoDetails: fetchingTodoDetails
+  })
+)();
+
+export const setTodoDetails = createAction(
+  actionNames.SET_TODO_DETAILS,
+  (todoDetails: LocalTodo) => ({
+    todoDetails: todoDetails
+  })
+)();
+
 export const setCompletedTodos = createAction(
   actionNames.SET_COMPLETED_TODOS,
   (completedTodos: LocalTodo[]) => ({
@@ -164,10 +243,17 @@ export const setUpdatedTodo = createAction(
   })
 )();
 
-export const setRiskFilters = createAction(
-  actionNames.SET_RISK_FILTERS,
+export const setPatientRiskFilters = createAction(
+  actionNames.SET_PATIENT_RISK_FILTERS,
   (riskFilters: RiskFilters) => ({
-    riskFilters: riskFilters
+    patientRiskFilters: riskFilters
+  })
+)();
+
+export const setAlertRiskFilters = createAction(
+  actionNames.SET_ALERT_RISK_FILTERS,
+  (riskFilters: RiskFilters) => ({
+    alertRiskFilters: riskFilters
   })
 )();
 

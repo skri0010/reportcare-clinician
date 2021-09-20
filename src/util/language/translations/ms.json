@@ -121,12 +121,6 @@
     "ItemsRemaining": "lagi",
     "ShowMoreButton": "LIHAT LEBIH"
   },
-  "Alert": {
-    "HighRisk": "Risiko Tinggi",
-    "MediumRisk": "Risiko Sederhana",
-    "LowRisk": "Risiko Rendah",
-    "UnassignedRisk": "Risiko belum ditetapkan"
-  },
   "Todo": {
     "Current": "Semasa",
     "Completed": "Selesai",
@@ -154,7 +148,8 @@
     "MarkAsDone": "TANDA SEBAGAI SELESAI",
     "UndoFromCompleted": "PINDAH DARI SELESAI",
     "Done": "SIAP",
-    "Undo": "UNDO"
+    "Undo": "UNDO",
+    "NoPendingTodo": "Semua todo sudah disiapkan!"
   },
   "Patients": {
     "PatientsList": {
@@ -241,7 +236,8 @@
       "TitleInputPlaceholder": "Berikan nama kepada rekod perubatan ini (contohnya latar belakang)",
       "Description": "Deskripsi",
       "DescriptionInputPlaceholder": "Apakah isi-isi deskripsi ini?"
-    }
+    },
+    "NoAlertHistory": "Pesakit ini belum mempunyai sejarah amaran!"
   },
   "Patient_Info": {
     "Male": "Lelaki",
@@ -272,7 +268,18 @@
     "SearchBarPlaceholder": "Cari amaran",
     "NoSelection": "Pilih salah satu amaran untuk melihat butirannya",
     "Symptoms": "Simptom",
-    "Signs": "Tanda"
+    "Signs": "Tanda",
+    "HighRisk": "Risiko Tinggi",
+    "MediumRisk": "Risiko Sederhana",
+    "LowRisk": "Risiko Rendah",
+    "UnassignedRisk": "Risiko belum ditetapkan",
+    "AlertList": {
+      "NoPendingAlerts": "Tiada amaran belum selesai dijumpai.",
+      "NoCompletedAlerts": "Tiada amaran selesai dijumpai"
+    },
+    "AlertVitals": {
+      "HeartRate": "Kadar Jantung"
+    }
   },
   "MobileMessage": {
     "ViewList": "Lihat Senarai",

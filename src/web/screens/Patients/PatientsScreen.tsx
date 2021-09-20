@@ -6,7 +6,7 @@ import { mockPatients } from "mock/mockPatients";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { ContactTitle } from "components/RowComponents/ContactTitle";
 import { AlertHistoryModal } from "./PatientScreens/PatientDetailsScreen/PatientHistoryComponents/AlertHistoryModal";
-import { AlertHistory, MedicalRecords } from "mock/mockPatientDetails";
+import { MedicalRecords } from "mock/mockPatientDetails";
 import { RiskLevel } from "models/RiskLevel";
 import { ScaledSheet } from "react-native-size-matters";
 import { ViewMedicalRecords } from "./PatientScreens/PatientDetailsScreen/PatientHistoryComponents/ViewMedicalRecord";
@@ -23,6 +23,7 @@ import i18n from "util/language/i18n";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AdaptiveTwoScreenWrapper } from "web/screens/AdaptiveTwoScreenWrapper";
 import { PatientConfigurationScreen } from "web/screens/Patients/PatientScreens/PatientConfiguration/PatientConfigurationScreen";
+import { AlertColorCode, AlertInfo, AlertStatus } from "rc_agents/model";
 
 export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
   route
@@ -71,17 +72,24 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
   }, [displayPatientId, patientDetails, patients, dispatch]);
 
   // Initial alert history details for the modal
-  const initialAlertHistory = {
+  const initialAlertHistory: AlertInfo = {
+    __typename: "Alert",
     id: "",
-    patientId: "",
-    risk: RiskLevel.UNASSIGNED,
-    date: "",
-    time: "",
-    description: "",
-    HRV: 0,
-    BP: "",
-    symptom: "",
-    signs: ""
+    patientID: "",
+    patientName: "",
+    riskLevel: RiskLevel.UNASSIGNED,
+    vitalsReportID: "",
+    symptomReportID: "",
+    dateTime: "",
+    summary: "",
+    colorCode: AlertColorCode.UNASSIGNED,
+    pending: AlertStatus.PENDING,
+    completed: null,
+    _version: -1,
+    _lastChangedAt: new Date().getTime(),
+    createdAt: "",
+    updatedAt: "",
+    owner: ""
   };
 
   // Inital medical record details for the modal
@@ -104,7 +112,7 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
   const [modalAlertVisible, setModalAlertVisible] = useState<boolean>(false);
   // Feed in the alert details to be displayed in the modal
   const [displayHistory, setDisplayHistory] =
-    useState<AlertHistory>(initialAlertHistory);
+    useState<AlertInfo>(initialAlertHistory);
 
   // For view medical record modal visibility
   const [viewMedicalModal, setViewMedicalModal] = useState<boolean>(false);

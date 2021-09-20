@@ -1,8 +1,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Alert, PatientInfo } from "aws/API";
-import { RiskLevel } from "models/RiskLevel";
-import { AlertInfo, AlertStatus, PatientDetails } from "rc_agents/model";
+import { PatientInfo } from "aws/API";
+import { PatientDetails } from "rc_agents/model";
 import { AsyncStorageKeys, AsyncStorageType } from ".";
+
+export * from "rc_agents/storage/get/alerts";
 
 export const getSignUpDetails = async (): Promise<
   AsyncStorageType[AsyncStorageKeys.SIGN_UP_DETAILS] | null
@@ -121,135 +122,6 @@ export const getAllPatientDetails = async (): Promise<
 };
 
 /**
- * Gets a single Alert.
- * @param alertId alert's Id
- * @param riskLevel riskLevel of the alert
- * @returns Alert if any, otherwise null
- */
-export const getSingleAlert = async (
-  alertId: string,
-  riskLevel: RiskLevel
-): Promise<Alert | null> => {
-  const localData = await getAlerts();
-  if (localData && localData[riskLevel]) {
-    return localData[riskLevel][alertId];
-  }
-  return null;
-};
-
-/**
- * Base function for getting all Alerts.
- * @returns alert object if exist, otherwise null
- */
-export const getAlerts = async (): Promise<
-  AsyncStorageType[AsyncStorageKeys.ALERTS] | null
-> => {
-  const localData = await AsyncStorage.getItem(AsyncStorageKeys.ALERTS);
-  if (localData) {
-    return JSON.parse(localData);
-  }
-  return null;
-};
-
-/**
- * Gets Alerts based on risk level and/or alert status
- * @param riskLevel risk level
- * @param status alert status
- * @returns array of Alerts if any, otherwise null
- */
-export const getRiskOrStatusAlerts = async (
-  riskLevel?: RiskLevel,
-  status?: AlertStatus
-): Promise<Alert[] | null> => {
-  const localData = await getAlerts();
-  if (localData) {
-    if (riskLevel) {
-      // Risk level is specified
-      const riskAlerts = localData[riskLevel];
-      if (status && status === AlertStatus.PENDING) {
-        return Object.values(riskAlerts).filter((a) => a.pending === status);
-      }
-      if (status && status === AlertStatus.COMPLETED) {
-        return Object.values(riskAlerts).filter((a) => a.completed === status);
-      }
-      return Object.values(riskAlerts);
-    }
-
-    if (status) {
-      // Risk level is not specified
-      const keys = Object.values(RiskLevel);
-      const statusAlerts: Alert[] = [];
-      await Promise.all(
-        keys.map((key) => {
-          const riskAlerts = localData[key];
-          Object.values(riskAlerts).map((alert) => {
-            if (status === AlertStatus.PENDING && alert.pending === status) {
-              statusAlerts.push(alert);
-            } else if (
-              status === AlertStatus.COMPLETED &&
-              alert.completed === status
-            ) {
-              statusAlerts.push(alert);
-            }
-            return alert;
-          });
-          return key;
-        })
-      );
-      return statusAlerts;
-    }
-  }
-  return null;
-};
-
-/**
- * Get a single AlertInfo from Alert
- * @param alert alert
- * @returns AlertInfo corresponding to the input Alert if any, otherwise null
- */
-export const getSingleAlertInfo = async (
-  alertId: string,
-  patientId: string
-): Promise<AlertInfo | null> => {
-  const localData = await getAlertInfos();
-  if (localData && localData[patientId]) {
-    const patientAlertInfos = localData[patientId];
-    return patientAlertInfos[alertId];
-  }
-  return null;
-};
-
-/**
- * Base function for getting all AlertInfos.
- * @returns AlertInfo object if any, otherwise null
- */
-export const getAlertInfos = async (): Promise<
-  AsyncStorageType[AsyncStorageKeys.ALERT_INFOS] | null
-> => {
-  const localData = await AsyncStorage.getItem(AsyncStorageKeys.ALERT_INFOS);
-  if (localData) {
-    return JSON.parse(localData);
-  }
-  return null;
-};
-
-/**
- * Gets all AlertInfos of a patient
- * @param patientId patient's Id
- * @returns array of AlertInfo of the input patientId if any, otherwise null
- */
-export const getPatientAlertInfos = async (
-  patientId: string
-): Promise<AlertInfo[] | null> => {
-  const localData = await getAlertInfos();
-  if (localData && localData[patientId]) {
-    const patientAlertInfos = localData[patientId];
-    return Object.values(patientAlertInfos);
-  }
-  return null;
-};
-
-/**
  * Gets patient configurations to be synced.
  * @returns array of patient infos if any, otherwise null
  */
@@ -259,20 +131,6 @@ export const getPatientConfigurations = async (): Promise<
   const localData = await AsyncStorage.getItem(
     AsyncStorageKeys.PATIENT_CONFIGURATIONS
   );
-  if (localData) {
-    return JSON.parse(localData);
-  }
-  return null;
-};
-
-/**
- * Gets Alerts with updated to be synced.
- * @returns array of Alerts if any, otherwise null
- */
-export const getAlertsSync = async (): Promise<
-  AsyncStorageType[AsyncStorageKeys.ALERTS_SYNC] | null
-> => {
-  const localData = await AsyncStorage.getItem(AsyncStorageKeys.ALERTS_SYNC);
   if (localData) {
     return JSON.parse(localData);
   }
@@ -309,6 +167,42 @@ export const getCompletedTodos = async (): Promise<
   const localData = await getTodos();
   if (localData) {
     return localData.filter((t) => t.completed === true);
+  }
+  return null;
+};
+
+export const getTodo = async (
+  id: string
+): Promise<AsyncStorageType[AsyncStorageKeys.TODOS] | null> => {
+  const localData = await getTodos();
+  if (localData) {
+    return localData.filter((t) => t.id === id);
+  }
+  return null;
+};
+
+export const getTodoDetails = async (
+  id: string
+): Promise<AsyncStorageType[AsyncStorageKeys.TODO_DETAILS] | undefined> => {
+  const localData = await getTodos();
+  if (localData) {
+    return localData.find((t) => t.id === id);
+  }
+  return undefined;
+};
+
+/**
+ * Gets locally stored PatientAssignmentSubscriptions to be processed
+ * @returns array of PatientAssignmentSubscriptions
+ */
+export const getPatientAssignmentSubscriptions = async (): Promise<
+  AsyncStorageType[AsyncStorageKeys.PATIENT_ASSIGNMENT_SUBSCRIPTIONS] | null
+> => {
+  const localData = await AsyncStorage.getItem(
+    AsyncStorageKeys.PATIENT_ASSIGNMENT_SUBSCRIPTIONS
+  );
+  if (localData) {
+    return JSON.parse(localData);
   }
   return null;
 };

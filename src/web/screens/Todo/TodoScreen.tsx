@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React, { FC, useEffect, useState } from "react";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { MainScreenProps } from "web/navigation/types";
@@ -17,8 +16,10 @@ import { useToast } from "react-native-toast-notifications";
 import {
   setProcedureSuccessful,
   setSubmittingTodo,
+  setFetchingTodoDetails,
   setUpdatedTodo
 } from "ic-redux/actions/agents/actionCreator";
+import { AgentTrigger } from "rc_agents/trigger";
 import { TodosList } from "web/screens/Todo/TodosList";
 import { AdaptiveTwoScreenWrapper } from "../AdaptiveTwoScreenWrapper";
 
@@ -37,11 +38,11 @@ export const TodoScreen: FC<MainScreenProps[ScreenName.TODO]> = ({
 }) => {
   const {
     colors,
-    todoDetails,
     fetchingTodoDetails,
     procedureOngoing,
     procedureSuccessful,
     updatedTodo,
+    todoDetails,
     submittingTodo
   } = select((state: RootState) => ({
     colors: state.settings.colors,
@@ -85,9 +86,11 @@ export const TodoScreen: FC<MainScreenProps[ScreenName.TODO]> = ({
   }, [todoDetails]);
 
   // Function to save the selected todo details to be displayed in the right screen
-  // JQ-TODO To be integrated with redux store for todo item details display on the right screen
   function onRowClick(item: LocalTodo) {
-    setTodoSelected(item);
+    dispatch(setFetchingTodoDetails(true));
+    if (item.id) {
+      AgentTrigger.triggerRetrieveTodoDetails(item.id);
+    }
   }
 
   // Compares dispatched updatedTodo with current Todo displayed in the TodoDetailsScreen
@@ -99,6 +102,12 @@ export const TodoScreen: FC<MainScreenProps[ScreenName.TODO]> = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updatedTodo]);
+
+  useEffect(() => {
+    if (todoDetails) {
+      setTodoSelected(todoDetails);
+    }
+  }, [todoDetails]);
 
   // Detects completion of UpdateTodo procedure and shows the appropriate toast.
   useEffect(() => {
