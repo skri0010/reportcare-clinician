@@ -47,7 +47,7 @@ class RequestClinicianContactsDisplay extends Communicate {
    */
   async doActivity(agent: Agent): Promise<void> {
     try {
-      await super.doActivity(agent);
+      await super.doActivity(agent, [rule3]);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
