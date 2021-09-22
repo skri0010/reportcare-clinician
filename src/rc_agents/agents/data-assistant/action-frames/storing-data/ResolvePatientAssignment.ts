@@ -65,11 +65,10 @@ class ResolvePatientAssignment extends Activity {
         // Device is online
         if (agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
           // Resolve (APPROVE or REASSIGN based on assignment)
-          await resolvePatientAssignment({
+          resolvedOnline = await resolvePatientAssignment({
             resolution: resolution,
-            ownClinicianId: clinicianId
+            userClinicianID: clinicianId
           });
-          resolvedOnline = true;
         }
         // Device is offline: Save locally
         else {
@@ -146,105 +145,56 @@ class ResolvePatientAssignment extends Activity {
 }
 
 /**
- * Resolve (APPROVE or REASSIGN based on assignment)
+ * Resolve patient assignment by updating it
+ * Logic is handled by backend Lambda function (handle-patient-assignment-resolution)
+ * Source for logic is in lambda-functions/handle-patient-assignment-resolution
  */
 export const resolvePatientAssignment: (params: {
   resolution: PatientAssignmentResolution;
-  ownClinicianId: string;
-}) => Promise<void> = async ({ resolution, ownClinicianId }) => {
-  // Approve patient to self
-  if (
-    resolution.resolution === PatientAssignmentStatus.APPROVED &&
-    resolution.clinicianID === ownClinicianId
-  ) {
-    await approvePatientAssignment({ assignment: resolution });
-  }
-  // Reassign patient to another clinician
-  else if (
-    resolution.resolution === PatientAssignmentStatus.REASSIGNED &&
-    resolution.clinicianID !== ownClinicianId
-  ) {
-    await reassignPatientAssignment({
-      reassignment: resolution,
-      ownClinicianId: ownClinicianId
-    });
-  }
-};
-
-/**
- * Approve API calls for online device
- */
-const approvePatientAssignment: (params: {
-  assignment: PatientAssignmentResolution;
-}) => Promise<void> = async ({ assignment }) => {
-  // Create ClinicianPatientMap, update PatientAssignment status, update access token
-  let createSuccessful = false;
+  userClinicianID: string;
+}) => Promise<boolean> = async ({ resolution, userClinicianID }) => {
+  let success = false;
   try {
-    await createClinicianPatientMap({
-      patientID: assignment.patientID,
-      clinicianID: assignment.clinicianID
-    });
-    createSuccessful = true;
-  } catch (error) {
-    // If clinician patient map is already created, proceed with patient assignment update
-    const query = await getClinicianPatientMap({
-      clinicianID: assignment.clinicianID,
-      patientID: assignment.patientID
-    });
-    if (query.data.getClinicianPatientMap) {
-      createSuccessful = true;
+    // Approve resolution
+    if (
+      resolution.resolution === PatientAssignmentStatus.APPROVED &&
+      resolution.clinicianID === userClinicianID
+    ) {
+      const result = await updatePatientAssignment({
+        patientID: resolution.patientID,
+        clinicianID: resolution.clinicianID,
+        pending: null, // Removes it from GSI to ensure it is sparse
+        resolution: PatientAssignmentStatus.APPROVED,
+        _version: resolution._version
+      });
+      if (result) {
+        success = true;
+      }
     }
-  }
-
-  if (createSuccessful) {
-    await updatePatientAssignment({
-      patientID: assignment.patientID,
-      clinicianID: assignment.clinicianID,
-      pending: null, // Removes it from GSI to ensure it is sparse
-      resolution: PatientAssignmentStatus.APPROVED,
-      _version: assignment._version
-    });
-    await Auth.currentAuthenticatedUser({ bypassCache: true }); // pre token generation Lambda is triggered
-  }
-};
-
-/**
- * Reassign API calls for online device
- */
-const reassignPatientAssignment: (params: {
-  reassignment: PatientAssignmentResolution;
-  ownClinicianId: string;
-}) => Promise<void> = async ({ reassignment, ownClinicianId }) => {
-  // Create PatientAssignment for another clinician and update PatientAssignment status
-  let createSuccessful = false;
-  try {
-    await createPatientAssignment({
-      patientID: reassignment.patientID,
-      clinicianID: reassignment.clinicianID,
-      pending: PatientAssignmentStatus.PENDING,
-      patientName: reassignment.patientName
-    });
-    createSuccessful = true;
-  } catch (error) {
-    // If patient assignment is already created, proceed with patient assignment update
-    const query = await getPatientAssignment({
-      clinicianID: reassignment.clinicianID,
-      patientID: reassignment.patientID
-    });
-    if (query.data.getPatientAssignment) {
-      createSuccessful = true;
+    // Reassign resolution
+    else if (
+      resolution.resolution === PatientAssignmentStatus.REASSIGNED &&
+      resolution.reassignToClinicianID &&
+      resolution.clinicianID !== resolution.reassignToClinicianID &&
+      resolution.clinicianID === userClinicianID
+    ) {
+      const result = await updatePatientAssignment({
+        patientID: resolution.patientID,
+        clinicianID: resolution.clinicianID,
+        pending: null, // Removes it from GSI to ensure it is sparse
+        resolution: PatientAssignmentStatus.REASSIGNED,
+        reassignToClinicianID: resolution.reassignToClinicianID,
+        _version: resolution._version
+      });
+      if (result) {
+        success = true;
+      }
     }
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.log(error);
   }
-
-  if (createSuccessful) {
-    await updatePatientAssignment({
-      patientID: reassignment.patientID,
-      clinicianID: ownClinicianId,
-      pending: null, // Removes it from GSI to ensure it is sparse
-      resolution: PatientAssignmentStatus.REASSIGNED,
-      _version: reassignment._version
-    });
-  }
+  return success;
 };
 
 // Preconditions

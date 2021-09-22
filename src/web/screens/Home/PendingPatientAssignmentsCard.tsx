@@ -1,6 +1,6 @@
 import React, { FC, useEffect } from "react";
 import { RootState, select } from "util/useRedux";
-import { View, TextStyle, FlatList } from "react-native";
+import { View, FlatList } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { CardWrapper } from "./CardWrapper";
@@ -32,8 +32,6 @@ export const PendingPatientAssignmentsCard: FC<PendingPatientAssignmentsCardProp
         state.agents.fetchingPendingPatientAssignments
     }));
 
-    const titleColor = { color: colors.primaryTextColor } as TextStyle;
-
     // Trigger agent to fetch pending assignments on initial load
     useEffect(() => {
       AgentTrigger.triggerRetrievePendingAssignments();
@@ -53,8 +51,22 @@ export const PendingPatientAssignmentsCard: FC<PendingPatientAssignmentsCardProp
       );
     };
 
-    const reassignPatientAssignment = (assignment: PatientAssignment) => {
-      // JH-TODO-NEW: Reassign patient assignment
+    // JH-TODO-NEW: List of clinicians and trigger
+    const reassignPatientAssignment = (
+      assignment: PatientAssignment,
+      reassignToClinicianID: string
+    ) => {
+      const patientAssignmentResolution: PatientAssignmentResolution = {
+        patientID: assignment.patientID,
+        clinicianID: assignment.clinicianID,
+        patientName: assignment.patientName,
+        resolution: PatientAssignmentStatus.REASSIGNED,
+        reassignToClinicianID: reassignToClinicianID,
+        _version: assignment._version
+      };
+      AgentTrigger.triggerResolvePendingAssignments(
+        patientAssignmentResolution
+      );
     };
 
     return (
@@ -88,11 +100,11 @@ export const PendingPatientAssignmentsCard: FC<PendingPatientAssignmentsCardProp
                   <PatientAssignmentRow
                     patientName={item.patientName}
                     onApprove={() => approvePatientAssignment(item)}
-                    onReassign={() => reassignPatientAssignment(item)}
+                    onReassign={() => null}
                   />
                 );
               }}
-              keyExtractor={(item) => `${item.patientID}_${item.clinicianID}`}
+              keyExtractor={(item) => item.patientID}
             />
           </View>
         ) : null}

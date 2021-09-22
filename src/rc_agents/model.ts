@@ -124,8 +124,9 @@ export type LocalMedicalRecords = {
 export interface PatientAssignmentResolution {
   patientID: string;
   clinicianID: string;
-  resolution: PatientAssignmentStatus;
   patientName: string;
+  resolution: PatientAssignmentStatus;
+  reassignToClinicianID?: string;
   _version: number;
 }
 
