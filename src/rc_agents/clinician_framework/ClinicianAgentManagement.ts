@@ -11,7 +11,7 @@ import { ClinicianAgent } from "./ClinicianAgent";
 import cloneDeep from "lodash/cloneDeep";
 
 /**
- * Base class for management of active agents.
+ * Base class for management of active clinician agents.
  */
 export class ClinicianAgentManagement extends AgentManagement {
   // List of attributes that should be stored in the cloud database
@@ -19,6 +19,7 @@ export class ClinicianAgentManagement extends AgentManagement {
 
   // List of keys that should be stored in the cloud database
   // All inner attributes of each key listed will be stored
+  // NOTE: Currently used to prevent intermediate information from being stored due to race conditions
   private storableKeys: string[] = [BeliefKeys.APP, BeliefKeys.PROCEDURE];
 
   /**
@@ -30,7 +31,7 @@ export class ClinicianAgentManagement extends AgentManagement {
   }
 
   /**
-   * Retrieve saved state of facts from the database
+   * Overrode existing factFromDB to retrieve facts from cloud database
    */
   override async factFromDB(): Promise<void> {
     let factsSet = false;
@@ -164,7 +165,7 @@ export class ClinicianAgentManagement extends AgentManagement {
    */
   async updateDbStates(): Promise<void> {
     // Ensures that all agents have completed their actions before updating
-    // Retry every 1s
+    // Retry every 3s
     const timer = setInterval(async () => {
       const agentIDMap: { [id: string]: boolean } = {};
       // Map expected agent ids to false
@@ -187,11 +188,13 @@ export class ClinicianAgentManagement extends AgentManagement {
         // eslint-disable-next-line no-console
         console.log("One or more agents have not completed their actions");
       }
-    }, 1000);
+    }, 3000);
   }
 
   /**
    * Collects and updates ClinicianProtectedInfo in the cloud database
+   * NOTE: Currently stores "storableFacts" and all beliefs of each agent.
+   * Replace "getBeliefs()" with "getStorableBeliefs()" to exclude certain beliefs from the agents.
    * @param protectedInfo
    * @param localClinician
    */
@@ -221,7 +224,7 @@ export class ClinicianAgentManagement extends AgentManagement {
         // Construct protectedInfo to be updated
         const updatedProtectedInfo: UpdateClinicianProtectedInfoInput = {
           clinicianID: localClinician.clinicianID,
-          facts: JSON.stringify(this.getStorableFacts()),
+          facts: JSON.stringify(this.getStorableFacts()), // Only stores certain facts
           APS: protectedInfo.APS,
           DTA: protectedInfo.DTA,
           UXSA: protectedInfo.UXSA,
@@ -235,9 +238,7 @@ export class ClinicianAgentManagement extends AgentManagement {
         this.getAgents().forEach((agent) => {
           switch (agent.getID()) {
             case AgentIDs.APS: {
-              const beliefsToUpdate = JSON.stringify(
-                agent.getStorableBeliefs()
-              );
+              const beliefsToUpdate = JSON.stringify(agent.getBeliefs());
               updatedProtectedInfo[AgentIDs.APS] = beliefsToUpdate;
               if (localClinician.protectedInfo) {
                 localClinician.protectedInfo[AgentIDs.APS] = beliefsToUpdate;
@@ -245,9 +246,7 @@ export class ClinicianAgentManagement extends AgentManagement {
               break;
             }
             case AgentIDs.DTA: {
-              const beliefsToUpdate = JSON.stringify(
-                agent.getStorableBeliefs()
-              );
+              const beliefsToUpdate = JSON.stringify(agent.getBeliefs());
               updatedProtectedInfo[AgentIDs.DTA] = beliefsToUpdate;
               if (localClinician.protectedInfo) {
                 localClinician.protectedInfo[AgentIDs.DTA] = beliefsToUpdate;
@@ -255,9 +254,7 @@ export class ClinicianAgentManagement extends AgentManagement {
               break;
             }
             case AgentIDs.UXSA: {
-              const beliefsToUpdate = JSON.stringify(
-                agent.getStorableBeliefs()
-              );
+              const beliefsToUpdate = JSON.stringify(agent.getBeliefs());
               updatedProtectedInfo[AgentIDs.UXSA] = beliefsToUpdate;
               if (localClinician.protectedInfo) {
                 localClinician.protectedInfo[AgentIDs.UXSA] = beliefsToUpdate;
@@ -265,9 +262,7 @@ export class ClinicianAgentManagement extends AgentManagement {
               break;
             }
             case AgentIDs.NWA: {
-              const beliefsToUpdate = JSON.stringify(
-                agent.getStorableBeliefs()
-              );
+              const beliefsToUpdate = JSON.stringify(agent.getBeliefs());
               updatedProtectedInfo[AgentIDs.NWA] = beliefsToUpdate;
               if (localClinician.protectedInfo) {
                 localClinician.protectedInfo[AgentIDs.NWA] = beliefsToUpdate;
@@ -275,9 +270,7 @@ export class ClinicianAgentManagement extends AgentManagement {
               break;
             }
             case AgentIDs.ALA: {
-              const beliefsToUpdate = JSON.stringify(
-                agent.getStorableBeliefs()
-              );
+              const beliefsToUpdate = JSON.stringify(agent.getBeliefs());
               updatedProtectedInfo[AgentIDs.ALA] = beliefsToUpdate;
               if (localClinician.protectedInfo) {
                 localClinician.protectedInfo[AgentIDs.ALA] = beliefsToUpdate;
@@ -285,9 +278,7 @@ export class ClinicianAgentManagement extends AgentManagement {
               break;
             }
             case AgentIDs.MHA: {
-              const beliefsToUpdate = JSON.stringify(
-                agent.getStorableBeliefs()
-              );
+              const beliefsToUpdate = JSON.stringify(agent.getBeliefs());
               updatedProtectedInfo[AgentIDs.MHA] = beliefsToUpdate;
               if (localClinician.protectedInfo) {
                 localClinician.protectedInfo[AgentIDs.MHA] = beliefsToUpdate;

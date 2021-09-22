@@ -238,7 +238,7 @@ export enum ClinicianAttributes {
   ALERT_TODO = "AlertTodo",
 
   //SRD-IV - Clinician Contacts
-  RETRIEVE_CLINICIAN_CONTACTS = "RetrieveClinicianContatcts",
+  RETRIEVE_CLINICIAN_CONTACTS = "RetrieveClinicianContacts",
   CLINICIAN_CONTACTS_RETRIEVED = "ClinicianContactsRetrieved",
   CLINICIAN_CONTACTS = "ClinicianContacts"
 }

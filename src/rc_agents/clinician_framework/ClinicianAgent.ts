@@ -8,6 +8,7 @@ import { ClinicianProtectedInfo } from "aws/API";
 import AgentAPI from "agents-framework/AgentAPI";
 import cloneDeep from "lodash/cloneDeep";
 import { ClinicianAgentAPI } from "./ClinicianAgentAPI";
+import ActivityNode from "agents-framework/base/Engine/Rete/ActivityNode";
 
 /**
  * Class representing the Agent
@@ -20,7 +21,12 @@ export class ClinicianAgent extends Agent {
   private actionCompleted: boolean;
 
   // List of attributes that should be stored in the cloud database
+  // Used when certain beliefs should be excluded from being stored
+  // NOTE: Currently unused since all beliefs are stored
   private storableAttributes: string[] = [CommonAttributes.LAST_ACTIVITY];
+
+  // Keeps track of current running activity if any
+  private currentActivity: ActivityNode | undefined;
 
   constructor(
     id: string,
@@ -152,6 +158,7 @@ export class ClinicianAgent extends Agent {
 
   /**
    * Gets beliefs that should be stored in the cloud database
+   * NOTE: Currently unused since all beliefs are stored
    * @returns storableBeliefs
    */
   getStorableBeliefs(): Fact {
@@ -180,15 +187,50 @@ export class ClinicianAgent extends Agent {
   }
 
   /**
-   * Work on available activities
+   * Overrode existing inference to include checking of current running activity with returned available actions.
+   */
+  override async inference(): Promise<void> {
+    const result = await this.engine.traverseNetwork(this);
+
+    for (let i = 0; i < result.length; i += 1) {
+      let activityExists = false;
+      // Check if activity is already running
+      if (
+        this.currentActivity &&
+        this.currentActivity.getID() === result[i].getID()
+      ) {
+        activityExists = true;
+      } else {
+        // Check if activity already exists in the list
+        for (let j = 0; j < this.availableActions.length; j += 1) {
+          if (this.availableActions[j].getID() === result[i].getID()) {
+            activityExists = true;
+            break;
+          }
+        }
+      }
+      if (!activityExists) {
+        this.availableActions.push(result[i]);
+      }
+    }
+
+    if (this.availableActions.length > 0) {
+      await this.startActivity();
+    }
+  }
+
+  /**
+   * Overrode existing startActivity to include tracking of current activity and whether it has been completed
    */
   override async startActivity(): Promise<void> {
     if (this.availableActions.length > 0) {
       // If working, do activity and set belief for last activity
       this.working = true;
-      this.setActionCompleted(false);
-      const activityNode = this.availableActions.shift()!;
-      const activity = activityNode.getActivity();
+      this.setActionCompleted(false); // Updates indicator that an activity is ongoing
+
+      // Performs activity
+      this.currentActivity = this.availableActions.shift()!; // Updates current activity
+      const activity = this.currentActivity.getActivity();
       await activity.doActivity(this);
 
       // Updates last activity in the current state of belief
@@ -199,7 +241,12 @@ export class ClinicianAgent extends Agent {
           activity.getID()
         )
       );
+
+      // Updates indicator that activity is completed
       this.setActionCompleted(true);
+    } else {
+      // No activity to perform
+      this.currentActivity = undefined;
     }
     this.working = false;
 
