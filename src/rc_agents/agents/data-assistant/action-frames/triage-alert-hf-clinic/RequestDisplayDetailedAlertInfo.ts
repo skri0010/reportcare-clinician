@@ -3,7 +3,8 @@ import {
   Communicate,
   Agent,
   Belief,
-  Precondition
+  Precondition,
+  ResettablePrecondition
 } from "agents-framework";
 import {
   ProcedureConst,
@@ -19,21 +20,18 @@ import {
 } from "rc_agents/clinician_framework";
 
 /**
- * Class to represent the activity for requesting display of pending alert count.
+ * Class to represent the activity for requesting display of information associated with an alert.
  * This happens in Procedure Triage Alert HF Clinic (AT-CP).
  */
-class RequestPendingAlertCountDisplay extends Communicate {
-  /**
-   * Constructor for the RequestPendingAlertCountDisplay class
-   */
+class RequestDisplayDetailedAlertInfo extends Communicate {
   constructor() {
     super(
-      ActionFrameIDs.DTA.REQUEST_PENDING_ALERT_COUNT_DISPLAY,
+      ActionFrameIDs.DTA.REQUEST_DISPLAY_DETAILED_ALERT_INFO,
       Performative.REQUEST,
-      // Triggers DisplayPendingAlertCount action frame of UXSA
+      // Triggers DisplayAlertInfo action frame of UXSA
       new Belief(
         BeliefKeys.CLINICIAN,
-        ClinicianAttributes.PENDING_ALERT_COUNT_RETRIEVED,
+        ClinicianAttributes.DETAILED_ALERT_INFO_RETRIEVED,
         true
       ),
       [AgentIDs.UXSA]
@@ -46,7 +44,7 @@ class RequestPendingAlertCountDisplay extends Communicate {
    */
   async doActivity(agent: Agent): Promise<void> {
     try {
-      await super.doActivity(agent);
+      await super.doActivity(agent, [rule3]);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
@@ -57,18 +55,23 @@ class RequestPendingAlertCountDisplay extends Communicate {
 // Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.AT_CP_I,
+  ProcedureAttributes.AT_CP_II,
   ProcedureConst.ACTIVE
 );
 const rule2 = new Precondition(
   AgentIDs.DTA,
   CommonAttributes.LAST_ACTIVITY,
-  ActionFrameIDs.DTA.RETRIEVE_PENDING_ALERT_COUNT
+  ActionFrameIDs.DTA.RETRIEVE_DETAILED_ALERT_INFO
+);
+const rule3 = new ResettablePrecondition(
+  BeliefKeys.CLINICIAN,
+  ClinicianAttributes.DETAILED_ALERT_INFO_RETRIEVED,
+  true
 );
 
 // Actionframe
-export const af_RequestPendingAlertCountDisplay = new Actionframe(
-  `AF_${ActionFrameIDs.DTA.REQUEST_PENDING_ALERT_COUNT_DISPLAY}`,
-  [rule1, rule2],
-  new RequestPendingAlertCountDisplay()
+export const af_RequestDisplayDetailedAlertInfo = new Actionframe(
+  `AF_${ActionFrameIDs.DTA.REQUEST_DISPLAY_DETAILED_ALERT_INFO}`,
+  [rule1, rule2, rule3],
+  new RequestDisplayDetailedAlertInfo()
 );

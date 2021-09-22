@@ -3,7 +3,8 @@ import {
   Communicate,
   Agent,
   Belief,
-  Precondition
+  Precondition,
+  ResettablePrecondition
 } from "agents-framework";
 import {
   ProcedureConst,
@@ -19,21 +20,18 @@ import {
 } from "rc_agents/clinician_framework";
 
 /**
- * Class to represent the activity for requesting display of alerts.
+ * Class to represent the activity for requesting display of refreshed alerts.
  * This happens in Procedure Triage Alert HF Clinic (AT-CP).
  */
-class RequestAlertsDisplay extends Communicate {
-  /**
-   * Constructor for the RequestAlertsDisplay class
-   */
+class RequestDisplayRefreshedAlerts extends Communicate {
   constructor() {
     super(
-      ActionFrameIDs.DTA.REQUEST_ALERTS_DISPLAY,
+      ActionFrameIDs.ALA.REQUEST_DISPLAY_REFRESHED_ALERTS,
       Performative.REQUEST,
       // Triggers DisplayAlerts action frame of UXSA
       new Belief(
         BeliefKeys.CLINICIAN,
-        ClinicianAttributes.ALERTS_RETRIEVED,
+        ClinicianAttributes.REFRESHED_ALERTS_RETRIEVED,
         true
       ),
       [AgentIDs.UXSA]
@@ -46,7 +44,7 @@ class RequestAlertsDisplay extends Communicate {
    */
   async doActivity(agent: Agent): Promise<void> {
     try {
-      await super.doActivity(agent);
+      await super.doActivity(agent, [rule3]);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
@@ -57,18 +55,23 @@ class RequestAlertsDisplay extends Communicate {
 // Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.AT_CP_I,
+  ProcedureAttributes.AT_CP_III,
   ProcedureConst.ACTIVE
 );
 const rule2 = new Precondition(
-  AgentIDs.DTA,
+  AgentIDs.ALA,
   CommonAttributes.LAST_ACTIVITY,
-  ActionFrameIDs.DTA.RETRIEVE_ALERTS
+  ActionFrameIDs.ALA.PROCESS_ALERT_NOTIFICATION
+);
+const rule3 = new ResettablePrecondition(
+  BeliefKeys.CLINICIAN,
+  ClinicianAttributes.REFRESHED_ALERTS_RETRIEVED,
+  true
 );
 
 // Actionframe
-export const af_RequestAlertsDisplay = new Actionframe(
-  `AF_${ActionFrameIDs.DTA.REQUEST_ALERTS_DISPLAY}`,
-  [rule1, rule2],
-  new RequestAlertsDisplay()
+export const af_RequestDisplayRefreshedAlerts = new Actionframe(
+  `AF_${ActionFrameIDs.ALA.REQUEST_DISPLAY_REFRESHED_ALERTS}`,
+  [rule1, rule2, rule3],
+  new RequestDisplayRefreshedAlerts()
 );

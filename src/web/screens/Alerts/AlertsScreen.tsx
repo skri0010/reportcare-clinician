@@ -7,7 +7,7 @@ import { ScaledSheet } from "react-native-size-matters";
 import { NoSelectionScreen } from "../Shared/NoSelectionScreen";
 import { MainScreenProps } from "web/navigation/types";
 import { AgentTrigger } from "rc_agents/trigger";
-import { AlertStatus } from "rc_agents/model";
+import { FetchAlertsMode } from "rc_agents/model";
 import { AddTodoScreen } from "web/screens/Todo/modals/AddTodoScreen";
 import { useToast } from "react-native-toast-notifications";
 import {
@@ -35,19 +35,19 @@ export const AlertScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
     alertInfo: state.agents.alertInfo
   }));
 
-  /**
-   * Trigger agent to fetch ALL alerts on initial load
-   */
-  useEffect(() => {
-    AgentTrigger.triggerRetrieveAlerts(AlertStatus.ALL);
-  }, []);
-
-  const [isEmptyAlert, setEmptyAlert] = useState(true);
-
   // For pointer events
   const [modalVisible, setModalVisible] = useState(false);
   const toast = useToast();
   const dispatch = useDispatch();
+
+  /**
+   * Trigger agent to fetch ALL alerts on initial load
+   */
+  useEffect(() => {
+    AgentTrigger.triggerRetrieveAlerts(FetchAlertsMode.ALL);
+  }, []);
+
+  const [isEmptyAlert, setIsEmptyAlert] = useState(true);
 
   // Detects completion of UpdateTodo procedure and shows the appropriate toast.
   useEffect(() => {
@@ -71,7 +71,7 @@ export const AlertScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
         pointerEvents={modalVisible || submittingTodo ? "none" : "auto"}
       >
         <View style={styles.rowSelection}>
-          <AlertListTabNavigator setEmptyAlert={setEmptyAlert} />
+          <AlertListTabNavigator setIsEmptyAlert={setIsEmptyAlert} />
         </View>
         <View
           style={{

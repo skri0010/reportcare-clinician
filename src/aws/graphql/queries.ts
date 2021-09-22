@@ -569,6 +569,76 @@ export const listReportVitalss = /* GraphQL */ `
     }
   }
 `;
+export const syncMedicalRecords = /* GraphQL */ `
+  query SyncMedicalRecords(
+    $filter: ModelMedicalRecordFilterInput
+    $limit: Int
+    $nextToken: String
+    $lastSync: AWSTimestamp
+  ) {
+    syncMedicalRecords(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      lastSync: $lastSync
+    ) {
+      items {
+        id
+        patientID
+        title
+        fileKey
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const getMedicalRecord = /* GraphQL */ `
+  query GetMedicalRecord($id: ID!) {
+    getMedicalRecord(id: $id) {
+      id
+      patientID
+      title
+      fileKey
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listMedicalRecords = /* GraphQL */ `
+  query ListMedicalRecords(
+    $filter: ModelMedicalRecordFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listMedicalRecords(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        patientID
+        title
+        fileKey
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
 export const syncClinicianInfos = /* GraphQL */ `
   query SyncClinicianInfos(
     $filter: ModelClinicianInfoFilterInput
@@ -583,12 +653,10 @@ export const syncClinicianInfos = /* GraphQL */ `
       lastSync: $lastSync
     ) {
       items {
-        id
+        clinicianID
         name
         hospitalName
         role
-        clinicianID
-        owner
         _version
         _deleted
         _lastChangedAt
@@ -603,13 +671,12 @@ export const syncClinicianInfos = /* GraphQL */ `
 export const getClinicianInfo = /* GraphQL */ `
   query GetClinicianInfo($clinicianID: String!) {
     getClinicianInfo(clinicianID: $clinicianID) {
-      id
+      clinicianID
       name
       hospitalName
       role
-      clinicianID
       protectedInfo {
-        id
+        clinicianID
         facts
         APS
         DTA
@@ -617,15 +684,12 @@ export const getClinicianInfo = /* GraphQL */ `
         NWA
         ALA
         MHA
-        clinicianID
-        owner
         _version
         _deleted
         _lastChangedAt
         createdAt
         updatedAt
       }
-      owner
       _version
       _deleted
       _lastChangedAt
@@ -650,12 +714,10 @@ export const listClinicianInfos = /* GraphQL */ `
       sortDirection: $sortDirection
     ) {
       items {
-        id
+        clinicianID
         name
         hospitalName
         role
-        clinicianID
-        owner
         _version
         _deleted
         _lastChangedAt
@@ -681,7 +743,7 @@ export const syncClinicianProtectedInfos = /* GraphQL */ `
       lastSync: $lastSync
     ) {
       items {
-        id
+        clinicianID
         facts
         APS
         DTA
@@ -689,8 +751,6 @@ export const syncClinicianProtectedInfos = /* GraphQL */ `
         NWA
         ALA
         MHA
-        clinicianID
-        owner
         _version
         _deleted
         _lastChangedAt
@@ -705,7 +765,7 @@ export const syncClinicianProtectedInfos = /* GraphQL */ `
 export const getClinicianProtectedInfo = /* GraphQL */ `
   query GetClinicianProtectedInfo($clinicianID: String!) {
     getClinicianProtectedInfo(clinicianID: $clinicianID) {
-      id
+      clinicianID
       facts
       APS
       DTA
@@ -713,8 +773,6 @@ export const getClinicianProtectedInfo = /* GraphQL */ `
       NWA
       ALA
       MHA
-      clinicianID
-      owner
       _version
       _deleted
       _lastChangedAt
@@ -739,7 +797,7 @@ export const listClinicianProtectedInfos = /* GraphQL */ `
       sortDirection: $sortDirection
     ) {
       items {
-        id
+        clinicianID
         facts
         APS
         DTA
@@ -747,8 +805,6 @@ export const listClinicianProtectedInfos = /* GraphQL */ `
         NWA
         ALA
         MHA
-        clinicianID
-        owner
         _version
         _deleted
         _lastChangedAt
@@ -774,10 +830,8 @@ export const syncClinicianPatientMaps = /* GraphQL */ `
       lastSync: $lastSync
     ) {
       items {
-        id
         clinicianID
         patientID
-        owner
         _version
         _deleted
         _lastChangedAt
@@ -792,23 +846,19 @@ export const syncClinicianPatientMaps = /* GraphQL */ `
 export const getClinicianPatientMap = /* GraphQL */ `
   query GetClinicianPatientMap($clinicianID: String!, $patientID: String!) {
     getClinicianPatientMap(clinicianID: $clinicianID, patientID: $patientID) {
-      id
       clinicianID
       patientID
       clinicianInfo {
-        id
+        clinicianID
         name
         hospitalName
         role
-        clinicianID
-        owner
         _version
         _deleted
         _lastChangedAt
         createdAt
         updatedAt
       }
-      owner
       _version
       _deleted
       _lastChangedAt
@@ -835,10 +885,8 @@ export const listClinicianPatientMaps = /* GraphQL */ `
       sortDirection: $sortDirection
     ) {
       items {
-        id
         clinicianID
         patientID
-        owner
         _version
         _deleted
         _lastChangedAt
@@ -864,18 +912,19 @@ export const syncPatientAssignments = /* GraphQL */ `
       lastSync: $lastSync
     ) {
       items {
-        id
         patientID
         clinicianID
+        patientName
         pending
         resolution
-        patientName
+        reassignToClinicianID
+        adminReassignFromClinicianID
+        adminCompleted
         _version
         _deleted
         _lastChangedAt
         createdAt
         updatedAt
-        owner
       }
       nextToken
       startedAt
@@ -885,18 +934,19 @@ export const syncPatientAssignments = /* GraphQL */ `
 export const getPatientAssignment = /* GraphQL */ `
   query GetPatientAssignment($patientID: String!, $clinicianID: String!) {
     getPatientAssignment(patientID: $patientID, clinicianID: $clinicianID) {
-      id
       patientID
       clinicianID
+      patientName
       pending
       resolution
-      patientName
+      reassignToClinicianID
+      adminReassignFromClinicianID
+      adminCompleted
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -918,18 +968,19 @@ export const listPatientAssignments = /* GraphQL */ `
       sortDirection: $sortDirection
     ) {
       items {
-        id
         patientID
         clinicianID
+        patientName
         pending
         resolution
-        patientName
+        reassignToClinicianID
+        adminReassignFromClinicianID
+        adminCompleted
         _version
         _deleted
         _lastChangedAt
         createdAt
         updatedAt
-        owner
       }
       nextToken
       startedAt
@@ -1523,6 +1574,38 @@ export const listReportVitalsByDateTime = /* GraphQL */ `
     }
   }
 `;
+export const listMedicalRecordsByPatientID = /* GraphQL */ `
+  query ListMedicalRecordsByPatientID(
+    $patientID: String
+    $sortDirection: ModelSortDirection
+    $filter: ModelMedicalRecordFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listMedicalRecordsByPatientID(
+      patientID: $patientID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        patientID
+        title
+        fileKey
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
 export const listClinicianMappingsByPatientID = /* GraphQL */ `
   query ListClinicianMappingsByPatientID(
     $patientID: String
@@ -1541,10 +1624,8 @@ export const listClinicianMappingsByPatientID = /* GraphQL */ `
       nextToken: $nextToken
     ) {
       items {
-        id
         clinicianID
         patientID
-        owner
         _version
         _deleted
         _lastChangedAt
@@ -1574,18 +1655,19 @@ export const listPendingPatientAssignments = /* GraphQL */ `
       nextToken: $nextToken
     ) {
       items {
-        id
         patientID
         clinicianID
+        patientName
         pending
         resolution
-        patientName
+        reassignToClinicianID
+        adminReassignFromClinicianID
+        adminCompleted
         _version
         _deleted
         _lastChangedAt
         createdAt
         updatedAt
-        owner
       }
       nextToken
       startedAt

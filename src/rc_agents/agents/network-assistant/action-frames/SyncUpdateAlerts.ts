@@ -13,11 +13,11 @@ import {
   BeliefKeys
 } from "rc_agents/clinician_framework";
 import { AsyncStorageKeys, Storage } from "rc_agents/storage";
-import { getAlert } from "aws/TypedAPI/getQueries";
-import { updateAlert } from "aws";
-import { Alert, UpdateAlertInput } from "aws/API";
 import { agentNWA } from "rc_agents/agents";
-import { AlertInfo, AlertStatus } from "rc_agents/model";
+import { replaceAlertsSync } from "rc_agents/storage/setItem";
+import { updateAlertInfo } from "rc_agents/agents/data-assistant/action-frames/triage-alert-hf-clinic/UpdateAlert";
+import { AgentTrigger } from "rc_agents/trigger";
+import { FetchAlertsMode } from "rc_agents/model";
 
 // LS-TODO: To be tested once integrated with Alert.
 
@@ -44,77 +44,48 @@ class SyncUpdateAlerts extends Activity {
       const clinicianId = await Storage.getClinicianID();
 
       // Gets alerts to be synced
-      const alerts = await Storage.getAlertsSync();
+      const alerts = await Storage.getAlertInfosSync();
 
       if (alerts && clinicianId) {
         // Indicator of whether all pending updates have been synced
         const successfulIds: string[] = [];
 
-        await Promise.all(
+        const promises = await Promise.all(
           Object.values(alerts).map(async (alert) => {
-            // Queries current alert
-            const alertQuery = await getAlert({ id: alert.id });
-            if (alertQuery.data.getAlert) {
-              let alertToStore: Alert | AlertInfo | undefined;
-
-              const latestAlert = alertQuery.data.getAlert;
-
-              // Latest Alert has higher version than local alert
-              if (latestAlert._version > alert._version) {
-                // Replace local alert and alert info with information from latest alert
-                alertToStore = latestAlert;
-              } else {
-                // This alert will be used for local merging later on
-                latestAlert.pending = null;
-                latestAlert.completed = AlertStatus.COMPLETED;
-
-                // Constructs alert object to be updated
-                const alertToUpdate: UpdateAlertInput = {
-                  id: latestAlert.id,
-                  completed: latestAlert.completed,
-                  pending: latestAlert.pending,
-                  _version: latestAlert._version
-                };
-                const updateResponse = await updateAlert(alertToUpdate);
-
-                // Updates to indicate that alert is successfully updated
-                if (updateResponse.data.updateAlert) {
-                  latestAlert._version =
-                    updateResponse.data.updateAlert._version;
-                } else {
-                  successfulIds.push(alert.id);
-                }
-
-                // Updates locally stored alert and alert info
-                // Input is of type Alert
-                alertToStore = latestAlert;
-              }
-
-              if (alertToStore) {
-                await Storage.mergeAlert(alertToStore);
-                await Storage.mergeAlertInfo(alertToStore);
-              }
-            }
+            return updateAlertInfo(alert);
           })
         );
 
+        promises.forEach((item) => {
+          if (item.successful) {
+            successfulIds.push(item.alertInfo.id);
+          }
+        });
+
         // Removes entry if all alerts are synced
-        if (successfulIds.length === Object.values(alerts).length) {
+        if (successfulIds.length === alerts.length) {
           await Storage.removeItem(AsyncStorageKeys.ALERTS_SYNC);
         } else {
           // Removes successfully synced alerts
-          await Promise.all(
-            successfulIds.map((id) => {
-              delete alerts[id];
-              return id;
-            })
-          );
+          successfulIds.forEach((id) => {
+            const index = alerts.findIndex((alert) => alert.id === id);
+            if (index >= 0) {
+              delete alerts[index];
+            }
+          });
+
+          // Store locally
+          await replaceAlertsSync(alerts);
 
           setRetryLaterTimeout(() => {
             agentNWA.addBelief(
               new Belief(BeliefKeys.APP, AppAttributes.SYNC_UPDATE_ALERTS, true)
             );
           });
+        }
+        if (successfulIds.length > 0) {
+          // Trigger procedure to retrieve alerts online
+          AgentTrigger.triggerRetrieveAlerts(FetchAlertsMode.ALL);
         }
       }
     } catch (error) {

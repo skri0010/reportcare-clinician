@@ -65,7 +65,7 @@ const rule2 = new Precondition(
   ActionFrameIDs.DTA.RETRIEVE_ALERT_HISTORY
 );
 const rule3 = new ResettablePrecondition(
-  AgentIDs.DTA,
+  BeliefKeys.PATIENT,
   PatientAttributes.PATIENT_ALERT_HISTORY_RETRIEVED,
   true
 );
@@ -73,6 +73,6 @@ const rule3 = new ResettablePrecondition(
 // Actionframe
 export const af_RequestDisplayAlertHistory = new Actionframe(
   `AF_${ActionFrameIDs.DTA.REQUEST_DISPLAY_ALERT_HISTORY}`,
-  [rule1, rule2],
+  [rule1, rule2, rule3],
   new RequestDisplayAlertHistory()
 );

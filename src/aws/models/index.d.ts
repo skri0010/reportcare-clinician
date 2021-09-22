@@ -96,20 +96,29 @@ export declare class ReportVitals {
   static copyOf(source: ReportVitals, mutator: (draft: MutableModel<ReportVitals>) => MutableModel<ReportVitals> | void): ReportVitals;
 }
 
+export declare class MedicalRecord {
+  readonly id: string;
+  readonly patientID: string;
+  readonly title: string;
+  readonly fileKey: string;
+  constructor(init: ModelInit<MedicalRecord>);
+  static copyOf(source: MedicalRecord, mutator: (draft: MutableModel<MedicalRecord>) => MutableModel<MedicalRecord> | void): MedicalRecord;
+}
+
 export declare class ClinicianInfo {
   readonly id: string;
+  readonly clinicianID: string;
   readonly name: string;
   readonly hospitalName: string;
   readonly role: string;
-  readonly clinicianID: string;
   readonly protectedInfo?: ClinicianProtectedInfo;
-  readonly owner: string;
   constructor(init: ModelInit<ClinicianInfo>);
   static copyOf(source: ClinicianInfo, mutator: (draft: MutableModel<ClinicianInfo>) => MutableModel<ClinicianInfo> | void): ClinicianInfo;
 }
 
 export declare class ClinicianProtectedInfo {
   readonly id: string;
+  readonly clinicianID: string;
   readonly facts: string;
   readonly APS: string;
   readonly DTA: string;
@@ -117,8 +126,6 @@ export declare class ClinicianProtectedInfo {
   readonly NWA: string;
   readonly ALA: string;
   readonly MHA: string;
-  readonly clinicianID: string;
-  readonly owner: string;
   constructor(init: ModelInit<ClinicianProtectedInfo>);
   static copyOf(source: ClinicianProtectedInfo, mutator: (draft: MutableModel<ClinicianProtectedInfo>) => MutableModel<ClinicianProtectedInfo> | void): ClinicianProtectedInfo;
 }
@@ -127,7 +134,6 @@ export declare class ClinicianPatientMap {
   readonly id: string;
   readonly patientID: string;
   readonly clinicianInfo: ClinicianInfo;
-  readonly owner: string;
   constructor(init: ModelInit<ClinicianPatientMap>);
   static copyOf(source: ClinicianPatientMap, mutator: (draft: MutableModel<ClinicianPatientMap>) => MutableModel<ClinicianPatientMap> | void): ClinicianPatientMap;
 }
@@ -136,9 +142,12 @@ export declare class PatientAssignment {
   readonly id: string;
   readonly patientID: string;
   readonly clinicianID: string;
+  readonly patientName: string;
   readonly pending?: string;
   readonly resolution?: string;
-  readonly patientName: string;
+  readonly reassignToClinicianID?: string;
+  readonly adminReassignFromClinicianID?: string;
+  readonly adminCompleted?: boolean;
   constructor(init: ModelInit<PatientAssignment>);
   static copyOf(source: PatientAssignment, mutator: (draft: MutableModel<PatientAssignment>) => MutableModel<PatientAssignment> | void): PatientAssignment;
 }

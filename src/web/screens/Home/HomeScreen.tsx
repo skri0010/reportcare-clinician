@@ -13,18 +13,12 @@ import { PendingPatientAssignmentsCard } from "./PendingPatientAssignmentsCard";
 export const HomeScreen: FC<MainScreenProps[ScreenName.HOME]> = ({
   navigation
 }) => {
-  // JH-TODO Replace titles with i18n
-  // JH-TODO Replace welcome card name
   const topMaxHeight = ms(200);
   const maxHeight = ms(250);
 
   const navigateToAlert = () => {
     navigation.navigate(ScreenName.ALERTS);
   };
-  // navigation.navigate(ScreenName.PATIENTS, {
-  //   displayPatientId: "testsiuloong",
-  //   selectedTab: PatientDetailsTabName.HISTORY
-  // });
 
   return (
     <ScreenWrapper padding>

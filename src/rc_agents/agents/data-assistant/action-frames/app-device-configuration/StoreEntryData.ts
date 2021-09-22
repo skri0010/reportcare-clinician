@@ -49,7 +49,6 @@ class StoreEntryData extends Activity {
         const clinicianID = data.username;
         // Create new ClinicianInfo
         const response = await createClinicianInfo({
-          owner: clinicianID,
           name: data.name,
           hospitalName: data.hospitalName,
           clinicianID: clinicianID,
@@ -61,7 +60,6 @@ class StoreEntryData extends Activity {
           // Create new ClinicianProtectedInfo data
           const createProtectedInfoResponse =
             await createClinicianProtectedInfo({
-              owner: clinicianID,
               clinicianID: clinicianID,
               facts: "",
               APS: "",

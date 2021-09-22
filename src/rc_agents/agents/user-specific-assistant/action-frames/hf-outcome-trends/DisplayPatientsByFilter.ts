@@ -65,7 +65,7 @@ class DisplayPatientsByFilter extends Activity {
         });
       }
 
-      // Dispatch to store retrieved patients
+      // Dispatch retrieved patients to store
       store.dispatch(setPatients(shouldFilter ? filteredPatients : patients));
 
       // Update Facts
