@@ -905,6 +905,13 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
+                "clinicianID": {
+                    "name": "clinicianID",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
                 "title": {
                     "name": "title",
                     "isArray": false,
@@ -943,22 +950,12 @@ export const schema = {
                         "rules": [
                             {
                                 "provider": "userPools",
-                                "ownerField": "owner",
+                                "ownerField": "clinicianID",
                                 "allow": "owner",
-                                "identityClaim": "cognito:username",
                                 "operations": [
                                     "create",
-                                    "update",
-                                    "delete",
-                                    "read"
-                                ]
-                            },
-                            {
-                                "provider": "userPools",
-                                "ownerField": "patientID",
-                                "allow": "owner",
-                                "operations": [
-                                    "read"
+                                    "read",
+                                    "update"
                                 ],
                                 "identityClaim": "cognito:username"
                             },
@@ -1389,8 +1386,15 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "reassignedClinicianID": {
-                    "name": "reassignedClinicianID",
+                "reassignToClinicianID": {
+                    "name": "reassignToClinicianID",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "adminReassignFromClinicianID": {
+                    "name": "adminReassignFromClinicianID",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
@@ -1971,5 +1975,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "1442b022224e2a27caee7cd4c7e3bb56"
+    "version": "813fc00e148cc91f595d29c9ca9c05f6"
 };

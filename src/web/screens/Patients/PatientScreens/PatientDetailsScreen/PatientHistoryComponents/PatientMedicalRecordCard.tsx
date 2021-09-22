@@ -1,39 +1,59 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { RootState, select } from "util/useRedux";
 import { ScaledSheet } from "react-native-size-matters";
 import { CardWrapper } from "web/screens/Home/CardWrapper";
-import { mockMedicalRecord, MedicalRecords } from "mock/mockPatientDetails";
 import { FlatList, View } from "react-native";
 import { MedicalRecordRow } from "./MedicalRecordRow";
 import i18n from "util/language/i18n";
 import { IconButton, IconType } from "components/Buttons/IconButton";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
+import { EmptyListIndicator } from "components/Indicators/EmptyListIndicator";
+import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
+import { MedicalRecord } from "aws/API";
+import { useNetInfo } from "@react-native-community/netinfo";
 
 interface PatientMedicalRecordProps {
   patientId: string;
   maxHeight: number;
   onAddPress: () => void; // action to be done when add button is pressed
-  setViewMedicalModal: (state: boolean) => void; // medical record modal visibility
-  setDisplayMedicalRecord: (state: MedicalRecords) => void; // medical record details to be shown
+  onViewMedicalRecord: (medicalRecord: MedicalRecord) => void;
 }
 
 export const PatientMedicalRecordCard: FC<PatientMedicalRecordProps> = ({
   maxHeight,
   onAddPress,
-  setViewMedicalModal,
-  setDisplayMedicalRecord
+  onViewMedicalRecord
 }) => {
-  const { colors } = select((state: RootState) => ({
-    colors: state.settings.colors
+  const {
+    colors,
+    fetchingMedicalRecords,
+    medicalRecords,
+    fetchingMedicalRecordContent
+  } = select((state: RootState) => ({
+    colors: state.settings.colors,
+    fetchingMedicalRecords: state.agents.fetchingMedicalRecords,
+    medicalRecords: state.agents.medicalRecords,
+    fetchingMedicalRecordContent: state.agents.fetchingMedicalRecordContent
   }));
 
-  // Query database for a specific patient by patientId for alert histories here
-  // For now I just mocked it
-  const [medicalRecords] = useState(mockMedicalRecord);
-  function onRowPress(record: MedicalRecords) {
-    setViewMedicalModal(true);
-    setDisplayMedicalRecord(record);
-  }
+  const [allowUpload, setAllowUpload] = useState<boolean>(false); // Whether file upload is allowed (is online)
+
+  const netInfo = useNetInfo();
+
+  // Detects changes in internet connection to enable or disable button for adding record
+  useEffect(() => {
+    // Internet connection detected
+    if (netInfo.isConnected && netInfo.isInternetReachable) {
+      setAllowUpload(true);
+    }
+    // No internet connection
+    else if (
+      netInfo.isConnected === false ||
+      netInfo.isInternetReachable === false
+    ) {
+      setAllowUpload(false);
+    }
+  }, [netInfo.isConnected, netInfo.isInternetReachable]);
 
   // Add medical record button
   const AddMedicalRecordButton: FC = () => {
@@ -43,33 +63,49 @@ export const PatientMedicalRecordCard: FC<PatientMedicalRecordProps> = ({
           name="plus"
           type={IconType.MATERIAL_COMMUNITY}
           onPress={onAddPress}
-          containerStyle={styles.button}
+          containerStyle={[styles.button, { opacity: allowUpload ? 1.0 : 0.2 }]}
           iconStyle={{ color: colors.primaryContrastTextColor }}
+          disabled={!allowUpload}
         />
       </View>
     );
   };
 
   return (
-    <CardWrapper
-      maxHeight={maxHeight}
-      title={i18n.t("Patient_History.MedicalRecords")}
-      ComponentNextToTitle={AddMedicalRecordButton}
+    <View
+      pointerEvents={
+        fetchingMedicalRecords || fetchingMedicalRecordContent ? "none" : "auto"
+      }
     >
-      {/* List of medical records */}
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        ItemSeparatorComponent={ItemSeparator}
-        data={medicalRecords}
-        renderItem={({ item }) => (
-          <MedicalRecordRow
-            description={item.record}
-            onRowPress={() => onRowPress(item)}
+      <CardWrapper
+        maxHeight={maxHeight}
+        title={i18n.t("Patient_History.MedicalRecords")}
+        ComponentNextToTitle={AddMedicalRecordButton}
+      >
+        {/* List of medical records */}
+        {medicalRecords && medicalRecords.length > 0 ? (
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            ItemSeparatorComponent={ItemSeparator}
+            data={medicalRecords}
+            renderItem={({ item }) => (
+              <MedicalRecordRow
+                medicalRecord={item}
+                onViewMedicalRecord={onViewMedicalRecord}
+              />
+            )}
+            keyExtractor={(medicalRecord) => medicalRecord.id}
           />
+        ) : !fetchingMedicalRecords ? (
+          <EmptyListIndicator
+            text={i18n.t("Patient_History.NoMedicalRecords")}
+          />
+        ) : null}
+        {(fetchingMedicalRecords || fetchingMedicalRecordContent) && (
+          <LoadingIndicator />
         )}
-        keyExtractor={(alert) => alert.id}
-      />
-    </CardWrapper>
+      </CardWrapper>
+    </View>
   );
 };
 

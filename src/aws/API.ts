@@ -484,6 +484,7 @@ export type DeleteReportVitalsInput = {
 export type CreateMedicalRecordInput = {
   id?: string | null,
   patientID: string,
+  clinicianID: string,
   title: string,
   fileKey: string,
   _version?: number | null,
@@ -501,6 +502,7 @@ export type MedicalRecord = {
   __typename: "MedicalRecord",
   id: string,
   patientID: string,
+  clinicianID: string,
   title: string,
   fileKey: string,
   _version: number,
@@ -508,12 +510,12 @@ export type MedicalRecord = {
   _lastChangedAt: number,
   createdAt: string,
   updatedAt: string,
-  owner?: string | null,
 };
 
 export type UpdateMedicalRecordInput = {
   id: string,
   patientID?: string | null,
+  clinicianID?: string | null,
   title?: string | null,
   fileKey?: string | null,
   _version?: number | null,
@@ -525,7 +527,6 @@ export type DeleteMedicalRecordInput = {
 };
 
 export type CreateClinicianInfoInput = {
-  id?: string | null,
   clinicianID: string,
   name: string,
   hospitalName: string,
@@ -544,7 +545,6 @@ export type ModelClinicianInfoConditionInput = {
 
 export type ClinicianInfo = {
   __typename: "ClinicianInfo",
-  id: string,
   clinicianID: string,
   name: string,
   hospitalName: string,
@@ -559,7 +559,6 @@ export type ClinicianInfo = {
 
 export type ClinicianProtectedInfo = {
   __typename: "ClinicianProtectedInfo",
-  id: string,
   clinicianID: string,
   facts: string,
   APS: string,
@@ -576,7 +575,6 @@ export type ClinicianProtectedInfo = {
 };
 
 export type UpdateClinicianInfoInput = {
-  id?: string | null,
   clinicianID: string,
   name?: string | null,
   hospitalName?: string | null,
@@ -590,7 +588,6 @@ export type DeleteClinicianInfoInput = {
 };
 
 export type CreateClinicianProtectedInfoInput = {
-  id?: string | null,
   clinicianID: string,
   facts: string,
   APS: string,
@@ -616,7 +613,6 @@ export type ModelClinicianProtectedInfoConditionInput = {
 };
 
 export type UpdateClinicianProtectedInfoInput = {
-  id?: string | null,
   clinicianID: string,
   facts?: string | null,
   APS?: string | null,
@@ -634,7 +630,6 @@ export type DeleteClinicianProtectedInfoInput = {
 };
 
 export type CreateClinicianPatientMapInput = {
-  id?: string | null,
   clinicianID: string,
   patientID: string,
   _version?: number | null,
@@ -648,7 +643,6 @@ export type ModelClinicianPatientMapConditionInput = {
 
 export type ClinicianPatientMap = {
   __typename: "ClinicianPatientMap",
-  id: string,
   clinicianID: string,
   patientID: string,
   clinicianInfo: ClinicianInfo,
@@ -660,7 +654,6 @@ export type ClinicianPatientMap = {
 };
 
 export type UpdateClinicianPatientMapInput = {
-  id?: string | null,
   clinicianID: string,
   patientID: string,
   _version?: number | null,
@@ -673,13 +666,13 @@ export type DeleteClinicianPatientMapInput = {
 };
 
 export type CreatePatientAssignmentInput = {
-  id?: string | null,
   patientID: string,
   clinicianID: string,
   patientName: string,
   pending?: string | null,
   resolution?: string | null,
-  reassignedClinicianID?: string | null,
+  reassignToClinicianID?: string | null,
+  adminReassignFromClinicianID?: string | null,
   adminCompleted?: boolean | null,
   _version?: number | null,
 };
@@ -688,7 +681,8 @@ export type ModelPatientAssignmentConditionInput = {
   patientName?: ModelStringInput | null,
   pending?: ModelStringInput | null,
   resolution?: ModelStringInput | null,
-  reassignedClinicianID?: ModelStringInput | null,
+  reassignToClinicianID?: ModelStringInput | null,
+  adminReassignFromClinicianID?: ModelStringInput | null,
   adminCompleted?: ModelBooleanInput | null,
   and?: Array< ModelPatientAssignmentConditionInput | null > | null,
   or?: Array< ModelPatientAssignmentConditionInput | null > | null,
@@ -697,13 +691,13 @@ export type ModelPatientAssignmentConditionInput = {
 
 export type PatientAssignment = {
   __typename: "PatientAssignment",
-  id: string,
   patientID: string,
   clinicianID: string,
   patientName: string,
   pending?: string | null,
   resolution?: string | null,
-  reassignedClinicianID?: string | null,
+  reassignToClinicianID?: string | null,
+  adminReassignFromClinicianID?: string | null,
   adminCompleted?: boolean | null,
   _version: number,
   _deleted?: boolean | null,
@@ -713,13 +707,13 @@ export type PatientAssignment = {
 };
 
 export type UpdatePatientAssignmentInput = {
-  id?: string | null,
   patientID: string,
   clinicianID: string,
   patientName?: string | null,
   pending?: string | null,
   resolution?: string | null,
-  reassignedClinicianID?: string | null,
+  reassignToClinicianID?: string | null,
+  adminReassignFromClinicianID?: string | null,
   adminCompleted?: boolean | null,
   _version?: number | null,
 };
@@ -1058,6 +1052,7 @@ export type ModelReportVitalsConnection = {
 export type ModelMedicalRecordFilterInput = {
   id?: ModelIDInput | null,
   patientID?: ModelStringInput | null,
+  clinicianID?: ModelStringInput | null,
   title?: ModelStringInput | null,
   fileKey?: ModelStringInput | null,
   and?: Array< ModelMedicalRecordFilterInput | null > | null,
@@ -1073,7 +1068,6 @@ export type ModelMedicalRecordConnection = {
 };
 
 export type ModelClinicianInfoFilterInput = {
-  id?: ModelIDInput | null,
   clinicianID?: ModelStringInput | null,
   name?: ModelStringInput | null,
   hospitalName?: ModelStringInput | null,
@@ -1091,7 +1085,6 @@ export type ModelClinicianInfoConnection = {
 };
 
 export type ModelClinicianProtectedInfoFilterInput = {
-  id?: ModelIDInput | null,
   clinicianID?: ModelStringInput | null,
   facts?: ModelStringInput | null,
   APS?: ModelStringInput | null,
@@ -1113,7 +1106,6 @@ export type ModelClinicianProtectedInfoConnection = {
 };
 
 export type ModelClinicianPatientMapFilterInput = {
-  id?: ModelIDInput | null,
   clinicianID?: ModelStringInput | null,
   patientID?: ModelStringInput | null,
   and?: Array< ModelClinicianPatientMapFilterInput | null > | null,
@@ -1139,13 +1131,13 @@ export type ModelStringKeyConditionInput = {
 };
 
 export type ModelPatientAssignmentFilterInput = {
-  id?: ModelIDInput | null,
   patientID?: ModelStringInput | null,
   clinicianID?: ModelStringInput | null,
   patientName?: ModelStringInput | null,
   pending?: ModelStringInput | null,
   resolution?: ModelStringInput | null,
-  reassignedClinicianID?: ModelStringInput | null,
+  reassignToClinicianID?: ModelStringInput | null,
+  adminReassignFromClinicianID?: ModelStringInput | null,
   adminCompleted?: ModelBooleanInput | null,
   and?: Array< ModelPatientAssignmentFilterInput | null > | null,
   or?: Array< ModelPatientAssignmentFilterInput | null > | null,
@@ -1828,6 +1820,7 @@ export type CreateMedicalRecordMutation = {
     __typename: "MedicalRecord",
     id: string,
     patientID: string,
+    clinicianID: string,
     title: string,
     fileKey: string,
     _version: number,
@@ -1835,7 +1828,6 @@ export type CreateMedicalRecordMutation = {
     _lastChangedAt: number,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -1849,6 +1841,7 @@ export type UpdateMedicalRecordMutation = {
     __typename: "MedicalRecord",
     id: string,
     patientID: string,
+    clinicianID: string,
     title: string,
     fileKey: string,
     _version: number,
@@ -1856,7 +1849,6 @@ export type UpdateMedicalRecordMutation = {
     _lastChangedAt: number,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -1870,6 +1862,7 @@ export type DeleteMedicalRecordMutation = {
     __typename: "MedicalRecord",
     id: string,
     patientID: string,
+    clinicianID: string,
     title: string,
     fileKey: string,
     _version: number,
@@ -1877,7 +1870,6 @@ export type DeleteMedicalRecordMutation = {
     _lastChangedAt: number,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -1889,14 +1881,12 @@ export type CreateClinicianInfoMutationVariables = {
 export type CreateClinicianInfoMutation = {
   createClinicianInfo?:  {
     __typename: "ClinicianInfo",
-    id: string,
     clinicianID: string,
     name: string,
     hospitalName: string,
     role: string,
     protectedInfo?:  {
       __typename: "ClinicianProtectedInfo",
-      id: string,
       clinicianID: string,
       facts: string,
       APS: string,
@@ -1927,14 +1917,12 @@ export type UpdateClinicianInfoMutationVariables = {
 export type UpdateClinicianInfoMutation = {
   updateClinicianInfo?:  {
     __typename: "ClinicianInfo",
-    id: string,
     clinicianID: string,
     name: string,
     hospitalName: string,
     role: string,
     protectedInfo?:  {
       __typename: "ClinicianProtectedInfo",
-      id: string,
       clinicianID: string,
       facts: string,
       APS: string,
@@ -1965,14 +1953,12 @@ export type DeleteClinicianInfoMutationVariables = {
 export type DeleteClinicianInfoMutation = {
   deleteClinicianInfo?:  {
     __typename: "ClinicianInfo",
-    id: string,
     clinicianID: string,
     name: string,
     hospitalName: string,
     role: string,
     protectedInfo?:  {
       __typename: "ClinicianProtectedInfo",
-      id: string,
       clinicianID: string,
       facts: string,
       APS: string,
@@ -2003,7 +1989,6 @@ export type CreateClinicianProtectedInfoMutationVariables = {
 export type CreateClinicianProtectedInfoMutation = {
   createClinicianProtectedInfo?:  {
     __typename: "ClinicianProtectedInfo",
-    id: string,
     clinicianID: string,
     facts: string,
     APS: string,
@@ -2028,7 +2013,6 @@ export type UpdateClinicianProtectedInfoMutationVariables = {
 export type UpdateClinicianProtectedInfoMutation = {
   updateClinicianProtectedInfo?:  {
     __typename: "ClinicianProtectedInfo",
-    id: string,
     clinicianID: string,
     facts: string,
     APS: string,
@@ -2053,7 +2037,6 @@ export type DeleteClinicianProtectedInfoMutationVariables = {
 export type DeleteClinicianProtectedInfoMutation = {
   deleteClinicianProtectedInfo?:  {
     __typename: "ClinicianProtectedInfo",
-    id: string,
     clinicianID: string,
     facts: string,
     APS: string,
@@ -2078,12 +2061,10 @@ export type CreateClinicianPatientMapMutationVariables = {
 export type CreateClinicianPatientMapMutation = {
   createClinicianPatientMap?:  {
     __typename: "ClinicianPatientMap",
-    id: string,
     clinicianID: string,
     patientID: string,
     clinicianInfo:  {
       __typename: "ClinicianInfo",
-      id: string,
       clinicianID: string,
       name: string,
       hospitalName: string,
@@ -2110,12 +2091,10 @@ export type UpdateClinicianPatientMapMutationVariables = {
 export type UpdateClinicianPatientMapMutation = {
   updateClinicianPatientMap?:  {
     __typename: "ClinicianPatientMap",
-    id: string,
     clinicianID: string,
     patientID: string,
     clinicianInfo:  {
       __typename: "ClinicianInfo",
-      id: string,
       clinicianID: string,
       name: string,
       hospitalName: string,
@@ -2142,12 +2121,10 @@ export type DeleteClinicianPatientMapMutationVariables = {
 export type DeleteClinicianPatientMapMutation = {
   deleteClinicianPatientMap?:  {
     __typename: "ClinicianPatientMap",
-    id: string,
     clinicianID: string,
     patientID: string,
     clinicianInfo:  {
       __typename: "ClinicianInfo",
-      id: string,
       clinicianID: string,
       name: string,
       hospitalName: string,
@@ -2174,13 +2151,13 @@ export type CreatePatientAssignmentMutationVariables = {
 export type CreatePatientAssignmentMutation = {
   createPatientAssignment?:  {
     __typename: "PatientAssignment",
-    id: string,
     patientID: string,
     clinicianID: string,
     patientName: string,
     pending?: string | null,
     resolution?: string | null,
-    reassignedClinicianID?: string | null,
+    reassignToClinicianID?: string | null,
+    adminReassignFromClinicianID?: string | null,
     adminCompleted?: boolean | null,
     _version: number,
     _deleted?: boolean | null,
@@ -2198,13 +2175,13 @@ export type UpdatePatientAssignmentMutationVariables = {
 export type UpdatePatientAssignmentMutation = {
   updatePatientAssignment?:  {
     __typename: "PatientAssignment",
-    id: string,
     patientID: string,
     clinicianID: string,
     patientName: string,
     pending?: string | null,
     resolution?: string | null,
-    reassignedClinicianID?: string | null,
+    reassignToClinicianID?: string | null,
+    adminReassignFromClinicianID?: string | null,
     adminCompleted?: boolean | null,
     _version: number,
     _deleted?: boolean | null,
@@ -2222,13 +2199,13 @@ export type DeletePatientAssignmentMutationVariables = {
 export type DeletePatientAssignmentMutation = {
   deletePatientAssignment?:  {
     __typename: "PatientAssignment",
-    id: string,
     patientID: string,
     clinicianID: string,
     patientName: string,
     pending?: string | null,
     resolution?: string | null,
-    reassignedClinicianID?: string | null,
+    reassignToClinicianID?: string | null,
+    adminReassignFromClinicianID?: string | null,
     adminCompleted?: boolean | null,
     _version: number,
     _deleted?: boolean | null,
@@ -3229,6 +3206,7 @@ export type SyncMedicalRecordsQuery = {
       __typename: "MedicalRecord",
       id: string,
       patientID: string,
+      clinicianID: string,
       title: string,
       fileKey: string,
       _version: number,
@@ -3236,7 +3214,6 @@ export type SyncMedicalRecordsQuery = {
       _lastChangedAt: number,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null > | null,
     nextToken?: string | null,
     startedAt?: number | null,
@@ -3252,6 +3229,7 @@ export type GetMedicalRecordQuery = {
     __typename: "MedicalRecord",
     id: string,
     patientID: string,
+    clinicianID: string,
     title: string,
     fileKey: string,
     _version: number,
@@ -3259,7 +3237,6 @@ export type GetMedicalRecordQuery = {
     _lastChangedAt: number,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -3276,6 +3253,7 @@ export type ListMedicalRecordsQuery = {
       __typename: "MedicalRecord",
       id: string,
       patientID: string,
+      clinicianID: string,
       title: string,
       fileKey: string,
       _version: number,
@@ -3283,7 +3261,6 @@ export type ListMedicalRecordsQuery = {
       _lastChangedAt: number,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null > | null,
     nextToken?: string | null,
     startedAt?: number | null,
@@ -3302,7 +3279,6 @@ export type SyncClinicianInfosQuery = {
     __typename: "ModelClinicianInfoConnection",
     items?:  Array< {
       __typename: "ClinicianInfo",
-      id: string,
       clinicianID: string,
       name: string,
       hospitalName: string,
@@ -3325,14 +3301,12 @@ export type GetClinicianInfoQueryVariables = {
 export type GetClinicianInfoQuery = {
   getClinicianInfo?:  {
     __typename: "ClinicianInfo",
-    id: string,
     clinicianID: string,
     name: string,
     hospitalName: string,
     role: string,
     protectedInfo?:  {
       __typename: "ClinicianProtectedInfo",
-      id: string,
       clinicianID: string,
       facts: string,
       APS: string,
@@ -3368,7 +3342,6 @@ export type ListClinicianInfosQuery = {
     __typename: "ModelClinicianInfoConnection",
     items?:  Array< {
       __typename: "ClinicianInfo",
-      id: string,
       clinicianID: string,
       name: string,
       hospitalName: string,
@@ -3396,7 +3369,6 @@ export type SyncClinicianProtectedInfosQuery = {
     __typename: "ModelClinicianProtectedInfoConnection",
     items?:  Array< {
       __typename: "ClinicianProtectedInfo",
-      id: string,
       clinicianID: string,
       facts: string,
       APS: string,
@@ -3423,7 +3395,6 @@ export type GetClinicianProtectedInfoQueryVariables = {
 export type GetClinicianProtectedInfoQuery = {
   getClinicianProtectedInfo?:  {
     __typename: "ClinicianProtectedInfo",
-    id: string,
     clinicianID: string,
     facts: string,
     APS: string,
@@ -3453,7 +3424,6 @@ export type ListClinicianProtectedInfosQuery = {
     __typename: "ModelClinicianProtectedInfoConnection",
     items?:  Array< {
       __typename: "ClinicianProtectedInfo",
-      id: string,
       clinicianID: string,
       facts: string,
       APS: string,
@@ -3485,7 +3455,6 @@ export type SyncClinicianPatientMapsQuery = {
     __typename: "ModelClinicianPatientMapConnection",
     items?:  Array< {
       __typename: "ClinicianPatientMap",
-      id: string,
       clinicianID: string,
       patientID: string,
       _version: number,
@@ -3507,12 +3476,10 @@ export type GetClinicianPatientMapQueryVariables = {
 export type GetClinicianPatientMapQuery = {
   getClinicianPatientMap?:  {
     __typename: "ClinicianPatientMap",
-    id: string,
     clinicianID: string,
     patientID: string,
     clinicianInfo:  {
       __typename: "ClinicianInfo",
-      id: string,
       clinicianID: string,
       name: string,
       hospitalName: string,
@@ -3545,7 +3512,6 @@ export type ListClinicianPatientMapsQuery = {
     __typename: "ModelClinicianPatientMapConnection",
     items?:  Array< {
       __typename: "ClinicianPatientMap",
-      id: string,
       clinicianID: string,
       patientID: string,
       _version: number,
@@ -3571,13 +3537,13 @@ export type SyncPatientAssignmentsQuery = {
     __typename: "ModelPatientAssignmentConnection",
     items?:  Array< {
       __typename: "PatientAssignment",
-      id: string,
       patientID: string,
       clinicianID: string,
       patientName: string,
       pending?: string | null,
       resolution?: string | null,
-      reassignedClinicianID?: string | null,
+      reassignToClinicianID?: string | null,
+      adminReassignFromClinicianID?: string | null,
       adminCompleted?: boolean | null,
       _version: number,
       _deleted?: boolean | null,
@@ -3598,13 +3564,13 @@ export type GetPatientAssignmentQueryVariables = {
 export type GetPatientAssignmentQuery = {
   getPatientAssignment?:  {
     __typename: "PatientAssignment",
-    id: string,
     patientID: string,
     clinicianID: string,
     patientName: string,
     pending?: string | null,
     resolution?: string | null,
-    reassignedClinicianID?: string | null,
+    reassignToClinicianID?: string | null,
+    adminReassignFromClinicianID?: string | null,
     adminCompleted?: boolean | null,
     _version: number,
     _deleted?: boolean | null,
@@ -3628,13 +3594,13 @@ export type ListPatientAssignmentsQuery = {
     __typename: "ModelPatientAssignmentConnection",
     items?:  Array< {
       __typename: "PatientAssignment",
-      id: string,
       patientID: string,
       clinicianID: string,
       patientName: string,
       pending?: string | null,
       resolution?: string | null,
-      reassignedClinicianID?: string | null,
+      reassignToClinicianID?: string | null,
+      adminReassignFromClinicianID?: string | null,
       adminCompleted?: boolean | null,
       _version: number,
       _deleted?: boolean | null,
@@ -4236,6 +4202,7 @@ export type ListMedicalRecordsByPatientIDQuery = {
       __typename: "MedicalRecord",
       id: string,
       patientID: string,
+      clinicianID: string,
       title: string,
       fileKey: string,
       _version: number,
@@ -4243,7 +4210,6 @@ export type ListMedicalRecordsByPatientIDQuery = {
       _lastChangedAt: number,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null > | null,
     nextToken?: string | null,
     startedAt?: number | null,
@@ -4264,7 +4230,6 @@ export type ListClinicianMappingsByPatientIDQuery = {
     __typename: "ModelClinicianPatientMapConnection",
     items?:  Array< {
       __typename: "ClinicianPatientMap",
-      id: string,
       clinicianID: string,
       patientID: string,
       _version: number,
@@ -4292,13 +4257,13 @@ export type ListPendingPatientAssignmentsQuery = {
     __typename: "ModelPatientAssignmentConnection",
     items?:  Array< {
       __typename: "PatientAssignment",
-      id: string,
       patientID: string,
       clinicianID: string,
       patientName: string,
       pending?: string | null,
       resolution?: string | null,
-      reassignedClinicianID?: string | null,
+      reassignToClinicianID?: string | null,
+      adminReassignFromClinicianID?: string | null,
       adminCompleted?: boolean | null,
       _version: number,
       _deleted?: boolean | null,
@@ -5131,8 +5096,7 @@ export type OnDeleteReportVitalsSubscription = {
 };
 
 export type OnCreateMedicalRecordSubscriptionVariables = {
-  owner?: string | null,
-  patientID?: string | null,
+  clinicianID?: string | null,
 };
 
 export type OnCreateMedicalRecordSubscription = {
@@ -5140,6 +5104,7 @@ export type OnCreateMedicalRecordSubscription = {
     __typename: "MedicalRecord",
     id: string,
     patientID: string,
+    clinicianID: string,
     title: string,
     fileKey: string,
     _version: number,
@@ -5147,13 +5112,11 @@ export type OnCreateMedicalRecordSubscription = {
     _lastChangedAt: number,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
 export type OnUpdateMedicalRecordSubscriptionVariables = {
-  owner?: string | null,
-  patientID?: string | null,
+  clinicianID?: string | null,
 };
 
 export type OnUpdateMedicalRecordSubscription = {
@@ -5161,6 +5124,7 @@ export type OnUpdateMedicalRecordSubscription = {
     __typename: "MedicalRecord",
     id: string,
     patientID: string,
+    clinicianID: string,
     title: string,
     fileKey: string,
     _version: number,
@@ -5168,13 +5132,11 @@ export type OnUpdateMedicalRecordSubscription = {
     _lastChangedAt: number,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
 export type OnDeleteMedicalRecordSubscriptionVariables = {
-  owner?: string | null,
-  patientID?: string | null,
+  clinicianID?: string | null,
 };
 
 export type OnDeleteMedicalRecordSubscription = {
@@ -5182,6 +5144,7 @@ export type OnDeleteMedicalRecordSubscription = {
     __typename: "MedicalRecord",
     id: string,
     patientID: string,
+    clinicianID: string,
     title: string,
     fileKey: string,
     _version: number,
@@ -5189,7 +5152,6 @@ export type OnDeleteMedicalRecordSubscription = {
     _lastChangedAt: number,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -5200,14 +5162,12 @@ export type OnCreateClinicianInfoSubscriptionVariables = {
 export type OnCreateClinicianInfoSubscription = {
   onCreateClinicianInfo?:  {
     __typename: "ClinicianInfo",
-    id: string,
     clinicianID: string,
     name: string,
     hospitalName: string,
     role: string,
     protectedInfo?:  {
       __typename: "ClinicianProtectedInfo",
-      id: string,
       clinicianID: string,
       facts: string,
       APS: string,
@@ -5237,14 +5197,12 @@ export type OnUpdateClinicianInfoSubscriptionVariables = {
 export type OnUpdateClinicianInfoSubscription = {
   onUpdateClinicianInfo?:  {
     __typename: "ClinicianInfo",
-    id: string,
     clinicianID: string,
     name: string,
     hospitalName: string,
     role: string,
     protectedInfo?:  {
       __typename: "ClinicianProtectedInfo",
-      id: string,
       clinicianID: string,
       facts: string,
       APS: string,
@@ -5274,14 +5232,12 @@ export type OnDeleteClinicianInfoSubscriptionVariables = {
 export type OnDeleteClinicianInfoSubscription = {
   onDeleteClinicianInfo?:  {
     __typename: "ClinicianInfo",
-    id: string,
     clinicianID: string,
     name: string,
     hospitalName: string,
     role: string,
     protectedInfo?:  {
       __typename: "ClinicianProtectedInfo",
-      id: string,
       clinicianID: string,
       facts: string,
       APS: string,
@@ -5311,7 +5267,6 @@ export type OnCreateClinicianProtectedInfoSubscriptionVariables = {
 export type OnCreateClinicianProtectedInfoSubscription = {
   onCreateClinicianProtectedInfo?:  {
     __typename: "ClinicianProtectedInfo",
-    id: string,
     clinicianID: string,
     facts: string,
     APS: string,
@@ -5335,7 +5290,6 @@ export type OnUpdateClinicianProtectedInfoSubscriptionVariables = {
 export type OnUpdateClinicianProtectedInfoSubscription = {
   onUpdateClinicianProtectedInfo?:  {
     __typename: "ClinicianProtectedInfo",
-    id: string,
     clinicianID: string,
     facts: string,
     APS: string,
@@ -5359,7 +5313,6 @@ export type OnDeleteClinicianProtectedInfoSubscriptionVariables = {
 export type OnDeleteClinicianProtectedInfoSubscription = {
   onDeleteClinicianProtectedInfo?:  {
     __typename: "ClinicianProtectedInfo",
-    id: string,
     clinicianID: string,
     facts: string,
     APS: string,
@@ -5384,12 +5337,10 @@ export type OnCreateClinicianPatientMapSubscriptionVariables = {
 export type OnCreateClinicianPatientMapSubscription = {
   onCreateClinicianPatientMap?:  {
     __typename: "ClinicianPatientMap",
-    id: string,
     clinicianID: string,
     patientID: string,
     clinicianInfo:  {
       __typename: "ClinicianInfo",
-      id: string,
       clinicianID: string,
       name: string,
       hospitalName: string,
@@ -5416,12 +5367,10 @@ export type OnUpdateClinicianPatientMapSubscriptionVariables = {
 export type OnUpdateClinicianPatientMapSubscription = {
   onUpdateClinicianPatientMap?:  {
     __typename: "ClinicianPatientMap",
-    id: string,
     clinicianID: string,
     patientID: string,
     clinicianInfo:  {
       __typename: "ClinicianInfo",
-      id: string,
       clinicianID: string,
       name: string,
       hospitalName: string,
@@ -5448,12 +5397,10 @@ export type OnDeleteClinicianPatientMapSubscriptionVariables = {
 export type OnDeleteClinicianPatientMapSubscription = {
   onDeleteClinicianPatientMap?:  {
     __typename: "ClinicianPatientMap",
-    id: string,
     clinicianID: string,
     patientID: string,
     clinicianInfo:  {
       __typename: "ClinicianInfo",
-      id: string,
       clinicianID: string,
       name: string,
       hospitalName: string,
@@ -5480,13 +5427,13 @@ export type OnCreatePatientAssignmentSubscriptionVariables = {
 export type OnCreatePatientAssignmentSubscription = {
   onCreatePatientAssignment?:  {
     __typename: "PatientAssignment",
-    id: string,
     patientID: string,
     clinicianID: string,
     patientName: string,
     pending?: string | null,
     resolution?: string | null,
-    reassignedClinicianID?: string | null,
+    reassignToClinicianID?: string | null,
+    adminReassignFromClinicianID?: string | null,
     adminCompleted?: boolean | null,
     _version: number,
     _deleted?: boolean | null,
@@ -5504,13 +5451,13 @@ export type OnUpdatePatientAssignmentSubscriptionVariables = {
 export type OnUpdatePatientAssignmentSubscription = {
   onUpdatePatientAssignment?:  {
     __typename: "PatientAssignment",
-    id: string,
     patientID: string,
     clinicianID: string,
     patientName: string,
     pending?: string | null,
     resolution?: string | null,
-    reassignedClinicianID?: string | null,
+    reassignToClinicianID?: string | null,
+    adminReassignFromClinicianID?: string | null,
     adminCompleted?: boolean | null,
     _version: number,
     _deleted?: boolean | null,
@@ -5528,13 +5475,13 @@ export type OnDeletePatientAssignmentSubscriptionVariables = {
 export type OnDeletePatientAssignmentSubscription = {
   onDeletePatientAssignment?:  {
     __typename: "PatientAssignment",
-    id: string,
     patientID: string,
     clinicianID: string,
     patientName: string,
     pending?: string | null,
     resolution?: string | null,
-    reassignedClinicianID?: string | null,
+    reassignToClinicianID?: string | null,
+    adminReassignFromClinicianID?: string | null,
     adminCompleted?: boolean | null,
     _version: number,
     _deleted?: boolean | null,

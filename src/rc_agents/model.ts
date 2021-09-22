@@ -88,7 +88,7 @@ export enum TodoStatus {
   COMPLETED = "COMPLETED"
 }
 
-export type MedicalRecordFile = {
+export type RecordFile = {
   name: string;
   path: string;
   size: number;
@@ -188,5 +188,5 @@ export interface TodoDetails {
 export interface MedicalRecordInput {
   title: string;
   patientID: string;
-  file: MedicalRecordFile;
+  file: RecordFile;
 }

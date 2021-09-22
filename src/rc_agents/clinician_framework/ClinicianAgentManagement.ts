@@ -220,7 +220,6 @@ export class ClinicianAgentManagement extends AgentManagement {
       if (protectedInfo) {
         // Construct protectedInfo to be updated
         const updatedProtectedInfo: UpdateClinicianProtectedInfoInput = {
-          id: protectedInfo.id!,
           clinicianID: localClinician.clinicianID,
           facts: JSON.stringify(this.getStorableFacts()),
           APS: protectedInfo.APS,

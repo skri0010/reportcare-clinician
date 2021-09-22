@@ -236,9 +236,11 @@
       "DropFileHere": "Lepaskan fail di sini",
       "Or": "Atau",
       "BrowseFiles": "Semak fail",
+      "MultipleFileError": "Anda hanya boleh muat naik satu fail sahaja",
       "MedicalRecordSavedSuccessfully": "Rekod perubatan telah berjaya disimpan"
     },
-    "NoAlertHistory": "Pesakit ini belum mempunyai sejarah amaran!"
+    "NoAlertHistory": "Pesakit ini belum mempunyai sejarah amaran!",
+    "NoMedicalRecords": "TIada rekod perubatan dijumpai!"
   },
   "Patient_Info": {
     "Male": "Lelaki",

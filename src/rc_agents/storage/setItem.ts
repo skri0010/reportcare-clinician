@@ -190,12 +190,17 @@ export const setAllPatientDetails = async (
   );
 };
 
-export const setPatientMedicalRecord = async (
-  medicalRecord: MedicalRecord
+/**
+ * Stores an array of medical records belonging to the same patient
+ */
+export const setPatientMedicalRecords = async (
+  medicalRecords: MedicalRecord[]
 ): Promise<void> => {
-  const localPatient = await getPatientDetails(medicalRecord.patientID);
+  const localPatient = await getPatientDetails(medicalRecords[0].patientID);
   if (localPatient) {
-    localPatient.medicalRecords[medicalRecord.id] = medicalRecord;
+    medicalRecords.forEach((medicalRecord) => {
+      localPatient.medicalRecords[medicalRecord.id] = medicalRecord;
+    });
     await setPatientDetails(localPatient);
   }
 };

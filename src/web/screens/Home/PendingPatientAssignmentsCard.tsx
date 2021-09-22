@@ -92,7 +92,7 @@ export const PendingPatientAssignmentsCard: FC<PendingPatientAssignmentsCardProp
                   />
                 );
               }}
-              keyExtractor={(item) => item.id}
+              keyExtractor={(item) => `${item.patientID}_${item.clinicianID}`}
             />
           </View>
         ) : null}

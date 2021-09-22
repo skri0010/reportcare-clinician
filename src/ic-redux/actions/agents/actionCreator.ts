@@ -7,7 +7,12 @@ import {
 } from "rc_agents/model";
 import { actionNames } from "ic-redux/actions/actionNames";
 import { createAction } from "typesafe-actions";
-import { PatientAssignment, PatientInfo, ClinicianInfo } from "aws/API";
+import {
+  PatientAssignment,
+  PatientInfo,
+  ClinicianInfo,
+  MedicalRecord
+} from "aws/API";
 
 export const setProcedureOngoing = createAction(
   actionNames.SET_PROCEDURE_ONGOING,
@@ -132,6 +137,34 @@ export const setCreateMedicalRecordSuccessful = createAction(
   actionNames.SET_CREATE_MEDICAL_RECORD_SUCCESSFUL,
   (createMedicalRecordSuccessful: boolean) => ({
     createMedicalRecordSuccessful: createMedicalRecordSuccessful
+  })
+)();
+
+export const setFetchingMedicalRecords = createAction(
+  actionNames.SET_FETCHING_MEDICAL_RECORDS,
+  (fetchingMedicalRecords: boolean) => ({
+    fetchingMedicalRecords: fetchingMedicalRecords
+  })
+)();
+
+export const setMedicalRecords = createAction(
+  actionNames.SET_MEDICAL_RECORDS,
+  (medicalRecords: MedicalRecord[]) => ({
+    medicalRecords: medicalRecords
+  })
+)();
+
+export const setFetchingMedicalRecordContent = createAction(
+  actionNames.SET_FETCHING_MEDICAL_RECORD_CONTENT,
+  (fetchingMedicalRecordContent: boolean) => ({
+    fetchingMedicalRecordContent: fetchingMedicalRecordContent
+  })
+)();
+
+export const setMedicalRecordContent = createAction(
+  actionNames.SET_MEDICAL_RECORD_CONTENT,
+  (medicalRecordContent: string | undefined) => ({
+    medicalRecordContent: medicalRecordContent
   })
 )();
 

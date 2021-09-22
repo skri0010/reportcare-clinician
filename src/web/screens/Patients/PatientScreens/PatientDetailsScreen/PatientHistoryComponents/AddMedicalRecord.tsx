@@ -1,21 +1,20 @@
-import React, { FC, useCallback, useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { View, TouchableOpacity } from "react-native";
 import { RootState, select, useDispatch } from "util/useRedux";
-import { H3, H4, H5 } from "components/Text";
+import { H3 } from "components/Text";
 import { ScaledSheet, ms } from "react-native-size-matters";
 import i18n from "util/language/i18n";
-import { useDropzone } from "react-dropzone";
 import { TextField } from "components/InputComponents/TextField";
 import { notEmptyString } from "util/validation";
-import { RowButton } from "components/Buttons/TextButton";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
-import { MedicalRecordFile, MedicalRecordInput } from "rc_agents/model";
+import { RecordFile, MedicalRecordInput } from "rc_agents/model";
 import { triggerCreateMedicalRecord } from "rc_agents/triggers";
 import {
   setCreateMedicalRecordSuccessful,
   setCreatingMedicalRecord
 } from "ic-redux/actions/agents/actionCreator";
 import { useToast } from "react-native-toast-notifications";
+import { FileDropbox } from "components/InputComponents/FileDropbox";
 
 interface AddMedicalRecordProps {
   setAddMedicalRecord: (state: boolean) => void;
@@ -39,19 +38,12 @@ export const AddMedicalRecord: FC<AddMedicalRecordProps> = ({
   }));
 
   const [title, setTitle] = useState<string>("");
-  const [file, setFile] = useState<MedicalRecordFile | undefined>(undefined);
+  const [file, setFile] = useState<RecordFile | undefined>(undefined);
   const [allInputValid, setAllInputValid] = useState<boolean>(false);
-  const [savingRecord, setSavingRecord] = useState<boolean>(false);
+  const [savingRecord, setSavingRecord] = useState<boolean>(false); // Locally tracks progress of saving record
 
   const dispatch = useDispatch();
   const toast = useToast();
-
-  // Handler when files are received
-  const onReceiveFile = useCallback((acceptedFiles) => {
-    if (acceptedFiles.length === 1) {
-      setFile(acceptedFiles[0]);
-    }
-  }, []);
 
   // Validates all inputs
   useEffect(() => {
@@ -59,13 +51,6 @@ export const AddMedicalRecord: FC<AddMedicalRecordProps> = ({
       setAllInputValid(true);
     }
   }, [title, file]);
-
-  // Default properties from dropzone
-  const { getRootProps, getInputProps, open, isDragActive } = useDropzone({
-    onDrop: onReceiveFile,
-    noClick: true,
-    noKeyboard: true
-  });
 
   // Creates input and triggers CreateMedicalRecord
   const onSaveRecord = () => {
@@ -83,8 +68,10 @@ export const AddMedicalRecord: FC<AddMedicalRecordProps> = ({
 
   // Tracks progress of creation
   useEffect(() => {
+    // Procedure has been completed
     if (savingRecord && !creatingMedicalRecord) {
       setSavingRecord(false);
+      // Create succesful
       if (createMedicalRecordSuccessful) {
         toast.show(
           i18n.t(
@@ -95,10 +82,13 @@ export const AddMedicalRecord: FC<AddMedicalRecordProps> = ({
           }
         );
         dispatch(setCreateMedicalRecordSuccessful(false));
+        setAddMedicalRecord(false);
       } else {
+        // Create failed
         toast.show(i18n.t("UnexpectedError"), {
           type: "danger"
         });
+        setAddMedicalRecord(false);
       }
     }
   }, [
@@ -106,11 +96,13 @@ export const AddMedicalRecord: FC<AddMedicalRecordProps> = ({
     creatingMedicalRecord,
     createMedicalRecordSuccessful,
     toast,
-    dispatch
+    dispatch,
+    setAddMedicalRecord
   ]);
 
   return (
     <View
+      // Disable pointer events if procedure is ongoing
       pointerEvents={savingRecord ? "none" : "auto"}
       style={[
         styles.container,
@@ -130,71 +122,14 @@ export const AddMedicalRecord: FC<AddMedicalRecordProps> = ({
         errorMessage={i18n.t("Patient_History.AddMedicalRecordCard.TitleError")}
       />
 
-      {/* File Upload */}
+      {/* File Upload Label */}
       <H3
         text={i18n.t("Patient_History.AddMedicalRecordCard.FileUpload")}
         style={styles.inputTitle}
       />
 
-      {/* File Input */}
-      <View
-        style={[
-          styles.fileUploadContainer,
-          {
-            borderColor: colors.primaryBorderColor
-          }
-        ]}
-      >
-        {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-        <div {...getRootProps({ className: "dropzone" })}>
-          {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-          <input {...getInputProps()} />
-          <View style={styles.fileInputContainer}>
-            <View
-              style={[
-                styles.fileDropSection,
-                {
-                  borderColor: isDragActive
-                    ? colors.acceptButtonColor
-                    : colors.secondaryBackgroundColor,
-                  borderStyle: isDragActive ? "solid" : "dashed"
-                }
-              ]}
-            >
-              <H4
-                text={
-                  isDragActive
-                    ? i18n.t(
-                        "Patient_History.AddMedicalRecordCard.DropFileHere"
-                      )
-                    : i18n.t(
-                        "Patient_History.AddMedicalRecordCard.DragAndDropFile"
-                      )
-                }
-                style={{
-                  fontWeight: "bold",
-                  color: isDragActive
-                    ? colors.primaryTextColor
-                    : colors.secondaryTextColor,
-                  paddingVertical: ms(10)
-                }}
-              />
-            </View>
-            <H5
-              text={i18n.t("Patient_History.AddMedicalRecordCard.Or")}
-              style={{
-                paddingTop: ms(10),
-                paddingBottom: ms(5),
-                fontWeight: "bold"
-              }}
-            />
-            <RowButton
-              title={i18n.t("Patient_History.AddMedicalRecordCard.BrowseFiles")}
-              onPress={open}
-            />
-          </View>
-        </div>
-      </View>
+      {/* File Upload Input */}
+      <FileDropbox file={file} setFile={setFile} />
 
       <View
         style={{
@@ -276,23 +211,5 @@ const styles = ScaledSheet.create({
     paddingTop: ms(25),
     fontWeight: "bold",
     paddingBottom: ms(10)
-  },
-  fileUploadContainer: {
-    height: "30%",
-    borderWidth: ms(2),
-    borderRadius: ms(3),
-    paddingBottom: ms(10)
-  },
-  fileInputContainer: {
-    height: "100%",
-    width: "100%",
-    alignItems: "center"
-  },
-  fileDropSection: {
-    alignItems: "center",
-    borderWidth: ms(5),
-    opacity: 0.5,
-    width: "100%",
-    height: "50%"
   }
 });

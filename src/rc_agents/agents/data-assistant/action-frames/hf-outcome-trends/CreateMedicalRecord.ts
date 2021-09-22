@@ -9,7 +9,6 @@ import {
 import { ProcedureConst } from "agents-framework/Enums";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
-  setRetryLaterTimeout,
   ActionFrameIDs,
   AppAttributes,
   BeliefKeys,
@@ -24,13 +23,13 @@ import {
   setCreatingMedicalRecord
 } from "ic-redux/actions/agents/actionCreator";
 import { store } from "util/useRedux";
-import { agentNWA } from "rc_agents/agents";
 import { MedicalRecordInput } from "rc_agents/model";
 import { Storage } from "@aws-amplify/storage";
+import { v4 as uuidv4 } from "uuid";
 
 /**
  * Class to represent an activity for creating a patient's medical record.
- * This happens in Procedure HF Outcome Trends (HF-OTP-II).
+ * This happens in Procedure HF Outcome Trends (HF-OTP-III).
  */
 class CreateMedicalRecord extends Activity {
   constructor() {
@@ -46,79 +45,82 @@ class CreateMedicalRecord extends Activity {
     await super.doActivity(agent, [rule2]);
 
     try {
+      const facts = agentAPI.getFacts();
       // Get medical record input from facts
       const medicalRecordInput: MedicalRecordInput =
-        agentAPI.getFacts()[BeliefKeys.PATIENT]?.[
-          PatientAttributes.MEDICAL_RECORD_TO_CREATE
-        ];
-      // Get online status from facts
-      const isOnline =
-        agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE];
+        facts[BeliefKeys.PATIENT]?.[PatientAttributes.MEDICAL_RECORD_TO_CREATE];
 
       if (medicalRecordInput) {
         // Indicator of whether create is successful
         let createSuccessful = false;
+        let medicalRecord: MedicalRecord | undefined;
 
-        // Device is online
-        if (isOnline) {
+        // Ensure that device is online
+        if (facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
           // Store file to S3 bucket and insert a record to DynamoDB
-          createSuccessful = await insertMedicalRecord(medicalRecordInput);
+          const insertResult = await insertMedicalRecord(medicalRecordInput);
+          if (insertResult) {
+            createSuccessful = true;
+            medicalRecord = insertResult;
+          }
         }
-        // Device is offline: store medical record locally
-        else if (!isOnline) {
-          // TODO: store into local storage
-          createSuccessful = true;
 
-          // Notifies NWA of the medical record to sync
-          agentNWA.addBelief(
+        if (createSuccessful && medicalRecord) {
+          // Dispatch to front end that create is successful
+          store.dispatch(setCreateMedicalRecordSuccessful(true));
+
+          // Add new medical record into the existing list of medical records
+          let existingMedicalRecords = store.getState().agents.medicalRecords;
+          if (!existingMedicalRecords) {
+            existingMedicalRecords = [];
+          }
+          existingMedicalRecords.unshift(medicalRecord);
+
+          // Update Facts
+          agentAPI.addFact(
             new Belief(
-              BeliefKeys.APP,
-              AppAttributes.SYNC_CREATE_MEDICAL_RECORDS,
+              BeliefKeys.PATIENT,
+              PatientAttributes.MEDICAL_RECORDS,
+              existingMedicalRecords
+            ),
+            false
+          );
+          // Trigger request to dispatch medical records to UXSA for frontend display
+          agent.addBelief(
+            new Belief(
+              BeliefKeys.PATIENT,
+              PatientAttributes.MEDICAL_RECORDS_RETRIEVED,
               true
             )
           );
-        }
-
-        if (createSuccessful) {
-          // Dispatch to front end that create is successful
-          store.dispatch(setCreateMedicalRecordSuccessful(true));
+          // Remove medical record input from facts
+          agentAPI.addFact(
+            new Belief(
+              BeliefKeys.PATIENT,
+              PatientAttributes.MEDICAL_RECORD_TO_CREATE,
+              null
+            ),
+            false
+          );
         }
       }
-      // Dispatch to front end that create has been completed
+      // Dispatch to front end that create has ended
       store.dispatch(setCreatingMedicalRecord(false));
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
-      // Set to retry later
-      setRetryLaterTimeout(() => {
-        agent.addBelief(
-          new Belief(
-            BeliefKeys.PATIENT,
-            PatientAttributes.CREATE_MEDICAL_RECORD,
-            true
-          )
-        );
-        agentAPI.addFact(
-          new Belief(
-            BeliefKeys.PROCEDURE,
-            ProcedureAttributes.HF_OTP_II,
-            ProcedureConst.ACTIVE
-          )
-        );
-      });
 
-      // Update Facts
       // End the procedure
       agentAPI.addFact(
         new Belief(
           BeliefKeys.PROCEDURE,
-          ProcedureAttributes.HF_OTP_II,
+          ProcedureAttributes.HF_OTP_III,
           ProcedureConst.INACTIVE
         ),
         true,
         true
       );
-      // Dispatch to front end that create has been completed
+      // Dispatch to front end that create has ended
       store.dispatch(setCreatingMedicalRecord(false));
     }
   }
@@ -127,50 +129,66 @@ class CreateMedicalRecord extends Activity {
 /**
  * Uploads medical record file to S3 bucket and inserts a record into DynamoDB
  * @param medicalRecordInput medical record input
- * @returns true if both upload and insert are successful, false otherwise.
+ * @returns medical record created if both upload and insert are successful, null otherwise.
  */
 export const insertMedicalRecord = async (
   medicalRecordInput: MedicalRecordInput
-): Promise<boolean> => {
+): Promise<MedicalRecord | null> => {
   // Indicator of whether medical record is successfully created
   let createSuccessful = false;
   let medicalRecord: MedicalRecord | undefined;
 
-  const medicalRecordFile = medicalRecordInput.file;
-  // Store file to S3 bucket
-  await Storage.put(medicalRecordFile.name, medicalRecordFile, {
-    contentType: medicalRecordFile.type,
-    level: "private"
-  })
-    .then(async () => {
-      // File is successfully pushed to S3 bucket - create a record in DynamoDB
-      const input: CreateMedicalRecordInput = {
-        title: medicalRecordInput.title,
-        patientID: medicalRecordInput.patientID,
-        fileKey: medicalRecordFile.name
-      };
-      const createResponse = await createMedicalRecord(input);
-      if (createResponse.data.createMedicalRecord) {
-        createSuccessful = true;
-        medicalRecord = createResponse.data.createMedicalRecord;
-      }
+  // Retrieves locally stored clinicianID
+  const clinicianID = await LocalStorage.getClinicianID();
+
+  if (clinicianID) {
+    const medicalRecordFile = medicalRecordInput.file;
+
+    // Generates unique ID as part of file key to prevent overwriting another file with the same name
+    const fileID = `${medicalRecordFile.name}_${uuidv4()}`;
+    // Upload file to S3 bucket
+    await Storage.put(fileID, medicalRecordFile, {
+      contentType: medicalRecordFile.type,
+      level: "private"
     })
-    .catch((error) => {
-      // eslint-disable-next-line no-console
-      console.log(error);
-    });
+      .then(async () => {
+        // File is successfully uploaded - create a record in DynamoDB
+        const input: CreateMedicalRecordInput = {
+          title: medicalRecordInput.title,
+          patientID: medicalRecordInput.patientID,
+          clinicianID: clinicianID,
+          fileKey: fileID
+        };
+        try {
+          const createResponse = await createMedicalRecord(input);
+          if (createResponse.data.createMedicalRecord) {
+            medicalRecord = createResponse.data.createMedicalRecord;
+            createSuccessful = true;
+          }
+        } catch (error) {
+          // eslint-disable-next-line no-console
+          console.log(error);
+        }
+      })
+      .catch((error) => {
+        // eslint-disable-next-line no-console
+        console.log(error);
+      });
+  }
 
   if (createSuccessful && medicalRecord) {
     // Stores medical record locally
-    await LocalStorage.setPatientMedicalRecord(medicalRecord);
+    await LocalStorage.setPatientMedicalRecords([medicalRecord]);
+    return medicalRecord;
   }
-  return createSuccessful;
+
+  return null;
 };
 
 // Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.HF_OTP_II,
+  ProcedureAttributes.HF_OTP_III,
   ProcedureConst.ACTIVE
 );
 const rule2 = new ResettablePrecondition(

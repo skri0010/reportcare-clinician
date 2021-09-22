@@ -99,6 +99,7 @@ export declare class ReportVitals {
 export declare class MedicalRecord {
   readonly id: string;
   readonly patientID: string;
+  readonly clinicianID: string;
   readonly title: string;
   readonly fileKey: string;
   constructor(init: ModelInit<MedicalRecord>);
@@ -145,7 +146,8 @@ export declare class PatientAssignment {
   readonly patientName: string;
   readonly pending?: string;
   readonly resolution?: string;
-  readonly reassignedClinicianID?: string;
+  readonly reassignToClinicianID?: string;
+  readonly adminReassignFromClinicianID?: string;
   readonly adminCompleted?: boolean;
   constructor(init: ModelInit<PatientAssignment>);
   static copyOf(source: PatientAssignment, mutator: (draft: MutableModel<PatientAssignment>) => MutableModel<PatientAssignment> | void): PatientAssignment;

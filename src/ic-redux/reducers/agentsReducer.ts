@@ -8,7 +8,12 @@ import {
   LocalTodo,
   RiskFilter
 } from "rc_agents/model";
-import { ClinicianInfo, PatientAssignment, PatientInfo } from "aws/API";
+import {
+  ClinicianInfo,
+  MedicalRecord,
+  PatientAssignment,
+  PatientInfo
+} from "aws/API";
 import { RiskLevel } from "models/RiskLevel";
 
 interface AgentsState {
@@ -50,6 +55,10 @@ interface AgentsState {
   todoDetails: LocalTodo | undefined;
   creatingMedicalRecord: boolean;
   createMedicalRecordSuccessful: boolean;
+  fetchingMedicalRecords: boolean;
+  medicalRecords: MedicalRecord[] | undefined;
+  fetchingMedicalRecordContent: boolean;
+  medicalRecordContent: string | undefined;
 }
 
 const initialState: AgentsState = {
@@ -110,7 +119,11 @@ const initialState: AgentsState = {
   submittingTodo: false,
   updatedTodo: undefined,
   creatingMedicalRecord: false,
-  createMedicalRecordSuccessful: false
+  createMedicalRecordSuccessful: false,
+  fetchingMedicalRecords: false,
+  medicalRecords: undefined,
+  fetchingMedicalRecordContent: false,
+  medicalRecordContent: undefined
 };
 
 export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
@@ -192,6 +205,27 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
         ...state,
         createMedicalRecordSuccessful:
           action.payload.createMedicalRecordSuccessful
+      };
+    case actionNames.SET_FETCHING_MEDICAL_RECORDS:
+      return {
+        ...state,
+        fetchingMedicalRecords: action.payload.fetchingMedicalRecords
+      };
+    case actionNames.SET_MEDICAL_RECORDS:
+      return {
+        ...state,
+        medicalRecords: action.payload.medicalRecords
+      };
+    case actionNames.SET_FETCHING_MEDICAL_RECORD_CONTENT:
+      return {
+        ...state,
+        fetchingMedicalRecordContent:
+          action.payload.fetchingMedicalRecordContent
+      };
+    case actionNames.SET_MEDICAL_RECORD_CONTENT:
+      return {
+        ...state,
+        medicalRecordContent: action.payload.medicalRecordContent
       };
     case actionNames.SET_PENDING_ALERT_COUNT:
       return {

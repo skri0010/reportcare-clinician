@@ -553,6 +553,7 @@ export const createMedicalRecord = /* GraphQL */ `
     createMedicalRecord(input: $input, condition: $condition) {
       id
       patientID
+      clinicianID
       title
       fileKey
       _version
@@ -560,7 +561,6 @@ export const createMedicalRecord = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -572,6 +572,7 @@ export const updateMedicalRecord = /* GraphQL */ `
     updateMedicalRecord(input: $input, condition: $condition) {
       id
       patientID
+      clinicianID
       title
       fileKey
       _version
@@ -579,7 +580,6 @@ export const updateMedicalRecord = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -591,6 +591,7 @@ export const deleteMedicalRecord = /* GraphQL */ `
     deleteMedicalRecord(input: $input, condition: $condition) {
       id
       patientID
+      clinicianID
       title
       fileKey
       _version
@@ -598,7 +599,6 @@ export const deleteMedicalRecord = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -608,13 +608,11 @@ export const createClinicianInfo = /* GraphQL */ `
     $condition: ModelClinicianInfoConditionInput
   ) {
     createClinicianInfo(input: $input, condition: $condition) {
-      id
       clinicianID
       name
       hospitalName
       role
       protectedInfo {
-        id
         clinicianID
         facts
         APS
@@ -643,13 +641,11 @@ export const updateClinicianInfo = /* GraphQL */ `
     $condition: ModelClinicianInfoConditionInput
   ) {
     updateClinicianInfo(input: $input, condition: $condition) {
-      id
       clinicianID
       name
       hospitalName
       role
       protectedInfo {
-        id
         clinicianID
         facts
         APS
@@ -678,13 +674,11 @@ export const deleteClinicianInfo = /* GraphQL */ `
     $condition: ModelClinicianInfoConditionInput
   ) {
     deleteClinicianInfo(input: $input, condition: $condition) {
-      id
       clinicianID
       name
       hospitalName
       role
       protectedInfo {
-        id
         clinicianID
         facts
         APS
@@ -713,7 +707,6 @@ export const createClinicianProtectedInfo = /* GraphQL */ `
     $condition: ModelClinicianProtectedInfoConditionInput
   ) {
     createClinicianProtectedInfo(input: $input, condition: $condition) {
-      id
       clinicianID
       facts
       APS
@@ -736,7 +729,6 @@ export const updateClinicianProtectedInfo = /* GraphQL */ `
     $condition: ModelClinicianProtectedInfoConditionInput
   ) {
     updateClinicianProtectedInfo(input: $input, condition: $condition) {
-      id
       clinicianID
       facts
       APS
@@ -759,7 +751,6 @@ export const deleteClinicianProtectedInfo = /* GraphQL */ `
     $condition: ModelClinicianProtectedInfoConditionInput
   ) {
     deleteClinicianProtectedInfo(input: $input, condition: $condition) {
-      id
       clinicianID
       facts
       APS
@@ -782,11 +773,9 @@ export const createClinicianPatientMap = /* GraphQL */ `
     $condition: ModelClinicianPatientMapConditionInput
   ) {
     createClinicianPatientMap(input: $input, condition: $condition) {
-      id
       clinicianID
       patientID
       clinicianInfo {
-        id
         clinicianID
         name
         hospitalName
@@ -811,11 +800,9 @@ export const updateClinicianPatientMap = /* GraphQL */ `
     $condition: ModelClinicianPatientMapConditionInput
   ) {
     updateClinicianPatientMap(input: $input, condition: $condition) {
-      id
       clinicianID
       patientID
       clinicianInfo {
-        id
         clinicianID
         name
         hospitalName
@@ -840,11 +827,9 @@ export const deleteClinicianPatientMap = /* GraphQL */ `
     $condition: ModelClinicianPatientMapConditionInput
   ) {
     deleteClinicianPatientMap(input: $input, condition: $condition) {
-      id
       clinicianID
       patientID
       clinicianInfo {
-        id
         clinicianID
         name
         hospitalName
@@ -869,13 +854,13 @@ export const createPatientAssignment = /* GraphQL */ `
     $condition: ModelPatientAssignmentConditionInput
   ) {
     createPatientAssignment(input: $input, condition: $condition) {
-      id
       patientID
       clinicianID
       patientName
       pending
       resolution
-      reassignedClinicianID
+      reassignToClinicianID
+      adminReassignFromClinicianID
       adminCompleted
       _version
       _deleted
@@ -891,13 +876,13 @@ export const updatePatientAssignment = /* GraphQL */ `
     $condition: ModelPatientAssignmentConditionInput
   ) {
     updatePatientAssignment(input: $input, condition: $condition) {
-      id
       patientID
       clinicianID
       patientName
       pending
       resolution
-      reassignedClinicianID
+      reassignToClinicianID
+      adminReassignFromClinicianID
       adminCompleted
       _version
       _deleted
@@ -913,13 +898,13 @@ export const deletePatientAssignment = /* GraphQL */ `
     $condition: ModelPatientAssignmentConditionInput
   ) {
     deletePatientAssignment(input: $input, condition: $condition) {
-      id
       patientID
       clinicianID
       patientName
       pending
       resolution
-      reassignedClinicianID
+      reassignToClinicianID
+      adminReassignFromClinicianID
       adminCompleted
       _version
       _deleted
