@@ -545,19 +545,75 @@ export const deleteReportVitals = /* GraphQL */ `
     }
   }
 `;
+export const createMedicalRecord = /* GraphQL */ `
+  mutation CreateMedicalRecord(
+    $input: CreateMedicalRecordInput!
+    $condition: ModelMedicalRecordConditionInput
+  ) {
+    createMedicalRecord(input: $input, condition: $condition) {
+      id
+      patientID
+      title
+      fileKey
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const updateMedicalRecord = /* GraphQL */ `
+  mutation UpdateMedicalRecord(
+    $input: UpdateMedicalRecordInput!
+    $condition: ModelMedicalRecordConditionInput
+  ) {
+    updateMedicalRecord(input: $input, condition: $condition) {
+      id
+      patientID
+      title
+      fileKey
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deleteMedicalRecord = /* GraphQL */ `
+  mutation DeleteMedicalRecord(
+    $input: DeleteMedicalRecordInput!
+    $condition: ModelMedicalRecordConditionInput
+  ) {
+    deleteMedicalRecord(input: $input, condition: $condition) {
+      id
+      patientID
+      title
+      fileKey
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
 export const createClinicianInfo = /* GraphQL */ `
   mutation CreateClinicianInfo(
     $input: CreateClinicianInfoInput!
     $condition: ModelClinicianInfoConditionInput
   ) {
     createClinicianInfo(input: $input, condition: $condition) {
-      id
+      clinicianID
       name
       hospitalName
       role
-      clinicianID
       protectedInfo {
-        id
+        clinicianID
         facts
         APS
         DTA
@@ -565,15 +621,12 @@ export const createClinicianInfo = /* GraphQL */ `
         NWA
         ALA
         MHA
-        clinicianID
-        owner
         _version
         _deleted
         _lastChangedAt
         createdAt
         updatedAt
       }
-      owner
       _version
       _deleted
       _lastChangedAt
@@ -588,13 +641,12 @@ export const updateClinicianInfo = /* GraphQL */ `
     $condition: ModelClinicianInfoConditionInput
   ) {
     updateClinicianInfo(input: $input, condition: $condition) {
-      id
+      clinicianID
       name
       hospitalName
       role
-      clinicianID
       protectedInfo {
-        id
+        clinicianID
         facts
         APS
         DTA
@@ -602,15 +654,12 @@ export const updateClinicianInfo = /* GraphQL */ `
         NWA
         ALA
         MHA
-        clinicianID
-        owner
         _version
         _deleted
         _lastChangedAt
         createdAt
         updatedAt
       }
-      owner
       _version
       _deleted
       _lastChangedAt
@@ -625,13 +674,12 @@ export const deleteClinicianInfo = /* GraphQL */ `
     $condition: ModelClinicianInfoConditionInput
   ) {
     deleteClinicianInfo(input: $input, condition: $condition) {
-      id
+      clinicianID
       name
       hospitalName
       role
-      clinicianID
       protectedInfo {
-        id
+        clinicianID
         facts
         APS
         DTA
@@ -639,15 +687,12 @@ export const deleteClinicianInfo = /* GraphQL */ `
         NWA
         ALA
         MHA
-        clinicianID
-        owner
         _version
         _deleted
         _lastChangedAt
         createdAt
         updatedAt
       }
-      owner
       _version
       _deleted
       _lastChangedAt
@@ -662,7 +707,7 @@ export const createClinicianProtectedInfo = /* GraphQL */ `
     $condition: ModelClinicianProtectedInfoConditionInput
   ) {
     createClinicianProtectedInfo(input: $input, condition: $condition) {
-      id
+      clinicianID
       facts
       APS
       DTA
@@ -670,8 +715,6 @@ export const createClinicianProtectedInfo = /* GraphQL */ `
       NWA
       ALA
       MHA
-      clinicianID
-      owner
       _version
       _deleted
       _lastChangedAt
@@ -686,7 +729,7 @@ export const updateClinicianProtectedInfo = /* GraphQL */ `
     $condition: ModelClinicianProtectedInfoConditionInput
   ) {
     updateClinicianProtectedInfo(input: $input, condition: $condition) {
-      id
+      clinicianID
       facts
       APS
       DTA
@@ -694,8 +737,6 @@ export const updateClinicianProtectedInfo = /* GraphQL */ `
       NWA
       ALA
       MHA
-      clinicianID
-      owner
       _version
       _deleted
       _lastChangedAt
@@ -710,7 +751,7 @@ export const deleteClinicianProtectedInfo = /* GraphQL */ `
     $condition: ModelClinicianProtectedInfoConditionInput
   ) {
     deleteClinicianProtectedInfo(input: $input, condition: $condition) {
-      id
+      clinicianID
       facts
       APS
       DTA
@@ -718,8 +759,6 @@ export const deleteClinicianProtectedInfo = /* GraphQL */ `
       NWA
       ALA
       MHA
-      clinicianID
-      owner
       _version
       _deleted
       _lastChangedAt
@@ -734,23 +773,19 @@ export const createClinicianPatientMap = /* GraphQL */ `
     $condition: ModelClinicianPatientMapConditionInput
   ) {
     createClinicianPatientMap(input: $input, condition: $condition) {
-      id
       clinicianID
       patientID
       clinicianInfo {
-        id
+        clinicianID
         name
         hospitalName
         role
-        clinicianID
-        owner
         _version
         _deleted
         _lastChangedAt
         createdAt
         updatedAt
       }
-      owner
       _version
       _deleted
       _lastChangedAt
@@ -765,23 +800,19 @@ export const updateClinicianPatientMap = /* GraphQL */ `
     $condition: ModelClinicianPatientMapConditionInput
   ) {
     updateClinicianPatientMap(input: $input, condition: $condition) {
-      id
       clinicianID
       patientID
       clinicianInfo {
-        id
+        clinicianID
         name
         hospitalName
         role
-        clinicianID
-        owner
         _version
         _deleted
         _lastChangedAt
         createdAt
         updatedAt
       }
-      owner
       _version
       _deleted
       _lastChangedAt
@@ -796,23 +827,19 @@ export const deleteClinicianPatientMap = /* GraphQL */ `
     $condition: ModelClinicianPatientMapConditionInput
   ) {
     deleteClinicianPatientMap(input: $input, condition: $condition) {
-      id
       clinicianID
       patientID
       clinicianInfo {
-        id
+        clinicianID
         name
         hospitalName
         role
-        clinicianID
-        owner
         _version
         _deleted
         _lastChangedAt
         createdAt
         updatedAt
       }
-      owner
       _version
       _deleted
       _lastChangedAt
@@ -827,18 +854,19 @@ export const createPatientAssignment = /* GraphQL */ `
     $condition: ModelPatientAssignmentConditionInput
   ) {
     createPatientAssignment(input: $input, condition: $condition) {
-      id
       patientID
       clinicianID
+      patientName
       pending
       resolution
-      patientName
+      reassignToClinicianID
+      adminReassignFromClinicianID
+      adminCompleted
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -848,18 +876,19 @@ export const updatePatientAssignment = /* GraphQL */ `
     $condition: ModelPatientAssignmentConditionInput
   ) {
     updatePatientAssignment(input: $input, condition: $condition) {
-      id
       patientID
       clinicianID
+      patientName
       pending
       resolution
-      patientName
+      reassignToClinicianID
+      adminReassignFromClinicianID
+      adminCompleted
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -869,18 +898,19 @@ export const deletePatientAssignment = /* GraphQL */ `
     $condition: ModelPatientAssignmentConditionInput
   ) {
     deletePatientAssignment(input: $input, condition: $condition) {
-      id
       patientID
       clinicianID
+      patientName
       pending
       resolution
-      patientName
+      reassignToClinicianID
+      adminReassignFromClinicianID
+      adminCompleted
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
-      owner
     }
   }
 `;

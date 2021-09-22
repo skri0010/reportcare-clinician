@@ -67,7 +67,7 @@ class VisualizeParameters extends Activity {
       true
     );
 
-    // Dispatch to front end that procedure has been completed
+    // Dispatch to store to indicate fetching has ended
     store.dispatch(setFetchingPatientDetails(false));
   }
 }

@@ -140,7 +140,13 @@ module.exports = {
             message: "Use exported types from aws/API files instead."
           },
           {
-            group: ["rc_agents/agents/"],
+            group: [
+              "**/*/ALA",
+              "**/*/MHA",
+              "**/*/DTA",
+              "**/*/NWA",
+              "**/*/UXSA"
+            ],
             message: "Please import from rc_agents/agents instead"
           }
         ]

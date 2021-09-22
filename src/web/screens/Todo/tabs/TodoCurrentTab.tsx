@@ -33,7 +33,6 @@ export const onDonePress = (item: LocalTodo): void => {
     completed: true,
     lastModified: new Date().toISOString()
   };
-
   AgentTrigger.triggerUpdateTodo(todoToUpdate);
 };
 

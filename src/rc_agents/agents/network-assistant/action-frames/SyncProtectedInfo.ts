@@ -47,7 +47,6 @@ class SyncProtectedInfo extends Activity {
 
             // Updated protected info should have the latest version
             const updatedProtectedInfo: UpdateClinicianProtectedInfoInput = {
-              id: localClinician.protectedInfo.id!,
               clinicianID: localClinician.clinicianID,
               facts: localClinician.protectedInfo.facts,
               APS: localClinician.protectedInfo.APS,
@@ -56,7 +55,6 @@ class SyncProtectedInfo extends Activity {
               NWA: localClinician.protectedInfo.NWA,
               ALA: localClinician.protectedInfo.ALA,
               MHA: localClinician.protectedInfo.MHA,
-              owner: localClinician.clinicianID,
               _version: latestProtectedInfo?._version
             };
             await updateClinicianProtectedInfo(updatedProtectedInfo);

@@ -64,7 +64,7 @@ export const PatientsList: FC<PatientsListScreen> = ({
         placeholder={i18n.t("Patients.SearchBarPlaceholder")}
       />
       {/* Risk filter pills */}
-      <RiskFilterPillList />
+      <RiskFilterPillList patientScreen />
       {/* Risk filter pills and List of patients */}
       {fetchingPatients ? (
         // Show loading indicator if fetching patients

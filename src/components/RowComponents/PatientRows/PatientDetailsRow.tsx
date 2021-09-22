@@ -24,13 +24,9 @@ export const PatientDetailsRow: React.FC<PatientDetailsRowProps> = ({
   return (
     <TouchableOpacity
       style={
-        selected
-          ? {
-              opacity: 0.5 // Indicate selected
-            }
-          : {}
+        { opacity: selected ? 0.5 : 1 } // indicate selected
       }
-      onPress={onRowPress ? () => onRowPress(patient) : undefined}
+      onPress={onRowPress && !selected ? () => onRowPress(patient) : undefined}
     >
       <PatientRowBase
         title={name}

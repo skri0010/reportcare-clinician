@@ -13,26 +13,32 @@ import {
   AppAttributes,
   BeliefKeys,
   ClinicianAttributes,
-  ProcedureAttributes
+  ProcedureAttributes,
+  setRetryLaterTimeout
 } from "rc_agents/clinician_framework";
 import { Storage } from "rc_agents/storage";
-import { mockCompletedAlerts, mockPendingAlerts } from "mock/mockAlerts";
 import { listCompletedRiskAlerts, listPendingRiskAlerts } from "aws";
-import { AlertColorCode, AlertInfo, AlertStatus } from "rc_agents/model";
-import { RiskLevel } from "models/RiskLevel";
+import {
+  AlertInfo,
+  FetchAlertsMode,
+  AlertsCount,
+  AlertStatus
+} from "rc_agents/model";
+import { store } from "util/useRedux";
+import {
+  setFetchingAlerts,
+  setFetchingCompletedAlerts,
+  setFetchingPendingAlerts
+} from "ic-redux/actions/agents/actionCreator";
 import { Alert } from "aws/API";
-
-// LS-TODO: To be tested with actual Alerts.
-// NOTE: This is originally MHA's action frame.
+import { RiskLevel } from "models/RiskLevel";
+import { convertAlertsToAlertInfos } from "util/utilityFunctions";
 
 /**
  * Class to represent the activity for retrieving alerts.
  * This happens in Procedure Triage Alert HF Clinic (AT-CP).
  */
 class RetrieveAlerts extends Activity {
-  /**
-   * Constructor for the RetrieveAlerts class
-   */
   constructor() {
     super(ActionFrameIDs.DTA.RETRIEVE_ALERTS);
   }
@@ -44,127 +50,134 @@ class RetrieveAlerts extends Activity {
   async doActivity(agent: Agent): Promise<void> {
     await super.doActivity(agent, [rule2]);
 
+    const facts = agentAPI.getFacts();
+    // Get fetch alert mode from facts
+    const fetchAlertsMode: FetchAlertsMode | undefined =
+      facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.FETCH_ALERTS_MODE];
+
+    // Get online status from facts
+    const isOnline: boolean = facts[BeliefKeys.APP]?.[AppAttributes.ONLINE];
+
+    // Get retrieve locally boolean from facts
+    const retrieveAlertsLocally =
+      facts[BeliefKeys.CLINICIAN]?.[
+        ClinicianAttributes.RETRIEVE_ALERTS_LOCALLY
+      ];
+
+    // Dispatch to store to indicate fetching
+    if (fetchAlertsMode) {
+      this.dispatchFetching(fetchAlertsMode, true);
+    }
+
     try {
-      const facts = agentAPI.getFacts();
+      if (fetchAlertsMode) {
+        let pendingAlertInfos: AlertInfo[] | undefined | null;
+        let completedAlertInfos: AlertInfo[] | undefined | null;
 
-      // Gets alert status and risk level from facts
-      const alertStatus: AlertStatus =
-        facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.ALERT_STATUS];
+        if (isOnline && !retrieveAlertsLocally) {
+          // Device is online and not do not need to fetch alerts locally
+          let pendingAlerts: Alert[] | undefined | null;
+          let completedAlerts: Alert[] | undefined | null;
 
-      const alertRiskLevel: RiskLevel =
-        facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.ALERT_RISK_LEVEL];
-
-      // Retrieves all alerts with a specific status and risk level
-      if (alertStatus && alertRiskLevel) {
-        if (facts[BeliefKeys.APP][AppAttributes.ONLINE]) {
-          // Device is online
-
-          // Maps risk level to color code for query
-          const alertColorCode: AlertColorCode =
-            mapRiskLevelToColorCode(alertRiskLevel);
-
-          let alerts: Alert[] | undefined;
-          // Pending alerts
-          if (alertStatus === AlertStatus.PENDING && alertColorCode) {
-            const query = await listPendingRiskAlerts({
-              pending: AlertStatus.PENDING,
-              colorCode: { eq: alertColorCode }
-            });
-            if (query.data && query.data.listPendingRiskAlerts) {
-              const result = query.data.listPendingRiskAlerts.items;
-              if (result && result.length > 0) {
-                alerts = result as Alert[];
-              } else {
-                // LS-TODO: To be removed
-                const mockAlerts = JSON.parse(
-                  JSON.stringify(mockPendingAlerts)
-                );
-                switch (alertColorCode) {
-                  case AlertColorCode.HIGH:
-                    alerts = mockAlerts.splice(0, 2);
-                    break;
-                  case AlertColorCode.MEDIUM:
-                    alerts = mockAlerts.splice(2, 1);
-                    break;
-                  default:
-                    break;
-                }
-              }
-            }
-          }
-          // Completed alerts
-          else if (alertStatus === AlertStatus.COMPLETED && alertColorCode) {
-            const query = await listCompletedRiskAlerts({
-              completed: AlertStatus.COMPLETED,
-              colorCode: { eq: alertColorCode }
-            });
-            if (query.data && query.data.listCompletedRiskAlerts) {
-              const result = query.data.listCompletedRiskAlerts.items;
-              if (result && result.length > 0) {
-                alerts = result as Alert[];
-              } else {
-                // LS-TODO: To be removed
-                const mockAlerts = JSON.parse(
-                  JSON.stringify(mockCompletedAlerts)
-                );
-                switch (alertColorCode) {
-                  case AlertColorCode.HIGH:
-                    alerts = mockAlerts.splice(0, 1);
-                    break;
-                  case AlertColorCode.MEDIUM:
-                    alerts = mockAlerts.splice(1, 1);
-                    break;
-                  case AlertColorCode.LOW:
-                    alerts = mockAlerts.splice(2, 1);
-                    break;
-                  default:
-                    break;
-                }
-              }
-            }
-          }
-
-          if (alerts) {
-            // LS-TODO: Previously using Alerts_To_Sort key to be sorted by SortAlerts of ALA first
-            // Broadcast alert to facts to be used by RetrieveAlertInfos action frame of DTA.
-            const sortedAlerts = sortAlertsByDateTime(alerts);
-
-            agentAPI.addFact(
-              new Belief(
-                BeliefKeys.CLINICIAN,
-                ClinicianAttributes.ALERTS,
-                sortedAlerts
-              ),
-              false
+          // Retrieve alerts based on fetchAlertsMode
+          if (
+            fetchAlertsMode === FetchAlertsMode.PENDING ||
+            fetchAlertsMode === FetchAlertsMode.ALL
+          ) {
+            pendingAlerts = await this.getAlertsByFetchAlertsMode(
+              FetchAlertsMode.PENDING
             );
+          }
+          if (
+            fetchAlertsMode === FetchAlertsMode.COMPLETED ||
+            fetchAlertsMode === FetchAlertsMode.ALL
+          ) {
+            completedAlerts = await this.getAlertsByFetchAlertsMode(
+              FetchAlertsMode.COMPLETED
+            );
+          }
 
-            // Merges newly retrieved alerts into locally stored alerts
-            await Storage.setMultipleAlerts(alerts);
+          // Flush locally store info
+          await Storage.flushAlertInfos();
+
+          // Store pending / completed AlertInfo[]
+          if (pendingAlerts) {
+            pendingAlertInfos = convertAlertsToAlertInfos(pendingAlerts);
+            await Storage.setAlertInfos(pendingAlertInfos);
+          }
+          if (completedAlerts) {
+            completedAlertInfos = convertAlertsToAlertInfos(completedAlerts);
+            await Storage.setAlertInfos(completedAlertInfos);
           }
         } else {
-          // Device is offline
-          const localRiskAlerts = await Storage.getRiskOrStatusAlerts(
-            alertRiskLevel,
-            alertStatus
-          );
-          if (localRiskAlerts) {
-            const sortedAlerts = sortAlertsByDateTime(localRiskAlerts);
-            agentAPI.addFact(
-              new Belief(
-                BeliefKeys.CLINICIAN,
-                ClinicianAttributes.ALERTS,
-                sortedAlerts
-              ),
-              false
-            );
+          // Device is offline or fetch locally based on fetchAlertsMode
+          // eslint-disable-next-line no-lonely-if
+          if (
+            fetchAlertsMode === FetchAlertsMode.PENDING ||
+            fetchAlertsMode === FetchAlertsMode.ALL
+          ) {
+            pendingAlertInfos = await Storage.getPendingAlertInfos();
+          }
+          if (
+            fetchAlertsMode === FetchAlertsMode.COMPLETED ||
+            fetchAlertsMode === FetchAlertsMode.ALL
+          ) {
+            completedAlertInfos = await Storage.getCompletedAlertInfos();
           }
         }
 
-        // Removes alert status and risk level from facts
+        if (pendingAlertInfos || completedAlertInfos) {
+          // Update Facts
+          // Store items
+          if (pendingAlertInfos) {
+            // Pending AlertInfo[]
+            agentAPI.addFact(
+              new Belief(
+                BeliefKeys.CLINICIAN,
+                ClinicianAttributes.PENDING_ALERTS,
+                pendingAlertInfos
+              ),
+              false
+            );
+
+            // Pending alerts count
+            const pendingAlertsCount = getAlertsCount(pendingAlertInfos);
+            agentAPI.addFact(
+              new Belief(
+                BeliefKeys.CLINICIAN,
+                ClinicianAttributes.PENDING_ALERTS_COUNT,
+                pendingAlertsCount
+              ),
+              false
+            );
+          }
+
+          if (completedAlertInfos) {
+            agentAPI.addFact(
+              new Belief(
+                BeliefKeys.CLINICIAN,
+                ClinicianAttributes.COMPLETED_ALERTS,
+                completedAlertInfos
+              ),
+              false
+            );
+          }
+
+          // Trigger request to Communicate to USXA
+          agent.addBelief(
+            new Belief(
+              BeliefKeys.CLINICIAN,
+              ClinicianAttributes.ALERTS_RETRIEVED,
+              true
+            )
+          );
+        }
+
+        // Remove item
         agentAPI.addFact(
           new Belief(
             BeliefKeys.CLINICIAN,
-            ClinicianAttributes.ALERT_STATUS,
+            ClinicianAttributes.FETCH_ALERTS_MODE,
             null
           ),
           false
@@ -172,7 +185,7 @@ class RetrieveAlerts extends Activity {
         agentAPI.addFact(
           new Belief(
             BeliefKeys.CLINICIAN,
-            ClinicianAttributes.ALERT_RISK_LEVEL,
+            ClinicianAttributes.RETRIEVE_ALERTS_LOCALLY,
             null
           ),
           false
@@ -181,38 +194,144 @@ class RetrieveAlerts extends Activity {
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
+      // Set to retry later
+      setRetryLaterTimeout(() => {
+        agent.addBelief(
+          new Belief(
+            BeliefKeys.PATIENT,
+            ClinicianAttributes.RETRIEVE_ALERTS,
+            true
+          )
+        );
+        agentAPI.addFact(
+          new Belief(
+            BeliefKeys.PROCEDURE,
+            ProcedureAttributes.AT_CP_I,
+            ProcedureConst.ACTIVE
+          )
+        );
+      });
+
+      // Update Facts
+      // End the procedure
+      agentAPI.addFact(
+        new Belief(
+          BeliefKeys.PROCEDURE,
+          ProcedureAttributes.AT_CP_I,
+          ProcedureConst.INACTIVE
+        ),
+        true,
+        true
+      );
+
+      // Dispatch to store to indicate fetching has ended
+      if (fetchAlertsMode) {
+        this.dispatchFetching(fetchAlertsMode, false);
+      }
+    }
+  }
+
+  // Query based on fetch alerts mode
+  getAlertsByFetchAlertsMode = async (
+    fetchAlertsMode: FetchAlertsMode
+  ): Promise<Alert[] | null> => {
+    let alerts: Alert[] = [];
+    let querySuccessful = false; // If query is not successful, return null
+
+    // Query
+    if (fetchAlertsMode === FetchAlertsMode.PENDING) {
+      const query = await listPendingRiskAlerts({
+        pending: AlertStatus.PENDING
+      });
+      // Process pending risk alerts
+      if (query.data.listPendingRiskAlerts?.items) {
+        querySuccessful = true;
+        const { items } = query.data.listPendingRiskAlerts;
+        if (!alerts) {
+          alerts = [];
+        }
+        if (items) {
+          items.forEach((item) => {
+            if (item) {
+              alerts.push(item);
+            }
+          });
+        }
+      }
+    } else {
+      const query = await listCompletedRiskAlerts({
+        completed: AlertStatus.COMPLETED
+      });
+      // Process completed risk alerts
+      if (query.data.listCompletedRiskAlerts?.items) {
+        querySuccessful = true;
+        const { items } = query.data.listCompletedRiskAlerts;
+        if (items) {
+          items.forEach((item) => {
+            if (item) {
+              if (!alerts) {
+                alerts = [];
+              }
+              alerts.push(item);
+            }
+          });
+        }
+      }
+    }
+
+    if (!querySuccessful && alerts.length === 0) {
+      return null;
+    }
+
+    return alerts;
+  };
+
+  // Dispatch to Redux store based on fetch alerts mode
+  // eslint-disable-next-line class-methods-use-this
+  dispatchFetching(fetchAlertsMode: FetchAlertsMode, value: boolean) {
+    if (fetchAlertsMode === FetchAlertsMode.PENDING) {
+      store.dispatch(setFetchingPendingAlerts(value));
+    } else if (fetchAlertsMode === FetchAlertsMode.COMPLETED) {
+      store.dispatch(setFetchingCompletedAlerts(value));
+    } else if (fetchAlertsMode === FetchAlertsMode.ALL) {
+      store.dispatch(setFetchingAlerts(value));
     }
   }
 }
 
-const mapRiskLevelToColorCode = (alertRiskLevel: RiskLevel): AlertColorCode => {
-  switch (alertRiskLevel) {
-    case RiskLevel.HIGH:
-      return AlertColorCode.HIGH;
-    case RiskLevel.MEDIUM:
-      return AlertColorCode.MEDIUM;
-    case RiskLevel.LOW:
-      return AlertColorCode.LOW;
-    case RiskLevel.UNASSIGNED:
-      return AlertColorCode.UNASSIGNED;
-    default:
-      return AlertColorCode.UNASSIGNED;
-  }
-};
+// eslint-disable-next-line class-methods-use-this
+export const getAlertsCount: (alerts: AlertInfo[]) => AlertsCount = (
+  alerts
+) => {
+  // Pending alerts count
+  const alertsCount: AlertsCount = {
+    highRisk: 0,
+    mediumRisk: 0,
+    lowRisk: 0,
+    unassignedRisk: 0
+  };
 
-/**
- * Sorts alerts / alert infos in descending order of datetime.
- * @param alerts List of alerts / alert infos to be sorted
- * @returns list of sorted alerts / alert infos
- */
-export const sortAlertsByDateTime = (
-  alerts: Alert[] | AlertInfo[]
-): Alert[] | AlertInfo[] => {
-  return alerts.sort((a, b) => {
-    const date1 = new Date(a.dateTime);
-    const date2 = new Date(b.dateTime);
-    return date2.getTime() - date1.getTime();
+  alerts.forEach((alert) => {
+    // Alert type is received if device is online or offline
+    switch ((alert as AlertInfo).riskLevel) {
+      case RiskLevel.HIGH:
+        alertsCount.highRisk += 1;
+        break;
+      case RiskLevel.MEDIUM:
+        alertsCount.mediumRisk += 1;
+        break;
+      case RiskLevel.LOW:
+        alertsCount.lowRisk += 1;
+        break;
+      case RiskLevel.UNASSIGNED:
+        alertsCount.unassignedRisk += 1;
+        break;
+      default:
+        break;
+    }
   });
+
+  return alertsCount;
 };
 
 // Preconditions

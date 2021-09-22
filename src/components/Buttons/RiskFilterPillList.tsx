@@ -4,22 +4,27 @@ import { RiskFilterPill } from "./RiskFilterPill";
 import { View, FlatList } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { select, RootState, store } from "util/useRedux";
-import { setRiskFilters } from "ic-redux/actions/agents/actionCreator";
-import { RiskFilter } from "rc_agents/model";
-import { agentDTA } from "rc_agents/agents";
-import { Belief } from "agents-framework";
-import { ProcedureConst } from "agents-framework/Enums";
-import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
-  BeliefKeys,
-  ClinicianAttributes,
-  ProcedureAttributes
-} from "rc_agents/clinician_framework";
+  setAlertRiskFilters,
+  setPatientRiskFilters
+} from "ic-redux/actions/agents/actionCreator";
+import { FetchAlertsMode, RiskFilter } from "rc_agents/model";
+import { AgentTrigger } from "rc_agents/trigger";
 
-export const RiskFilterPillList: FC = () => {
+interface RiskFilterPillListProps {
+  patientScreen?: boolean;
+  alertScreen?: boolean;
+}
+
+export const RiskFilterPillList: FC<RiskFilterPillListProps> = ({
+  patientScreen = false,
+  alertScreen = false
+}) => {
   const { colors, riskFilters } = select((state: RootState) => ({
     colors: state.settings.colors,
-    riskFilters: state.agents.riskFilters
+    riskFilters: alertScreen
+      ? state.agents.alertRiskFilters
+      : state.agents.patientRiskFilters
   }));
 
   // Function to toggle selected risk filters
@@ -31,29 +36,31 @@ export const RiskFilterPillList: FC = () => {
       [RiskLevel.UNASSIGNED]: riskFilters.Unassigned
     };
     tempRiskFilters[riskLevel] = !tempRiskFilters[riskLevel];
-    // Update risk filters
-    store.dispatch(setRiskFilters(tempRiskFilters));
-    // Trigger agents to retrieve filtered patients
-    agentDTA.addBelief(
-      new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.RETRIEVE_ROLE, true)
-    );
+    // Update risk filters based on which Screen user is on
+    if (patientScreen) {
+      store.dispatch(setPatientRiskFilters(tempRiskFilters));
+      // Trigger agents to retrieve filtered patients
+      AgentTrigger.triggerRetrievePatientsByRole();
+    } else {
+      // Trigger agents to set filtered alerts
+      store.dispatch(setAlertRiskFilters(tempRiskFilters));
 
-    agentAPI.addFact(
-      new Belief(
-        BeliefKeys.PROCEDURE,
-        ProcedureAttributes.HF_OTP_I,
-        ProcedureConst.ACTIVE
-      )
-    );
+      // Trigger the DTA agent to retrieve alert status based on the alert status
+      AgentTrigger.triggerRetrieveAlerts(FetchAlertsMode.ALL);
+    }
   };
 
   return (
-    <View style={styles.container}>
+    <View
+      style={
+        (styles.container, { backgroundColor: colors.primaryContrastTextColor })
+      }
+    >
       {/* Risk filter pill list */}
       <FlatList
         contentContainerStyle={[
           styles.listContainer,
-          { backgroundColor: colors.primaryBackgroundColor }
+          { backgroundColor: colors.primaryContrastTextColor }
         ]}
         data={Object.values(RiskLevel)}
         horizontal

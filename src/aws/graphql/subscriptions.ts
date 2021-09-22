@@ -491,16 +491,63 @@ export const onDeleteReportVitals = /* GraphQL */ `
     }
   }
 `;
-export const onCreateClinicianInfo = /* GraphQL */ `
-  subscription OnCreateClinicianInfo($owner: String) {
-    onCreateClinicianInfo(owner: $owner) {
+export const onCreateMedicalRecord = /* GraphQL */ `
+  subscription OnCreateMedicalRecord($owner: String, $patientID: String) {
+    onCreateMedicalRecord(owner: $owner, patientID: $patientID) {
       id
+      patientID
+      title
+      fileKey
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onUpdateMedicalRecord = /* GraphQL */ `
+  subscription OnUpdateMedicalRecord($owner: String, $patientID: String) {
+    onUpdateMedicalRecord(owner: $owner, patientID: $patientID) {
+      id
+      patientID
+      title
+      fileKey
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onDeleteMedicalRecord = /* GraphQL */ `
+  subscription OnDeleteMedicalRecord($owner: String, $patientID: String) {
+    onDeleteMedicalRecord(owner: $owner, patientID: $patientID) {
+      id
+      patientID
+      title
+      fileKey
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onCreateClinicianInfo = /* GraphQL */ `
+  subscription OnCreateClinicianInfo($clinicianID: String) {
+    onCreateClinicianInfo(clinicianID: $clinicianID) {
+      clinicianID
       name
       hospitalName
       role
-      clinicianID
       protectedInfo {
-        id
+        clinicianID
         facts
         APS
         DTA
@@ -508,15 +555,12 @@ export const onCreateClinicianInfo = /* GraphQL */ `
         NWA
         ALA
         MHA
-        clinicianID
-        owner
         _version
         _deleted
         _lastChangedAt
         createdAt
         updatedAt
       }
-      owner
       _version
       _deleted
       _lastChangedAt
@@ -526,15 +570,14 @@ export const onCreateClinicianInfo = /* GraphQL */ `
   }
 `;
 export const onUpdateClinicianInfo = /* GraphQL */ `
-  subscription OnUpdateClinicianInfo($owner: String) {
-    onUpdateClinicianInfo(owner: $owner) {
-      id
+  subscription OnUpdateClinicianInfo($clinicianID: String) {
+    onUpdateClinicianInfo(clinicianID: $clinicianID) {
+      clinicianID
       name
       hospitalName
       role
-      clinicianID
       protectedInfo {
-        id
+        clinicianID
         facts
         APS
         DTA
@@ -542,15 +585,12 @@ export const onUpdateClinicianInfo = /* GraphQL */ `
         NWA
         ALA
         MHA
-        clinicianID
-        owner
         _version
         _deleted
         _lastChangedAt
         createdAt
         updatedAt
       }
-      owner
       _version
       _deleted
       _lastChangedAt
@@ -560,15 +600,14 @@ export const onUpdateClinicianInfo = /* GraphQL */ `
   }
 `;
 export const onDeleteClinicianInfo = /* GraphQL */ `
-  subscription OnDeleteClinicianInfo($owner: String) {
-    onDeleteClinicianInfo(owner: $owner) {
-      id
+  subscription OnDeleteClinicianInfo($clinicianID: String) {
+    onDeleteClinicianInfo(clinicianID: $clinicianID) {
+      clinicianID
       name
       hospitalName
       role
-      clinicianID
       protectedInfo {
-        id
+        clinicianID
         facts
         APS
         DTA
@@ -576,15 +615,12 @@ export const onDeleteClinicianInfo = /* GraphQL */ `
         NWA
         ALA
         MHA
-        clinicianID
-        owner
         _version
         _deleted
         _lastChangedAt
         createdAt
         updatedAt
       }
-      owner
       _version
       _deleted
       _lastChangedAt
@@ -594,9 +630,9 @@ export const onDeleteClinicianInfo = /* GraphQL */ `
   }
 `;
 export const onCreateClinicianProtectedInfo = /* GraphQL */ `
-  subscription OnCreateClinicianProtectedInfo($owner: String) {
-    onCreateClinicianProtectedInfo(owner: $owner) {
-      id
+  subscription OnCreateClinicianProtectedInfo($clinicianID: String) {
+    onCreateClinicianProtectedInfo(clinicianID: $clinicianID) {
+      clinicianID
       facts
       APS
       DTA
@@ -604,8 +640,6 @@ export const onCreateClinicianProtectedInfo = /* GraphQL */ `
       NWA
       ALA
       MHA
-      clinicianID
-      owner
       _version
       _deleted
       _lastChangedAt
@@ -615,9 +649,9 @@ export const onCreateClinicianProtectedInfo = /* GraphQL */ `
   }
 `;
 export const onUpdateClinicianProtectedInfo = /* GraphQL */ `
-  subscription OnUpdateClinicianProtectedInfo($owner: String) {
-    onUpdateClinicianProtectedInfo(owner: $owner) {
-      id
+  subscription OnUpdateClinicianProtectedInfo($clinicianID: String) {
+    onUpdateClinicianProtectedInfo(clinicianID: $clinicianID) {
+      clinicianID
       facts
       APS
       DTA
@@ -625,8 +659,6 @@ export const onUpdateClinicianProtectedInfo = /* GraphQL */ `
       NWA
       ALA
       MHA
-      clinicianID
-      owner
       _version
       _deleted
       _lastChangedAt
@@ -636,9 +668,9 @@ export const onUpdateClinicianProtectedInfo = /* GraphQL */ `
   }
 `;
 export const onDeleteClinicianProtectedInfo = /* GraphQL */ `
-  subscription OnDeleteClinicianProtectedInfo($owner: String) {
-    onDeleteClinicianProtectedInfo(owner: $owner) {
-      id
+  subscription OnDeleteClinicianProtectedInfo($clinicianID: String) {
+    onDeleteClinicianProtectedInfo(clinicianID: $clinicianID) {
+      clinicianID
       facts
       APS
       DTA
@@ -646,8 +678,6 @@ export const onDeleteClinicianProtectedInfo = /* GraphQL */ `
       NWA
       ALA
       MHA
-      clinicianID
-      owner
       _version
       _deleted
       _lastChangedAt
@@ -657,25 +687,27 @@ export const onDeleteClinicianProtectedInfo = /* GraphQL */ `
   }
 `;
 export const onCreateClinicianPatientMap = /* GraphQL */ `
-  subscription OnCreateClinicianPatientMap($owner: String, $patientID: String) {
-    onCreateClinicianPatientMap(owner: $owner, patientID: $patientID) {
-      id
+  subscription OnCreateClinicianPatientMap(
+    $clinicianID: String
+    $patientID: String
+  ) {
+    onCreateClinicianPatientMap(
+      clinicianID: $clinicianID
+      patientID: $patientID
+    ) {
       clinicianID
       patientID
       clinicianInfo {
-        id
+        clinicianID
         name
         hospitalName
         role
-        clinicianID
-        owner
         _version
         _deleted
         _lastChangedAt
         createdAt
         updatedAt
       }
-      owner
       _version
       _deleted
       _lastChangedAt
@@ -685,25 +717,27 @@ export const onCreateClinicianPatientMap = /* GraphQL */ `
   }
 `;
 export const onUpdateClinicianPatientMap = /* GraphQL */ `
-  subscription OnUpdateClinicianPatientMap($owner: String, $patientID: String) {
-    onUpdateClinicianPatientMap(owner: $owner, patientID: $patientID) {
-      id
+  subscription OnUpdateClinicianPatientMap(
+    $clinicianID: String
+    $patientID: String
+  ) {
+    onUpdateClinicianPatientMap(
+      clinicianID: $clinicianID
+      patientID: $patientID
+    ) {
       clinicianID
       patientID
       clinicianInfo {
-        id
+        clinicianID
         name
         hospitalName
         role
-        clinicianID
-        owner
         _version
         _deleted
         _lastChangedAt
         createdAt
         updatedAt
       }
-      owner
       _version
       _deleted
       _lastChangedAt
@@ -713,25 +747,27 @@ export const onUpdateClinicianPatientMap = /* GraphQL */ `
   }
 `;
 export const onDeleteClinicianPatientMap = /* GraphQL */ `
-  subscription OnDeleteClinicianPatientMap($owner: String, $patientID: String) {
-    onDeleteClinicianPatientMap(owner: $owner, patientID: $patientID) {
-      id
+  subscription OnDeleteClinicianPatientMap(
+    $clinicianID: String
+    $patientID: String
+  ) {
+    onDeleteClinicianPatientMap(
+      clinicianID: $clinicianID
+      patientID: $patientID
+    ) {
       clinicianID
       patientID
       clinicianInfo {
-        id
+        clinicianID
         name
         hospitalName
         role
-        clinicianID
-        owner
         _version
         _deleted
         _lastChangedAt
         createdAt
         updatedAt
       }
-      owner
       _version
       _deleted
       _lastChangedAt
@@ -741,56 +777,89 @@ export const onDeleteClinicianPatientMap = /* GraphQL */ `
   }
 `;
 export const onCreatePatientAssignment = /* GraphQL */ `
+<<<<<<< HEAD
   subscription OnCreatePatientAssignment($owner: String) {
     onCreatePatientAssignment(owner: $owner) {
       id
+=======
+  subscription OnCreatePatientAssignment(
+    $patientID: String
+    $clinicianID: String
+  ) {
+    onCreatePatientAssignment(
+      patientID: $patientID
+      clinicianID: $clinicianID
+    ) {
+>>>>>>> 9feb7b4a553cf668786bd6ddf904f48a50f34b45
       patientID
       clinicianID
+      patientName
       pending
       resolution
-      patientName
+      reassignToClinicianID
+      adminReassignFromClinicianID
+      adminCompleted
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
-      owner
     }
   }
 `;
 export const onUpdatePatientAssignment = /* GraphQL */ `
+<<<<<<< HEAD
   subscription OnUpdatePatientAssignment($owner: String) {
     onUpdatePatientAssignment(owner: $owner) {
       id
+=======
+  subscription OnUpdatePatientAssignment(
+    $patientID: String
+    $clinicianID: String
+  ) {
+    onUpdatePatientAssignment(
+      patientID: $patientID
+      clinicianID: $clinicianID
+    ) {
+>>>>>>> 9feb7b4a553cf668786bd6ddf904f48a50f34b45
       patientID
       clinicianID
+      patientName
       pending
       resolution
-      patientName
+      reassignToClinicianID
+      adminReassignFromClinicianID
+      adminCompleted
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
-      owner
     }
   }
 `;
 export const onDeletePatientAssignment = /* GraphQL */ `
-  subscription OnDeletePatientAssignment($owner: String) {
-    onDeletePatientAssignment(owner: $owner) {
-      id
+  subscription OnDeletePatientAssignment(
+    $patientID: String
+    $clinicianID: String
+  ) {
+    onDeletePatientAssignment(
+      patientID: $patientID
+      clinicianID: $clinicianID
+    ) {
       patientID
       clinicianID
+      patientName
       pending
       resolution
-      patientName
+      reassignToClinicianID
+      adminReassignFromClinicianID
+      adminCompleted
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
-      owner
     }
   }
 `;

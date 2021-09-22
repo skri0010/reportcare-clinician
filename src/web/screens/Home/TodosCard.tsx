@@ -5,7 +5,6 @@ import { ScaledSheet } from "react-native-size-matters";
 import { TodoRow } from "components/RowComponents/TodoRow";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { RiskLevel } from "models/RiskLevel";
-import { H4 } from "components/Text";
 import { CardWrapper } from "./CardWrapper";
 import { FloatingBottomButton } from "components/Buttons/FloatingBottomButton";
 import i18n from "util/language/i18n";
@@ -30,7 +29,7 @@ export const TodosCard: FC<TodosCardProps> = ({ maxHeight, navigation }) => {
 
   useEffect(() => {
     AgentTrigger.triggerRetrieveTodos(TodoStatus.PENDING);
-  }, []);
+  }, [pendingTodos]);
 
   useEffect(() => {
     if (pendingTodos && pendingTodos.length > 10) {
@@ -54,8 +53,6 @@ export const TodosCard: FC<TodosCardProps> = ({ maxHeight, navigation }) => {
                   riskLevel={
                     item.riskLevel ? item.riskLevel : RiskLevel.UNASSIGNED
                   }
-                  disabled
-                  reduceOpacity
                   onCardPress={() => {
                     // Navigate to Todo screen
                     navigation.navigate(ScreenName.TODO, { todoToShow: item });

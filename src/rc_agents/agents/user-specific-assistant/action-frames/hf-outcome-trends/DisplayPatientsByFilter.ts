@@ -45,11 +45,11 @@ class DisplayPatientsByFilter extends Activity {
     if (patients) {
       // Filter patients based on risk filters
       const filteredPatients: PatientInfo[] = [];
-      const { riskFilters } = store.getState().agents;
+      const { patientRiskFilters } = store.getState().agents;
       let shouldFilter = false;
 
       // If one of the risk filters is true, we must proceed to filter
-      Object.values(riskFilters).forEach((value) => {
+      Object.values(patientRiskFilters).forEach((value) => {
         if (value) {
           shouldFilter = true;
         }
@@ -59,13 +59,13 @@ class DisplayPatientsByFilter extends Activity {
       if (shouldFilter) {
         patients.forEach((patient) => {
           // We can assert RiskLevel in this condition
-          if (riskFilters[patient.riskLevel as RiskLevel]) {
+          if (patientRiskFilters[patient.riskLevel as RiskLevel]) {
             filteredPatients.push(patient);
           }
         });
       }
 
-      // Dispatch to store retrieved patients
+      // Dispatch retrieved patients to store
       store.dispatch(setPatients(shouldFilter ? filteredPatients : patients));
 
       // Update Facts

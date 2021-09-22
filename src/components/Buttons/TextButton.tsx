@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
-import { ms, ScaledSheet } from "react-native-size-matters";
+import { ScaledSheet } from "react-native-size-matters";
 import { H5 } from "components/Text";
 import { TouchableOpacity, View } from "react-native";
 import i18n from "util/language/i18n";

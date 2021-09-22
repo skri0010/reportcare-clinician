@@ -13,14 +13,17 @@ import {
   AppAttributes,
   BeliefKeys,
   PatientAttributes,
-  ProcedureAttributes
+  ProcedureAttributes,
+  setRetryLaterTimeout
 } from "rc_agents/clinician_framework";
 import { Storage } from "rc_agents/storage";
 import { listPatientAlertsByDateTime } from "aws";
 import { AlertInfo } from "rc_agents/model";
-import { ModelSortDirection } from "aws/API";
-import { queryAlertInfo } from "../triage-alert-hf-clinic/RetrieveAlertInfo";
-import { sortAlertsByDateTime } from "../triage-alert-hf-clinic/RetrieveAlerts";
+import { Alert, ModelSortDirection } from "aws/API";
+import { queryAlertInfo } from "../triage-alert-hf-clinic/RetrieveDetailedAlertInfo";
+import { store } from "util/useRedux";
+import { setFetchingPatientAlertHistory } from "ic-redux/actions/agents/actionCreator";
+import { convertAlertsToAlertInfos } from "util/utilityFunctions";
 
 /**
  * Class to represent the activity for retrieving alert history of a patient.
@@ -41,66 +44,87 @@ class RetrieveAlertHistory extends Activity {
   async doActivity(agent: Agent): Promise<void> {
     await super.doActivity(agent, [rule2]);
 
+    // Dispatch to frontend that the patient alert history is being fetched
+    store.dispatch(setFetchingPatientAlertHistory(true));
+
     try {
       const facts = agentAPI.getFacts();
 
-      // Gets alert patientId from facts
+      // Get patient id from facts
       const patientId: string =
         facts[BeliefKeys.PATIENT]?.[PatientAttributes.ALERT_PATIENT_ID];
 
-      if (patientId) {
-        const alertInfos: AlertInfo[] = [];
+      // Get online status from facts
+      const isOnline: boolean = facts[BeliefKeys.APP]?.[AppAttributes.ONLINE];
 
-        if (facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
-          // Device is online: retrieves alerts of the current patient
+      if (patientId) {
+        // AlertInfo[] with vitals and symptom reports
+        let alertHistory: AlertInfo[] | undefined;
+
+        if (isOnline) {
+          // Device is online
+
+          // Retrieve alerts for patient
           const query = await listPatientAlertsByDateTime({
             patientID: patientId,
             sortDirection: ModelSortDirection.DESC
           });
 
           if (query.data.listPatientAlertsByDateTime?.items) {
-            const result = query.data.listPatientAlertsByDateTime.items;
-            if (result && result.length > 0) {
-              await Promise.all(
-                result.map(async (alert) => {
-                  const alertInfo = await queryAlertInfo(alert!);
-                  if (alertInfo) {
-                    alertInfos.push(alertInfo);
-                    await Storage.setAlertInfo(alertInfo);
-                  }
-                })
+            // Get alerts without full details
+            const alerts: Alert[] =
+              query.data.listPatientAlertsByDateTime.items.flatMap((item) =>
+                item ? [item] : []
               );
-            }
-          }
+            if (alerts) {
+              // Get alerts with full details
+              alertHistory = await Promise.all(
+                alerts.map(async (alert) => {
+                  return queryAlertInfo(alert);
+                })
+              )
+                .then((values) =>
+                  values.flatMap((value) => (value ? [value] : []))
+                )
+                .then((values) => convertAlertsToAlertInfos(values));
 
-          if (alertInfos.length > 0) {
-            const sortedPatientAlerts = sortAlertsByDateTime(alertInfos);
-            agentAPI.addFact(
-              new Belief(
-                BeliefKeys.PATIENT,
-                PatientAttributes.ALERT_HISTORY,
-                sortedPatientAlerts
-              ),
-              false
-            );
+              if (alertHistory) {
+                // Store alert history
+                await Storage.setAlertInfos(alertHistory);
+              }
+            }
           }
         } else {
           // Device is offline: get alert infos of current patient from local storage
-          const patientAlerts = await Storage.getPatientAlertInfos(patientId);
-          if (patientAlerts) {
-            const sortedPatientAlerts = sortAlertsByDateTime(patientAlerts);
-            agentAPI.addFact(
-              new Belief(
-                BeliefKeys.PATIENT,
-                PatientAttributes.ALERT_HISTORY,
-                sortedPatientAlerts
-              ),
-              false
-            );
+          const localAlertInfos = await Storage.getAlertInfosByPatientId(
+            patientId
+          );
+          if (localAlertInfos) {
+            alertHistory = localAlertInfos;
           }
         }
 
-        // Removes patientId from facts
+        if (alertHistory) {
+          // Update Facts
+          agentAPI.addFact(
+            new Belief(
+              BeliefKeys.PATIENT,
+              PatientAttributes.ALERT_HISTORY,
+              alertHistory
+            ),
+            false
+          );
+          // Trigger request to dispatch alert history to UXSA for frontend display
+          agent.addBelief(
+            new Belief(
+              BeliefKeys.PATIENT,
+              PatientAttributes.PATIENT_ALERT_HISTORY_RETRIEVED,
+              true
+            )
+          );
+        }
+
+        // Remove item
         agentAPI.addFact(
           new Belief(
             BeliefKeys.PATIENT,
@@ -113,6 +137,37 @@ class RetrieveAlertHistory extends Activity {
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
+
+      setRetryLaterTimeout(() => {
+        agent.addBelief(
+          new Belief(
+            BeliefKeys.PATIENT,
+            PatientAttributes.RETRIEVE_ALERT_HISTORY,
+            true
+          )
+        );
+        agentAPI.addFact(
+          new Belief(
+            BeliefKeys.PROCEDURE,
+            ProcedureAttributes.HF_OTP_II,
+            ProcedureConst.ACTIVE
+          )
+        );
+      });
+
+      // Update Facts
+      // End the procedure
+      agentAPI.addFact(
+        new Belief(
+          BeliefKeys.PROCEDURE,
+          ProcedureAttributes.HF_OTP_II,
+          ProcedureConst.INACTIVE
+        ),
+        true,
+        true
+      );
+      // Dispatch to store to indicate fetching has ended
+      store.dispatch(setFetchingPatientAlertHistory(false));
     }
   }
 }

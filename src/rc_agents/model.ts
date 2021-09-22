@@ -2,7 +2,8 @@ import {
   ActivityInfo,
   ReportSymptom,
   ReportVitals,
-  PatientInfo
+  PatientInfo,
+  Alert
 } from "aws/API";
 import { RiskLevel } from "models/RiskLevel";
 
@@ -45,12 +46,39 @@ export enum AlertStatus {
   COMPLETED = "COMPLETED"
 }
 
+export enum FetchAlertsMode {
+  PENDING = "PENDING",
+  COMPLETED = "COMPLETED",
+  ALL = "ALL",
+  NONE = "NONE"
+}
+
 export enum AlertColorCode {
   HIGH = "red",
   MEDIUM = "yellow",
   LOW = "green",
   UNASSIGNED = "white"
 }
+
+/**
+ * Maps alert's color code to risk level.
+ * @param colorCode alert's color code
+ * @returns risk level corresponding to the color code
+ */
+export const mapColorCodeToRiskLevel = (colorCode: string): RiskLevel => {
+  switch (colorCode) {
+    case AlertColorCode.HIGH:
+      return RiskLevel.HIGH;
+    case AlertColorCode.MEDIUM:
+      return RiskLevel.MEDIUM;
+    case AlertColorCode.LOW:
+      return RiskLevel.LOW;
+    case AlertColorCode.UNASSIGNED:
+      return RiskLevel.UNASSIGNED;
+    default:
+      return RiskLevel.UNASSIGNED;
+  }
+};
 
 export type RiskFilter = { [riskLevel in RiskLevel]: boolean };
 
@@ -83,35 +111,31 @@ export type LocalReportVitals = {
 export interface PatientAssignmentResolution {
   patientID: string;
   clinicianID: string;
-  resolution: PatientAssignmentStatus;
   patientName: string;
+  resolution: PatientAssignmentStatus;
+  reassignToClinicianID?: string;
   _version: number;
 }
 
-export interface PendingAlertCount {
+export interface AlertsCount {
   highRisk: number;
   mediumRisk: number;
   lowRisk: number;
   unassignedRisk: number;
 }
 
-export interface AlertInfo {
-  id: string;
-  patientId: string;
-  patientName: string;
+export type AlertInfo = {
   riskLevel: RiskLevel;
-  NHYAClass?: string;
   diagnosis?: string;
-  dateTime: string;
-  summary: string;
-  vitals?: ReportVitals;
-  symptoms?: ReportSymptom;
+  NYHAClass?: string;
   lastMedication?: string;
-  medicationQuantity?: string;
+  medicationQuantity?: number;
   activityDuringAlert?: string;
-  completed: boolean;
-  _version: number;
-}
+} & Alert;
+
+export type ProcessedAlertInfos = {
+  [patientID: string]: AlertInfo[] | undefined;
+};
 
 export interface TodoInput {
   id?: string;
@@ -119,10 +143,12 @@ export interface TodoInput {
   patientName: string;
   notes: string;
   completed: boolean;
+  // Attributes for associated Alert
   alert?: AlertInfo;
   alertId?: string;
   patientId?: string;
   riskLevel?: RiskLevel;
+  // End of attributes for associated Alert
   createdAt: string;
   lastModified?: string;
   _version: number;
@@ -141,4 +167,8 @@ export interface LocalTodo {
   lastModified?: string;
   toSync: boolean;
   _version: number;
+}
+
+export interface TodoDetails {
+  id: string;
 }

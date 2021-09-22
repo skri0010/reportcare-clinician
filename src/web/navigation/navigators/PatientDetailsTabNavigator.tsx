@@ -13,8 +13,8 @@ import {
   PatientDetailsTabParamList
 } from "web/navigation";
 import i18n from "util/language/i18n";
-import { AlertHistory, MedicalRecords } from "mock/mockPatientDetails";
-import { PatientDetails } from "rc_agents/model";
+import { MedicalRecords } from "mock/mockPatientDetails";
+import { AlertInfo, PatientDetails } from "rc_agents/model";
 import { getTopTabBarOptions } from "util/getStyles";
 
 const Tab = createMaterialTopTabNavigator<PatientDetailsTabParamList>();
@@ -22,7 +22,7 @@ const Tab = createMaterialTopTabNavigator<PatientDetailsTabParamList>();
 export interface PatientDetailsTabNavigatorProps {
   details: PatientDetails;
   selectedTab?: PatientDetailsTabName;
-  setDisplayHistory: (state: AlertHistory) => void; // alert history details to be shown
+  setDisplayHistory: (state: AlertInfo) => void; // alert history details to be shown
   setModalAlertVisible: (state: boolean) => void; // alert modal visibility
   setViewMedicalModal: (state: boolean) => void; // medical record modal visibility
   setDisplayMedicalRecord: (state: MedicalRecords) => void; // medical record details to be shown
