@@ -777,11 +777,6 @@ export const onDeleteClinicianPatientMap = /* GraphQL */ `
   }
 `;
 export const onCreatePatientAssignment = /* GraphQL */ `
-<<<<<<< HEAD
-  subscription OnCreatePatientAssignment($owner: String) {
-    onCreatePatientAssignment(owner: $owner) {
-      id
-=======
   subscription OnCreatePatientAssignment(
     $patientID: String
     $clinicianID: String
@@ -790,7 +785,6 @@ export const onCreatePatientAssignment = /* GraphQL */ `
       patientID: $patientID
       clinicianID: $clinicianID
     ) {
->>>>>>> 9feb7b4a553cf668786bd6ddf904f48a50f34b45
       patientID
       clinicianID
       patientName
@@ -808,11 +802,6 @@ export const onCreatePatientAssignment = /* GraphQL */ `
   }
 `;
 export const onUpdatePatientAssignment = /* GraphQL */ `
-<<<<<<< HEAD
-  subscription OnUpdatePatientAssignment($owner: String) {
-    onUpdatePatientAssignment(owner: $owner) {
-      id
-=======
   subscription OnUpdatePatientAssignment(
     $patientID: String
     $clinicianID: String
@@ -821,7 +810,6 @@ export const onUpdatePatientAssignment = /* GraphQL */ `
       patientID: $patientID
       clinicianID: $clinicianID
     ) {
->>>>>>> 9feb7b4a553cf668786bd6ddf904f48a50f34b45
       patientID
       clinicianID
       patientName
