@@ -207,6 +207,38 @@ type MedicalRecord
 }
 
 """
+== Authorization ==
+1. Clinicians can create and read the records
+2. Patients can read their own records
+3. Other clinicians can read records containing their patients
+"""
+type IcdCrtRecord
+  @model
+  @auth(
+    rules: [
+      {
+        allow: owner
+        ownerField: "clinicianID"
+        operations: [create, read, update]
+      }
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groupsField: "patientID", operations: [read] }
+    ]
+  )
+  @key(
+    name: "icdCrtRecordsByDateTime"
+    fields: ["patientID", "dateTime"]
+    queryField: "listIcdCrtRecordsByDateTime"
+  ) {
+  id: ID!
+  patientID: String!
+  clinicianID: String!
+  title: String!
+  dateTime: AWSDateTime!
+  fileKey: String!
+}
+
+"""
 #P5
 == Authorization ==
 1. Clinicians (clinicianID) can create, read and update their own records
@@ -244,6 +276,7 @@ type ClinicianInfo
     ]
   )
   @key(fields: ["clinicianID"]) {
+  id: ID
   clinicianID: String!
   name: String!
   hospitalName: String!
@@ -274,6 +307,7 @@ type ClinicianProtectedInfo
     ]
   )
   @key(fields: ["clinicianID"]) {
+  id: ID
   clinicianID: String!
   facts: String!
   APS: String!
@@ -310,6 +344,7 @@ type ClinicianPatientMap
     fields: ["patientID", "clinicianID"]
     queryField: "listClinicianMappingsByPatientID"
   ) {
+  id: ID
   clinicianID: String!
   patientID: String!
   clinicianInfo: ClinicianInfo! @connection(fields: ["clinicianID"])
@@ -353,6 +388,7 @@ type PatientAssignment
     fields: ["clinicianID", "pending"]
     queryField: "listPendingPatientAssignments"
   ) {
+  id: ID
   patientID: String!
   clinicianID: String!
   patientName: String!

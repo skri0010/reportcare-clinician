@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect } from "react";
 import { ScaledSheet } from "react-native-size-matters";
 import { H5 } from "components/Text";
 import { Linking, View } from "react-native";
@@ -6,16 +6,17 @@ import { RowButton } from "components/Buttons/TextButton";
 import { MedicalRecord } from "aws/API";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { setMedicalRecordContent } from "ic-redux/actions/agents/actionCreator";
-import { useNetInfo } from "@react-native-community/netinfo";
 
 interface MedicalRecordRowProps {
   medicalRecord: MedicalRecord;
   onViewMedicalRecord: (medicalRecord: MedicalRecord) => void;
+  allowView: boolean; // Whether content viewing is allowed (is online)
 }
 
 export const MedicalRecordRow: FC<MedicalRecordRowProps> = ({
   medicalRecord,
-  onViewMedicalRecord
+  onViewMedicalRecord,
+  allowView
 }) => {
   const { colors, medicalRecordContent } = select((state: RootState) => ({
     colors: state.settings.colors,
@@ -23,24 +24,6 @@ export const MedicalRecordRow: FC<MedicalRecordRowProps> = ({
   }));
 
   const dispatch = useDispatch();
-  const [allowView, setAllowView] = useState<boolean>(false); // Whether content viewing is allowed (is online)
-
-  const netInfo = useNetInfo();
-
-  // Detects changes in internet connection to enable or disable button for viewing record content
-  useEffect(() => {
-    // Internet connection detected
-    if (netInfo.isConnected && netInfo.isInternetReachable) {
-      setAllowView(true);
-    }
-    // No internet connection
-    else if (
-      netInfo.isConnected === false ||
-      netInfo.isInternetReachable === false
-    ) {
-      setAllowView(false);
-    }
-  }, [netInfo.isConnected, netInfo.isInternetReachable]);
 
   // Detects retrieved content URL
   useEffect(() => {

@@ -36,7 +36,7 @@ export const PatientMedicalRecordCard: FC<PatientMedicalRecordProps> = ({
     fetchingMedicalRecordContent: state.agents.fetchingMedicalRecordContent
   }));
 
-  const [allowUpload, setAllowUpload] = useState<boolean>(false); // Whether file upload is allowed (is online)
+  const [isOnline, setIsOnline] = useState<boolean>(false); // Whether file upload is allowed (is online)
 
   const netInfo = useNetInfo();
 
@@ -44,14 +44,14 @@ export const PatientMedicalRecordCard: FC<PatientMedicalRecordProps> = ({
   useEffect(() => {
     // Internet connection detected
     if (netInfo.isConnected && netInfo.isInternetReachable) {
-      setAllowUpload(true);
+      setIsOnline(true);
     }
     // No internet connection
     else if (
       netInfo.isConnected === false ||
       netInfo.isInternetReachable === false
     ) {
-      setAllowUpload(false);
+      setIsOnline(false);
     }
   }, [netInfo.isConnected, netInfo.isInternetReachable]);
 
@@ -63,9 +63,9 @@ export const PatientMedicalRecordCard: FC<PatientMedicalRecordProps> = ({
           name="plus"
           type={IconType.MATERIAL_COMMUNITY}
           onPress={onAddPress}
-          containerStyle={[styles.button, { opacity: allowUpload ? 1.0 : 0.2 }]}
+          containerStyle={[styles.button, { opacity: isOnline ? 1.0 : 0.2 }]}
           iconStyle={{ color: colors.primaryContrastTextColor }}
-          disabled={!allowUpload}
+          disabled={!isOnline}
         />
       </View>
     );
@@ -92,6 +92,7 @@ export const PatientMedicalRecordCard: FC<PatientMedicalRecordProps> = ({
               <MedicalRecordRow
                 medicalRecord={item}
                 onViewMedicalRecord={onViewMedicalRecord}
+                allowView={isOnline}
               />
             )}
             keyExtractor={(medicalRecord) => medicalRecord.id}
