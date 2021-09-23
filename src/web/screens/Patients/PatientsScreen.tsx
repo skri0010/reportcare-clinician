@@ -170,22 +170,21 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
                   />
                   {patientDetails.patientInfo.configured ? (
                     // Patient is configured: Show details
-                    <View>
-                      <PatientDetailsTabNavigator
-                        details={patientDetails}
-                        selectedTab={selectedTab}
-                        setAddMedicalRecord={setAddMedicalRecord}
-                        setDisplayHistory={setDisplayHistory}
-                        setDisplayMedicalRecord={setDisplayMedicalRecord}
-                        setModalAlertVisible={setModalAlertVisible}
-                        setViewMedicalModal={setViewMedicalModal}
-                      />
-                      <PatientConfigurationScreen
-                        info={patientDetails.patientInfo}
-                      />
-                    </View>
-                  ) : // Patient is not configured: Show configuration screen
-                  null}
+                    <PatientDetailsTabNavigator
+                      details={patientDetails}
+                      selectedTab={selectedTab}
+                      setAddMedicalRecord={setAddMedicalRecord}
+                      setDisplayHistory={setDisplayHistory}
+                      setDisplayMedicalRecord={setDisplayMedicalRecord}
+                      setModalAlertVisible={setModalAlertVisible}
+                      setViewMedicalModal={setViewMedicalModal}
+                    />
+                  ) : (
+                    // Patient is not configured: Show configuration screen
+                    <PatientConfigurationScreen
+                      info={patientDetails.patientInfo}
+                    />
+                  )}
                 </>
               ) : (
                 // Patient details is not being fetched and patient details is null
