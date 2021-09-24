@@ -16,16 +16,17 @@ import {
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import { AlertInfo } from "rc_agents/model";
 import { store } from "util/useRedux";
-import { setAlertHistory } from "ic-redux/actions/agents/actionCreator";
+import {
+  setAlertHistory,
+  setFetchingPatientAlertHistory
+} from "ic-redux/actions/agents/actionCreator";
+import { sortAlertInfoByDescendingDateTime } from "util/utilityFunctions";
 
 /**
  * Class to represent the activity for displaying the alert history
  * This happens in Procedure HF Outcome Trends (HF-OTP-II)
  */
 class DisplayAlertHistory extends Activity {
-  /**
-   * Constructor for DisplayAlertHistory class
-   */
   constructor() {
     super(ActionFrameIDs.UXSA.DISPLAY_ALERT_HISTORY);
   }
@@ -44,13 +45,21 @@ class DisplayAlertHistory extends Activity {
       ];
 
     if (alertHistory) {
-      // Remove the alert history from the facts
+      // Sort alert history
+      const sortedAlertHistory =
+        sortAlertInfoByDescendingDateTime(alertHistory);
+
+      // Dispatch alert history into store
+      store.dispatch(setAlertHistory(sortedAlertHistory));
+
+      // Update Facts
+      // Remove item
       agentAPI.addFact(
         new Belief(BeliefKeys.PATIENT, PatientAttributes.ALERT_HISTORY, null),
         false
       );
 
-      // Stops the procedure
+      // End the procedure
       agentAPI.addFact(
         new Belief(
           BeliefKeys.PROCEDURE,
@@ -62,8 +71,8 @@ class DisplayAlertHistory extends Activity {
       );
     }
 
-    // Store the alert history into redux
-    store.dispatch(setAlertHistory(alertHistory));
+    // Dispatch to store to indicated fetching ended
+    store.dispatch(setFetchingPatientAlertHistory(false));
   }
 }
 

@@ -71,3 +71,8 @@ export type TodoScreenNavigation = DrawerNavigationProp<
   MainScreenParamList,
   ScreenName.TODO
 >;
+
+export type AlertScreenNavigation = DrawerNavigationProp<
+  MainScreenParamList,
+  ScreenName.ALERTS
+>;

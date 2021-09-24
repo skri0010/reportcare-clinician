@@ -290,7 +290,7 @@ export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
           </View>
         </KeyboardAwareScrollView>
       </SafeAreaView>
-      {(signingIn || connecting) && <LoadingIndicator />}
+      {(signingIn || connecting) && <LoadingIndicator overlayBackgroundColor />}
     </MobileScreenWrapper>
   );
 };

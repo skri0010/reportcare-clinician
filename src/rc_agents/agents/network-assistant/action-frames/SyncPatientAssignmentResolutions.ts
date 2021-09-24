@@ -50,11 +50,13 @@ class SyncPatientAssignmentResolutions extends Activity {
             try {
               // Resolve (APPROVE or REASSIGN based on assignment)
               // This function handles conflicts as well
-              await resolvePatientAssignment({
+              const resolved = await resolvePatientAssignment({
                 resolution: resolution,
-                ownClinicianId: clinicianId
+                userClinicianID: clinicianId
               });
-              delete resolutionList[key];
+              if (resolved) {
+                delete resolutionList[key];
+              }
               // Insert remaining resolutions back into storage
               Storage.setPatientAssignmentResolutions(resolutionList);
             } catch (error) {

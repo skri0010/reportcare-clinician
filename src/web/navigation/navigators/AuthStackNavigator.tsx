@@ -1,7 +1,9 @@
 import React, { FC } from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
-import { AuthStackParamList, AuthScreenName } from "../../auth_screens";
+import {
+  createStackNavigator,
+  StackNavigationOptions
+} from "@react-navigation/stack";
 import { RootState, select } from "util/useRedux";
 import { SignIn } from "../../auth_screens/SignIn";
 import { RegisterAccount } from "../../auth_screens/RegisterAccount";
@@ -9,14 +11,18 @@ import { ForgotPassword } from "../../auth_screens/ForgotPassword";
 import { ConfirmRegistration } from "../../auth_screens/ConfirmRegistration";
 import { getMainScreenHeaderStyle } from "util/getStyles";
 import i18n from "util/language/i18n";
+import {
+  AuthenticationScreenName,
+  AuthenticationStackParamList
+} from "web/navigation";
 
-interface AuthNavigationStackProps {
+interface AuthStackNavigatorProps {
   setAuthState: (state: string) => void;
 }
 
-const Stack = createStackNavigator<AuthStackParamList>();
+const Stack = createStackNavigator<AuthenticationStackParamList>();
 
-export const AuthNavigationStack: FC<AuthNavigationStackProps> = ({
+export const AuthStackNavigator: FC<AuthStackNavigatorProps> = ({
   setAuthState
 }) => {
   const { colors, fonts } = select((state: RootState) => ({
@@ -30,11 +36,22 @@ export const AuthNavigationStack: FC<AuthNavigationStackProps> = ({
     fontSize: fonts.h4Size
   };
 
+  // Options for individual screens
+  const buildOptions: (input: {
+    headerTitle: string;
+  }) => StackNavigationOptions = ({ headerTitle }) => ({
+    headerStyle: screenHeaderStyle,
+    headerTitle: headerTitle,
+    headerTintColor: colors.primaryContrastTextColor,
+    headerTitleAlign: "center",
+    headerTitleStyle: headerTitleStyle
+  });
+
   return (
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
-          name={AuthScreenName.SIGN_IN}
+          name={AuthenticationScreenName.SIGN_IN}
           options={{ headerShown: false }}
         >
           {(screenProps) => (
@@ -46,36 +63,32 @@ export const AuthNavigationStack: FC<AuthNavigationStackProps> = ({
           )}
         </Stack.Screen>
         <Stack.Screen
-          name={AuthScreenName.REGISTER}
+          name={AuthenticationScreenName.REGISTRATION}
           component={RegisterAccount}
           options={{
-            headerStyle: screenHeaderStyle,
-            headerTitle: i18n.t("Auth_Registration.RegisterAccount"),
-            headerTintColor: colors.primaryContrastTextColor,
-            headerTitleAlign: "center",
-            headerTitleStyle: headerTitleStyle
+            ...buildOptions({
+              headerTitle: i18n.t("Auth_Registration.RegisterAccount")
+            })
           }}
         />
         <Stack.Screen
-          name={AuthScreenName.CONFIRM_REGISTER}
+          name={AuthenticationScreenName.CONFIRM_REGISTRATION}
           component={ConfirmRegistration}
           options={{
-            headerStyle: screenHeaderStyle,
-            headerTitle: i18n.t("Auth_ConfirmRegistration.ConfirmRegistration"),
-            headerTintColor: colors.primaryContrastTextColor,
-            headerTitleAlign: "center",
-            headerTitleStyle: headerTitleStyle
+            ...buildOptions({
+              headerTitle: i18n.t(
+                "Auth_ConfirmRegistration.ConfirmRegistration"
+              )
+            })
           }}
         />
         <Stack.Screen
-          name={AuthScreenName.FORGOT_PW}
+          name={AuthenticationScreenName.FORGET_PASSWORD}
           component={ForgotPassword}
           options={{
-            headerStyle: screenHeaderStyle,
-            headerTitle: i18n.t("Auth_ForgotPassword.ResetPassword"),
-            headerTintColor: colors.primaryContrastTextColor,
-            headerTitleAlign: "center",
-            headerTitleStyle: headerTitleStyle
+            ...buildOptions({
+              headerTitle: i18n.t("Auth_ForgotPassword.ResetPassword")
+            })
           }}
         />
       </Stack.Navigator>

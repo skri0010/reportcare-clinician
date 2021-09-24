@@ -6,7 +6,6 @@ import { ms, ScaledSheet } from "react-native-size-matters";
 import { Picker } from "@react-native-picker/picker";
 import { Role, Hospital } from "rc_agents/model";
 import { RootState, select } from "util/useRedux";
-import { AuthScreenName, AuthScreensProps } from "web/auth_screens";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import {
   validateEmail,
@@ -22,10 +21,12 @@ import { TextField } from "components/InputComponents/TextField";
 import { Storage } from "rc_agents/storage";
 import { getPickerStyles } from "util/getStyles";
 import { Label } from "components/Text/Label";
+import { AuthScreenProps } from "web/navigation/types/AuthenticationStackProps";
+import { AuthenticationScreenName } from "web/navigation";
 
-export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
-  navigation
-}) => {
+export const RegisterAccount: FC<
+  AuthScreenProps[AuthenticationScreenName.REGISTRATION]
+> = ({ navigation }) => {
   const { colors, fonts } = select((state: RootState) => ({
     colors: state.settings.colors,
     fonts: state.settings.fonts
@@ -63,7 +64,7 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
           hospitalName: hospital,
           role: role
         });
-        navigation.navigate(AuthScreenName.CONFIRM_REGISTER, {
+        navigation.navigate(AuthenticationScreenName.CONFIRM_REGISTRATION, {
           username: username
         });
       })
@@ -235,7 +236,7 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
           onPress={inputValid ? register : () => null}
         />
       </SafeAreaView>
-      {registering && <LoadingIndicator />}
+      {registering && <LoadingIndicator overlayBackgroundColor />}
     </ScreenWrapper>
   );
 };

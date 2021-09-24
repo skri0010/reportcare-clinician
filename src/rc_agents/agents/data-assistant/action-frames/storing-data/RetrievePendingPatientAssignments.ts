@@ -77,7 +77,7 @@ class RetrievePendingPatientAssignments extends Activity {
       }
 
       if (pendingPatientAssignments) {
-        // Update Facts and Beliefs
+        // Update Facts
         // Store items
         agentAPI.addFact(
           new Belief(
