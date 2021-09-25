@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { RootState, select } from "util/useRedux";
 import { View, FlatList } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
@@ -14,6 +14,8 @@ import { PatientAssignmentRow } from "components/RowComponents/PatientRows/Patie
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AgentTrigger } from "rc_agents/trigger";
 import { EmptyListIndicator } from "components/Indicators/EmptyListIndicator";
+import { HomeScreenModal } from "./HomeScreenModals";
+import { PatientReassignmentModal } from "./PatientReassignmentModal";
 
 interface PendingPatientAssignmentsCardProps {
   maxHeight: number;
@@ -31,6 +33,8 @@ export const PendingPatientAssignmentsCard: FC<PendingPatientAssignmentsCardProp
       fetchingPendingPatientAssignments:
         state.agents.fetchingPendingPatientAssignments
     }));
+
+    const [viewModal, setViewModal] = useState<boolean>(false);
 
     // Trigger agent to fetch pending assignments on initial load
     useEffect(() => {
@@ -100,7 +104,7 @@ export const PendingPatientAssignmentsCard: FC<PendingPatientAssignmentsCardProp
                   <PatientAssignmentRow
                     patientName={item.patientName}
                     onApprove={() => approvePatientAssignment(item)}
-                    onReassign={() => null}
+                    onReassign={() => setViewModal(true)}
                   />
                 );
               }}
@@ -108,6 +112,15 @@ export const PendingPatientAssignmentsCard: FC<PendingPatientAssignmentsCardProp
             />
           </View>
         ) : null}
+
+        <HomeScreenModal
+          visible={viewModal}
+          onRequestClose={() => {
+            setViewModal(false);
+          }}
+        >
+          <PatientReassignmentModal setModalVisible={setViewModal} />
+        </HomeScreenModal>
       </CardWrapper>
     );
   };
