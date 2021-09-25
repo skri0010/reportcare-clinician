@@ -15,7 +15,7 @@ import i18n from "util/language/i18n";
 import { MedicalRecords } from "mock/mockPatientDetails";
 import { AlertInfo, PatientDetails } from "rc_agents/model";
 import { getTopTabBarOptions } from "util/getStyles";
-import { PatientICDCRT } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientIcdCrt";
+import { PatientICDCRT } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientICDCRT";
 
 const Tab = createMaterialTopTabNavigator<PatientDetailsTabParamList>();
 

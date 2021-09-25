@@ -23,6 +23,8 @@ import { getPickerStyles } from "util/getStyles";
 import { Label } from "components/Text/Label";
 import { AuthScreenProps } from "web/navigation/types/AuthenticationStackProps";
 import { AuthenticationScreenName } from "web/navigation";
+import { ConsentFormModal } from "./ConsentFormModal";
+import { TOSCheckbox } from "components/TOScomponents/TOSCheckbox";
 
 export const RegisterAccount: FC<
   AuthScreenProps[AuthenticationScreenName.REGISTRATION]
@@ -43,6 +45,10 @@ export const RegisterAccount: FC<
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [registering, setRegistering] = useState(false);
+  const [checkTerms, setCheckTerms] = useState(false);
+
+  // For view medical record modal visibility
+  const [viewTermsModal, setViewTermsModal] = useState(false);
 
   const toast = useToast();
 
@@ -226,14 +232,29 @@ export const RegisterAccount: FC<
               errorMessage={i18n.t("Auth_Registration.ConfirmPasswordError")}
               textContentType="password"
             />
+            {/* Terms of service checkbox and text */}
+            <TOSCheckbox
+              checkTerms={checkTerms}
+              onCheck={setCheckTerms}
+              setViewModal={setViewTermsModal}
+            />
           </View>
         </View>
 
         {/* Register Button */}
         <AuthButton
-          inputValid={inputValid}
+          inputValid={inputValid && checkTerms}
           buttonTitle={i18n.t("Auth_Registration.Register")}
-          onPress={inputValid ? register : () => null}
+          onPress={inputValid && checkTerms ? register : () => null}
+        />
+
+        {/* Modal to view specific medical records of patient */}
+        <ConsentFormModal
+          visible={viewTermsModal}
+          onRequestClose={() => {
+            setViewTermsModal(false);
+          }}
+          setAgreement={setCheckTerms}
         />
       </SafeAreaView>
       {registering && <LoadingIndicator overlayBackgroundColor />}

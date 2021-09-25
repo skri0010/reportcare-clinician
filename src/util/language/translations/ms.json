@@ -38,7 +38,11 @@
     "ConfirmPasswordError": "Kata laluan tidak sepadan",
     "Register": "Daftar",
     "CodeSent": "Kod pengesahan 6 angka telah dihantar ke emel anda",
-    "RegistrationFailed": "Gagal untuk mendaftar.\nPengguna dengan nama pengguna yang sama mungkin telah wujud."
+    "RegistrationFailed": "Gagal untuk mendaftar.\nPengguna dengan nama pengguna yang sama mungkin telah wujud.",
+    "TermOfServices": "Terma-Terma Perkhidmatan",
+    "Accept": "Terima",
+    "Decline": "Tolak",
+    "ToSText": "Saya bersetuju dengan "
   },
   "Auth_ConfirmRegistration": {
     "ConfirmRegistration": "Sahkan Pendaftaran",

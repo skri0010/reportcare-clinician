@@ -38,7 +38,11 @@
     "ConfirmPasswordError": "Passwords did not match",
     "Register": "Register",
     "CodeSent": "A 6-digit verification code has been sent to your email",
-    "RegistrationFailed": "Failed to register.\nA user with the same username may already exist."
+    "RegistrationFailed": "Failed to register.\nA user with the same username may already exist.",
+    "TermOfServices": "Terms of Services",
+    "Accept": "Accept",
+    "Decline": "Decline",
+    "ToSText": "I agree to the "
   },
   "Auth_ConfirmRegistration": {
     "ConfirmRegistration": "Confirm Registration",
