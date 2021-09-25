@@ -15,6 +15,7 @@ import {
   getPatientAssignmentSubscriptions,
   getPatientConfigurations,
   getPatientDetails,
+  getPatientMedicationConfigurations,
   getPendingPatientAssignments,
   getTodos
 } from "./getItem";
@@ -244,9 +245,20 @@ export const setPatientConfigurations = async (
 export const setPatientMedicationConfigurations = async (
   patientMedConfig: AsyncStorageType[AsyncStorageKeys.MEDICATION_CONFIGURATIONS]
 ): Promise<void> => {
+  // Get all the current local medication infos to be synced
+  let localMedConfiguration = await getPatientMedicationConfigurations();
+
+  // If localMedConfiguration is null, create an empty list
+  if (!localMedConfiguration) {
+    localMedConfiguration = [];
+  }
+
+  // Merged the new med configs to be synced into the current med configs to be synced
+  localMedConfiguration = localMedConfiguration.concat(patientMedConfig);
+
   await AsyncStorage.setItem(
     AsyncStorageKeys.MEDICATION_CONFIGURATIONS,
-    JSON.stringify(patientMedConfig)
+    JSON.stringify(localMedConfiguration)
   );
 };
 /**

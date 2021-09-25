@@ -54,7 +54,7 @@ class SyncConfigurePatients extends Activity {
         // Keeps track of configuration updates that have succeeded
         const succeedIndices: number[] = [];
         // Keeps track of the medication configuration updates that have failed
-        const failedSyncPatientID: string[] = [];
+        const failedSyncMedInfo: number[] = [];
 
         await Promise.all(
           configurations.map(async (configuration) => {
@@ -77,56 +77,48 @@ class SyncConfigurePatients extends Activity {
           })
         );
 
-        // eslint-disable-next-line no-restricted-syntax
-        Object.entries(medConfigurations).forEach(
-          async ([patientId, medInput]) => {
+        // Create med info for each med config and add them into DB
+        const syncedMedConfig = await Promise.all(
+          medConfigurations.map(async (medConfiguration) => {
             try {
-              // For each entry of medication configurations,
-              // creates a medication info entry for them
-              const syncMedicationSuccessful =
-                await createMedicationConfiguration(medInput, patientId);
-
-              // If the creation of medication info is successful, delete the entry from the local storage
-              if (syncMedicationSuccessful) {
-                delete medConfigurations.patientId;
-              } else {
-                medConfigurationSuccessful = false;
-                // Add the patient ID of the list of medication configurations into failedSyncPatientID
-                failedSyncPatientID.push(patientId);
-              }
+              const medInfoResponse =
+                createMedicationConfiguration(medConfiguration);
+              return medInfoResponse;
             } catch (error) {
               // eslint-disable-next-line no-console
               console.log(error);
             }
-          }
+          })
         );
 
-        // Remove AsyncStorage entry if all configurations are updated
-        if (configurationsSuccessful) {
+        // Get the index of the med configs that have failed syncing
+        syncedMedConfig.forEach((medConfig) => {
+          if (!medConfig) {
+            failedSyncMedInfo.push(syncedMedConfig.indexOf(medConfig));
+            medConfigurationSuccessful = false;
+          }
+        });
+
+        // Remove AsyncStorage entry if all configurations and medication configurations are updated
+        if (configurationsSuccessful && medConfigurationSuccessful) {
           await Storage.removeItem(AsyncStorageKeys.PATIENT_CONFIGURATIONS);
-        }
-        // Store configurations that failed to be updated
-        else if (succeedIndices.length > 0) {
-          await Storage.setPatientConfigurations(
-            configurations.filter((_, index) => !succeedIndices.includes(index))
-          );
-          setRetryLaterTimeout(() => {
-            agentNWA.addBelief(
-              new Belief(
-                BeliefKeys.APP,
-                AppAttributes.SYNC_CONFIGURE_PATIENTS,
-                true
+          await Storage.removeItem(AsyncStorageKeys.MEDICATION_CONFIGURATIONS);
+        } else {
+          if (succeedIndices.length > 0) {
+            await Storage.setPatientConfigurations(
+              configurations.filter(
+                (_, index) => !succeedIndices.includes(index)
               )
             );
-          });
-        }
-
-        // Remove all entry from the AsyncStorage if all medication infos are synced
-        if (medConfigurationSuccessful) {
-          await Storage.removeItem(AsyncStorageKeys.MEDICATION_CONFIGURATIONS);
-        } else if (failedSyncPatientID.length > 0) {
-          // Store the unsynced medication configurations back into local storage
-          await Storage.setPatientMedicationConfigurations(medConfigurations);
+          }
+          if (failedSyncMedInfo.length > 0) {
+            // Store the unsynced medication configurations back into local storage
+            await Storage.setPatientMedicationConfigurations(
+              medConfigurations.filter((_, index) =>
+                failedSyncMedInfo.includes(index)
+              )
+            );
+          }
           setRetryLaterTimeout(() => {
             agentNWA.addBelief(
               new Belief(

@@ -180,5 +180,5 @@ export interface MedInput {
   name: string;
   dosage: string;
   frequency: string;
-  patientID?: string;
+  patientID: string;
 }

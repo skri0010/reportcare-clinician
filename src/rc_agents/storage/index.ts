@@ -61,7 +61,7 @@ export type AsyncStorageType = {
     [patientId: string]: PatientDetails | undefined;
   };
   [AsyncStorageKeys.PATIENT_CONFIGURATIONS]: PatientInfo[];
-  [AsyncStorageKeys.MEDICATION_CONFIGURATIONS]: { [key: string]: MedInput[] };
+  [AsyncStorageKeys.MEDICATION_CONFIGURATIONS]: MedInput[];
   [AsyncStorageKeys.ALERT_INFOS]: ProcessedAlertInfos;
   [AsyncStorageKeys.TODOS]: LocalTodo[];
   [AsyncStorageKeys.TODO_DETAILS]: LocalTodo;
