@@ -16,7 +16,7 @@ import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AgentTrigger } from "rc_agents/trigger";
 import { useRoute } from "@react-navigation/native";
 import { ScreenName } from "web/navigation";
-import { setUpdatingAlertIndicators } from "ic-redux/actions/agents/actionCreator";
+import { setUpdatingAlertIndicators } from "ic-redux/actions/agents/alertActionCreator";
 
 interface AddTodoScreenProps {
   setModalVisible: (state: boolean) => void;
@@ -27,9 +27,9 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
     (state: RootState) => ({
       colors: state.settings.colors,
       fonts: state.settings.fonts,
-      alertInfo: state.agents.alertInfo,
-      updatingAlert: state.agents.updatingAlert,
-      alertUpdated: state.agents.alertUpdated
+      alertInfo: state.alerts.alertInfo,
+      updatingAlert: state.alerts.updatingAlert,
+      alertUpdated: state.alerts.alertUpdated
     })
   );
 

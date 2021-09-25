@@ -11,8 +11,8 @@ import { AlertListTabsProps } from "../types";
 import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { RiskFilterPillList } from "components/Buttons/RiskFilterPillList";
 import { AlertInfo } from "rc_agents/model";
-import { setAlertInfo } from "ic-redux/actions/agents/actionCreator";
 import { AgentTrigger } from "rc_agents/trigger";
+import { setAlertInfo } from "ic-redux/actions/agents/alertActionCreator";
 
 const Tab = createMaterialTopTabNavigator<AlertListTabParamList>();
 

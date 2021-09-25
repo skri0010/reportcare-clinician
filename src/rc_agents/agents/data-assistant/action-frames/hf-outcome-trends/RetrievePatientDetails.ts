@@ -29,8 +29,8 @@ import {
   ReportVitals
 } from "aws/API";
 import { Storage } from "rc_agents/storage";
-import { setFetchingPatientDetails } from "ic-redux/actions/agents/actionCreator";
 import { store } from "util/useRedux";
+import { setFetchingPatientDetails } from "ic-redux/actions/agents/patientActionCreator";
 
 /**
  * Class to represent an activity for retrieving details of a specific patient.

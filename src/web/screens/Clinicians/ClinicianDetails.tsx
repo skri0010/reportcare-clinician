@@ -11,7 +11,7 @@ import { ScreenName } from "web/navigation";
 
 export const ClinicianDetails: FC = () => {
   const { clinicianSelected } = select((state: RootState) => ({
-    clinicianSelected: state.agents.clinicianSelected
+    clinicianSelected: state.clinicians.clinicianSelected
   }));
 
   return (

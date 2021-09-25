@@ -28,10 +28,10 @@ import {
 } from "rc_agents/clinician_framework";
 import { AsyncStorageKeys } from "rc_agents/storage";
 import { useNetInfo } from "@react-native-community/netinfo";
-import { setProcedureOngoing } from "ic-redux/actions/agents/actionCreator";
 import { AuthButton } from "components/Buttons/AuthButton";
 import { TextField } from "components/InputComponents/TextField";
 import { H1, H5 } from "components/Text";
+import { setProcedureOngoing } from "ic-redux/actions/agents/procedureActionCreator";
 
 export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
   navigation,
@@ -41,8 +41,8 @@ export const SignIn: FC<AuthScreensProps[AuthScreenName.SIGN_IN]> = ({
     (state: RootState) => ({
       colors: state.settings.colors,
       fonts: state.settings.fonts,
-      procedureOngoing: state.agents.procedureOngoing,
-      procedureSuccessful: state.agents.procedureSuccessful
+      procedureOngoing: state.procedures.procedureOngoing,
+      procedureSuccessful: state.procedures.procedureSuccessful
     })
   );
 

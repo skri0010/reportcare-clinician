@@ -11,7 +11,6 @@ import { RiskLevel } from "models/RiskLevel";
 import { ScaledSheet } from "react-native-size-matters";
 import { ViewMedicalRecords } from "./PatientScreens/PatientDetailsScreen/PatientHistoryComponents/ViewMedicalRecord";
 import { AddMedicalRecord } from "./PatientScreens/PatientDetailsScreen/PatientHistoryComponents/AddMedicalRecord";
-import { setPatientDetails } from "ic-redux/actions/agents/actionCreator";
 import { PatientDetailsTabNavigator } from "web/navigation/navigators/PatientDetailsTabNavigator";
 import { PatientHistoryModal } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientHistoryComponents/PatientHistoryModals";
 import { MainScreenProps } from "web/navigation/types";
@@ -24,6 +23,7 @@ import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AdaptiveTwoScreenWrapper } from "web/screens/AdaptiveTwoScreenWrapper";
 import { PatientConfigurationScreen } from "web/screens/Patients/PatientScreens/PatientConfiguration/PatientConfigurationScreen";
 import { AlertColorCode, AlertInfo, AlertStatus } from "rc_agents/model";
+import { setPatientDetails } from "ic-redux/actions/agents/patientActionCreator";
 
 export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
   route
@@ -32,9 +32,9 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
   const { colors, patients, patientDetails, fetchingPatientDetails } = select(
     (state: RootState) => ({
       colors: state.settings.colors,
-      patients: state.agents.patients,
-      patientDetails: state.agents.patientDetails,
-      fetchingPatientDetails: state.agents.fetchingPatientDetails
+      patients: state.patients.patients,
+      patientDetails: state.patients.patientDetails,
+      fetchingPatientDetails: state.patients.fetchingPatientDetails
     })
   );
 

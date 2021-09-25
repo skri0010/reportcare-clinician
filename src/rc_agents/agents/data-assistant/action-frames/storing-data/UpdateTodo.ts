@@ -17,11 +17,11 @@ import {
 } from "rc_agents/clinician_framework";
 import { Storage } from "rc_agents/storage";
 import { store } from "util/useRedux";
-import { setProcedureSuccessful } from "ic-redux/actions/agents/actionCreator";
 import { agentNWA } from "rc_agents/agents";
 import { getTodo, updateTodo } from "aws";
 import { LocalTodo, TodoStatus, TodoInput } from "rc_agents/model";
 import { UpdateTodoInput } from "aws/API";
+import { setProcedureSuccessful } from "ic-redux/actions/agents/procedureActionCreator";
 
 /**
  * Class to represent an activity for updating a clinician's Todo.

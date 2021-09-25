@@ -9,8 +9,8 @@ import { RootState, select, useDispatch } from "util/useRedux";
 import { RiskFilterPillList } from "components/Buttons/RiskFilterPillList";
 import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { NoItemsTextIndicator } from "components/Indicators/NoItemsTextIndicator";
-import { setPatientDetails } from "ic-redux/actions/agents/actionCreator";
 import { PatientInfo } from "aws/API";
+import { setPatientDetails } from "ic-redux/actions/agents/patientActionCreator";
 
 interface PatientsListScreen {
   displayPatientId?: string;
@@ -23,8 +23,8 @@ export const PatientsList: FC<PatientsListScreen> = ({
 }) => {
   const { colors, patients, fetchingPatients } = select((state: RootState) => ({
     colors: state.settings.colors,
-    patients: state.agents.patients,
-    fetchingPatients: state.agents.fetchingPatients
+    patients: state.patients.patients,
+    fetchingPatients: state.patients.fetchingPatients
   }));
 
   const dispatch = useDispatch();

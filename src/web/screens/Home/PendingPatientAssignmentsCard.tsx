@@ -27,9 +27,10 @@ export const PendingPatientAssignmentsCard: FC<PendingPatientAssignmentsCardProp
       fetchingPendingPatientAssignments
     } = select((state: RootState) => ({
       colors: state.settings.colors,
-      pendingPatientAssignments: state.agents.pendingPatientAssignments,
+      pendingPatientAssignments:
+        state.patientAssignments.pendingPatientAssignments,
       fetchingPendingPatientAssignments:
-        state.agents.fetchingPendingPatientAssignments
+        state.patientAssignments.fetchingPendingPatientAssignments
     }));
 
     // Trigger agent to fetch pending assignments on initial load

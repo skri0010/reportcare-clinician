@@ -15,13 +15,13 @@ import {
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
 import { store } from "util/useRedux";
+import { LocalTodo } from "rc_agents/model";
+import { setProcedureOngoing } from "ic-redux/actions/agents/procedureActionCreator";
 import {
   setCompletedTodos,
   setPendingTodos,
-  setProcedureOngoing,
   setUpdatedTodo
-} from "ic-redux/actions/agents/actionCreator";
-import { LocalTodo } from "rc_agents/model";
+} from "ic-redux/actions/agents/todoActionCreator";
 
 /**
  * Class to represent an activity for displaying Todos.

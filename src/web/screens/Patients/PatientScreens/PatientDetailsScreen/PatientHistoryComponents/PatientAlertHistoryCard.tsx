@@ -22,8 +22,8 @@ export const PatientAlertHistoryCard: FC<PatientAlertHistoryProps> = ({
 }) => {
   const { alertHistory, fetchingPatientAlertHistory } = select(
     (state: RootState) => ({
-      alertHistory: state.agents.alertHistory,
-      fetchingPatientAlertHistory: state.agents.fetchingPatientAlertHistory
+      alertHistory: state.patients.alertHistory,
+      fetchingPatientAlertHistory: state.patients.fetchingPatientAlertHistory
     })
   );
 

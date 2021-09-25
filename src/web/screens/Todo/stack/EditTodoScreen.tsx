@@ -15,12 +15,12 @@ import { RootState, select, useDispatch } from "util/useRedux";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import i18n from "util/language/i18n";
 import { LocalTodo, TodoInput } from "rc_agents/model";
+import { AgentTrigger } from "rc_agents/trigger";
+import { setProcedureOngoing } from "ic-redux/actions/agents/procedureActionCreator";
 import {
-  setProcedureOngoing,
   setSubmittingTodo,
   setUpdatedTodo
-} from "ic-redux/actions/agents/actionCreator";
-import { AgentTrigger } from "rc_agents/trigger";
+} from "ic-redux/actions/agents/todoActionCreator";
 
 interface EditTodoScreenProps extends TodoDetailsStackProps.EditTodoProps {
   todo: LocalTodo;
@@ -32,7 +32,7 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
 }) => {
   const { colors, updatedTodo } = select((state: RootState) => ({
     colors: state.settings.colors,
-    updatedTodo: state.agents.updatedTodo
+    updatedTodo: state.todos.updatedTodo
   }));
 
   const inputBarColor: StyleProp<ViewStyle> = {

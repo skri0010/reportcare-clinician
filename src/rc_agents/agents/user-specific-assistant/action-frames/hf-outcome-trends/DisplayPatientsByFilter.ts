@@ -15,12 +15,12 @@ import {
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
 import { store } from "util/useRedux";
+import { PatientInfo } from "aws/API";
+import { RiskLevel } from "models/RiskLevel";
 import {
   setFetchingPatients,
   setPatients
-} from "ic-redux/actions/agents/actionCreator";
-import { PatientInfo } from "aws/API";
-import { RiskLevel } from "models/RiskLevel";
+} from "ic-redux/actions/agents/patientActionCreator";
 
 /**
  * Class to represent an activity for displaying patients (filter if necessary).
@@ -45,7 +45,7 @@ class DisplayPatientsByFilter extends Activity {
     if (patients) {
       // Filter patients based on risk filters
       const filteredPatients: PatientInfo[] = [];
-      const { patientRiskFilters } = store.getState().agents;
+      const { patientRiskFilters } = store.getState().filters;
       let shouldFilter = false;
 
       // If one of the risk filters is true, we must proceed to filter

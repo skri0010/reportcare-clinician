@@ -17,7 +17,6 @@ import {
 } from "rc_agents/clinician_framework";
 import { Storage } from "rc_agents/storage";
 import { store } from "util/useRedux";
-import { setProcedureSuccessful } from "ic-redux/actions/agents/actionCreator";
 import { agentNWA } from "rc_agents/agents";
 import { createTodo, listTodosByAlertID } from "aws";
 import {
@@ -28,6 +27,7 @@ import {
   TodoStatus
 } from "rc_agents/model";
 import { CreateTodoInput } from "aws/API";
+import { setProcedureSuccessful } from "ic-redux/actions/agents/procedureActionCreator";
 
 // LS-TODO: To be tested with creating Todo associated with an Alert.
 

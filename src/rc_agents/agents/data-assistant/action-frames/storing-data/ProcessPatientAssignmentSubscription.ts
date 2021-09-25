@@ -21,8 +21,8 @@ import { getPatientAssignment } from "aws";
 import { store } from "util/useRedux";
 import { PatientAssignmentSubscription } from "aws/TypedAPI/subscriptions";
 import { agentNWA } from "rc_agents/agents";
-import { setPendingPatientAssignments } from "ic-redux/actions/agents/actionCreator";
 import { PatientAssignment } from "aws/API";
+import { setPendingPatientAssignments } from "ic-redux/actions/agents/patientAssignmentActionCreator";
 
 /**
  * Class to represent an activity for processing patient assignment subscription.

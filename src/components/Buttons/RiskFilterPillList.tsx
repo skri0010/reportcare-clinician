@@ -4,12 +4,12 @@ import { RiskFilterPill } from "./RiskFilterPill";
 import { View, FlatList } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { select, RootState, store } from "util/useRedux";
+import { FetchAlertsMode, RiskFilter } from "rc_agents/model";
+import { AgentTrigger } from "rc_agents/trigger";
 import {
   setAlertRiskFilters,
   setPatientRiskFilters
-} from "ic-redux/actions/agents/actionCreator";
-import { FetchAlertsMode, RiskFilter } from "rc_agents/model";
-import { AgentTrigger } from "rc_agents/trigger";
+} from "ic-redux/actions/agents/filterActionCreator";
 
 interface RiskFilterPillListProps {
   patientScreen?: boolean;
@@ -23,8 +23,8 @@ export const RiskFilterPillList: FC<RiskFilterPillListProps> = ({
   const { colors, riskFilters } = select((state: RootState) => ({
     colors: state.settings.colors,
     riskFilters: alertScreen
-      ? state.agents.alertRiskFilters
-      : state.agents.patientRiskFilters
+      ? state.filters.alertRiskFilters
+      : state.filters.patientRiskFilters
   }));
 
   // Function to toggle selected risk filters

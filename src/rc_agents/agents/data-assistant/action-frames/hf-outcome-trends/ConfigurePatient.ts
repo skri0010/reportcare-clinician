@@ -19,12 +19,12 @@ import {
 import { getPatientInfo, updatePatientInfo } from "aws";
 import { PatientInfo, UpdatePatientInfoInput } from "aws/API";
 import { Storage } from "rc_agents/storage";
+import { store } from "util/useRedux";
+import { agentNWA } from "rc_agents/agents";
 import {
   setConfigurationSuccessful,
   setConfiguringPatient
-} from "ic-redux/actions/agents/actionCreator";
-import { store } from "util/useRedux";
-import { agentNWA } from "rc_agents/agents";
+} from "ic-redux/actions/agents/configurationActionCreator";
 
 /**
  * Class to represent an activity for configuring a patient.

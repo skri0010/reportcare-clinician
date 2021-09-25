@@ -22,8 +22,8 @@ import { AlertInfo } from "rc_agents/model";
 import { Alert, ModelSortDirection } from "aws/API";
 import { queryAlertInfo } from "../triage-alert-hf-clinic/RetrieveDetailedAlertInfo";
 import { store } from "util/useRedux";
-import { setFetchingPatientAlertHistory } from "ic-redux/actions/agents/actionCreator";
 import { convertAlertsToAlertInfos } from "util/utilityFunctions";
+import { setFetchingPatientAlertHistory } from "ic-redux/actions/agents/patientActionCreator";
 
 /**
  * Class to represent the activity for retrieving alert history of a patient.

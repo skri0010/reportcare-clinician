@@ -19,8 +19,8 @@ import {
 import { Storage } from "rc_agents/storage";
 import { getClinicianInfo } from "aws";
 import { Role } from "rc_agents/model";
-import { setFetchingPatients } from "ic-redux/actions/agents/actionCreator";
 import { store } from "util/useRedux";
+import { setFetchingPatients } from "ic-redux/actions/agents/patientActionCreator";
 
 /**
  * Class to represent an activity for retrieving role of user for retrieving patients.
