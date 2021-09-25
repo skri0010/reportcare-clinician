@@ -55,7 +55,7 @@ class DisplayTodos extends Activity {
 
     if (updatedTodo) {
       // Removes previous Todo from its existing list and adds it to the front of updated list
-      const currentAgentsState = store.getState().agents;
+      const currentAgentsState = store.getState().todos;
       let currentPendingTodos = currentAgentsState.pendingTodos;
       let currentCompletedTodos = currentAgentsState.completedTodos;
 

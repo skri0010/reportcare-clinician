@@ -80,7 +80,7 @@ class SyncProcessPatientAssignmentSubscriptions extends Activity {
 
           // Adds to the front of current list of pending patient assignments
           let currentPendingPatientAssignments =
-            store.getState().agents.pendingPatientAssignments;
+            store.getState().patientAssignments.pendingPatientAssignments;
           if (!currentPendingPatientAssignments) {
             currentPendingPatientAssignments = [];
           }

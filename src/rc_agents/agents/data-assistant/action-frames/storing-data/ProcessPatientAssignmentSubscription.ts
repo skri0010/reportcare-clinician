@@ -72,7 +72,8 @@ class ProcessPatientAssignmentSubscription extends Activity {
 
             // Adds to the front of current list of pending patient assignments
             let patientAssignmentExists: PatientAssignment | undefined;
-            let { pendingPatientAssignments } = store.getState().agents;
+            let { pendingPatientAssignments } =
+              store.getState().patientAssignments;
             if (pendingPatientAssignments) {
               // Check if patient assignment already exists
               patientAssignmentExists = pendingPatientAssignments.find(
