@@ -138,7 +138,9 @@ srcFolderAliasKeys.forEach((srcFolder) => {
 });
 
 module.exports = {
-  entry: [path.resolve(appDirectory, "index.web.ts")],
+  entry: {
+    app: path.resolve(appDirectory, "index.web.ts")
+  },
   output: {
     filename: "bundle.web.js",
     path: path.resolve(appDirectory, "dist")
@@ -195,9 +197,17 @@ module.exports = {
       __DEV__: !production
     }),
     new HtmlWebpackPlugin({
-      template: path.join(appDirectory, "public/index.html"),
-      manifest: "./public/manifest",
-      favicon: "./public/favicon.ico"
+      template: "public/index.html",
+      filename: "index.html",
+      favicon: "./public/favicon.ico",
+      chunks: [] // Refers to above entry js files
+    }),
+    new HtmlWebpackPlugin({
+      template: path.join(appDirectory, "public/app.html"),
+      filename: "app.html",
+      manifest: "./public/manifest.json",
+      favicon: "./public/favicon.ico",
+      chunks: ["app"] // Refers to above entry js files: index.web.ts
     }),
     new MiniCssExtractPlugin(),
     // Use web obfuscator in production
