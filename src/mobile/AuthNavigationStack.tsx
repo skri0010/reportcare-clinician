@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import React, { FC } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -32,18 +33,12 @@ export const AuthNavigationStack: FC<AuthNavigationStackProps> = ({
 
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator initialRouteName={AuthScreenName.SIGN_IN}>
         <Stack.Screen
           name={AuthScreenName.SIGN_IN}
           options={{ headerShown: false }}
         >
-          {(screenProps) => (
-            <SignIn
-              navigation={screenProps.navigation}
-              route={screenProps.route}
-              setAuthState={setAuthState}
-            />
-          )}
+          {(props) => <SignIn {...props} setAuthState={setAuthState} />}
         </Stack.Screen>
         <Stack.Screen
           name={AuthScreenName.REGISTER}

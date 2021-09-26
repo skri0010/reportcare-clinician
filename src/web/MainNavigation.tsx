@@ -11,13 +11,11 @@ import { Belief } from "agents-framework";
 import { AppAttributes, BeliefKeys } from "rc_agents/clinician_framework";
 import { Storage } from "rc_agents/storage";
 
-interface MainNavigationStackProps {
+interface MainNavigationProps {
   setAuthState: (state: string) => void;
 }
 
-export const MainNavigationStack: FC<MainNavigationStackProps> = ({
-  setAuthState
-}) => {
+export const MainNavigation: FC<MainNavigationProps> = ({ setAuthState }) => {
   const toast = useToast();
   const netInfo = useNetInfo();
 

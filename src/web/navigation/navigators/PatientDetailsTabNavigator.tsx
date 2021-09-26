@@ -64,31 +64,25 @@ export const PatientDetailsTabNavigator: FC<PatientDetailsTabNavigatorProps> =
           name={PatientDetailsTabName.OVERVIEW}
           options={{ title: i18n.t("Patients.Overview") }}
         >
-          {(props: PatientDetailsTabProps.OverviewTabProps) => (
-            <PatientOverview {...props} details={details} />
-          )}
+          {(props) => <PatientOverview {...props} details={details} />}
         </Tab.Screen>
         <Tab.Screen
           name={PatientDetailsTabName.PARAMETERS}
           options={{ title: i18n.t("Patients.Parameters") }}
         >
-          {(props: PatientDetailsTabProps.ParametersTabProps) => (
-            <PatientParameters {...props} details={details} />
-          )}
+          {(props) => <PatientParameters {...props} details={details} />}
         </Tab.Screen>
         <Tab.Screen
           name={PatientDetailsTabName.ICDCRT}
           options={{ title: i18n.t("Patients.ICD/CRT") }}
         >
-          {(props: PatientDetailsTabProps.ICDCRTTabProps) => (
-            <PatientICDCRT {...props} details={details} />
-          )}
+          {(props) => <PatientICDCRT {...props} details={details} />}
         </Tab.Screen>
         <Tab.Screen
           name={PatientDetailsTabName.HISTORY}
           options={{ title: i18n.t("Patients.History") }}
         >
-          {(props: PatientDetailsTabProps.HistoryTabProps) => (
+          {(props) => (
             <PatientHistory
               {...props}
               info={details.patientInfo}
