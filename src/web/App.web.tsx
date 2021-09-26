@@ -16,6 +16,7 @@ import {
   subscribeAlertNotification,
   subscribePatientAssignment
 } from "aws/TypedAPI/subscriptions";
+import "web/styles.css";
 
 Amplify.configure(awsconfig);
 Auth.configure(awsconfig);

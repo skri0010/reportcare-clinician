@@ -3,6 +3,7 @@ const path = require("path");
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const WebpackObfuscator = require("webpack-obfuscator");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 
 // Set to true to analyze bundle
@@ -112,6 +113,11 @@ const svgLoaderConfiguration = {
   use: ["@svgr/webpack", "url-loader"]
 };
 
+const cssLoaderConfiguration = {
+  test: /\.css$/i,
+  use: [MiniCssExtractPlugin.loader, "css-loader"]
+};
+
 // Map key-value pairs of all alias paths
 const srcFolderAliasPaths = {};
 const srcFolderAliasKeys = [
@@ -172,6 +178,7 @@ module.exports = {
       imageLoaderConfiguration,
       ttfLoaderConfiguration,
       svgLoaderConfiguration,
+      cssLoaderConfiguration,
       // This is required to resolve graphql imports
       // See: https://github.com/graphql/graphql-js/issues/2721
       {
@@ -192,6 +199,7 @@ module.exports = {
       manifest: "./public/manifest",
       favicon: "./public/favicon.ico"
     }),
+    new MiniCssExtractPlugin(),
     // Use web obfuscator in production
     ...(production
       ? [
