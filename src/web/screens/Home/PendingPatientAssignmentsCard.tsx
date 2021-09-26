@@ -23,18 +23,16 @@ interface PendingPatientAssignmentsCardProps {
 
 export const PendingPatientAssignmentsCard: FC<PendingPatientAssignmentsCardProps> =
   ({ maxHeight }) => {
-    const {
-      colors,
-      pendingPatientAssignments,
-      fetchingPendingPatientAssignments
-    } = select((state: RootState) => ({
-      colors: state.settings.colors,
-      pendingPatientAssignments: state.agents.pendingPatientAssignments,
-      fetchingPendingPatientAssignments:
-        state.agents.fetchingPendingPatientAssignments
-    }));
+    const { pendingPatientAssignments, fetchingPendingPatientAssignments } =
+      select((state: RootState) => ({
+        pendingPatientAssignments: state.agents.pendingPatientAssignments,
+        fetchingPendingPatientAssignments:
+          state.agents.fetchingPendingPatientAssignments
+      }));
 
     const [viewModal, setViewModal] = useState<boolean>(false);
+    const [selectedAssignment, setSelectedAssignment] =
+      useState<null | PatientAssignment>(null);
 
     // Trigger agent to fetch pending assignments on initial load
     useEffect(() => {
@@ -48,24 +46,6 @@ export const PendingPatientAssignmentsCard: FC<PendingPatientAssignmentsCardProp
         clinicianID: assignment.clinicianID,
         resolution: PatientAssignmentStatus.APPROVED,
         patientName: assignment.patientName,
-        _version: assignment._version
-      };
-      AgentTrigger.triggerResolvePendingAssignments(
-        patientAssignmentResolution
-      );
-    };
-
-    // JH-TODO-NEW: List of clinicians and trigger
-    const reassignPatientAssignment = (
-      assignment: PatientAssignment,
-      reassignToClinicianID: string
-    ) => {
-      const patientAssignmentResolution: PatientAssignmentResolution = {
-        patientID: assignment.patientID,
-        clinicianID: assignment.clinicianID,
-        patientName: assignment.patientName,
-        resolution: PatientAssignmentStatus.REASSIGNED,
-        reassignToClinicianID: reassignToClinicianID,
         _version: assignment._version
       };
       AgentTrigger.triggerResolvePendingAssignments(
@@ -104,7 +84,10 @@ export const PendingPatientAssignmentsCard: FC<PendingPatientAssignmentsCardProp
                   <PatientAssignmentRow
                     patientName={item.patientName}
                     onApprove={() => approvePatientAssignment(item)}
-                    onReassign={() => setViewModal(true)}
+                    onReassign={() => {
+                      setSelectedAssignment(item);
+                      setViewModal(true);
+                    }}
                   />
                 );
               }}
@@ -119,7 +102,10 @@ export const PendingPatientAssignmentsCard: FC<PendingPatientAssignmentsCardProp
             setViewModal(false);
           }}
         >
-          <PatientReassignmentModal setModalVisible={setViewModal} />
+          <PatientReassignmentModal
+            setModalVisible={setViewModal}
+            selectedAssignment={selectedAssignment}
+          />
         </HomeScreenModal>
       </CardWrapper>
     );

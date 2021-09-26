@@ -7,16 +7,22 @@ import i18n from "util/language/i18n";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AgentTrigger } from "rc_agents/trigger";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { ClinicianInfo } from "aws/API";
+import { ClinicianInfo, PatientAssignment } from "aws/API";
 import { ClinicianShareRow } from "components/RowComponents/ClinicianRow/ClinicianShareRow";
 import { RowButton } from "components/Buttons/TextButton";
+import {
+  PatientAssignmentResolution,
+  PatientAssignmentStatus
+} from "rc_agents/model";
 
 interface PatientReassignmentModalProps {
   setModalVisible: (state: boolean) => void;
+  selectedAssignment: PatientAssignment | null;
 }
 
 export const PatientReassignmentModal: FC<PatientReassignmentModalProps> = ({
-  setModalVisible
+  setModalVisible,
+  selectedAssignment
 }) => {
   const { colors, clinicians, fonts } = select((state: RootState) => ({
     colors: state.settings.colors,
@@ -33,6 +39,23 @@ export const PatientReassignmentModal: FC<PatientReassignmentModalProps> = ({
 
   const [selectedClinician, setSelectedClinician] =
     useState<null | ClinicianInfo>(null);
+
+  // JH-TODO-NEW: List of clinicians and trigger
+  const reassignPatientAssignment = () => {
+    if (selectedAssignment && selectedClinician) {
+      const patientAssignmentResolution: PatientAssignmentResolution = {
+        patientID: selectedAssignment.patientID,
+        clinicianID: selectedAssignment.clinicianID,
+        patientName: selectedAssignment.patientName,
+        resolution: PatientAssignmentStatus.REASSIGNED,
+        reassignToClinicianID: selectedClinician.clinicianID,
+        _version: selectedAssignment._version
+      };
+      AgentTrigger.triggerResolvePendingAssignments(
+        patientAssignmentResolution
+      );
+    }
+  };
 
   return (
     <View
@@ -75,12 +98,15 @@ export const PatientReassignmentModal: FC<PatientReassignmentModalProps> = ({
               </View>
             ))}
           </ScrollView>
-          {/* Share button */}
+          {/* Reassign button */}
           <View style={styles.buttonContainer}>
             <View style={{ width: "30%" }}>
               <RowButton
-                title="Share"
-                onPress={() => null}
+                title={i18n.t("Auth_ConfirmRegistration.Confirm")}
+                onPress={() => {
+                  reassignPatientAssignment();
+                  setModalVisible(false);
+                }}
                 backgroundColor={colors.acceptButtonColor}
               />
             </View>
