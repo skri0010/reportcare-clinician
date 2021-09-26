@@ -39,7 +39,9 @@ import {
   ListClinicianPatientMapsQuery,
   ListClinicianPatientMapsQueryVariables,
   ListMedicalRecordsByPatientIDQuery,
-  ListMedicalRecordsByPatientIDQueryVariables
+  ListMedicalRecordsByPatientIDQueryVariables,
+  ListIcdCrtRecordsByDateTimeQuery,
+  ListIcdCrtRecordsByDateTimeQueryVariables
 } from "aws/API";
 
 interface ListClinicianInfosResponse extends BaseResponse {
@@ -286,4 +288,17 @@ export const listMedicalRecordsByPatientID = async (
     query: queries.listMedicalRecordsByPatientID,
     variables: variables
   })) as ListMedicalRecordsByPatientIDResponse;
+};
+
+interface ListIcdCrtRecordsByDateTimeResponse extends BaseResponse {
+  data: ListIcdCrtRecordsByDateTimeQuery;
+}
+
+export const listIcdCrtRecordsByDateTime = async (
+  variables: ListIcdCrtRecordsByDateTimeQueryVariables
+): Promise<ListIcdCrtRecordsByDateTimeResponse> => {
+  return (await API.graphql({
+    query: queries.listIcdCrtRecordsByDateTime,
+    variables: variables
+  })) as ListIcdCrtRecordsByDateTimeResponse;
 };

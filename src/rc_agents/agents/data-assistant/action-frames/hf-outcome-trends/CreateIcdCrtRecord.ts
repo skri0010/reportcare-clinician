@@ -15,25 +15,25 @@ import {
   PatientAttributes,
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
-import { createMedicalRecord, StorageFolderPath } from "aws";
-import { CreateMedicalRecordInput, MedicalRecord } from "aws/API";
+import { createIcdCrtRecord, StorageFolderPath } from "aws";
+import { CreateIcdCrtRecordInput, IcdCrtRecord } from "aws/API";
 import { LocalStorage } from "rc_agents/storage";
 import {
-  setCreateMedicalRecordSuccessful,
-  setCreatingMedicalRecord
+  setCreateIcdCrtRecordSuccessful,
+  setCreatingIcdCrtRecord
 } from "ic-redux/actions/agents/actionCreator";
 import { store } from "util/useRedux";
-import { MedicalRecordInput } from "rc_agents/model";
+import { IcdCrtRecordInput } from "rc_agents/model";
 import { Storage } from "@aws-amplify/storage";
 import { v4 as uuidv4 } from "uuid";
 
 /**
- * Class to represent an activity for creating a patient's medical record.
- * This happens in Procedure HF Outcome Trends (HF-OTP-III).
+ * Class to represent an activity for creating a patient's ICD/CRT record.
+ * This happens in Procedure HF Outcome Trends (HF-OTP-IV).
  */
-class CreateMedicalRecord extends Activity {
+class CreateIcdCrtRecord extends Activity {
   constructor() {
-    super(ActionFrameIDs.DTA.CREATE_MEDICAL_RECORD);
+    super(ActionFrameIDs.DTA.CREATE_ICDCRT_RECORD);
   }
 
   /**
@@ -46,58 +46,58 @@ class CreateMedicalRecord extends Activity {
 
     try {
       const facts = agentAPI.getFacts();
-      // Get medical record input from facts
-      const medicalRecordInput: MedicalRecordInput =
-        facts[BeliefKeys.PATIENT]?.[PatientAttributes.MEDICAL_RECORD_TO_CREATE];
+      // Get ICD/CRT record input from facts
+      const icdCrtRecordInput: IcdCrtRecordInput =
+        facts[BeliefKeys.PATIENT]?.[PatientAttributes.ICDCRT_RECORD_TO_CREATE];
 
-      if (medicalRecordInput) {
+      if (icdCrtRecordInput) {
         // Indicator of whether create is successful
         let createSuccessful = false;
-        let medicalRecord: MedicalRecord | undefined;
+        let icdCrtRecord: IcdCrtRecord | undefined;
 
         // Ensure that device is online
         if (facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
           // Store file to S3 bucket and insert a record to DynamoDB
-          const insertResult = await insertMedicalRecord(medicalRecordInput);
+          const insertResult = await insertIcdCrtRecord(icdCrtRecordInput);
           if (insertResult) {
             createSuccessful = true;
-            medicalRecord = insertResult;
+            icdCrtRecord = insertResult;
           }
         }
 
-        if (createSuccessful && medicalRecord) {
+        if (createSuccessful && icdCrtRecord) {
           // Dispatch to front end that create is successful
-          store.dispatch(setCreateMedicalRecordSuccessful(true));
+          store.dispatch(setCreateIcdCrtRecordSuccessful(true));
 
-          // Add new medical record into the existing list of medical records
-          let existingMedicalRecords = store.getState().agents.medicalRecords;
-          if (!existingMedicalRecords) {
-            existingMedicalRecords = [];
+          // Add new ICD/CRT record into the existing list of ICD/CRT records
+          let existingIcdCrtRecords = store.getState().agents.icdCrtRecords;
+          if (!existingIcdCrtRecords) {
+            existingIcdCrtRecords = [];
           }
-          existingMedicalRecords.unshift(medicalRecord);
+          existingIcdCrtRecords.unshift(icdCrtRecord);
 
           // Update Facts
           agentAPI.addFact(
             new Belief(
               BeliefKeys.PATIENT,
-              PatientAttributes.MEDICAL_RECORDS,
-              existingMedicalRecords
+              PatientAttributes.ICDCRT_RECORDS,
+              existingIcdCrtRecords
             ),
             false
           );
-          // Trigger request to dispatch medical records to UXSA for frontend display
+          // Trigger request to dispatch ICD/CRT records to UXSA for frontend display
           agent.addBelief(
             new Belief(
               BeliefKeys.PATIENT,
-              PatientAttributes.MEDICAL_RECORDS_RETRIEVED,
+              PatientAttributes.ICDCRT_RECORDS_RETRIEVED,
               true
             )
           );
-          // Remove medical record input from facts
+          // Remove ICD/CRT record input from facts
           agentAPI.addFact(
             new Belief(
               BeliefKeys.PATIENT,
-              PatientAttributes.MEDICAL_RECORD_TO_CREATE,
+              PatientAttributes.ICDCRT_RECORD_TO_CREATE,
               null
             ),
             false
@@ -105,7 +105,7 @@ class CreateMedicalRecord extends Activity {
         }
       }
       // Dispatch to front end that create has ended
-      store.dispatch(setCreatingMedicalRecord(false));
+      store.dispatch(setCreatingIcdCrtRecord(false));
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
@@ -114,59 +114,61 @@ class CreateMedicalRecord extends Activity {
       agentAPI.addFact(
         new Belief(
           BeliefKeys.PROCEDURE,
-          ProcedureAttributes.HF_OTP_III,
+          ProcedureAttributes.HF_OTP_IV,
           ProcedureConst.INACTIVE
         ),
         true,
         true
       );
       // Dispatch to front end that create has ended
-      store.dispatch(setCreatingMedicalRecord(false));
+      store.dispatch(setCreatingIcdCrtRecord(false));
     }
   }
 }
 
 /**
- * Uploads medical record file to S3 bucket and inserts a record into DynamoDB
- * @param medicalRecordInput medical record input
- * @returns medical record created if both upload and insert are successful, null otherwise.
+ * Uploads ICD/CRT record file to S3 bucket and inserts a record into DynamoDB
+ * @param icdCrtRecordInput ICD/CRT record input
+ * @returns ICD/CRT record created if both upload and insert are successful, null otherwise.
  */
-export const insertMedicalRecord = async (
-  medicalRecordInput: MedicalRecordInput
-): Promise<MedicalRecord | null> => {
-  // Indicator of whether medical record is successfully created
+export const insertIcdCrtRecord = async (
+  icdCrtRecordInput: IcdCrtRecordInput
+): Promise<IcdCrtRecord | null> => {
+  // Indicator of whether ICD/CRT record is successfully created
   let createSuccessful = false;
-  let medicalRecord: MedicalRecord | undefined;
+  let icdCrtRecord: IcdCrtRecord | undefined;
 
   // Retrieves locally stored clinicianID
   const clinicianID = await LocalStorage.getClinicianID();
 
   if (clinicianID) {
-    const medicalRecordFile = medicalRecordInput.file;
+    const icdCrtRecordFile = icdCrtRecordInput.file;
 
     // Generates unique ID as part of file key to prevent overwriting another file with the same name
-    const fileID = `${medicalRecordFile.name}_${uuidv4()}`;
+    const fileID = `${icdCrtRecordFile.name}_${uuidv4()}`;
+
     // Upload file to S3 bucket
     await Storage.put(
-      `${StorageFolderPath.MEDICAL_RECORDS}${fileID}`,
-      medicalRecordFile,
+      `${StorageFolderPath.ICDCRT_RECORDS}${fileID}`,
+      icdCrtRecordFile,
       {
-        contentType: medicalRecordFile.type,
+        contentType: icdCrtRecordFile.type,
         level: "protected"
       }
     )
       .then(async () => {
         // File is successfully uploaded - create a record in DynamoDB
-        const input: CreateMedicalRecordInput = {
-          title: medicalRecordInput.title,
-          patientID: medicalRecordInput.patientID,
+        const input: CreateIcdCrtRecordInput = {
+          title: icdCrtRecordInput.title,
+          patientID: icdCrtRecordInput.patientID,
+          dateTime: icdCrtRecordInput.dateTime,
           clinicianID: clinicianID,
           fileKey: fileID
         };
         try {
-          const createResponse = await createMedicalRecord(input);
-          if (createResponse.data.createMedicalRecord) {
-            medicalRecord = createResponse.data.createMedicalRecord;
+          const createResponse = await createIcdCrtRecord(input);
+          if (createResponse.data.createIcdCrtRecord) {
+            icdCrtRecord = createResponse.data.createIcdCrtRecord;
             createSuccessful = true;
           }
         } catch (error) {
@@ -180,10 +182,10 @@ export const insertMedicalRecord = async (
       });
   }
 
-  if (createSuccessful && medicalRecord) {
-    // Stores medical record locally
-    await LocalStorage.setPatientMedicalRecords([medicalRecord]);
-    return medicalRecord;
+  if (createSuccessful && icdCrtRecord) {
+    // Stores ICD/CRT record locally
+    await LocalStorage.setPatientIcdCrtRecords([icdCrtRecord]);
+    return icdCrtRecord;
   }
 
   return null;
@@ -192,18 +194,18 @@ export const insertMedicalRecord = async (
 // Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.HF_OTP_III,
+  ProcedureAttributes.HF_OTP_IV,
   ProcedureConst.ACTIVE
 );
 const rule2 = new ResettablePrecondition(
   BeliefKeys.PATIENT,
-  PatientAttributes.CREATE_MEDICAL_RECORD,
+  PatientAttributes.CREATE_ICDCRT_RECORD,
   true
 );
 
 // Actionframe
-export const af_CreateMedicalRecord = new Actionframe(
-  `AF_${ActionFrameIDs.DTA.CREATE_MEDICAL_RECORD}`,
+export const af_CreateIcdCrtRecord = new Actionframe(
+  `AF_${ActionFrameIDs.DTA.CREATE_ICDCRT_RECORD}`,
   [rule1, rule2],
-  new CreateMedicalRecord()
+  new CreateIcdCrtRecord()
 );

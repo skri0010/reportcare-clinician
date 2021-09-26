@@ -15,7 +15,7 @@ import i18n from "util/language/i18n";
 import { AlertInfo, PatientDetails } from "rc_agents/model";
 import { getTopTabBarOptions } from "util/getStyles";
 import { PatientICDCRT } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientIcdCrt";
-import { MedicalRecord } from "aws/API";
+import { IcdCrtRecord, MedicalRecord } from "aws/API";
 
 const Tab = createMaterialTopTabNavigator<PatientDetailsTabParamList>();
 
@@ -25,7 +25,9 @@ export interface PatientDetailsTabNavigatorProps {
   setDisplayHistory: (state: AlertInfo) => void; // alert history details to be shown
   setModalAlertVisible: (state: boolean) => void; // alert modal visibility
   setAddMedicalRecord: (state: boolean) => void; // add medical record modal visibility
-  onViewMedicalRecord: (medicalRecord: MedicalRecord) => void; //when content of medical content is to be shown
+  onViewMedicalRecord: (medicalRecord: MedicalRecord) => void; // when content of medical content is to be shown
+  setAddIcdCrtRecord: (state: boolean) => void; // add ICD/CRT record modal visibility
+  onViewIcdCrtRecord: (icdCrtRecord: IcdCrtRecord) => void; // when content of ICD/CRT content is to be shown
 }
 
 export const PatientDetailsTabNavigator: FC<PatientDetailsTabNavigatorProps> =
@@ -35,7 +37,9 @@ export const PatientDetailsTabNavigator: FC<PatientDetailsTabNavigatorProps> =
     setDisplayHistory,
     setModalAlertVisible,
     setAddMedicalRecord,
-    onViewMedicalRecord
+    onViewMedicalRecord,
+    setAddIcdCrtRecord,
+    onViewIcdCrtRecord
   }) => {
     const { colors, fonts } = select((state: RootState) => ({
       colors: state.settings.colors,
@@ -79,7 +83,12 @@ export const PatientDetailsTabNavigator: FC<PatientDetailsTabNavigatorProps> =
           options={{ title: i18n.t("Patients.ICD/CRT") }}
         >
           {(props: PatientDetailsTabProps.ICDCRTTabProps) => (
-            <PatientICDCRT {...props} details={details} />
+            <PatientICDCRT
+              {...props}
+              details={details}
+              setAddIcdCrtRecord={setAddIcdCrtRecord}
+              onViewIcdCrtRecord={onViewIcdCrtRecord}
+            />
           )}
         </Tab.Screen>
         <Tab.Screen

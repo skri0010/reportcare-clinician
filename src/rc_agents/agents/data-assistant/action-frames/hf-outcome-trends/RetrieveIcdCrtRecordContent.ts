@@ -15,22 +15,22 @@ import {
   PatientAttributes,
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
-import { MedicalRecord } from "aws/API";
+import { IcdCrtRecord } from "aws/API";
 import { store } from "util/useRedux";
-import { setFetchingMedicalRecordContent } from "ic-redux/actions/agents/actionCreator";
+import { setFetchingIcdCrtRecordContent } from "ic-redux/actions/agents/actionCreator";
 import { Storage } from "@aws-amplify/storage";
 import { StorageFolderPath } from "aws";
 
 /**
- * Class to represent the activity for retrieving content of a patient's medical record.
- * This happens in Procedure HF Outcome Trends (HF-OTP-III).
+ * Class to represent the activity for retrieving content of a patient's ICD/CRT record.
+ * This happens in Procedure HF Outcome Trends (HF-OTP-IV).
  */
-class RetrieveMedicalRecordContent extends Activity {
+class RetrieveIcdCrtRecordContent extends Activity {
   /**
    * Constructor
    */
   constructor() {
-    super(ActionFrameIDs.DTA.RETRIEVE_MEDICAL_RECORD_CONTENT);
+    super(ActionFrameIDs.DTA.RETRIEVE_ICDCRT_RECORD_CONTENT);
   }
 
   /**
@@ -40,22 +40,22 @@ class RetrieveMedicalRecordContent extends Activity {
   async doActivity(agent: Agent): Promise<void> {
     await super.doActivity(agent, [rule2]);
 
-    // Dispatch to frontend that the medical record's content is being fetched
-    store.dispatch(setFetchingMedicalRecordContent(true));
+    // Dispatch to frontend that the ICD/CRT record's content is being fetched
+    store.dispatch(setFetchingIcdCrtRecordContent(true));
 
     try {
       const facts = agentAPI.getFacts();
 
-      // Get medical record from facts
-      const medicalRecord: MedicalRecord =
-        facts[BeliefKeys.PATIENT]?.[PatientAttributes.MEDICAL_RECORD_TO_VIEW];
+      // Get ICD/CRT record from facts
+      const icdCrtRecord: IcdCrtRecord =
+        facts[BeliefKeys.PATIENT]?.[PatientAttributes.ICDCRT_RECORD_TO_VIEW];
 
-      if (medicalRecord) {
+      if (icdCrtRecord) {
         // Ensure that device is online
         if (facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
           // Device is online - retrieve file from S3 bucket
           const fileURL = await Storage.get(
-            `${StorageFolderPath.MEDICAL_RECORDS}${medicalRecord.fileKey}`,
+            `${StorageFolderPath.ICDCRT_RECORDS}${icdCrtRecord.fileKey}`,
             {
               level: "protected"
             }
@@ -66,27 +66,27 @@ class RetrieveMedicalRecordContent extends Activity {
             agentAPI.addFact(
               new Belief(
                 BeliefKeys.PATIENT,
-                PatientAttributes.MEDICAL_RECORD_CONTENT,
+                PatientAttributes.ICDCRT_RECORD_CONTENT,
                 fileURL
               ),
               false
             );
-            // Trigger request to dispatch medical record content to UXSA for frontend display
+            // Trigger request to dispatch ICD/CRT record content to UXSA for frontend display
             agent.addBelief(
               new Belief(
                 BeliefKeys.PATIENT,
-                PatientAttributes.MEDICAL_RECORD_CONTENT_RETRIEVED,
+                PatientAttributes.ICDCRT_RECORD_CONTENT_RETRIEVED,
                 true
               )
             );
           }
         }
 
-        // Remove medical record from facts
+        // Remove ICD/CRT record from facts
         agentAPI.addFact(
           new Belief(
             BeliefKeys.PATIENT,
-            PatientAttributes.MEDICAL_RECORD_TO_VIEW,
+            PatientAttributes.ICDCRT_RECORD_TO_VIEW,
             null
           ),
           false
@@ -100,14 +100,14 @@ class RetrieveMedicalRecordContent extends Activity {
       agentAPI.addFact(
         new Belief(
           BeliefKeys.PROCEDURE,
-          ProcedureAttributes.HF_OTP_III,
+          ProcedureAttributes.HF_OTP_IV,
           ProcedureConst.INACTIVE
         ),
         true,
         true
       );
       // Dispatch to store to indicate fetching has ended
-      store.dispatch(setFetchingMedicalRecordContent(false));
+      store.dispatch(setFetchingIcdCrtRecordContent(false));
     }
   }
 }
@@ -115,18 +115,18 @@ class RetrieveMedicalRecordContent extends Activity {
 // Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.HF_OTP_III,
+  ProcedureAttributes.HF_OTP_IV,
   ProcedureConst.ACTIVE
 );
 const rule2 = new ResettablePrecondition(
   BeliefKeys.PATIENT,
-  PatientAttributes.RETRIEVE_MEDICAL_RECORD_CONTENT,
+  PatientAttributes.RETRIEVE_ICDCRT_RECORD_CONTENT,
   true
 );
 
 // Actionframe
-export const af_RetrieveMedicalRecordContent = new Actionframe(
-  `AF_${ActionFrameIDs.DTA.RETRIEVE_MEDICAL_RECORD_CONTENT}`,
+export const af_RetrieveIcdCrtRecordContent = new Actionframe(
+  `AF_${ActionFrameIDs.DTA.RETRIEVE_ICDCRT_RECORD_CONTENT}`,
   [rule1, rule2],
-  new RetrieveMedicalRecordContent()
+  new RetrieveIcdCrtRecordContent()
 );

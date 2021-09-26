@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { MedicalRecord, PatientInfo } from "aws/API";
+import { IcdCrtRecord, MedicalRecord, PatientInfo } from "aws/API";
 import { PatientDetails } from "rc_agents/model";
 import { AsyncStorageKeys, AsyncStorageType } from ".";
 
@@ -132,6 +132,21 @@ export const getPatientMedicalRecords = async (
   const localData = await getPatientDetails(patientId);
   if (localData) {
     return Object.values(localData.medicalRecords);
+  }
+  return null;
+};
+
+/**
+ * Gets all ICD/CRT records of a specific patient from the local storage
+ * @param patientId patientID
+ * @returns array of ICD/CRT records if any, null otherwise
+ */
+export const getPatientIcdCrtRecords = async (
+  patientId: string
+): Promise<IcdCrtRecord[] | null> => {
+  const localData = await getPatientDetails(patientId);
+  if (localData) {
+    return Object.values(localData.icdCrtRecords);
   }
   return null;
 };

@@ -1,4 +1,4 @@
-import { MedicalRecord, PatientInfo } from "aws/API";
+import { IcdCrtRecord, MedicalRecord, PatientInfo } from "aws/API";
 import {
   BeliefKeys,
   ClinicianAttributes,
@@ -15,7 +15,8 @@ import {
   PatientAssignmentResolution,
   TodoInput,
   TodoStatus,
-  MedicalRecordInput
+  MedicalRecordInput,
+  IcdCrtRecordInput
 } from "rc_agents/model";
 import {
   AlertNotification,
@@ -462,6 +463,82 @@ export const triggerRetrieveMedicalRecordContent = (
     new Belief(
       BeliefKeys.PROCEDURE,
       ProcedureAttributes.HF_OTP_III,
+      ProcedureConst.ACTIVE
+    )
+  );
+};
+
+// HF-OTP-IV: Triggers CreateIcdCrtRecord of DTA
+export const triggerCreateIcdCrtRecord = (input: IcdCrtRecordInput): void => {
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PATIENT,
+      PatientAttributes.ICDCRT_RECORD_TO_CREATE,
+      input
+    ),
+    false
+  );
+  agentDTA.addBelief(
+    new Belief(BeliefKeys.PATIENT, PatientAttributes.CREATE_ICDCRT_RECORD, true)
+  );
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PROCEDURE,
+      ProcedureAttributes.HF_OTP_IV,
+      ProcedureConst.ACTIVE
+    )
+  );
+};
+
+// HF-OTP-IV: Triggers RetrieveIcdCrtRecords of DTA
+export const triggerRetrieveIcdCrtRecords = (patientID: string): void => {
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PATIENT,
+      PatientAttributes.PATIENT_TO_VIEW_ICDCRT_RECORDS,
+      patientID
+    ),
+    false
+  );
+  agentDTA.addBelief(
+    new Belief(
+      BeliefKeys.PATIENT,
+      PatientAttributes.RETRIEVE_ICDCRT_RECORDS,
+      true
+    )
+  );
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PROCEDURE,
+      ProcedureAttributes.HF_OTP_IV,
+      ProcedureConst.ACTIVE
+    )
+  );
+};
+
+// HF-OTP-IV: Triggers RetrieveIcdCrtRecordContent of DTA
+export const triggerRetrieveIcdCrtRecordContent = (
+  input: IcdCrtRecord
+): void => {
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PATIENT,
+      PatientAttributes.ICDCRT_RECORD_TO_VIEW,
+      input
+    ),
+    false
+  );
+  agentDTA.addBelief(
+    new Belief(
+      BeliefKeys.PATIENT,
+      PatientAttributes.RETRIEVE_ICDCRT_RECORD_CONTENT,
+      true
+    )
+  );
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PROCEDURE,
+      ProcedureAttributes.HF_OTP_IV,
       ProcedureConst.ACTIVE
     )
   );

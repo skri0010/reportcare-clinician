@@ -53,6 +53,13 @@ export const ActionFrameIDs = {
     REQUEST_DISPLAY_MEDICAL_RECORD_CONTENT:
       "RequestDisplayMedicalRecordContent",
 
+    // HF-OTP-IV: Single patient's ICD/CRT records
+    CREATE_ICDCRT_RECORD: "CreateIcdCrtRecord",
+    RETRIEVE_ICDCRT_RECORDS: "RetrieveIcdCrtRecords",
+    REQUEST_DISPLAY_ICDCRT_RECORDS: "RequestDisplayIcdCrtRecords",
+    RETRIEVE_ICDCRT_RECORD_CONTENT: "RetrieveIcdCrtRecordContent",
+    REQUEST_DISPLAY_ICDCRT_RECORD_CONTENT: "RequestDisplayIcdCrtRecordContent",
+
     // SRD-I: Patient Assignments
     RETRIEVE_PENDING_PATIENT_ASSIGNMENTS: "RetrievePendingPatientAssignments",
     REQUEST_DISPLAY_PENDING_PATIENT_ASSIGNMENTS:
@@ -98,6 +105,10 @@ export const ActionFrameIDs = {
     // HF-OTP-III: Single patient's medical records
     DISPLAY_MEDICAL_RECORDS: "DisplayMedicalRecords",
     DISPLAY_MEDICAL_RECORD_CONTENT: "DisplayMedicalRecordContent",
+
+    // HF-OTP-IV: Single patient's ICD/CRT records
+    DISPLAY_ICDCRT_RECORDS: "DisplayIcdCrtRecords",
+    DISPLAY_ICDCRT_RECORD_CONTENT: "DisplayIcdCrtRecordContent",
 
     // SRD-I: Patient Assignments
     DISPLAY_PENDING_PATIENT_ASSIGNMENTS: "DisplayPendingPatientAssignments",
@@ -168,6 +179,7 @@ export enum ProcedureAttributes {
   HF_OTP_I = "HF-OTP-I",
   HF_OTP_II = "HF-OTP-II",
   HF_OTP_III = "HF-OTP-III",
+  HF_OTP_IV = "HF-OTP-IV",
   SRD_I = "SRD-I",
   SRD_II = "SRD-II",
   SRD_III = "SRD-III",
@@ -263,7 +275,7 @@ export enum PatientAttributes {
   // HF-OTP-III: Single patient's medical records
   CREATE_MEDICAL_RECORD = "CreateMedicalRecord",
   MEDICAL_RECORD_TO_CREATE = "MedicalRecordToCreate",
-  RETRIEVE_MEDICAL_RECORDS = "RetrieveMedicalRecord",
+  RETRIEVE_MEDICAL_RECORDS = "RetrieveMedicalRecords",
   PATIENT_TO_VIEW_MEDICAL_RECORDS = "PatientToViewMedicalRecords",
   MEDICAL_RECORDS = "MedicalRecords",
   MEDICAL_RECORDS_RETRIEVED = "MedicalRecordsRetrieved",
@@ -271,6 +283,18 @@ export enum PatientAttributes {
   RETRIEVE_MEDICAL_RECORD_CONTENT = "RetrieveMedicalRecordContent",
   MEDICAL_RECORD_CONTENT = "MedicalRecordContent",
   MEDICAL_RECORD_CONTENT_RETRIEVED = "MedicalRecordContentRetrieved",
+
+  // HF-OTP-IV: Single patient's ICD/CRT records
+  CREATE_ICDCRT_RECORD = "CreateIcdCrtRecord",
+  ICDCRT_RECORD_TO_CREATE = "IcdCrtRecordToCreate",
+  RETRIEVE_ICDCRT_RECORDS = "RetrieveIcdCrtRecords",
+  PATIENT_TO_VIEW_ICDCRT_RECORDS = "PatientToViewIcdCrtRecords",
+  ICDCRT_RECORDS = "IcdCrtRecords",
+  ICDCRT_RECORDS_RETRIEVED = "IcdCrtRecordsRetrieved",
+  ICDCRT_RECORD_TO_VIEW = "IcdCrtRecordToView",
+  RETRIEVE_ICDCRT_RECORD_CONTENT = "RetrieveIcdCrtRecordContent",
+  ICDCRT_RECORD_CONTENT = "IcdCrtRecordContent",
+  ICDCRT_RECORD_CONTENT_RETRIEVED = "IcdCrtRecordContentRetrieved",
 
   // SRD-I: Patient Assignments
   PENDING_PATIENT_ASSIGNMENTS = "PendingPatientAssignments",

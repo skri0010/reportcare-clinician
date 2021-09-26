@@ -97,9 +97,7 @@
       "Fn::Not": [
         {
           "Fn::Equals": [
-            {
-              "Ref": "s3PermissionsAuthenticatedPublic"
-            },
+            { "Ref": "s3PermissionsAuthenticatedPublic" },
             "DISALLOW"
           ]
         }
@@ -109,9 +107,7 @@
       "Fn::Not": [
         {
           "Fn::Equals": [
-            {
-              "Ref": "s3PermissionsAuthenticatedProtected"
-            },
+            { "Ref": "s3PermissionsAuthenticatedProtected" },
             "DISALLOW"
           ]
         }
@@ -121,9 +117,7 @@
       "Fn::Not": [
         {
           "Fn::Equals": [
-            {
-              "Ref": "s3PermissionsAuthenticatedPrivate"
-            },
+            { "Ref": "s3PermissionsAuthenticatedPrivate" },
             "DISALLOW"
           ]
         }
@@ -133,9 +127,7 @@
       "Fn::Not": [
         {
           "Fn::Equals": [
-            {
-              "Ref": "s3PermissionsAuthenticatedUploads"
-            },
+            { "Ref": "s3PermissionsAuthenticatedUploads" },
             "DISALLOW"
           ]
         }
@@ -144,48 +136,28 @@
     "CreateGuestPublic": {
       "Fn::Not": [
         {
-          "Fn::Equals": [
-            {
-              "Ref": "s3PermissionsGuestPublic"
-            },
-            "DISALLOW"
-          ]
+          "Fn::Equals": [{ "Ref": "s3PermissionsGuestPublic" }, "DISALLOW"]
         }
       ]
     },
     "CreateGuestUploads": {
       "Fn::Not": [
         {
-          "Fn::Equals": [
-            {
-              "Ref": "s3PermissionsGuestUploads"
-            },
-            "DISALLOW"
-          ]
+          "Fn::Equals": [{ "Ref": "s3PermissionsGuestUploads" }, "DISALLOW"]
         }
       ]
     },
     "AuthReadAndList": {
       "Fn::Not": [
         {
-          "Fn::Equals": [
-            {
-              "Ref": "AuthenticatedAllowList"
-            },
-            "DISALLOW"
-          ]
+          "Fn::Equals": [{ "Ref": "AuthenticatedAllowList" }, "DISALLOW"]
         }
       ]
     },
     "GuestReadAndList": {
       "Fn::Not": [
         {
-          "Fn::Equals": [
-            {
-              "Ref": "GuestAllowList"
-            },
-            "DISALLOW"
-          ]
+          "Fn::Equals": [{ "Ref": "GuestAllowList" }, "DISALLOW"]
         }
       ]
     }
@@ -193,6 +165,7 @@
   "Resources": {
     "S3Bucket": {
       "Type": "AWS::S3::Bucket",
+
       "DeletionPolicy": "Retain",
       "Properties": {
         "BucketName": {
@@ -230,6 +203,7 @@
             }
           ]
         },
+
         "CorsConfiguration": {
           "CorsRules": [
             {
@@ -249,6 +223,7 @@
         }
       }
     },
+
     "S3AuthPublicPolicy": {
       "DependsOn": ["S3Bucket"],
       "Condition": "CreateAuthPublic",

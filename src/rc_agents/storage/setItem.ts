@@ -1,5 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { MedicalRecord, PatientAssignment, PatientInfo, Todo } from "aws/API";
+import {
+  IcdCrtRecord,
+  MedicalRecord,
+  PatientAssignment,
+  PatientInfo,
+  Todo
+} from "aws/API";
 import { PatientAssignmentSubscription } from "aws/TypedAPI/subscriptions";
 // eslint-disable-next-line no-restricted-imports
 import {
@@ -128,7 +134,8 @@ export const setPatients = async (
         activityInfos: localPatients[patient.patientID]?.activityInfos || {},
         symptomReports: localPatients[patient.patientID]?.symptomReports || {},
         vitalsReports: localPatients[patient.patientID]?.vitalsReports || {},
-        medicalRecords: localPatients[patient.patientID]?.medicalRecords || {}
+        medicalRecords: localPatients[patient.patientID]?.medicalRecords || {},
+        icdCrtRecords: localPatients[patient.patientID]?.icdCrtRecords || {}
       };
     }
   });
@@ -147,7 +154,8 @@ export const setPatient = async (patient: PatientInfo): Promise<void> => {
     activityInfos: localPatient?.activityInfos || {},
     symptomReports: localPatient?.symptomReports || {},
     vitalsReports: localPatient?.vitalsReports || {},
-    medicalRecords: localPatient?.medicalRecords || {}
+    medicalRecords: localPatient?.medicalRecords || {},
+    icdCrtRecords: localPatient?.icdCrtRecords || {}
   });
 };
 
@@ -172,7 +180,8 @@ export const setPatientDetails = async (
       activityInfos: patientDetails.activityInfos,
       symptomReports: patientDetails.symptomReports,
       vitalsReports: patientDetails.vitalsReports,
-      medicalRecords: patientDetails.medicalRecords
+      medicalRecords: patientDetails.medicalRecords,
+      icdCrtRecords: patientDetails.icdCrtRecords
     };
   }
   await AsyncStorage.setItem(
@@ -200,6 +209,21 @@ export const setPatientMedicalRecords = async (
   if (localPatient) {
     medicalRecords.forEach((medicalRecord) => {
       localPatient.medicalRecords[medicalRecord.id] = medicalRecord;
+    });
+    await setPatientDetails(localPatient);
+  }
+};
+
+/**
+ * Stores an array of ICD/CRT records belonging to the same patient
+ */
+export const setPatientIcdCrtRecords = async (
+  icdCrtRecords: IcdCrtRecord[]
+): Promise<void> => {
+  const localPatient = await getPatientDetails(icdCrtRecords[0].patientID);
+  if (localPatient) {
+    icdCrtRecords.forEach((icdCrtRecord) => {
+      localPatient.icdCrtRecords[icdCrtRecord.id] = icdCrtRecord;
     });
     await setPatientDetails(localPatient);
   }
