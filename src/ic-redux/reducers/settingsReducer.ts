@@ -11,8 +11,11 @@ import {
   normalWebFont
 } from "../../models/FontScheme";
 import { isMobile } from "util/device";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import autoMergeLevel2 from "redux-persist/lib/stateReconciler/autoMergeLevel2";
+import { AsyncStorageKeys } from "rc_agents/storage";
 
-interface SettingsState {
+export interface SettingsState {
   colors: ColorScheme;
   language: LanguageID;
   fonts: FontScheme;
@@ -44,4 +47,12 @@ export const settingsReducer: Reducer<SettingsState, RootAction> = (
     default:
       return state;
   }
+};
+
+// Redux persistence configuration for settings
+export const settingsPersistConfig = {
+  key: AsyncStorageKeys.PERSIST_SETTINGS,
+  storage: AsyncStorage, // Store the values in the AsyncStorage
+  whitelist: ["colors", "language", "fonts"], // Persist the redux values for colors, language and fonts
+  stateReconciler: autoMergeLevel2 // Merge 2 levels deep, ie merge new state with old state instead of replacing the old state entirely
 };

@@ -3,8 +3,11 @@ import { RootAction } from "ic-redux/actions/RootAction";
 import { Reducer } from "redux";
 import { RiskFilter } from "rc_agents/model";
 import { RiskLevel } from "models/RiskLevel";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import autoMergeLevel2 from "redux-persist/lib/stateReconciler/autoMergeLevel2";
+import { AsyncStorageKeys } from "rc_agents/storage";
 
-interface FilterState {
+export interface FilterState {
   // filter
   patientRiskFilters: RiskFilter;
   alertRiskFilters: RiskFilter;
@@ -47,4 +50,13 @@ export const filterReducer: Reducer<FilterState, RootAction> = (
     default:
       return state;
   }
+};
+
+// JQ-TODO: This is just for testing purposes. Would be removed later
+export const filtersPersistConfig = {
+  key: AsyncStorageKeys.PERSIST_FILTERS,
+  storage: AsyncStorage,
+  whitelist: ["patientRiskFilters"], // Only store the values for the patient risk filter
+  blacklist: ["alertRiskFilters", "riskFilters"],
+  stateReconciler: autoMergeLevel2
 };

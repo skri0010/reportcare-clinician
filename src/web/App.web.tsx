@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState, useCallback } from "react";
 import { Provider } from "react-redux";
-import { store } from "util/useRedux";
+import { store, persistor } from "util/useRedux";
 import { MainNavigationStack } from "web/MainNavigation";
 import { AuthStackNavigator } from "web/navigation/navigators/AuthStackNavigator";
 import awsconfig from "aws/aws-exports";
@@ -16,6 +16,7 @@ import {
   subscribeAlertNotification,
   subscribePatientAssignment
 } from "aws/TypedAPI/subscriptions";
+import { PersistGate } from "redux-persist/lib/integration/react";
 
 Amplify.configure(awsconfig);
 Auth.configure(awsconfig);
@@ -86,13 +87,19 @@ const App: FC = () => {
   return (
     <Provider store={store}>
       {displayApp ? (
-        <ToastProviderComponent>
-          {authState === AuthState.SIGNED_IN ? (
-            <MainNavigationStack setAuthState={setAuthState} />
-          ) : authState === AuthState.SIGNED_OUT ? (
-            <AuthStackNavigator setAuthState={setAuthState} />
-          ) : null}
-        </ToastProviderComponent>
+        // PersistGate delays the rendering of the UI until the persisted redux state has been retrieved
+        <PersistGate
+          loading={<LoadingIndicator overlayBackgroundColor />}
+          persistor={persistor}
+        >
+          <ToastProviderComponent>
+            {authState === AuthState.SIGNED_IN ? (
+              <MainNavigationStack setAuthState={setAuthState} />
+            ) : authState === AuthState.SIGNED_OUT ? (
+              <AuthStackNavigator setAuthState={setAuthState} />
+            ) : null}
+          </ToastProviderComponent>
+        </PersistGate>
       ) : (
         <LoadingIndicator overlayBackgroundColor />
       )}
