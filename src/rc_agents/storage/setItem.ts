@@ -241,12 +241,12 @@ export const setPatientConfigurations = async (
  *  @param patientMedConfig an object with an array of medication configurations mapped to a patient
  */
 export const setPatientMedicationConfigurations = async (
- patientMedConfig: AsyncStorageType[AsyncStorageKeys.MEDICATION_CONFIGURATIONS]
+  patientMedConfig: AsyncStorageType[AsyncStorageKeys.MEDICATION_CONFIGURATIONS]
 ): Promise<void> => {
- await AsyncStorage.setItem(
-   AsyncStorageKeys.MEDICATION_CONFIGURATIONS,
-   JSON.stringify(patientMedConfig)
- );
+  await AsyncStorage.setItem(
+    AsyncStorageKeys.MEDICATION_CONFIGURATIONS,
+    JSON.stringify(patientMedConfig)
+  );
 };
 
 /**
