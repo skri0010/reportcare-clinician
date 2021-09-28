@@ -15,7 +15,7 @@ import {
   ProcedureAttributes,
   ActionFrameIDs
 } from "rc_agents/clinician_framework";
-import { Storage } from "rc_agents/storage";
+import { LocalStorage } from "rc_agents/storage";
 
 /**
  * Class to represent the activity for associating clinician id with entry data.
@@ -37,8 +37,8 @@ class AssociateData extends Activity {
     super.doActivity(agent, [rule2]);
 
     try {
-      const signUpDetails = await Storage.getSignUpDetails();
-      const username = await Storage.getUsername();
+      const signUpDetails = await LocalStorage.getSignUpDetails();
+      const username = await LocalStorage.getUsername();
 
       // New user signs in for the first time
       if (signUpDetails && username && signUpDetails.username === username) {

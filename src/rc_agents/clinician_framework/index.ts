@@ -45,6 +45,14 @@ export const ActionFrameIDs = {
     RETRIEVE_ALERT_HISTORY: "RetrieveAlertHistory",
     REQUEST_DISPLAY_ALERT_HISTORY: "RequestDisplayAlertHistory",
 
+    // HF-OTP-III: Single patient's medical records
+    CREATE_MEDICAL_RECORD: "CreateMedicalRecord",
+    RETRIEVE_MEDICAL_RECORDS: "RetrieveMedicalRecords",
+    REQUEST_DISPLAY_MEDICAL_RECORDS: "RequestDisplayMedicalRecords",
+    RETRIEVE_MEDICAL_RECORD_CONTENT: "RetrieveMedicalRecordContent",
+    REQUEST_DISPLAY_MEDICAL_RECORD_CONTENT:
+      "RequestDisplayMedicalRecordContent",
+
     // SRD-I: Patient Assignments
     RETRIEVE_PENDING_PATIENT_ASSIGNMENTS: "RetrievePendingPatientAssignments",
     REQUEST_DISPLAY_PENDING_PATIENT_ASSIGNMENTS:
@@ -86,6 +94,10 @@ export const ActionFrameIDs = {
     // HF-OTP-II: Single patient's details
     VISUALIZE_PARAMETERS: "VisualizeParameters",
     DISPLAY_ALERT_HISTORY: "DisplayAlertHistory",
+
+    // HF-OTP-III: Single patient's medical records
+    DISPLAY_MEDICAL_RECORDS: "DisplayMedicalRecords",
+    DISPLAY_MEDICAL_RECORD_CONTENT: "DisplayMedicalRecordContent",
 
     // SRD-I: Patient Assignments
     DISPLAY_PENDING_PATIENT_ASSIGNMENTS: "DisplayPendingPatientAssignments",
@@ -155,6 +167,7 @@ export enum ProcedureAttributes {
   ADC = "ADC",
   HF_OTP_I = "HF-OTP-I",
   HF_OTP_II = "HF-OTP-II",
+  HF_OTP_III = "HF-OTP-III",
   SRD_I = "SRD-I",
   SRD_II = "SRD-II",
   SRD_III = "SRD-III",
@@ -225,7 +238,7 @@ export enum ClinicianAttributes {
   ALERT_TODO = "AlertTodo",
 
   //SRD-IV - Clinician Contacts
-  RETRIEVE_CLINICIAN_CONTACTS = "RetrieveClinicianContatcts",
+  RETRIEVE_CLINICIAN_CONTACTS = "RetrieveClinicianContacts",
   CLINICIAN_CONTACTS_RETRIEVED = "ClinicianContactsRetrieved",
   CLINICIAN_CONTACTS = "ClinicianContacts"
 }
@@ -246,6 +259,18 @@ export enum PatientAttributes {
   PATIENT_ALERT_HISTORY_RETRIEVED = "PatientAlertHistoryRetrieved",
   PATIENT_TO_CONFIGURE = "PatientToConfigure",
   CONFIGURE_PATIENT = "ConfigurePatient",
+
+  // HF-OTP-III: Single patient's medical records
+  CREATE_MEDICAL_RECORD = "CreateMedicalRecord",
+  MEDICAL_RECORD_TO_CREATE = "MedicalRecordToCreate",
+  RETRIEVE_MEDICAL_RECORDS = "RetrieveMedicalRecord",
+  PATIENT_TO_VIEW_MEDICAL_RECORDS = "PatientToViewMedicalRecords",
+  MEDICAL_RECORDS = "MedicalRecords",
+  MEDICAL_RECORDS_RETRIEVED = "MedicalRecordsRetrieved",
+  MEDICAL_RECORD_TO_VIEW = "MedicalRecordToView",
+  RETRIEVE_MEDICAL_RECORD_CONTENT = "RetrieveMedicalRecordContent",
+  MEDICAL_RECORD_CONTENT = "MedicalRecordContent",
+  MEDICAL_RECORD_CONTENT_RETRIEVED = "MedicalRecordContentRetrieved",
 
   // SRD-I: Patient Assignments
   PENDING_PATIENT_ASSIGNMENTS = "PendingPatientAssignments",

@@ -99,10 +99,22 @@ export declare class ReportVitals {
 export declare class MedicalRecord {
   readonly id: string;
   readonly patientID: string;
+  readonly clinicianID: string;
   readonly title: string;
   readonly fileKey: string;
   constructor(init: ModelInit<MedicalRecord>);
   static copyOf(source: MedicalRecord, mutator: (draft: MutableModel<MedicalRecord>) => MutableModel<MedicalRecord> | void): MedicalRecord;
+}
+
+export declare class IcdCrtRecord {
+  readonly id: string;
+  readonly patientID: string;
+  readonly clinicianID: string;
+  readonly title: string;
+  readonly dateTime: string;
+  readonly fileKey: string;
+  constructor(init: ModelInit<IcdCrtRecord>);
+  static copyOf(source: IcdCrtRecord, mutator: (draft: MutableModel<IcdCrtRecord>) => MutableModel<IcdCrtRecord> | void): IcdCrtRecord;
 }
 
 export declare class ClinicianInfo {

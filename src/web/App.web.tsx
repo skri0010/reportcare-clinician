@@ -6,9 +6,10 @@ import { AuthStackNavigator } from "web/navigation/navigators/AuthStackNavigator
 import awsconfig from "aws/aws-exports";
 import { Amplify } from "@aws-amplify/core";
 import { Auth } from "@aws-amplify/auth";
+import { Storage } from "@aws-amplify/storage";
 import { AuthState } from "web/auth_screens";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
-import { Storage } from "rc_agents/storage";
+import { LocalStorage } from "rc_agents/storage";
 import { ToastProviderComponent } from "components/Indicators/ToastProvider";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AgentIDs } from "rc_agents/clinician_framework";
@@ -62,7 +63,7 @@ const App: FC = () => {
     try {
       await Auth.currentAuthenticatedUser();
       // In case local storage has been cleared
-      const clinicianId = await Storage.getClinicianID();
+      const clinicianId = await LocalStorage.getClinicianID();
       if (clinicianId) {
         setAuthState(AuthState.SIGNED_IN);
       } else {

@@ -11,6 +11,7 @@ interface RowButtonProps {
   fontSize?: number;
   backgroundColor?: string;
   textColor?: string;
+  disabled?: boolean;
 }
 
 export const RowButton: FC<RowButtonProps> = ({
@@ -18,7 +19,8 @@ export const RowButton: FC<RowButtonProps> = ({
   onPress,
   fontSize,
   backgroundColor,
-  textColor
+  textColor,
+  disabled
 }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
@@ -34,6 +36,7 @@ export const RowButton: FC<RowButtonProps> = ({
           }
         ]}
         onPress={onPress}
+        disabled={disabled}
       >
         <H5
           text={i18n.t(title)}

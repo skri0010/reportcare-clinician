@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleProp, ViewStyle, View, TextInput, Platform } from "react-native";
+import { StyleProp, View, TextInput, Platform, TextStyle } from "react-native";
 import { RootState, select } from "util/useRedux";
 import { ScaledSheet } from "react-native-size-matters";
 import { H7 } from "components/Text";
@@ -8,7 +8,7 @@ import { Label } from "components/Text/Label";
 interface TextFieldProps {
   editable?: boolean;
   label: string;
-  labelStyle?: StyleProp<ViewStyle>;
+  labelStyle?: StyleProp<TextStyle>;
   value: string;
   onChange?: (text: string) => void;
   placeholder?: string;

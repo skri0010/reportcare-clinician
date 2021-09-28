@@ -1,4 +1,4 @@
-import { PatientInfo } from "aws/API";
+import { MedicalRecord, PatientInfo } from "aws/API";
 import {
   BeliefKeys,
   ClinicianAttributes,
@@ -6,7 +6,7 @@ import {
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
 import { ProcedureConst } from "agents-framework/Enums";
-import { agentALA, agentDTA } from "rc_agents/agents";
+import { agentALA, agentDTA, agentUXSA } from "rc_agents/agents";
 import { Belief } from "agents-framework";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
@@ -14,7 +14,8 @@ import {
   FetchAlertsMode,
   PatientAssignmentResolution,
   TodoInput,
-  TodoStatus
+  TodoStatus,
+  MedicalRecordInput
 } from "rc_agents/model";
 import {
   AlertNotification,
@@ -24,7 +25,7 @@ import {
 // HF-OTP-I
 // Triggers RetrievePatientsByRole of DTA
 export const triggerRetrievePatientsByRole = (): void => {
-  agentDTA.addBelief(
+  agentUXSA.addBelief(
     new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.RETRIEVE_ROLE, true)
   );
 
@@ -381,6 +382,86 @@ export const triggerRetrieveTodoDetails = (input: string): void => {
     new Belief(
       BeliefKeys.PROCEDURE,
       ProcedureAttributes.SRD_III,
+      ProcedureConst.ACTIVE
+    )
+  );
+};
+
+// HF-OTP-III: Triggers CreateMedicalRecord of DTA
+export const triggerCreateMedicalRecord = (input: MedicalRecordInput): void => {
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PATIENT,
+      PatientAttributes.MEDICAL_RECORD_TO_CREATE,
+      input
+    ),
+    false
+  );
+  agentDTA.addBelief(
+    new Belief(
+      BeliefKeys.PATIENT,
+      PatientAttributes.CREATE_MEDICAL_RECORD,
+      true
+    )
+  );
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PROCEDURE,
+      ProcedureAttributes.HF_OTP_III,
+      ProcedureConst.ACTIVE
+    )
+  );
+};
+
+// HF-OTP-III: Triggers RetrieveMedicalRecords of DTA
+export const triggerRetrieveMedicalRecords = (patientID: string): void => {
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PATIENT,
+      PatientAttributes.PATIENT_TO_VIEW_MEDICAL_RECORDS,
+      patientID
+    ),
+    false
+  );
+  agentDTA.addBelief(
+    new Belief(
+      BeliefKeys.PATIENT,
+      PatientAttributes.RETRIEVE_MEDICAL_RECORDS,
+      true
+    )
+  );
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PROCEDURE,
+      ProcedureAttributes.HF_OTP_III,
+      ProcedureConst.ACTIVE
+    )
+  );
+};
+
+// HF-OTP-III: Triggers RetrieveMedicalRecordContent of DTA
+export const triggerRetrieveMedicalRecordContent = (
+  input: MedicalRecord
+): void => {
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PATIENT,
+      PatientAttributes.MEDICAL_RECORD_TO_VIEW,
+      input
+    ),
+    false
+  );
+  agentDTA.addBelief(
+    new Belief(
+      BeliefKeys.PATIENT,
+      PatientAttributes.RETRIEVE_MEDICAL_RECORD_CONTENT,
+      true
+    )
+  );
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PROCEDURE,
+      ProcedureAttributes.HF_OTP_III,
       ProcedureConst.ACTIVE
     )
   );

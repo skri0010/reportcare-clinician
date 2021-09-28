@@ -17,7 +17,7 @@ import { useToast } from "react-native-toast-notifications";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AuthButton } from "components/Buttons/AuthButton";
 import { TextField } from "components/InputComponents/TextField";
-import { Storage } from "rc_agents/storage";
+import { LocalStorage } from "rc_agents/storage";
 import { getPickerStyles } from "util/getStyles";
 import { Label } from "components/Text/Label";
 import { AuthScreenProps } from "web/navigation/types/AuthenticationStackProps";
@@ -57,7 +57,7 @@ export const RegisterAccount: FC<
       .then(async () => {
         setRegistering(false);
         toast.show(i18n.t("Auth_Registration.CodeSent"), { type: "success" });
-        await Storage.setSignUpDetails({
+        await LocalStorage.setSignUpDetails({
           username: username,
           name: name,
           hospitalName: hospital,
