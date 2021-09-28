@@ -8,7 +8,6 @@ import { ClinicianProtectedInfo } from "aws/API";
 import AgentAPI from "agents-framework/AgentAPI";
 import cloneDeep from "lodash/cloneDeep";
 import { ClinicianAgentAPI } from "./ClinicianAgentAPI";
-import ActivityNode from "agents-framework/base/Engine/Rete/ActivityNode";
 
 /**
  * Class representing the Agent
@@ -24,9 +23,6 @@ export class ClinicianAgent extends Agent {
   // Used when certain beliefs should be excluded from being stored
   // NOTE: Currently unused since all beliefs are stored
   private storableAttributes: string[] = [CommonAttributes.LAST_ACTIVITY];
-
-  // Keeps track of current running activity if any
-  private currentActivity: ActivityNode | undefined;
 
   constructor(
     id: string,
