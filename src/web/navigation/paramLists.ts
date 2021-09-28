@@ -51,7 +51,7 @@ export type TodoDetailsStackParamList = {
 // Authentication Stack Parameters
 export type AuthenticationStackParamList = {
   [AuthenticationScreenName.SIGN_IN]: undefined;
-  [AuthenticationScreenName.CONFIRM_REGISTRATION]: { username: string };
+  [AuthenticationScreenName.CONFIRM_REGISTRATION]: { username?: string };
   [AuthenticationScreenName.FORGET_PASSWORD]: undefined;
   [AuthenticationScreenName.REGISTRATION]: undefined;
 };

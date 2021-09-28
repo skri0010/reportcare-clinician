@@ -1,8 +1,7 @@
 import React, { FC, useState, useEffect } from "react";
-import { Dimensions } from "react-native";
+import { View, Dimensions } from "react-native";
 import { Auth } from "@aws-amplify/auth";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { ms, ScaledSheet } from "react-native-size-matters";
+import { ScaledSheet } from "react-native-size-matters";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { validateCode, validateUsername } from "util/validation";
 import i18n from "util/language/i18n";
@@ -64,11 +63,8 @@ export const ConfirmRegistration: FC<
   }, [username, code]);
 
   return (
-    <ScreenWrapper>
-      <SafeAreaView
-        style={styles.safeAreaContainer}
-        pointerEvents={confirming ? "none" : "auto"}
-      >
+    <ScreenWrapper pointerEvents={confirming ? "none" : "auto"}>
+      <View style={styles.container}>
         {/* Username */}
         <TextField
           editable={false}
@@ -96,15 +92,15 @@ export const ConfirmRegistration: FC<
           buttonTitle={i18n.t("Auth_ConfirmRegistration.Confirm")}
           onPress={inputValid ? confirm : () => null}
         />
-      </SafeAreaView>
+      </View>
       {confirming && <LoadingIndicator overlayBackgroundColor />}
     </ScreenWrapper>
   );
 };
 
 const styles = ScaledSheet.create({
-  safeAreaContainer: {
-    margin: ms(30),
+  container: {
+    margin: "30@ms",
     alignSelf: "center",
     width: Dimensions.get("window").width / 2
   }

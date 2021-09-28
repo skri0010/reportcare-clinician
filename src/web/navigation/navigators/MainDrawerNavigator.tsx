@@ -109,7 +109,7 @@ export const MainDrawerNavigator: FC<DrawerNavigationProps> = ({ signOut }) => {
             iconLabel: i18n.t("ScreenName.Patients")
           })
         }}
-        initialParams={initialParamsList[ScreenName.PATIENTS]}
+        initialParams={initialParamsList.Patients}
       />
       <Drawer.Screen
         name={ScreenName.CLINICIANS}
@@ -140,7 +140,7 @@ export const MainDrawerNavigator: FC<DrawerNavigationProps> = ({ signOut }) => {
             iconLabel: i18n.t("ScreenName.Todo")
           })
         }}
-        initialParams={initialParamsList[ScreenName.TODO]}
+        initialParams={initialParamsList.Todo}
       />
       {/* To be implemented in future versions */}
       {/* <Drawer.Screen
