@@ -240,7 +240,6 @@ type ClinicianInfo
     ]
   )
   @key(fields: ["clinicianID"]) {
-  id: ID!
   clinicianID: String!
   name: String!
   hospitalName: String!
@@ -271,7 +270,6 @@ type ClinicianProtectedInfo
     ]
   )
   @key(fields: ["clinicianID"]) {
-  id: ID!
   clinicianID: String!
   facts: String!
   APS: String!
@@ -308,7 +306,6 @@ type ClinicianPatientMap
     fields: ["patientID", "clinicianID"]
     queryField: "listClinicianMappingsByPatientID"
   ) {
-  id: ID!
   clinicianID: String!
   patientID: String!
   clinicianInfo: ClinicianInfo! @connection(fields: ["clinicianID"])
@@ -352,13 +349,22 @@ type PatientAssignment
     fields: ["clinicianID", "pending"]
     queryField: "listPendingPatientAssignments"
   ) {
-  id: ID!
   patientID: String!
   clinicianID: String!
   patientName: String!
   pending: String
   resolution: String
-  reassignedClinicianID: String
+  reassignToClinicianID: String
+  adminReassignFromClinicianID: String
+    @auth(
+      rules: [
+        {
+          allow: groups
+          groups: ["Admin"]
+          operations: [create, update, delete]
+        }
+      ]
+    )
   adminCompleted: Boolean
     @auth(
       rules: [

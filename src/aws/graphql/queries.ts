@@ -653,7 +653,6 @@ export const syncClinicianInfos = /* GraphQL */ `
       lastSync: $lastSync
     ) {
       items {
-        id
         clinicianID
         name
         hospitalName
@@ -672,13 +671,11 @@ export const syncClinicianInfos = /* GraphQL */ `
 export const getClinicianInfo = /* GraphQL */ `
   query GetClinicianInfo($clinicianID: String!) {
     getClinicianInfo(clinicianID: $clinicianID) {
-      id
       clinicianID
       name
       hospitalName
       role
       protectedInfo {
-        id
         clinicianID
         facts
         APS
@@ -717,7 +714,6 @@ export const listClinicianInfos = /* GraphQL */ `
       sortDirection: $sortDirection
     ) {
       items {
-        id
         clinicianID
         name
         hospitalName
@@ -747,7 +743,6 @@ export const syncClinicianProtectedInfos = /* GraphQL */ `
       lastSync: $lastSync
     ) {
       items {
-        id
         clinicianID
         facts
         APS
@@ -770,7 +765,6 @@ export const syncClinicianProtectedInfos = /* GraphQL */ `
 export const getClinicianProtectedInfo = /* GraphQL */ `
   query GetClinicianProtectedInfo($clinicianID: String!) {
     getClinicianProtectedInfo(clinicianID: $clinicianID) {
-      id
       clinicianID
       facts
       APS
@@ -803,7 +797,6 @@ export const listClinicianProtectedInfos = /* GraphQL */ `
       sortDirection: $sortDirection
     ) {
       items {
-        id
         clinicianID
         facts
         APS
@@ -837,7 +830,6 @@ export const syncClinicianPatientMaps = /* GraphQL */ `
       lastSync: $lastSync
     ) {
       items {
-        id
         clinicianID
         patientID
         _version
@@ -854,11 +846,9 @@ export const syncClinicianPatientMaps = /* GraphQL */ `
 export const getClinicianPatientMap = /* GraphQL */ `
   query GetClinicianPatientMap($clinicianID: String!, $patientID: String!) {
     getClinicianPatientMap(clinicianID: $clinicianID, patientID: $patientID) {
-      id
       clinicianID
       patientID
       clinicianInfo {
-        id
         clinicianID
         name
         hospitalName
@@ -895,7 +885,6 @@ export const listClinicianPatientMaps = /* GraphQL */ `
       sortDirection: $sortDirection
     ) {
       items {
-        id
         clinicianID
         patientID
         _version
@@ -923,13 +912,13 @@ export const syncPatientAssignments = /* GraphQL */ `
       lastSync: $lastSync
     ) {
       items {
-        id
         patientID
         clinicianID
         patientName
         pending
         resolution
-        reassignedClinicianID
+        reassignToClinicianID
+        adminReassignFromClinicianID
         adminCompleted
         _version
         _deleted
@@ -945,13 +934,13 @@ export const syncPatientAssignments = /* GraphQL */ `
 export const getPatientAssignment = /* GraphQL */ `
   query GetPatientAssignment($patientID: String!, $clinicianID: String!) {
     getPatientAssignment(patientID: $patientID, clinicianID: $clinicianID) {
-      id
       patientID
       clinicianID
       patientName
       pending
       resolution
-      reassignedClinicianID
+      reassignToClinicianID
+      adminReassignFromClinicianID
       adminCompleted
       _version
       _deleted
@@ -979,13 +968,13 @@ export const listPatientAssignments = /* GraphQL */ `
       sortDirection: $sortDirection
     ) {
       items {
-        id
         patientID
         clinicianID
         patientName
         pending
         resolution
-        reassignedClinicianID
+        reassignToClinicianID
+        adminReassignFromClinicianID
         adminCompleted
         _version
         _deleted
@@ -1635,7 +1624,6 @@ export const listClinicianMappingsByPatientID = /* GraphQL */ `
       nextToken: $nextToken
     ) {
       items {
-        id
         clinicianID
         patientID
         _version
@@ -1667,13 +1655,13 @@ export const listPendingPatientAssignments = /* GraphQL */ `
       nextToken: $nextToken
     ) {
       items {
-        id
         patientID
         clinicianID
         patientName
         pending
         resolution
-        reassignedClinicianID
+        reassignToClinicianID
+        adminReassignFromClinicianID
         adminCompleted
         _version
         _deleted
