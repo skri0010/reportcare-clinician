@@ -67,7 +67,7 @@ export type AsyncStorageType = {
   [AsyncStorageKeys.ALERTS]: AlertInfo[];
   [AsyncStorageKeys.PATIENT_CONFIGURATIONS]: PatientInfo[];
   [AsyncStorageKeys.MEDICATION_CONFIGURATIONS]: {
-    [key: string]: MedicationInfo[];
+    [key: string]: MedInput[];
   };
   [AsyncStorageKeys.ALERT_INFOS]: {
     [key: string]: { [key: string]: AlertInfo };

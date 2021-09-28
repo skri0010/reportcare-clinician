@@ -21,7 +21,9 @@ export const PatientOverview: FC<PatientOverviewProps> = ({ details }) => {
 
   const [vitals, setVitals] = useState<ReportVitals | null>(null);
   const [symptoms, setSymptoms] = useState<ReportSymptom[]>([]);
-  const [medications, setMedications] = useState<MedicationInfo[]>([]);
+  const [medications, setMedications] = useState<MedicationInfo[] | MedInput[]>(
+    []
+  );
 
   useEffect(() => {
     // TODO: This code needs to be modified for changing days

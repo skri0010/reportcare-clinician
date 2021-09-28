@@ -68,7 +68,7 @@ export interface PatientDetails {
   activityInfos: LocalActivityInfos;
   symptomReports: LocalReportSymptoms;
   vitalsReports: LocalReportVitals;
-  medicationInfo: MedicationInfo[];
+  medicationInfo: MedInput[];
 }
 
 export type LocalActivityInfos = {
@@ -158,7 +158,8 @@ export interface TodoDetails {
 export interface MedInput {
   id?: string;
   name: string;
-  dosage: string;
-  frequency: string;
+  dosage: number;
+  frequency: number;
   patientID?: string;
+  records?: string;
 }

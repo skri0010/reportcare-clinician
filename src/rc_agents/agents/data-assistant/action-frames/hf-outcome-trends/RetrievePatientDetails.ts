@@ -16,7 +16,7 @@ import {
   PatientAttributes,
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
-import { PatientDetails } from "rc_agents/model";
+import { MedInput, PatientDetails } from "rc_agents/model";
 import {
   listActivityInfosByPatientID,
   listReportSymptomsByPatientID,
@@ -149,6 +149,14 @@ class RetrievePatientDetails extends Activity {
 
             medicationInfos.forEach((medication: MedicationInfo | null) => {
               if (medication) {
+                const localMed: MedInput = {
+                  id: medication.id,
+                  name: medication.name,
+                  dosage: medication.dosage,
+                  frequency: medication.frequency,
+                  patientID: medication.patientID,
+                  records: medication.records
+                };
                 patientDetails.medicationInfo.push(medication);
               }
             });

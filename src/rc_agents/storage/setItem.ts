@@ -173,7 +173,7 @@ export const setPatient = async (patient: PatientInfo): Promise<void> => {
  * @param patientID patient ID
  */
 export const setPatientMedInfo = async (
-  medicationInfo: MedicationInfo[],
+  medicationInfo: MedicationInfo[] | MedInput[],
   patientID: string
 ): Promise<void> => {
   const localPatient = await getPatientDetails(patientID);

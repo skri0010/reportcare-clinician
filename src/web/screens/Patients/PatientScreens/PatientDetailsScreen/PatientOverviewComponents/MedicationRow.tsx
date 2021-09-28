@@ -5,9 +5,10 @@ import { ms } from "react-native-size-matters";
 import { H4 } from "components/Text";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { MedicationInfo } from "aws/API";
+import { MedInput } from "rc_agents/model";
 
 interface MedicationRowProps {
-  medicationInfo: MedicationInfo;
+  medicationInfo: MedInput;
 }
 
 export const MedicationRow: FC<MedicationRowProps> = ({ medicationInfo }) => {
@@ -16,13 +17,16 @@ export const MedicationRow: FC<MedicationRowProps> = ({ medicationInfo }) => {
   }));
 
   function validateMeds() {
-    const recordObject = JSON.parse(medicationInfo.records);
-    const meds = recordObject[new Date().toDateString()] as string[] | null;
-    if (meds) {
-      if (meds.length === medicationInfo.frequency) {
-        return true;
+    if (medicationInfo.records) {
+      const recordObject = JSON.parse(medicationInfo.records);
+      const meds = recordObject[new Date().toDateString()] as string[] | null;
+      if (meds) {
+        if (meds.length === medicationInfo.frequency) {
+          return true;
+        }
       }
     }
+    return false;
   }
 
   const medicineTaken = validateMeds();

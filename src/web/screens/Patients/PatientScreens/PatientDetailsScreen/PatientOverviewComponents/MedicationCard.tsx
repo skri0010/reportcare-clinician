@@ -6,9 +6,10 @@ import { mockMedicationRecord } from "mock/mockMedication";
 import { MedicationRow } from "./MedicationRow";
 import i18n from "util/language/i18n";
 import { MedicationInfo } from "aws/API";
+import { MedInput } from "rc_agents/model";
 
 interface MedicationTakenProps {
-  medications: MedicationInfo[];
+  medications: MedInput[];
   maxHeight: number;
   minHeight: number;
 }
@@ -30,7 +31,7 @@ export const MedicationTakenCard: FC<MedicationTakenProps> = ({
         showsVerticalScrollIndicator={false}
         data={medications}
         renderItem={({ item }) => <MedicationRow medicationInfo={item} />}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.name}
       />
     </CardWrapper>
   );
