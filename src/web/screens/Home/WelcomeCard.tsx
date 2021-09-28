@@ -5,7 +5,7 @@ import { ScaledSheet } from "react-native-size-matters";
 import { H3, H5 } from "components/Text";
 import { CardWrapper } from "./CardWrapper";
 import i18n from "util/language/i18n";
-import { Storage } from "rc_agents/storage";
+import { LocalStorage } from "rc_agents/storage";
 
 interface WelcomeCardProps {
   flex?: number;
@@ -17,20 +17,20 @@ export const WelcomeCard: FC<WelcomeCardProps> = ({ flex = 1, maxHeight }) => {
     colors: state.settings.colors
   }));
 
-  const [username, setUsername] = useState<string>("");
+  const [clinicianName, setClinicianName] = useState<string>("");
 
   const cardTextColor = {
     color: colors.primaryTextColor
   } as TextStyle;
 
   useEffect(() => {
-    fetchUsername();
+    fetchClinician();
   }, []);
 
-  const fetchUsername = async () => {
-    const clinician = await Storage.getClinician();
+  const fetchClinician = async () => {
+    const clinician = await LocalStorage.getClinician();
     if (clinician) {
-      setUsername(clinician.name);
+      setClinicianName(clinician.name);
     }
   };
 
@@ -50,7 +50,7 @@ export const WelcomeCard: FC<WelcomeCardProps> = ({ flex = 1, maxHeight }) => {
           <View style={styles.messageContainer}>
             {/* Welcome title */}
             <H3
-              text={`${i18n.t("Home.Welcome")}${username}`}
+              text={`${i18n.t("Home.Welcome")}${clinicianName}`}
               style={[styles.username, cardTextColor]}
             />
             {/* Welcome message */}

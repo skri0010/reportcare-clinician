@@ -12,7 +12,7 @@ import {
   AppAttributes,
   BeliefKeys
 } from "rc_agents/clinician_framework";
-import { AsyncStorageKeys, Storage } from "rc_agents/storage";
+import { AsyncStorageKeys, LocalStorage } from "rc_agents/storage";
 import { agentNWA } from "rc_agents/agents";
 import { replaceAlertsSync } from "rc_agents/storage/setItem";
 import { updateAlertInfo } from "rc_agents/agents/data-assistant/action-frames/triage-alert-hf-clinic/UpdateAlert";
@@ -41,10 +41,10 @@ class SyncUpdateAlerts extends Activity {
 
     try {
       // Gets locally stored clinicianId
-      const clinicianId = await Storage.getClinicianID();
+      const clinicianId = await LocalStorage.getClinicianID();
 
       // Gets alerts to be synced
-      const alerts = await Storage.getAlertInfosSync();
+      const alerts = await LocalStorage.getAlertInfosSync();
 
       if (alerts && clinicianId) {
         // Indicator of whether all pending updates have been synced
@@ -64,7 +64,7 @@ class SyncUpdateAlerts extends Activity {
 
         // Removes entry if all alerts are synced
         if (successfulIds.length === alerts.length) {
-          await Storage.removeItem(AsyncStorageKeys.ALERTS_SYNC);
+          await LocalStorage.removeItem(AsyncStorageKeys.ALERTS_SYNC);
         } else {
           // Removes successfully synced alerts
           successfulIds.forEach((id) => {

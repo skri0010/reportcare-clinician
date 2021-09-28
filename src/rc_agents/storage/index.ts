@@ -17,7 +17,7 @@ import {
 /**
  * AsyncStorage access functions (SET, GET and REMOVE) with types
  */
-export const Storage = accessFunctions;
+export const LocalStorage = accessFunctions;
 
 // Keys for storing data locally in AsyncStorage
 export enum AsyncStorageKeys {

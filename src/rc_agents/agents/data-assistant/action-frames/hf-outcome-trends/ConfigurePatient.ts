@@ -23,7 +23,7 @@ import {
   CreateMedicationInfoInput,
   MedicationInfo
 } from "aws/API";
-import { Storage } from "rc_agents/storage";
+import { LocalStorage } from "rc_agents/storage";
 import {
   setConfigurationSuccessful,
   setConfiguringPatient
@@ -103,7 +103,7 @@ class ConfigurePatient extends Activity {
           if (medInfosCreated.length === medConfiguration.length) {
             medConfigurationSuccessful = true;
             // Stores the med info into patient details
-            await Storage.setPatientMedInfo(
+            await LocalStorage.setPatientMedInfo(
               medInfosCreated,
               configuration.patientID
             );
@@ -112,19 +112,21 @@ class ConfigurePatient extends Activity {
         // Device is offline: store patient configuration locally and update local patient details
         else if (!isOnline) {
           // Update local patient details
-          await Storage.setPatient(configuration);
+          await LocalStorage.setPatient(configuration);
 
           //  Update local medication info for the patient
-          await Storage.setPatientMedInfo(
+          await LocalStorage.setPatientMedInfo(
             medConfiguration,
             configuration.patientID
           );
 
           // Store patient configuration to be synced later on
-          await Storage.setPatientConfigurations([configuration]);
+          await LocalStorage.setPatientConfigurations([configuration]);
 
           // Stores med configs to be synced later on
-          await Storage.setPatientMedicationConfigurations(medConfiguration);
+          await LocalStorage.setPatientMedicationConfigurations(
+            medConfiguration
+          );
 
           configurationSuccessful = true;
           medConfigurationSuccessful = true;
@@ -271,7 +273,7 @@ export const updatePatientConfiguration = async (
   }
 
   // Updates locally stored patient details
-  await Storage.setPatient(configuration);
+  await LocalStorage.setPatient(configuration);
 
   return updateSuccessful;
 };

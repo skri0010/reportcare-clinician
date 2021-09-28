@@ -12,7 +12,7 @@ import {
   BeliefKeys,
   setRetryLaterTimeout
 } from "rc_agents/clinician_framework";
-import { Storage, AsyncStorageKeys } from "rc_agents/storage";
+import { LocalStorage, AsyncStorageKeys } from "rc_agents/storage";
 import { agentNWA } from "rc_agents/agents";
 // eslint-disable-next-line no-restricted-imports
 import {
@@ -40,11 +40,11 @@ class SyncConfigurePatients extends Activity {
 
     try {
       // Get locally stored configurations
-      const configurations = await Storage.getPatientConfigurations();
+      const configurations = await LocalStorage.getPatientConfigurations();
 
       // Get locally stored medication configurations
       const medConfigurations =
-        await Storage.getPatientMedicationConfigurations();
+        await LocalStorage.getPatientMedicationConfigurations();
 
       if (configurations && medConfigurations) {
         // Indicator of whether all patient configurations have been synced
@@ -101,11 +101,15 @@ class SyncConfigurePatients extends Activity {
 
         // Remove AsyncStorage entry if all configurations and medication configurations are updated
         if (configurationsSuccessful && medConfigurationSuccessful) {
-          await Storage.removeItem(AsyncStorageKeys.PATIENT_CONFIGURATIONS);
-          await Storage.removeItem(AsyncStorageKeys.MEDICATION_CONFIGURATIONS);
+          await LocalStorage.removeItem(
+            AsyncStorageKeys.PATIENT_CONFIGURATIONS
+          );
+          await LocalStorage.removeItem(
+            AsyncStorageKeys.MEDICATION_CONFIGURATIONS
+          );
         } else {
           if (succeedIndices.length > 0) {
-            await Storage.setPatientConfigurations(
+            await LocalStorage.setPatientConfigurations(
               configurations.filter(
                 (_, index) => !succeedIndices.includes(index)
               )
@@ -113,7 +117,7 @@ class SyncConfigurePatients extends Activity {
           }
           if (failedSyncMedInfo.length > 0) {
             // Store the unsynced medication configurations back into local storage
-            await Storage.setPatientMedicationConfigurations(
+            await LocalStorage.setPatientMedicationConfigurations(
               medConfigurations.filter((_, index) =>
                 failedSyncMedInfo.includes(index)
               )

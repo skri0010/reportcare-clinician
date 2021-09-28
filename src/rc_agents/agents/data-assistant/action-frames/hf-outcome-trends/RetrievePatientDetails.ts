@@ -28,7 +28,7 @@ import {
   ReportSymptom,
   ReportVitals
 } from "aws/API";
-import { Storage } from "rc_agents/storage";
+import { LocalStorage } from "rc_agents/storage";
 import { setFetchingPatientDetails } from "ic-redux/actions/agents/actionCreator";
 import { store } from "util/useRedux";
 
@@ -69,7 +69,8 @@ class RetrievePatientDetails extends Activity {
           activityInfos: {},
           symptomReports: {},
           vitalsReports: {},
-          medicationInfo: []
+          medicationInfo: [],
+          medicalRecords: {}
         };
         let patientDetailsRetrieved = false;
 
@@ -139,13 +140,13 @@ class RetrievePatientDetails extends Activity {
           }
 
           // Save retrieved patient
-          await Storage.setPatientDetails(patientDetails);
+          await LocalStorage.setPatientDetails(patientDetails);
           patientDetailsRetrieved = true;
         }
         // Device is offline: Retrieve locally stored data (if any)
         else if (!isOnline) {
           // Get local patients' details
-          const localPatientDetails = await Storage.getPatientDetails(
+          const localPatientDetails = await LocalStorage.getPatientDetails(
             patientInfo.patientID
           );
 

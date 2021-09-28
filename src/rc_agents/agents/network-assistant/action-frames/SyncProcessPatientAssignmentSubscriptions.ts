@@ -12,7 +12,7 @@ import {
   BeliefKeys,
   setRetryLaterTimeout
 } from "rc_agents/clinician_framework";
-import { Storage, AsyncStorageKeys } from "rc_agents/storage";
+import { LocalStorage, AsyncStorageKeys } from "rc_agents/storage";
 import { agentNWA } from "rc_agents/agents";
 import { store } from "util/useRedux";
 import { PatientAssignment } from "aws/API";
@@ -40,7 +40,7 @@ class SyncProcessPatientAssignmentSubscriptions extends Activity {
     try {
       // Get locally stored patient assignment subscriptions
       const patientAssignmentSubscriptions =
-        await Storage.getPatientAssignmentSubscriptions();
+        await LocalStorage.getPatientAssignmentSubscriptions();
 
       if (patientAssignmentSubscriptions) {
         // Indicator of whether all patient assignment subscriptions have been processed
@@ -74,7 +74,7 @@ class SyncProcessPatientAssignmentSubscriptions extends Activity {
 
         if (retrievedPatientAssignments.length > 0) {
           // Inserts patient assignments into the locally stored list
-          await Storage.insertPendingPatientAssignments(
+          await LocalStorage.insertPendingPatientAssignments(
             retrievedPatientAssignments
           );
 
@@ -94,16 +94,16 @@ class SyncProcessPatientAssignmentSubscriptions extends Activity {
           );
         }
 
-        // Remove AsyncStorage entry if all patient assignment subscriptions are processed
+        // Remove AsyncLocalStorage entry if all patient assignment subscriptions are processed
         if (processSuccessful) {
-          await Storage.removeItem(
+          await LocalStorage.removeItem(
             AsyncStorageKeys.PATIENT_ASSIGNMENT_SUBSCRIPTIONS
           );
         }
 
         // Store patient assignment subscriptions that failed to be processed
         else if (processedIndices.length > 0) {
-          await Storage.setPatientAssignmentSubscriptions(
+          await LocalStorage.setPatientAssignmentSubscriptions(
             patientAssignmentSubscriptions.filter(
               (_, index) => !processedIndices.includes(index)
             )
