@@ -72,7 +72,7 @@ class RetrievePatientDetails extends Activity {
           vitalsReports: {},
           medicationInfo: []
         };
-        //let patientDetailsRetrieved = false;
+        let patientDetailsRetrieved = false;
 
         // Device is online
         if (isOnline) {
@@ -157,15 +157,41 @@ class RetrievePatientDetails extends Activity {
                   patientID: medication.patientID,
                   records: medication.records
                 };
-                patientDetails.medicationInfo.push(medication);
+                patientDetails.medicationInfo.push(localMed);
               }
             });
           }
           // Save retrieved patient
           await Storage.setPatientDetails(patientDetails);
-          //patientDetailsRetrieved = true;
+          patientDetailsRetrieved = true;
+        }
+        // Device is offline: Retrieve locally stored data (if any)
+        else if (!isOnline) {
+          // Get local patients' details
+          const localPatientDetails = await Storage.getPatientDetails(
+            patientInfo.patientID
+          );
+          patientDetailsRetrieved = true;
+          if (localPatientDetails?.activityInfos) {
+            patientDetails.activityInfos = localPatientDetails.activityInfos;
+          }
 
-          // Update Facts and Beliefs
+          if (localPatientDetails?.symptomReports) {
+            patientDetails.symptomReports = localPatientDetails.symptomReports;
+          }
+
+          if (localPatientDetails?.medicationInfo) {
+            patientDetails.medicationInfo = localPatientDetails.medicationInfo;
+          }
+
+          if (localPatientDetails?.vitalsReports) {
+            patientDetails.vitalsReports = localPatientDetails.vitalsReports;
+          }
+        }
+
+        // Trigger request to Communicate to USXA
+        if (patientDetailsRetrieved) {
+          // Update Facts
           // Store items
           agentAPI.addFact(
             new Belief(
@@ -175,35 +201,15 @@ class RetrievePatientDetails extends Activity {
             ),
             false
           );
-        }
-        // Device is offline: Retrieve locally stored data (if any)
-        else if (!isOnline) {
-          // Get local patients' details
-          const localPatientDetails = await Storage.getPatientDetails(
-            patientInfo.patientID
+          // Trigger request to Communicate to USXA
+          agent.addBelief(
+            new Belief(
+              BeliefKeys.PATIENT,
+              PatientAttributes.PATIENT_DETAILS_RETRIEVED,
+              true
+            )
           );
-          // Update Facts and Beliefs
-          // Store items
-          if (localPatientDetails) {
-            agentAPI.addFact(
-              new Belief(
-                BeliefKeys.PATIENT,
-                PatientAttributes.PATIENT_DETAILS,
-                localPatientDetails
-              ),
-              false
-            );
-          }
         }
-
-        // Trigger request to Communicate to USXA
-        agent.addBelief(
-          new Belief(
-            BeliefKeys.PATIENT,
-            PatientAttributes.PATIENT_DETAILS_RETRIEVED,
-            true
-          )
-        );
       }
 
       // Removes patientInfo from facts

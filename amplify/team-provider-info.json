@@ -14,6 +14,12 @@
     "categories": {
       "auth": {
         "reportcaref82cc4af": {}
+      },
+      "function": {
+        "S3Triggerb0df74fe": {
+          "deploymentBucketName": "amplify-reportcare-dev-213733-deployment",
+          "s3Key": "amplify-builds/S3Triggerb0df74fe-57515765397144747942-build.zip"
+        }
       }
     }
   }

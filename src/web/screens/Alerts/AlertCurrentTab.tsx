@@ -1,39 +1,40 @@
 import React, { FC, useEffect, useState } from "react";
 import { View, FlatList } from "react-native";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
-import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { RootState, select } from "util/useRedux";
 import { AlertRow } from "components/RowComponents/AlertRow";
-import { RiskFilterPillList } from "components/Buttons/RiskFilterPillList";
-import { AlertInfo } from "rc_agents/model";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import i18n from "util/language/i18n";
 import { NoListItemMessage } from "../Shared/NoListItemMessage";
-import { AgentTrigger } from "rc_agents/trigger";
+import { AlertRowTabProps } from "web/navigation/navigators/AlertListTabNavigator";
+import { AlertListTabsProps } from "web/navigation/types";
 
-export interface AlertRowTabProps {
-  setEmptyAlert: (state: boolean) => void;
-}
+interface AlertCurrentTabProps
+  extends AlertRowTabProps,
+    AlertListTabsProps.CurrentTabProps {}
 
-export const AlertCurrentTab: FC<AlertRowTabProps> = ({ setEmptyAlert }) => {
-  const { colors, pendingAlerts, fetchingPendingAlerts, fetchingAlerts } =
-    select((state: RootState) => ({
+export const AlertCurrentTab: FC<AlertCurrentTabProps> = ({
+  displayedAlertInfoId,
+  onRowPress
+}) => {
+  const { colors, pendingAlerts, fetchingPendingAlerts } = select(
+    (state: RootState) => ({
       colors: state.settings.colors,
       pendingAlerts: state.agents.pendingAlerts,
       fetchingPendingAlerts: state.agents.fetchingPendingAlerts,
-      alertRiskFilters: state.agents.alertRiskFilters,
-      fetchingAlerts: state.agents.fetchingAlerts
-    }));
+      alertRiskFilters: state.agents.alertRiskFilters
+    })
+  );
 
   const [noPendingAlertsNotice, setNoPendingAlertsNotice] =
     useState<string>("");
 
   // Prepare text notice to be displayed after fetching patients
   useEffect(() => {
-    if (fetchingPendingAlerts || fetchingAlerts) {
+    if (fetchingPendingAlerts) {
       if (pendingAlerts) {
         // No patients found
-        setNoPendingAlertsNotice(i18n.t("Alert.AlertList.NoPendingAlerts"));
+        setNoPendingAlertsNotice(i18n.t("Alerts.AlertList.NoPendingAlerts"));
       } else {
         // Could not fetch patients
         setNoPendingAlertsNotice(
@@ -41,32 +42,12 @@ export const AlertCurrentTab: FC<AlertRowTabProps> = ({ setEmptyAlert }) => {
         );
       }
     }
-  }, [pendingAlerts, fetchingPendingAlerts, fetchingAlerts]);
-
-  // When the alert item is pressed, trigger the retrieval of alert info
-  function onCardPress(item: AlertInfo) {
-    AgentTrigger.triggerRetrieveAlertInfo(item);
-    setEmptyAlert(false);
-  }
+  }, [pendingAlerts, fetchingPendingAlerts]);
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.primaryBackgroundColor }}>
-      <SearchBarComponent
-        onUserInput={() => {
-          null;
-        }}
-        onSearchClick={() => {
-          null;
-        }}
-        containerStyle={{ backgroundColor: colors.primaryContrastTextColor }}
-        placeholder="Search..."
-      />
-
-      {/* Filter for Pending Alerts */}
-      <RiskFilterPillList alertScreen />
-
+    <View style={{ flex: 1, backgroundColor: colors.primaryContrastTextColor }}>
       {/* Show no alerts message if no alert found */}
-      {fetchingPendingAlerts || fetchingAlerts ? (
+      {fetchingPendingAlerts ? (
         // Show loading indicator if fetching patients
         <LoadingIndicator flex={1} />
       ) : pendingAlerts && pendingAlerts.length > 0 ? (
@@ -77,7 +58,8 @@ export const AlertCurrentTab: FC<AlertRowTabProps> = ({ setEmptyAlert }) => {
           renderItem={({ item }) => (
             <AlertRow
               alertDetails={item}
-              onCardPress={() => onCardPress(item)}
+              onCardPress={() => onRowPress(item)}
+              selected={displayedAlertInfoId === item.id}
             />
           )}
         />

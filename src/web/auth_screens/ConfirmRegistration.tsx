@@ -3,7 +3,6 @@ import { Dimensions } from "react-native";
 import { Auth } from "@aws-amplify/auth";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ms, ScaledSheet } from "react-native-size-matters";
-import { AuthScreenName, AuthScreensProps } from "web/auth_screens";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { validateCode, validateUsername } from "util/validation";
 import i18n from "util/language/i18n";
@@ -11,9 +10,11 @@ import { useToast } from "react-native-toast-notifications";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AuthButton } from "components/Buttons/AuthButton";
 import { TextField } from "components/InputComponents/TextField";
+import { AuthenticationScreenName } from "web/navigation";
+import { AuthScreenProps } from "web/navigation/types/AuthenticationStackProps";
 
 export const ConfirmRegistration: FC<
-  AuthScreensProps[AuthScreenName.CONFIRM_REGISTER]
+  AuthScreenProps[AuthenticationScreenName.CONFIRM_REGISTRATION]
 > = ({ navigation, route }) => {
   // Local states
   const [username, setUsername] = useState("");
@@ -36,7 +37,7 @@ export const ConfirmRegistration: FC<
         toast.show(i18n.t("Auth_ConfirmRegistration.RegistrationSuccessful"), {
           type: "success"
         });
-        navigation.navigate(AuthScreenName.SIGN_IN);
+        navigation.navigate(AuthenticationScreenName.SIGN_IN);
       })
       .catch((error: { code: string; message: string; name: string }) => {
         // eslint-disable-next-line no-console
@@ -96,7 +97,7 @@ export const ConfirmRegistration: FC<
           onPress={inputValid ? confirm : () => null}
         />
       </SafeAreaView>
-      {confirming && <LoadingIndicator />}
+      {confirming && <LoadingIndicator overlayBackgroundColor />}
     </ScreenWrapper>
   );
 };

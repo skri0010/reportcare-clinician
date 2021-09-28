@@ -65,7 +65,9 @@ class DisplayClinicianContacts extends Activity {
         BeliefKeys.PROCEDURE,
         ProcedureAttributes.SRD_IV,
         ProcedureConst.INACTIVE
-      )
+      ),
+      true,
+      true
     );
 
     // Dispatch to store to indicate fetching has ended
