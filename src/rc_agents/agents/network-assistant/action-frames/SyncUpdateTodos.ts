@@ -12,7 +12,7 @@ import {
   AppAttributes,
   BeliefKeys
 } from "rc_agents/clinician_framework";
-import { Storage } from "rc_agents/storage";
+import { LocalStorage } from "rc_agents/storage";
 import { updateTodo } from "aws/TypedAPI/updateMutations";
 import { getTodo } from "aws/TypedAPI/getQueries";
 import { agentNWA } from "rc_agents/agents";
@@ -38,10 +38,10 @@ class SyncUpdateTodos extends Activity {
 
     try {
       // Gets locally stored clinicianId
-      const clinicianId = await Storage.getClinicianID();
+      const clinicianId = await LocalStorage.getClinicianID();
 
       // Gets locally stored Todos
-      const localTodos = await Storage.getTodos();
+      const localTodos = await LocalStorage.getTodos();
 
       if (localTodos && clinicianId) {
         // Indicator of whether all pending updates have been synced
@@ -97,7 +97,7 @@ class SyncUpdateTodos extends Activity {
         );
 
         // Saves updated Todos locally
-        await Storage.setTodos(localTodos);
+        await LocalStorage.setTodos(localTodos);
 
         if (!updateSuccessful) {
           setRetryLaterTimeout(() => {

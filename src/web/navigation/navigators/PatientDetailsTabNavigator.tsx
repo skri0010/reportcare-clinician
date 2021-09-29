@@ -13,9 +13,9 @@ import {
   PatientDetailsTabParamList
 } from "web/navigation";
 import i18n from "util/language/i18n";
-import { MedicalRecords } from "mock/mockPatientDetails";
 import { AlertInfo, PatientDetails } from "rc_agents/model";
 import { getTopTabBarOptions } from "util/getStyles";
+import { MedicalRecord } from "aws/API";
 
 const Tab = createMaterialTopTabNavigator<PatientDetailsTabParamList>();
 
@@ -24,9 +24,8 @@ export interface PatientDetailsTabNavigatorProps {
   selectedTab?: PatientDetailsTabName;
   setDisplayHistory: (state: AlertInfo) => void; // alert history details to be shown
   setModalAlertVisible: (state: boolean) => void; // alert modal visibility
-  setViewMedicalModal: (state: boolean) => void; // medical record modal visibility
-  setDisplayMedicalRecord: (state: MedicalRecords) => void; // medical record details to be shown
   setAddMedicalRecord: (state: boolean) => void; // add medical record modal visibility
+  onViewMedicalRecord: (medicalRecord: MedicalRecord) => void; //when content of medical content is to be shown
 }
 
 export const PatientDetailsTabNavigator: FC<PatientDetailsTabNavigatorProps> =
@@ -35,9 +34,8 @@ export const PatientDetailsTabNavigator: FC<PatientDetailsTabNavigatorProps> =
     selectedTab,
     setDisplayHistory,
     setModalAlertVisible,
-    setViewMedicalModal,
-    setDisplayMedicalRecord,
-    setAddMedicalRecord
+    setAddMedicalRecord,
+    onViewMedicalRecord
   }) => {
     const { colors, fonts } = select((state: RootState) => ({
       colors: state.settings.colors,
@@ -64,31 +62,25 @@ export const PatientDetailsTabNavigator: FC<PatientDetailsTabNavigatorProps> =
           name={PatientDetailsTabName.OVERVIEW}
           options={{ title: i18n.t("Patients.Overview") }}
         >
-          {(props: PatientDetailsTabProps.OverviewTabProps) => (
-            <PatientOverview {...props} details={details} />
-          )}
+          {(props) => <PatientOverview {...props} details={details} />}
         </Tab.Screen>
         <Tab.Screen
           name={PatientDetailsTabName.PARAMETERS}
           options={{ title: i18n.t("Patients.Parameters") }}
         >
-          {(props: PatientDetailsTabProps.ParametersTabProps) => (
-            <PatientParameters {...props} details={details} />
-          )}
+          {(props) => <PatientParameters {...props} details={details} />}
         </Tab.Screen>
         <Tab.Screen
           name={PatientDetailsTabName.ICDCRT}
           options={{ title: i18n.t("Patients.ICD/CRT") }}
         >
-          {(props: PatientDetailsTabProps.ICDCRTTabProps) => (
-            <PatientICDCRT {...props} details={details} />
-          )}
+          {(props) => <PatientICDCRT {...props} details={details} />}
         </Tab.Screen>
         <Tab.Screen
           name={PatientDetailsTabName.HISTORY}
           options={{ title: i18n.t("Patients.History") }}
         >
-          {(props: PatientDetailsTabProps.HistoryTabProps) => (
+          {(props) => (
             <PatientHistory
               {...props}
               info={details.patientInfo}
@@ -97,9 +89,8 @@ export const PatientDetailsTabNavigator: FC<PatientDetailsTabNavigatorProps> =
                 setModalAlertVisible: setModalAlertVisible
               }}
               medicalRecordFunc={{
-                setViewMedicalModal: setViewMedicalModal,
-                setDisplayMedicalRecord: setDisplayMedicalRecord,
-                setAddMedicalRecord: setAddMedicalRecord
+                setAddMedicalRecord: setAddMedicalRecord,
+                onViewMedicalRecord: onViewMedicalRecord
               }}
             />
           )}

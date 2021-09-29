@@ -16,7 +16,7 @@ import {
   AppAttributes,
   ActionFrameIDs
 } from "rc_agents/clinician_framework";
-import { Storage } from "rc_agents/storage";
+import { LocalStorage } from "rc_agents/storage";
 import { getClinicianInfo } from "aws";
 import { Role } from "rc_agents/model";
 import { setFetchingPatients } from "ic-redux/actions/agents/actionCreator";
@@ -42,7 +42,7 @@ class RetrieveRole extends Activity {
     try {
       const roles: string[] = Object.values(Role);
       // Get locally stored clinician info
-      const localClinician = await Storage.getClinician();
+      const localClinician = await LocalStorage.getClinician();
       // Get online status from facts
       const isOnline =
         agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE];
@@ -56,7 +56,7 @@ class RetrieveRole extends Activity {
             const clinician = query.data.getClinicianInfo;
             if (clinician && clinician.role) {
               // Save retrieved data locally
-              await Storage.setClinician(clinician);
+              await LocalStorage.setClinician(clinician);
               if (roles.includes(clinician.role)) {
                 role = clinician.role;
               }

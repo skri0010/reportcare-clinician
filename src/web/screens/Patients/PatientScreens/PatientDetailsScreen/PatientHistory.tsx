@@ -4,9 +4,8 @@ import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { Dimensions, View } from "react-native";
 import { PatientAlertHistoryCard } from "./PatientHistoryComponents/PatientAlertHistoryCard";
 import { PatientMedicalRecordCard } from "./PatientHistoryComponents/PatientMedicalRecordCard";
-import { MedicalRecords } from "mock/mockPatientDetails";
 import { PatientDetailsTabProps } from "web/navigation/types";
-import { PatientInfo } from "aws/API";
+import { MedicalRecord, PatientInfo } from "aws/API";
 import { AlertInfo } from "rc_agents/model";
 import { AgentTrigger } from "rc_agents/trigger";
 
@@ -17,9 +16,8 @@ interface PatientHistoryProps extends PatientDetailsTabProps.HistoryTabProps {
     setModalAlertVisible: (state: boolean) => void;
   };
   medicalRecordFunc: {
-    setViewMedicalModal: (state: boolean) => void;
-    setDisplayMedicalRecord: (state: MedicalRecords) => void;
     setAddMedicalRecord: (state: boolean) => void;
+    onViewMedicalRecord: (medicalRecord: MedicalRecord) => void;
   };
 }
 
@@ -33,8 +31,9 @@ export const PatientHistory: FC<PatientHistoryProps> = ({
     Dimensions.get("window").height * 0.65
   );
 
-  // Trigger the retrieval of alert history
+  // Trigger the retrieval of alert history and medical records
   useEffect(() => {
+    AgentTrigger.triggerRetrieveMedicalRecords(info.patientID);
     AgentTrigger.triggerGetHistoricalAlerts(info.patientID);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -54,8 +53,7 @@ export const PatientHistory: FC<PatientHistoryProps> = ({
           patientId={info.patientID}
           maxHeight={cardMaxHeight}
           onAddPress={() => medicalRecordFunc.setAddMedicalRecord(true)}
-          setViewMedicalModal={medicalRecordFunc.setViewMedicalModal}
-          setDisplayMedicalRecord={medicalRecordFunc.setDisplayMedicalRecord}
+          onViewMedicalRecord={medicalRecordFunc.onViewMedicalRecord}
         />
       </View>
     </ScreenWrapper>

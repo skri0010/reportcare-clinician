@@ -3,6 +3,7 @@ import {
   ReportSymptom,
   ReportVitals,
   PatientInfo,
+  MedicalRecord,
   Alert
 } from "aws/API";
 import { RiskLevel } from "models/RiskLevel";
@@ -87,12 +88,20 @@ export enum TodoStatus {
   COMPLETED = "COMPLETED"
 }
 
+export type RecordFile = {
+  name: string;
+  path: string;
+  size: number;
+  type: string;
+};
+
 // Interfaces shared with front end
 export interface PatientDetails {
   patientInfo: PatientInfo;
   activityInfos: LocalActivityInfos;
   symptomReports: LocalReportSymptoms;
   vitalsReports: LocalReportVitals;
+  medicalRecords: LocalMedicalRecords;
 }
 
 export type LocalActivityInfos = {
@@ -106,6 +115,10 @@ export type LocalReportSymptoms = {
 
 export type LocalReportVitals = {
   [date: string]: ReportVitals[] | undefined;
+};
+
+export type LocalMedicalRecords = {
+  [id: string]: MedicalRecord;
 };
 
 export interface PatientAssignmentResolution {
@@ -171,4 +184,10 @@ export interface LocalTodo {
 
 export interface TodoDetails {
   id: string;
+}
+
+export interface MedicalRecordInput {
+  title: string;
+  patientID: string;
+  file: RecordFile;
 }
