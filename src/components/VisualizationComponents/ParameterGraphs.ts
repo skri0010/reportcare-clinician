@@ -2,16 +2,6 @@ import { ReportVitals } from "aws/API";
 import { ChartViewTypes } from "models/ChartViewTypes";
 import i18n from "util/language/i18n";
 
-// enum days {
-//   "Sunday" = 0,
-//   "Monday" = 1,
-//   "Tuesday" = 2,
-//   "Wednesday" = 3,
-//   "Thursday" = 4,
-//   "Friday" = 5,
-//   "Saturday" = 6
-// }
-
 export interface Stat {
   min: number;
   max: number;

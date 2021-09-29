@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { View, FlatList } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
-import { select, RootState, store } from "util/useRedux";
+import { select, RootState, useDispatch } from "util/useRedux";
 import { setChartFilters } from "ic-redux/actions/agents/actionCreator";
 import { ChartFilter, ChartViewTypes } from "models/ChartViewTypes";
 import { ChartFilterPill } from "./ChartFilterPill";
@@ -13,6 +13,8 @@ export const ChartFilterPillList: FC = () => {
     chartFilter: state.agents.chartFilters
   }));
 
+  const dispatch = useDispatch();
+
   // Function to toggle selected View type for charts
   const setSelectedChartFilter = (viewType: ChartViewTypes) => {
     const tempChartFilters: ChartFilter = {
@@ -23,7 +25,7 @@ export const ChartFilterPillList: FC = () => {
     };
     tempChartFilters[viewType] = true;
     // Update selected view type for charts
-    store.dispatch(setChartFilters(tempChartFilters));
+    dispatch(setChartFilters(tempChartFilters));
   };
 
   return (

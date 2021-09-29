@@ -4,6 +4,7 @@ import { TouchableHighlight, View } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { ChartViewTypes } from "models/ChartViewTypes";
 import { H6 } from "components/Text";
+import i18n from "util/language/i18n";
 
 export interface ChartFilterPillProps {
   viewType: ChartViewTypes;
@@ -32,6 +33,20 @@ export const ChartFilterPill: FC<ChartFilterPillProps> = ({
       return colors.maxLineColor;
     }
     return undefined;
+  };
+
+  // Function to get line color of min, max or avg
+  const getViewTypeTranslation = () => {
+    if (viewType === ChartViewTypes.AVERAGE) {
+      return i18n.t("Parameter_Graphs.ChartViewTypes.Maximum");
+    }
+    if (viewType === ChartViewTypes.MIN) {
+      return i18n.t("Parameter_Graphs.ChartViewTypes.Minimum");
+    }
+    if (viewType === ChartViewTypes.MAX) {
+      return i18n.t("Parameter_Graphs.ChartViewTypes.Average");
+    }
+    return i18n.t("Parameter_Graphs.ChartViewTypes.All");
   };
 
   return (
@@ -65,7 +80,7 @@ export const ChartFilterPill: FC<ChartFilterPillProps> = ({
         }}
       >
         <H6
-          text={`${viewType}  `}
+          text={`${getViewTypeTranslation()}  `}
           style={
             selected
               ? [styles.textStyle, { fontWeight: "bold" }]

@@ -87,16 +87,13 @@
     "Steps": "Steps Counter",
     "StepsUnit": "(step)",
     "NoData": "No data was found",
-    "Days": {
-      "Sunday": "Sun",
-      "Monday": "Mon",
-      "Tuesday": "Tue",
-      "Wednesday": "Wed",
-      "Thursday": "Thu",
-      "Friday": "Fri",
-      "Saturday": "Sat"
-    },
     "ViewBy": "View By: ",
+    "ChartViewTypes": {
+      "Maximum": " Maximum",
+      "Minimum": "Minimum",
+      "Average": "Average",
+      "All": "All"
+    },
     "Information": "Any gap in the line chart that exist between dates signifies that the patient has no recorded vital for the specific day."
   },
   "ScreenName": {
