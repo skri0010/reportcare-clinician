@@ -281,6 +281,7 @@ type ClinicianInfo
   name: String!
   hospitalName: String!
   role: String!
+  contactNumber: String!
   protectedInfo: ClinicianProtectedInfo @connection(fields: ["clinicianID"])
 }
 
@@ -336,6 +337,7 @@ type ClinicianPatientMap
       { allow: owner, ownerField: "patientID", operations: [read] }
       { allow: groups, groupsField: "patientID", operations: [read] }
       { allow: groups, groups: ["Admin"] }
+      { allow: private, provider: iam }
     ]
   )
   @key(fields: ["clinicianID", "patientID"])
@@ -380,17 +382,7 @@ type PatientAssignment
         operations: [read]
       }
       { allow: groups, groups: ["Admin"] }
-      {
-        allow: groups
-        groups: [
-          "EPs"
-          "Nurses"
-          "HFSpecialists"
-          "MedicalOfficers"
-          "Pharmacists"
-        ]
-        operations: [read]
-      }
+      { allow: private, provider: iam }
     ]
   )
   @key(fields: ["patientID", "clinicianID"])
@@ -424,6 +416,7 @@ type PatientAssignment
           groups: ["Admin"]
           operations: [create, update, delete]
         }
+        { allow: private, provider: iam }
       ]
     )
 }
