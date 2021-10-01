@@ -58,7 +58,8 @@
     "redux": "^4.1.0",
     "stream-browserify": "^3.0.0",
     "typesafe-actions": "^5.1.0",
-    "util": "^0.12.4"
+    "util": "^0.12.4",
+    "victory": "^36.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

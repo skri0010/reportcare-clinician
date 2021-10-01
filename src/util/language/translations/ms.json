@@ -82,16 +82,19 @@
     "OxygenSaturationUnit": "(%)",
     "Weight": "Berat Badan ",
     "WeightUnit": "(kg)",
+    "FluidIntake": "Pengambilan Air ",
+    "FluidUnit": "(ml)",
+    "Steps": "Jumlah Langkah",
+    "StepsUnit": "(langkah)",
     "NoData": "Tiada data dijumpai",
-    "Days": {
-      "Sunday": "Ahad",
-      "Monday": "Isnin",
-      "Tuesday": "Selasa",
-      "Wednesday": "Rabu",
-      "Thursday": "Khamis",
-      "Friday": "Jumaat",
-      "Saturday": "Sabtu"
-    }
+    "ViewBy": "Melihat secara: ",
+    "ChartViewTypes": {
+      "Maximum": " Maksimum",
+      "Minimum": "Minimum",
+      "Average": "Purata",
+      "All": "Semua"
+    },
+    "Information": "Jurang yang wujud dalam carta garis antara tarikh menandakan bahawa pesakit tidak mempunyai catatan penting untuk hari tertentu."
   },
   "ScreenName": {
     "Home": "Home",

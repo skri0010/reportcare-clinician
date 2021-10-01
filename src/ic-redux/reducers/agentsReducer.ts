@@ -16,6 +16,7 @@ import {
   PatientInfo
 } from "aws/API";
 import { RiskLevel } from "models/RiskLevel";
+import { ChartFilter, ChartViewTypes } from "models/ChartViewTypes";
 
 interface AgentsState {
   procedureSuccessful: boolean;
@@ -37,6 +38,7 @@ interface AgentsState {
   configuringPatient: boolean;
   configurationSuccessful: boolean;
   riskFilters: RiskFilter;
+  chartFilters: ChartFilter;
   pendingAlertCount: AlertsCount;
   fetchingPendingAlerts: boolean;
   fetchingCompletedAlerts: boolean;
@@ -102,6 +104,12 @@ const initialState: AgentsState = {
     [RiskLevel.MEDIUM]: false,
     [RiskLevel.LOW]: false,
     [RiskLevel.UNASSIGNED]: false
+  },
+  chartFilters: {
+    [ChartViewTypes.ALL]: true,
+    [ChartViewTypes.MIN]: false,
+    [ChartViewTypes.MAX]: false,
+    [ChartViewTypes.AVERAGE]: false
   },
   pendingAlertCount: {
     highRisk: 0,
@@ -323,6 +331,8 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
         ...state,
         alertInfo: action.payload.alertInfo
       };
+    case actionNames.SET_CHART_FILTERS:
+      return { ...state, chartFilters: action.payload.chartFilters };
     case actionNames.SET_PATIENT_RISK_FILTERS:
       return {
         ...state,
