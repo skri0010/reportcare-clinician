@@ -19,6 +19,7 @@ import { IcdCrtRecord, MedicalRecord } from "aws/API";
 
 const Tab = createMaterialTopTabNavigator<PatientDetailsTabParamList>();
 
+
 export interface PatientDetailsTabNavigatorProps {
   details: PatientDetails;
   selectedTab?: PatientDetailsTabName;
