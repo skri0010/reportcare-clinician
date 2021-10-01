@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { AlertListTabParamList } from "../paramLists";
@@ -13,6 +13,8 @@ import { RiskFilterPillList } from "components/Buttons/RiskFilterPillList";
 import { AlertInfo } from "rc_agents/model";
 import { setAlertInfo } from "ic-redux/actions/agents/actionCreator";
 import { AgentTrigger } from "rc_agents/trigger";
+import { Alert } from "react-native";
+import Fuse from "fuse.js";
 
 const Tab = createMaterialTopTabNavigator<AlertListTabParamList>();
 
@@ -28,12 +30,19 @@ export interface AlertRowTabProps {
 export const AlertListTabNavigator: FC<AlertListTabNavigatorProps> = ({
   setIsEmptyAlert
 }) => {
-  const { colors, fonts } = select((state: RootState) => ({
-    colors: state.settings.colors,
-    fonts: state.settings.fonts
-  }));
+  const { colors, fonts, completedAlerts, pendingAlerts } = select(
+    (state: RootState) => ({
+      colors: state.settings.colors,
+      fonts: state.settings.fonts,
+      completedAlerts: state.agents.completedAlerts,
+      pendingAlerts: state.agents.pendingAlerts
+    })
+  );
 
   const dispatch = useDispatch();
+  const [pending, setPending] = useState<boolean>(true);
+  const [searching, setSearching] = useState<boolean>(false);
+  const [searchedSubset, setSubset] = useState<AlertInfo[]>([]);
 
   // When the alert item is pressed, trigger the retrieval of alert info
   const onAlertRowPress = (alert: AlertInfo) => {
@@ -50,8 +59,25 @@ export const AlertListTabNavigator: FC<AlertListTabNavigatorProps> = ({
         onUserInput={() => {
           null;
         }}
-        onSearchClick={() => {
-          null;
+        onSearchClick={(searchString: string) => {
+          if (searchString.length === 0) {
+            setSearching(false);
+          } else if (pendingAlerts || completedAlerts) {
+            const options = {
+              includeScore: true,
+              keys: ["patientName"]
+            };
+            const searchingAlerts = pending ? pendingAlerts : completedAlerts;
+            if (searchingAlerts) {
+              const fuse = new Fuse(searchingAlerts, options);
+
+              const result = fuse.search(searchString);
+              const searchResults: AlertInfo[] = [];
+              result.forEach((item) => searchResults.push(item.item));
+              setSearching(true);
+              setSubset(searchResults);
+            }
+          }
         }}
         containerStyle={{
           backgroundColor: colors.primaryContrastTextColor
