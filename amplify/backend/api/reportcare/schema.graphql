@@ -370,17 +370,6 @@ type PatientAssignment
     rules: [
       { allow: owner, ownerField: "patientID", operations: [create, read] }
       { allow: owner, ownerField: "clinicianID", operations: [read, update] }
-      {
-        allow: groups
-        groups: [
-          "EPs"
-          "Nurses"
-          "HFSpecialists"
-          "MedicalOfficers"
-          "Pharmacists"
-        ]
-        operations: [read]
-      }
       { allow: groups, groups: ["Admin"] }
       { allow: private, provider: iam }
     ]

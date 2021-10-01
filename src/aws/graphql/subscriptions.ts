@@ -226,6 +226,14 @@ export const onCreateMedCompliant = /* GraphQL */ `
     onCreateMedCompliant(owner: $owner) {
       id
       MedId
+      Verification
+      Date
+      patientID
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
       MedicationInfo {
         id
         name
@@ -241,14 +249,6 @@ export const onCreateMedCompliant = /* GraphQL */ `
         updatedAt
         owner
       }
-      Verification
-      Date
-      patientID
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
       owner
     }
   }
@@ -258,6 +258,14 @@ export const onUpdateMedCompliant = /* GraphQL */ `
     onUpdateMedCompliant(owner: $owner) {
       id
       MedId
+      Verification
+      Date
+      patientID
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
       MedicationInfo {
         id
         name
@@ -273,14 +281,6 @@ export const onUpdateMedCompliant = /* GraphQL */ `
         updatedAt
         owner
       }
-      Verification
-      Date
-      patientID
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
       owner
     }
   }
@@ -290,6 +290,14 @@ export const onDeleteMedCompliant = /* GraphQL */ `
     onDeleteMedCompliant(owner: $owner) {
       id
       MedId
+      Verification
+      Date
+      patientID
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
       MedicationInfo {
         id
         name
@@ -305,14 +313,6 @@ export const onDeleteMedCompliant = /* GraphQL */ `
         updatedAt
         owner
       }
-      Verification
-      Date
-      patientID
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
       owner
     }
   }
@@ -322,6 +322,16 @@ export const onCreateReportSymptom = /* GraphQL */ `
     onCreateReportSymptom(owner: $owner) {
       id
       ActId
+      Name
+      Severity
+      DateTime
+      Summary
+      patientID
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
       ActivityInfo {
         id
         Actname
@@ -338,16 +348,6 @@ export const onCreateReportSymptom = /* GraphQL */ `
         updatedAt
         owner
       }
-      Name
-      Severity
-      DateTime
-      Summary
-      patientID
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
       owner
     }
   }
@@ -357,6 +357,16 @@ export const onUpdateReportSymptom = /* GraphQL */ `
     onUpdateReportSymptom(owner: $owner) {
       id
       ActId
+      Name
+      Severity
+      DateTime
+      Summary
+      patientID
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
       ActivityInfo {
         id
         Actname
@@ -373,16 +383,6 @@ export const onUpdateReportSymptom = /* GraphQL */ `
         updatedAt
         owner
       }
-      Name
-      Severity
-      DateTime
-      Summary
-      patientID
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
       owner
     }
   }
@@ -392,6 +392,16 @@ export const onDeleteReportSymptom = /* GraphQL */ `
     onDeleteReportSymptom(owner: $owner) {
       id
       ActId
+      Name
+      Severity
+      DateTime
+      Summary
+      patientID
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
       ActivityInfo {
         id
         Actname
@@ -408,16 +418,6 @@ export const onDeleteReportSymptom = /* GraphQL */ `
         updatedAt
         owner
       }
-      Name
-      Severity
-      DateTime
-      Summary
-      patientID
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
       owner
     }
   }
@@ -598,6 +598,12 @@ export const onCreateClinicianInfo = /* GraphQL */ `
       name
       hospitalName
       role
+      contactNumber
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
       protectedInfo {
         id
         clinicianID
@@ -614,11 +620,6 @@ export const onCreateClinicianInfo = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -630,6 +631,12 @@ export const onUpdateClinicianInfo = /* GraphQL */ `
       name
       hospitalName
       role
+      contactNumber
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
       protectedInfo {
         id
         clinicianID
@@ -646,11 +653,6 @@ export const onUpdateClinicianInfo = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -662,6 +664,12 @@ export const onDeleteClinicianInfo = /* GraphQL */ `
       name
       hospitalName
       role
+      contactNumber
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
       protectedInfo {
         id
         clinicianID
@@ -678,11 +686,6 @@ export const onDeleteClinicianInfo = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -758,23 +761,24 @@ export const onCreateClinicianPatientMap = /* GraphQL */ `
       id
       clinicianID
       patientID
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
       clinicianInfo {
         id
         clinicianID
         name
         hospitalName
         role
+        contactNumber
         _version
         _deleted
         _lastChangedAt
         createdAt
         updatedAt
       }
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -790,23 +794,24 @@ export const onUpdateClinicianPatientMap = /* GraphQL */ `
       id
       clinicianID
       patientID
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
       clinicianInfo {
         id
         clinicianID
         name
         hospitalName
         role
+        contactNumber
         _version
         _deleted
         _lastChangedAt
         createdAt
         updatedAt
       }
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -822,23 +827,24 @@ export const onDeleteClinicianPatientMap = /* GraphQL */ `
       id
       clinicianID
       patientID
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
       clinicianInfo {
         id
         clinicianID
         name
         hospitalName
         role
+        contactNumber
         _version
         _deleted
         _lastChangedAt
         createdAt
         updatedAt
       }
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -859,12 +865,12 @@ export const onCreatePatientAssignment = /* GraphQL */ `
       resolution
       reassignToClinicianID
       adminReassignFromClinicianID
-      adminCompleted
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
+      adminCompleted
     }
   }
 `;
@@ -885,12 +891,12 @@ export const onUpdatePatientAssignment = /* GraphQL */ `
       resolution
       reassignToClinicianID
       adminReassignFromClinicianID
-      adminCompleted
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
+      adminCompleted
     }
   }
 `;
@@ -911,12 +917,12 @@ export const onDeletePatientAssignment = /* GraphQL */ `
       resolution
       reassignToClinicianID
       adminReassignFromClinicianID
-      adminCompleted
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
+      adminCompleted
     }
   }
 `;
@@ -930,6 +936,30 @@ export const onCreateAlert = /* GraphQL */ `
       summary
       colorCode
       vitalsReportID
+      symptomReportID
+      pending
+      completed
+      owner
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      symptomReport {
+        id
+        ActId
+        Name
+        Severity
+        DateTime
+        Summary
+        patientID
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+        owner
+      }
       vitalsReport {
         id
         Temperature
@@ -949,30 +979,6 @@ export const onCreateAlert = /* GraphQL */ `
         updatedAt
         owner
       }
-      symptomReportID
-      symptomReport {
-        id
-        ActId
-        Name
-        Severity
-        DateTime
-        Summary
-        patientID
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-        owner
-      }
-      pending
-      completed
-      owner
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -986,6 +992,30 @@ export const onUpdateAlert = /* GraphQL */ `
       summary
       colorCode
       vitalsReportID
+      symptomReportID
+      pending
+      completed
+      owner
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      symptomReport {
+        id
+        ActId
+        Name
+        Severity
+        DateTime
+        Summary
+        patientID
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+        owner
+      }
       vitalsReport {
         id
         Temperature
@@ -1005,30 +1035,6 @@ export const onUpdateAlert = /* GraphQL */ `
         updatedAt
         owner
       }
-      symptomReportID
-      symptomReport {
-        id
-        ActId
-        Name
-        Severity
-        DateTime
-        Summary
-        patientID
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-        owner
-      }
-      pending
-      completed
-      owner
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -1042,6 +1048,30 @@ export const onDeleteAlert = /* GraphQL */ `
       summary
       colorCode
       vitalsReportID
+      symptomReportID
+      pending
+      completed
+      owner
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      symptomReport {
+        id
+        ActId
+        Name
+        Severity
+        DateTime
+        Summary
+        patientID
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+        owner
+      }
       vitalsReport {
         id
         Temperature
@@ -1061,30 +1091,6 @@ export const onDeleteAlert = /* GraphQL */ `
         updatedAt
         owner
       }
-      symptomReportID
-      symptomReport {
-        id
-        ActId
-        Name
-        Severity
-        DateTime
-        Summary
-        patientID
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-        owner
-      }
-      pending
-      completed
-      owner
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -1098,6 +1104,14 @@ export const onCreateTodo = /* GraphQL */ `
       notes
       lastModified
       alertID
+      pending
+      completed
+      owner
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
       alert {
         id
         patientID
@@ -1116,14 +1130,6 @@ export const onCreateTodo = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      pending
-      completed
-      owner
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -1137,6 +1143,14 @@ export const onUpdateTodo = /* GraphQL */ `
       notes
       lastModified
       alertID
+      pending
+      completed
+      owner
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
       alert {
         id
         patientID
@@ -1155,14 +1169,6 @@ export const onUpdateTodo = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      pending
-      completed
-      owner
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -1176,6 +1182,14 @@ export const onDeleteTodo = /* GraphQL */ `
       notes
       lastModified
       alertID
+      pending
+      completed
+      owner
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
       alert {
         id
         patientID
@@ -1194,14 +1208,6 @@ export const onDeleteTodo = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      pending
-      completed
-      owner
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
