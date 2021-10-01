@@ -585,6 +585,7 @@ export const syncMedicalRecords = /* GraphQL */ `
       items {
         id
         patientID
+        clinicianID
         title
         fileKey
         _version
@@ -592,7 +593,6 @@ export const syncMedicalRecords = /* GraphQL */ `
         _lastChangedAt
         createdAt
         updatedAt
-        owner
       }
       nextToken
       startedAt
@@ -604,6 +604,7 @@ export const getMedicalRecord = /* GraphQL */ `
     getMedicalRecord(id: $id) {
       id
       patientID
+      clinicianID
       title
       fileKey
       _version
@@ -611,7 +612,6 @@ export const getMedicalRecord = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -625,6 +625,7 @@ export const listMedicalRecords = /* GraphQL */ `
       items {
         id
         patientID
+        clinicianID
         title
         fileKey
         _version
@@ -632,7 +633,79 @@ export const listMedicalRecords = /* GraphQL */ `
         _lastChangedAt
         createdAt
         updatedAt
-        owner
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const syncIcdCrtRecords = /* GraphQL */ `
+  query SyncIcdCrtRecords(
+    $filter: ModelIcdCrtRecordFilterInput
+    $limit: Int
+    $nextToken: String
+    $lastSync: AWSTimestamp
+  ) {
+    syncIcdCrtRecords(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      lastSync: $lastSync
+    ) {
+      items {
+        id
+        patientID
+        clinicianID
+        title
+        dateTime
+        fileKey
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const getIcdCrtRecord = /* GraphQL */ `
+  query GetIcdCrtRecord($id: ID!) {
+    getIcdCrtRecord(id: $id) {
+      id
+      patientID
+      clinicianID
+      title
+      dateTime
+      fileKey
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listIcdCrtRecords = /* GraphQL */ `
+  query ListIcdCrtRecords(
+    $filter: ModelIcdCrtRecordFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listIcdCrtRecords(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        patientID
+        clinicianID
+        title
+        dateTime
+        fileKey
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
       }
       nextToken
       startedAt
@@ -653,6 +726,7 @@ export const syncClinicianInfos = /* GraphQL */ `
       lastSync: $lastSync
     ) {
       items {
+        id
         clinicianID
         name
         hospitalName
@@ -671,11 +745,13 @@ export const syncClinicianInfos = /* GraphQL */ `
 export const getClinicianInfo = /* GraphQL */ `
   query GetClinicianInfo($clinicianID: String!) {
     getClinicianInfo(clinicianID: $clinicianID) {
+      id
       clinicianID
       name
       hospitalName
       role
       protectedInfo {
+        id
         clinicianID
         facts
         APS
@@ -714,6 +790,7 @@ export const listClinicianInfos = /* GraphQL */ `
       sortDirection: $sortDirection
     ) {
       items {
+        id
         clinicianID
         name
         hospitalName
@@ -743,6 +820,7 @@ export const syncClinicianProtectedInfos = /* GraphQL */ `
       lastSync: $lastSync
     ) {
       items {
+        id
         clinicianID
         facts
         APS
@@ -765,6 +843,7 @@ export const syncClinicianProtectedInfos = /* GraphQL */ `
 export const getClinicianProtectedInfo = /* GraphQL */ `
   query GetClinicianProtectedInfo($clinicianID: String!) {
     getClinicianProtectedInfo(clinicianID: $clinicianID) {
+      id
       clinicianID
       facts
       APS
@@ -797,6 +876,7 @@ export const listClinicianProtectedInfos = /* GraphQL */ `
       sortDirection: $sortDirection
     ) {
       items {
+        id
         clinicianID
         facts
         APS
@@ -830,6 +910,7 @@ export const syncClinicianPatientMaps = /* GraphQL */ `
       lastSync: $lastSync
     ) {
       items {
+        id
         clinicianID
         patientID
         _version
@@ -846,9 +927,11 @@ export const syncClinicianPatientMaps = /* GraphQL */ `
 export const getClinicianPatientMap = /* GraphQL */ `
   query GetClinicianPatientMap($clinicianID: String!, $patientID: String!) {
     getClinicianPatientMap(clinicianID: $clinicianID, patientID: $patientID) {
+      id
       clinicianID
       patientID
       clinicianInfo {
+        id
         clinicianID
         name
         hospitalName
@@ -885,6 +968,7 @@ export const listClinicianPatientMaps = /* GraphQL */ `
       sortDirection: $sortDirection
     ) {
       items {
+        id
         clinicianID
         patientID
         _version
@@ -912,6 +996,7 @@ export const syncPatientAssignments = /* GraphQL */ `
       lastSync: $lastSync
     ) {
       items {
+        id
         patientID
         clinicianID
         patientName
@@ -934,6 +1019,7 @@ export const syncPatientAssignments = /* GraphQL */ `
 export const getPatientAssignment = /* GraphQL */ `
   query GetPatientAssignment($patientID: String!, $clinicianID: String!) {
     getPatientAssignment(patientID: $patientID, clinicianID: $clinicianID) {
+      id
       patientID
       clinicianID
       patientName
@@ -968,6 +1054,7 @@ export const listPatientAssignments = /* GraphQL */ `
       sortDirection: $sortDirection
     ) {
       items {
+        id
         patientID
         clinicianID
         patientName
@@ -1592,6 +1679,7 @@ export const listMedicalRecordsByPatientID = /* GraphQL */ `
       items {
         id
         patientID
+        clinicianID
         title
         fileKey
         _version
@@ -1599,7 +1687,41 @@ export const listMedicalRecordsByPatientID = /* GraphQL */ `
         _lastChangedAt
         createdAt
         updatedAt
-        owner
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const listIcdCrtRecordsByDateTime = /* GraphQL */ `
+  query ListIcdCrtRecordsByDateTime(
+    $patientID: String
+    $dateTime: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelIcdCrtRecordFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listIcdCrtRecordsByDateTime(
+      patientID: $patientID
+      dateTime: $dateTime
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        patientID
+        clinicianID
+        title
+        dateTime
+        fileKey
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
       }
       nextToken
       startedAt
@@ -1624,6 +1746,7 @@ export const listClinicianMappingsByPatientID = /* GraphQL */ `
       nextToken: $nextToken
     ) {
       items {
+        id
         clinicianID
         patientID
         _version
@@ -1655,6 +1778,7 @@ export const listPendingPatientAssignments = /* GraphQL */ `
       nextToken: $nextToken
     ) {
       items {
+        id
         patientID
         clinicianID
         patientName

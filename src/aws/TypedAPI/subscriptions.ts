@@ -5,7 +5,7 @@ import {
   triggerProcessPatientAssignmentSubscription
 } from "rc_agents/triggers";
 import { Observable } from "zen-observable-ts";
-import { Storage } from "rc_agents/storage";
+import { LocalStorage } from "rc_agents/storage";
 
 // Override default subscription otherwise null data will be received
 // Requested fields should be a subset of CreateAlertNotification response fields
@@ -70,7 +70,7 @@ interface onCreatePatientAssignmentResponse extends BaseResponse {
 
 export const subscribePatientAssignment = async (): Promise<void> => {
   // Retrieves locally stored clinicianID
-  const clinicianID = await Storage.getClinicianID();
+  const clinicianID = await LocalStorage.getClinicianID();
   if (clinicianID) {
     (
       API.graphql({

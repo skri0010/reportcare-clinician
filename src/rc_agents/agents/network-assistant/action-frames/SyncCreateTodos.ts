@@ -14,7 +14,7 @@ import {
   ClinicianAttributes,
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
-import { Storage } from "rc_agents/storage";
+import { LocalStorage } from "rc_agents/storage";
 import { createTodo } from "aws/TypedAPI/createMutations";
 import { CreateTodoInput } from "aws/API";
 import { listTodosByAlertID } from "aws";
@@ -43,10 +43,10 @@ class SyncCreateTodos extends Activity {
 
     try {
       // Gets locally stored clinicianId
-      const clinicianId = await Storage.getClinicianID();
+      const clinicianId = await LocalStorage.getClinicianID();
 
       // Gets locally stored Todos
-      const localTodos = await Storage.getTodos();
+      const localTodos = await LocalStorage.getTodos();
 
       if (localTodos && clinicianId) {
         // Indicators of whether all pending Todos have been synced
@@ -146,7 +146,7 @@ class SyncCreateTodos extends Activity {
 
         // Saves updated Todos locally
         if (localTodos) {
-          await Storage.setTodos(localTodos);
+          await LocalStorage.setTodos(localTodos);
         }
 
         // Set to retry when operation is not successful

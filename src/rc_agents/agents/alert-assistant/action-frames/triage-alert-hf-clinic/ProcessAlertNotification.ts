@@ -18,7 +18,7 @@ import {
 } from "rc_agents/clinician_framework";
 import { AlertNotification } from "aws/TypedAPI/subscriptions";
 import { listClinicianPatientMaps, getDetailedAlert } from "aws";
-import { Storage } from "rc_agents/storage";
+import { LocalStorage } from "rc_agents/storage";
 import { agentNWA } from "rc_agents/agents";
 import { convertAlertToAlertInfo } from "util/utilityFunctions";
 import { AlertStatus, FetchAlertsMode } from "rc_agents/model";
@@ -47,7 +47,7 @@ class ProcessAlertNotification extends Activity {
         facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.ALERT_NOTIFICATION];
 
       // Retrieves locally stored ClinicianID
-      const clinicianID = await Storage.getClinicianID();
+      const clinicianID = await LocalStorage.getClinicianID();
 
       if (alertNotification && clinicianID) {
         if (facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
@@ -71,7 +71,7 @@ class ProcessAlertNotification extends Activity {
                 // Store alert into local storage
                 const alert = alertQuery.data.getAlert;
                 const alertInfo = convertAlertToAlertInfo(alert);
-                await Storage.setAlertInfo(alertInfo);
+                await LocalStorage.setAlertInfo(alertInfo);
 
                 // Obtain fetch alerts mode
                 const fetchAlertsMode: FetchAlertsMode | null =
@@ -89,7 +89,7 @@ class ProcessAlertNotification extends Activity {
                     new Belief(
                       BeliefKeys.CLINICIAN,
                       ClinicianAttributes.REFRESHED_PENDING_ALERTS,
-                      await Storage.getPendingAlertInfos()
+                      await LocalStorage.getPendingAlertInfos()
                     ),
                     false
                   );
@@ -102,7 +102,7 @@ class ProcessAlertNotification extends Activity {
                     new Belief(
                       BeliefKeys.CLINICIAN,
                       ClinicianAttributes.REFRESHED_COMPLETED_ALERTS,
-                      await Storage.getCompletedAlertInfos()
+                      await LocalStorage.getCompletedAlertInfos()
                     ),
                     false
                   );
@@ -121,7 +121,7 @@ class ProcessAlertNotification extends Activity {
           }
         } else {
           // Store alert notification locally to be processed later
-          await Storage.setAlertNotification(alertNotification);
+          await LocalStorage.setAlertNotification(alertNotification);
 
           // Notifies NWA agent
           agentNWA.addBelief(

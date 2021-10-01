@@ -6,10 +6,8 @@ import { mockPatients } from "mock/mockPatients";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { ContactTitle } from "components/RowComponents/ContactTitle";
 import { AlertHistoryModal } from "./PatientScreens/PatientDetailsScreen/PatientHistoryComponents/AlertHistoryModal";
-import { MedicalRecords } from "mock/mockPatientDetails";
 import { RiskLevel } from "models/RiskLevel";
 import { ScaledSheet } from "react-native-size-matters";
-import { ViewMedicalRecords } from "./PatientScreens/PatientDetailsScreen/PatientHistoryComponents/ViewMedicalRecord";
 import { AddMedicalRecord } from "./PatientScreens/PatientDetailsScreen/PatientHistoryComponents/AddMedicalRecord";
 import { setPatientDetails } from "ic-redux/actions/agents/actionCreator";
 import { PatientDetailsTabNavigator } from "web/navigation/navigators/PatientDetailsTabNavigator";
@@ -24,6 +22,7 @@ import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AdaptiveTwoScreenWrapper } from "web/screens/AdaptiveTwoScreenWrapper";
 import { PatientConfigurationScreen } from "web/screens/Patients/PatientScreens/PatientConfiguration/PatientConfigurationScreen";
 import { AlertColorCode, AlertInfo, AlertStatus } from "rc_agents/model";
+import { AddIcdCrtRecordModal } from "./PatientScreens/PatientDetailsScreen/PatientIcdCrtComponents/AddIcdCrtRecordModal";
 
 export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
   route
@@ -92,14 +91,6 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
     owner: ""
   };
 
-  // Inital medical record details for the modal
-  const initialMedicalRecord = {
-    id: "",
-    patientId: "",
-    record: "",
-    content: ""
-  };
-
   // JH-TODO-NEW: Remove
   // Patient that has been selected by the user from the list of patients
   const [selectedPatient] = useState(mockPatients[0]);
@@ -114,27 +105,9 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
   const [displayHistory, setDisplayHistory] =
     useState<AlertInfo>(initialAlertHistory);
 
-  // For view medical record modal visibility
-  const [viewMedicalModal, setViewMedicalModal] = useState<boolean>(false);
-  // Feed in the medical record details to be displayed in the modal
-  const [displayMedicalRecord, setDisplayMedicalRecord] =
-    useState<MedicalRecords>(initialMedicalRecord);
-
-  // For add medical record modal visibility
+  // For add medical and ICD/CRT record modals visibility
   const [addMedicalRecord, setAddMedicalRecord] = useState<boolean>(false);
-  const [showGraph, setShowGraph] = useState(false); // used locally for graph display
-
-  // JH-TODO-NEW
-  // // Detects completion of retrieval procedure
-  // useEffect(() => {
-  //   if (retrieving && !procedureOngoing) {
-  //     setRetrieving(false);
-  //     if (!showGraph) {
-  //       setShowGraph(true);
-  //     }
-  //   }
-  // }, [procedureOngoing, retrieving, showGraph]);
-  // Prepare text notice to be displayed after fetching patients
+  const [addIcdCrtRecord, setAddIcdCrtRecord] = useState<boolean>(false);
 
   return (
     <ScreenWrapper fixed>
@@ -175,9 +148,14 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
                       selectedTab={selectedTab}
                       setAddMedicalRecord={setAddMedicalRecord}
                       setDisplayHistory={setDisplayHistory}
-                      setDisplayMedicalRecord={setDisplayMedicalRecord}
                       setModalAlertVisible={setModalAlertVisible}
-                      setViewMedicalModal={setViewMedicalModal}
+                      onViewMedicalRecord={
+                        AgentTrigger.triggerRetrieveMedicalRecordContent
+                      }
+                      setAddIcdCrtRecord={setAddIcdCrtRecord}
+                      onViewIcdCrtRecord={
+                        AgentTrigger.triggerRetrieveIcdCrtRecordContent
+                      }
                     />
                   ) : (
                     // Patient is not configured: Show configuration screen
@@ -214,19 +192,6 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
           />
         </PatientHistoryModal>
 
-        {/* Modal to view specific medical records of patient */}
-        <PatientHistoryModal
-          visible={viewMedicalModal}
-          onRequestClose={() => {
-            setViewMedicalModal(false);
-          }}
-        >
-          <ViewMedicalRecords
-            setViewMedicalModal={setViewMedicalModal}
-            medicalRecord={displayMedicalRecord}
-          />
-        </PatientHistoryModal>
-
         {/* Modal to add new medical records */}
         <PatientHistoryModal
           visible={addMedicalRecord}
@@ -234,7 +199,20 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
             setAddMedicalRecord(false);
           }}
         >
-          <AddMedicalRecord setAddMedicalRecord={setAddMedicalRecord} />
+          <AddMedicalRecord
+            setAddMedicalRecord={setAddMedicalRecord}
+            patientID={patientDetails?.patientInfo.patientID}
+          />
+        </PatientHistoryModal>
+
+        <PatientHistoryModal
+          visible={addIcdCrtRecord}
+          onRequestClose={() => setAddIcdCrtRecord(false)}
+        >
+          <AddIcdCrtRecordModal
+            setAddIcdCrtRecord={setAddIcdCrtRecord}
+            patientID={patientDetails?.patientInfo.patientID}
+          />
         </PatientHistoryModal>
       </View>
     </ScreenWrapper>

@@ -1,7 +1,6 @@
 import React, { FC, useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, Image, Dimensions } from "react-native";
 import { Auth } from "@aws-amplify/auth";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { RootState, select, useDispatch } from "util/useRedux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -25,7 +24,7 @@ import { useNetInfo } from "@react-native-community/netinfo";
 import { setProcedureOngoing } from "ic-redux/actions/agents/actionCreator";
 import { AuthButton } from "components/Buttons/AuthButton";
 import { TextField } from "components/InputComponents/TextField";
-import { H1, H4 } from "components/Text";
+import { H1, H4, H5 } from "components/Text";
 import { AuthScreenProps } from "web/navigation/types/AuthenticationStackProps";
 import { AuthenticationScreenName } from "web/navigation";
 import { AuthState } from ".";
@@ -189,136 +188,120 @@ export const SignIn: FC<AuthScreenProps[AuthenticationScreenName.SIGN_IN]> = ({
   ];
 
   return (
-    <ScreenWrapper>
-      <SafeAreaView
-        style={styles.safeAreaContainer}
-        pointerEvents={signingIn ? "none" : "auto"}
-      >
-        {/* App Logo and Name */}
-        <View>
-          <View style={styles.logoContainer}>
-            <Image
-              style={styles.logo}
-              source={require("assets/heart-icon.png")}
-            />
-            <Text style={[styles.title, { fontSize: fonts.appNameSize }]}>
-              ReportCare
-            </Text>
-          </View>
+    <ScreenWrapper fixed pointerEvents={signingIn ? "none" : "auto"}>
+      {/* App Logo and Name */}
+      <View style={styles.logoContainer}>
+        <Image style={styles.logo} source={require("assets/heart-icon.png")} />
+        <Text style={[styles.title, { fontSize: fonts.appNameSize }]}>
+          ReportCare
+        </Text>
+      </View>
 
-          {/* Sign In Content */}
-          <View style={styles.contentContainer}>
-            <View style={styles.titleContainer}>
-              <H1 text={i18n.t("Auth_SignIn.SignIn")} style={styles.title} />
-            </View>
-
-            {/* Username */}
-            <TextField
-              label={i18n.t("Auth_SignIn.Username")}
-              labelStyle={{ marginTop: ms(-5) }}
-              value={username}
-              onChange={(text) => setUsername(text)}
-              placeholder={i18n.t("Auth_SignIn.UsernamePlaceholder")}
-              error={username !== "" && !validateUsername(username)}
-              errorMessage={i18n.t("Auth_SignIn.UsernameError")}
-            />
-
-            {/* Password */}
-            <TextField
-              label={i18n.t("Auth_SignIn.Password")}
-              value={password}
-              onChange={(text) => setPassword(text)}
-              placeholder={i18n.t("Auth_SignIn.PasswordPlaceholder")}
-              secureText
-              autoCorrect={false}
-              error={password !== "" && !validatePassword(password)}
-              errorMessage={i18n.t("Auth_SignIn.PasswordError")}
-              textContentType="password"
-            />
-
-            {/* Forgot Password */}
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate(AuthenticationScreenName.FORGET_PASSWORD)
-              }
-            >
-              <H4
-                text={i18n.t("Auth_SignIn.ForgotPassword")}
-                style={footerButtonTextStyle}
-              />
-            </TouchableOpacity>
-          </View>
-
-          {/* Sign In Button */}
-          <AuthButton
-            inputValid={inputValid}
-            buttonTitle={i18n.t("Auth_SignIn.SignIn")}
-            onPress={inputValid ? signIn : () => null}
-          />
-
-          {/* Prompt to Register */}
-          <View style={styles.footerContainer}>
-            <H4
-              text={i18n.t("Auth_SignIn.PromptRegister")}
-              style={[
-                footerButtonTextStyle,
-                { color: colors.primaryTextColor }
-              ]}
-            />
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate(AuthenticationScreenName.REGISTRATION)
-              }
-            >
-              <H4
-                text={i18n.t("Auth_SignIn.RedirectToRegister")}
-                style={[
-                  footerButtonTextStyle,
-                  {
-                    fontWeight: "bold",
-                    textDecorationLine: "underline"
-                  }
-                ]}
-              />
-            </TouchableOpacity>
-          </View>
+      {/* Sign In Content */}
+      <View style={styles.contentContainer}>
+        <View style={styles.titleContainer}>
+          <H1 text={i18n.t("Auth_SignIn.SignIn")} style={styles.title} />
         </View>
-      </SafeAreaView>
+
+        {/* Username */}
+        <TextField
+          label={i18n.t("Auth_SignIn.Username")}
+          labelStyle={{ marginTop: ms(-5) }}
+          value={username}
+          onChange={(text) => setUsername(text)}
+          placeholder={i18n.t("Auth_SignIn.UsernamePlaceholder")}
+          error={username !== "" && !validateUsername(username)}
+          errorMessage={i18n.t("Auth_SignIn.UsernameError")}
+        />
+
+        {/* Password */}
+        <TextField
+          label={i18n.t("Auth_SignIn.Password")}
+          value={password}
+          onChange={(text) => setPassword(text)}
+          placeholder={i18n.t("Auth_SignIn.PasswordPlaceholder")}
+          secureText
+          autoCorrect={false}
+          error={password !== "" && !validatePassword(password)}
+          errorMessage={i18n.t("Auth_SignIn.PasswordError")}
+          textContentType="password"
+        />
+
+        {/* Forgot Password */}
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate(AuthenticationScreenName.FORGET_PASSWORD)
+          }
+        >
+          <H5
+            text={i18n.t("Auth_SignIn.ForgotPassword")}
+            style={footerButtonTextStyle}
+          />
+        </TouchableOpacity>
+      </View>
+
+      {/* Sign In Button */}
+      <AuthButton
+        inputValid={inputValid}
+        buttonTitle={i18n.t("Auth_SignIn.SignIn")}
+        onPress={inputValid ? signIn : () => null}
+      />
+
+      {/* Prompt to Register */}
+      <View style={styles.footerContainer}>
+        <H4
+          text={i18n.t("Auth_SignIn.PromptRegister")}
+          style={[footerButtonTextStyle, { color: colors.primaryTextColor }]}
+        />
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate(AuthenticationScreenName.REGISTRATION)
+          }
+        >
+          <H4
+            text={i18n.t("Auth_SignIn.RedirectToRegister")}
+            style={[
+              footerButtonTextStyle,
+              {
+                fontWeight: "bold",
+                textDecorationLine: "underline"
+              }
+            ]}
+          />
+        </TouchableOpacity>
+      </View>
       {(signingIn || connecting) && <LoadingIndicator overlayBackgroundColor />}
     </ScreenWrapper>
   );
 };
 
 const styles = ScaledSheet.create({
-  safeAreaContainer: {
-    margin: ms(30)
-  },
   logoContainer: {
     flexDirection: "column",
     alignItems: "center",
-    marginTop: ms(-10)
+    marginTop: "35@ms"
   },
   logo: {
-    height: ms(55),
-    width: ms(75)
+    height: "55@ms",
+    width: "75@ms"
   },
   contentContainer: {
     alignSelf: "center",
     width: (Dimensions.get("window").width * 2) / 5
   },
   titleContainer: {
-    marginTop: ms(15),
-    marginBottom: ms(15)
+    marginTop: "15@ms",
+    marginBottom: "15@ms"
   },
   title: {
     fontWeight: "bold"
   },
   footerButtonText: {
-    marginTop: ms(5),
+    marginTop: "5@ms",
     fontWeight: "600"
   },
   footerContainer: {
-    marginTop: ms(10),
+    marginTop: "30@ms",
     flexDirection: "row",
     alignItems: "baseline",
     alignSelf: "center"
