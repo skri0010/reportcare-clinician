@@ -4,7 +4,7 @@ import { select, RootState } from "util/useRedux";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { PatientOverview } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientOverview";
 import { PatientParameters } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientParameters";
-// import { PatientICDCRT } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientIcdCrt";
+import { PatientICDCRT } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientIcdCrt";
 import { PatientHistory } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientHistory";
 import { PatientInformation } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientInformation";
 import { PatientDetailsTabProps } from "web/navigation/types";
@@ -74,7 +74,7 @@ export const PatientDetailsTabNavigator: FC<PatientDetailsTabNavigatorProps> =
         >
           {(props) => <PatientParameters {...props} details={details} />}
         </Tab.Screen>
-        {/* <Tab.Screen
+        <Tab.Screen
           name={PatientDetailsTabName.ICDCRT}
           options={{ title: i18n.t("Patients.ICD/CRT") }}
         >
@@ -86,7 +86,7 @@ export const PatientDetailsTabNavigator: FC<PatientDetailsTabNavigatorProps> =
               onViewIcdCrtRecord={onViewIcdCrtRecord}
             />
           )}
-        </Tab.Screen> */}
+        </Tab.Screen>
         <Tab.Screen
           name={PatientDetailsTabName.HISTORY}
           options={{ title: i18n.t("Patients.History") }}
