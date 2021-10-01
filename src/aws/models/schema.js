@@ -1589,21 +1589,6 @@ export const schema = {
                                 "provider": "userPools",
                                 "allow": "groups",
                                 "groups": [
-                                    "EPs",
-                                    "Nurses",
-                                    "HFSpecialists",
-                                    "MedicalOfficers",
-                                    "Pharmacists"
-                                ],
-                                "operations": [
-                                    "read"
-                                ]
-                            },
-                            {
-                                "groupClaim": "cognito:groups",
-                                "provider": "userPools",
-                                "allow": "groups",
-                                "groups": [
                                     "Admin"
                                 ],
                                 "operations": [
