@@ -12,7 +12,7 @@ import {
   BeliefKeys,
   setRetryLaterTimeout
 } from "rc_agents/clinician_framework";
-import { Storage, AsyncStorageKeys } from "rc_agents/storage";
+import { LocalStorage, AsyncStorageKeys } from "rc_agents/storage";
 import { agentNWA } from "rc_agents/agents";
 // eslint-disable-next-line no-restricted-imports
 import { updatePatientConfiguration } from "rc_agents/agents/data-assistant/action-frames/hf-outcome-trends/ConfigurePatient";
@@ -37,7 +37,7 @@ class SyncConfigurePatients extends Activity {
 
     try {
       // Get locally stored configurations
-      const configurations = await Storage.getPatientConfigurations();
+      const configurations = await LocalStorage.getPatientConfigurations();
 
       if (configurations) {
         // Indicator of whether all patient configurations have been synced
@@ -68,11 +68,13 @@ class SyncConfigurePatients extends Activity {
 
         // Remove AsyncStorage entry if all configurations are updated
         if (configurationsSuccessful) {
-          await Storage.removeItem(AsyncStorageKeys.PATIENT_CONFIGURATIONS);
+          await LocalStorage.removeItem(
+            AsyncStorageKeys.PATIENT_CONFIGURATIONS
+          );
         }
         // Store configurations that failed to be updated
         else if (succeedIndices.length > 0) {
-          await Storage.setPatientConfigurations(
+          await LocalStorage.setPatientConfigurations(
             configurations.filter((_, index) => !succeedIndices.includes(index))
           );
           setRetryLaterTimeout(() => {

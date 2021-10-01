@@ -1,14 +1,14 @@
 import React, { FC, useEffect, useState, useCallback } from "react";
 import { Provider } from "react-redux";
 import { store, persistor } from "util/useRedux";
-import { MainNavigationStack } from "web/MainNavigation";
+import { MainNavigation } from "web/MainNavigation";
 import { AuthStackNavigator } from "web/navigation/navigators/AuthStackNavigator";
 import awsconfig from "aws/aws-exports";
 import { Amplify } from "@aws-amplify/core";
 import { Auth } from "@aws-amplify/auth";
 import { AuthState } from "web/auth_screens";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
-import { Storage } from "rc_agents/storage";
+import { LocalStorage } from "rc_agents/storage";
 import { ToastProviderComponent } from "components/Indicators/ToastProvider";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AgentIDs } from "rc_agents/clinician_framework";
@@ -17,6 +17,7 @@ import {
   subscribePatientAssignment
 } from "aws/TypedAPI/subscriptions";
 import { PersistGate } from "redux-persist/lib/integration/react";
+import "web/styles.css";
 
 Amplify.configure(awsconfig);
 Auth.configure(awsconfig);
@@ -62,7 +63,7 @@ const App: FC = () => {
     try {
       await Auth.currentAuthenticatedUser();
       // In case local storage has been cleared
-      const clinicianId = await Storage.getClinicianID();
+      const clinicianId = await LocalStorage.getClinicianID();
       if (clinicianId) {
         setAuthState(AuthState.SIGNED_IN);
       } else {
@@ -94,7 +95,7 @@ const App: FC = () => {
         >
           <ToastProviderComponent>
             {authState === AuthState.SIGNED_IN ? (
-              <MainNavigationStack setAuthState={setAuthState} />
+              <MainNavigation setAuthState={setAuthState} />
             ) : authState === AuthState.SIGNED_OUT ? (
               <AuthStackNavigator setAuthState={setAuthState} />
             ) : null}

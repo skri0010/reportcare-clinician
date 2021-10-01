@@ -12,7 +12,11 @@ import {
   Todo,
   CreateTodoInput,
   PatientAssignment,
-  CreatePatientAssignmentInput
+  CreatePatientAssignmentInput,
+  MedicalRecord,
+  CreateMedicalRecordInput,
+  IcdCrtRecord,
+  CreateIcdCrtRecordInput
 } from "aws/API";
 
 interface CreateClinicianInfoResponse extends BaseResponse {
@@ -77,4 +81,30 @@ export const createPatientAssignment = async (
     query: mutations.createPatientAssignment,
     variables: { input: input }
   })) as CreatePatientAssignmentResponse;
+};
+
+interface CreateMedicalRecordResponse extends BaseResponse {
+  data: { createMedicalRecord?: MedicalRecord };
+}
+
+export const createMedicalRecord = async (
+  input: CreateMedicalRecordInput
+): Promise<CreateMedicalRecordResponse> => {
+  return (await API.graphql({
+    query: mutations.createMedicalRecord,
+    variables: { input: input }
+  })) as CreateMedicalRecordResponse;
+};
+
+interface CreateIcdCrtRecordResponse extends BaseResponse {
+  data: { createIcdCrtRecord?: IcdCrtRecord };
+}
+
+export const createIcdCrtRecord = async (
+  input: CreateIcdCrtRecordInput
+): Promise<CreateIcdCrtRecordResponse> => {
+  return (await API.graphql({
+    query: mutations.createIcdCrtRecord,
+    variables: { input: input }
+  })) as CreateIcdCrtRecordResponse;
 };

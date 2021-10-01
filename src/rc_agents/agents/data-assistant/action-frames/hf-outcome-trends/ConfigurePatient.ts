@@ -18,9 +18,9 @@ import {
 } from "rc_agents/clinician_framework";
 import { getPatientInfo, updatePatientInfo } from "aws";
 import { PatientInfo, UpdatePatientInfoInput } from "aws/API";
-import { Storage } from "rc_agents/storage";
 import { store } from "util/useRedux";
 import { agentNWA } from "rc_agents/agents";
+import { LocalStorage } from "rc_agents/storage";
 import {
   setConfigurationSuccessful,
   setConfiguringPatient
@@ -67,10 +67,10 @@ class ConfigurePatient extends Activity {
         // Device is offline: store patient configuration locally and update local patient details
         else if (!isOnline) {
           // Update local patient details
-          await Storage.setPatient(configuration);
+          await LocalStorage.setPatient(configuration);
 
           // Store patient configuration to be synced later on
-          await Storage.setPatientConfigurations([configuration]);
+          await LocalStorage.setPatientConfigurations([configuration]);
           configurationSuccessful = true;
 
           // Notifies NWA of the configuration to sync
@@ -215,7 +215,7 @@ export const updatePatientConfiguration = async (
   }
 
   // Updates locally stored patient details
-  await Storage.setPatient(configuration);
+  await LocalStorage.setPatient(configuration);
 
   return updateSuccessful;
 };

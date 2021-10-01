@@ -6,12 +6,14 @@ import { RiskLevel } from "models/RiskLevel";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import autoMergeLevel2 from "redux-persist/lib/stateReconciler/autoMergeLevel2";
 import { AsyncStorageKeys } from "rc_agents/storage";
+import { ChartFilter, ChartViewTypes } from "models/ChartViewTypes";
 
 export interface FilterState {
   // filter
   patientRiskFilters: RiskFilter;
   alertRiskFilters: RiskFilter;
   riskFilters: RiskFilter;
+  chartFilters: ChartFilter;
 }
 
 const initialState: FilterState = {
@@ -32,6 +34,12 @@ const initialState: FilterState = {
     [RiskLevel.MEDIUM]: false,
     [RiskLevel.LOW]: false,
     [RiskLevel.UNASSIGNED]: false
+  },
+  chartFilters: {
+    [ChartViewTypes.ALL]: true,
+    [ChartViewTypes.MIN]: false,
+    [ChartViewTypes.MAX]: false,
+    [ChartViewTypes.AVERAGE]: false
   }
 };
 
@@ -47,6 +55,8 @@ export const filterReducer: Reducer<FilterState, RootAction> = (
       };
     case actionNames.SET_ALERT_RISK_FILTERS:
       return { ...state, alertRiskFilters: action.payload.alertRiskFilters };
+    case actionNames.SET_CHART_FILTERS:
+      return { ...state, chartFilters: action.payload.chartFilters };
     default:
       return state;
   }

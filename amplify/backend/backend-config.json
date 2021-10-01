@@ -19,31 +19,41 @@
               "userPoolId": "authreportcaref82cc4af"
             }
           },
-          "additionalAuthenticationProviders": []
+          "additionalAuthenticationProviders": [
+            {
+              "authenticationType": "AWS_IAM"
+            }
+          ]
         }
       }
     }
   },
-  "function": {
-    "S3Triggerb0df74fe": {
-      "service": "Lambda",
-      "providerPlugin": "awscloudformation",
-      "build": true
+  "storage": {
+    "icdcrtmedicalrecords": {
+      "service": "S3",
+      "providerPlugin": "awscloudformation"
     }
   },
-  "storage": {
-    "medicalrecords": {
-      "service": "S3",
+  "function": {
+    "reportcarelambdalayer": {
       "providerPlugin": "awscloudformation",
+      "service": "LambdaLayer",
+      "build": true
+    },
+    "patientassignmenthandler": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
       "dependsOn": [
         {
           "category": "function",
-          "resourceName": "S3Triggerb0df74fe",
-          "attributes": [
-            "Name",
-            "Arn",
-            "LambdaExecutionRole"
-          ]
+          "resourceName": "reportcarelambdalayer",
+          "attributes": ["Arn"]
+        },
+        {
+          "category": "api",
+          "resourceName": "reportcare",
+          "attributes": ["GraphQLAPIIdOutput", "GraphQLAPIEndpointOutput"]
         }
       ]
     }

@@ -7,7 +7,7 @@ import { ClinicianAgent } from "./ClinicianAgent";
 /**
  * Class representing an end point for the agent system
  */
-class ClinicianAgentAPI extends AgentAPI {
+export class ClinicianAgentAPI extends AgentAPI {
   constructor() {
     super(new ClinicianAgentManagement());
   }
@@ -45,6 +45,16 @@ class ClinicianAgentAPI extends AgentAPI {
   mergeFacts(facts: Belief): void {
     if (this.system instanceof ClinicianAgentManagement) {
       this.system.mergeFacts(facts);
+    }
+  }
+
+  /**
+   * Gets keys of beliefs/facts that should be stored
+   * @returns an array of keys
+   */
+  getStorableKeys(): string[] | undefined {
+    if (this.system instanceof ClinicianAgentManagement) {
+      return this.system.getStorableKeys();
     }
   }
 }

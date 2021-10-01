@@ -1,21 +1,19 @@
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import { CardWrapper } from "web/screens/Home/CardWrapper";
-import { mockVitals } from "mock/mockVitals";
-import { SystolicPressureChart } from "components/Visualization/SystolicPressureChart";
+import { SystolicBPChart } from "components/VisualizationComponents/SystolicBPChart";
+import { ParameterGraphsProps } from "components/VisualizationComponents/ParameterGraphs";
 
-interface SystolicBPChartCardProps {
-  patientId: string;
+interface SystolicBPChartCardProps extends ParameterGraphsProps {
   maxHeight: number;
 }
 
 export const SystolicBPChartCard: FC<SystolicBPChartCardProps> = ({
+  data,
   maxHeight
 }) => {
-  const [vitals] = useState(mockVitals);
-
   return (
     <CardWrapper maxHeight={maxHeight}>
-      <SystolicPressureChart data={vitals} />
+      <SystolicBPChart data={data} />
     </CardWrapper>
   );
 };

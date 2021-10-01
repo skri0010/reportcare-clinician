@@ -2,7 +2,7 @@ import { actionNames } from "ic-redux/actions/actionNames";
 import { RootAction } from "ic-redux/actions/RootAction";
 import { Reducer } from "redux";
 import { AlertInfo, PatientDetails } from "rc_agents/model";
-import { PatientInfo } from "aws/API";
+import { PatientInfo, IcdCrtRecord, MedicalRecord } from "aws/API";
 
 interface PatientState {
   // patient
@@ -12,6 +12,18 @@ interface PatientState {
   fetchingPatientDetails: boolean;
   fetchingPatientAlertHistory: boolean;
   alertHistory: AlertInfo[] | undefined;
+  creatingMedicalRecord: boolean;
+  createMedicalRecordSuccessful: boolean;
+  fetchingMedicalRecords: boolean;
+  medicalRecords: MedicalRecord[] | undefined;
+  fetchingMedicalRecordContent: boolean;
+  medicalRecordContent: string | undefined;
+  creatingIcdCrtRecord: boolean;
+  createIcdCrtRecordSuccessful: boolean;
+  fetchingIcdCrtRecords: boolean;
+  icdCrtRecords: IcdCrtRecord[] | undefined;
+  fetchingIcdCrtRecordContent: boolean;
+  icdCrtRecordContent: string | undefined;
 }
 
 const initialState: PatientState = {
@@ -20,7 +32,19 @@ const initialState: PatientState = {
   fetchingPatients: false,
   fetchingPatientDetails: false,
   fetchingPatientAlertHistory: false,
-  alertHistory: undefined
+  alertHistory: undefined,
+  creatingMedicalRecord: false,
+  createMedicalRecordSuccessful: false,
+  fetchingMedicalRecords: false,
+  medicalRecords: undefined,
+  fetchingMedicalRecordContent: false,
+  medicalRecordContent: undefined,
+  creatingIcdCrtRecord: false,
+  createIcdCrtRecordSuccessful: false,
+  fetchingIcdCrtRecords: false,
+  icdCrtRecords: undefined,
+  fetchingIcdCrtRecordContent: false,
+  icdCrtRecordContent: undefined
 };
 
 export const patientReducer: Reducer<PatientState, RootAction> = (
@@ -46,6 +70,69 @@ export const patientReducer: Reducer<PatientState, RootAction> = (
       };
     case actionNames.SET_ALERT_HISTORY:
       return { ...state, alertHistory: action.payload.alertHistory };
+    case actionNames.SET_CREATING_MEDICAL_RECORD:
+      return {
+        ...state,
+        creatingMedicalRecord: action.payload.creatingMedicalRecord
+      };
+    case actionNames.SET_CREATE_MEDICAL_RECORD_SUCCESSFUL:
+      return {
+        ...state,
+        createMedicalRecordSuccessful:
+          action.payload.createMedicalRecordSuccessful
+      };
+    case actionNames.SET_FETCHING_MEDICAL_RECORDS:
+      return {
+        ...state,
+        fetchingMedicalRecords: action.payload.fetchingMedicalRecords
+      };
+    case actionNames.SET_MEDICAL_RECORDS:
+      return {
+        ...state,
+        medicalRecords: action.payload.medicalRecords
+      };
+    case actionNames.SET_FETCHING_MEDICAL_RECORD_CONTENT:
+      return {
+        ...state,
+        fetchingMedicalRecordContent:
+          action.payload.fetchingMedicalRecordContent
+      };
+    case actionNames.SET_MEDICAL_RECORD_CONTENT:
+      return {
+        ...state,
+        medicalRecordContent: action.payload.medicalRecordContent
+      };
+    case actionNames.SET_CREATING_ICDCRT_RECORD:
+      return {
+        ...state,
+        creatingIcdCrtRecord: action.payload.creatingIcdCrtRecord
+      };
+    case actionNames.SET_CREATE_ICDCRT_RECORD_SUCCESSFUL:
+      return {
+        ...state,
+        createIcdCrtRecordSuccessful:
+          action.payload.createIcdCrtRecordSuccessful
+      };
+    case actionNames.SET_FETCHING_ICDCRT_RECORDS:
+      return {
+        ...state,
+        fetchingIcdCrtRecords: action.payload.fetchingIcdCrtRecords
+      };
+    case actionNames.SET_ICDCRT_RECORDS:
+      return {
+        ...state,
+        icdCrtRecords: action.payload.icdCrtRecords
+      };
+    case actionNames.SET_FETCHING_ICDCRT_RECORD_CONTENT:
+      return {
+        ...state,
+        fetchingIcdCrtRecordContent: action.payload.fetchingIcdCrtRecordContent
+      };
+    case actionNames.SET_ICDCRT_RECORD_CONTENT:
+      return {
+        ...state,
+        icdCrtRecordContent: action.payload.icdCrtRecordContent
+      };
     default:
       return state;
   }

@@ -17,7 +17,7 @@ import {
   AppAttributes,
   ActionFrameIDs
 } from "rc_agents/clinician_framework";
-import { Storage } from "rc_agents/storage";
+import { LocalStorage } from "rc_agents/storage";
 import { PatientInfo } from "aws/API";
 import { listPatientInfos } from "aws";
 import { Role } from "rc_agents/model";
@@ -127,7 +127,7 @@ class RetrievePatientsByRole extends Activity {
 
     if (role) {
       // Role exists indicated clinician info has been updated
-      const localClinician = await Storage.getClinician();
+      const localClinician = await LocalStorage.getClinician();
       if (localClinician) {
         // Device is online: Retrieve and store locally
         if (isOnline) {
@@ -161,12 +161,12 @@ class RetrievePatientsByRole extends Activity {
           }
           if (patients) {
             // Save retrieved data locally
-            await Storage.setPatients(patients);
+            await LocalStorage.setPatients(patients);
           }
         }
       }
       // Regardless if device is online or offline, retrieve locally
-      const localData = await Storage.getPatients();
+      const localData = await LocalStorage.getPatients();
       if (localData) {
         returnPatients = localData;
       }

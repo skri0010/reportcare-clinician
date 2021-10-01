@@ -14,7 +14,11 @@ import {
   ProcedureAttributes,
   ActionFrameIDs
 } from "rc_agents/clinician_framework";
-import { AsyncStorageKeys, AsyncStorageType, Storage } from "rc_agents/storage";
+import {
+  AsyncStorageKeys,
+  AsyncStorageType,
+  LocalStorage
+} from "rc_agents/storage";
 import { createClinicianInfo, createClinicianProtectedInfo } from "aws";
 import { store } from "util/useRedux";
 import {
@@ -52,6 +56,7 @@ class StoreEntryData extends Activity {
           name: data.name,
           hospitalName: data.hospitalName,
           clinicianID: clinicianID,
+          contactNumber: "0112222333",
           role: data.role
         });
 
@@ -77,12 +82,12 @@ class StoreEntryData extends Activity {
           }
 
           // Stores clinicianID and clinician locally
-          await Storage.setClinicianID(newClinicianInfo.clinicianID);
-          await Storage.setClinician(newClinicianInfo);
+          await LocalStorage.setClinicianID(newClinicianInfo.clinicianID);
+          await LocalStorage.setClinician(newClinicianInfo);
 
           // Removes sign up details and username from local storage
-          await Storage.removeItem(AsyncStorageKeys.SIGN_UP_DETAILS);
-          await Storage.removeItem(AsyncStorageKeys.USERNAME);
+          await LocalStorage.removeItem(AsyncStorageKeys.SIGN_UP_DETAILS);
+          await LocalStorage.removeItem(AsyncStorageKeys.USERNAME);
 
           // Dispatch to front end that sign in was successful
           store.dispatch(setProcedureSuccessful(true));

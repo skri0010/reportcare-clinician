@@ -1,15 +1,18 @@
 import { ReportVitals } from "aws/API";
+import { LocalReportVitals } from "rc_agents/model";
+import { getWeekLocaleDateString } from "util/utilityFunctions";
 
-export const mockVitals: ReportVitals[] = [
+const mockVitals: ReportVitals[] = [
   {
     __typename: "ReportVitals",
     patientID: "Mohammad Zaini",
-    BPDi: "44",
-    BPSys: "11",
+    BPDi: "84",
+    BPSys: "55",
     DateTime: "2021-04-10T09:24:55.351Z",
     Humidity: undefined,
     NoSteps: "123",
     OxySat: "70",
+    FluidIntake: "200",
     Temperature: undefined,
     Weight: "20",
     id: "5b22208a-da5e-430d-a661-a6530bbb5ab8",
@@ -21,12 +24,13 @@ export const mockVitals: ReportVitals[] = [
   {
     __typename: "ReportVitals",
     patientID: "Mohammad Zaini",
-    BPDi: "44",
-    BPSys: "11",
+    BPDi: "74",
+    BPSys: "55",
     DateTime: "2021-04-11T09:24:55.351Z",
     Humidity: undefined,
     NoSteps: "123",
     OxySat: "70",
+    FluidIntake: "500",
     Temperature: undefined,
     Weight: "20",
     id: "5b22208a-da5e-430d-a661-a6530bbb5ab9",
@@ -38,12 +42,13 @@ export const mockVitals: ReportVitals[] = [
   {
     __typename: "ReportVitals",
     patientID: "Mohammad Zaini",
-    BPDi: "44",
-    BPSys: "11",
+    BPDi: "64",
+    BPSys: "55",
     DateTime: "2021-04-12T09:24:55.351Z",
     Humidity: undefined,
     NoSteps: "123",
     OxySat: "70",
+    FluidIntake: "150",
     Temperature: undefined,
     Weight: "20",
     id: "5b22208a-da5e-430d-a661-a6530bbb5ac1",
@@ -55,12 +60,13 @@ export const mockVitals: ReportVitals[] = [
   {
     __typename: "ReportVitals",
     patientID: "Mohammad Zaini",
-    BPDi: "44",
-    BPSys: "11",
+    BPDi: undefined,
+    BPSys: "55",
     DateTime: "2021-04-13T09:24:55.351Z",
     Humidity: undefined,
     NoSteps: "123",
     OxySat: "70",
+    FluidIntake: "170",
     Temperature: undefined,
     Weight: "20",
     id: "5b22208a-da5e-430d-a661-a6530bbb5ac3",
@@ -72,12 +78,13 @@ export const mockVitals: ReportVitals[] = [
   {
     __typename: "ReportVitals",
     patientID: "Mohammad Zaini",
-    BPDi: "50",
+    BPDi: "90",
     BPSys: "200",
     DateTime: "2021-04-13T09:20:47.251Z",
     Humidity: undefined,
     NoSteps: "100",
-    OxySat: "200",
+    OxySat: "100",
+    FluidIntake: "250",
     Temperature: undefined,
     Weight: "99",
     id: "37e7e083-b61f-4d34-891a-89bc1c6f6cc4",
@@ -89,12 +96,13 @@ export const mockVitals: ReportVitals[] = [
   {
     __typename: "ReportVitals",
     patientID: "Mohammad Zaini",
-    BPDi: "50",
-    BPSys: "200",
+    BPDi: "70",
+    BPSys: "",
     DateTime: "2021-04-13T09:20:47.251Z",
     Humidity: undefined,
     NoSteps: "100",
-    OxySat: "200",
+    OxySat: "100",
+    FluidIntake: "300",
     Temperature: undefined,
     Weight: "99",
     id: "37e7e083-b61f-4d34-891a-89bc1c6f6cc5",
@@ -106,12 +114,13 @@ export const mockVitals: ReportVitals[] = [
   {
     __typename: "ReportVitals",
     patientID: "Mohammad Zaini",
-    BPDi: "50",
+    BPDi: "55",
     BPSys: "200",
     DateTime: "2021-04-14T09:20:47.251Z",
     Humidity: undefined,
     NoSteps: "100",
-    OxySat: "200",
+    OxySat: "100",
+    FluidIntake: "10",
     Temperature: undefined,
     Weight: "99",
     id: "37e7e083-b61f-4d34-891a-89bc1c6f6cc6",
@@ -128,7 +137,8 @@ export const mockVitals: ReportVitals[] = [
     DateTime: "2021-04-15T09:20:47.251Z",
     Humidity: undefined,
     NoSteps: "100",
-    OxySat: "200",
+    OxySat: "90",
+    FluidIntake: "",
     Temperature: undefined,
     Weight: "99",
     id: "37e7e083-b61f-4d34-891a-89bc1c6f6cc7",
@@ -146,6 +156,7 @@ export const mockVitals: ReportVitals[] = [
     Humidity: undefined,
     NoSteps: "80",
     OxySat: "100",
+    FluidIntake: "1000",
     Temperature: undefined,
     Weight: "80",
     id: "5b22208a-da5e-430d-a661-a6530bbb5ab8",
@@ -163,6 +174,7 @@ export const mockVitals: ReportVitals[] = [
     Humidity: undefined,
     NoSteps: "80",
     OxySat: "100",
+    FluidIntake: "700",
     Temperature: undefined,
     Weight: "80",
     id: "36ee7c15-8772-4679-aade-6b3d7f4c7707",
@@ -174,12 +186,13 @@ export const mockVitals: ReportVitals[] = [
   {
     __typename: "ReportVitals",
     patientID: "Tyler Haris",
-    BPDi: "70",
+    BPDi: undefined,
     BPSys: "195",
     DateTime: "2021-04-16T09:24:55.351Z",
     Humidity: undefined,
     NoSteps: "80",
     OxySat: "100",
+    FluidIntake: "70",
     Temperature: undefined,
     Weight: "80",
     id: "3",
@@ -192,11 +205,12 @@ export const mockVitals: ReportVitals[] = [
     __typename: "ReportVitals",
     patientID: "Danial Williams",
     BPDi: "90",
-    BPSys: "195",
+    BPSys: "",
     DateTime: "2021-04-16T09:24:55.351Z",
     Humidity: undefined,
     NoSteps: "80",
     OxySat: "100",
+    FluidIntake: "699",
     Temperature: undefined,
     Weight: "80",
     id: "6",
@@ -206,3 +220,28 @@ export const mockVitals: ReportVitals[] = [
     _version: 1
   }
 ];
+
+const targetLocaleDateStrings = getWeekLocaleDateString();
+const tempLocalReportVitals: LocalReportVitals = {};
+
+let localeDateStringIndex = 0;
+mockVitals.forEach((vitals) => {
+  // Use dates from current date
+  vitals.DateTime = new Date(
+    targetLocaleDateStrings[localeDateStringIndex]
+  ).toString();
+  localeDateStringIndex =
+    (localeDateStringIndex + 1) % targetLocaleDateStrings.length;
+
+  // Get localReportVitals similar to RetrievePatientDetails
+  const dateKey = new Date(vitals.DateTime).toLocaleDateString();
+  const localVitalsReports = tempLocalReportVitals[dateKey];
+  if (localVitalsReports) {
+    localVitalsReports.push(vitals);
+    tempLocalReportVitals[dateKey] = localVitalsReports;
+  } else {
+    tempLocalReportVitals[dateKey] = [vitals];
+  }
+});
+
+export const mockLocalReportVitals = tempLocalReportVitals;

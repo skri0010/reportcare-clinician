@@ -10,7 +10,7 @@ import {
   AppAttributes,
   BeliefKeys
 } from "rc_agents/clinician_framework";
-import { Storage, AsyncStorageKeys } from "rc_agents/storage";
+import { LocalStorage, AsyncStorageKeys } from "rc_agents/storage";
 // eslint-disable-next-line no-restricted-imports
 import { resolvePatientAssignment } from "rc_agents/agents/data-assistant/action-frames/storing-data/ResolvePatientAssignment";
 
@@ -38,10 +38,11 @@ class SyncPatientAssignmentResolutions extends Activity {
 
     try {
       // Get locally stored list of assignments to resolve
-      const resolutionList = await Storage.getPatientAssignmentResolutions();
+      const resolutionList =
+        await LocalStorage.getPatientAssignmentResolutions();
 
       // Get locally stored clinicianId
-      const clinicianId = await Storage.getClinicianID();
+      const clinicianId = await LocalStorage.getClinicianID();
 
       if (resolutionList && clinicianId) {
         Object.keys(resolutionList).forEach(async (key) => {
@@ -58,7 +59,7 @@ class SyncPatientAssignmentResolutions extends Activity {
                 delete resolutionList[key];
               }
               // Insert remaining resolutions back into storage
-              Storage.setPatientAssignmentResolutions(resolutionList);
+              LocalStorage.setPatientAssignmentResolutions(resolutionList);
             } catch (error) {
               // eslint-disable-next-line no-console
               console.log(error);
@@ -68,7 +69,9 @@ class SyncPatientAssignmentResolutions extends Activity {
 
         // Reset AsyncStorage key if none left
         if (Object.keys(resolutionList).length === 0) {
-          Storage.removeItem(AsyncStorageKeys.PATIENT_ASSIGNMENTS_RESOLUTIONS);
+          LocalStorage.removeItem(
+            AsyncStorageKeys.PATIENT_ASSIGNMENTS_RESOLUTIONS
+          );
         }
       }
     } catch (error) {

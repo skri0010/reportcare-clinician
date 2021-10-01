@@ -16,7 +16,7 @@ import {
   ProcedureAttributes,
   setRetryLaterTimeout
 } from "rc_agents/clinician_framework";
-import { Storage } from "rc_agents/storage";
+import { LocalStorage } from "rc_agents/storage";
 import { listCompletedRiskAlerts, listPendingRiskAlerts } from "aws";
 import {
   AlertInfo,
@@ -98,16 +98,16 @@ class RetrieveAlerts extends Activity {
           }
 
           // Flush locally store info
-          await Storage.flushAlertInfos();
+          await LocalStorage.flushAlertInfos();
 
           // Store pending / completed AlertInfo[]
           if (pendingAlerts) {
             pendingAlertInfos = convertAlertsToAlertInfos(pendingAlerts);
-            await Storage.setAlertInfos(pendingAlertInfos);
+            await LocalStorage.setAlertInfos(pendingAlertInfos);
           }
           if (completedAlerts) {
             completedAlertInfos = convertAlertsToAlertInfos(completedAlerts);
-            await Storage.setAlertInfos(completedAlertInfos);
+            await LocalStorage.setAlertInfos(completedAlertInfos);
           }
         } else {
           // Device is offline or fetch locally based on fetchAlertsMode
@@ -116,13 +116,13 @@ class RetrieveAlerts extends Activity {
             fetchAlertsMode === FetchAlertsMode.PENDING ||
             fetchAlertsMode === FetchAlertsMode.ALL
           ) {
-            pendingAlertInfos = await Storage.getPendingAlertInfos();
+            pendingAlertInfos = await LocalStorage.getPendingAlertInfos();
           }
           if (
             fetchAlertsMode === FetchAlertsMode.COMPLETED ||
             fetchAlertsMode === FetchAlertsMode.ALL
           ) {
-            completedAlertInfos = await Storage.getCompletedAlertInfos();
+            completedAlertInfos = await LocalStorage.getCompletedAlertInfos();
           }
         }
 
