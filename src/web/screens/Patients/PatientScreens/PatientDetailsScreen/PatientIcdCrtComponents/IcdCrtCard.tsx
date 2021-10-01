@@ -1,38 +1,40 @@
 import React, { FC, useEffect, useState } from "react";
 import { RootState, select } from "util/useRedux";
-import { ScaledSheet } from "react-native-size-matters";
 import { CardWrapper } from "web/screens/Home/CardWrapper";
 import { FlatList, View } from "react-native";
-import { MedicalRecordRow } from "./MedicalRecordRow";
 import i18n from "util/language/i18n";
+import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
+import { EmptyListIndicator } from "components/Indicators/EmptyListIndicator";
+import { IcdCrtRecordRow } from "./IcdCrtRecordRow";
 import { IconButton, IconType } from "components/Buttons/IconButton";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
-import { EmptyListIndicator } from "components/Indicators/EmptyListIndicator";
-import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
-import { MedicalRecord } from "aws/API";
+import { IcdCrtRecord } from "aws/API";
 import { useNetInfo } from "@react-native-community/netinfo";
+import { ScaledSheet } from "react-native-size-matters";
 
-interface PatientMedicalRecordProps {
-  medicalRecords: MedicalRecord[];
-  maxHeight: number;
-  onAddPress: () => void; // action to be done when add button is pressed
-  onViewMedicalRecord: (medicalRecord: MedicalRecord) => void;
+interface IcdCrtProps {
+  onAddPress: () => void; // when the add button is pressed
+  onViewIcdCrtRecord: (icdCrtRecord: IcdCrtRecord) => void;
 }
 
-export const PatientMedicalRecordCard: FC<PatientMedicalRecordProps> = ({
-  medicalRecords,
-  maxHeight,
+export const IcdCrtCard: FC<IcdCrtProps> = ({
   onAddPress,
-  onViewMedicalRecord
+  onViewIcdCrtRecord
 }) => {
-  const { colors, fetchingMedicalRecordContent } = select(
-    (state: RootState) => ({
-      colors: state.settings.colors,
-      fetchingMedicalRecordContent: state.agents.fetchingMedicalRecordContent
-    })
-  );
+  const {
+    colors,
+    fetchingIcdCrtRecords,
+    icdCrtRecords,
+    fetchingIcdCrtRecordContent
+  } = select((state: RootState) => ({
+    colors: state.settings.colors,
+    alertHistory: state.agents.alertHistory,
+    fetchingIcdCrtRecords: state.agents.fetchingIcdCrtRecords,
+    icdCrtRecords: state.agents.icdCrtRecords,
+    fetchingIcdCrtRecordContent: state.agents.fetchingIcdCrtRecordContent
+  }));
 
-  const [isOnline, setIsOnline] = useState<boolean>(false); // Whether file upload is allowed (is online)
+  const [isOnline, setIsOnline] = useState<boolean>(false); // Whether app is online
 
   const netInfo = useNetInfo();
 
@@ -51,8 +53,8 @@ export const PatientMedicalRecordCard: FC<PatientMedicalRecordProps> = ({
     }
   }, [netInfo.isConnected, netInfo.isInternetReachable]);
 
-  // Add medical record button
-  const AddMedicalRecordButton: FC = () => {
+  // Add ICD/CRT record button
+  const AddIcdCrtRecordButton: FC = () => {
     return (
       <View style={styles.buttonContainer}>
         <IconButton
@@ -68,33 +70,38 @@ export const PatientMedicalRecordCard: FC<PatientMedicalRecordProps> = ({
   };
 
   return (
-    <View>
+    <View
+      pointerEvents={
+        fetchingIcdCrtRecords || fetchingIcdCrtRecordContent ? "none" : "auto"
+      }
+    >
       <CardWrapper
-        maxHeight={maxHeight}
-        title={i18n.t("Patient_History.MedicalRecords")}
-        ComponentNextToTitle={AddMedicalRecordButton}
+        title={i18n.t("Patient_ICD/CRT.IcdCrtRecords")}
+        ComponentNextToTitle={AddIcdCrtRecordButton}
       >
-        {/* List of medical records */}
-        {medicalRecords.length > 0 ? (
+        {/* List of ICD/CRT records */}
+        {icdCrtRecords && icdCrtRecords.length > 0 ? (
           <FlatList
             showsVerticalScrollIndicator={false}
             ItemSeparatorComponent={ItemSeparator}
-            data={medicalRecords}
+            data={icdCrtRecords}
             renderItem={({ item }) => (
-              <MedicalRecordRow
-                medicalRecord={item}
-                onViewMedicalRecord={onViewMedicalRecord}
+              <IcdCrtRecordRow
+                icdCrtRecord={item}
+                onViewIcdCrtRecord={onViewIcdCrtRecord}
                 allowView={isOnline}
               />
             )}
-            keyExtractor={(medicalRecord) => medicalRecord.id}
+            keyExtractor={(icdCrtRecord) => icdCrtRecord.id}
           />
-        ) : (
+        ) : !fetchingIcdCrtRecords ? (
           <EmptyListIndicator
-            text={i18n.t("Patient_History.NoMedicalRecords")}
+            text={i18n.t("Patient_ICD/CRT.NoIcdCrtRecords")}
           />
+        ) : null}
+        {(fetchingIcdCrtRecords || fetchingIcdCrtRecordContent) && (
+          <LoadingIndicator />
         )}
-        {fetchingMedicalRecordContent && <LoadingIndicator />}
       </CardWrapper>
     </View>
   );

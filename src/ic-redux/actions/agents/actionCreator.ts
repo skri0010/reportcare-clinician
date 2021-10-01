@@ -12,7 +12,7 @@ import {
   PatientAssignment,
   PatientInfo,
   ClinicianInfo,
-  MedicalRecord
+  IcdCrtRecord
 } from "aws/API";
 
 export const setProcedureOngoing = createAction(
@@ -141,20 +141,6 @@ export const setCreateMedicalRecordSuccessful = createAction(
   })
 )();
 
-export const setFetchingMedicalRecords = createAction(
-  actionNames.SET_FETCHING_MEDICAL_RECORDS,
-  (fetchingMedicalRecords: boolean) => ({
-    fetchingMedicalRecords: fetchingMedicalRecords
-  })
-)();
-
-export const setMedicalRecords = createAction(
-  actionNames.SET_MEDICAL_RECORDS,
-  (medicalRecords: MedicalRecord[]) => ({
-    medicalRecords: medicalRecords
-  })
-)();
-
 export const setFetchingMedicalRecordContent = createAction(
   actionNames.SET_FETCHING_MEDICAL_RECORD_CONTENT,
   (fetchingMedicalRecordContent: boolean) => ({
@@ -166,6 +152,48 @@ export const setMedicalRecordContent = createAction(
   actionNames.SET_MEDICAL_RECORD_CONTENT,
   (medicalRecordContent: string | undefined) => ({
     medicalRecordContent: medicalRecordContent
+  })
+)();
+
+export const setCreatingIcdCrtRecord = createAction(
+  actionNames.SET_CREATING_ICDCRT_RECORD,
+  (creatingIcdCrtRecord: boolean) => ({
+    creatingIcdCrtRecord: creatingIcdCrtRecord
+  })
+)();
+
+export const setCreateIcdCrtRecordSuccessful = createAction(
+  actionNames.SET_CREATE_ICDCRT_RECORD_SUCCESSFUL,
+  (createIcdCrtRecordSuccessful: boolean) => ({
+    createIcdCrtRecordSuccessful: createIcdCrtRecordSuccessful
+  })
+)();
+
+export const setFetchingIcdCrtRecords = createAction(
+  actionNames.SET_FETCHING_ICDCRT_RECORDS,
+  (fetchingIcdCrtRecords: boolean) => ({
+    fetchingIcdCrtRecords: fetchingIcdCrtRecords
+  })
+)();
+
+export const setIcdCrtRecords = createAction(
+  actionNames.SET_ICDCRT_RECORDS,
+  (icdCrtRecords: IcdCrtRecord[]) => ({
+    icdCrtRecords: icdCrtRecords
+  })
+)();
+
+export const setFetchingIcdCrtRecordContent = createAction(
+  actionNames.SET_FETCHING_ICDCRT_RECORD_CONTENT,
+  (fetchingIcdCrtRecordContent: boolean) => ({
+    fetchingIcdCrtRecordContent: fetchingIcdCrtRecordContent
+  })
+)();
+
+export const setIcdCrtRecordContent = createAction(
+  actionNames.SET_ICDCRT_RECORD_CONTENT,
+  (icdCrtRecordContent: string | undefined) => ({
+    icdCrtRecordContent: icdCrtRecordContent
   })
 )();
 

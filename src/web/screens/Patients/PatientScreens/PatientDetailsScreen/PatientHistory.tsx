@@ -5,12 +5,12 @@ import { Dimensions, View } from "react-native";
 import { PatientAlertHistoryCard } from "./PatientHistoryComponents/PatientAlertHistoryCard";
 import { PatientMedicalRecordCard } from "./PatientHistoryComponents/PatientMedicalRecordCard";
 import { PatientDetailsTabProps } from "web/navigation/types";
-import { MedicalRecord, PatientInfo } from "aws/API";
-import { AlertInfo } from "rc_agents/model";
+import { MedicalRecord } from "aws/API";
+import { AlertInfo, PatientDetails } from "rc_agents/model";
 import { AgentTrigger } from "rc_agents/trigger";
 
 interface PatientHistoryProps extends PatientDetailsTabProps.HistoryTabProps {
-  info: PatientInfo;
+  details: PatientDetails;
   alertHistoryFunc: {
     setDisplayHistory: (state: AlertInfo) => void;
     setModalAlertVisible: (state: boolean) => void;
@@ -22,7 +22,7 @@ interface PatientHistoryProps extends PatientDetailsTabProps.HistoryTabProps {
 }
 
 export const PatientHistory: FC<PatientHistoryProps> = ({
-  info,
+  details,
   alertHistoryFunc,
   medicalRecordFunc
 }) => {
@@ -31,26 +31,31 @@ export const PatientHistory: FC<PatientHistoryProps> = ({
     Dimensions.get("window").height * 0.65
   );
 
-  // Trigger the retrieval of alert history and medical records
+  // Trigger the retrieval of alert history
   useEffect(() => {
-    AgentTrigger.triggerRetrieveMedicalRecords(info.patientID);
-    AgentTrigger.triggerGetHistoricalAlerts(info.patientID);
+    AgentTrigger.triggerGetHistoricalAlerts(details.patientInfo.patientID);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // useEffect(() => {
+  //   setCurrentMedicalRecords(details.medicalRecords);
+  // }, [details.medicalRecords]);
+
+  // const [currentMedicalRecords, setCurrentMedicalRecords] = useState<MedicalRecord[] | undefined>(undefined);
 
   return (
     <ScreenWrapper padding>
       <View style={styles.container}>
         {/* Alert Histories */}
         <PatientAlertHistoryCard
-          patientId={info.patientID}
+          patientId={details.patientInfo.patientID}
           maxHeight={cardMaxHeight}
           setDisplayHistory={alertHistoryFunc.setDisplayHistory}
           setModalAlertVisible={alertHistoryFunc.setModalAlertVisible}
         />
         {/* Medical Histories */}
         <PatientMedicalRecordCard
-          patientId={info.patientID}
+          medicalRecords={details.medicalRecords}
           maxHeight={cardMaxHeight}
           onAddPress={() => medicalRecordFunc.setAddMedicalRecord(true)}
           onViewMedicalRecord={medicalRecordFunc.onViewMedicalRecord}

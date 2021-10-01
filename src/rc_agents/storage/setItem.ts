@@ -1,5 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { MedicalRecord, PatientAssignment, PatientInfo, Todo } from "aws/API";
+import {
+  IcdCrtRecord,
+  MedicalRecord,
+  PatientAssignment,
+  PatientInfo,
+  Todo
+} from "aws/API";
 import { PatientAssignmentSubscription } from "aws/TypedAPI/subscriptions";
 // eslint-disable-next-line no-restricted-imports
 import {
@@ -12,7 +18,7 @@ import { AsyncStorageKeys, AsyncStorageType } from ".";
 import {
   getAllPatientDetails,
   getPatientAssignmentSubscriptions,
-  getPatientConfigurations,
+  getPatientBaselines,
   getPatientDetails,
   getPendingPatientAssignments,
   getTodos
@@ -128,7 +134,8 @@ export const setPatients = async (
         activityInfos: localPatients[patient.patientID]?.activityInfos || {},
         symptomReports: localPatients[patient.patientID]?.symptomReports || {},
         vitalsReports: localPatients[patient.patientID]?.vitalsReports || {},
-        medicalRecords: localPatients[patient.patientID]?.medicalRecords || {}
+        medicalRecords: localPatients[patient.patientID]?.medicalRecords || [],
+        icdCrtRecords: localPatients[patient.patientID]?.icdCrtRecords || {}
       };
     }
   });
@@ -147,7 +154,8 @@ export const setPatient = async (patient: PatientInfo): Promise<void> => {
     activityInfos: localPatient?.activityInfos || {},
     symptomReports: localPatient?.symptomReports || {},
     vitalsReports: localPatient?.vitalsReports || {},
-    medicalRecords: localPatient?.medicalRecords || {}
+    medicalRecords: localPatient?.medicalRecords || [],
+    icdCrtRecords: localPatient?.icdCrtRecords || {}
   });
 };
 
@@ -172,7 +180,8 @@ export const setPatientDetails = async (
       activityInfos: patientDetails.activityInfos,
       symptomReports: patientDetails.symptomReports,
       vitalsReports: patientDetails.vitalsReports,
-      medicalRecords: patientDetails.medicalRecords
+      medicalRecords: patientDetails.medicalRecords,
+      icdCrtRecords: patientDetails.icdCrtRecords
     };
   }
   await AsyncStorage.setItem(
@@ -191,40 +200,53 @@ export const setAllPatientDetails = async (
 };
 
 /**
- * Stores an array of medical records belonging to the same patient
+ * Stores a patient's medical record in patient details.
  */
-export const setPatientMedicalRecords = async (
-  medicalRecords: MedicalRecord[]
+export const setMedicalRecord = async (
+  medicalRecord: MedicalRecord
 ): Promise<void> => {
-  const localPatient = await getPatientDetails(medicalRecords[0].patientID);
+  const localPatient = await getPatientDetails(medicalRecord.patientID);
   if (localPatient) {
-    medicalRecords.forEach((medicalRecord) => {
-      localPatient.medicalRecords[medicalRecord.id] = medicalRecord;
+    localPatient.medicalRecords.unshift(medicalRecord);
+    await setPatientDetails(localPatient);
+  }
+};
+
+/**
+ * Stores an array of ICD/CRT records belonging to the same patient
+ */
+export const setPatientIcdCrtRecords = async (
+  icdCrtRecords: IcdCrtRecord[]
+): Promise<void> => {
+  const localPatient = await getPatientDetails(icdCrtRecords[0].patientID);
+  if (localPatient) {
+    icdCrtRecords.forEach((icdCrtRecord) => {
+      localPatient.icdCrtRecords[icdCrtRecord.id] = icdCrtRecord;
     });
     await setPatientDetails(localPatient);
   }
 };
 
-export const setPatientConfigurations = async (
-  configurations: PatientInfo[]
+export const setPatientBaselines = async (
+  baselines: PatientInfo[]
 ): Promise<void> => {
-  let localData = await getPatientConfigurations();
+  let localData = await getPatientBaselines();
 
-  configurations.forEach((configuration) => {
+  baselines.forEach((baseline) => {
     if (localData) {
       // Removes existing patient configuration if any
-      const existIndex = localData.findIndex((p) => p.id === configuration.id);
+      const existIndex = localData.findIndex((p) => p.id === baseline.id);
       if (existIndex >= 0) {
         localData.splice(existIndex, 1);
       }
     } else {
       localData = [];
     }
-    localData.push(configuration);
+    localData.push(baseline);
   });
 
   await AsyncStorage.setItem(
-    AsyncStorageKeys.PATIENT_CONFIGURATIONS,
+    AsyncStorageKeys.PATIENT_BASELINES,
     JSON.stringify(localData)
   );
 };

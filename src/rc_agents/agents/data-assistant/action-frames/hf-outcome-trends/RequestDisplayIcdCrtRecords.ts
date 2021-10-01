@@ -16,18 +16,18 @@ import {
 } from "rc_agents/clinician_framework";
 
 /**
- * Class to represent the activity for requesting the display of patient's medical records
- * This happens in Procedure HF Outcome Trends (HF-OTP-III)
+ * Class to represent the activity for requesting the display of patient's ICD/CRT records
+ * This happens in Procedure HF Outcome Trends (HF-OTP-IV)
  */
-class RequestDisplayMedicalRecords extends Communicate {
+class RequestDisplayIcdCrtRecords extends Communicate {
   constructor() {
     super(
-      ActionFrameIDs.DTA.REQUEST_DISPLAY_MEDICAL_RECORDS,
+      ActionFrameIDs.DTA.REQUEST_DISPLAY_ICDCRT_RECORDS,
       Performative.REQUEST,
-      //   Belief to trigger the UXSA action frame of DisplayMedicalRecords
+      //   Belief to trigger the UXSA action frame of DisplayIcdCrtRecords
       new Belief(
         BeliefKeys.PATIENT,
-        PatientAttributes.MEDICAL_RECORDS_RETRIEVED,
+        PatientAttributes.ICDCRT_RECORDS_RETRIEVED,
         true
       ),
       [AgentIDs.UXSA]
@@ -52,18 +52,18 @@ class RequestDisplayMedicalRecords extends Communicate {
 // Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.HF_OTP_III,
+  ProcedureAttributes.HF_OTP_IV,
   ProcedureConst.ACTIVE
 );
 const rule2 = new ResettablePrecondition(
   BeliefKeys.PATIENT,
-  PatientAttributes.MEDICAL_RECORDS_RETRIEVED,
+  PatientAttributes.ICDCRT_RECORDS_RETRIEVED,
   true
 );
 
 // Actionframe
-export const af_RequestDisplayMedicalRecords = new Actionframe(
-  `AF_${ActionFrameIDs.DTA.REQUEST_DISPLAY_MEDICAL_RECORDS}`,
+export const af_RequestDisplayIcdCrtRecords = new Actionframe(
+  `AF_${ActionFrameIDs.DTA.REQUEST_DISPLAY_ICDCRT_RECORDS}`,
   [rule1, rule2],
-  new RequestDisplayMedicalRecords()
+  new RequestDisplayIcdCrtRecords()
 );

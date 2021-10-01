@@ -23,7 +23,7 @@ import { Hospital, NYHAClass } from "rc_agents/model";
 import { getPickerStyles } from "util/getStyles";
 import { Label } from "components/Text/Label";
 import { AuthButton } from "components/Buttons/AuthButton";
-import { triggerConfigurePatient } from "rc_agents/triggers";
+import { triggerStorePatientBaseline } from "rc_agents/triggers";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { useToast } from "react-native-toast-notifications";
 import {
@@ -142,7 +142,7 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
       dispatch(setConfiguringPatient(true));
       setConfiguring(true);
       const infoToUpdate = { ...configInfo, configured: true };
-      triggerConfigurePatient(infoToUpdate);
+      triggerStorePatientBaseline(infoToUpdate);
     };
 
     useEffect(() => {

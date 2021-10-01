@@ -203,7 +203,17 @@
     "NoRecord": "-",
     "NoSymptoms": "No symptoms recorded"
   },
-  "Patient_ICD/CRT": {},
+  "Patient_ICD/CRT": {
+    "IcdCrtRecords": "ICD/CRT records",
+    "NoIcdCrtRecords": "No ICD/CRT records found!",
+    "Title": "Title",
+    "TitleInputPlaceholder": "Give the record a title",
+    "TitleError": "Please enter a valid title",
+    "FileUpload": "File Upload",
+    "Save": "Save",
+    "Cancel": "Cancel",
+    "IcdCrtRecordSavedSuccessfully": "ICD/CRT record has been saved successfully"
+  },
   "Patient_History": {
     "Alert": "Alert",
     "Risk": {
@@ -232,14 +242,7 @@
       "Title": "Title",
       "TitleInputPlaceholder": "Give the medical record a name (eg Family Background)",
       "TitleError": "Please enter a valid title",
-      "Description": "Description",
-      "DescriptionInputPlaceholder": "What is the content of the medical record?",
       "FileUpload": "File Upload",
-      "DragAndDropFile": "Drag and Drop file",
-      "DropFileHere": "Drop file here",
-      "Or": "Or",
-      "BrowseFiles": "Browse files",
-      "MultipleFileError": "You can only upload one file at a time",
       "MedicalRecordSavedSuccessfully": "Medical record has been saved successfully"
     },
     "NoAlertHistory": "The patient does not have any alert histories currently!",
@@ -290,6 +293,13 @@
   "MobileMessage": {
     "ViewList": "View List",
     "BackToDetails": "Back to Details"
+  },
+  "FileDropbox": {
+    "DragAndDropFile": "Drag and Drop file",
+    "DropFileHere": "Drop file here",
+    "Or": "Or",
+    "BrowseFiles": "Browse files",
+    "MultipleFileError": "You can only upload one file at a time"
   },
   "UnexpectedError": "An unexpected error has occured",
   "Keywords": {

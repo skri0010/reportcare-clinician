@@ -19,11 +19,13 @@ import {
 import { PatientDetails } from "rc_agents/model";
 import {
   listActivityInfosByPatientID,
+  listMedicalRecordsByPatientID,
   listReportSymptomsByPatientID,
   listReportVitalsByPatientID
 } from "aws";
 import {
   ActivityInfo,
+  MedicalRecord,
   PatientInfo,
   ReportSymptom,
   ReportVitals
@@ -69,7 +71,8 @@ class RetrievePatientDetails extends Activity {
           activityInfos: {},
           symptomReports: {},
           vitalsReports: {},
-          medicalRecords: {}
+          medicalRecords: [],
+          icdCrtRecords: {}
         };
         let patientDetailsRetrieved = false;
 
@@ -83,6 +86,9 @@ class RetrievePatientDetails extends Activity {
             patientID: patientId
           });
           const vitalsReportsQuery = await listReportVitalsByPatientID({
+            patientID: patientId
+          });
+          const medicalRecordsQuery = await listMedicalRecordsByPatientID({
             patientID: patientId
           });
 
@@ -134,6 +140,18 @@ class RetrievePatientDetails extends Activity {
                 } else {
                   patientDetails.vitalsReports[dateKey] = [vitals];
                 }
+              }
+            });
+          }
+
+          // Store medical records in patient details
+          if (medicalRecordsQuery.data.listMedicalRecordsByPatientID?.items) {
+            const medicalRecords =
+              medicalRecordsQuery.data.listMedicalRecordsByPatientID?.items;
+
+            medicalRecords.forEach((record: MedicalRecord | null) => {
+              if (record) {
+                patientDetails.medicalRecords.push(record);
               }
             });
           }

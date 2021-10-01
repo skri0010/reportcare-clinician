@@ -9,7 +9,6 @@ import {
 import { ProcedureConst } from "agents-framework/Enums";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
-  setRetryLaterTimeout,
   ActionFrameIDs,
   AppAttributes,
   BeliefKeys,
@@ -27,25 +26,26 @@ import { store } from "util/useRedux";
 import { agentNWA } from "rc_agents/agents";
 
 /**
- * Class to represent an activity for configuring a patient.
- * This happens in Procedure HF Outcome Trends (HF-OTP-II).
+ * Represents the activity for storing patient record baseline data.
+ * This happens in Procedure App-Medical Records Device Configuration (MRDC) - P-RB.
+ * Happens when patient is being configured (includes U-CPRB subprocedure).
  */
-class ConfigurePatient extends Activity {
+class StoreBaseline extends Activity {
   constructor() {
-    super(ActionFrameIDs.DTA.CONFIGURE_PATIENT);
+    super(ActionFrameIDs.DTA.STORE_BASELINE);
   }
 
   /**
-   * Perform this activity
-   * @param {Agent} agent - context of the agent
+   * Perform the activity
+   * @param {Agent} agent current agent
    */
   async doActivity(agent: Agent): Promise<void> {
     // Reset preconditions
     await super.doActivity(agent, [rule2]);
 
     try {
-      // Get patient configuration from facts
-      const configuration: PatientInfo =
+      // Get patient baseline data from facts
+      const baseline: PatientInfo =
         agentAPI.getFacts()[BeliefKeys.PATIENT]?.[
           PatientAttributes.PATIENT_TO_CONFIGURE
         ];
@@ -53,43 +53,50 @@ class ConfigurePatient extends Activity {
       const isOnline =
         agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE];
 
-      if (configuration) {
+      if (baseline) {
         // Indicator of whether configuration is successful
         let configurationSuccessful = false;
 
         // Device is online
         if (isOnline) {
-          // Updates patient info using configuration
-          configurationSuccessful = await updatePatientConfiguration(
-            configuration
-          );
+          // Updates patient info using baseline
+          configurationSuccessful = await updatePatientBaseline(baseline);
         }
-        // Device is offline: store patient configuration locally and update local patient details
+        // Device is offline: store patient baseline locally and update local patient details
         else if (!isOnline) {
           // Update local patient details
-          await LocalStorage.setPatient(configuration);
+          await LocalStorage.setPatient(baseline);
 
-          // Store patient configuration to be synced later on
-          await LocalStorage.setPatientConfigurations([configuration]);
+          // Store patient baseline to be synced later on
+          await LocalStorage.setPatientBaselines([baseline]);
           configurationSuccessful = true;
 
-          // Notifies NWA of the configuration to sync
+          // Notifies NWA of the baselines to sync
           agentNWA.addBelief(
             new Belief(
               BeliefKeys.APP,
-              AppAttributes.SYNC_CONFIGURE_PATIENTS,
+              AppAttributes.SYNC_PATIENT_BASELINES,
               true
             )
           );
         }
 
         if (configurationSuccessful) {
-          // Add configuration to facts to be used for retrieving details
+          // End the current procedure then trigger display of updated patient details
+          agentAPI.addFact(
+            new Belief(
+              BeliefKeys.PROCEDURE,
+              ProcedureAttributes.MRDC,
+              ProcedureConst.INACTIVE
+            )
+          );
+
+          // Add baseline to facts to be used for retrieving details
           agentAPI.addFact(
             new Belief(
               BeliefKeys.PATIENT,
               PatientAttributes.PATIENT_TO_VIEW_DETAILS,
-              configuration
+              baseline
             ),
             false
           );
@@ -103,6 +110,15 @@ class ConfigurePatient extends Activity {
             )
           );
 
+          // Start the procedure
+          agentAPI.addFact(
+            new Belief(
+              BeliefKeys.PROCEDURE,
+              ProcedureAttributes.HF_OTP_II,
+              ProcedureConst.ACTIVE
+            )
+          );
+
           // Dispatch to front end that configuration is successful
           store.dispatch(setConfigurationSuccessful(true));
         }
@@ -112,30 +128,13 @@ class ConfigurePatient extends Activity {
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
-      // Set to retry later
-      setRetryLaterTimeout(() => {
-        agent.addBelief(
-          new Belief(
-            BeliefKeys.PATIENT,
-            PatientAttributes.CONFIGURE_PATIENT,
-            true
-          )
-        );
-        agentAPI.addFact(
-          new Belief(
-            BeliefKeys.PROCEDURE,
-            ProcedureAttributes.HF_OTP_II,
-            ProcedureConst.ACTIVE
-          )
-        );
-      });
 
       // Update Facts
       // End the procedure
       agentAPI.addFact(
         new Belief(
           BeliefKeys.PROCEDURE,
-          ProcedureAttributes.HF_OTP_II,
+          ProcedureAttributes.MRDC,
           ProcedureConst.INACTIVE
         ),
         true,
@@ -148,48 +147,48 @@ class ConfigurePatient extends Activity {
 }
 
 /**
- * Updates patient info using input configuration.
- * @param configuration patient configuration
+ * Updates patient info using input baseline.
+ * @param baseline patient baseline data
  * @returns true if patient info is successfully updated, false otherwise.
  */
-export const updatePatientConfiguration = async (
-  configuration: PatientInfo
+export const updatePatientBaseline = async (
+  baseline: PatientInfo
 ): Promise<boolean> => {
   // Indicator of whether patient info is successfully updated
   let updateSuccessful = false;
 
   // Extracts information to be updated
   const patientInfoToUpdate = {
-    deviceNo: configuration.deviceNo,
-    diagnosisInfo: configuration.diagnosisInfo,
-    hospitalName: configuration.hospitalName,
-    NHYAclass: configuration.NHYAclass,
-    targetActivity: configuration.targetActivity,
-    targetWeight: configuration.targetWeight,
-    fluidIntakeGoal: configuration.fluidIntakeGoal,
-    configured: configuration.configured
+    deviceNo: baseline.deviceNo,
+    diagnosisInfo: baseline.diagnosisInfo,
+    hospitalName: baseline.hospitalName,
+    NHYAclass: baseline.NHYAclass,
+    targetActivity: baseline.targetActivity,
+    targetWeight: baseline.targetWeight,
+    fluidIntakeGoal: baseline.fluidIntakeGoal,
+    configured: baseline.configured
   };
 
-  // Indicator of whether to update configuration
-  let updateConfiguration = true;
+  // Indicator of whether to update baseline
+  let updateBaseline = true;
 
   // Gets latest patient info
   const patientInfoQuery = await getPatientInfo({
-    patientID: configuration.patientID
+    patientID: baseline.patientID
   });
 
   if (patientInfoQuery.data.getPatientInfo) {
     // Compares version of patient infos
     const latestPatientInfo = patientInfoQuery.data.getPatientInfo;
     // Latest patient info has higher version
-    if (latestPatientInfo._version > configuration._version) {
-      // Patient has been configured: replace configuration with retrieved patient
+    if (latestPatientInfo._version > baseline._version) {
+      // Patient has been configured: replace baseline with retrieved patient
       if (latestPatientInfo.configured) {
-        configuration = latestPatientInfo;
-        updateConfiguration = false;
+        baseline = latestPatientInfo;
+        updateBaseline = false;
       } else {
-        // Patient hasn't been configured: update configuration's remaining information
-        configuration = {
+        // Patient hasn't been configured: update baseline's remaining information
+        baseline = {
           ...latestPatientInfo,
           ...patientInfoToUpdate
         };
@@ -197,25 +196,25 @@ export const updatePatientConfiguration = async (
     }
   }
 
-  if (updateConfiguration) {
+  if (updateBaseline) {
     // Creates update input
     const updateInput: UpdatePatientInfoInput = {
-      id: configuration.id,
-      patientID: configuration.patientID,
-      _version: configuration._version,
+      id: baseline.id,
+      patientID: baseline.patientID,
+      _version: baseline._version,
       ...patientInfoToUpdate
     };
     const updateResponse = await updatePatientInfo(updateInput);
 
     if (updateResponse.data.updatePatientInfo) {
       // Updates version of patient info
-      configuration._version = updateResponse.data.updatePatientInfo._version;
+      baseline._version = updateResponse.data.updatePatientInfo._version;
       updateSuccessful = true;
     }
   }
 
   // Updates locally stored patient details
-  await LocalStorage.setPatient(configuration);
+  await LocalStorage.setPatient(baseline);
 
   return updateSuccessful;
 };
@@ -223,18 +222,18 @@ export const updatePatientConfiguration = async (
 // Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.HF_OTP_II,
+  ProcedureAttributes.MRDC,
   ProcedureConst.ACTIVE
 );
 const rule2 = new ResettablePrecondition(
   BeliefKeys.PATIENT,
-  PatientAttributes.CONFIGURE_PATIENT,
+  PatientAttributes.STORE_BASELINE,
   true
 );
 
 // Actionframe
-export const af_ConfigurePatient = new Actionframe(
-  `AF_${ActionFrameIDs.DTA.CONFIGURE_PATIENT}`,
+export const af_StoreBaseline = new Actionframe(
+  `AF_${ActionFrameIDs.DTA.STORE_BASELINE}`,
   [rule1, rule2],
-  new ConfigurePatient()
+  new StoreBaseline()
 );

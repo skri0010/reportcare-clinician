@@ -7,6 +7,7 @@ export const mockClinician: ClinicianInfo[] = [
     role: "EP",
     hospitalName: "Sabah Hospital",
     clinicianID: "20",
+    contactNumber: "",
     createdAt: "",
     updatedAt: "",
     _lastChangedAt: 1627604201979,

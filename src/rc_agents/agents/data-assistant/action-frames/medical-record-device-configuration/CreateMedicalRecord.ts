@@ -15,12 +15,13 @@ import {
   PatientAttributes,
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
-import { createMedicalRecord } from "aws";
+import { createMedicalRecord, StorageFolderPath } from "aws";
 import { CreateMedicalRecordInput, MedicalRecord } from "aws/API";
 import { LocalStorage } from "rc_agents/storage";
 import {
   setCreateMedicalRecordSuccessful,
-  setCreatingMedicalRecord
+  setCreatingMedicalRecord,
+  setPatientDetails
 } from "ic-redux/actions/agents/actionCreator";
 import { store } from "util/useRedux";
 import { MedicalRecordInput } from "rc_agents/model";
@@ -28,8 +29,9 @@ import { Storage } from "@aws-amplify/storage";
 import { v4 as uuidv4 } from "uuid";
 
 /**
- * Class to represent an activity for creating a patient's medical record.
- * This happens in Procedure HF Outcome Trends (HF-OTP-III).
+ * Represents the activity for creating a patient's medical record.
+ * This happens in Procedure App-Medical Records Device Configuration (MRDC) - P-RB.
+ * Triggered directly when clinician uploads patient's medical record.
  */
 class CreateMedicalRecord extends Activity {
   constructor() {
@@ -37,8 +39,8 @@ class CreateMedicalRecord extends Activity {
   }
 
   /**
-   * Perform this activity
-   * @param {Agent} agent - context of the agent
+   * Performs the activity
+   * @param {Agent} agent current agent
    */
   async doActivity(agent: Agent): Promise<void> {
     // Reset preconditions
@@ -69,38 +71,27 @@ class CreateMedicalRecord extends Activity {
           // Dispatch to front end that create is successful
           store.dispatch(setCreateMedicalRecordSuccessful(true));
 
-          // Add new medical record into the existing list of medical records
-          let existingMedicalRecords = store.getState().agents.medicalRecords;
-          if (!existingMedicalRecords) {
-            existingMedicalRecords = [];
-          }
-          existingMedicalRecords.unshift(medicalRecord);
+          // Add new medical record into the existing list of medical records in patient details
+          const existingPatientDetails = store.getState().agents.patientDetails;
+          if (existingPatientDetails) {
+            const existingMedicalRecords =
+              existingPatientDetails.medicalRecords;
+            existingMedicalRecords.unshift(medicalRecord);
+            existingPatientDetails.medicalRecords = existingMedicalRecords;
 
-          // Update Facts
+            // Dispatch updated patient details
+            store.dispatch(setPatientDetails(existingPatientDetails));
+          }
+
+          // End the procedure
           agentAPI.addFact(
             new Belief(
-              BeliefKeys.PATIENT,
-              PatientAttributes.MEDICAL_RECORDS,
-              existingMedicalRecords
+              BeliefKeys.PROCEDURE,
+              ProcedureAttributes.MRDC,
+              ProcedureConst.INACTIVE
             ),
-            false
-          );
-          // Trigger request to dispatch medical records to UXSA for frontend display
-          agent.addBelief(
-            new Belief(
-              BeliefKeys.PATIENT,
-              PatientAttributes.MEDICAL_RECORDS_RETRIEVED,
-              true
-            )
-          );
-          // Remove medical record input from facts
-          agentAPI.addFact(
-            new Belief(
-              BeliefKeys.PATIENT,
-              PatientAttributes.MEDICAL_RECORD_TO_CREATE,
-              null
-            ),
-            false
+            true,
+            true
           );
         }
       }
@@ -114,7 +105,7 @@ class CreateMedicalRecord extends Activity {
       agentAPI.addFact(
         new Belief(
           BeliefKeys.PROCEDURE,
-          ProcedureAttributes.HF_OTP_III,
+          ProcedureAttributes.MRDC,
           ProcedureConst.INACTIVE
         ),
         true,
@@ -147,10 +138,14 @@ export const insertMedicalRecord = async (
     // Generates unique ID as part of file key to prevent overwriting another file with the same name
     const fileID = `${medicalRecordFile.name}_${uuidv4()}`;
     // Upload file to S3 bucket
-    await Storage.put(fileID, medicalRecordFile, {
-      contentType: medicalRecordFile.type,
-      level: "private"
-    })
+    await Storage.put(
+      `${StorageFolderPath.MEDICAL_RECORDS}${fileID}`,
+      medicalRecordFile,
+      {
+        contentType: medicalRecordFile.type,
+        level: "protected"
+      }
+    )
       .then(async () => {
         // File is successfully uploaded - create a record in DynamoDB
         const input: CreateMedicalRecordInput = {
@@ -178,7 +173,7 @@ export const insertMedicalRecord = async (
 
   if (createSuccessful && medicalRecord) {
     // Stores medical record locally
-    await LocalStorage.setPatientMedicalRecords([medicalRecord]);
+    await LocalStorage.setMedicalRecord(medicalRecord);
     return medicalRecord;
   }
 
@@ -188,7 +183,7 @@ export const insertMedicalRecord = async (
 // Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.HF_OTP_III,
+  ProcedureAttributes.MRDC,
   ProcedureConst.ACTIVE
 );
 const rule2 = new ResettablePrecondition(

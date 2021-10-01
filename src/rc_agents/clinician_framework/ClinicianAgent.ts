@@ -183,6 +183,44 @@ export class ClinicianAgent extends Agent {
   }
 
   /**
+   * Overrode existing startActivity to include tracking of current activity and whether it has been completed
+   */
+  override async startActivity(): Promise<void> {
+    if (this.availableActions.length > 0) {
+      // If working, do activity and set belief for last activity
+      this.working = true;
+      this.setActionCompleted(false); // Updates indicator that an activity is ongoing
+
+      // Performs activity
+      this.currentActivity = this.availableActions.shift()!; // Updates current activity
+      const activity = this.currentActivity.getActivity();
+      await activity.doActivity(this);
+
+      // Updates last activity in the current state of belief
+      this.addBelief(
+        new Belief(
+          this.getID(),
+          CommonAttributes.LAST_ACTIVITY,
+          activity.getID()
+        )
+      );
+
+      // Updates indicator that activity is completed
+      this.setActionCompleted(true);
+    }
+    this.currentActivity = undefined;
+    this.working = false;
+
+    while (this.messageQueue.length > 0) {
+      const message = this.messageQueue.shift()!;
+      this.addBelief(message.getContent());
+    }
+
+    // Do Inference
+    await this.inference();
+  }
+
+  /**
    * Overrode existing inference to include checking of current running activity with returned available actions.
    */
   override async inference(): Promise<void> {
@@ -212,47 +250,9 @@ export class ClinicianAgent extends Agent {
 
     if (this.availableActions.length > 0) {
       await this.startActivity();
-    }
-  }
-
-  /**
-   * Overrode existing startActivity to include tracking of current activity and whether it has been completed
-   */
-  override async startActivity(): Promise<void> {
-    if (this.availableActions.length > 0) {
-      // If working, do activity and set belief for last activity
-      this.working = true;
-      this.setActionCompleted(false); // Updates indicator that an activity is ongoing
-
-      // Performs activity
-      this.currentActivity = this.availableActions.shift()!; // Updates current activity
-      const activity = this.currentActivity.getActivity();
-      await activity.doActivity(this);
-
-      // Updates last activity in the current state of belief
-      this.addBelief(
-        new Belief(
-          this.getID(),
-          CommonAttributes.LAST_ACTIVITY,
-          activity.getID()
-        )
-      );
-
-      // Updates indicator that activity is completed
-      this.setActionCompleted(true);
     } else {
-      // No activity to perform
       this.currentActivity = undefined;
     }
-    this.working = false;
-
-    while (this.messageQueue.length > 0) {
-      const message = this.messageQueue.shift()!;
-      this.addBelief(message.getContent());
-    }
-
-    // Do Inference
-    await this.inference();
   }
 
   /**

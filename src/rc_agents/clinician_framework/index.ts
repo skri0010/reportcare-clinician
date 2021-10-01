@@ -16,9 +16,14 @@ export enum AgentIDs {
 export const ActionFrameIDs = {
   APS: {
     ASSOCIATE_DATA: "AssociateData",
-    REQUEST_ENTRY_DATA: "RequestEntryData"
+    REQUEST_ENTRY_DATA: "RequestEntryData",
+    REQUEST_STORE_BASELINE: "RequestStoreBaseline"
   },
   DTA: {
+    // MRDC
+    STORE_BASELINE: "StoreBaseline",
+    CREATE_MEDICAL_RECORD: "CreateMedicalRecord",
+
     // ADC
     RETRIEVE_ENTRY_DATA: "RetrieveEntryData",
     STORE_ENTRY_DATA: "StoreEntryData",
@@ -36,7 +41,6 @@ export const ActionFrameIDs = {
     REQUEST_RETRIEVE_ROLE: "RequestRetrieveRole",
     RETRIEVE_PATIENTS_BY_ROLE: "RetrievePatientsByRole",
     REQUEST_DISPLAY_PATIENTS: "RequestDisplayPatients",
-    CONFIGURE_PATIENT: "ConfigurePatient",
 
     // HF-OTP-II: Single patient's details
     RETRIEVE_PATIENT_DETAILS: "RetrievePatientDetails",
@@ -45,13 +49,17 @@ export const ActionFrameIDs = {
     RETRIEVE_ALERT_HISTORY: "RetrieveAlertHistory",
     REQUEST_DISPLAY_ALERT_HISTORY: "RequestDisplayAlertHistory",
 
-    // HF-OTP-III: Single patient's medical records
-    CREATE_MEDICAL_RECORD: "CreateMedicalRecord",
-    RETRIEVE_MEDICAL_RECORDS: "RetrieveMedicalRecords",
-    REQUEST_DISPLAY_MEDICAL_RECORDS: "RequestDisplayMedicalRecords",
+    // HF-OTP-III: Single patient's medical record content
     RETRIEVE_MEDICAL_RECORD_CONTENT: "RetrieveMedicalRecordContent",
     REQUEST_DISPLAY_MEDICAL_RECORD_CONTENT:
       "RequestDisplayMedicalRecordContent",
+
+    // HF-OTP-IV: Single patient's ICD/CRT records
+    CREATE_ICDCRT_RECORD: "CreateIcdCrtRecord",
+    RETRIEVE_ICDCRT_RECORDS: "RetrieveIcdCrtRecords",
+    REQUEST_DISPLAY_ICDCRT_RECORDS: "RequestDisplayIcdCrtRecords",
+    RETRIEVE_ICDCRT_RECORD_CONTENT: "RetrieveIcdCrtRecordContent",
+    REQUEST_DISPLAY_ICDCRT_RECORD_CONTENT: "RequestDisplayIcdCrtRecordContent",
 
     // SRD-I: Patient Assignments
     RETRIEVE_PENDING_PATIENT_ASSIGNMENTS: "RetrievePendingPatientAssignments",
@@ -92,12 +100,15 @@ export const ActionFrameIDs = {
     DISPLAY_PATIENTS_BY_FILTER: "DisplayPatientsByFilter",
 
     // HF-OTP-II: Single patient's details
-    VISUALIZE_PARAMETERS: "VisualizeParameters",
+    DISPLAY_PATIENT_DETAILS: "DisplayPatientDetails",
     DISPLAY_ALERT_HISTORY: "DisplayAlertHistory",
 
-    // HF-OTP-III: Single patient's medical records
-    DISPLAY_MEDICAL_RECORDS: "DisplayMedicalRecords",
+    // HF-OTP-III: Single patient's medical record content
     DISPLAY_MEDICAL_RECORD_CONTENT: "DisplayMedicalRecordContent",
+
+    // HF-OTP-IV: Single patient's ICD/CRT records
+    DISPLAY_ICDCRT_RECORDS: "DisplayIcdCrtRecords",
+    DISPLAY_ICDCRT_RECORD_CONTENT: "DisplayIcdCrtRecordContent",
 
     // SRD-I: Patient Assignments
     DISPLAY_PENDING_PATIENT_ASSIGNMENTS: "DisplayPendingPatientAssignments",
@@ -112,10 +123,10 @@ export const ActionFrameIDs = {
     DISPLAY_CLINICIAN_CONTACTS: "DisplayClinicianContacts"
   },
   NWA: {
-    SYNC_PROTECTED_INFO: "SyncProtectedInfo",
+    // MRDC
+    SYNC_PATIENT_BASELINES: "SyncPatientBaselines",
 
-    // HF-OTP-II: Patient Configuration
-    SYNC_CONFIGURE_PATIENTS: "SyncConfigurePatients",
+    SYNC_PROTECTED_INFO: "SyncProtectedInfo",
 
     // SRD-I: Patient Assignments
     SYNC_PATIENT_ASSIGNMENT_RESOLUTIONS: "SyncPatientAssignmentResolutions",
@@ -154,7 +165,7 @@ export enum AppAttributes {
   ONLINE = "Online",
   SYNC_PROTECTED_INFO = "SyncProtectedInfo",
   SYNC_PATIENT_ASSIGNMENT_RESOLUTIONS = "SyncPatientAssignmentResolutions",
-  SYNC_CONFIGURE_PATIENTS = "SyncConfigurePatients",
+  SYNC_PATIENT_BASELINES = "SyncPatientBaselines",
   SYNC_CREATE_TODOS = "SyncCreateTodos",
   SYNC_UPDATE_TODOS = "SyncUpdateTodos",
   SYNC_UPDATE_ALERTS = "SyncUpdateAlerts",
@@ -164,10 +175,11 @@ export enum AppAttributes {
 
 // Attributes for PROCEDURE key
 export enum ProcedureAttributes {
-  ADC = "ADC",
+  MRDC = "MRDC",
   HF_OTP_I = "HF-OTP-I",
   HF_OTP_II = "HF-OTP-II",
   HF_OTP_III = "HF-OTP-III",
+  HF_OTP_IV = "HF-OTP-IV",
   SRD_I = "SRD-I",
   SRD_II = "SRD-II",
   SRD_III = "SRD-III",
@@ -245,6 +257,12 @@ export enum ClinicianAttributes {
 
 // Attributes for PATIENT key
 export enum PatientAttributes {
+  // MRDC
+  STORE_BASELINE = "StoreBaseline",
+  PATIENT_TO_CONFIGURE = "PatientToConfigure",
+  CREATE_MEDICAL_RECORD = "CreateMedicalRecord",
+  MEDICAL_RECORD_TO_CREATE = "MedicalRecordToCreate",
+
   // HF-OTP-I: ClinicianInfo and all patients (PatientInfo)
   RETRIEVE_PATIENTS = "RetrievePatients",
   PATIENTS = "Patients",
@@ -257,20 +275,24 @@ export enum PatientAttributes {
   DISPLAY_PATIENT_DETAILS_REQUESTED = "DisplayPatientDetailsRequested",
   PATIENT_DETAILS = "PatientDetails",
   PATIENT_ALERT_HISTORY_RETRIEVED = "PatientAlertHistoryRetrieved",
-  PATIENT_TO_CONFIGURE = "PatientToConfigure",
-  CONFIGURE_PATIENT = "ConfigurePatient",
 
-  // HF-OTP-III: Single patient's medical records
-  CREATE_MEDICAL_RECORD = "CreateMedicalRecord",
-  MEDICAL_RECORD_TO_CREATE = "MedicalRecordToCreate",
-  RETRIEVE_MEDICAL_RECORDS = "RetrieveMedicalRecord",
-  PATIENT_TO_VIEW_MEDICAL_RECORDS = "PatientToViewMedicalRecords",
-  MEDICAL_RECORDS = "MedicalRecords",
-  MEDICAL_RECORDS_RETRIEVED = "MedicalRecordsRetrieved",
+  // HF-OTP-III: Single patient's medical record content
   MEDICAL_RECORD_TO_VIEW = "MedicalRecordToView",
   RETRIEVE_MEDICAL_RECORD_CONTENT = "RetrieveMedicalRecordContent",
   MEDICAL_RECORD_CONTENT = "MedicalRecordContent",
   MEDICAL_RECORD_CONTENT_RETRIEVED = "MedicalRecordContentRetrieved",
+
+  // HF-OTP-IV: Single patient's ICD/CRT records
+  CREATE_ICDCRT_RECORD = "CreateIcdCrtRecord",
+  ICDCRT_RECORD_TO_CREATE = "IcdCrtRecordToCreate",
+  RETRIEVE_ICDCRT_RECORDS = "RetrieveIcdCrtRecords",
+  PATIENT_TO_VIEW_ICDCRT_RECORDS = "PatientToViewIcdCrtRecords",
+  ICDCRT_RECORDS = "IcdCrtRecords",
+  ICDCRT_RECORDS_RETRIEVED = "IcdCrtRecordsRetrieved",
+  ICDCRT_RECORD_TO_VIEW = "IcdCrtRecordToView",
+  RETRIEVE_ICDCRT_RECORD_CONTENT = "RetrieveIcdCrtRecordContent",
+  ICDCRT_RECORD_CONTENT = "IcdCrtRecordContent",
+  ICDCRT_RECORD_CONTENT_RETRIEVED = "IcdCrtRecordContentRetrieved",
 
   // SRD-I: Patient Assignments
   PENDING_PATIENT_ASSIGNMENTS = "PendingPatientAssignments",

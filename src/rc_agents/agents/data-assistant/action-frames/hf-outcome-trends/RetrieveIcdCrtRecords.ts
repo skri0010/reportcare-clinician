@@ -16,21 +16,21 @@ import {
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
 import { LocalStorage } from "rc_agents/storage";
-import { MedicalRecord } from "aws/API";
+import { IcdCrtRecord, ModelSortDirection } from "aws/API";
 import { store } from "util/useRedux";
-import { setFetchingMedicalRecords } from "ic-redux/actions/agents/actionCreator";
-import { listMedicalRecordsByPatientID } from "aws";
+import { setFetchingIcdCrtRecords } from "ic-redux/actions/agents/actionCreator";
+import { listIcdCrtRecordsByDateTime } from "aws";
 
 /**
- * Class to represent the activity for retrieving medical records of a patient.
- * This happens in Procedure HF Outcome Trends (HF-OTP-III).
+ * Class to represent the activity for retrieving ICD/CRT records of a patient.
+ * This happens in Procedure HF Outcome Trends (HF-OTP-IV).
  */
-class RetrieveMedicalRecords extends Activity {
+class RetrieveIcdCrtRecords extends Activity {
   /**
    * Constructor
    */
   constructor() {
-    super(ActionFrameIDs.DTA.RETRIEVE_MEDICAL_RECORDS);
+    super(ActionFrameIDs.DTA.RETRIEVE_ICDCRT_RECORDS);
   }
 
   /**
@@ -40,8 +40,8 @@ class RetrieveMedicalRecords extends Activity {
   async doActivity(agent: Agent): Promise<void> {
     await super.doActivity(agent, [rule2]);
 
-    // Dispatch to frontend that the patient's medical records are being fetched
-    store.dispatch(setFetchingMedicalRecords(true));
+    // Dispatch to frontend that the patient's ICD/CRT records are being fetched
+    store.dispatch(setFetchingIcdCrtRecords(true));
 
     try {
       const facts = agentAPI.getFacts();
@@ -49,56 +49,58 @@ class RetrieveMedicalRecords extends Activity {
       // Get patient id from facts
       const patientId: string =
         facts[BeliefKeys.PATIENT]?.[
-          PatientAttributes.PATIENT_TO_VIEW_MEDICAL_RECORDS
+          PatientAttributes.PATIENT_TO_VIEW_ICDCRT_RECORDS
         ];
 
       // Get online status from facts
       const isOnline: boolean = facts[BeliefKeys.APP]?.[AppAttributes.ONLINE];
 
       if (patientId) {
-        let medicalRecords: MedicalRecord[] | undefined;
+        let icdCrtRecords: IcdCrtRecord[] | undefined;
 
         if (isOnline) {
-          // Device is online - retrieve medical records of current patient
-          const query = await listMedicalRecordsByPatientID({
-            patientID: patientId
+          // Device is online - retrieve ICD/CRT records of current patient
+          const query = await listIcdCrtRecordsByDateTime({
+            patientID: patientId,
+            sortDirection: ModelSortDirection.DESC
           });
 
           if (
-            query.data.listMedicalRecordsByPatientID?.items &&
-            query.data.listMedicalRecordsByPatientID?.items.length > 0
+            query.data.listIcdCrtRecordsByDateTime?.items &&
+            query.data.listIcdCrtRecordsByDateTime?.items.length > 0
           ) {
-            medicalRecords = query.data.listMedicalRecordsByPatientID
-              .items as MedicalRecord[];
+            icdCrtRecords = query.data.listIcdCrtRecordsByDateTime
+              .items as IcdCrtRecord[];
 
-            // Stores medical records locally
-            await LocalStorage.setPatientMedicalRecords(medicalRecords);
+            // Stores ICD/CRT records locally
+            await LocalStorage.setPatientIcdCrtRecords(icdCrtRecords);
           }
         } else {
-          // Device is offline: get medical records of current patient from local storage
-          const localMedicalRecords =
-            await LocalStorage.getPatientMedicalRecords(patientId);
+          // Device is offline: get ICD/CRT records of current patient from local storage
+          const localIcdCrtRecords = await LocalStorage.getPatientIcdCrtRecords(
+            patientId
+          );
 
-          if (localMedicalRecords) {
-            medicalRecords = localMedicalRecords;
+          if (localIcdCrtRecords) {
+            icdCrtRecords = localIcdCrtRecords;
           }
         }
 
-        if (medicalRecords) {
+        if (icdCrtRecords) {
           // Update Facts
           agentAPI.addFact(
             new Belief(
               BeliefKeys.PATIENT,
-              PatientAttributes.MEDICAL_RECORDS,
-              medicalRecords
+              PatientAttributes.ICDCRT_RECORDS,
+              icdCrtRecords
             ),
             false
           );
-          // Trigger request to dispatch medical records to UXSA for frontend display
+          // Trigger request to dispatch ICD/CRT records to UXSA for frontend display
           agent.addBelief(
             new Belief(
               BeliefKeys.PATIENT,
-              PatientAttributes.MEDICAL_RECORDS_RETRIEVED,
+              PatientAttributes.ICDCRT_RECORDS_RETRIEVED,
               true
             )
           );
@@ -106,7 +108,7 @@ class RetrieveMedicalRecords extends Activity {
           agentAPI.addFact(
             new Belief(
               BeliefKeys.PATIENT,
-              PatientAttributes.PATIENT_TO_VIEW_MEDICAL_RECORDS,
+              PatientAttributes.PATIENT_TO_VIEW_ICDCRT_RECORDS,
               null
             ),
             false
@@ -117,7 +119,7 @@ class RetrieveMedicalRecords extends Activity {
           agentAPI.addFact(
             new Belief(
               BeliefKeys.PATIENT,
-              PatientAttributes.PATIENT_TO_VIEW_MEDICAL_RECORDS,
+              PatientAttributes.PATIENT_TO_VIEW_ICDCRT_RECORDS,
               null
             ),
             false
@@ -127,14 +129,14 @@ class RetrieveMedicalRecords extends Activity {
           agentAPI.addFact(
             new Belief(
               BeliefKeys.PROCEDURE,
-              ProcedureAttributes.HF_OTP_III,
+              ProcedureAttributes.HF_OTP_IV,
               ProcedureConst.INACTIVE
             ),
             true,
             true
           );
           // Dispatch to store to indicate fetching has ended
-          store.dispatch(setFetchingMedicalRecords(false));
+          store.dispatch(setFetchingIcdCrtRecords(false));
         }
       }
     } catch (error) {
@@ -146,14 +148,14 @@ class RetrieveMedicalRecords extends Activity {
       agentAPI.addFact(
         new Belief(
           BeliefKeys.PROCEDURE,
-          ProcedureAttributes.HF_OTP_III,
+          ProcedureAttributes.HF_OTP_IV,
           ProcedureConst.INACTIVE
         ),
         true,
         true
       );
       // Dispatch to store to indicate fetching has ended
-      store.dispatch(setFetchingMedicalRecords(false));
+      store.dispatch(setFetchingIcdCrtRecords(false));
     }
   }
 }
@@ -161,18 +163,18 @@ class RetrieveMedicalRecords extends Activity {
 // Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.HF_OTP_III,
+  ProcedureAttributes.HF_OTP_IV,
   ProcedureConst.ACTIVE
 );
 const rule2 = new ResettablePrecondition(
   BeliefKeys.PATIENT,
-  PatientAttributes.RETRIEVE_MEDICAL_RECORDS,
+  PatientAttributes.RETRIEVE_ICDCRT_RECORDS,
   true
 );
 
 // Actionframe
-export const af_RetrieveMedicalRecords = new Actionframe(
-  `AF_${ActionFrameIDs.DTA.RETRIEVE_MEDICAL_RECORDS}`,
+export const af_RetrieveIcdCrtRecords = new Actionframe(
+  `AF_${ActionFrameIDs.DTA.RETRIEVE_ICDCRT_RECORDS}`,
   [rule1, rule2],
-  new RetrieveMedicalRecords()
+  new RetrieveIcdCrtRecords()
 );
