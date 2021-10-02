@@ -1389,8 +1389,15 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "reassignedClinicianID": {
-                    "name": "reassignedClinicianID",
+                "reassignToClinicianID": {
+                    "name": "reassignToClinicianID",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "adminReassignFromClinicianID": {
+                    "name": "adminReassignFromClinicianID",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
@@ -1971,5 +1978,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "1442b022224e2a27caee7cd4c7e3bb56"
+    "version": "6ef74679fc922dc058daa89fae53a846"
 };

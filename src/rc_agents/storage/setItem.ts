@@ -1,15 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {
-  Alert,
-  PatientAssignment,
-  PatientInfo,
-  Todo,
-  MedicationInfo
-} from "aws/API";
-import {
-  AlertNotification,
-  PatientAssignmentSubscription
-} from "aws/TypedAPI/subscriptions";
+import { PatientAssignment, PatientInfo, Todo, MedicationInfo } from "aws/API";
+import { PatientAssignmentSubscription } from "aws/TypedAPI/subscriptions";
 // eslint-disable-next-line no-restricted-imports
 import {
   LocalTodo,
@@ -245,7 +236,6 @@ export const setPatientConfigurations = async (
     JSON.stringify(localData)
   );
 };
-
 /**
  * Stores the medication configuration to be synced
  * @param patientMedConfig an object with an array of medication configurations mapped to a patient

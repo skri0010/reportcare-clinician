@@ -110,7 +110,7 @@ export interface PatientDetails {
   activityInfos: LocalActivityInfos;
   symptomReports: LocalReportSymptoms;
   vitalsReports: LocalReportVitals;
-  medicationInfo: MedicationInfo[] | MedInput[];
+  medicationInfo: MedInput[];
 }
 
 export type LocalActivityInfos = {
@@ -129,8 +129,9 @@ export type LocalReportVitals = {
 export interface PatientAssignmentResolution {
   patientID: string;
   clinicianID: string;
-  resolution: PatientAssignmentStatus;
   patientName: string;
+  resolution: PatientAssignmentStatus;
+  reassignToClinicianID?: string;
   _version: number;
 }
 
@@ -193,7 +194,8 @@ export interface TodoDetails {
 export interface MedInput {
   id?: string;
   name: string;
-  dosage: string;
-  frequency: string;
+  dosage: number;
+  frequency: number;
   patientID?: string;
+  records?: string;
 }

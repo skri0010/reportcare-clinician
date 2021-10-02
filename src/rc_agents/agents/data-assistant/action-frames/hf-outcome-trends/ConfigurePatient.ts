@@ -298,8 +298,8 @@ export const createMedicationConfiguration = async (
     medicationInfos.map(async (medInfo) => {
       const medInfoToInsert: CreateMedicationInfoInput = {
         name: medInfo.name,
-        dosage: parseFloat(medInfo.dosage),
-        frequency: parseFloat(medInfo.frequency),
+        dosage: medInfo.dosage,
+        frequency: medInfo.frequency,
         records: JSON.stringify("{}"),
         patientID: patientID,
         active: true

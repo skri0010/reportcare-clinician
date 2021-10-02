@@ -6,7 +6,9 @@ import {
   notEmptyString,
   validateMedName,
   validateMedDosage,
-  validateMedFreq
+  validateMedFreq,
+  validateMedDosageInput,
+  validateMedFreqInput
 } from "util/validation";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { RootState, select } from "util/useRedux";
@@ -40,12 +42,20 @@ export const MedicationConfigForm: FC<MedicationConfigFormProps> = ({
 
   // Update dosage
   const updateMedDosage = (dosage: string) => {
-    setConfigMedInfo({ ...configMedInfo, dosage: dosage });
+    if (validateMedDosageInput(configMedInfo.name, dosage)) {
+      setConfigMedInfo({ ...configMedInfo, dosage: parseFloat(dosage) });
+    } else {
+      setConfigMedInfo({ ...configMedInfo, dosage: 0 });
+    }
   };
 
   // Update frequency
   const updateMedFreq = (frequency: string) => {
-    setConfigMedInfo({ ...configMedInfo, frequency: frequency });
+    if (validateMedFreqInput(frequency)) {
+      setConfigMedInfo({ ...configMedInfo, frequency: parseFloat(frequency) });
+    } else {
+      setConfigMedInfo({ ...configMedInfo, frequency: 0 });
+    }
   };
 
   // Input validations to see if the save button should be enabled or not
@@ -82,25 +92,21 @@ export const MedicationConfigForm: FC<MedicationConfigFormProps> = ({
         {/* Medicine Dosage */}
         <TextField
           label={i18n.t("Patient_Configuration.Label.Dosage")}
-          value={configMedInfo.dosage}
+          value={configMedInfo.dosage === 0 ? "" : `${configMedInfo.dosage}`}
           onChange={(dosage) => updateMedDosage(dosage)}
           placeholder={i18n.t("Patient_Configuration.Placeholder.Dosage")}
-          error={
-            notEmptyString(configMedInfo.dosage) &&
-            !validateMedDosage(configMedInfo.name, configMedInfo.dosage)
-          }
+          error={!validateMedDosage(configMedInfo.name, configMedInfo.dosage)}
           errorMessage={i18n.t("Patient_Configuration.Error.Dosage")}
         />
         {/* Medicine Frequency */}
         <TextField
           label={i18n.t("Patient_Configuration.Label.Frequency")}
-          value={configMedInfo.frequency}
+          value={
+            configMedInfo.frequency === 0 ? "" : `${configMedInfo.frequency}`
+          }
           onChange={(frequency) => updateMedFreq(frequency)}
           placeholder={i18n.t("Patient_Configuration.Placeholder.Frequency")}
-          error={
-            notEmptyString(configMedInfo.frequency) &&
-            !validateMedFreq(configMedInfo.frequency)
-          }
+          error={validateMedFreq(configMedInfo.frequency)}
           errorMessage={i18n.t("Patient_Configuration.Error.Frequency")}
         />
       </View>

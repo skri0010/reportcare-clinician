@@ -54,8 +54,8 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
     // Medication configuration inputs
     const [configMedInfo, setConfigMedInfo] = useState<MedInput>({
       name: "",
-      dosage: "",
-      frequency: ""
+      dosage: 0,
+      frequency: 0
     });
 
     const [allInputValid, setAllInputValid] = useState<boolean>(false);
@@ -78,8 +78,8 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
     // Medication info to be deleted from medInfos
     const [medInfoToDelete, setMedInfoToDelete] = useState<MedInput>({
       name: "",
-      dosage: "",
-      frequency: ""
+      dosage: 0,
+      frequency: 0
     });
 
     // Used locally to keep track of ongoing configuration procedure
@@ -152,8 +152,8 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
       // Reset the values in the input text fields
       setConfigMedInfo({
         name: "",
-        dosage: "",
-        frequency: ""
+        dosage: 0,
+        frequency: 0
       });
     };
 

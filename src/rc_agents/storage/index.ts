@@ -6,7 +6,12 @@ import {
   PatientDetails,
   MedInput
 } from "rc_agents/model";
-import { ClinicianInfo, PatientAssignment, PatientInfo } from "aws/API";
+import {
+  ClinicianInfo,
+  MedicationInfo,
+  PatientAssignment,
+  PatientInfo
+} from "aws/API";
 // eslint-disable-next-line no-restricted-imports
 import * as accessFunctions from "rc_agents/storage/accessFunctions";
 import {
