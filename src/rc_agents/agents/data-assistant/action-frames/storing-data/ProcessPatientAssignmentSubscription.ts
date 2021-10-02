@@ -22,7 +22,6 @@ import { store } from "util/useRedux";
 import { agentNWA } from "rc_agents/agents";
 import { setPendingPatientAssignments } from "ic-redux/actions/agents/actionCreator";
 import { PatientAssignment } from "aws/API";
-
 /**
  * Class to represent an activity for processing patient assignment subscription.
  * This happens in Procedure Storing Data (SRD-I).
@@ -53,7 +52,8 @@ class ProcessPatientAssignmentSubscription extends Activity {
       if (
         patientAssignmentSubscription &&
         clinicianId &&
-        patientAssignmentSubscription.clinicianID === clinicianId
+        patientAssignmentSubscription.clinicianID === clinicianId &&
+        patientAssignmentSubscription.resolution === null
       ) {
         if (facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
           // Device is online: retrieves patient assignment

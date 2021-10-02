@@ -3,16 +3,22 @@ import {
   Agent,
   Activity,
   Precondition,
-  ResettablePrecondition
+  ResettablePrecondition,
+  Belief
 } from "agents-framework";
 import {
   ActionFrameIDs,
   AppAttributes,
-  BeliefKeys
+  BeliefKeys,
+  PatientAttributes,
+  ProcedureAttributes
 } from "rc_agents/clinician_framework";
 import { LocalStorage, AsyncStorageKeys } from "rc_agents/storage";
 // eslint-disable-next-line no-restricted-imports
 import { resolvePatientAssignment } from "rc_agents/agents/data-assistant/action-frames/storing-data/ResolvePatientAssignment";
+import { agentDTA } from "rc_agents/agents";
+import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
+import { ProcedureConst } from "agents-framework/Enums";
 
 /**
  * Class to represent the activity for syncing local resolutions of patient assignments.
@@ -35,6 +41,8 @@ class SyncPatientAssignmentResolutions extends Activity {
    */
   async doActivity(agent: Agent): Promise<void> {
     super.doActivity(agent, [rule2]);
+    // eslint-disable-next-line no-console
+    console.log("Triggered sync patient assignment");
 
     try {
       // Get locally stored list of assignments to resolve
@@ -43,7 +51,8 @@ class SyncPatientAssignmentResolutions extends Activity {
 
       // Get locally stored clinicianId
       const clinicianId = await LocalStorage.getClinicianID();
-
+      // eslint-disable-next-line no-console
+      console.log(resolutionList);
       if (resolutionList && clinicianId) {
         Object.keys(resolutionList).forEach(async (key) => {
           const resolution = resolutionList[key];
@@ -78,6 +87,23 @@ class SyncPatientAssignmentResolutions extends Activity {
       // eslint-disable-next-line no-console
       console.log(error);
     }
+
+    // Retrieve Pending Patient Assignment
+    agentDTA.addBelief(
+      new Belief(
+        BeliefKeys.PATIENT,
+        PatientAttributes.RETRIEVE_PENDING_PATIENT_ASSIGNMENTS,
+        true
+      )
+    );
+
+    agentAPI.addFact(
+      new Belief(
+        BeliefKeys.PROCEDURE,
+        ProcedureAttributes.SRD_I,
+        ProcedureConst.ACTIVE
+      )
+    );
   }
 }
 
