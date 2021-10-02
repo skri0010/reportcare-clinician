@@ -1,4 +1,4 @@
-import { ReportVitals, Alert } from "aws/API";
+import { ReportVitals, Alert, IcdCrtRecord } from "aws/API";
 import moment from "moment";
 import { AlertInfo, mapColorCodeToRiskLevel } from "rc_agents/model";
 
@@ -70,6 +70,17 @@ export const sortAlertInfoByDescendingDateTime = (
   alerts: AlertInfo[]
 ): AlertInfo[] => {
   return alerts.sort((a, b) => {
+    const date1 = new Date(a.dateTime);
+    const date2 = new Date(b.dateTime);
+    return date2.getTime() - date1.getTime();
+  });
+};
+
+// Sorts IcdCrtRecord[] in descending datetime
+export const sortIcdCrtRecordsByDescendingDateTime = (
+  records: IcdCrtRecord[]
+): IcdCrtRecord[] => {
+  return records.sort((a, b) => {
     const date1 = new Date(a.dateTime);
     const date2 = new Date(b.dateTime);
     return date2.getTime() - date1.getTime();

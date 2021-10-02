@@ -8,13 +8,7 @@ import {
   LocalTodo,
   RiskFilter
 } from "rc_agents/model";
-import {
-  ClinicianInfo,
-  IcdCrtRecord,
-  MedicalRecord,
-  PatientAssignment,
-  PatientInfo
-} from "aws/API";
+import { ClinicianInfo, PatientAssignment, PatientInfo } from "aws/API";
 import { RiskLevel } from "models/RiskLevel";
 import { ChartFilter, ChartViewTypes } from "models/ChartViewTypes";
 
@@ -58,14 +52,10 @@ interface AgentsState {
   todoDetails: LocalTodo | undefined;
   creatingMedicalRecord: boolean;
   createMedicalRecordSuccessful: boolean;
-  fetchingMedicalRecords: boolean;
-  medicalRecords: MedicalRecord[] | undefined;
   fetchingMedicalRecordContent: boolean;
   medicalRecordContent: string | undefined;
   creatingIcdCrtRecord: boolean;
   createIcdCrtRecordSuccessful: boolean;
-  fetchingIcdCrtRecords: boolean;
-  icdCrtRecords: IcdCrtRecord[] | undefined;
   fetchingIcdCrtRecordContent: boolean;
   icdCrtRecordContent: string | undefined;
 }
@@ -135,14 +125,10 @@ const initialState: AgentsState = {
   updatedTodo: undefined,
   creatingMedicalRecord: false,
   createMedicalRecordSuccessful: false,
-  fetchingMedicalRecords: false,
-  medicalRecords: undefined,
   fetchingMedicalRecordContent: false,
   medicalRecordContent: undefined,
   creatingIcdCrtRecord: false,
   createIcdCrtRecordSuccessful: false,
-  fetchingIcdCrtRecords: false,
-  icdCrtRecords: undefined,
   fetchingIcdCrtRecordContent: false,
   icdCrtRecordContent: undefined
 };
@@ -227,16 +213,6 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
         createMedicalRecordSuccessful:
           action.payload.createMedicalRecordSuccessful
       };
-    case actionNames.SET_FETCHING_MEDICAL_RECORDS:
-      return {
-        ...state,
-        fetchingMedicalRecords: action.payload.fetchingMedicalRecords
-      };
-    case actionNames.SET_MEDICAL_RECORDS:
-      return {
-        ...state,
-        medicalRecords: action.payload.medicalRecords
-      };
     case actionNames.SET_FETCHING_MEDICAL_RECORD_CONTENT:
       return {
         ...state,
@@ -258,16 +234,6 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
         ...state,
         createIcdCrtRecordSuccessful:
           action.payload.createIcdCrtRecordSuccessful
-      };
-    case actionNames.SET_FETCHING_ICDCRT_RECORDS:
-      return {
-        ...state,
-        fetchingIcdCrtRecords: action.payload.fetchingIcdCrtRecords
-      };
-    case actionNames.SET_ICDCRT_RECORDS:
-      return {
-        ...state,
-        icdCrtRecords: action.payload.icdCrtRecords
       };
     case actionNames.SET_FETCHING_ICDCRT_RECORD_CONTENT:
       return {

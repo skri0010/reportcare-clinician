@@ -27,8 +27,9 @@ import {
 } from "ic-redux/actions/agents/actionCreator";
 
 /**
- * Class to represent the activity for storing clinician's entry data.
- * This happens in Procedure App Device Configuration (ADC).
+ * Represents the activity for storing clinician's entry data.
+ * This happens in Procedure App Device Configuration (MRDC) - P-RB.
+ * Only being triggered when a new user signs in.
  */
 class StoreEntryData extends Activity {
   constructor() {
@@ -36,8 +37,8 @@ class StoreEntryData extends Activity {
   }
 
   /**
-   * Perform this activity
-   * @param {Agent} agent - context of the agent
+   * Performs the activity
+   * @param {Agent} agent current agent
    */
   async doActivity(agent: Agent): Promise<void> {
     await super.doActivity(agent, [rule1]);
@@ -108,7 +109,7 @@ class StoreEntryData extends Activity {
     agentAPI.addFact(
       new Belief(
         BeliefKeys.PROCEDURE,
-        ProcedureAttributes.ADC,
+        ProcedureAttributes.MRDC,
         ProcedureConst.INACTIVE
       )
     );
@@ -137,7 +138,7 @@ const rule2 = new Precondition(
 );
 const rule3 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.ADC,
+  ProcedureAttributes.MRDC,
   ProcedureConst.ACTIVE
 );
 

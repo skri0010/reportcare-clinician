@@ -19,18 +19,16 @@ import {
 } from "rc_agents/clinician_framework";
 
 /**
- * Class to represent the activity for requesting clinician's entry data.
- * This happens in Procedure App Device Configuration (ADC).
+ * Represents the activity for requesting clinician's entry data.
+ * This happens in Procedure App-Medical Records Device Configuration (MRDC) - CP-PSB.
+ * Only being triggered when a clinician signs in.
  */
 class RequestEntryData extends Communicate {
-  /**
-   * Constructor for the RequestEntryData class
-   */
   constructor() {
     super(
       ActionFrameIDs.APS.REQUEST_ENTRY_DATA,
       Performative.REQUEST,
-      // Triggers RetrieveEntryData or StoreEntryData action frame of DTA
+      // Triggers DTA to retrieve or store entry data
       new Belief(
         BeliefKeys.CLINICIAN,
         ClinicianAttributes.RETRIEVE_ENTRY,
@@ -41,8 +39,8 @@ class RequestEntryData extends Communicate {
   }
 
   /**
-   * Perform the activity
-   * @param {Agent} agent - agent executing the activity
+   * Performs the activity
+   * @param {Agent} agent current agent
    */
   async doActivity(agent: Agent): Promise<void> {
     try {
@@ -62,7 +60,7 @@ const rule1 = new Precondition(
 );
 const rule2 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.ADC,
+  ProcedureAttributes.MRDC,
   ProcedureConst.ACTIVE
 );
 

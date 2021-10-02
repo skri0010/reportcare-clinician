@@ -13,28 +13,24 @@ import { MedicalRecord } from "aws/API";
 import { useNetInfo } from "@react-native-community/netinfo";
 
 interface PatientMedicalRecordProps {
-  patientId: string;
+  medicalRecords: MedicalRecord[];
   maxHeight: number;
   onAddPress: () => void; // action to be done when add button is pressed
   onViewMedicalRecord: (medicalRecord: MedicalRecord) => void;
 }
 
 export const PatientMedicalRecordCard: FC<PatientMedicalRecordProps> = ({
+  medicalRecords,
   maxHeight,
   onAddPress,
   onViewMedicalRecord
 }) => {
-  const {
-    colors,
-    fetchingMedicalRecords,
-    medicalRecords,
-    fetchingMedicalRecordContent
-  } = select((state: RootState) => ({
-    colors: state.settings.colors,
-    fetchingMedicalRecords: state.agents.fetchingMedicalRecords,
-    medicalRecords: state.agents.medicalRecords,
-    fetchingMedicalRecordContent: state.agents.fetchingMedicalRecordContent
-  }));
+  const { colors, fetchingMedicalRecordContent } = select(
+    (state: RootState) => ({
+      colors: state.settings.colors,
+      fetchingMedicalRecordContent: state.agents.fetchingMedicalRecordContent
+    })
+  );
 
   const [isOnline, setIsOnline] = useState<boolean>(false); // Whether file upload is allowed (is online)
 
@@ -72,18 +68,14 @@ export const PatientMedicalRecordCard: FC<PatientMedicalRecordProps> = ({
   };
 
   return (
-    <View
-      pointerEvents={
-        fetchingMedicalRecords || fetchingMedicalRecordContent ? "none" : "auto"
-      }
-    >
+    <View>
       <CardWrapper
         maxHeight={maxHeight}
         title={i18n.t("Patient_History.MedicalRecords")}
         ComponentNextToTitle={AddMedicalRecordButton}
       >
         {/* List of medical records */}
-        {medicalRecords && medicalRecords.length > 0 ? (
+        {medicalRecords.length > 0 ? (
           <FlatList
             showsVerticalScrollIndicator={false}
             ItemSeparatorComponent={ItemSeparator}
@@ -97,14 +89,12 @@ export const PatientMedicalRecordCard: FC<PatientMedicalRecordProps> = ({
             )}
             keyExtractor={(medicalRecord) => medicalRecord.id}
           />
-        ) : !fetchingMedicalRecords ? (
+        ) : (
           <EmptyListIndicator
             text={i18n.t("Patient_History.NoMedicalRecords")}
           />
-        ) : null}
-        {(fetchingMedicalRecords || fetchingMedicalRecordContent) && (
-          <LoadingIndicator />
         )}
+        {fetchingMedicalRecordContent && <LoadingIndicator />}
       </CardWrapper>
     </View>
   );

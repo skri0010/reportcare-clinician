@@ -12,7 +12,6 @@ import {
   PatientAssignment,
   PatientInfo,
   ClinicianInfo,
-  MedicalRecord,
   IcdCrtRecord
 } from "aws/API";
 
@@ -142,20 +141,6 @@ export const setCreateMedicalRecordSuccessful = createAction(
   })
 )();
 
-export const setFetchingMedicalRecords = createAction(
-  actionNames.SET_FETCHING_MEDICAL_RECORDS,
-  (fetchingMedicalRecords: boolean) => ({
-    fetchingMedicalRecords: fetchingMedicalRecords
-  })
-)();
-
-export const setMedicalRecords = createAction(
-  actionNames.SET_MEDICAL_RECORDS,
-  (medicalRecords: MedicalRecord[]) => ({
-    medicalRecords: medicalRecords
-  })
-)();
-
 export const setFetchingMedicalRecordContent = createAction(
   actionNames.SET_FETCHING_MEDICAL_RECORD_CONTENT,
   (fetchingMedicalRecordContent: boolean) => ({
@@ -181,20 +166,6 @@ export const setCreateIcdCrtRecordSuccessful = createAction(
   actionNames.SET_CREATE_ICDCRT_RECORD_SUCCESSFUL,
   (createIcdCrtRecordSuccessful: boolean) => ({
     createIcdCrtRecordSuccessful: createIcdCrtRecordSuccessful
-  })
-)();
-
-export const setFetchingIcdCrtRecords = createAction(
-  actionNames.SET_FETCHING_ICDCRT_RECORDS,
-  (fetchingIcdCrtRecords: boolean) => ({
-    fetchingIcdCrtRecords: fetchingIcdCrtRecords
-  })
-)();
-
-export const setIcdCrtRecords = createAction(
-  actionNames.SET_ICDCRT_RECORDS,
-  (icdCrtRecords: IcdCrtRecord[]) => ({
-    icdCrtRecords: icdCrtRecords
   })
 )();
 
