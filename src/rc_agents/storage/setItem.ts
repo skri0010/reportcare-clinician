@@ -215,7 +215,7 @@ export const setMedicalRecord = async (
 /**
  * Stores a patient's ICD/CRT record in patient details.
  */
-export const setPatientIcdCrtRecord = async (
+export const setIcdCrtRecord = async (
   icdCrtRecord: IcdCrtRecord
 ): Promise<void> => {
   const localPatient = await getPatientDetails(icdCrtRecord.patientID);

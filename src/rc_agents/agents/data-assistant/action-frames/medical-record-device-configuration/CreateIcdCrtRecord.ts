@@ -184,7 +184,7 @@ export const insertIcdCrtRecord = async (
 
   if (createSuccessful && icdCrtRecord) {
     // Stores ICD/CRT record locally
-    await LocalStorage.setPatientIcdCrtRecord(icdCrtRecord);
+    await LocalStorage.setIcdCrtRecord(icdCrtRecord);
     return icdCrtRecord;
   }
 

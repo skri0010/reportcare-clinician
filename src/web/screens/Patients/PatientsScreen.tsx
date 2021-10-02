@@ -109,7 +109,7 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
   const [addMedicalRecord, setAddMedicalRecord] = useState<boolean>(false);
   const [addIcdCrtRecord, setAddIcdCrtRecord] = useState<boolean>(false);
 
-  // For editing patient's details
+  // For editing patient's details - navigate to patient configuration screen
   const [editDetails, setEditDetails] = useState(false);
 
   return (

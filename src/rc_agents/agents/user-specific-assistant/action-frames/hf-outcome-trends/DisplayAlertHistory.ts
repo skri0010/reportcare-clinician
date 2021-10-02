@@ -21,7 +21,6 @@ import {
   setFetchingPatientAlertHistory
 } from "ic-redux/actions/agents/actionCreator";
 import { sortAlertInfoByDescendingDateTime } from "util/utilityFunctions";
-import { agentDTA, agentUXSA } from "rc_agents/agents";
 
 /**
  * Class to represent the activity for displaying the alert history

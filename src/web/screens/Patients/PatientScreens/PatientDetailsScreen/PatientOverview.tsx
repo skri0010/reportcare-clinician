@@ -18,7 +18,7 @@ import { EditPatientDetailsButton } from "components/Buttons/EditPatientBaseline
 
 interface PatientOverviewProps extends PatientDetailsTabProps.OverviewTabProps {
   details: PatientDetails;
-  setEditDetails: (state: boolean) => void;
+  setEditDetails: (state: boolean) => void; // To edit patient's details
 }
 
 export const PatientOverview: FC<PatientOverviewProps> = ({

@@ -21,12 +21,11 @@ export const ActionFrameIDs = {
   },
   DTA: {
     // MRDC
-    STORE_BASELINE: "StoreBaseline",
-    CREATE_MEDICAL_RECORD: "CreateMedicalRecord",
-
-    // ADC
     RETRIEVE_ENTRY_DATA: "RetrieveEntryData",
     STORE_ENTRY_DATA: "StoreEntryData",
+    STORE_BASELINE: "StoreBaseline",
+    CREATE_MEDICAL_RECORD: "CreateMedicalRecord",
+    CREATE_ICDCRT_RECORD: "CreateIcdCrtRecord",
 
     // AT-CP-I: AlertInfo[]
     RETRIEVE_ALERTS: "RetrieveAlerts",
@@ -54,8 +53,7 @@ export const ActionFrameIDs = {
     REQUEST_DISPLAY_MEDICAL_RECORD_CONTENT:
       "RequestDisplayMedicalRecordContent",
 
-    // HF-OTP-IV: Single patient's ICD/CRT records
-    CREATE_ICDCRT_RECORD: "CreateIcdCrtRecord",
+    // HF-OTP-IV: Single patient's ICD/CRT record content
     RETRIEVE_ICDCRT_RECORD_CONTENT: "RetrieveIcdCrtRecordContent",
     REQUEST_DISPLAY_ICDCRT_RECORD_CONTENT: "RequestDisplayIcdCrtRecordContent",
 
@@ -190,6 +188,7 @@ export enum ProcedureAttributes {
 // Attributes for CLINICIAN key
 
 export enum ClinicianAttributes {
+  // MRDC
   USERNAME = "Username",
   HAS_ENTRY = "HasEntry",
   ENTRY_DATA = "EntryData",

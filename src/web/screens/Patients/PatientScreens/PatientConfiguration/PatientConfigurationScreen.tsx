@@ -34,8 +34,8 @@ import { SaveAndCancelButtons } from "components/Buttons/SaveAndCancelButtons";
 
 interface PatientConfigurationScreenProps {
   info: PatientInfo;
-  editDetails: boolean;
-  setEditDetails: (state: boolean) => void;
+  editDetails: boolean; // Indicates that patient has been configured and details are to be updated
+  setEditDetails: (state: boolean) => void; // To edit patient's details
 }
 
 export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
