@@ -37,12 +37,6 @@ export const PatientHistory: FC<PatientHistoryProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // useEffect(() => {
-  //   setCurrentMedicalRecords(details.medicalRecords);
-  // }, [details.medicalRecords]);
-
-  // const [currentMedicalRecords, setCurrentMedicalRecords] = useState<MedicalRecord[] | undefined>(undefined);
-
   return (
     <ScreenWrapper padding>
       <View style={styles.container}>

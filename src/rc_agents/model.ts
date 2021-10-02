@@ -103,7 +103,7 @@ export interface PatientDetails {
   symptomReports: LocalReportSymptoms;
   vitalsReports: LocalReportVitals;
   medicalRecords: MedicalRecord[];
-  icdCrtRecords: LocalIcdCrtRecords;
+  icdCrtRecords: IcdCrtRecord[];
 }
 
 export type LocalActivityInfos = {
@@ -117,10 +117,6 @@ export type LocalReportSymptoms = {
 
 export type LocalReportVitals = {
   [date: string]: ReportVitals[] | undefined;
-};
-
-export type LocalIcdCrtRecords = {
-  [id: string]: IcdCrtRecord;
 };
 
 export interface PatientAssignmentResolution {

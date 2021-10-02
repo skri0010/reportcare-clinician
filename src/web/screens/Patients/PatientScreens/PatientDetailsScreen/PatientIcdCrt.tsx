@@ -1,7 +1,6 @@
 import { IcdCrtRecord } from "aws/API";
 import { PatientDetails } from "rc_agents/model";
-import { AgentTrigger } from "rc_agents/trigger";
-import React, { FC, useEffect } from "react";
+import React, { FC } from "react";
 import { View } from "react-native";
 import { PatientDetailsTabProps } from "web/navigation/types";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
@@ -18,15 +17,11 @@ export const PatientICDCRT: FC<PatientICDCRTProps> = ({
   setAddIcdCrtRecord,
   onViewIcdCrtRecord
 }) => {
-  // Triggers retrieval of patient's ICD/CRT records
-  useEffect(() => {
-    AgentTrigger.triggerRetrieveIcdCrtRecords(details.patientInfo.patientID);
-  }, [details.patientInfo.patientID]);
-
   return (
     <ScreenWrapper padding>
       <View>
         <IcdCrtCard
+          icdCrtRecords={details.icdCrtRecords}
           onAddPress={() => setAddIcdCrtRecord(true)}
           onViewIcdCrtRecord={onViewIcdCrtRecord}
         />

@@ -83,6 +83,16 @@ class CreateMedicalRecord extends Activity {
             store.dispatch(setPatientDetails(existingPatientDetails));
           }
 
+          // Remove medical record input from facts
+          agentAPI.addFact(
+            new Belief(
+              BeliefKeys.PATIENT,
+              PatientAttributes.MEDICAL_RECORD_TO_CREATE,
+              null
+            ),
+            false
+          );
+
           // End the procedure
           agentAPI.addFact(
             new Belief(

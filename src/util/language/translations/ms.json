@@ -164,6 +164,7 @@
   },
   "Patient_Configuration": {
     "Title": "Konfigurasikan butiran",
+    "EditDetails": "Edit butiran",
     "Proceed": "Selesai",
     "Label": {
       "HospitalName": "Nama hospital",
@@ -210,8 +211,6 @@
     "TitleInputPlaceholder": "Berikan tajuk kepada rekod ini",
     "TitleError": "Sila berikan tajuk yang sah",
     "FileUpload": "Fail Muat Naik",
-    "Save": "Simpan",
-    "Cancel": "Batal",
     "IcdCrtRecordSavedSuccessfully": "Rekod ICD/CRT telah berjaya disimpan"
   },
   "Patient_History": {
@@ -226,8 +225,6 @@
     "MedicalRecords": "Rekod perubatan",
     "AddButton": "Tambah",
     "CloseButton": "Tutup",
-    "SaveButton": "Simpan",
-    "CancelButton": "Batal",
     "AlertSummaryCard": {
       "AlertSummary": "Ringkasan Amaran",
       "AlertDetails": "Butiran Amaran",
@@ -300,6 +297,10 @@
     "Or": "Atau",
     "BrowseFiles": "Semak fail",
     "MultipleFileError": "Anda hanya boleh muat naik satu fail sahaja"
+  },
+  "DetailsUpdate": {
+    "Save": "Simpan",
+    "Cancel": "Batal"
   },
   "UnexpectedError": "Ralat yang tidak disangkai telah berlaku",
   "Keywords": {

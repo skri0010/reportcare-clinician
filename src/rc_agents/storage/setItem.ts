@@ -135,7 +135,7 @@ export const setPatients = async (
         symptomReports: localPatients[patient.patientID]?.symptomReports || {},
         vitalsReports: localPatients[patient.patientID]?.vitalsReports || {},
         medicalRecords: localPatients[patient.patientID]?.medicalRecords || [],
-        icdCrtRecords: localPatients[patient.patientID]?.icdCrtRecords || {}
+        icdCrtRecords: localPatients[patient.patientID]?.icdCrtRecords || []
       };
     }
   });
@@ -155,7 +155,7 @@ export const setPatient = async (patient: PatientInfo): Promise<void> => {
     symptomReports: localPatient?.symptomReports || {},
     vitalsReports: localPatient?.vitalsReports || {},
     medicalRecords: localPatient?.medicalRecords || [],
-    icdCrtRecords: localPatient?.icdCrtRecords || {}
+    icdCrtRecords: localPatient?.icdCrtRecords || []
   });
 };
 
@@ -213,16 +213,14 @@ export const setMedicalRecord = async (
 };
 
 /**
- * Stores an array of ICD/CRT records belonging to the same patient
+ * Stores a patient's ICD/CRT record in patient details.
  */
-export const setPatientIcdCrtRecords = async (
-  icdCrtRecords: IcdCrtRecord[]
+export const setPatientIcdCrtRecord = async (
+  icdCrtRecord: IcdCrtRecord
 ): Promise<void> => {
-  const localPatient = await getPatientDetails(icdCrtRecords[0].patientID);
+  const localPatient = await getPatientDetails(icdCrtRecord.patientID);
   if (localPatient) {
-    icdCrtRecords.forEach((icdCrtRecord) => {
-      localPatient.icdCrtRecords[icdCrtRecord.id] = icdCrtRecord;
-    });
+    localPatient.icdCrtRecords.unshift(icdCrtRecord);
     await setPatientDetails(localPatient);
   }
 };

@@ -8,12 +8,7 @@ import {
   LocalTodo,
   RiskFilter
 } from "rc_agents/model";
-import {
-  ClinicianInfo,
-  IcdCrtRecord,
-  PatientAssignment,
-  PatientInfo
-} from "aws/API";
+import { ClinicianInfo, PatientAssignment, PatientInfo } from "aws/API";
 import { RiskLevel } from "models/RiskLevel";
 import { ChartFilter, ChartViewTypes } from "models/ChartViewTypes";
 
@@ -61,8 +56,6 @@ interface AgentsState {
   medicalRecordContent: string | undefined;
   creatingIcdCrtRecord: boolean;
   createIcdCrtRecordSuccessful: boolean;
-  fetchingIcdCrtRecords: boolean;
-  icdCrtRecords: IcdCrtRecord[] | undefined;
   fetchingIcdCrtRecordContent: boolean;
   icdCrtRecordContent: string | undefined;
 }
@@ -136,8 +129,6 @@ const initialState: AgentsState = {
   medicalRecordContent: undefined,
   creatingIcdCrtRecord: false,
   createIcdCrtRecordSuccessful: false,
-  fetchingIcdCrtRecords: false,
-  icdCrtRecords: undefined,
   fetchingIcdCrtRecordContent: false,
   icdCrtRecordContent: undefined
 };
@@ -243,16 +234,6 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
         ...state,
         createIcdCrtRecordSuccessful:
           action.payload.createIcdCrtRecordSuccessful
-      };
-    case actionNames.SET_FETCHING_ICDCRT_RECORDS:
-      return {
-        ...state,
-        fetchingIcdCrtRecords: action.payload.fetchingIcdCrtRecords
-      };
-    case actionNames.SET_ICDCRT_RECORDS:
-      return {
-        ...state,
-        icdCrtRecords: action.payload.icdCrtRecords
       };
     case actionNames.SET_FETCHING_ICDCRT_RECORD_CONTENT:
       return {

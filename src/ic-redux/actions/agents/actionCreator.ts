@@ -169,20 +169,6 @@ export const setCreateIcdCrtRecordSuccessful = createAction(
   })
 )();
 
-export const setFetchingIcdCrtRecords = createAction(
-  actionNames.SET_FETCHING_ICDCRT_RECORDS,
-  (fetchingIcdCrtRecords: boolean) => ({
-    fetchingIcdCrtRecords: fetchingIcdCrtRecords
-  })
-)();
-
-export const setIcdCrtRecords = createAction(
-  actionNames.SET_ICDCRT_RECORDS,
-  (icdCrtRecords: IcdCrtRecord[]) => ({
-    icdCrtRecords: icdCrtRecords
-  })
-)();
-
 export const setFetchingIcdCrtRecordContent = createAction(
   actionNames.SET_FETCHING_ICDCRT_RECORD_CONTENT,
   (fetchingIcdCrtRecordContent: boolean) => ({

@@ -458,33 +458,7 @@ export const triggerCreateIcdCrtRecord = (input: IcdCrtRecordInput): void => {
   agentAPI.addFact(
     new Belief(
       BeliefKeys.PROCEDURE,
-      ProcedureAttributes.HF_OTP_IV,
-      ProcedureConst.ACTIVE
-    )
-  );
-};
-
-// HF-OTP-IV: Triggers RetrieveIcdCrtRecords of DTA
-export const triggerRetrieveIcdCrtRecords = (patientID: string): void => {
-  agentAPI.addFact(
-    new Belief(
-      BeliefKeys.PATIENT,
-      PatientAttributes.PATIENT_TO_VIEW_ICDCRT_RECORDS,
-      patientID
-    ),
-    false
-  );
-  agentDTA.addBelief(
-    new Belief(
-      BeliefKeys.PATIENT,
-      PatientAttributes.RETRIEVE_ICDCRT_RECORDS,
-      true
-    )
-  );
-  agentAPI.addFact(
-    new Belief(
-      BeliefKeys.PROCEDURE,
-      ProcedureAttributes.HF_OTP_IV,
+      ProcedureAttributes.MRDC,
       ProcedureConst.ACTIVE
     )
   );

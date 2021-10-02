@@ -9,7 +9,6 @@ import {
 import { ProcedureConst } from "agents-framework/Enums";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
-  setRetryLaterTimeout,
   ActionFrameIDs,
   AppAttributes,
   BeliefKeys,
@@ -19,13 +18,16 @@ import {
 import { PatientDetails } from "rc_agents/model";
 import {
   listActivityInfosByPatientID,
+  listIcdCrtRecordsByDateTime,
   listMedicalRecordsByPatientID,
   listReportSymptomsByPatientID,
   listReportVitalsByPatientID
 } from "aws";
 import {
   ActivityInfo,
+  IcdCrtRecord,
   MedicalRecord,
+  ModelSortDirection,
   PatientInfo,
   ReportSymptom,
   ReportVitals
@@ -33,9 +35,10 @@ import {
 import { LocalStorage } from "rc_agents/storage";
 import { setFetchingPatientDetails } from "ic-redux/actions/agents/actionCreator";
 import { store } from "util/useRedux";
+import { sortIcdCrtRecordsByDescendingDateTime } from "util/utilityFunctions";
 
 /**
- * Class to represent an activity for retrieving details of a specific patient.
+ * Represents the activity for retrieving details of a specific patient.
  * This happens in Procedure HF Outcome Trends (HF-OTP-II).
  */
 class RetrievePatientDetails extends Activity {
@@ -44,8 +47,8 @@ class RetrievePatientDetails extends Activity {
   }
 
   /**
-   * Perform this activity
-   * @param {Agent} agent - context of the agent
+   * Performs the activity
+   * @param {Agent} agent current agent
    */
   async doActivity(agent: Agent): Promise<void> {
     // Reset preconditions
@@ -66,13 +69,13 @@ class RetrievePatientDetails extends Activity {
 
       if (patientInfo) {
         const patientId = patientInfo.patientID;
-        const patientDetails: PatientDetails = {
+        let patientDetails: PatientDetails = {
           patientInfo: patientInfo,
           activityInfos: {},
           symptomReports: {},
           vitalsReports: {},
           medicalRecords: [],
-          icdCrtRecords: {}
+          icdCrtRecords: []
         };
         let patientDetailsRetrieved = false;
 
@@ -90,6 +93,10 @@ class RetrievePatientDetails extends Activity {
           });
           const medicalRecordsQuery = await listMedicalRecordsByPatientID({
             patientID: patientId
+          });
+          const icdCrtRecordsQuery = await listIcdCrtRecordsByDateTime({
+            patientID: patientId,
+            sortDirection: ModelSortDirection.DESC
           });
 
           // Store activity infos in patient details
@@ -156,6 +163,18 @@ class RetrievePatientDetails extends Activity {
             });
           }
 
+          // Store ICD/CRT records in patient details
+          if (icdCrtRecordsQuery.data.listIcdCrtRecordsByDateTime?.items) {
+            const icdCrtRecords =
+              icdCrtRecordsQuery.data.listIcdCrtRecordsByDateTime?.items;
+
+            icdCrtRecords.forEach((record: IcdCrtRecord | null) => {
+              if (record) {
+                patientDetails.icdCrtRecords.push(record);
+              }
+            });
+          }
+
           // Save retrieved patient
           await LocalStorage.setPatientDetails(patientDetails);
           patientDetailsRetrieved = true;
@@ -168,14 +187,13 @@ class RetrievePatientDetails extends Activity {
           );
 
           if (localPatientDetails) {
-            agentAPI.addFact(
-              new Belief(
-                BeliefKeys.PATIENT,
-                PatientAttributes.PATIENT_DETAILS,
-                localPatientDetails
-              ),
-              false
-            );
+            // Sorts ICD/CRT records in descending order of dateTime
+            localPatientDetails.icdCrtRecords =
+              sortIcdCrtRecordsByDescendingDateTime(
+                localPatientDetails.icdCrtRecords
+              );
+
+            patientDetails = localPatientDetails;
             patientDetailsRetrieved = true;
           }
         }
@@ -214,23 +232,6 @@ class RetrievePatientDetails extends Activity {
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
-      // Set to retry later
-      setRetryLaterTimeout(() => {
-        agent.addBelief(
-          new Belief(
-            BeliefKeys.PATIENT,
-            PatientAttributes.RETRIEVE_PATIENT_DETAILS,
-            true
-          )
-        );
-        agentAPI.addFact(
-          new Belief(
-            BeliefKeys.PROCEDURE,
-            ProcedureAttributes.HF_OTP_II,
-            ProcedureConst.ACTIVE
-          )
-        );
-      });
 
       // Update Facts
       // End the procedure

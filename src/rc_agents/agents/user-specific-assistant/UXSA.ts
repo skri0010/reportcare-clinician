@@ -16,7 +16,6 @@ import { af_DisplayAlertHistory } from "./action-frames/hf-outcome-trends/Displa
 import { af_DisplayClinicianContacts } from "./action-frames/storing-data/DisplayClinicianContacts";
 import { af_DisplayRefreshedAlerts } from "./action-frames/triage-alert-hf-clinic/DisplayRefreshedAlerts";
 import { af_DisplayMedicalRecordContent } from "./action-frames/hf-outcome-trends/DisplayMedicalRecordContent";
-import { af_DisplayIcdCrtRecords } from "./action-frames/hf-outcome-trends/DisplayIcdCrtRecords";
 import { af_DisplayIcdCrtRecordContent } from "./action-frames/hf-outcome-trends/DisplayIcdCrtRecordContent";
 
 // Initial Beliefs of Agent
@@ -39,7 +38,6 @@ const agentUXSA = new ClinicianAgent(
     af_DisplayMedicalRecordContent,
 
     // HF-OTP-IV
-    af_DisplayIcdCrtRecords,
     af_DisplayIcdCrtRecordContent,
 
     // SRD-I

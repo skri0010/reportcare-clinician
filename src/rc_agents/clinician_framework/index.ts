@@ -56,8 +56,6 @@ export const ActionFrameIDs = {
 
     // HF-OTP-IV: Single patient's ICD/CRT records
     CREATE_ICDCRT_RECORD: "CreateIcdCrtRecord",
-    RETRIEVE_ICDCRT_RECORDS: "RetrieveIcdCrtRecords",
-    REQUEST_DISPLAY_ICDCRT_RECORDS: "RequestDisplayIcdCrtRecords",
     RETRIEVE_ICDCRT_RECORD_CONTENT: "RetrieveIcdCrtRecordContent",
     REQUEST_DISPLAY_ICDCRT_RECORD_CONTENT: "RequestDisplayIcdCrtRecordContent",
 
@@ -106,8 +104,7 @@ export const ActionFrameIDs = {
     // HF-OTP-III: Single patient's medical record content
     DISPLAY_MEDICAL_RECORD_CONTENT: "DisplayMedicalRecordContent",
 
-    // HF-OTP-IV: Single patient's ICD/CRT records
-    DISPLAY_ICDCRT_RECORDS: "DisplayIcdCrtRecords",
+    // HF-OTP-IV: Single patient's ICD/CRT record content
     DISPLAY_ICDCRT_RECORD_CONTENT: "DisplayIcdCrtRecordContent",
 
     // SRD-I: Patient Assignments
@@ -262,6 +259,8 @@ export enum PatientAttributes {
   PATIENT_TO_CONFIGURE = "PatientToConfigure",
   CREATE_MEDICAL_RECORD = "CreateMedicalRecord",
   MEDICAL_RECORD_TO_CREATE = "MedicalRecordToCreate",
+  CREATE_ICDCRT_RECORD = "CreateIcdCrtRecord",
+  ICDCRT_RECORD_TO_CREATE = "IcdCrtRecordToCreate",
 
   // HF-OTP-I: ClinicianInfo and all patients (PatientInfo)
   RETRIEVE_PATIENTS = "RetrievePatients",
@@ -282,13 +281,7 @@ export enum PatientAttributes {
   MEDICAL_RECORD_CONTENT = "MedicalRecordContent",
   MEDICAL_RECORD_CONTENT_RETRIEVED = "MedicalRecordContentRetrieved",
 
-  // HF-OTP-IV: Single patient's ICD/CRT records
-  CREATE_ICDCRT_RECORD = "CreateIcdCrtRecord",
-  ICDCRT_RECORD_TO_CREATE = "IcdCrtRecordToCreate",
-  RETRIEVE_ICDCRT_RECORDS = "RetrieveIcdCrtRecords",
-  PATIENT_TO_VIEW_ICDCRT_RECORDS = "PatientToViewIcdCrtRecords",
-  ICDCRT_RECORDS = "IcdCrtRecords",
-  ICDCRT_RECORDS_RETRIEVED = "IcdCrtRecordsRetrieved",
+  // HF-OTP-IV: Single patient's ICD/CRT record content
   ICDCRT_RECORD_TO_VIEW = "IcdCrtRecordToView",
   RETRIEVE_ICDCRT_RECORD_CONTENT = "RetrieveIcdCrtRecordContent",
   ICDCRT_RECORD_CONTENT = "IcdCrtRecordContent",

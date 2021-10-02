@@ -4,7 +4,7 @@ import { select, RootState } from "util/useRedux";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { PatientOverview } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientOverview";
 import { PatientParameters } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientParameters";
-import { PatientICDCRT } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientIcdCrt";
+import { PatientICDCRT } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientICDCRT";
 import { PatientHistory } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientHistory";
 import { PatientInformation } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientInformation";
 import { PatientDetailsTabProps } from "web/navigation/types";
@@ -28,6 +28,7 @@ export interface PatientDetailsTabNavigatorProps {
   onViewMedicalRecord: (medicalRecord: MedicalRecord) => void; // when content of medical content is to be shown
   setAddIcdCrtRecord: (state: boolean) => void; // add ICD/CRT record modal visibility
   onViewIcdCrtRecord: (icdCrtRecord: IcdCrtRecord) => void; // when content of ICD/CRT content is to be shown
+  setEditDetails: (state: boolean) => void;
 }
 
 export const PatientDetailsTabNavigator: FC<PatientDetailsTabNavigatorProps> =
@@ -39,7 +40,8 @@ export const PatientDetailsTabNavigator: FC<PatientDetailsTabNavigatorProps> =
     setAddMedicalRecord,
     onViewMedicalRecord,
     setAddIcdCrtRecord,
-    onViewIcdCrtRecord
+    onViewIcdCrtRecord,
+    setEditDetails
   }) => {
     const { colors, fonts } = select((state: RootState) => ({
       colors: state.settings.colors,
@@ -66,7 +68,13 @@ export const PatientDetailsTabNavigator: FC<PatientDetailsTabNavigatorProps> =
           name={PatientDetailsTabName.OVERVIEW}
           options={{ title: i18n.t("Patients.Overview") }}
         >
-          {(props) => <PatientOverview {...props} details={details} />}
+          {(props) => (
+            <PatientOverview
+              {...props}
+              details={details}
+              setEditDetails={setEditDetails}
+            />
+          )}
         </Tab.Screen>
         <Tab.Screen
           name={PatientDetailsTabName.PARAMETERS}

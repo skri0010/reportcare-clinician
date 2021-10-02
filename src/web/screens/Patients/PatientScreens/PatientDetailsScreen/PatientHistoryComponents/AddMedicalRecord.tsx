@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from "react";
-import { View, TouchableOpacity } from "react-native";
+import { View } from "react-native";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { H3 } from "components/Text";
 import { ScaledSheet, ms } from "react-native-size-matters";
@@ -15,6 +15,7 @@ import {
 } from "ic-redux/actions/agents/actionCreator";
 import { useToast } from "react-native-toast-notifications";
 import { FileDropbox } from "components/InputComponents/FileDropbox";
+import { SaveAndCancelButtons } from "components/Buttons/SaveAndCancelButtons";
 
 interface AddMedicalRecordProps {
   setAddMedicalRecord: (state: boolean) => void;
@@ -131,75 +132,20 @@ export const AddMedicalRecord: FC<AddMedicalRecordProps> = ({
       {/* File Upload Input */}
       <FileDropbox file={file} setFile={setFile} />
 
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "center",
-          paddingTop: ms(20)
+      {/* Save and Cancel Buttons */}
+      <SaveAndCancelButtons
+        onPressSave={onSaveRecord}
+        onPressCancel={() => {
+          setAddMedicalRecord(false);
         }}
-      >
-        {/* Save button */}
-        <TouchableOpacity
-          disabled={!allInputValid}
-          style={[
-            styles.saveButton,
-            {
-              backgroundColor: allInputValid
-                ? colors.acceptButtonColor
-                : colors.primaryDeactivatedButtonColor,
-              borderColor: colors.primaryTextColor
-            }
-          ]}
-          onPress={onSaveRecord}
-        >
-          <H3
-            text={i18n.t("Patient_History.SaveButton")}
-            style={{ color: colors.primaryTextColor }}
-          />
-        </TouchableOpacity>
-        {/* Cancel button */}
-        <TouchableOpacity
-          style={[
-            styles.closeButton,
-            {
-              backgroundColor: colors.primaryContrastTextColor,
-              borderColor: colors.primaryTextColor
-            }
-          ]}
-          onPress={() => {
-            setAddMedicalRecord(false);
-          }}
-        >
-          <H3
-            text={i18n.t("Patient_History.CancelButton")}
-            style={{ color: colors.primaryTextColor }}
-          />
-        </TouchableOpacity>
-      </View>
+        validToSave={allInputValid}
+      />
       {savingRecord && <LoadingIndicator overlayBackgroundColor />}
     </View>
   );
 };
 
 const styles = ScaledSheet.create({
-  closeButton: {
-    textAlign: "center",
-    justifyContent: "space-evenly",
-    borderRadius: "5@ms",
-    width: "60@ms",
-    height: "25@ms",
-    borderWidth: "1@ms",
-    margin: "10@ms"
-  },
-  saveButton: {
-    textAlign: "center",
-    width: "60@ms",
-    borderRadius: "5@ms",
-    justifyContent: "space-evenly",
-    height: "25@ms",
-    margin: "10@ms"
-  },
   container: {
     width: "50%",
     height: "90%",

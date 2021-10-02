@@ -28,7 +28,7 @@ import { agentNWA } from "rc_agents/agents";
 /**
  * Represents the activity for storing patient record baseline data.
  * This happens in Procedure App-Medical Records Device Configuration (MRDC) - P-RB.
- * Happens when patient is being configured (includes U-CPRB subprocedure).
+ * Happens when patient is configured for the first time or when details are updated in U-CPRB subprocedure.
  */
 class StoreBaseline extends Activity {
   constructor() {

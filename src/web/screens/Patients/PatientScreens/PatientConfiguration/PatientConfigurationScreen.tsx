@@ -30,13 +30,16 @@ import {
   setConfigurationSuccessful,
   setConfiguringPatient
 } from "ic-redux/actions/agents/actionCreator";
+import { SaveAndCancelButtons } from "components/Buttons/SaveAndCancelButtons";
 
 interface PatientConfigurationScreenProps {
   info: PatientInfo;
+  editDetails: boolean;
+  setEditDetails: (state: boolean) => void;
 }
 
 export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
-  ({ info }) => {
+  ({ info, editDetails, setEditDetails }) => {
     // States
     const { fonts, colors, configuringPatient, configurationSuccessful } =
       select((state: RootState) => ({
@@ -153,6 +156,7 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
             type: "success"
           });
           dispatch(setConfigurationSuccessful(false));
+          setEditDetails(false);
         } else {
           toast.show(i18n.t("UnexpectedError"), {
             type: "danger"
@@ -164,7 +168,8 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
       configuringPatient,
       configurationSuccessful,
       toast,
-      dispatch
+      dispatch,
+      setEditDetails
     ]);
 
     return (
@@ -298,14 +303,22 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
           />
         </ScrollView>
 
-        {/* Proceed button */}
-        <AuthButton
-          buttonTitle={i18n.t("Patient_Configuration.Proceed")}
-          onPress={onProceedPress}
-          inputValid={allInputValid && !configuringPatient}
-          noTextTransform
-        />
-
+        {/* Patient has been configured - editing patient's details should allow cancelling */}
+        {editDetails ? (
+          <SaveAndCancelButtons
+            onPressSave={onProceedPress}
+            onPressCancel={() => setEditDetails(false)}
+            validToSave={allInputValid && !configuring}
+          />
+        ) : (
+          // Patient hasn't been configured - not allowed to proceed without configuration
+          <AuthButton
+            buttonTitle={i18n.t("Patient_Configuration.Proceed")}
+            onPress={onProceedPress}
+            inputValid={allInputValid && !configuring}
+            noTextTransform
+          />
+        )}
         {configuring && <LoadingIndicator />}
       </ScreenWrapper>
     );
