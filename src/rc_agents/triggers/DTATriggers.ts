@@ -1,4 +1,9 @@
-import { IcdCrtRecord, MedicalRecord, PatientInfo } from "aws/API";
+import {
+  IcdCrtRecord,
+  MedicalRecord,
+  PatientAssignment,
+  PatientInfo
+} from "aws/API";
 import {
   BeliefKeys,
   ClinicianAttributes,
@@ -18,10 +23,7 @@ import {
   MedicalRecordInput,
   IcdCrtRecordInput
 } from "rc_agents/model";
-import {
-  AlertNotification,
-  PatientAssignmentSubscription
-} from "aws/TypedAPI/subscriptions";
+import { AlertNotification } from "aws/TypedAPI/subscriptions";
 
 // HF-OTP-I
 // Triggers RetrievePatientsByRole of DTA
@@ -91,7 +93,7 @@ export const triggerRetrievePendingAssignments = (): void => {
 
 // SRD-V: Triggers ProcessPatientAssignmentSubscription of DTA
 export const triggerProcessPatientAssignmentSubscription = (
-  patientAssignmentSubscription: PatientAssignmentSubscription
+  patientAssignmentSubscription: PatientAssignment
 ): void => {
   // Adds input to facts
   agentAPI.addFact(

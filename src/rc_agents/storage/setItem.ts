@@ -6,7 +6,6 @@ import {
   PatientInfo,
   Todo
 } from "aws/API";
-import { PatientAssignmentSubscription } from "aws/TypedAPI/subscriptions";
 // eslint-disable-next-line no-restricted-imports
 import {
   LocalTodo,
@@ -387,7 +386,7 @@ export const setTodos = async (
  * @param patientAssignmentSubscription patient assignment subscription to be inserted
  */
 export const setPatientAssignmentSubscription = async (
-  patientAssignmentSubscription: PatientAssignmentSubscription
+  patientAssignmentSubscription: PatientAssignment
 ): Promise<void> => {
   let localData = await getPatientAssignmentSubscriptions();
   if (!localData) {
@@ -402,7 +401,7 @@ export const setPatientAssignmentSubscription = async (
  * @param patientAssignmentSubscriptions array of patient assignment subscriptions
  */
 export const setPatientAssignmentSubscriptions = async (
-  patientAssignmentSubscriptions: PatientAssignmentSubscription[]
+  patientAssignmentSubscriptions: PatientAssignment[]
 ): Promise<void> => {
   await AsyncStorage.setItem(
     AsyncStorageKeys.PATIENT_ASSIGNMENT_SUBSCRIPTIONS,

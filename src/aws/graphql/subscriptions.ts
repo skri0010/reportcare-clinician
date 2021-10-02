@@ -864,13 +864,13 @@ export const onCreatePatientAssignment = /* GraphQL */ `
       pending
       resolution
       reassignToClinicianID
-      adminReassignFromClinicianID
+      adminCompleted
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
-      adminCompleted
+      adminReassignFromClinicianID
     }
   }
 `;
@@ -890,13 +890,13 @@ export const onUpdatePatientAssignment = /* GraphQL */ `
       pending
       resolution
       reassignToClinicianID
-      adminReassignFromClinicianID
+      adminCompleted
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
-      adminCompleted
+      adminReassignFromClinicianID
     }
   }
 `;
@@ -916,13 +916,13 @@ export const onDeletePatientAssignment = /* GraphQL */ `
       pending
       resolution
       reassignToClinicianID
-      adminReassignFromClinicianID
+      adminCompleted
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
-      adminCompleted
+      adminReassignFromClinicianID
     }
   }
 `;
