@@ -15,7 +15,11 @@ import {
   AppAttributes,
   ActionFrameIDs
 } from "rc_agents/clinician_framework";
-import { Storage, AsyncStorageKeys, AsyncStorageType } from "rc_agents/storage";
+import {
+  LocalStorage,
+  AsyncStorageKeys,
+  AsyncStorageType
+} from "rc_agents/storage";
 import {
   PatientAssignmentResolution,
   PatientAssignmentStatus
@@ -55,7 +59,7 @@ class ResolvePatientAssignment extends Activity {
         ];
 
       // Get locally stored clinicianId
-      const clinicianId = await Storage.getClinicianID();
+      const clinicianId = await LocalStorage.getClinicianID();
 
       if (resolution && clinicianId) {
         // Device is online
@@ -69,7 +73,7 @@ class ResolvePatientAssignment extends Activity {
         // Device is offline: Save locally
         else {
           // Append current assignments to resolve to locally stored assignments to resolve
-          const data = await Storage.getPatientAssignmentResolutions();
+          const data = await LocalStorage.getPatientAssignmentResolutions();
           let resolutionList: AsyncStorageType[AsyncStorageKeys.PATIENT_ASSIGNMENTS_RESOLUTIONS];
           // Key exists in AsyncStorage
           if (data) {
@@ -83,7 +87,7 @@ class ResolvePatientAssignment extends Activity {
             resolutionList = { [resolution.patientName]: resolution };
           }
           // Store updated resolutions
-          Storage.setPatientAssignmentResolutions(resolutionList);
+          LocalStorage.setPatientAssignmentResolutions(resolutionList);
 
           // Trigger request to Communicate to NWA
           agent.addBelief(

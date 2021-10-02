@@ -26,6 +26,7 @@ export interface IconButtonProps {
   containerBorderColor?: string;
   containerBackgroundColor?: string;
   iconStyle?: StyleProp<TextStyle>;
+  disabled?: boolean;
 }
 
 export const IconButton: FC<IconButtonProps> = ({
@@ -36,7 +37,8 @@ export const IconButton: FC<IconButtonProps> = ({
   containerStyle,
   containerBorderColor,
   containerBackgroundColor,
-  iconStyle
+  iconStyle,
+  disabled
 }) => {
   const { colors, fonts } = select((state: RootState) => ({
     colors: state.settings.colors,
@@ -72,6 +74,7 @@ export const IconButton: FC<IconButtonProps> = ({
         },
         containerStyle
       ]}
+      disabled={disabled}
     >
       <Icon />
     </TouchableOpacity>

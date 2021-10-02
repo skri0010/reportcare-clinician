@@ -30,6 +30,11 @@ import { af_RetrieveClinicianContacts } from "./action-frames/storing-data/Retri
 import { af_RequestClinicianContactDisplay } from "./action-frames/storing-data/RequestClinicianContactsDisplay";
 import { af_ConfigurePatient } from "./action-frames/hf-outcome-trends/ConfigurePatient";
 import { af_ProcessPatientAssignmentSubscription } from "./action-frames/storing-data/ProcessPatientAssignmentSubscription";
+import { af_CreateMedicalRecord } from "./action-frames/hf-outcome-trends/CreateMedicalRecord";
+import { af_RetrieveMedicalRecords } from "./action-frames/hf-outcome-trends/RetrieveMedicalRecords";
+import { af_RequestDisplayMedicalRecords } from "./action-frames/hf-outcome-trends/RequestDisplayMedicalRecords";
+import { af_RetrieveMedicalRecordContent } from "./action-frames/hf-outcome-trends/RetrieveMedicalRecordContent";
+import { af_RequestDisplayMedicalRecordContent } from "./action-frames/hf-outcome-trends/RequestDisplayMedicalRecordContent";
 
 // Initial Beliefs of Agent
 
@@ -60,6 +65,13 @@ const agentDTA = new ClinicianAgent(
     af_RetrieveAlertHistory,
     af_RequestDisplayAlertHistory,
     af_ConfigurePatient,
+
+    // HF-OTP-III
+    af_CreateMedicalRecord,
+    af_RetrieveMedicalRecords,
+    af_RequestDisplayMedicalRecords,
+    af_RetrieveMedicalRecordContent,
+    af_RequestDisplayMedicalRecordContent,
 
     // AT-CP-I
     af_RetrieveAlerts,

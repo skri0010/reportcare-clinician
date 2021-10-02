@@ -23,7 +23,7 @@ import {
   CreateMedicationInfoInput,
   MedicationInfo
 } from "aws/API";
-import { Storage } from "rc_agents/storage";
+import { LocalStorage } from "rc_agents/storage";
 import {
   setConfigurationSuccessful,
   setConfiguringPatient
@@ -57,6 +57,7 @@ class ConfigurePatient extends Activity {
         ];
 
       // Get medication configuration from facts
+      // If the clinician did not add any medication info, medConfiguration would just be an empty list
       const medConfiguration: MedInput[] =
         agentAPI.getFacts()[BeliefKeys.PATIENT]?.[
           PatientAttributes.MEDICATION_TO_CONFIGURE
@@ -69,7 +70,7 @@ class ConfigurePatient extends Activity {
       if (configuration && medConfiguration) {
         let configurationSuccessful = false; // Indicator of patient configuration is successful
         let medConfigurationSuccessful = false; // Indicator of medication configuration is successful
-
+        const medInfosCreated: MedicationInfo[] = []; // Stores all med infos using API call
         // Device is online
         if (isOnline) {
           // Updates patient info using configuration
@@ -77,56 +78,54 @@ class ConfigurePatient extends Activity {
             configuration
           );
 
-          // Creates medication info(s) from medConfiguration
-          medConfigurationSuccessful = await createMedicationConfiguration(
-            medConfiguration,
-            configuration.patientID
+          // Creates med info for each of the med config
+          const allMedInfoCreation = await Promise.all(
+            medConfiguration.map(async (medInfo) => {
+              const createMedInfoResponse =
+                createMedicationConfiguration(medInfo);
+              if (createMedInfoResponse) {
+                return createMedInfoResponse;
+              }
+            })
           );
+
+          // Check for each of the med info response returned after calling createMedicationConfiguration
+          // Only insert med info that is not null or undefined
+          if (allMedInfoCreation) {
+            allMedInfoCreation.forEach((medInfo) => {
+              if (medInfo) {
+                medInfosCreated.push(medInfo);
+              }
+            });
+          }
+
+          // All the med configs have been added into the DB successfully
+          if (medInfosCreated.length === medConfiguration.length) {
+            medConfigurationSuccessful = true;
+            // Stores the med info into patient details
+            await LocalStorage.setPatientMedInfo(
+              medInfosCreated,
+              configuration.patientID
+            );
+          }
         }
         // Device is offline: store patient configuration locally and update local patient details
         else if (!isOnline) {
-          // Add patient ID to each MedInput received from frontend
-          // then save the MedInput into the list of medication infos to sync
-          const allMedInfoToSync: MedInput[] = [];
-          medConfiguration.forEach((medInfo) => {
-            const medInfoToSync: MedInput = {
-              ...medInfo,
-              patientID: configuration.patientID
-            };
-            allMedInfoToSync.push(medInfoToSync);
-          });
-
           // Update local patient details
-          await Storage.setPatient(configuration);
+          await LocalStorage.setPatient(configuration);
 
           //  Update local medication info for the patient
-          await Storage.setPatientMedInfo(
-            allMedInfoToSync,
+          await LocalStorage.setPatientMedInfo(
+            medConfiguration,
             configuration.patientID
           );
 
           // Store patient configuration to be synced later on
-          await Storage.setPatientConfigurations([configuration]);
+          await LocalStorage.setPatientConfigurations([configuration]);
 
-          // Get all the current local medication infos to be synced
-          let localMedConfiguration =
-            await Storage.getPatientMedicationConfigurations();
-
-          // If there is no local medication infos to be synced, add a new object for them
-          if (!localMedConfiguration) {
-            localMedConfiguration = {};
-          }
-
-          // If the patient doesn't have an entry in the local medication infos to be synced,
-          // add an entry for the patient
-          if (!localMedConfiguration[configuration.patientID]) {
-            localMedConfiguration[configuration.patientID] = [];
-          }
-
-          // Save the medication infos to be synced into local storage
-          localMedConfiguration[configuration.patientID] = allMedInfoToSync;
-          await Storage.setPatientMedicationConfigurations(
-            localMedConfiguration
+          // Stores med configs to be synced later on
+          await LocalStorage.setPatientMedicationConfigurations(
+            medConfiguration
           );
 
           configurationSuccessful = true;
@@ -274,54 +273,37 @@ export const updatePatientConfiguration = async (
   }
 
   // Updates locally stored patient details
-  await Storage.setPatient(configuration);
+  await LocalStorage.setPatient(configuration);
 
   return updateSuccessful;
 };
 
 /**
  * Creates medication infos for the patient
- * @param medicationInfos a list of medication input from the frontend (can be an empty list)
- * @param patientID patient ID
- * @returns a boolean indicating the success or failure of the medication info creation
+ * @param medicationInfo single medication input entered by clinician
+ * @returns medication info created after API call
  */
 export const createMedicationConfiguration = async (
-  medicationInfos: MedInput[],
-  patientID: string
-): Promise<boolean> => {
-  let createMedInfoSuccessful = false;
+  medicationInfo: MedInput
+): Promise<MedicationInfo | null> => {
+  // Creates medication info to be inserted into DB
+  const medInfoToInsert: CreateMedicationInfoInput = {
+    name: medicationInfo.name,
+    dosage: medicationInfo.dosage,
+    frequency: medicationInfo.frequency,
+    records: JSON.stringify({}),
+    patientID: medicationInfo.patientID,
+    active: true
+  };
 
-  const allMedInfos: MedicationInfo[] = [];
+  // Make API call to create med info and insert into DB
+  const createMedInfoResponse = await createMedicationInfo(medInfoToInsert);
 
-  // Save each medication input into the DB
-  const allMedInfoCreation = await Promise.all(
-    medicationInfos.map(async (medInfo) => {
-      const medInfoToInsert: CreateMedicationInfoInput = {
-        name: medInfo.name,
-        dosage: medInfo.dosage,
-        frequency: medInfo.frequency,
-        records: JSON.stringify("{}"),
-        patientID: patientID,
-        active: true
-      };
-
-      const createMedInfoResponse = createMedicationInfo(medInfoToInsert);
-      return createMedInfoResponse;
-    })
-  );
-
-  if (allMedInfoCreation) {
-    allMedInfoCreation.forEach((medInfo) => {
-      if (medInfo.data.createMedicationInfo)
-        allMedInfos.push(medInfo.data.createMedicationInfo);
-    });
-    createMedInfoSuccessful = true;
+  if (createMedInfoResponse.data.createMedicationInfo) {
+    return createMedInfoResponse.data.createMedicationInfo;
   }
 
-  // Save the created medication infos into local storage
-  await Storage.setPatientMedInfo(allMedInfos, patientID);
-
-  return createMedInfoSuccessful;
+  return null;
 };
 
 // Preconditions

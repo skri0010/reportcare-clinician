@@ -22,7 +22,7 @@ import {
 /**
  * AsyncStorage access functions (SET, GET and REMOVE) with types
  */
-export const Storage = accessFunctions;
+export const LocalStorage = accessFunctions;
 
 // Keys for storing data locally in AsyncStorage
 export enum AsyncStorageKeys {
@@ -66,7 +66,7 @@ export type AsyncStorageType = {
     [patientId: string]: PatientDetails | undefined;
   };
   [AsyncStorageKeys.PATIENT_CONFIGURATIONS]: PatientInfo[];
-  [AsyncStorageKeys.MEDICATION_CONFIGURATIONS]: { [key: string]: MedInput[] };
+  [AsyncStorageKeys.MEDICATION_CONFIGURATIONS]: MedInput[];
   [AsyncStorageKeys.ALERT_INFOS]: ProcessedAlertInfos;
   [AsyncStorageKeys.TODOS]: LocalTodo[];
   [AsyncStorageKeys.TODO_DETAILS]: LocalTodo;

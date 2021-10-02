@@ -251,10 +251,19 @@
     "AddMedicalRecordCard": {
       "Title": "Title",
       "TitleInputPlaceholder": "Give the medical record a name (eg Family Background)",
+      "TitleError": "Please enter a valid title",
       "Description": "Description",
-      "DescriptionInputPlaceholder": "What is the content of the medical record?"
+      "DescriptionInputPlaceholder": "What is the content of the medical record?",
+      "FileUpload": "File Upload",
+      "DragAndDropFile": "Drag and Drop file",
+      "DropFileHere": "Drop file here",
+      "Or": "Or",
+      "BrowseFiles": "Browse files",
+      "MultipleFileError": "You can only upload one file at a time",
+      "MedicalRecordSavedSuccessfully": "Medical record has been saved successfully"
     },
-    "NoAlertHistory": "The patient does not have any alert histories currently!"
+    "NoAlertHistory": "The patient does not have any alert histories currently!",
+    "NoMedicalRecords": "No medical records found!"
   },
   "Patient_Info": {
     "Male": "Male",

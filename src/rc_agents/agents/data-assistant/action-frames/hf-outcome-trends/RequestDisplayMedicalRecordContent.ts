@@ -1,40 +1,37 @@
 import {
   Actionframe,
-  Communicate,
   Agent,
   Belief,
+  Communicate,
   Precondition,
   ResettablePrecondition
 } from "agents-framework";
 import {
-  ProcedureConst,
+  CommonAttributes,
   Performative,
-  CommonAttributes
+  ProcedureConst
 } from "agents-framework/Enums";
 import {
   ActionFrameIDs,
   AgentIDs,
   BeliefKeys,
-  ClinicianAttributes,
+  PatientAttributes,
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
 
 /**
- * Class to represent the activity for requesting display of clinician contacts
- * This happens in Procedure Storing Data (SRD-IV) Clinician Procedure
+ * Class to represent the activity for requesting the display of patient's medical record content
+ * This happens in Procedure HF Outcome Trends (HF-OTP-III)
  */
-class RequestClinicianContactsDisplay extends Communicate {
-  /**
-   * Constructor for the RequestAlertInfoDisplay class
-   */
+class RequestDisplayMedicalRecordContent extends Communicate {
   constructor() {
     super(
-      ActionFrameIDs.DTA.REQUEST_DISPLAY_CLINICIAN_CONTACTS,
+      ActionFrameIDs.DTA.REQUEST_DISPLAY_MEDICAL_RECORD_CONTENT,
       Performative.REQUEST,
-      // Triggers Display Clinician contacts action frame of UXSA
+      //   Belief to trigger the UXSA action frame of DisplayMedicalRecordContent
       new Belief(
-        BeliefKeys.CLINICIAN,
-        ClinicianAttributes.CLINICIAN_CONTACTS_RETRIEVED,
+        BeliefKeys.PATIENT,
+        PatientAttributes.MEDICAL_RECORD_CONTENT_RETRIEVED,
         true
       ),
       [AgentIDs.UXSA]
@@ -42,11 +39,12 @@ class RequestClinicianContactsDisplay extends Communicate {
   }
 
   /**
-   * Perform the activity
+   * Perform this activity
    * @param {Agent} agent - agent executing the activity
    */
   async doActivity(agent: Agent): Promise<void> {
     try {
+      // Reset preconditions
       await super.doActivity(agent, [rule3]);
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -58,24 +56,23 @@ class RequestClinicianContactsDisplay extends Communicate {
 // Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.SRD_IV,
+  ProcedureAttributes.HF_OTP_III,
   ProcedureConst.ACTIVE
 );
 const rule2 = new Precondition(
   AgentIDs.DTA,
   CommonAttributes.LAST_ACTIVITY,
-  ActionFrameIDs.DTA.RETRIEVE_CLINICIAN_CONTACTS
+  ActionFrameIDs.DTA.RETRIEVE_MEDICAL_RECORD_CONTENT
 );
-
 const rule3 = new ResettablePrecondition(
-  BeliefKeys.CLINICIAN,
-  ClinicianAttributes.CLINICIAN_CONTACTS_RETRIEVED,
+  BeliefKeys.PATIENT,
+  PatientAttributes.MEDICAL_RECORD_CONTENT_RETRIEVED,
   true
 );
 
 // Actionframe
-export const af_RequestClinicianContactDisplay = new Actionframe(
-  `AF_${ActionFrameIDs.DTA.REQUEST_DISPLAY_CLINICIAN_CONTACTS}`,
+export const af_RequestDisplayMedicalRecordContent = new Actionframe(
+  `AF_${ActionFrameIDs.DTA.REQUEST_DISPLAY_MEDICAL_RECORD_CONTENT}`,
   [rule1, rule2, rule3],
-  new RequestClinicianContactsDisplay()
+  new RequestDisplayMedicalRecordContent()
 );

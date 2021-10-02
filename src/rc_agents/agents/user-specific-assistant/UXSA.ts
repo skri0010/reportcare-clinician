@@ -15,6 +15,8 @@ import { ClinicianAgent } from "rc_agents/clinician_framework/ClinicianAgent";
 import { af_DisplayAlertHistory } from "./action-frames/hf-outcome-trends/DisplayAlertHistory";
 import { af_DisplayClinicianContacts } from "./action-frames/storing-data/DisplayClinicianContacts";
 import { af_DisplayRefreshedAlerts } from "./action-frames/triage-alert-hf-clinic/DisplayRefreshedAlerts";
+import { af_DisplayMedicalRecords } from "./action-frames/hf-outcome-trends/DisplayMedicalRecords";
+import { af_DisplayMedicalRecordContent } from "./action-frames/hf-outcome-trends/DisplayMedicalRecordContent";
 
 // Initial Beliefs of Agent
 const belief1 = new Belief(AgentIDs.UXSA, CommonAttributes.LAST_ACTIVITY, null);
@@ -31,6 +33,10 @@ const agentUXSA = new ClinicianAgent(
     // HF-OTP-II
     af_VisualizeParameters,
     af_DisplayAlertHistory,
+
+    // HF-OTP-III
+    af_DisplayMedicalRecords,
+    af_DisplayMedicalRecordContent,
 
     // SRD-I
     af_DisplayPendingPatientAssignments,
