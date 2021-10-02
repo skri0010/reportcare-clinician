@@ -929,6 +929,29 @@ export const deleteClinicianPatientMap = /* GraphQL */ `
     }
   }
 `;
+export const deletePatientAssignment = /* GraphQL */ `
+  mutation DeletePatientAssignment(
+    $input: DeletePatientAssignmentInput!
+    $condition: ModelPatientAssignmentConditionInput
+  ) {
+    deletePatientAssignment(input: $input, condition: $condition) {
+      id
+      patientID
+      clinicianID
+      patientName
+      pending
+      resolution
+      reassignToClinicianID
+      adminCompleted
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      adminReassignFromClinicianID
+    }
+  }
+`;
 export const createPatientAssignment = /* GraphQL */ `
   mutation CreatePatientAssignment(
     $input: CreatePatientAssignmentInput!
@@ -942,13 +965,13 @@ export const createPatientAssignment = /* GraphQL */ `
       pending
       resolution
       reassignToClinicianID
-      adminReassignFromClinicianID
+      adminCompleted
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
-      adminCompleted
+      adminReassignFromClinicianID
     }
   }
 `;
@@ -965,36 +988,13 @@ export const updatePatientAssignment = /* GraphQL */ `
       pending
       resolution
       reassignToClinicianID
-      adminReassignFromClinicianID
+      adminCompleted
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
-      adminCompleted
-    }
-  }
-`;
-export const deletePatientAssignment = /* GraphQL */ `
-  mutation DeletePatientAssignment(
-    $input: DeletePatientAssignmentInput!
-    $condition: ModelPatientAssignmentConditionInput
-  ) {
-    deletePatientAssignment(input: $input, condition: $condition) {
-      id
-      patientID
-      clinicianID
-      patientName
-      pending
-      resolution
-      reassignToClinicianID
       adminReassignFromClinicianID
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
-      adminCompleted
     }
   }
 `;

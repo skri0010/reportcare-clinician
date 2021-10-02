@@ -1376,78 +1376,6 @@ export const syncClinicianPatientMaps = /* GraphQL */ `
     }
   }
 `;
-export const listPendingPatientAssignments = /* GraphQL */ `
-  query ListPendingPatientAssignments(
-    $clinicianID: String
-    $pending: ModelStringKeyConditionInput
-    $sortDirection: ModelSortDirection
-    $filter: ModelPatientAssignmentFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listPendingPatientAssignments(
-      clinicianID: $clinicianID
-      pending: $pending
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        patientID
-        clinicianID
-        patientName
-        pending
-        resolution
-        reassignToClinicianID
-        adminReassignFromClinicianID
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-        adminCompleted
-      }
-      nextToken
-      startedAt
-    }
-  }
-`;
-export const syncPatientAssignments = /* GraphQL */ `
-  query SyncPatientAssignments(
-    $filter: ModelPatientAssignmentFilterInput
-    $limit: Int
-    $nextToken: String
-    $lastSync: AWSTimestamp
-  ) {
-    syncPatientAssignments(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      lastSync: $lastSync
-    ) {
-      items {
-        id
-        patientID
-        clinicianID
-        patientName
-        pending
-        resolution
-        reassignToClinicianID
-        adminReassignFromClinicianID
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-        adminCompleted
-      }
-      nextToken
-      startedAt
-    }
-  }
-`;
 export const getPatientAssignment = /* GraphQL */ `
   query GetPatientAssignment($patientID: String!, $clinicianID: String!) {
     getPatientAssignment(patientID: $patientID, clinicianID: $clinicianID) {
@@ -1458,13 +1386,13 @@ export const getPatientAssignment = /* GraphQL */ `
       pending
       resolution
       reassignToClinicianID
-      adminReassignFromClinicianID
+      adminCompleted
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
-      adminCompleted
+      adminReassignFromClinicianID
     }
   }
 `;
@@ -1493,13 +1421,85 @@ export const listPatientAssignments = /* GraphQL */ `
         pending
         resolution
         reassignToClinicianID
-        adminReassignFromClinicianID
+        adminCompleted
         _version
         _deleted
         _lastChangedAt
         createdAt
         updatedAt
+        adminReassignFromClinicianID
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const listPendingPatientAssignments = /* GraphQL */ `
+  query ListPendingPatientAssignments(
+    $clinicianID: String
+    $pending: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelPatientAssignmentFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listPendingPatientAssignments(
+      clinicianID: $clinicianID
+      pending: $pending
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        patientID
+        clinicianID
+        patientName
+        pending
+        resolution
+        reassignToClinicianID
         adminCompleted
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+        adminReassignFromClinicianID
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const syncPatientAssignments = /* GraphQL */ `
+  query SyncPatientAssignments(
+    $filter: ModelPatientAssignmentFilterInput
+    $limit: Int
+    $nextToken: String
+    $lastSync: AWSTimestamp
+  ) {
+    syncPatientAssignments(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      lastSync: $lastSync
+    ) {
+      items {
+        id
+        patientID
+        clinicianID
+        patientName
+        pending
+        resolution
+        reassignToClinicianID
+        adminCompleted
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+        adminReassignFromClinicianID
       }
       nextToken
       startedAt
