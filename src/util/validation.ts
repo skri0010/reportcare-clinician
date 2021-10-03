@@ -89,9 +89,12 @@ export const validateMedDosageInput = (
 export const validateMedDosage = (medName: string, dosage: number): boolean => {
   // Assumed medication dosage (in mg)
   const medicine = mockMedDosages.filter((t) => t.name === medName);
-  const minDosage = medicine[0].dosage.min;
-  const maxDosage = medicine[0].dosage.max;
-  return dosage >= minDosage && dosage <= maxDosage;
+  if (medicine) {
+    const minDosage = medicine[0].dosage.min;
+    const maxDosage = medicine[0].dosage.max;
+    return dosage >= minDosage && dosage <= maxDosage;
+  }
+  return false;
 };
 
 export const validateMedFreqInput = (frequency: string): boolean => {
