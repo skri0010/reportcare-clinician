@@ -39,7 +39,7 @@ class RequestDisplayTodoDetails extends Communicate {
   async doActivity(agent: Agent): Promise<void> {
     try {
       await super.doActivity(agent, [rule2]);
-      console.log(agentUXSA.getBeliefs());
+      // console.log(agentUXSA.getBeliefs());
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);

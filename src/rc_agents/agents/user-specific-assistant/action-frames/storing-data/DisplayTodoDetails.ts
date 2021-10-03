@@ -36,7 +36,7 @@ class DisplayTodoDetails extends Activity {
   async doActivity(agent: Agent): Promise<void> {
     // reset preconditions
     await super.doActivity(agent, [rule2]);
-    console.log("DISPLAY TODO DETAILS");
+    // console.log("DISPLAY TODO DETAILS");
     try {
       // Get fact with todo details
       const todoDetails: LocalTodo =

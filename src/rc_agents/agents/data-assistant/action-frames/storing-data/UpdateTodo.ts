@@ -60,7 +60,7 @@ class UpdateTodo extends Activity {
       const clinicianId = await LocalStorage.getClinicianID();
 
       if (todoInput && !todoInput.id) {
-        console.log("oh no");
+        // console.log("oh no");
         // Todo was created offline and not synced: Triggers CreateTodo
         if (todoInput.alertId) {
           const localUnsyncTodos = await LocalStorage.getTodoFromAlertID(
@@ -76,7 +76,7 @@ class UpdateTodo extends Activity {
               : todoInput.createdAt;
             todoInput.createdAt = localUnsyncTodo.createdAt;
             todoInput.toSync = true;
-            console.log(todoInput);
+            // console.log(todoInput);
           }
         }
 
@@ -90,7 +90,7 @@ class UpdateTodo extends Activity {
       } else if (todoInput && todoInput.id && clinicianId) {
         let toSync: boolean | undefined;
 
-        console.log("hello");
+        // console.log("hello");
         // Constructs UpdateTodoInput to be updated
         const todoToUpdate: UpdateTodoInput = {
           id: todoInput.id,
