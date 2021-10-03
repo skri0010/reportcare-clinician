@@ -7,6 +7,7 @@ import {
   ResettablePrecondition
 } from "agents-framework";
 import { ProcedureConst, Performative } from "agents-framework/Enums";
+import { agentUXSA } from "rc_agents/agents";
 import {
   ActionFrameIDs,
   AgentIDs,
@@ -38,6 +39,7 @@ class RequestDisplayTodoDetails extends Communicate {
   async doActivity(agent: Agent): Promise<void> {
     try {
       await super.doActivity(agent, [rule2]);
+      console.log(agentUXSA.getBeliefs());
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);

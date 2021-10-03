@@ -24,7 +24,7 @@ import {
   AlertInfo,
   AlertStatus,
   LocalTodo,
-  TodoInput,
+  // TodoInput,
   TodoStatus
 } from "rc_agents/model";
 import { CreateTodoInput } from "aws/API";
@@ -51,16 +51,16 @@ class CreateTodo extends Activity {
 
     try {
       // Gets Todo from facts
-      const todoInput: TodoInput =
+      const todoInput: LocalTodo =
         facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.TODO];
 
       // Gets locally stored clinicianId
       const clinicianId = await LocalStorage.getClinicianID();
-      let alertTodoUpdate: boolean = false;
+      const alertTodoUpdate: boolean = false;
 
       if (todoInput && clinicianId) {
         let toSync: boolean | undefined;
-        let alertTodoExists = false;
+        // let alertTodoExists = false;
 
         // Constructs CreateTodoInput to be inserted
         const todoToInsert: CreateTodoInput = {
@@ -82,7 +82,7 @@ class CreateTodo extends Activity {
         }
 
         // Triggers associated Alert to be updated if any
-        if (todoInput.alert || todoInput.alertId) {
+        if (todoInput.alertId) {
           let alertToUpdate: AlertInfo | undefined;
 
           // Create Todo for the first time
@@ -92,16 +92,16 @@ class CreateTodo extends Activity {
             delete todoInput.alert;
           }
           // When attempts to update an unsynced Todo
-          else if (todoInput.alertId && todoInput.patientId) {
-            // Query current AlertInfo from local storage
-            const alertInfo = await LocalStorage.getAlertInfoByPatientId(
-              todoInput.alertId,
-              todoInput.patientId
-            );
-            if (alertInfo) {
-              alertToUpdate = alertInfo;
-            }
-          }
+          // else if (todoInput.alertId && todoInput.patientId) {
+          //   // Query current AlertInfo from local storage
+          //   const alertInfo = await LocalStorage.getAlertInfoByPatientId(
+          //     todoInput.alertId,
+          //     todoInput.patientId
+          //   );
+          //   if (alertInfo) {
+          //     alertToUpdate = alertInfo;
+          //   }
+          // }
 
           if (alertToUpdate) {
             todoToInsert.alertID = alertToUpdate.id;
@@ -143,48 +143,6 @@ class CreateTodo extends Activity {
          */
         if (facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
           if (todoInput.alertId) {
-            // Queries existing Todo with the same Alert
-            const query = await listTodosByAlertID({
-              clinicianID: clinicianId,
-              alertID: { eq: todoInput.alertId }
-            });
-            if (query.data.listTodosByAlertID?.items) {
-              const results = query.data.listTodosByAlertID?.items;
-              if (results && results.length > 0) {
-                alertTodoExists = true;
-                const existingTodo = results[0]!;
-
-                // Updates input to be used for updating Todo
-                todoInput.id = existingTodo.id;
-                todoInput._version = existingTodo._version;
-                todoInput.lastModified = todoInput.lastModified
-                  ? todoInput.lastModified
-                  : todoInput.createdAt;
-                todoInput.createdAt = existingTodo.createdAt;
-
-                // Add the Todo associated with an alert into facts
-                alertTodoUpdate = true;
-                agentAPI.addFact(
-                  new Belief(
-                    BeliefKeys.CLINICIAN,
-                    ClinicianAttributes.ALERT_TODO,
-                    todoInput
-                  ),
-                  false
-                );
-
-                // Triggers UpdateTodo
-                agent.addBelief(
-                  new Belief(
-                    BeliefKeys.CLINICIAN,
-                    ClinicianAttributes.UPDATE_TODO,
-                    true
-                  )
-                );
-              }
-            }
-          }
-          if (!alertTodoExists) {
             // Inserts Todo
             const createResponse = await createTodo(todoToInsert);
             if (createResponse.data.createTodo) {
@@ -195,7 +153,59 @@ class CreateTodo extends Activity {
               // Updates to indicate that Todo is successfully inserted
               toSync = false;
             }
+            // Queries existing Todo with the same Alert
+            // const query = await listTodosByAlertID({
+            //   clinicianID: clinicianId,
+            //   alertID: { eq: todoInput.alertId }
+            // });
+            // if (query.data.listTodosByAlertID?.items) {
+            //   const results = query.data.listTodosByAlertID?.items;
+            //   if (results && results.length > 0) {
+            //     alertTodoExists = true;
+            //     const existingTodo = results[0]!;
+
+            //     // Updates input to be used for updating Todo
+            //     todoInput.id = existingTodo.id;
+            //     todoInput._version = existingTodo._version;
+            //     todoInput.lastModified = todoInput.lastModified
+            //       ? todoInput.lastModified
+            //       : todoInput.createdAt;
+            //     todoInput.createdAt = existingTodo.createdAt;
+
+            //     // Add the Todo associated with an alert into facts
+            //     alertTodoUpdate = true;
+            //     agentAPI.addFact(
+            //       new Belief(
+            //         BeliefKeys.CLINICIAN,
+            //         ClinicianAttributes.ALERT_TODO,
+            //         todoInput
+            //       ),
+            //       false
+            //     );
+
+            //     // Triggers UpdateTodo
+            //     agent.addBelief(
+            //       new Belief(
+            //         BeliefKeys.CLINICIAN,
+            //         ClinicianAttributes.UPDATE_TODO,
+            //         true
+            //       )
+            //     );
+            //   }
+            // }
           }
+          // if (!alertTodoExists) {
+          //   // Inserts Todo
+          //   const createResponse = await createTodo(todoToInsert);
+          //   if (createResponse.data.createTodo) {
+          //     // Gets newly inserted Todo to update local Todo id
+          //     const insertedTodo = createResponse.data.createTodo;
+          //     todoInput.id = insertedTodo.id;
+
+          //     // Updates to indicate that Todo is successfully inserted
+          //     toSync = false;
+          //   }
+          // }
         } else {
           // Device is offline: Todo requires syncing
           toSync = true;
@@ -235,15 +245,15 @@ class CreateTodo extends Activity {
 
         // Do not request for todo display yet when the todo is associated with an alert
         // The display will only requested in update todo procedure for todos associated with an alert
-        if (!alertTodoUpdate) {
-          agent.addBelief(
-            new Belief(
-              BeliefKeys.CLINICIAN,
-              ClinicianAttributes.TODOS_UPDATED,
-              true
-            )
-          );
-        }
+        // if (!alertTodoUpdate) {
+        agent.addBelief(
+          new Belief(
+            BeliefKeys.CLINICIAN,
+            ClinicianAttributes.TODOS_UPDATED,
+            true
+          )
+        );
+        // }
       }
     } catch (error) {
       // eslint-disable-next-line no-console

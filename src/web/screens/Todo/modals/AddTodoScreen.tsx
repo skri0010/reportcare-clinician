@@ -10,7 +10,8 @@ import { ScaledSheet, ms } from "react-native-size-matters";
 import { H3 } from "components/Text";
 import { RootState, select, useDispatch } from "util/useRedux";
 import i18n from "util/language/i18n";
-import { TodoInput } from "rc_agents/model";
+// import { TodoInput } from "rc_agents/model";
+import { LocalTodo } from "rc_agents/model";
 import { useToast } from "react-native-toast-notifications";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AgentTrigger } from "rc_agents/trigger";
@@ -63,12 +64,13 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
   // Triggers CreateTodo procedure
   const createTodo = () => {
     const inAlertScreen = route.name === ScreenName.ALERTS;
-    const todoInput: TodoInput = {
+    const todoInput: LocalTodo = {
       title: titleInput,
       patientName: patientInput,
       notes: noteInput,
       completed: false,
       createdAt: new Date().toISOString(),
+      lastModified: new Date().toISOString(),
       _version: 1,
       // When the todo is created in the Alert screen,
       // include the patient info, alert info, alert id and risk level
@@ -78,7 +80,13 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
       riskLevel: inAlertScreen && alertInfo ? alertInfo.riskLevel : undefined
     };
 
-    AgentTrigger.triggerCreateTodo(todoInput);
+    if (alertInfo) {
+      if (alertInfo.completed) {
+        AgentTrigger.triggerUpdateTodo(todoInput);
+      } else if (alertInfo.pending) {
+        AgentTrigger.triggerCreateTodo(todoInput);
+      }
+    }
   };
 
   // Detects completion of CreateTodo procedure and shows the appropriate toast.

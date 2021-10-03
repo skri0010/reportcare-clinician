@@ -20,7 +20,7 @@ import { store } from "util/useRedux";
 import { setProcedureSuccessful } from "ic-redux/actions/agents/actionCreator";
 import { agentNWA } from "rc_agents/agents";
 import { getTodo, updateTodo } from "aws";
-import { LocalTodo, TodoStatus, TodoInput } from "rc_agents/model";
+import { LocalTodo, TodoStatus } from "rc_agents/model";
 import { UpdateTodoInput } from "aws/API";
 
 /**
@@ -43,16 +43,16 @@ class UpdateTodo extends Activity {
 
     try {
       // Gets Todo details to be updated
-      let todoInput: TodoInput =
+      const todoInput: LocalTodo =
         facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.TODO];
 
-      const alertTodoInput: TodoInput =
-        facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.ALERT_TODO];
+      // const alertTodoInput: LocalTodo =
+      //   facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.ALERT_TODO];
 
       // Todo associated with alert
-      if (alertTodoInput) {
-        todoInput = alertTodoInput;
-      }
+      // if (alertTodoInput) {
+      //   todoInput = alertTodoInput;
+      // }
 
       const isOnline: boolean = facts[BeliefKeys.APP]?.[AppAttributes.ONLINE];
 
@@ -60,17 +60,37 @@ class UpdateTodo extends Activity {
       const clinicianId = await LocalStorage.getClinicianID();
 
       if (todoInput && !todoInput.id) {
+        console.log("oh no");
         // Todo was created offline and not synced: Triggers CreateTodo
-        agent.addBelief(
-          new Belief(
-            BeliefKeys.CLINICIAN,
-            ClinicianAttributes.CREATE_TODO,
-            true
-          )
-        );
+        if (todoInput.alertId) {
+          const localUnsyncTodos = await LocalStorage.getTodoFromAlertID(
+            todoInput.alertId
+          );
+
+          if (localUnsyncTodos) {
+            const localUnsyncTodo = localUnsyncTodos[0];
+            todoInput.id = localUnsyncTodo.id;
+            todoInput._version = localUnsyncTodo._version;
+            todoInput.lastModified = todoInput.lastModified
+              ? todoInput.lastModified
+              : todoInput.createdAt;
+            todoInput.createdAt = localUnsyncTodo.createdAt;
+            todoInput.toSync = true;
+            console.log(todoInput);
+          }
+        }
+
+        // agent.addBelief(
+        //   new Belief(
+        //     BeliefKeys.CLINICIAN,
+        //     ClinicianAttributes.CREATE_TODO,
+        //     true
+        //   )
+        // );
       } else if (todoInput && todoInput.id && clinicianId) {
         let toSync: boolean | undefined;
 
+        console.log("hello");
         // Constructs UpdateTodoInput to be updated
         const todoToUpdate: UpdateTodoInput = {
           id: todoInput.id,

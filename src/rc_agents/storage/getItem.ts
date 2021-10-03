@@ -211,6 +211,16 @@ export const getTodo = async (
   return null;
 };
 
+export const getTodoFromAlertID = async (
+  alertID: string
+): Promise<AsyncStorageType[AsyncStorageKeys.TODOS] | null> => {
+  const localData = await getTodos();
+  if (localData) {
+    return localData.filter((t) => t.alertId === alertID);
+  }
+  return null;
+};
+
 export const getTodoDetails = async (
   id: string
 ): Promise<AsyncStorageType[AsyncStorageKeys.TODO_DETAILS] | undefined> => {

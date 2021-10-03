@@ -6,7 +6,8 @@ import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { RootState, select, store } from "util/useRedux";
 import i18n from "util/language/i18n";
-import { LocalTodo, TodoStatus, TodoInput } from "rc_agents/model";
+// import { LocalTodo, TodoStatus, TodoInput } from "rc_agents/model";
+import { LocalTodo, TodoStatus } from "rc_agents/model";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import {
   setProcedureOngoing,
@@ -28,7 +29,7 @@ export const onDonePress = (item: LocalTodo): void => {
   store.dispatch(setSubmittingTodo(true));
 
   // Creates Todo object for updating
-  const todoToUpdate: TodoInput = {
+  const todoToUpdate: LocalTodo = {
     ...item,
     completed: true,
     lastModified: new Date().toISOString()

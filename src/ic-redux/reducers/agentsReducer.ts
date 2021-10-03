@@ -355,6 +355,11 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
       return { ...state, updatedTodo: action.payload.updatedTodo };
     case actionNames.SET_TODO_DETAILS:
       return { ...state, todoDetails: action.payload.todoDetails };
+    case actionNames.SET_FETCHING_TODO_DETAILS:
+      return {
+        ...state,
+        fetchingTodoDetails: action.payload.fetchingTodoDetails
+      };
     default:
       return state;
   }

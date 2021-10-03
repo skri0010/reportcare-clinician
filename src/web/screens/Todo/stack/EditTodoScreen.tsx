@@ -14,7 +14,7 @@ import { H3 } from "components/Text";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import i18n from "util/language/i18n";
-import { LocalTodo, TodoInput } from "rc_agents/model";
+import { LocalTodo } from "rc_agents/model";
 import {
   setProcedureOngoing,
   setSubmittingTodo,
@@ -49,7 +49,7 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
     dispatch(setProcedureOngoing(true));
     dispatch(setSubmittingTodo(true));
 
-    const todoToUpdate: TodoInput = {
+    const todoToUpdate: LocalTodo = {
       ...item,
       title: titleInput,
       notes: noteInput,

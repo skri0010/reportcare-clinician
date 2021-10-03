@@ -13,10 +13,11 @@ import {
   AlertInfo,
   FetchAlertsMode,
   PatientAssignmentResolution,
-  TodoInput,
+  // TodoInput,
   TodoStatus,
   MedicalRecordInput,
-  IcdCrtRecordInput
+  IcdCrtRecordInput,
+  LocalTodo
 } from "rc_agents/model";
 import {
   AlertNotification,
@@ -190,7 +191,7 @@ export const triggerRetrieveTodos = (status: TodoStatus): void => {
 };
 
 // SRD-II: Triggers CreateTodo of DTA
-export const triggerCreateTodo = (input: TodoInput): void => {
+export const triggerCreateTodo = (input: LocalTodo): void => {
   agentAPI.addFact(
     new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.TODO, input),
     false
@@ -208,7 +209,7 @@ export const triggerCreateTodo = (input: TodoInput): void => {
 };
 
 // SRD-II: Triggers UpdateTodo of DTA
-export const triggerUpdateTodo = (input: TodoInput): void => {
+export const triggerUpdateTodo = (input: LocalTodo): void => {
   agentAPI.addFact(
     new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.TODO, input),
     false

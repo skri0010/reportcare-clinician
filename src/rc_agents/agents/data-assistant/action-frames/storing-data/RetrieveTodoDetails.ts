@@ -23,6 +23,8 @@ import {
 } from "rc_agents/model";
 import { Todo } from "aws/API";
 import { getTodo } from "aws/TypedAPI/getQueries";
+import { store } from "util/useRedux";
+import { setFetchingTodoDetails } from "ic-redux/actions/agents/actionCreator";
 
 /**
  * Class representing an activity that triggers the display of todo details.
@@ -85,7 +87,7 @@ class RetrieveTodoDetails extends Activity {
               );
             }
             // Save to local storage
-            await LocalStorage.setTodo(todoToDispatch);
+            // await LocalStorage.setTodo(todoToDispatch);
 
             agentAPI.addFact(
               new Belief(
@@ -130,6 +132,7 @@ class RetrieveTodoDetails extends Activity {
         }
       }
 
+      store.dispatch(setFetchingTodoDetails(false));
       /**
        * Makes sure that the procedure stays active
        * Since it could be ended by DisplayTodos after the Todo list finished its display

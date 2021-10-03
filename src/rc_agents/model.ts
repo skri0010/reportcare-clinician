@@ -179,12 +179,13 @@ export interface LocalTodo {
   patientName: string;
   notes: string;
   completed: boolean;
+  alert?: AlertInfo;
   alertId?: string;
   patientId?: string;
   riskLevel?: RiskLevel;
   createdAt: string;
   lastModified?: string;
-  toSync: boolean;
+  toSync?: boolean;
   _version: number;
 }
 
