@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import {
   Actionframe,
   Agent,
@@ -22,6 +23,8 @@ import { store } from "util/useRedux";
 import { agentNWA } from "rc_agents/agents";
 import { setPendingPatientAssignments } from "ic-redux/actions/agents/actionCreator";
 import { PatientAssignment } from "aws/API";
+import { PatientAssignmentStatus } from "rc_agents/model";
+import { Auth } from "@aws-amplify/auth";
 /**
  * Class to represent an activity for processing patient assignment subscription.
  * This happens in Procedure Storing Data (SRD-I).
@@ -52,43 +55,57 @@ class ProcessPatientAssignmentSubscription extends Activity {
       if (
         patientAssignmentSubscription &&
         clinicianId &&
-        patientAssignmentSubscription.clinicianID === clinicianId &&
-        patientAssignmentSubscription.resolution === null
+        patientAssignmentSubscription.clinicianID === clinicianId
       ) {
         if (facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
-          // Device is online: retrieves patient assignment
-          const query = await getPatientAssignment({
-            clinicianID: patientAssignmentSubscription.clinicianID,
-            patientID: patientAssignmentSubscription.patientID
-          });
+          // Case when patient assignment is created or reassigned to you
+          if (patientAssignmentSubscription.resolution === null) {
+            // Device is online: retrieves patient assignment
+            const query = await getPatientAssignment({
+              clinicianID: patientAssignmentSubscription.clinicianID,
+              patientID: patientAssignmentSubscription.patientID
+            });
 
-          if (query.data.getPatientAssignment) {
-            const patientAssignmentToDispatch = query.data.getPatientAssignment;
-            // Saves patient assignment locally
-            await LocalStorage.setPendingPatientAssignment(
-              patientAssignmentToDispatch
-            );
-
-            // Adds to the front of current list of pending patient assignments
-            let patientAssignmentExists: PatientAssignment | undefined;
-            let { pendingPatientAssignments } = store.getState().agents;
-            if (pendingPatientAssignments) {
-              // Check if patient assignment already exists
-              patientAssignmentExists = pendingPatientAssignments.find(
-                (item) =>
-                  item.patientID === patientAssignmentSubscription.patientID
+            if (query.data.getPatientAssignment) {
+              const patientAssignmentToDispatch =
+                query.data.getPatientAssignment;
+              // Saves patient assignment locally
+              await LocalStorage.setPendingPatientAssignment(
+                patientAssignmentToDispatch
               );
-            } else {
-              pendingPatientAssignments = [];
-            }
 
-            if (!patientAssignmentExists) {
-              pendingPatientAssignments.unshift(patientAssignmentToDispatch);
-              // Dispatch updated list of pending patient assignments
-              store.dispatch(
-                setPendingPatientAssignments(pendingPatientAssignments)
-              );
+              // Adds to the front of current list of pending patient assignments
+              let patientAssignmentExists: PatientAssignment | undefined;
+              let { pendingPatientAssignments } = store.getState().agents;
+              if (pendingPatientAssignments) {
+                // Check if patient assignment already exists
+                patientAssignmentExists = pendingPatientAssignments.find(
+                  (item) =>
+                    item.patientID === patientAssignmentSubscription.patientID
+                );
+              } else {
+                pendingPatientAssignments = [];
+              }
+
+              if (!patientAssignmentExists) {
+                pendingPatientAssignments.unshift(patientAssignmentToDispatch);
+                // Dispatch updated list of pending patient assignments
+                store.dispatch(
+                  setPendingPatientAssignments(pendingPatientAssignments)
+                );
+              }
             }
+          }
+          // case when you have approved patient Assignment
+          else if (
+            patientAssignmentSubscription.resolution ===
+              PatientAssignmentStatus.APPROVED &&
+            patientAssignmentSubscription.adminCompleted
+          ) {
+            // Get new token
+            const lol = await Auth.currentAuthenticatedUser();
+            console.log("Retrieved new user token");
+            console.log(lol);
           }
         } else {
           // Device is offline: Store patient assignment subscription locally
