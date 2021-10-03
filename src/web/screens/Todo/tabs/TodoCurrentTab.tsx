@@ -53,11 +53,6 @@ export const TodoCurrentTab: FC<TodoCurrentTabProps> = ({
     setTodoSelected(item);
   }
 
-  // Triggers retrieval of pending Todos
-  useEffect(() => {
-    AgentTrigger.triggerRetrieveTodos(TodoStatus.PENDING);
-  }, []);
-
   return (
     <ScreenWrapper
       style={{ backgroundColor: colors.secondaryWebBackgroundColor }}

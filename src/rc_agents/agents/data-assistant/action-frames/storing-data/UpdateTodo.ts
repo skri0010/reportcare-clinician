@@ -46,27 +46,24 @@ class UpdateTodo extends Activity {
       const todoInput: LocalTodo =
         facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.TODO];
 
-      // const alertTodoInput: LocalTodo =
-      //   facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.ALERT_TODO];
-
-      // Todo associated with alert
-      // if (alertTodoInput) {
-      //   todoInput = alertTodoInput;
-      // }
-
       const isOnline: boolean = facts[BeliefKeys.APP]?.[AppAttributes.ONLINE];
 
       // Gets locally stored clinicianId
       const clinicianId = await LocalStorage.getClinicianID();
 
       if (todoInput && !todoInput.id) {
-        // console.log("oh no");
-        // Todo was created offline and not synced: Triggers CreateTodo
+        /**
+         * This section handles updating of todo when the todo is either:
+         * 1. Created offline and not synced
+         * 2. Created from an already completed alert
+         */
         if (todoInput.alertId) {
+          // Get the todo based on the alert ID of the alert associated with the todo
           const localUnsyncTodos = await LocalStorage.getTodoFromAlertID(
             todoInput.alertId
           );
 
+          // Update existing and outdated todo in local storage with the updated todo
           if (localUnsyncTodos) {
             const localUnsyncTodo = localUnsyncTodos[0];
             todoInput.id = localUnsyncTodo.id;
@@ -76,21 +73,42 @@ class UpdateTodo extends Activity {
               : todoInput.createdAt;
             todoInput.createdAt = localUnsyncTodo.createdAt;
             todoInput.toSync = true;
-            // console.log(todoInput);
           }
-        }
 
-        // agent.addBelief(
-        //   new Belief(
-        //     BeliefKeys.CLINICIAN,
-        //     ClinicianAttributes.CREATE_TODO,
-        //     true
-        //   )
-        // );
-      } else if (todoInput && todoInput.id && clinicianId) {
+          // Update alert version etc
+          // Adds AlertInfo to facts to be updated
+          agentAPI.addFact(
+            new Belief(
+              BeliefKeys.CLINICIAN,
+              ClinicianAttributes.ALERT_INFO,
+              todoInput.alert
+            ),
+            false
+          );
+          // Triggers to update alert
+          agent.addBelief(
+            new Belief(
+              BeliefKeys.CLINICIAN,
+              ClinicianAttributes.UPDATE_ALERT,
+              true
+            )
+          );
+          agentAPI.addFact(
+            new Belief(
+              BeliefKeys.PROCEDURE,
+              ProcedureAttributes.AT_CP_II,
+              ProcedureConst.ACTIVE
+            )
+          );
+          // Removes alert to avoid it from being stored into local storage
+          delete todoInput.alert;
+        }
+      }
+
+      // Updates the todo in the DB and the local storage
+      if (todoInput && todoInput.id && clinicianId) {
         let toSync: boolean | undefined;
 
-        // console.log("hello");
         // Constructs UpdateTodoInput to be updated
         const todoToUpdate: UpdateTodoInput = {
           id: todoInput.id,

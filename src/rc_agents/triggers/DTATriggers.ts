@@ -13,8 +13,7 @@ import {
   AlertInfo,
   FetchAlertsMode,
   PatientAssignmentResolution,
-  // TodoInput,
-  TodoStatus,
+  FetchTodosMode,
   MedicalRecordInput,
   IcdCrtRecordInput,
   LocalTodo
@@ -173,9 +172,13 @@ export const triggerConfigurePatient = (input: PatientInfo): void => {
 };
 
 // SRD-II: Triggers RetrieveTodos of DTA
-export const triggerRetrieveTodos = (status: TodoStatus): void => {
+export const triggerRetrieveTodos = (fetchMode: FetchTodosMode): void => {
   agentAPI.addFact(
-    new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.TODO_STATUS, status),
+    new Belief(
+      BeliefKeys.CLINICIAN,
+      ClinicianAttributes.TODO_STATUS,
+      fetchMode
+    ),
     false
   );
   agentDTA.addBelief(

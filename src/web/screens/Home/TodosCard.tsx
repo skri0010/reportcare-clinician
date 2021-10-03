@@ -9,10 +9,11 @@ import { CardWrapper } from "./CardWrapper";
 import { FloatingBottomButton } from "components/Buttons/FloatingBottomButton";
 import i18n from "util/language/i18n";
 import { ScreenName } from "web/navigation";
-import { TodoStatus } from "rc_agents/model";
+import { TodoStatus, FetchTodosMode } from "rc_agents/model";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AgentTrigger } from "rc_agents/trigger";
 import { HomeScreenNavigation } from "web/navigation/types/MainScreenProps";
+import { onDonePress } from "web/screens/Todo/tabs/TodoCurrentTab";
 
 interface TodosCardProps {
   maxHeight: number;
@@ -27,8 +28,9 @@ export const TodosCard: FC<TodosCardProps> = ({ maxHeight, navigation }) => {
 
   const [lastPatientIndex, setLastPatientIndex] = useState(-1);
 
+  // Trigger the retrieval of PENDING todos
   useEffect(() => {
-    AgentTrigger.triggerRetrieveTodos(TodoStatus.PENDING);
+    AgentTrigger.triggerRetrieveTodos(FetchTodosMode.PENDING);
   }, []);
 
   useEffect(() => {
@@ -71,6 +73,7 @@ export const TodosCard: FC<TodosCardProps> = ({ maxHeight, navigation }) => {
                   // Navigate to Todo screen
                   navigation.navigate(ScreenName.TODO, { todoToShow: item });
                 }}
+                onButtonPress={() => onDonePress(item)}
               />
             );
           }}

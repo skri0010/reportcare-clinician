@@ -10,7 +10,7 @@ import { AddTodoScreen } from "./modals/AddTodoScreen";
 import { NoSelectionScreen } from "../Shared/NoSelectionScreen";
 import i18n from "util/language/i18n";
 import { TodoDetailsStackNavigator } from "../../navigation/navigators/TodoDetailsStackNavigator";
-import { LocalTodo } from "rc_agents/model";
+import { FetchTodosMode, LocalTodo } from "rc_agents/model";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { useToast } from "react-native-toast-notifications";
 import {
@@ -124,6 +124,10 @@ export const TodoScreen: FC<MainScreenProps[ScreenName.TODO]> = ({
     }
   }, [dispatch, procedureOngoing, procedureSuccessful, toast, submittingTodo]);
 
+  // Triggers the retrieval of ALL todos
+  useEffect(() => {
+    AgentTrigger.triggerRetrieveTodos(FetchTodosMode.ALL);
+  }, []);
   return (
     <ScreenWrapper fixed>
       <View

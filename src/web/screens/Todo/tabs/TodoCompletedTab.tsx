@@ -53,9 +53,6 @@ export const TodoCompletedTab: FC<TodoCompleteTabProps> = ({
     setTodoSelected(item);
   }
 
-  useEffect(() => {
-    AgentTrigger.triggerRetrieveTodos(TodoStatus.COMPLETED);
-  }, []);
   return (
     <ScreenWrapper
       style={{ backgroundColor: colors.secondaryWebBackgroundColor }}

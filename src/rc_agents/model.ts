@@ -89,6 +89,13 @@ export enum TodoStatus {
   COMPLETED = "COMPLETED"
 }
 
+export enum FetchTodosMode {
+  ALL = "ALL",
+  PENDING = "PENDING",
+  COMPLETED = "COMPLETED",
+  NONE = "NONE"
+}
+
 export type RecordFile = {
   name: string;
   path: string;
