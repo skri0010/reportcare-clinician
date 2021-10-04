@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "api": {
+      "reportcare": ["Query", "Mutation"]
+    },
+    "storage": {
+      "s3clinicianrecords": ["create", "read", "update"]
+    }
+  },
+  "lambdaLayers": [
+    {
+      "type": "ProjectLayer",
+      "resourceName": "reportcarelambdalayer",
+      "env": "dev",
+      "version": "Always choose latest version",
+      "isLatestVersionSelected": true
+    }
+  ]
+}

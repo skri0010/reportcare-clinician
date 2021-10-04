@@ -289,7 +289,7 @@ export const triggerRetrieveDetailedAlertInfo = (
   );
 };
 
-// AT-CP-III: Triggers ProcessAlertNotification of ALA
+// HF-EUA: Triggers ProcessAlertNotification of ALA
 export const triggerProcessAlertNotification = (
   alertNotification: AlertNotification
 ): void => {
@@ -314,7 +314,7 @@ export const triggerProcessAlertNotification = (
   agentAPI.addFact(
     new Belief(
       BeliefKeys.PROCEDURE,
-      ProcedureAttributes.AT_CP_III,
+      ProcedureAttributes.HF_EUA,
       ProcedureConst.ACTIVE
     )
   );

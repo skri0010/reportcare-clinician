@@ -19,8 +19,8 @@ import { displayAlerts } from "rc_agents/agents/user-specific-assistant/action-f
 import { getAlertsCount } from "rc_agents/agents/data-assistant/action-frames/triage-alert-hf-clinic/RetrieveAlerts";
 
 /**
- * Class to represent an activity for triggering the display of refreshed alerts.
- * This happens in Procedure Triage Alert HF Clinic (AT-CP).
+ * Represents the activity for triggering the display of refreshed alerts when real-time alerts are received.
+ * This happens in Procedure HF- Exacerbation User Specific Alert (HF-EUA).
  */
 class DisplayRefreshedAlerts extends Activity {
   constructor() {
@@ -87,7 +87,7 @@ class DisplayRefreshedAlerts extends Activity {
     agentAPI.addFact(
       new Belief(
         BeliefKeys.PROCEDURE,
-        ProcedureAttributes.AT_CP_III,
+        ProcedureAttributes.HF_EUA,
         ProcedureConst.INACTIVE
       ),
       true,
@@ -99,7 +99,7 @@ class DisplayRefreshedAlerts extends Activity {
 // Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.AT_CP_III,
+  ProcedureAttributes.HF_EUA,
   ProcedureConst.ACTIVE
 );
 const rule2 = new ResettablePrecondition(

@@ -20,15 +20,15 @@ import {
 } from "rc_agents/clinician_framework";
 
 /**
- * Class to represent the activity for requesting display of refreshed alerts.
- * This happens in Procedure Triage Alert HF Clinic (AT-CP).
+ * Represents the activity for requesting display of refreshed alerts.
+ * This happens in Procedure HF- Exacerbation User Specific Alert (HF-EUA).
  */
 class RequestDisplayRefreshedAlerts extends Communicate {
   constructor() {
     super(
-      ActionFrameIDs.ALA.REQUEST_DISPLAY_REFRESHED_ALERTS,
+      ActionFrameIDs.MHA.REQUEST_DISPLAY_REFRESHED_ALERTS,
       Performative.REQUEST,
-      // Triggers DisplayAlerts action frame of UXSA
+      // Triggers DisplayRefreshedAlerts action frame of UXSA
       new Belief(
         BeliefKeys.CLINICIAN,
         ClinicianAttributes.REFRESHED_ALERTS_RETRIEVED,
@@ -39,8 +39,8 @@ class RequestDisplayRefreshedAlerts extends Communicate {
   }
 
   /**
-   * Perform the activity
-   * @param {Agent} agent - agent executing the activity
+   * Performs the activity
+   * @param {Agent} agent current agent
    */
   async doActivity(agent: Agent): Promise<void> {
     try {
@@ -55,23 +55,23 @@ class RequestDisplayRefreshedAlerts extends Communicate {
 // Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.AT_CP_III,
+  ProcedureAttributes.HF_EUA,
   ProcedureConst.ACTIVE
 );
 const rule2 = new Precondition(
   AgentIDs.ALA,
   CommonAttributes.LAST_ACTIVITY,
-  ActionFrameIDs.ALA.PROCESS_ALERT_NOTIFICATION
+  ActionFrameIDs.MHA.ASSOCIATE_ALERT_MEDICAL_RECORDS
 );
 const rule3 = new ResettablePrecondition(
   BeliefKeys.CLINICIAN,
-  ClinicianAttributes.REFRESHED_ALERTS_RETRIEVED,
+  ClinicianAttributes.ALERT_MEDICAL_RECORDS_ASSOCIATED,
   true
 );
 
 // Actionframe
 export const af_RequestDisplayRefreshedAlerts = new Actionframe(
-  `AF_${ActionFrameIDs.ALA.REQUEST_DISPLAY_REFRESHED_ALERTS}`,
+  `AF_${ActionFrameIDs.MHA.REQUEST_DISPLAY_REFRESHED_ALERTS}`,
   [rule1, rule2, rule3],
   new RequestDisplayRefreshedAlerts()
 );

@@ -10,7 +10,8 @@ export enum AgentIDs {
   UXSA = "UXSA",
   NWA = "NWA",
   ALA = "ALA",
-  MHA = "MHA"
+  MHA = "MHA",
+  CAM = "CAM"
 }
 
 export const ActionFrameIDs = {
@@ -90,7 +91,7 @@ export const ActionFrameIDs = {
     // AT-CP-II: Detailed AlertInfo
     DISPLAY_DETAILED_ALERT_INFO: "DisplayDetailedAlertInfo",
 
-    // AT-CP-III: Alert Notifications and refreshed AlertInfo[]
+    // HF-EUA: Alert Notifications and refreshed AlertInfo[]
     DISPLAY_REFRESHED_ALERTS: "DisplayRefreshedAlerts",
 
     // HF-OTP-I: ClinicianInfo and all patients (PatientInfo)
@@ -140,14 +141,24 @@ export const ActionFrameIDs = {
     // AT-CP-II: Detailed AlertInfo
     SYNC_UPDATE_ALERTS: "SyncUpdateAlerts",
 
-    // AT_CP_III: Alert Notifications and refreshed AlertInfo[]
+    // HF-EUA: Real-time alert notifications and refreshed AlertInfo[]
     SYNC_PROCESS_ALERT_NOTIFICATIONS: "SyncProcessAlertNotifications"
   },
-  MHA: {},
   ALA: {
-    // AT_CP_III: Alert Notifications and refreshed AlertInfo[]
+    // HF-EUA: Real-time alerts
     PROCESS_ALERT_NOTIFICATION: "ProcessAlertNotification",
+    REQUEST_ASSOCIATE_ALERT_MEDICAL_RECORDS:
+      "RequestAssociateAlertMedicalRecords"
+  },
+  MHA: {
+    // HF-EUA: Real-time alerts
+    ASSOCIATE_ALERT_MEDICAL_RECORDS: "AssociateAlertMedicalRecords",
     REQUEST_DISPLAY_REFRESHED_ALERTS: "RequestDisplayRefreshedAlerts"
+  },
+  CAM: {
+    // HF-EUA: Real-time alerts
+    RETRIEVE_USER_CONTEXT: "RetrieveUserContext",
+    INFORM_USER_CONTEXT: "InformUserContext"
   }
 };
 
@@ -187,7 +198,7 @@ export enum ProcedureAttributes {
   SRD_V = "SRD-V",
   AT_CP_I = "AT-CP-I",
   AT_CP_II = "AT-CP-II",
-  AT_CP_III = "AT-CP-III"
+  HF_EUA = "HF-EUA"
 }
 
 // Attributes for CLINICIAN key
@@ -231,12 +242,17 @@ export enum ClinicianAttributes {
   UPDATE_ALERT = "UpdateAlert",
   ALERTS_UPDATED = "AlertsUpdated",
 
-  // AT_CP_III: Alert Notifications and refreshed AlertInfo[]
+  // HF-EUA: Alert Notifications and refreshed AlertInfo[]
   ALERT_NOTIFICATION = "AlertNotification",
   PROCESS_ALERT_NOTIFICATION = "ProcessAlertNotification",
   REFRESHED_PENDING_ALERTS = "RefreshedPendingAlerts",
   REFRESHED_COMPLETED_ALERTS = "RefreshedCompletedAlerts",
   REFRESHED_ALERTS_RETRIEVED = "RefreshedAlertsRetrieved",
+  CONTEXT_RETRIEVED = "ContextRetrieved",
+  ALERT_MEDICAL_RECORDS_RETRIEVED = "AlertMedicalRecordsRetrieved",
+  ALERT_MEDICAL_RECORDS_ASSOCIATED = "AlertMedicalRecordsAssociated",
+  CURRENT_TIME = "CurrentTime",
+  CURRENT_LOCATION = "CurrentLocation",
 
   // SRD-II - Todos
   RETRIEVE_TODOS = "RetrieveTodos",
@@ -249,7 +265,7 @@ export enum ClinicianAttributes {
   DISPLAY_TODOS = "DisplayTodos",
   ALERT_TODO = "AlertTodo",
 
-  //SRD-IV - Clinician Contacts
+  // SRD-IV - Clinician Contacts
   RETRIEVE_CLINICIAN_CONTACTS = "RetrieveClinicianContacts",
   CLINICIAN_CONTACTS_RETRIEVED = "ClinicianContactsRetrieved",
   CLINICIAN_CONTACTS = "ClinicianContacts"

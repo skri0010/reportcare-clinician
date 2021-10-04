@@ -13,8 +13,7 @@ import {
   AppAttributes,
   BeliefKeys,
   ClinicianAttributes,
-  ProcedureAttributes,
-  setRetryLaterTimeout
+  ProcedureAttributes
 } from "rc_agents/clinician_framework";
 import { AlertNotification } from "aws/TypedAPI/subscriptions";
 import { listClinicianPatientMaps, getDetailedAlert } from "aws";
@@ -24,8 +23,8 @@ import { convertAlertToAlertInfo } from "util/utilityFunctions";
 import { AlertStatus, FetchAlertsMode } from "rc_agents/model";
 
 /**
- * Class to represent the activity for processing an alert notification.
- * This happens in Procedure Triage Alert HF Clinic (AT-CP).
+ * Represents the activity for processing a real-time alert notification.
+ * This happens in Procedure HF- Exacerbation User Specific Alert (HF-EUA).
  */
 class ProcessAlertNotification extends Activity {
   constructor() {
@@ -33,8 +32,8 @@ class ProcessAlertNotification extends Activity {
   }
 
   /**
-   * Perform this activity
-   * @param {Agent} agent - agent executing the activity
+   * Performs the activity
+   * @param {Agent} agent current agent
    */
   async doActivity(agent: Agent): Promise<void> {
     await super.doActivity(agent, [rule2]);
@@ -50,18 +49,17 @@ class ProcessAlertNotification extends Activity {
       const clinicianID = await LocalStorage.getClinicianID();
 
       if (alertNotification && clinicianID) {
+        // Trigger request to MHA to associate retrieved medical records
         if (facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
           // Check if alert is current clinician's patient
           const mapQuery = await listClinicianPatientMaps({
             clinicianID: clinicianID
           });
-
           if (mapQuery && mapQuery.data.listClinicianPatientMaps?.items) {
             const patientIds =
               mapQuery.data.listClinicianPatientMaps.items.flatMap((item) =>
                 item ? [item.patientID] : []
               );
-
             if (patientIds.includes(alertNotification.patientID)) {
               // Get detailed alert
               const alertQuery = await getDetailedAlert({
@@ -72,7 +70,6 @@ class ProcessAlertNotification extends Activity {
                 const alert = alertQuery.data.getAlert;
                 const alertInfo = convertAlertToAlertInfo(alert);
                 await LocalStorage.setAlertInfo(alertInfo);
-
                 // Obtain fetch alerts mode
                 const fetchAlertsMode: FetchAlertsMode | null =
                   alertInfo.pending === AlertStatus.PENDING
@@ -80,7 +77,6 @@ class ProcessAlertNotification extends Activity {
                     : alertInfo.completed === AlertStatus.COMPLETED
                     ? FetchAlertsMode.COMPLETED
                     : null;
-
                 // Update Facts
                 // Add item
                 if (fetchAlertsMode === FetchAlertsMode.PENDING) {
@@ -94,7 +90,6 @@ class ProcessAlertNotification extends Activity {
                     false
                   );
                 }
-
                 // Add item
                 if (fetchAlertsMode === FetchAlertsMode.COMPLETED) {
                   // Pending AlertInfo[]
@@ -107,12 +102,11 @@ class ProcessAlertNotification extends Activity {
                     false
                   );
                 }
-
-                // Trigger request to Communicate to USXA
+                // Trigger request to MHA
                 agent.addBelief(
                   new Belief(
                     BeliefKeys.CLINICIAN,
-                    ClinicianAttributes.REFRESHED_ALERTS_RETRIEVED,
+                    ClinicianAttributes.ALERT_MEDICAL_RECORDS_RETRIEVED,
                     true
                   )
                 );
@@ -122,7 +116,6 @@ class ProcessAlertNotification extends Activity {
         } else {
           // Store alert notification locally to be processed later
           await LocalStorage.setAlertNotification(alertNotification);
-
           // Notifies NWA agent
           agentNWA.addBelief(
             new Belief(
@@ -137,28 +130,11 @@ class ProcessAlertNotification extends Activity {
       // eslint-disable-next-line no-console
       console.log(error);
 
-      setRetryLaterTimeout(() => {
-        agent.addBelief(
-          new Belief(
-            BeliefKeys.CLINICIAN,
-            ClinicianAttributes.PROCESS_ALERT_NOTIFICATION,
-            true
-          )
-        );
-        agentAPI.addFact(
-          new Belief(
-            BeliefKeys.PROCEDURE,
-            ProcedureAttributes.AT_CP_III,
-            ProcedureConst.ACTIVE
-          )
-        );
-      });
-
       // End the procedure
       agentAPI.addFact(
         new Belief(
           BeliefKeys.PROCEDURE,
-          ProcedureAttributes.AT_CP_III,
+          ProcedureAttributes.HF_EUA,
           ProcedureConst.INACTIVE
         ),
         true,
@@ -182,7 +158,7 @@ class ProcessAlertNotification extends Activity {
 // Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.AT_CP_III,
+  ProcedureAttributes.HF_EUA,
   ProcedureConst.ACTIVE
 );
 const rule2 = new ResettablePrecondition(

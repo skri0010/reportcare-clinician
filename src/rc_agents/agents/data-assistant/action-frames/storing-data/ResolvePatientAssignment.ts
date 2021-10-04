@@ -24,14 +24,7 @@ import {
   PatientAssignmentResolution,
   PatientAssignmentStatus
 } from "rc_agents/model";
-import {
-  createClinicianPatientMap,
-  createPatientAssignment,
-  updatePatientAssignment,
-  getClinicianPatientMap,
-  getPatientAssignment
-} from "aws";
-import Auth from "@aws-amplify/auth";
+import { updatePatientAssignment } from "aws";
 
 /**
  * Class to represent an activity for resolving patient assignment (APPROVE or REASSIGN) .

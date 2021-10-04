@@ -580,6 +580,7 @@ export type CreateClinicianInfoInput = {
   name: string;
   hospitalName: string;
   role: string;
+  contactNumber: string;
   _version?: number | null;
 };
 
@@ -587,6 +588,7 @@ export type ModelClinicianInfoConditionInput = {
   name?: ModelStringInput | null;
   hospitalName?: ModelStringInput | null;
   role?: ModelStringInput | null;
+  contactNumber?: ModelStringInput | null;
   and?: Array<ModelClinicianInfoConditionInput | null> | null;
   or?: Array<ModelClinicianInfoConditionInput | null> | null;
   not?: ModelClinicianInfoConditionInput | null;
@@ -599,6 +601,7 @@ export type ClinicianInfo = {
   name: string;
   hospitalName: string;
   role: string;
+  contactNumber: string;
   _version: number;
   _deleted?: boolean | null;
   _lastChangedAt: number;
@@ -631,6 +634,7 @@ export type UpdateClinicianInfoInput = {
   name?: string | null;
   hospitalName?: string | null;
   role?: string | null;
+  contactNumber?: string | null;
   _version?: number | null;
 };
 
@@ -722,16 +726,9 @@ export type DeleteClinicianPatientMapInput = {
   _version?: number | null;
 };
 
-export type CreatePatientAssignmentInput = {
-  id?: string | null;
+export type DeletePatientAssignmentInput = {
   patientID: string;
   clinicianID: string;
-  patientName: string;
-  pending?: string | null;
-  resolution?: string | null;
-  reassignToClinicianID?: string | null;
-  adminReassignFromClinicianID?: string | null;
-  adminCompleted?: boolean | null;
   _version?: number | null;
 };
 
@@ -756,13 +753,26 @@ export type PatientAssignment = {
   pending?: string | null;
   resolution?: string | null;
   reassignToClinicianID?: string | null;
-  adminReassignFromClinicianID?: string | null;
+  adminCompleted?: boolean | null;
   _version: number;
   _deleted?: boolean | null;
   _lastChangedAt: number;
   createdAt: string;
   updatedAt: string;
+  adminReassignFromClinicianID?: string | null;
+};
+
+export type CreatePatientAssignmentInput = {
+  id?: string | null;
+  patientID: string;
+  clinicianID: string;
+  patientName: string;
+  pending?: string | null;
+  resolution?: string | null;
+  reassignToClinicianID?: string | null;
+  adminReassignFromClinicianID?: string | null;
   adminCompleted?: boolean | null;
+  _version?: number | null;
 };
 
 export type UpdatePatientAssignmentInput = {
@@ -775,12 +785,6 @@ export type UpdatePatientAssignmentInput = {
   reassignToClinicianID?: string | null;
   adminReassignFromClinicianID?: string | null;
   adminCompleted?: boolean | null;
-  _version?: number | null;
-};
-
-export type DeletePatientAssignmentInput = {
-  patientID: string;
-  clinicianID: string;
   _version?: number | null;
 };
 
@@ -1161,6 +1165,7 @@ export type ModelClinicianInfoFilterInput = {
   name?: ModelStringInput | null;
   hospitalName?: ModelStringInput | null;
   role?: ModelStringInput | null;
+  contactNumber?: ModelStringInput | null;
   and?: Array<ModelClinicianInfoFilterInput | null> | null;
   or?: Array<ModelClinicianInfoFilterInput | null> | null;
   not?: ModelClinicianInfoFilterInput | null;
@@ -1935,6 +1940,7 @@ export type CreateClinicianInfoMutation = {
     name: string;
     hospitalName: string;
     role: string;
+    contactNumber: string;
     _version: number;
     _deleted?: boolean | null;
     _lastChangedAt: number;
@@ -1956,6 +1962,7 @@ export type UpdateClinicianInfoMutation = {
     name: string;
     hospitalName: string;
     role: string;
+    contactNumber: string;
     _version: number;
     _deleted?: boolean | null;
     _lastChangedAt: number;
@@ -1977,6 +1984,7 @@ export type DeleteClinicianInfoMutation = {
     name: string;
     hospitalName: string;
     role: string;
+    contactNumber: string;
     _version: number;
     _deleted?: boolean | null;
     _lastChangedAt: number;
@@ -2117,6 +2125,31 @@ export type DeleteClinicianPatientMapMutation = {
   } | null;
 };
 
+export type DeletePatientAssignmentMutationVariables = {
+  input: DeletePatientAssignmentInput;
+  condition?: ModelPatientAssignmentConditionInput | null;
+};
+
+export type DeletePatientAssignmentMutation = {
+  deletePatientAssignment?: {
+    __typename: "PatientAssignment";
+    id?: string | null;
+    patientID: string;
+    clinicianID: string;
+    patientName: string;
+    pending?: string | null;
+    resolution?: string | null;
+    reassignToClinicianID?: string | null;
+    adminCompleted?: boolean | null;
+    _version: number;
+    _deleted?: boolean | null;
+    _lastChangedAt: number;
+    createdAt: string;
+    updatedAt: string;
+    adminReassignFromClinicianID?: string | null;
+  } | null;
+};
+
 export type CreatePatientAssignmentMutationVariables = {
   input: CreatePatientAssignmentInput;
   condition?: ModelPatientAssignmentConditionInput | null;
@@ -2132,13 +2165,13 @@ export type CreatePatientAssignmentMutation = {
     pending?: string | null;
     resolution?: string | null;
     reassignToClinicianID?: string | null;
-    adminReassignFromClinicianID?: string | null;
+    adminCompleted?: boolean | null;
     _version: number;
     _deleted?: boolean | null;
     _lastChangedAt: number;
     createdAt: string;
     updatedAt: string;
-    adminCompleted?: boolean | null;
+    adminReassignFromClinicianID?: string | null;
   } | null;
 };
 
@@ -2157,38 +2190,13 @@ export type UpdatePatientAssignmentMutation = {
     pending?: string | null;
     resolution?: string | null;
     reassignToClinicianID?: string | null;
-    adminReassignFromClinicianID?: string | null;
+    adminCompleted?: boolean | null;
     _version: number;
     _deleted?: boolean | null;
     _lastChangedAt: number;
     createdAt: string;
     updatedAt: string;
-    adminCompleted?: boolean | null;
-  } | null;
-};
-
-export type DeletePatientAssignmentMutationVariables = {
-  input: DeletePatientAssignmentInput;
-  condition?: ModelPatientAssignmentConditionInput | null;
-};
-
-export type DeletePatientAssignmentMutation = {
-  deletePatientAssignment?: {
-    __typename: "PatientAssignment";
-    id?: string | null;
-    patientID: string;
-    clinicianID: string;
-    patientName: string;
-    pending?: string | null;
-    resolution?: string | null;
-    reassignToClinicianID?: string | null;
     adminReassignFromClinicianID?: string | null;
-    _version: number;
-    _deleted?: boolean | null;
-    _lastChangedAt: number;
-    createdAt: string;
-    updatedAt: string;
-    adminCompleted?: boolean | null;
   } | null;
 };
 
@@ -2409,6 +2417,14 @@ export type DeleteAlertNotificationMutation = {
     createdAt: string;
     updatedAt: string;
   } | null;
+};
+
+export type EchoQueryVariables = {
+  msg?: string | null;
+};
+
+export type EchoQuery = {
+  echo?: string | null;
 };
 
 export type GetPatientInfoQueryVariables = {
@@ -3018,6 +3034,7 @@ export type GetClinicianInfoQuery = {
     name: string;
     hospitalName: string;
     role: string;
+    contactNumber: string;
     _version: number;
     _deleted?: boolean | null;
     _lastChangedAt: number;
@@ -3180,6 +3197,48 @@ export type SyncClinicianPatientMapsQuery = {
   } | null;
 };
 
+export type GetPatientAssignmentQueryVariables = {
+  patientID: string;
+  clinicianID: string;
+};
+
+export type GetPatientAssignmentQuery = {
+  getPatientAssignment?: {
+    __typename: "PatientAssignment";
+    id?: string | null;
+    patientID: string;
+    clinicianID: string;
+    patientName: string;
+    pending?: string | null;
+    resolution?: string | null;
+    reassignToClinicianID?: string | null;
+    adminCompleted?: boolean | null;
+    _version: number;
+    _deleted?: boolean | null;
+    _lastChangedAt: number;
+    createdAt: string;
+    updatedAt: string;
+    adminReassignFromClinicianID?: string | null;
+  } | null;
+};
+
+export type ListPatientAssignmentsQueryVariables = {
+  patientID?: string | null;
+  clinicianID?: ModelStringKeyConditionInput | null;
+  filter?: ModelPatientAssignmentFilterInput | null;
+  limit?: number | null;
+  nextToken?: string | null;
+  sortDirection?: ModelSortDirection | null;
+};
+
+export type ListPatientAssignmentsQuery = {
+  listPatientAssignments?: {
+    __typename: "ModelPatientAssignmentConnection";
+    nextToken?: string | null;
+    startedAt?: number | null;
+  } | null;
+};
+
 export type ListPendingPatientAssignmentsQueryVariables = {
   clinicianID?: string | null;
   pending?: ModelStringKeyConditionInput | null;
@@ -3206,48 +3265,6 @@ export type SyncPatientAssignmentsQueryVariables = {
 
 export type SyncPatientAssignmentsQuery = {
   syncPatientAssignments?: {
-    __typename: "ModelPatientAssignmentConnection";
-    nextToken?: string | null;
-    startedAt?: number | null;
-  } | null;
-};
-
-export type GetPatientAssignmentQueryVariables = {
-  patientID: string;
-  clinicianID: string;
-};
-
-export type GetPatientAssignmentQuery = {
-  getPatientAssignment?: {
-    __typename: "PatientAssignment";
-    id?: string | null;
-    patientID: string;
-    clinicianID: string;
-    patientName: string;
-    pending?: string | null;
-    resolution?: string | null;
-    reassignToClinicianID?: string | null;
-    adminReassignFromClinicianID?: string | null;
-    _version: number;
-    _deleted?: boolean | null;
-    _lastChangedAt: number;
-    createdAt: string;
-    updatedAt: string;
-    adminCompleted?: boolean | null;
-  } | null;
-};
-
-export type ListPatientAssignmentsQueryVariables = {
-  patientID?: string | null;
-  clinicianID?: ModelStringKeyConditionInput | null;
-  filter?: ModelPatientAssignmentFilterInput | null;
-  limit?: number | null;
-  nextToken?: string | null;
-  sortDirection?: ModelSortDirection | null;
-};
-
-export type ListPatientAssignmentsQuery = {
-  listPatientAssignments?: {
     __typename: "ModelPatientAssignmentConnection";
     nextToken?: string | null;
     startedAt?: number | null;
@@ -4136,6 +4153,7 @@ export type OnCreateClinicianInfoSubscription = {
     name: string;
     hospitalName: string;
     role: string;
+    contactNumber: string;
     _version: number;
     _deleted?: boolean | null;
     _lastChangedAt: number;
@@ -4156,6 +4174,7 @@ export type OnUpdateClinicianInfoSubscription = {
     name: string;
     hospitalName: string;
     role: string;
+    contactNumber: string;
     _version: number;
     _deleted?: boolean | null;
     _lastChangedAt: number;
@@ -4176,6 +4195,7 @@ export type OnDeleteClinicianInfoSubscription = {
     name: string;
     hospitalName: string;
     role: string;
+    contactNumber: string;
     _version: number;
     _deleted?: boolean | null;
     _lastChangedAt: number;
@@ -4328,13 +4348,13 @@ export type OnCreatePatientAssignmentSubscription = {
     pending?: string | null;
     resolution?: string | null;
     reassignToClinicianID?: string | null;
-    adminReassignFromClinicianID?: string | null;
+    adminCompleted?: boolean | null;
     _version: number;
     _deleted?: boolean | null;
     _lastChangedAt: number;
     createdAt: string;
     updatedAt: string;
-    adminCompleted?: boolean | null;
+    adminReassignFromClinicianID?: string | null;
   } | null;
 };
 
@@ -4353,13 +4373,13 @@ export type OnUpdatePatientAssignmentSubscription = {
     pending?: string | null;
     resolution?: string | null;
     reassignToClinicianID?: string | null;
-    adminReassignFromClinicianID?: string | null;
+    adminCompleted?: boolean | null;
     _version: number;
     _deleted?: boolean | null;
     _lastChangedAt: number;
     createdAt: string;
     updatedAt: string;
-    adminCompleted?: boolean | null;
+    adminReassignFromClinicianID?: string | null;
   } | null;
 };
 
@@ -4378,13 +4398,13 @@ export type OnDeletePatientAssignmentSubscription = {
     pending?: string | null;
     resolution?: string | null;
     reassignToClinicianID?: string | null;
-    adminReassignFromClinicianID?: string | null;
+    adminCompleted?: boolean | null;
     _version: number;
     _deleted?: boolean | null;
     _lastChangedAt: number;
     createdAt: string;
     updatedAt: string;
-    adminCompleted?: boolean | null;
+    adminReassignFromClinicianID?: string | null;
   } | null;
 };
 
