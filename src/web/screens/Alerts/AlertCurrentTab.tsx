@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 import { View, FlatList } from "react-native";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { RootState, select, useDispatch } from "util/useRedux";
@@ -14,6 +14,7 @@ import {
   setSearchedAlerts,
   setSearchingAlerts
 } from "ic-redux/actions/agents/actionCreator";
+import { useFocusEffect } from "@react-navigation/native";
 
 interface AlertCurrentTabProps
   extends AlertRowTabProps,
@@ -73,13 +74,8 @@ export const AlertCurrentTab: FC<AlertCurrentTabProps> = ({
     setSearchResult(searchedAlerts);
   }, [searching, searchedAlerts]);
 
-  const setPendingTab2 = () => {
-    dispatch(setPendingTab(true));
-  };
-
   return (
     <View style={{ flex: 1, backgroundColor: colors.primaryContrastTextColor }}>
-      {setPendingTab2}
       {/* Show no alerts message if no alert found */}
       {fetchingPendingAlerts ? (
         // Show loading indicator if fetching patients

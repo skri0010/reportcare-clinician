@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 import { FlatList, View } from "react-native";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { RootState, select, useDispatch } from "util/useRedux";
@@ -14,6 +14,7 @@ import {
   setSearchedAlerts,
   setSearchingAlerts
 } from "ic-redux/actions/agents/actionCreator";
+import { useFocusEffect } from "@react-navigation/native";
 
 interface AlertCompletedTabProps
   extends AlertRowTabProps,
@@ -38,8 +39,9 @@ export const AlertCompletedTab: FC<AlertCompletedTabProps> = ({
   }));
 
   const dispatch = useDispatch();
+
   useEffect(() => {
-    dispatch(setPendingTab(false));
+    dispatch(setPendingTab(true));
     dispatch(setSearchedAlerts(undefined));
     dispatch(setSearchingAlerts(false));
   }, []);
