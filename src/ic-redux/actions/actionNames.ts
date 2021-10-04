@@ -54,7 +54,12 @@ export const actionNames = {
 
   // Others
   SET_PATIENT_RISK_FILTERS: "SET_PATIENT_RISK_FILTERS",
-  SET_ALERT_RISK_FILTERS: "SET_ALERT_RISK_FILTERS"
+  SET_ALERT_RISK_FILTERS: "SET_ALERT_RISK_FILTERS",
+
+  // Searching with fuse
+  SET_SEARCHING_ALERTS: "SET_SEARCHING_ALERTS",
+  SET_SEARCHED_ALERTS: "SET_SEARCHED_ALERTS",
+  SET_PENDING_TAB: "SET_PENDING_TAB"
 } as const;
 
 // DO NOT REMOVE "as const", this is necessary for TypeScript checking

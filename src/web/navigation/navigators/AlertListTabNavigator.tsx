@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { FC, useState } from "react";
+import React, { FC, useState, useEffect } from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { AlertListTabParamList } from "../paramLists";
@@ -11,9 +11,12 @@ import { AlertListTabsProps } from "../types";
 import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { RiskFilterPillList } from "components/Buttons/RiskFilterPillList";
 import { AlertInfo } from "rc_agents/model";
-import { setAlertInfo } from "ic-redux/actions/agents/actionCreator";
+import {
+  setAlertInfo,
+  setSearchedAlerts,
+  setSearchingAlerts
+} from "ic-redux/actions/agents/actionCreator";
 import { AgentTrigger } from "rc_agents/trigger";
-import { Alert } from "react-native";
 import Fuse from "fuse.js";
 
 const Tab = createMaterialTopTabNavigator<AlertListTabParamList>();
@@ -30,19 +33,18 @@ export interface AlertRowTabProps {
 export const AlertListTabNavigator: FC<AlertListTabNavigatorProps> = ({
   setIsEmptyAlert
 }) => {
-  const { colors, fonts, completedAlerts, pendingAlerts } = select(
+  const { colors, fonts, completedAlerts, pendingAlerts, pendingTab } = select(
     (state: RootState) => ({
       colors: state.settings.colors,
       fonts: state.settings.fonts,
       completedAlerts: state.agents.completedAlerts,
-      pendingAlerts: state.agents.pendingAlerts
+      pendingAlerts: state.agents.pendingAlerts,
+      pendingTab: state.agents.pendingTab
     })
   );
 
   const dispatch = useDispatch();
-  const [pending, setPending] = useState<boolean>(true);
-  const [searching, setSearching] = useState<boolean>(false);
-  const [searchedSubset, setSubset] = useState<AlertInfo[]>([]);
+  const [pending, setPending] = useState<boolean>(pendingTab);
 
   // When the alert item is pressed, trigger the retrieval of alert info
   const onAlertRowPress = (alert: AlertInfo) => {
@@ -53,6 +55,10 @@ export const AlertListTabNavigator: FC<AlertListTabNavigatorProps> = ({
     }
   };
 
+  useEffect(() => {
+    setPending(pendingTab);
+  }, [pendingTab]);
+
   return (
     <>
       <SearchBarComponent
@@ -61,8 +67,9 @@ export const AlertListTabNavigator: FC<AlertListTabNavigatorProps> = ({
         }}
         onSearchClick={(searchString: string) => {
           if (searchString.length === 0) {
-            setSearching(false);
+            dispatch(setSearchingAlerts(false));
           } else if (pendingAlerts || completedAlerts) {
+            dispatch(setSearchingAlerts(true));
             const options = {
               includeScore: true,
               keys: ["patientName"]
@@ -70,12 +77,10 @@ export const AlertListTabNavigator: FC<AlertListTabNavigatorProps> = ({
             const searchingAlerts = pending ? pendingAlerts : completedAlerts;
             if (searchingAlerts) {
               const fuse = new Fuse(searchingAlerts, options);
-
               const result = fuse.search(searchString);
               const searchResults: AlertInfo[] = [];
               result.forEach((item) => searchResults.push(item.item));
-              setSearching(true);
-              setSubset(searchResults);
+              dispatch(setSearchedAlerts(searchResults));
             }
           }
         }}

@@ -74,7 +74,6 @@ export const PatientsList: FC<PatientsListScreen> = ({
               keys: ["name"]
             };
             const fuse = new Fuse(patients, options);
-
             const result = fuse.search(searchString);
             const searchResults: PatientInfo[] = [];
             result.forEach((item) => searchResults.push(item.item));
