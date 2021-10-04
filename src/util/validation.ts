@@ -77,13 +77,8 @@ export const validateMedName = (medName: string): boolean => {
   );
 };
 
-export const validateMedDosageInput = (
-  medName: string,
-  dosage: string
-): boolean => {
-  return (
-    validateNumber(dosage) && validateMedDosage(medName, parseFloat(dosage))
-  );
+export const validateMedDosageInput = (dosage: string): boolean => {
+  return validateNumber(dosage);
 };
 
 export const validateMedDosage = (medName: string, dosage: number): boolean => {

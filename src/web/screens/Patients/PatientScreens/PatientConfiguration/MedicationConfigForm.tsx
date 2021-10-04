@@ -19,14 +19,14 @@ interface MedicationConfigFormProps {
   configMedInfo: MedInput;
   setConfigMedInfo: (medInfo: MedInput) => void;
   saveMedInput: (medInput: MedInput) => void;
-  setMedConfigFormVisible: (state: boolean) => void;
+  setAddMedInfo: (state: boolean) => void;
 }
 
 export const MedicationConfigForm: FC<MedicationConfigFormProps> = ({
   configMedInfo,
   setConfigMedInfo,
   saveMedInput,
-  setMedConfigFormVisible
+  setAddMedInfo
 }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
@@ -42,7 +42,7 @@ export const MedicationConfigForm: FC<MedicationConfigFormProps> = ({
 
   // Update dosage
   const updateMedDosage = (dosage: string) => {
-    if (validateMedDosageInput(configMedInfo.name, dosage)) {
+    if (validateMedDosageInput(dosage)) {
       setConfigMedInfo({ ...configMedInfo, dosage: parseFloat(dosage) });
     } else {
       setConfigMedInfo({ ...configMedInfo, dosage: 0 });
@@ -129,7 +129,7 @@ export const MedicationConfigForm: FC<MedicationConfigFormProps> = ({
         {/* Cancel button */}
         <RowButton
           title="Patient_Configuration.Cancel"
-          onPress={() => setMedConfigFormVisible(false)}
+          onPress={() => setAddMedInfo(false)}
           backgroundColor={colors.primaryBackgroundColor}
           textColor={colors.primaryTextColor}
           borderColor={colors.secondaryBorderColor}
@@ -149,13 +149,11 @@ const styles = ScaledSheet.create({
     flexWrap: "wrap",
     justifyContent: "space-evenly",
     alignItems: "center",
-    paddingHorizontal: "30@ms"
+    paddingHorizontal: "60@ms"
   },
   form: {
     paddingHorizontal: "20@ms",
     paddingTop: "5@ms",
-    borderRadius: "3@ms",
-    alignSelf: "center",
-    width: "30%"
+    borderRadius: "3@ms"
   }
 });

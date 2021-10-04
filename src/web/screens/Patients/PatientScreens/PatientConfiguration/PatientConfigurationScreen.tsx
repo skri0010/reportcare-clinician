@@ -441,7 +441,7 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
                 configMedInfo={configMedInfo}
                 setConfigMedInfo={setConfigMedInfo}
                 saveMedInput={saveMedInput}
-                setMedConfigFormVisible={setMedConfigFormVisible}
+                setAddMedInfo={setMedConfigFormVisible}
               />
             </View>
           </Modal>
