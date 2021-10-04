@@ -17,22 +17,37 @@ import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AgentTrigger } from "rc_agents/trigger";
 import { useRoute } from "@react-navigation/native";
 import { ScreenName } from "web/navigation";
-import { setUpdatingAlertIndicators } from "ic-redux/actions/agents/actionCreator";
+import {
+  setProcedureOngoing,
+  setProcedureSuccessful,
+  setUpdatingAlertIndicators,
+  setUpdatingTodoOfAlert
+} from "ic-redux/actions/agents/actionCreator";
 
 interface AddTodoScreenProps {
   setModalVisible: (state: boolean) => void;
 }
 
 export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
-  const { colors, fonts, alertInfo, updatingAlert, alertUpdated } = select(
-    (state: RootState) => ({
-      colors: state.settings.colors,
-      fonts: state.settings.fonts,
-      alertInfo: state.agents.alertInfo,
-      updatingAlert: state.agents.updatingAlert,
-      alertUpdated: state.agents.alertUpdated
-    })
-  );
+  const {
+    colors,
+    fonts,
+    alertInfo,
+    updatingAlert,
+    alertUpdated,
+    updatingTodo,
+    procedureOngoing,
+    procedureSuccessful
+  } = select((state: RootState) => ({
+    colors: state.settings.colors,
+    fonts: state.settings.fonts,
+    alertInfo: state.agents.alertInfo,
+    updatingAlert: state.agents.updatingAlert,
+    alertUpdated: state.agents.alertUpdated,
+    updatingTodo: state.agents.updatingTodo,
+    procedureOngoing: state.agents.procedureOngoing,
+    procedureSuccessful: state.agents.procedureSuccessful
+  }));
 
   const shortTodoTextInputStyle: StyleProp<ViewStyle> = {
     backgroundColor: colors.primaryContrastTextColor,
@@ -63,7 +78,7 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
 
   // Triggers CreateTodo procedure
   const createTodo = () => {
-    const inAlertScreen = route.name === ScreenName.ALERTS;
+    // const inAlertScreen = route.name === ScreenName.ALERTS;
     const todoInput: LocalTodo = {
       title: titleInput,
       patientName: patientInput,
@@ -74,14 +89,16 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
       _version: 1,
       // When the todo is created in the Alert screen,
       // include the patient info, alert info, alert id and risk level
-      patientId: inAlertScreen && alertInfo ? alertInfo.patientID : undefined,
-      alert: inAlertScreen && alertInfo ? alertInfo : undefined,
-      alertId: inAlertScreen && alertInfo ? alertInfo.id : undefined,
-      riskLevel: inAlertScreen && alertInfo ? alertInfo.riskLevel : undefined
+      patientId: alertInfo ? alertInfo.patientID : undefined,
+      alert: alertInfo || undefined,
+      alertId: alertInfo ? alertInfo.id : undefined,
+      riskLevel: alertInfo ? alertInfo.riskLevel : undefined
     };
 
     if (alertInfo) {
       if (alertInfo.completed) {
+        dispatch(setProcedureOngoing(true));
+        dispatch(setUpdatingTodoOfAlert(true));
         AgentTrigger.triggerUpdateTodo(todoInput);
       } else if (alertInfo.pending) {
         AgentTrigger.triggerCreateTodo(todoInput);
@@ -105,6 +122,28 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
       setModalVisible(false);
     }
   }, [updatingAlert, alertUpdated, dispatch, setModalVisible, toast]);
+
+  useEffect(() => {
+    if (updatingTodo && !procedureOngoing) {
+      dispatch(setUpdatingTodoOfAlert(false));
+      if (procedureSuccessful) {
+        // Operation successful
+        toast.show(i18n.t("Todo.TodoUpdateSuccessful"), { type: "success" });
+        dispatch(setProcedureSuccessful(false));
+      } else {
+        // Operation failed
+        toast.show(i18n.t("UnexpectedError"), { type: "danger" });
+      }
+      setModalVisible(false);
+    }
+  }, [
+    dispatch,
+    procedureOngoing,
+    procedureSuccessful,
+    toast,
+    updatingTodo,
+    setModalVisible
+  ]);
 
   return (
     <View
@@ -195,7 +234,7 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
       </View>
 
       {/* Loading Indicator while Todo is being created */}
-      {updatingAlert && <LoadingIndicator />}
+      {updatingAlert || (updatingTodo && <LoadingIndicator />)}
     </View>
   );
 };

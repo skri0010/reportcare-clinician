@@ -68,6 +68,7 @@ interface AgentsState {
   icdCrtRecords: IcdCrtRecord[] | undefined;
   fetchingIcdCrtRecordContent: boolean;
   icdCrtRecordContent: string | undefined;
+  updatingTodo: boolean;
 }
 
 const initialState: AgentsState = {
@@ -144,7 +145,8 @@ const initialState: AgentsState = {
   fetchingIcdCrtRecords: false,
   icdCrtRecords: undefined,
   fetchingIcdCrtRecordContent: false,
-  icdCrtRecordContent: undefined
+  icdCrtRecordContent: undefined,
+  updatingTodo: false
 };
 
 export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
@@ -359,6 +361,11 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
       return {
         ...state,
         fetchingTodoDetails: action.payload.fetchingTodoDetails
+      };
+    case actionNames.SET_UPDATING_TODO_OF_ALERT:
+      return {
+        ...state,
+        updatingTodo: action.payload.updatingTodo
       };
     default:
       return state;

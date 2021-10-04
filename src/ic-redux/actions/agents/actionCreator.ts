@@ -353,3 +353,10 @@ export const setChartFilters = createAction(
     chartFilters: chartFilters
   })
 )();
+
+export const setUpdatingTodoOfAlert = createAction(
+  actionNames.SET_UPDATING_TODO_OF_ALERT,
+  (updatingTodo: boolean) => ({
+    updatingTodo: updatingTodo
+  })
+)();

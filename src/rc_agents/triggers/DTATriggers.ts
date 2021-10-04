@@ -16,7 +16,8 @@ import {
   FetchTodosMode,
   MedicalRecordInput,
   IcdCrtRecordInput,
-  LocalTodo
+  LocalTodo,
+  RetrieveTodoDetailsMethod
 } from "rc_agents/model";
 import {
   AlertNotification,
@@ -371,11 +372,24 @@ export const triggerRetrieveClinicianContacts = (): void => {
 };
 
 // SRD-III: Triggers RetrieveTodoDetails of DTA
-export const triggerRetrieveTodoDetails = (input: string): void => {
+export const triggerRetrieveTodoDetails = (
+  input: string,
+  retrieveMethod: RetrieveTodoDetailsMethod
+): void => {
   agentAPI.addFact(
     new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.TODO_ID, input),
     false
   );
+
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.CLINICIAN,
+      ClinicianAttributes.RETRIEVE_DETAILS_METHOD,
+      retrieveMethod
+    ),
+    false
+  );
+
   agentDTA.addBelief(
     new Belief(
       BeliefKeys.CLINICIAN,

@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IcdCrtRecord, MedicalRecord, PatientInfo } from "aws/API";
-import { PatientDetails } from "rc_agents/model";
+import { LocalTodo, PatientDetails } from "rc_agents/model";
 import { AsyncStorageKeys, AsyncStorageType } from ".";
 
 export * from "rc_agents/storage/get/alerts";
@@ -221,12 +221,22 @@ export const getTodoFromAlertID = async (
   return null;
 };
 
-export const getTodoDetails = async (
+export const getTodoDetailsForTodoID = async (
   id: string
 ): Promise<AsyncStorageType[AsyncStorageKeys.TODO_DETAILS] | undefined> => {
   const localData = await getTodos();
   if (localData) {
     return localData.find((t) => t.id === id);
+  }
+  return undefined;
+};
+
+export const getTodoDetailsForAlertID = async (
+  id: string
+): Promise<LocalTodo | undefined> => {
+  const localData = await getTodos();
+  if (localData) {
+    return localData.find((t) => t.alertId === id);
   }
   return undefined;
 };

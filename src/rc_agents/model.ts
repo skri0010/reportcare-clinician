@@ -96,6 +96,11 @@ export enum FetchTodosMode {
   NONE = "NONE"
 }
 
+export enum RetrieveTodoDetailsMethod {
+  TODO_ID = "TODO_ID",
+  ALERT_ID = "ALERT_ID"
+}
+
 export type RecordFile = {
   name: string;
   path: string;

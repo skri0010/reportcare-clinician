@@ -209,7 +209,8 @@ export enum ClinicianAttributes {
   TODO_DETAILS = "TodoDetails",
   DISPLAY_TODO_DETAILS = "DisplayTodoDetails",
   TODO_DETAILS_RETRIEVED = "TodoDetailsRetrieved",
-  TODO_ID = "TodoId",
+  TODO_ID = "TodoID",
+  RETRIEVE_DETAILS_METHOD = "RetrieveDetailsMethod",
 
   // AT-CP-I: AlertInfo[]
   FETCH_ALERTS_MODE = "FetchAlertsMode",

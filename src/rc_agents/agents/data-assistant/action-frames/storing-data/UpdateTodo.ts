@@ -63,7 +63,6 @@ class UpdateTodo extends Activity {
             todoInput.alertId
           );
 
-          // Update existing and outdated todo in local storage with the updated todo
           if (localUnsyncTodos) {
             const localUnsyncTodo = localUnsyncTodos[0];
             todoInput.id = localUnsyncTodo.id;
@@ -73,33 +72,60 @@ class UpdateTodo extends Activity {
               : todoInput.createdAt;
             todoInput.createdAt = localUnsyncTodo.createdAt;
             todoInput.toSync = true;
+            // Update existing and outdated todo in local storage with the updated todo
+            if (!localUnsyncTodo.id) {
+              agentAPI.addFact(
+                new Belief(
+                  BeliefKeys.CLINICIAN,
+                  ClinicianAttributes.TODO,
+                  todoInput
+                ),
+                false
+              );
+              // Trigger CreateTodo
+              agent.addBelief(
+                new Belief(
+                  BeliefKeys.CLINICIAN,
+                  ClinicianAttributes.CREATE_TODO,
+                  true
+                )
+              );
+              // Stop UpdateTodo
+              agent.addBelief(
+                new Belief(
+                  BeliefKeys.CLINICIAN,
+                  ClinicianAttributes.UPDATE_TODO,
+                  false
+                )
+              );
+            }
           }
 
           // Update alert version etc
           // Adds AlertInfo to facts to be updated
-          agentAPI.addFact(
-            new Belief(
-              BeliefKeys.CLINICIAN,
-              ClinicianAttributes.ALERT_INFO,
-              todoInput.alert
-            ),
-            false
-          );
-          // Triggers to update alert
-          agent.addBelief(
-            new Belief(
-              BeliefKeys.CLINICIAN,
-              ClinicianAttributes.UPDATE_ALERT,
-              true
-            )
-          );
-          agentAPI.addFact(
-            new Belief(
-              BeliefKeys.PROCEDURE,
-              ProcedureAttributes.AT_CP_II,
-              ProcedureConst.ACTIVE
-            )
-          );
+          // agentAPI.addFact(
+          //   new Belief(
+          //     BeliefKeys.CLINICIAN,
+          //     ClinicianAttributes.ALERT_INFO,
+          //     todoInput.alert
+          //   ),
+          //   false
+          // );
+          // // Triggers to update alert
+          // agent.addBelief(
+          //   new Belief(
+          //     BeliefKeys.CLINICIAN,
+          //     ClinicianAttributes.UPDATE_ALERT,
+          //     true
+          //   )
+          // );
+          // agentAPI.addFact(
+          //   new Belief(
+          //     BeliefKeys.PROCEDURE,
+          //     ProcedureAttributes.AT_CP_II,
+          //     ProcedureConst.ACTIVE
+          //   )
+          // );
           // Removes alert to avoid it from being stored into local storage
           delete todoInput.alert;
         }

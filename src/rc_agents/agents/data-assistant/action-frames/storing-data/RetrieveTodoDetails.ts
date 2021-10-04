@@ -19,6 +19,7 @@ import { LocalStorage } from "rc_agents/storage";
 import {
   LocalTodo,
   mapColorCodeToRiskLevel,
+  RetrieveTodoDetailsMethod,
   TodoStatus
 } from "rc_agents/model";
 import { Todo } from "aws/API";
@@ -52,6 +53,11 @@ class RetrieveTodoDetails extends Activity {
         agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[
           ClinicianAttributes.TODO_ID
         ];
+      const retrieveMethod: RetrieveTodoDetailsMethod =
+        agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[
+          ClinicianAttributes.RETRIEVE_DETAILS_METHOD
+        ];
+
       if (todoDetails) {
         let todoDetail: Todo | undefined;
         // Check if device is online
@@ -108,9 +114,18 @@ class RetrieveTodoDetails extends Activity {
             );
           }
         } else {
-          // check local storage for todo details
-          const todoToDispatch = await LocalStorage.getTodoDetails(todoDetails);
+          let todoToDispatch: LocalTodo | undefined;
 
+          if (retrieveMethod === RetrieveTodoDetailsMethod.TODO_ID) {
+            // check local storage for todo details
+            todoToDispatch = await LocalStorage.getTodoDetailsForTodoID(
+              todoDetails
+            );
+          } else {
+            todoToDispatch = await LocalStorage.getTodoDetailsForAlertID(
+              todoDetails
+            );
+          }
           if (todoToDispatch) {
             agentAPI.addFact(
               new Belief(
