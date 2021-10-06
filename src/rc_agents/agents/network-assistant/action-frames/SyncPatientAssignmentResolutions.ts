@@ -10,13 +10,14 @@ import {
   ActionFrameIDs,
   AppAttributes,
   BeliefKeys,
+  ClinicianAttributes,
   PatientAttributes,
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
 import { LocalStorage, AsyncStorageKeys } from "rc_agents/storage";
 // eslint-disable-next-line no-restricted-imports
 import { resolvePatientAssignment } from "rc_agents/agents/data-assistant/action-frames/storing-data/ResolvePatientAssignment";
-import { agentDTA } from "rc_agents/agents";
+import { agentDTA, agentUXSA } from "rc_agents/agents";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import { ProcedureConst } from "agents-framework/Enums";
 
@@ -41,8 +42,6 @@ class SyncPatientAssignmentResolutions extends Activity {
    */
   async doActivity(agent: Agent): Promise<void> {
     super.doActivity(agent, [rule2]);
-    // eslint-disable-next-line no-console
-    console.log("Triggered sync patient assignment");
 
     try {
       // Get locally stored list of assignments to resolve
@@ -101,6 +100,19 @@ class SyncPatientAssignmentResolutions extends Activity {
       new Belief(
         BeliefKeys.PROCEDURE,
         ProcedureAttributes.SRD_I,
+        ProcedureConst.ACTIVE
+      )
+    );
+
+    // Retrive Patients By Role
+    agentUXSA.addBelief(
+      new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.RETRIEVE_ROLE, true)
+    );
+
+    agentAPI.addFact(
+      new Belief(
+        BeliefKeys.PROCEDURE,
+        ProcedureAttributes.HF_OTP_I,
         ProcedureConst.ACTIVE
       )
     );

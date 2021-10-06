@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import {
   Actionframe,
   Agent,
@@ -15,12 +14,13 @@ import {
   AppAttributes,
   BeliefKeys,
   PatientAttributes,
-  ProcedureAttributes
+  ProcedureAttributes,
+  ClinicianAttributes
 } from "rc_agents/clinician_framework";
 import { LocalStorage } from "rc_agents/storage";
 import { getPatientAssignment } from "aws";
 import { store } from "util/useRedux";
-import { agentNWA } from "rc_agents/agents";
+import { agentNWA, agentUXSA } from "rc_agents/agents";
 import { setPendingPatientAssignments } from "ic-redux/actions/agents/actionCreator";
 import { PatientAssignment } from "aws/API";
 import { PatientAssignmentStatus } from "rc_agents/model";
@@ -103,9 +103,27 @@ class ProcessPatientAssignmentSubscription extends Activity {
             patientAssignmentSubscription.adminCompleted
           ) {
             // Get new token
-            const lol = await Auth.currentAuthenticatedUser();
-            console.log("Retrieved new user token");
-            console.log(lol);
+            // Bypass cache is needed to ignore what is stored in cache and retrive new groups
+            // eslint-disable-next-line no-console
+            console.log(
+              await Auth.currentAuthenticatedUser({ bypassCache: true })
+            );
+            // Trigger Retrive Patients By Role
+            agentUXSA.addBelief(
+              new Belief(
+                BeliefKeys.CLINICIAN,
+                ClinicianAttributes.RETRIEVE_ROLE,
+                true
+              )
+            );
+
+            agentAPI.addFact(
+              new Belief(
+                BeliefKeys.PROCEDURE,
+                ProcedureAttributes.HF_OTP_I,
+                ProcedureConst.ACTIVE
+              )
+            );
           }
         } else {
           // Device is offline: Store patient assignment subscription locally
