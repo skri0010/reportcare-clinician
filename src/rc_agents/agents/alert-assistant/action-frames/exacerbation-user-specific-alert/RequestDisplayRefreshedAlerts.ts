@@ -26,7 +26,7 @@ import {
 class RequestDisplayRefreshedAlerts extends Communicate {
   constructor() {
     super(
-      ActionFrameIDs.MHA.REQUEST_DISPLAY_REFRESHED_ALERTS,
+      ActionFrameIDs.ALA.REQUEST_DISPLAY_REFRESHED_ALERTS,
       Performative.REQUEST,
       // Triggers DisplayRefreshedAlerts action frame of UXSA
       new Belief(
@@ -61,17 +61,17 @@ const rule1 = new Precondition(
 const rule2 = new Precondition(
   AgentIDs.ALA,
   CommonAttributes.LAST_ACTIVITY,
-  ActionFrameIDs.MHA.ASSOCIATE_ALERT_MEDICAL_RECORDS
+  ActionFrameIDs.ALA.PROCESS_ALERT_NOTIFICATION
 );
 const rule3 = new ResettablePrecondition(
   BeliefKeys.CLINICIAN,
-  ClinicianAttributes.ALERT_MEDICAL_RECORDS_ASSOCIATED,
+  ClinicianAttributes.REFRESHED_ALERTS_RETRIEVED,
   true
 );
 
 // Actionframe
 export const af_RequestDisplayRefreshedAlerts = new Actionframe(
-  `AF_${ActionFrameIDs.MHA.REQUEST_DISPLAY_REFRESHED_ALERTS}`,
+  `AF_${ActionFrameIDs.ALA.REQUEST_DISPLAY_REFRESHED_ALERTS}`,
   [rule1, rule2, rule3],
   new RequestDisplayRefreshedAlerts()
 );

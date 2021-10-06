@@ -1,11 +1,8 @@
 import API from "@aws-amplify/api-graphql";
 import { BaseResponse } from "aws";
-import {
-  triggerProcessAlertNotification,
-  triggerProcessPatientAssignmentSubscription
-} from "rc_agents/triggers";
 import { Observable } from "zen-observable-ts";
 import { LocalStorage } from "rc_agents/storage";
+import { AgentTrigger } from "rc_agents/trigger";
 
 // Override default subscription otherwise null data will be received
 // Requested fields should be a subset of CreateAlertNotification response fields
@@ -39,7 +36,7 @@ export const subscribeAlertNotification = (): void => {
       const alertNotification = response.value.data.onCreateAlertNotification;
       if (alertNotification) {
         // Trigger ALA to process AlertNotification
-        triggerProcessAlertNotification(alertNotification);
+        AgentTrigger.triggerProcessAlertNotification(alertNotification);
       }
     },
     // eslint-disable-next-line no-console
@@ -82,7 +79,9 @@ export const subscribePatientAssignment = async (): Promise<void> => {
         const patientAssignment = response.value.data.onCreatePatientAssignment;
         if (patientAssignment) {
           // Trigger DTA to process patient assignment subscription
-          triggerProcessPatientAssignmentSubscription(patientAssignment);
+          AgentTrigger.triggerProcessPatientAssignmentSubscription(
+            patientAssignment
+          );
         }
       },
       // eslint-disable-next-line no-console

@@ -1296,6 +1296,13 @@ export const schema = {
                     "type": "String",
                     "isRequired": true,
                     "attributes": []
+                },
+                "CAM": {
+                    "name": "CAM",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
                 }
             },
             "syncable": true,
@@ -1652,6 +1659,13 @@ export const schema = {
                 },
                 "colorCode": {
                     "name": "colorCode",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "triageValue": {
+                    "name": "triageValue",
                     "isArray": false,
                     "type": "String",
                     "isRequired": true,
@@ -2135,6 +2149,20 @@ export const schema = {
                     "type": "String",
                     "isRequired": true,
                     "attributes": []
+                },
+                "uploaderClinicianID": {
+                    "name": "uploaderClinicianID",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "uploadDateTime": {
+                    "name": "uploadDateTime",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": []
                 }
             },
             "syncable": true,
@@ -2156,12 +2184,12 @@ export const schema = {
                 {
                     "type": "key",
                     "properties": {
-                        "name": "clinicianRecordsByType",
+                        "name": "uploadedClinicianRecordsByPatientID",
                         "fields": [
-                            "type",
-                            "documentID"
+                            "patientID",
+                            "uploadDateTime"
                         ],
-                        "queryField": "listClinicianRecordsByType"
+                        "queryField": "listUploadedClinicianRecordsByPatientID"
                     }
                 },
                 {
@@ -2209,5 +2237,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "074f6e9147b9d6966cd7b63df4cff1c4"
+    "version": "7a4b1e187562b6aa352560662c961929"
 };

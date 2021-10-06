@@ -4,8 +4,8 @@ import {
   PutObjectCommand,
   GetObjectCommand,
   S3Client
-} from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+} from "node_modules/@aws-sdk/client-s3";
+import { getSignedUrl } from "node_modules/@aws-sdk/s3-request-presigner";
 import { PresignedUrlObjectResponse } from "./types";
 
 // Set the AWS Region.
@@ -20,8 +20,10 @@ const EXPIRY_TIME = 300;
 // Create an Amazon S3 service client object.
 const s3Client = new S3Client({ region: REGION });
 
-export const getPresignedUploadUrl = async (
+export const getPresignedUploadUrl: (
   path: string
+) => Promise<PresignedUrlObjectResponse> = async (
+  path
 ): Promise<PresignedUrlObjectResponse> => {
   let returnObject: PresignedUrlObjectResponse = {
     success: false

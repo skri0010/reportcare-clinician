@@ -288,6 +288,14 @@
     },
     "AlertVitals": {
       "HeartRate": "Heart Rate"
+    },
+    "RealTimeAlert": {
+      "NewAlert": "An alert has been raised!",
+      "Patient": "Patient",
+      "Summary": "Summary",
+      "TriageValue": "Triage value",
+      "DateTime": "Date time",
+      "ViewDetails": "View details"
     }
   },
   "MobileMessage": {

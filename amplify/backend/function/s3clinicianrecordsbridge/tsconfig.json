@@ -12,10 +12,10 @@
     "resolveJsonModule": true,
     "types": ["./src/node_modules/@types/node"],
     "outDir": "./src",
-    "baseUrl": "./",
     "rootDir": "./lib",
+    "baseUrl": "./",
     "paths": {
-      "src": ["./lib"]
+      "node_modules/*": ["./src/node_modules/*"]
     },
     "strict": true // Important to narrow down types
   },

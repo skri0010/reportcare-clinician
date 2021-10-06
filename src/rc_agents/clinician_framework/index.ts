@@ -61,6 +61,11 @@ export const ActionFrameIDs = {
     RETRIEVE_ICDCRT_RECORD_CONTENT: "RetrieveIcdCrtRecordContent",
     REQUEST_DISPLAY_ICDCRT_RECORD_CONTENT: "RequestDisplayIcdCrtRecordContent",
 
+    // HF-EUA: Real-time alerts
+    RETRIEVE_MONITORING_RECORDS: "RetrieveMonitoringRecords",
+    INFORM_MONITORING_RECORDS: "InformMonitoringRecords",
+    REQUEST_ASSOCIATE_MONITORING_RECORDS: "RequestAssociateMonitoringRecords",
+
     // SRD-I: Patient Assignments
     RETRIEVE_PENDING_PATIENT_ASSIGNMENTS: "RetrievePendingPatientAssignments",
     REQUEST_DISPLAY_PENDING_PATIENT_ASSIGNMENTS:
@@ -147,13 +152,13 @@ export const ActionFrameIDs = {
   ALA: {
     // HF-EUA: Real-time alerts
     PROCESS_ALERT_NOTIFICATION: "ProcessAlertNotification",
-    REQUEST_ASSOCIATE_ALERT_MEDICAL_RECORDS:
-      "RequestAssociateAlertMedicalRecords"
+    INFORM_REAL_TIME_ALERT: "InformRealTimeAlert",
+    REQUEST_RETRIEVE_USER_CONTEXT: "RequestRetrieveUserContext",
+    REQUEST_DISPLAY_REFRESHED_ALERTS: "RequestDisplayRefreshedAlerts"
   },
   MHA: {
     // HF-EUA: Real-time alerts
-    ASSOCIATE_ALERT_MEDICAL_RECORDS: "AssociateAlertMedicalRecords",
-    REQUEST_DISPLAY_REFRESHED_ALERTS: "RequestDisplayRefreshedAlerts"
+    RECEIVE_REAL_TIME_ALERT_INFO: "ReceiveRealTimeAlertInfo"
   },
   CAM: {
     // HF-EUA: Real-time alerts
@@ -245,12 +250,18 @@ export enum ClinicianAttributes {
   // HF-EUA: Alert Notifications and refreshed AlertInfo[]
   ALERT_NOTIFICATION = "AlertNotification",
   PROCESS_ALERT_NOTIFICATION = "ProcessAlertNotification",
+  REAL_TIME_ALERT = "RealTimeAlert",
+  INFORM_REAL_TIME_ALERT = "InformRealTimeAlert",
+  REAL_TIME_ALERT_RECEIVED = "RealTimeAlertReceived",
+  RETRIEVE_USER_CONTEXT = "RetrieveUserContext",
+  CONTEXT_RETRIEVED = "ContextRetrieved",
   REFRESHED_PENDING_ALERTS = "RefreshedPendingAlerts",
   REFRESHED_COMPLETED_ALERTS = "RefreshedCompletedAlerts",
   REFRESHED_ALERTS_RETRIEVED = "RefreshedAlertsRetrieved",
-  CONTEXT_RETRIEVED = "ContextRetrieved",
-  ALERT_MEDICAL_RECORDS_RETRIEVED = "AlertMedicalRecordsRetrieved",
-  ALERT_MEDICAL_RECORDS_ASSOCIATED = "AlertMedicalRecordsAssociated",
+  RETRIEVE_MONITORING_RECORDS = "RetrieveMonitoringRecords",
+  MONITORING_RECORDS = "MonitoringRecords",
+  MONITORING_RECORDS_RETRIEVED = "MonitoringRecordsRetrieved",
+  REAL_TIME_ALERT_INFO_RECEIVED = "RealTimeAlertInfoReceived",
   CURRENT_TIME = "CurrentTime",
   CURRENT_LOCATION = "CurrentLocation",
 

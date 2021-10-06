@@ -20,11 +20,13 @@ import { listClinicianPatientMaps, getDetailedAlert } from "aws";
 import { LocalStorage } from "rc_agents/storage";
 import { agentNWA } from "rc_agents/agents";
 import { convertAlertToAlertInfo } from "util/utilityFunctions";
-import { AlertStatus, FetchAlertsMode } from "rc_agents/model";
+import { AlertInfo, AlertStatus, FetchAlertsMode } from "rc_agents/model";
+import { store } from "util/useRedux";
+import { setRealTimeAlert } from "ic-redux/actions/agents/actionCreator";
 
 /**
  * Represents the activity for processing a real-time alert notification.
- * This happens in Procedure HF- Exacerbation User Specific Alert (HF-EUA).
+ * This happens in Procedure HF- Exacerbation User Specific Alert (HF-EUA) - A-AS.
  */
 class ProcessAlertNotification extends Activity {
   constructor() {
@@ -37,6 +39,10 @@ class ProcessAlertNotification extends Activity {
    */
   async doActivity(agent: Agent): Promise<void> {
     await super.doActivity(agent, [rule2]);
+
+    // Indicator of whether a pop up notification should be shown
+    let showAlertPopUp: boolean = false;
+    let alertInfo: AlertInfo | undefined;
 
     try {
       const facts = agentAPI.getFacts();
@@ -55,11 +61,13 @@ class ProcessAlertNotification extends Activity {
           const mapQuery = await listClinicianPatientMaps({
             clinicianID: clinicianID
           });
+
           if (mapQuery && mapQuery.data.listClinicianPatientMaps?.items) {
             const patientIds =
               mapQuery.data.listClinicianPatientMaps.items.flatMap((item) =>
                 item ? [item.patientID] : []
               );
+            // Clinician is responsible for this patient - should retrieve monitoring records
             if (patientIds.includes(alertNotification.patientID)) {
               // Get detailed alert
               const alertQuery = await getDetailedAlert({
@@ -68,50 +76,76 @@ class ProcessAlertNotification extends Activity {
               if (alertQuery.data.getAlert) {
                 // Store alert into local storage
                 const alert = alertQuery.data.getAlert;
-                const alertInfo = convertAlertToAlertInfo(alert);
+                alertInfo = convertAlertToAlertInfo(alert);
                 await LocalStorage.setAlertInfo(alertInfo);
-                // Obtain fetch alerts mode
-                const fetchAlertsMode: FetchAlertsMode | null =
-                  alertInfo.pending === AlertStatus.PENDING
-                    ? FetchAlertsMode.PENDING
-                    : alertInfo.completed === AlertStatus.COMPLETED
-                    ? FetchAlertsMode.COMPLETED
-                    : null;
-                // Update Facts
-                // Add item
-                if (fetchAlertsMode === FetchAlertsMode.PENDING) {
-                  // Pending AlertInfo[]
-                  agentAPI.addFact(
-                    new Belief(
-                      BeliefKeys.CLINICIAN,
-                      ClinicianAttributes.REFRESHED_PENDING_ALERTS,
-                      await LocalStorage.getPendingAlertInfos()
-                    ),
-                    false
-                  );
-                }
-                // Add item
-                if (fetchAlertsMode === FetchAlertsMode.COMPLETED) {
-                  // Pending AlertInfo[]
-                  agentAPI.addFact(
-                    new Belief(
-                      BeliefKeys.CLINICIAN,
-                      ClinicianAttributes.REFRESHED_COMPLETED_ALERTS,
-                      await LocalStorage.getCompletedAlertInfos()
-                    ),
-                    false
-                  );
-                }
-                // Trigger request to MHA
-                agent.addBelief(
-                  new Belief(
-                    BeliefKeys.CLINICIAN,
-                    ClinicianAttributes.ALERT_MEDICAL_RECORDS_RETRIEVED,
-                    true
-                  )
-                );
+                showAlertPopUp = true;
               }
             }
+          }
+
+          if (showAlertPopUp && alertInfo) {
+            // Dispatch to front end to be shown in a pop up
+            store.dispatch(setRealTimeAlert(alertInfo));
+
+            // Trigger to inform MHA
+            agent.addBelief(
+              new Belief(
+                BeliefKeys.CLINICIAN,
+                ClinicianAttributes.INFORM_REAL_TIME_ALERT,
+                true
+              )
+            );
+
+            // Trigger to request CAM to retrieve user context
+            agent.addBelief(
+              new Belief(
+                BeliefKeys.CLINICIAN,
+                ClinicianAttributes.RETRIEVE_USER_CONTEXT,
+                true
+              )
+            );
+
+            // Obtain fetch alerts mode
+            const fetchAlertsMode: FetchAlertsMode | null =
+              alertInfo.pending === AlertStatus.PENDING
+                ? FetchAlertsMode.PENDING
+                : alertInfo.completed === AlertStatus.COMPLETED
+                ? FetchAlertsMode.COMPLETED
+                : null;
+
+            // Updates facts with latest pending and completed alerts
+            if (fetchAlertsMode === FetchAlertsMode.PENDING) {
+              // Pending AlertInfo[]
+              agentAPI.addFact(
+                new Belief(
+                  BeliefKeys.CLINICIAN,
+                  ClinicianAttributes.REFRESHED_PENDING_ALERTS,
+                  await LocalStorage.getPendingAlertInfos()
+                ),
+                false
+              );
+            }
+
+            if (fetchAlertsMode === FetchAlertsMode.COMPLETED) {
+              // Completed AlertInfo[]
+              agentAPI.addFact(
+                new Belief(
+                  BeliefKeys.CLINICIAN,
+                  ClinicianAttributes.REFRESHED_COMPLETED_ALERTS,
+                  await LocalStorage.getCompletedAlertInfos()
+                ),
+                false
+              );
+            }
+
+            // Trigger to display refreshed alerts
+            agent.addBelief(
+              new Belief(
+                BeliefKeys.CLINICIAN,
+                ClinicianAttributes.REFRESHED_ALERTS_RETRIEVED,
+                true
+              )
+            );
           }
         } else {
           // Store alert notification locally to be processed later
@@ -129,17 +163,6 @@ class ProcessAlertNotification extends Activity {
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
-
-      // End the procedure
-      agentAPI.addFact(
-        new Belief(
-          BeliefKeys.PROCEDURE,
-          ProcedureAttributes.HF_EUA,
-          ProcedureConst.INACTIVE
-        ),
-        true,
-        true
-      );
     }
 
     // Update Facts

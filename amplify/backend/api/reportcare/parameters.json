@@ -3,6 +3,9 @@
   "DynamoDBBillingMode": "PAY_PER_REQUEST",
   "DynamoDBEnableServerSideEncryption": false,
   "AuthCognitoUserPoolId": {
-    "Fn::GetAtt": ["authreportcaref82cc4af", "Outputs.UserPoolId"]
+    "Fn::GetAtt": [
+      "authreportcaref82cc4af",
+      "Outputs.UserPoolId"
+    ]
   }
 }

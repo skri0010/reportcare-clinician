@@ -3,8 +3,7 @@ import {
   Agent,
   Belief,
   Communicate,
-  Precondition,
-  ResettablePrecondition
+  Precondition
 } from "agents-framework";
 import {
   CommonAttributes,
@@ -18,6 +17,7 @@ import {
   ClinicianAttributes,
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
+import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 
 /**
  * Represents the activity for informing MHA the retrieved user's context when real-time alert is received.
@@ -43,7 +43,18 @@ class InformUserContext extends Communicate {
    * @param {Agent} agent current agent
    */
   async doActivity(agent: Agent): Promise<void> {
-    await super.doActivity(agent, [rule3]);
+    await super.doActivity(agent);
+
+    // End the procedure
+    agentAPI.addFact(
+      new Belief(
+        BeliefKeys.PROCEDURE,
+        ProcedureAttributes.HF_EUA,
+        ProcedureConst.INACTIVE
+      ),
+      true,
+      true
+    );
   }
 }
 
@@ -58,15 +69,10 @@ const rule2 = new Precondition(
   CommonAttributes.LAST_ACTIVITY,
   ActionFrameIDs.CAM.RETRIEVE_USER_CONTEXT
 );
-const rule3 = new ResettablePrecondition(
-  BeliefKeys.CLINICIAN,
-  ClinicianAttributes.CONTEXT_RETRIEVED,
-  true
-);
 
 // Actionframe
 export const af_InformUserContext = new Actionframe(
   `AF_${ActionFrameIDs.CAM.INFORM_USER_CONTEXT}`,
-  [rule1, rule2, rule3],
+  [rule1, rule2],
   new InformUserContext()
 );

@@ -68,6 +68,8 @@ interface AgentsState {
   icdCrtRecords: IcdCrtRecord[] | undefined;
   fetchingIcdCrtRecordContent: boolean;
   icdCrtRecordContent: string | undefined;
+  showAlertPopUp: boolean;
+  realTimeAlert: AlertInfo | undefined;
 }
 
 const initialState: AgentsState = {
@@ -144,7 +146,9 @@ const initialState: AgentsState = {
   fetchingIcdCrtRecords: false,
   icdCrtRecords: undefined,
   fetchingIcdCrtRecordContent: false,
-  icdCrtRecordContent: undefined
+  icdCrtRecordContent: undefined,
+  showAlertPopUp: false,
+  realTimeAlert: undefined
 };
 
 export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
@@ -330,6 +334,16 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
       return {
         ...state,
         alertInfo: action.payload.alertInfo
+      };
+    case actionNames.SET_SHOW_ALERT_POPUP:
+      return {
+        ...state,
+        showAlertPopUp: action.payload.showAlertPopUp
+      };
+    case actionNames.SET_REAL_TIME_ALERT:
+      return {
+        ...state,
+        realTimeAlert: action.payload.realTimeAlert
       };
     case actionNames.SET_CHART_FILTERS:
       return { ...state, chartFilters: action.payload.chartFilters };

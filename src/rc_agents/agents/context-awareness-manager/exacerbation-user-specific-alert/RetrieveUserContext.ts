@@ -14,9 +14,8 @@ import {
   ClinicianAttributes,
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
-import Geolocation, {
-  GeolocationResponse
-} from "@react-native-community/geolocation";
+import Geolocation from "@react-native-community/geolocation";
+import { agentMHA } from "rc_agents/agents";
 
 /**
  * Represents the activity for retrieving user's context when real-time alert is received.
@@ -36,56 +35,43 @@ class RetrieveUserContext extends Activity {
 
     try {
       // Retrieves time and location of current user
-      const currentTime = new Date().toLocaleTimeString();
-      let currentLocation: GeolocationResponse | undefined;
       Geolocation.getCurrentPosition((info) => {
-        currentLocation = info;
-        // eslint-disable-next-line no-console
-        console.log(info);
-      });
+        const currentLocation = info;
+        const currentTime = new Date().toLocaleTimeString();
 
-      // Adds retrieved time and location to facts
-      if (currentTime && currentLocation) {
-        agentAPI.addFact(
-          new Belief(
-            BeliefKeys.CLINICIAN,
-            ClinicianAttributes.CURRENT_TIME,
-            currentTime
-          ),
-          false
-        );
-        agentAPI.addFact(
-          new Belief(
-            BeliefKeys.CLINICIAN,
-            ClinicianAttributes.CURRENT_LOCATION,
-            currentLocation
-          ),
-          false
-        );
-        // Updates beliefs to trigger InformUserContext action frame
-        agent.addBelief(
-          new Belief(
-            BeliefKeys.CLINICIAN,
-            ClinicianAttributes.CONTEXT_RETRIEVED,
-            true
-          )
-        );
-      }
+        if (currentTime && currentLocation) {
+          // Adds retrieved time and location to MHA beliefs directly (to be handled in the future)
+          agentMHA.addBelief(
+            new Belief(
+              BeliefKeys.CLINICIAN,
+              ClinicianAttributes.CURRENT_TIME,
+              currentTime
+            )
+          );
+          agentMHA.addBelief(
+            new Belief(
+              BeliefKeys.CLINICIAN,
+              ClinicianAttributes.CURRENT_LOCATION,
+              currentLocation
+            )
+          );
+        }
+      });
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
-    }
 
-    // End the procedure
-    agentAPI.addFact(
-      new Belief(
-        BeliefKeys.PROCEDURE,
-        ProcedureAttributes.HF_EUA,
-        ProcedureConst.INACTIVE
-      ),
-      true,
-      true
-    );
+      // End the procedure
+      agentAPI.addFact(
+        new Belief(
+          BeliefKeys.PROCEDURE,
+          ProcedureAttributes.HF_EUA,
+          ProcedureConst.INACTIVE
+        ),
+        true,
+        true
+      );
+    }
   }
 }
 
@@ -97,7 +83,7 @@ const rule1 = new Precondition(
 );
 const rule2 = new ResettablePrecondition(
   BeliefKeys.CLINICIAN,
-  ClinicianAttributes.ALERT_MEDICAL_RECORDS_RETRIEVED,
+  ClinicianAttributes.RETRIEVE_USER_CONTEXT,
   true
 );
 

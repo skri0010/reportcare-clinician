@@ -5,7 +5,8 @@ import {
   PatientInfo,
   MedicalRecord,
   Alert,
-  IcdCrtRecord
+  IcdCrtRecord,
+  MedicationInfo
 } from "aws/API";
 import { RiskLevel } from "models/RiskLevel";
 
@@ -143,14 +144,30 @@ export interface AlertsCount {
   unassignedRisk: number;
 }
 
-export type AlertInfo = {
+type BaseAlertInfo = {
   riskLevel: RiskLevel;
+} & Alert;
+
+// For viewing usual Alert details
+export type AlertInfo = {
   diagnosis?: string;
   NYHAClass?: string;
   lastMedication?: string;
   medicationQuantity?: number;
   activityDuringAlert?: string;
-} & Alert;
+} & BaseAlertInfo;
+
+export type MedInfoCompliants = {
+  [date: string]: string[];
+};
+
+// For viewing details of real-time Alert (triage >= 70%)
+export type AlertWithMonitoringRecords = {
+  latestBaseline?: PatientInfo;
+  symptomsReports: ReportSymptom[];
+  vitalsReports: ReportVitals[];
+  medCompliants: MedicationInfo[];
+} & BaseAlertInfo;
 
 export type ProcessedAlertInfos = {
   [patientID: string]: AlertInfo[] | undefined;

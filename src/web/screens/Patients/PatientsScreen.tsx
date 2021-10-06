@@ -81,6 +81,7 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
     symptomReportID: "",
     dateTime: "",
     summary: "",
+    triageValue: "",
     colorCode: AlertColorCode.UNASSIGNED,
     pending: AlertStatus.PENDING,
     completed: null,

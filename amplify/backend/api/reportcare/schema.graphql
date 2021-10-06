@@ -317,6 +317,7 @@ type ClinicianProtectedInfo
   NWA: String!
   ALA: String!
   MHA: String!
+  CAM: String!
 }
 
 """
@@ -442,6 +443,7 @@ type Alert
   dateTime: AWSDateTime!
   summary: String!
   colorCode: String!
+  triageValue: String!
   vitalsReportID: ID!
   vitalsReport: ReportVitals @connection(fields: ["vitalsReportID"])
   symptomReportID: ID!
@@ -539,20 +541,22 @@ type ClinicianRecord
   )
   @key(fields: ["patientID", "documentID"])
   @key(
-    name: "clinicianRecordsByType"
-    fields: ["type", "documentID"]
-    queryField: "listClinicianRecordsByType"
+    name: "uploadedClinicianRecordsByPatientID"
+    fields: ["patientID", "uploadDateTime"]
+    queryField: "listUploadedClinicianRecordsByPatientID"
   ) {
   patientID: String!
   documentID: String!
   type: String!
   title: String!
   path: String!
+  uploaderClinicianID: String!
+  uploadDateTime: AWSDateTime
 }
 
 """
 NOTE: Function type, name, arguments and return type must match in backend/function/s3clinicianrecordsbridge/lib/types
-Query 1: getPresignedURLForUpload
+Query 1: getPresignedUrlForUpload
 Input: {
   recordType: "IcdCrt" | "Medical"
   operation: "Upload" | "Download

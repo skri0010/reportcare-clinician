@@ -969,6 +969,61 @@ export type DeleteAlertNotificationInput = {
   _version?: number | null;
 };
 
+export type CreateClinicianRecordInput = {
+  patientID: string;
+  documentID: string;
+  type: string;
+  title: string;
+  path: string;
+  uploaderClinicianID: string;
+  uploadDateTime?: string | null;
+  _version?: number | null;
+};
+
+export type ModelClinicianRecordConditionInput = {
+  type?: ModelStringInput | null;
+  title?: ModelStringInput | null;
+  path?: ModelStringInput | null;
+  uploaderClinicianID?: ModelStringInput | null;
+  uploadDateTime?: ModelStringInput | null;
+  and?: Array<ModelClinicianRecordConditionInput | null> | null;
+  or?: Array<ModelClinicianRecordConditionInput | null> | null;
+  not?: ModelClinicianRecordConditionInput | null;
+};
+
+export type ClinicianRecord = {
+  __typename: "ClinicianRecord";
+  patientID: string;
+  documentID: string;
+  type: string;
+  title: string;
+  path: string;
+  uploaderClinicianID: string;
+  uploadDateTime?: string | null;
+  _version: number;
+  _deleted?: boolean | null;
+  _lastChangedAt: number;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type UpdateClinicianRecordInput = {
+  patientID: string;
+  documentID: string;
+  type?: string | null;
+  title?: string | null;
+  path?: string | null;
+  uploaderClinicianID?: string | null;
+  uploadDateTime?: string | null;
+  _version?: number | null;
+};
+
+export type DeleteClinicianRecordInput = {
+  patientID: string;
+  documentID: string;
+  _version?: number | null;
+};
+
 export type ModelPatientInfoFilterInput = {
   id?: ModelIDInput | null;
   name?: ModelStringInput | null;
@@ -1308,6 +1363,26 @@ export type ModelAlertNotificationFilterInput = {
 export type ModelAlertNotificationConnection = {
   __typename: "ModelAlertNotificationConnection";
   items?: Array<AlertNotification | null> | null;
+  nextToken?: string | null;
+  startedAt?: number | null;
+};
+
+export type ModelClinicianRecordFilterInput = {
+  patientID?: ModelStringInput | null;
+  documentID?: ModelStringInput | null;
+  type?: ModelStringInput | null;
+  title?: ModelStringInput | null;
+  path?: ModelStringInput | null;
+  uploaderClinicianID?: ModelStringInput | null;
+  uploadDateTime?: ModelStringInput | null;
+  and?: Array<ModelClinicianRecordFilterInput | null> | null;
+  or?: Array<ModelClinicianRecordFilterInput | null> | null;
+  not?: ModelClinicianRecordFilterInput | null;
+};
+
+export type ModelClinicianRecordConnection = {
+  __typename: "ModelClinicianRecordConnection";
+  items?: Array<ClinicianRecord | null> | null;
   nextToken?: string | null;
   startedAt?: number | null;
 };
@@ -2419,12 +2494,85 @@ export type DeleteAlertNotificationMutation = {
   } | null;
 };
 
-export type EchoQueryVariables = {
-  msg?: string | null;
+export type CreateClinicianRecordMutationVariables = {
+  input: CreateClinicianRecordInput;
+  condition?: ModelClinicianRecordConditionInput | null;
 };
 
-export type EchoQuery = {
-  echo?: string | null;
+export type CreateClinicianRecordMutation = {
+  createClinicianRecord?: {
+    __typename: "ClinicianRecord";
+    patientID: string;
+    documentID: string;
+    type: string;
+    title: string;
+    path: string;
+    uploaderClinicianID: string;
+    uploadDateTime?: string | null;
+    _version: number;
+    _deleted?: boolean | null;
+    _lastChangedAt: number;
+    createdAt: string;
+    updatedAt: string;
+  } | null;
+};
+
+export type UpdateClinicianRecordMutationVariables = {
+  input: UpdateClinicianRecordInput;
+  condition?: ModelClinicianRecordConditionInput | null;
+};
+
+export type UpdateClinicianRecordMutation = {
+  updateClinicianRecord?: {
+    __typename: "ClinicianRecord";
+    patientID: string;
+    documentID: string;
+    type: string;
+    title: string;
+    path: string;
+    uploaderClinicianID: string;
+    uploadDateTime?: string | null;
+    _version: number;
+    _deleted?: boolean | null;
+    _lastChangedAt: number;
+    createdAt: string;
+    updatedAt: string;
+  } | null;
+};
+
+export type DeleteClinicianRecordMutationVariables = {
+  input: DeleteClinicianRecordInput;
+  condition?: ModelClinicianRecordConditionInput | null;
+};
+
+export type DeleteClinicianRecordMutation = {
+  deleteClinicianRecord?: {
+    __typename: "ClinicianRecord";
+    patientID: string;
+    documentID: string;
+    type: string;
+    title: string;
+    path: string;
+    uploaderClinicianID: string;
+    uploadDateTime?: string | null;
+    _version: number;
+    _deleted?: boolean | null;
+    _lastChangedAt: number;
+    createdAt: string;
+    updatedAt: string;
+  } | null;
+};
+
+export type GetPresignedUrlForClinicianRecordsQueryVariables = {
+  recordType?: string | null;
+  operation?: string | null;
+  patientID?: string | null;
+  documentID?: string | null;
+  documentTitle?: string | null;
+};
+
+export type GetPresignedUrlForClinicianRecordsQuery = {
+  getPresignedUrlForClinicianRecords?: string | null;
 };
 
 export type GetPatientInfoQueryVariables = {
@@ -3547,6 +3695,78 @@ export type SyncAlertNotificationsQuery = {
   } | null;
 };
 
+export type GetClinicianRecordQueryVariables = {
+  patientID: string;
+  documentID: string;
+};
+
+export type GetClinicianRecordQuery = {
+  getClinicianRecord?: {
+    __typename: "ClinicianRecord";
+    patientID: string;
+    documentID: string;
+    type: string;
+    title: string;
+    path: string;
+    uploaderClinicianID: string;
+    uploadDateTime?: string | null;
+    _version: number;
+    _deleted?: boolean | null;
+    _lastChangedAt: number;
+    createdAt: string;
+    updatedAt: string;
+  } | null;
+};
+
+export type ListClinicianRecordsQueryVariables = {
+  patientID?: string | null;
+  documentID?: ModelStringKeyConditionInput | null;
+  filter?: ModelClinicianRecordFilterInput | null;
+  limit?: number | null;
+  nextToken?: string | null;
+  sortDirection?: ModelSortDirection | null;
+};
+
+export type ListClinicianRecordsQuery = {
+  listClinicianRecords?: {
+    __typename: "ModelClinicianRecordConnection";
+    nextToken?: string | null;
+    startedAt?: number | null;
+  } | null;
+};
+
+export type ListUploadedClinicianRecordsByPatientIDQueryVariables = {
+  patientID?: string | null;
+  uploadDateTime?: ModelStringKeyConditionInput | null;
+  sortDirection?: ModelSortDirection | null;
+  filter?: ModelClinicianRecordFilterInput | null;
+  limit?: number | null;
+  nextToken?: string | null;
+};
+
+export type ListUploadedClinicianRecordsByPatientIDQuery = {
+  listUploadedClinicianRecordsByPatientID?: {
+    __typename: "ModelClinicianRecordConnection";
+    nextToken?: string | null;
+    startedAt?: number | null;
+  } | null;
+};
+
+export type SyncClinicianRecordsQueryVariables = {
+  filter?: ModelClinicianRecordFilterInput | null;
+  limit?: number | null;
+  nextToken?: string | null;
+  lastSync?: number | null;
+};
+
+export type SyncClinicianRecordsQuery = {
+  syncClinicianRecords?: {
+    __typename: "ModelClinicianRecordConnection";
+    nextToken?: string | null;
+    startedAt?: number | null;
+  } | null;
+};
+
 export type OnCreatePatientInfoSubscriptionVariables = {
   owner?: string | null;
 };
@@ -4598,6 +4818,60 @@ export type OnDeleteAlertNotificationSubscription = {
     patientID: string;
     alertID: string;
     owner: string;
+    _version: number;
+    _deleted?: boolean | null;
+    _lastChangedAt: number;
+    createdAt: string;
+    updatedAt: string;
+  } | null;
+};
+
+export type OnCreateClinicianRecordSubscription = {
+  onCreateClinicianRecord?: {
+    __typename: "ClinicianRecord";
+    patientID: string;
+    documentID: string;
+    type: string;
+    title: string;
+    path: string;
+    uploaderClinicianID: string;
+    uploadDateTime?: string | null;
+    _version: number;
+    _deleted?: boolean | null;
+    _lastChangedAt: number;
+    createdAt: string;
+    updatedAt: string;
+  } | null;
+};
+
+export type OnUpdateClinicianRecordSubscription = {
+  onUpdateClinicianRecord?: {
+    __typename: "ClinicianRecord";
+    patientID: string;
+    documentID: string;
+    type: string;
+    title: string;
+    path: string;
+    uploaderClinicianID: string;
+    uploadDateTime?: string | null;
+    _version: number;
+    _deleted?: boolean | null;
+    _lastChangedAt: number;
+    createdAt: string;
+    updatedAt: string;
+  } | null;
+};
+
+export type OnDeleteClinicianRecordSubscription = {
+  onDeleteClinicianRecord?: {
+    __typename: "ClinicianRecord";
+    patientID: string;
+    documentID: string;
+    type: string;
+    title: string;
+    path: string;
+    uploaderClinicianID: string;
+    uploadDateTime?: string | null;
     _version: number;
     _deleted?: boolean | null;
     _lastChangedAt: number;

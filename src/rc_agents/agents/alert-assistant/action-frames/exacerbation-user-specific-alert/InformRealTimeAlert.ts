@@ -20,21 +20,21 @@ import {
 } from "rc_agents/clinician_framework";
 
 /**
- * Represents the activity for requesting MHA to associate the real-time alert with the retrieved medical records.
- * This happens in Procedure HF- Exacerbation User Specific Alert (HF-EUA).
+ * Represents the activity for informing MHA about the real-time alert.
+ * This happens in Procedure HF- Exacerbation User Specific Alert (HF-EUA) - A-AS.
  */
-class RequestAssociateAlertMedicalRecords extends Communicate {
+class InformRealTimeAlert extends Communicate {
   constructor() {
     super(
-      ActionFrameIDs.ALA.REQUEST_ASSOCIATE_ALERT_MEDICAL_RECORDS,
-      Performative.REQUEST,
-      // Request MHA to associate the retrieved information and CAM to retrieve user context for association
+      ActionFrameIDs.ALA.INFORM_REAL_TIME_ALERT,
+      Performative.INFORM,
+      // Inform MHA with the real time alert
       new Belief(
         BeliefKeys.CLINICIAN,
-        ClinicianAttributes.ALERT_MEDICAL_RECORDS_RETRIEVED,
+        ClinicianAttributes.REAL_TIME_ALERT_RECEIVED,
         true
       ),
-      [AgentIDs.MHA, AgentIDs.CAM]
+      [AgentIDs.MHA]
     );
   }
 
@@ -60,13 +60,13 @@ const rule2 = new Precondition(
 );
 const rule3 = new ResettablePrecondition(
   BeliefKeys.CLINICIAN,
-  ClinicianAttributes.ALERT_MEDICAL_RECORDS_RETRIEVED,
+  ClinicianAttributes.INFORM_REAL_TIME_ALERT,
   true
 );
 
 // Actionframe
-export const af_RequestAssociateAlertMedicalRecords = new Actionframe(
-  `AF_${ActionFrameIDs.ALA.REQUEST_ASSOCIATE_ALERT_MEDICAL_RECORDS}`,
+export const af_InformRealTimeAlert = new Actionframe(
+  `AF_${ActionFrameIDs.ALA.INFORM_REAL_TIME_ALERT}`,
   [rule1, rule2, rule3],
-  new RequestAssociateAlertMedicalRecords()
+  new InformRealTimeAlert()
 );

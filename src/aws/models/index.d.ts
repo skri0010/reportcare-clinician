@@ -139,6 +139,7 @@ export declare class ClinicianProtectedInfo {
   readonly NWA: string;
   readonly ALA: string;
   readonly MHA: string;
+  readonly CAM: string;
   constructor(init: ModelInit<ClinicianProtectedInfo>);
   static copyOf(source: ClinicianProtectedInfo, mutator: (draft: MutableModel<ClinicianProtectedInfo>) => MutableModel<ClinicianProtectedInfo> | void): ClinicianProtectedInfo;
 }
@@ -172,6 +173,7 @@ export declare class Alert {
   readonly dateTime: string;
   readonly summary: string;
   readonly colorCode: string;
+  readonly triageValue: string;
   readonly vitalsReportID: string;
   readonly vitalsReport?: ReportVitals;
   readonly symptomReportID: string;
@@ -215,6 +217,8 @@ export declare class ClinicianRecord {
   readonly type: string;
   readonly title: string;
   readonly path: string;
+  readonly uploaderClinicianID: string;
+  readonly uploadDateTime?: string;
   constructor(init: ModelInit<ClinicianRecord>);
   static copyOf(source: ClinicianRecord, mutator: (draft: MutableModel<ClinicianRecord>) => MutableModel<ClinicianRecord> | void): ClinicianRecord;
 }

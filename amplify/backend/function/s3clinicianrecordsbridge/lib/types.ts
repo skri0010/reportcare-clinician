@@ -16,7 +16,7 @@ interface Event {
 // == Exported types ==
 export interface QueryEvent extends Event {
   typeName: "Query";
-  fieldName: "getPresignedURLForClinicianRecords";
+  fieldName: "getPresignedUrlForClinicianRecords" | OptionalString;
   arguments: QueryArgumentsType;
 }
 
@@ -36,7 +36,11 @@ export enum QueryArgument {
 
 type QueryArgumentsType = {
   [QueryArgument.recordType]: "IcdCrt" | "Medical" | OptionalString;
-  [QueryArgument.operation]: "Upload" | "Download" | OptionalString;
+  [QueryArgument.operation]:
+    | "Upload"
+    | "Download"
+    | "Acknowledge"
+    | OptionalString;
   [QueryArgument.patientID]: OptionalString;
   [QueryArgument.documentID]: OptionalString;
   [QueryArgument.documentTitle]: OptionalString;

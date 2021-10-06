@@ -40,6 +40,8 @@ import { af_RetrieveIcdCrtRecords } from "./action-frames/hf-outcome-trends/Retr
 import { af_RequestDisplayIcdCrtRecords } from "./action-frames/hf-outcome-trends/RequestDisplayIcdCrtRecords";
 import { af_RetrieveIcdCrtRecordContent } from "./action-frames/hf-outcome-trends/RetrieveIcdCrtRecordContent";
 import { af_RequestDisplayIcdCrtRecordContent } from "./action-frames/hf-outcome-trends/RequestDisplayIcdCrtRecordContent";
+import { af_RetrieveMonitoringRecords } from "./action-frames/exacerbation-user-specific-alert/RetrieveMonitoringRecords";
+import { af_InformMonitoringRecords } from "./action-frames/exacerbation-user-specific-alert/InformMonitoringRecords";
 
 // Initial Beliefs of Agent
 
@@ -84,6 +86,10 @@ const agentDTA = new ClinicianAgent(
     af_RequestDisplayIcdCrtRecords,
     af_RetrieveIcdCrtRecordContent,
     af_RequestDisplayIcdCrtRecordContent,
+
+    // HF-EUA
+    af_RetrieveMonitoringRecords,
+    af_InformMonitoringRecords,
 
     // AT-CP-I
     af_RetrieveAlerts,

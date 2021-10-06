@@ -614,6 +614,7 @@ export const onCreateClinicianInfo = /* GraphQL */ `
         NWA
         ALA
         MHA
+        CAM
         _version
         _deleted
         _lastChangedAt
@@ -647,6 +648,7 @@ export const onUpdateClinicianInfo = /* GraphQL */ `
         NWA
         ALA
         MHA
+        CAM
         _version
         _deleted
         _lastChangedAt
@@ -680,6 +682,7 @@ export const onDeleteClinicianInfo = /* GraphQL */ `
         NWA
         ALA
         MHA
+        CAM
         _version
         _deleted
         _lastChangedAt
@@ -701,6 +704,7 @@ export const onCreateClinicianProtectedInfo = /* GraphQL */ `
       NWA
       ALA
       MHA
+      CAM
       _version
       _deleted
       _lastChangedAt
@@ -721,6 +725,7 @@ export const onUpdateClinicianProtectedInfo = /* GraphQL */ `
       NWA
       ALA
       MHA
+      CAM
       _version
       _deleted
       _lastChangedAt
@@ -741,6 +746,7 @@ export const onDeleteClinicianProtectedInfo = /* GraphQL */ `
       NWA
       ALA
       MHA
+      CAM
       _version
       _deleted
       _lastChangedAt
@@ -864,13 +870,13 @@ export const onCreatePatientAssignment = /* GraphQL */ `
       pending
       resolution
       reassignToClinicianID
-      adminReassignFromClinicianID
+      adminCompleted
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
-      adminCompleted
+      adminReassignFromClinicianID
     }
   }
 `;
@@ -890,13 +896,13 @@ export const onUpdatePatientAssignment = /* GraphQL */ `
       pending
       resolution
       reassignToClinicianID
-      adminReassignFromClinicianID
+      adminCompleted
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
-      adminCompleted
+      adminReassignFromClinicianID
     }
   }
 `;
@@ -916,13 +922,13 @@ export const onDeletePatientAssignment = /* GraphQL */ `
       pending
       resolution
       reassignToClinicianID
-      adminReassignFromClinicianID
+      adminCompleted
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
-      adminCompleted
+      adminReassignFromClinicianID
     }
   }
 `;
@@ -935,6 +941,7 @@ export const onCreateAlert = /* GraphQL */ `
       dateTime
       summary
       colorCode
+      triageValue
       vitalsReportID
       symptomReportID
       pending
@@ -991,6 +998,7 @@ export const onUpdateAlert = /* GraphQL */ `
       dateTime
       summary
       colorCode
+      triageValue
       vitalsReportID
       symptomReportID
       pending
@@ -1047,6 +1055,7 @@ export const onDeleteAlert = /* GraphQL */ `
       dateTime
       summary
       colorCode
+      triageValue
       vitalsReportID
       symptomReportID
       pending
@@ -1119,6 +1128,7 @@ export const onCreateTodo = /* GraphQL */ `
         dateTime
         summary
         colorCode
+        triageValue
         vitalsReportID
         symptomReportID
         pending
@@ -1158,6 +1168,7 @@ export const onUpdateTodo = /* GraphQL */ `
         dateTime
         summary
         colorCode
+        triageValue
         vitalsReportID
         symptomReportID
         pending
@@ -1197,6 +1208,7 @@ export const onDeleteTodo = /* GraphQL */ `
         dateTime
         summary
         colorCode
+        triageValue
         vitalsReportID
         symptomReportID
         pending
@@ -1248,6 +1260,60 @@ export const onDeleteAlertNotification = /* GraphQL */ `
       patientID
       alertID
       owner
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateClinicianRecord = /* GraphQL */ `
+  subscription OnCreateClinicianRecord {
+    onCreateClinicianRecord {
+      patientID
+      documentID
+      type
+      title
+      path
+      uploaderClinicianID
+      uploadDateTime
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateClinicianRecord = /* GraphQL */ `
+  subscription OnUpdateClinicianRecord {
+    onUpdateClinicianRecord {
+      patientID
+      documentID
+      type
+      title
+      path
+      uploaderClinicianID
+      uploadDateTime
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteClinicianRecord = /* GraphQL */ `
+  subscription OnDeleteClinicianRecord {
+    onDeleteClinicianRecord {
+      patientID
+      documentID
+      type
+      title
+      path
+      uploaderClinicianID
+      uploadDateTime
       _version
       _deleted
       _lastChangedAt

@@ -55,6 +55,7 @@ class SyncProtectedInfo extends Activity {
               NWA: localClinician.protectedInfo.NWA,
               ALA: localClinician.protectedInfo.ALA,
               MHA: localClinician.protectedInfo.MHA,
+              CAM: localClinician.protectedInfo.CAM,
               _version: latestProtectedInfo?._version
             };
             await updateClinicianProtectedInfo(updatedProtectedInfo);

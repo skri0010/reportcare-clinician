@@ -139,6 +139,18 @@ class RetrieveEntryData extends Activity {
                   }
                   break;
                 }
+                case AgentIDs.CAM: {
+                  if (
+                    clinician.protectedInfo?.CAM &&
+                    Object.entries(JSON.parse(clinician.protectedInfo?.CAM))
+                      .length > 0
+                  ) {
+                    existingAgent.mergeBeliefs(
+                      JSON.parse(clinician.protectedInfo?.CAM)
+                    );
+                  }
+                  break;
+                }
                 default: {
                   break;
                 }

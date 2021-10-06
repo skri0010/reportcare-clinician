@@ -975,6 +975,8 @@ export type CreateClinicianRecordInput = {
   type: string;
   title: string;
   path: string;
+  uploaderClinicianID: string;
+  uploadDateTime?: string | null;
   _version?: number | null;
 };
 
@@ -982,6 +984,8 @@ export type ModelClinicianRecordConditionInput = {
   type?: ModelStringInput | null;
   title?: ModelStringInput | null;
   path?: ModelStringInput | null;
+  uploaderClinicianID?: ModelStringInput | null;
+  uploadDateTime?: ModelStringInput | null;
   and?: Array<ModelClinicianRecordConditionInput | null> | null;
   or?: Array<ModelClinicianRecordConditionInput | null> | null;
   not?: ModelClinicianRecordConditionInput | null;
@@ -994,6 +998,8 @@ export type ClinicianRecord = {
   type: string;
   title: string;
   path: string;
+  uploaderClinicianID: string;
+  uploadDateTime?: string | null;
   _version: number;
   _deleted?: boolean | null;
   _lastChangedAt: number;
@@ -1007,6 +1013,8 @@ export type UpdateClinicianRecordInput = {
   type?: string | null;
   title?: string | null;
   path?: string | null;
+  uploaderClinicianID?: string | null;
+  uploadDateTime?: string | null;
   _version?: number | null;
 };
 
@@ -1365,6 +1373,8 @@ export type ModelClinicianRecordFilterInput = {
   type?: ModelStringInput | null;
   title?: ModelStringInput | null;
   path?: ModelStringInput | null;
+  uploaderClinicianID?: ModelStringInput | null;
+  uploadDateTime?: ModelStringInput | null;
   and?: Array<ModelClinicianRecordFilterInput | null> | null;
   or?: Array<ModelClinicianRecordFilterInput | null> | null;
   not?: ModelClinicianRecordFilterInput | null;
@@ -2497,6 +2507,8 @@ export type CreateClinicianRecordMutation = {
     type: string;
     title: string;
     path: string;
+    uploaderClinicianID: string;
+    uploadDateTime?: string | null;
     _version: number;
     _deleted?: boolean | null;
     _lastChangedAt: number;
@@ -2518,6 +2530,8 @@ export type UpdateClinicianRecordMutation = {
     type: string;
     title: string;
     path: string;
+    uploaderClinicianID: string;
+    uploadDateTime?: string | null;
     _version: number;
     _deleted?: boolean | null;
     _lastChangedAt: number;
@@ -2539,6 +2553,8 @@ export type DeleteClinicianRecordMutation = {
     type: string;
     title: string;
     path: string;
+    uploaderClinicianID: string;
+    uploadDateTime?: string | null;
     _version: number;
     _deleted?: boolean | null;
     _lastChangedAt: number;
@@ -2547,7 +2563,7 @@ export type DeleteClinicianRecordMutation = {
   } | null;
 };
 
-export type GetPresignedURLForClinicianRecordsQueryVariables = {
+export type GetPresignedUrlForClinicianRecordsQueryVariables = {
   recordType?: string | null;
   operation?: string | null;
   patientID?: string | null;
@@ -2555,8 +2571,8 @@ export type GetPresignedURLForClinicianRecordsQueryVariables = {
   documentTitle?: string | null;
 };
 
-export type GetPresignedURLForClinicianRecordsQuery = {
-  getPresignedURLForClinicianRecords?: string | null;
+export type GetPresignedUrlForClinicianRecordsQuery = {
+  getPresignedUrlForClinicianRecords?: string | null;
 };
 
 export type GetPatientInfoQueryVariables = {
@@ -3692,6 +3708,8 @@ export type GetClinicianRecordQuery = {
     type: string;
     title: string;
     path: string;
+    uploaderClinicianID: string;
+    uploadDateTime?: string | null;
     _version: number;
     _deleted?: boolean | null;
     _lastChangedAt: number;
@@ -3717,17 +3735,17 @@ export type ListClinicianRecordsQuery = {
   } | null;
 };
 
-export type ListClinicianRecordsByTypeQueryVariables = {
-  type?: string | null;
-  documentID?: ModelStringKeyConditionInput | null;
+export type ListUploadedClinicianRecordsByPatientIDQueryVariables = {
+  patientID?: string | null;
+  uploadDateTime?: ModelStringKeyConditionInput | null;
   sortDirection?: ModelSortDirection | null;
   filter?: ModelClinicianRecordFilterInput | null;
   limit?: number | null;
   nextToken?: string | null;
 };
 
-export type ListClinicianRecordsByTypeQuery = {
-  listClinicianRecordsByType?: {
+export type ListUploadedClinicianRecordsByPatientIDQuery = {
+  listUploadedClinicianRecordsByPatientID?: {
     __typename: "ModelClinicianRecordConnection";
     nextToken?: string | null;
     startedAt?: number | null;
@@ -4816,6 +4834,8 @@ export type OnCreateClinicianRecordSubscription = {
     type: string;
     title: string;
     path: string;
+    uploaderClinicianID: string;
+    uploadDateTime?: string | null;
     _version: number;
     _deleted?: boolean | null;
     _lastChangedAt: number;
@@ -4832,6 +4852,8 @@ export type OnUpdateClinicianRecordSubscription = {
     type: string;
     title: string;
     path: string;
+    uploaderClinicianID: string;
+    uploadDateTime?: string | null;
     _version: number;
     _deleted?: boolean | null;
     _lastChangedAt: number;
@@ -4848,6 +4870,8 @@ export type OnDeleteClinicianRecordSubscription = {
     type: string;
     title: string;
     path: string;
+    uploaderClinicianID: string;
+    uploadDateTime?: string | null;
     _version: number;
     _deleted?: boolean | null;
     _lastChangedAt: number;

@@ -279,8 +279,22 @@ export const setFetchingAlertInfo = createAction(
 
 export const setAlertInfo = createAction(
   actionNames.SET_ALERT_INFO,
-  (alertInfo: AlertInfo) => ({
+  (alertInfo: AlertInfo | undefined) => ({
     alertInfo: alertInfo
+  })
+)();
+
+export const setShowAlertPopUp = createAction(
+  actionNames.SET_SHOW_ALERT_POPUP,
+  (showAlertPopUp: boolean) => ({
+    showAlertPopUp: showAlertPopUp
+  })
+)();
+
+export const setRealTimeAlert = createAction(
+  actionNames.SET_REAL_TIME_ALERT,
+  (realTimeAlert: AlertInfo | undefined) => ({
+    realTimeAlert: realTimeAlert
   })
 )();
 

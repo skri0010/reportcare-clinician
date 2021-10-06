@@ -4,7 +4,9 @@ import { CommonAttributes } from "agents-framework/Enums";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import { ClinicianAgent } from "rc_agents/clinician_framework/ClinicianAgent";
 import { af_ProcessAlertNotification } from "./action-frames/exacerbation-user-specific-alert/ProcessAlertNotification";
-import { af_RequestAssociateAlertMedicalRecords } from "./action-frames/exacerbation-user-specific-alert/RequestAssociateAlertMedicalRecords";
+import { af_InformRealTimeAlert } from "./action-frames/exacerbation-user-specific-alert/InformRealTimeAlert";
+import { af_RequestDisplayRefreshedAlerts } from "./action-frames/exacerbation-user-specific-alert/RequestDisplayRefreshedAlerts";
+import { af_RequestRetrieveUserContext } from "./action-frames/exacerbation-user-specific-alert/RequestRetrieveUserContext";
 
 // Initial Beliefs of Agent
 const belief1 = new Belief(AgentIDs.ALA, CommonAttributes.LAST_ACTIVITY, null);
@@ -15,7 +17,9 @@ const agentALA = new ClinicianAgent(
   [
     // HF-EUA
     af_ProcessAlertNotification,
-    af_RequestAssociateAlertMedicalRecords
+    af_InformRealTimeAlert,
+    af_RequestRetrieveUserContext,
+    af_RequestDisplayRefreshedAlerts
   ], // action frame
   [belief1], // beliefs
   agentAPI

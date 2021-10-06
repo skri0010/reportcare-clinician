@@ -132,6 +132,15 @@ export const getDetailedAlert = async (
   })) as GetAlertResponse;
 };
 
+export const getBasicAlert = async (
+  variables: GetAlertQueryVariables
+): Promise<GetAlertResponse> => {
+  return (await API.graphql({
+    query: queries.getAlert,
+    variables: variables
+  })) as GetAlertResponse;
+};
+
 interface GetTodoResponse extends BaseResponse {
   data: GetTodoQuery;
 }

@@ -288,6 +288,14 @@
     },
     "AlertVitals": {
       "HeartRate": "Kadar Jantung"
+    },
+    "RealTimeAlert": {
+      "NewAlert": "Amaran baru telah dikemukakan!",
+      "Patient": "Pesakit",
+      "Summary": "Ringkasan",
+      "TriageValue": "Nilai triase",
+      "DateTime": "Masa tarikh",
+      "ViewDetails": "Lihat butiran"
     }
   },
   "MobileMessage": {

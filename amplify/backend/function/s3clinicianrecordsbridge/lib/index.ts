@@ -1,4 +1,7 @@
-import { createClinicianRecord } from "./api/mutations";
+import {
+  createClinicianRecord,
+  updateClinicianRecord
+} from "./typed-api/mutations";
 import { getPresignedUploadUrl, getPresignedDownloadUrl } from "./s3Commands";
 import {
   ExpectedEvent,
@@ -38,7 +41,7 @@ const handleQuery = async (
   try {
     // Check field name and arguments
     if (
-      queryEvent.fieldName === "getPresignedURLForClinicianRecords" &&
+      queryEvent.fieldName === "getPresignedUrlForClinicianRecords" &&
       queryEvent.arguments
     ) {
       const { recordType, operation, patientID, documentID, documentTitle } =
@@ -54,7 +57,12 @@ const handleQuery = async (
       // Check argument attributes
       if (expectedAttributes) {
         // Check clinician authorised to patient
-        if (queryEvent.identity.claims["cognito:groups"].includes(patientID)) {
+        if (
+          queryEvent.identity.username &&
+          queryEvent.identity.claims["cognito:groups"].includes(patientID)
+        ) {
+          // Logging purposes
+          console.log(JSON.stringify(queryEvent.arguments, null, 2));
           const path = `${S3Level}/${recordType}/${patientID}/${documentID}`;
 
           // Handle "Upload"
@@ -64,9 +72,11 @@ const handleQuery = async (
               documentID: documentID,
               type: recordType,
               title: documentTitle,
-              path: path
+              path: path,
+              uploaderClinicianID: queryEvent.identity.username
             });
             if (createResult.data?.createClinicianRecord) {
+              // Create and return a presigned URL to upload document
               presignedUrlObjectResponse = await getPresignedUploadUrl(path);
             } else {
               throw Error("Failed to create DynamoDB ClinicianRecord record");
@@ -74,8 +84,22 @@ const handleQuery = async (
           }
           // Handle "Download"
           else if (operation === "Download") {
-            presignedUrlObjectResponse = await getPresignedDownloadUrl(path);
             // Create and return a presigned URL to download document
+            presignedUrlObjectResponse = await getPresignedDownloadUrl(path);
+          } else if (operation === "Acknowledge") {
+            // Update DynamoDB record with uploaderClinicianID and uploadDateTime
+            const updateResult = await updateClinicianRecord({
+              patientID: patientID,
+              documentID: documentID,
+              uploadDateTime: new Date().toISOString()
+            });
+            if (updateResult.data?.updateClinicianRecord) {
+              presignedUrlObjectResponse = { success: true };
+            } else {
+              throw Error(
+                "Failed to acknowledge document upload through updating DynamoDB record"
+              );
+            }
           } else {
             throw Error("Unrecognised operation");
           }

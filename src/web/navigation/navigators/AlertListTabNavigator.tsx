@@ -11,23 +11,16 @@ import { AlertListTabsProps } from "../types";
 import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { RiskFilterPillList } from "components/Buttons/RiskFilterPillList";
 import { AlertInfo } from "rc_agents/model";
-import { setAlertInfo } from "ic-redux/actions/agents/actionCreator";
 import { AgentTrigger } from "rc_agents/trigger";
+import { setAlertInfo } from "ic-redux/actions/agents/actionCreator";
 
 const Tab = createMaterialTopTabNavigator<AlertListTabParamList>();
-
-interface AlertListTabNavigatorProps {
-  setIsEmptyAlert: (isEmptyAlert: boolean) => void;
-}
-
 export interface AlertRowTabProps {
   displayedAlertInfoId?: string;
   onRowPress: (alert: AlertInfo) => void;
 }
 
-export const AlertListTabNavigator: FC<AlertListTabNavigatorProps> = ({
-  setIsEmptyAlert
-}) => {
+export const AlertListTabNavigator: FC = () => {
   const { colors, fonts } = select((state: RootState) => ({
     colors: state.settings.colors,
     fonts: state.settings.fonts
@@ -37,10 +30,9 @@ export const AlertListTabNavigator: FC<AlertListTabNavigatorProps> = ({
 
   // When the alert item is pressed, trigger the retrieval of alert info
   const onAlertRowPress = (alert: AlertInfo) => {
+    dispatch(setAlertInfo(undefined));
     if (alert) {
-      dispatch(setAlertInfo(alert));
       AgentTrigger.triggerRetrieveDetailedAlertInfo(alert);
-      setIsEmptyAlert(false);
     }
   };
 

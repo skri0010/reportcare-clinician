@@ -6,7 +6,7 @@ import {
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
 import { ProcedureConst } from "agents-framework/Enums";
-import { agentALA, agentDTA, agentUXSA } from "rc_agents/agents";
+import { agentDTA } from "rc_agents/agents";
 import { Belief } from "agents-framework";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
@@ -18,26 +18,7 @@ import {
   MedicalRecordInput,
   IcdCrtRecordInput
 } from "rc_agents/model";
-import {
-  AlertNotification,
-  PatientAssignmentSubscription
-} from "aws/TypedAPI/subscriptions";
-
-// HF-OTP-I
-// Triggers RetrievePatientsByRole of DTA
-export const triggerRetrievePatientsByRole = (): void => {
-  agentUXSA.addBelief(
-    new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.RETRIEVE_ROLE, true)
-  );
-
-  agentAPI.addFact(
-    new Belief(
-      BeliefKeys.PROCEDURE,
-      ProcedureAttributes.HF_OTP_I,
-      ProcedureConst.ACTIVE
-    )
-  );
-};
+import { PatientAssignmentSubscription } from "aws/TypedAPI/subscriptions";
 
 // HF-OTP-II
 // Triggers RetrievePatientDetails of DTA
@@ -289,37 +270,6 @@ export const triggerRetrieveDetailedAlertInfo = (
   );
 };
 
-// HF-EUA: Triggers ProcessAlertNotification of ALA
-export const triggerProcessAlertNotification = (
-  alertNotification: AlertNotification
-): void => {
-  // Adds alert notification to facts
-  agentAPI.addFact(
-    new Belief(
-      BeliefKeys.CLINICIAN,
-      ClinicianAttributes.ALERT_NOTIFICATION,
-      alertNotification
-    ),
-    false
-  );
-
-  // Triggers ALA to process AlertNotification
-  agentALA.addBelief(
-    new Belief(
-      BeliefKeys.CLINICIAN,
-      ClinicianAttributes.PROCESS_ALERT_NOTIFICATION,
-      true
-    )
-  );
-  agentAPI.addFact(
-    new Belief(
-      BeliefKeys.PROCEDURE,
-      ProcedureAttributes.HF_EUA,
-      ProcedureConst.ACTIVE
-    )
-  );
-};
-
 // HF-OTP-II Triggers retrieval of historical alerts according to patient ID
 export const triggerGetHistoricalAlerts = (patientId: string): void => {
   // Add patient ID as fact
@@ -539,6 +489,32 @@ export const triggerRetrieveIcdCrtRecordContent = (
     new Belief(
       BeliefKeys.PROCEDURE,
       ProcedureAttributes.HF_OTP_IV,
+      ProcedureConst.ACTIVE
+    )
+  );
+};
+
+// HF-EUA: Triggers RetrieveMonitoringRecords of DTA
+export const triggerRetrieveMonitoringRecords = (input: AlertInfo): void => {
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.CLINICIAN,
+      ClinicianAttributes.REAL_TIME_ALERT,
+      input
+    ),
+    false
+  );
+  agentDTA.addBelief(
+    new Belief(
+      BeliefKeys.CLINICIAN,
+      ClinicianAttributes.RETRIEVE_MONITORING_RECORDS,
+      true
+    )
+  );
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PROCEDURE,
+      ProcedureAttributes.HF_EUA,
       ProcedureConst.ACTIVE
     )
   );

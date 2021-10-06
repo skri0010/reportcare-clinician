@@ -1,5 +1,5 @@
 import React, { FC, useState, useEffect } from "react";
-import { RootState, select, useDispatch } from "util/useRedux";
+import { RootState, select } from "util/useRedux";
 import { ScreenName } from "web/navigation";
 import { View, Modal } from "react-native";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
@@ -9,60 +9,43 @@ import { MainScreenProps } from "web/navigation/types";
 import { AgentTrigger } from "rc_agents/trigger";
 import { FetchAlertsMode } from "rc_agents/model";
 import { AddTodoScreen } from "web/screens/Todo/modals/AddTodoScreen";
-import { useToast } from "react-native-toast-notifications";
-import {
-  setProcedureSuccessful,
-  setSubmittingTodo
-} from "ic-redux/actions/agents/actionCreator";
-import i18n from "util/language/i18n";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AlertListTabNavigator } from "web/navigation/navigators/AlertListTabNavigator";
 import { AlertDetailsScreen } from "./AlertDetailsScreen";
 
 export const AlertScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
-  const {
-    colors,
-    procedureOngoing,
-    procedureSuccessful,
-    submittingTodo,
-    fetchingAlertInfo
-  } = select((state: RootState) => ({
-    colors: state.settings.colors, // Used to detect completion of updateTodo procedure
-    procedureOngoing: state.agents.procedureOngoing,
-    procedureSuccessful: state.agents.procedureSuccessful,
-    submittingTodo: state.agents.submittingTodo,
-    fetchingAlertInfo: state.agents.fetchingAlertInfo,
-    alertInfo: state.agents.alertInfo
-  }));
+  const { colors, submittingTodo, fetchingAlertInfo, alertInfo } = select(
+    (state: RootState) => ({
+      colors: state.settings.colors,
+      submittingTodo: state.agents.submittingTodo,
+      fetchingAlertInfo: state.agents.fetchingAlertInfo,
+      alertInfo: state.agents.alertInfo
+    })
+  );
 
   // For pointer events
   const [modalVisible, setModalVisible] = useState(false);
-  const toast = useToast();
-  const dispatch = useDispatch();
+  const [isEmptyAlert, setIsEmptyAlert] = useState(true);
 
   /**
    * Trigger agent to fetch ALL alerts on initial load
    */
   useEffect(() => {
-    AgentTrigger.triggerRetrieveAlerts(FetchAlertsMode.ALL);
+    // fetchingAlertInfo will be true if the screen is navigated to for viewing a real-time alert.
+    if (!fetchingAlertInfo) {
+      AgentTrigger.triggerRetrieveAlerts(FetchAlertsMode.ALL);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const [isEmptyAlert, setIsEmptyAlert] = useState(true);
-
-  // Detects completion of UpdateTodo procedure and shows the appropriate toast.
+  // Display details screen when alertInfo is retrieved
   useEffect(() => {
-    if (submittingTodo && !procedureOngoing) {
-      dispatch(setSubmittingTodo(false));
-      if (procedureSuccessful) {
-        // Operation successful
-        toast.show(i18n.t("Todo.TodoUpdateSuccessful"), { type: "success" });
-        dispatch(setProcedureSuccessful(false));
-      } else {
-        // Operation failed
-        toast.show(i18n.t("UnexpectedError"), { type: "danger" });
-      }
+    if (alertInfo) {
+      setIsEmptyAlert(false);
+    } else {
+      setIsEmptyAlert(true);
     }
-  }, [dispatch, procedureOngoing, procedureSuccessful, toast, submittingTodo]);
+  }, [alertInfo]);
 
   return (
     <ScreenWrapper fixed>
@@ -71,7 +54,7 @@ export const AlertScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
         pointerEvents={modalVisible || submittingTodo ? "none" : "auto"}
       >
         <View style={styles.rowSelection}>
-          <AlertListTabNavigator setIsEmptyAlert={setIsEmptyAlert} />
+          <AlertListTabNavigator />
         </View>
         <View
           style={{

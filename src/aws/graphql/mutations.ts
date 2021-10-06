@@ -689,6 +689,7 @@ export const createClinicianInfo = /* GraphQL */ `
         NWA
         ALA
         MHA
+        CAM
         _version
         _deleted
         _lastChangedAt
@@ -725,6 +726,7 @@ export const updateClinicianInfo = /* GraphQL */ `
         NWA
         ALA
         MHA
+        CAM
         _version
         _deleted
         _lastChangedAt
@@ -761,6 +763,7 @@ export const deleteClinicianInfo = /* GraphQL */ `
         NWA
         ALA
         MHA
+        CAM
         _version
         _deleted
         _lastChangedAt
@@ -785,6 +788,7 @@ export const createClinicianProtectedInfo = /* GraphQL */ `
       NWA
       ALA
       MHA
+      CAM
       _version
       _deleted
       _lastChangedAt
@@ -808,6 +812,7 @@ export const updateClinicianProtectedInfo = /* GraphQL */ `
       NWA
       ALA
       MHA
+      CAM
       _version
       _deleted
       _lastChangedAt
@@ -831,6 +836,7 @@ export const deleteClinicianProtectedInfo = /* GraphQL */ `
       NWA
       ALA
       MHA
+      CAM
       _version
       _deleted
       _lastChangedAt
@@ -929,6 +935,29 @@ export const deleteClinicianPatientMap = /* GraphQL */ `
     }
   }
 `;
+export const deletePatientAssignment = /* GraphQL */ `
+  mutation DeletePatientAssignment(
+    $input: DeletePatientAssignmentInput!
+    $condition: ModelPatientAssignmentConditionInput
+  ) {
+    deletePatientAssignment(input: $input, condition: $condition) {
+      id
+      patientID
+      clinicianID
+      patientName
+      pending
+      resolution
+      reassignToClinicianID
+      adminCompleted
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      adminReassignFromClinicianID
+    }
+  }
+`;
 export const createPatientAssignment = /* GraphQL */ `
   mutation CreatePatientAssignment(
     $input: CreatePatientAssignmentInput!
@@ -942,13 +971,13 @@ export const createPatientAssignment = /* GraphQL */ `
       pending
       resolution
       reassignToClinicianID
-      adminReassignFromClinicianID
+      adminCompleted
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
-      adminCompleted
+      adminReassignFromClinicianID
     }
   }
 `;
@@ -965,36 +994,13 @@ export const updatePatientAssignment = /* GraphQL */ `
       pending
       resolution
       reassignToClinicianID
-      adminReassignFromClinicianID
+      adminCompleted
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
-      adminCompleted
-    }
-  }
-`;
-export const deletePatientAssignment = /* GraphQL */ `
-  mutation DeletePatientAssignment(
-    $input: DeletePatientAssignmentInput!
-    $condition: ModelPatientAssignmentConditionInput
-  ) {
-    deletePatientAssignment(input: $input, condition: $condition) {
-      id
-      patientID
-      clinicianID
-      patientName
-      pending
-      resolution
-      reassignToClinicianID
       adminReassignFromClinicianID
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
-      adminCompleted
     }
   }
 `;
@@ -1010,6 +1016,7 @@ export const createAlert = /* GraphQL */ `
       dateTime
       summary
       colorCode
+      triageValue
       vitalsReportID
       symptomReportID
       pending
@@ -1069,6 +1076,7 @@ export const updateAlert = /* GraphQL */ `
       dateTime
       summary
       colorCode
+      triageValue
       vitalsReportID
       symptomReportID
       pending
@@ -1128,6 +1136,7 @@ export const deleteAlert = /* GraphQL */ `
       dateTime
       summary
       colorCode
+      triageValue
       vitalsReportID
       symptomReportID
       pending
@@ -1203,6 +1212,7 @@ export const createTodo = /* GraphQL */ `
         dateTime
         summary
         colorCode
+        triageValue
         vitalsReportID
         symptomReportID
         pending
@@ -1245,6 +1255,7 @@ export const updateTodo = /* GraphQL */ `
         dateTime
         summary
         colorCode
+        triageValue
         vitalsReportID
         symptomReportID
         pending
@@ -1287,6 +1298,7 @@ export const deleteTodo = /* GraphQL */ `
         dateTime
         summary
         colorCode
+        triageValue
         vitalsReportID
         symptomReportID
         pending
@@ -1347,6 +1359,69 @@ export const deleteAlertNotification = /* GraphQL */ `
       patientID
       alertID
       owner
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createClinicianRecord = /* GraphQL */ `
+  mutation CreateClinicianRecord(
+    $input: CreateClinicianRecordInput!
+    $condition: ModelClinicianRecordConditionInput
+  ) {
+    createClinicianRecord(input: $input, condition: $condition) {
+      patientID
+      documentID
+      type
+      title
+      path
+      uploaderClinicianID
+      uploadDateTime
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateClinicianRecord = /* GraphQL */ `
+  mutation UpdateClinicianRecord(
+    $input: UpdateClinicianRecordInput!
+    $condition: ModelClinicianRecordConditionInput
+  ) {
+    updateClinicianRecord(input: $input, condition: $condition) {
+      patientID
+      documentID
+      type
+      title
+      path
+      uploaderClinicianID
+      uploadDateTime
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteClinicianRecord = /* GraphQL */ `
+  mutation DeleteClinicianRecord(
+    $input: DeleteClinicianRecordInput!
+    $condition: ModelClinicianRecordConditionInput
+  ) {
+    deleteClinicianRecord(input: $input, condition: $condition) {
+      patientID
+      documentID
+      type
+      title
+      path
+      uploaderClinicianID
+      uploadDateTime
       _version
       _deleted
       _lastChangedAt

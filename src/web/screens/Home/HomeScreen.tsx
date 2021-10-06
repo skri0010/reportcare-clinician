@@ -1,5 +1,5 @@
-import React, { FC } from "react";
-import { View } from "react-native";
+import React, { FC, useEffect } from "react";
+import { Button, View } from "react-native";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { MainScreenProps } from "web/navigation/types";
 import { ScreenName } from "web/navigation";
@@ -9,6 +9,12 @@ import { RequestsByMariaCard } from "./RequestsByMariaCard";
 import { AlertsCard } from "./AlertsCard";
 import { TodosCard } from "./TodosCard";
 import { PendingPatientAssignmentsCard } from "./PendingPatientAssignmentsCard";
+import { AgentTrigger } from "rc_agents/trigger";
+import { RootState, select, useDispatch } from "util/useRedux";
+import useSound from "use-sound";
+import { PatientHistoryModal } from "../Patients/PatientScreens/PatientDetailsScreen/PatientHistoryComponents/PatientHistoryModals";
+import { setShowAlertPopUp } from "ic-redux/actions/agents/actionCreator";
+import { AlertPopUp } from "../Alerts/AlertPopUp";
 
 export const HomeScreen: FC<MainScreenProps[ScreenName.HOME]> = ({
   navigation
@@ -19,6 +25,24 @@ export const HomeScreen: FC<MainScreenProps[ScreenName.HOME]> = ({
   const navigateToAlert = () => {
     navigation.navigate(ScreenName.ALERTS);
   };
+
+  const dispatch = useDispatch();
+
+  const [playNotificationSound] = useSound(
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    require("assets/notification.mp3").default
+  );
+
+  const { showAlertPopUp, realTimeAlert } = select((state: RootState) => ({
+    showAlertPopUp: state.agents.showAlertPopUp,
+    realTimeAlert: state.agents.realTimeAlert
+  }));
+
+  useEffect(() => {
+    if (showAlertPopUp && realTimeAlert) {
+      playNotificationSound();
+    }
+  }, [showAlertPopUp, realTimeAlert, playNotificationSound]);
 
   return (
     <ScreenWrapper padding>
@@ -35,6 +59,24 @@ export const HomeScreen: FC<MainScreenProps[ScreenName.HOME]> = ({
         <TodosCard maxHeight={maxHeight} navigation={navigation} />
         <PendingPatientAssignmentsCard maxHeight={maxHeight} />
       </View>
+      <Button
+        title="Test"
+        onPress={() => {
+          AgentTrigger.triggerProcessAlertNotification({
+            id: "",
+            alertID: "d063a1aa-0aea-4539-95e2-a83c85ec5fc0",
+            patientID: "bea"
+          });
+        }}
+      />
+      {realTimeAlert && (
+        <PatientHistoryModal
+          visible={showAlertPopUp}
+          onRequestClose={() => dispatch(setShowAlertPopUp(false))}
+        >
+          <AlertPopUp navigation={navigation} realTimeAlert={realTimeAlert} />
+        </PatientHistoryModal>
+      )}
     </ScreenWrapper>
   );
 };
