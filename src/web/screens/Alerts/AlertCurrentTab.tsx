@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from "react";
 import { View, FlatList } from "react-native";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
-import { RootState, select, useDispatch } from "util/useRedux";
+import { RootState, select } from "util/useRedux";
 import { AlertRow } from "components/RowComponents/AlertRow";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import i18n from "util/language/i18n";
@@ -26,8 +26,6 @@ export const AlertCurrentTab: FC<AlertCurrentTabProps> = ({
       alertRiskFilters: state.agents.alertRiskFilters
     })
   );
-
-  const dispatch = useDispatch();
 
   const [noPendingAlertsNotice, setNoPendingAlertsNotice] =
     useState<string>("");

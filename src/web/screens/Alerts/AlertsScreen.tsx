@@ -48,7 +48,6 @@ export const AlertScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
   }, []);
 
   const [isEmptyAlert, setIsEmptyAlert] = useState(true);
-  const [setIsPending, searchIsPending] = useState(true);
 
   // Detects completion of UpdateTodo procedure and shows the appropriate toast.
   useEffect(() => {
