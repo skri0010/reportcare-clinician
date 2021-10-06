@@ -1,9 +1,7 @@
 import React, { FC, useState } from "react";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { setLanguage } from "ic-redux/actions/settings/actionCreator";
-import { lightColorScheme } from "models/ColorScheme";
-import { darkColorScheme } from "models/ColorScheme/darkColorScheme";
-import { TouchableOpacity, View, Switch } from "react-native";
+import { Switch } from "react-native";
 import { defaultLanguage, alternateLanguage } from "util/language";
 
 export const LanguageButton: FC = () => {

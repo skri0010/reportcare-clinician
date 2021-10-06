@@ -39,10 +39,8 @@ export const SettingsCard: FC<SummaryCardProps> = ({
           {/* Welcome message */}
           <H6 style={[styles.description, cardTextColor]} text={description} />
         </View>
-        <View style={styles.buttonContainer}>
-          {type ? <DarkModeButton /> : <LanguageButton />}
-        </View>
       </View>
+      <View>{type ? <DarkModeButton /> : <LanguageButton />}</View>
     </View>
   );
 };
@@ -51,8 +49,9 @@ const styles = ScaledSheet.create({
   card: {
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingRight: "10@ms",
-    borderRadius: "15@ms"
+    padding: "10@ms",
+    borderRadius: "15@ms",
+    margin: "10@ms"
   },
   textContainer: {
     flex: 1,

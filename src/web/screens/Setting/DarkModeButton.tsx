@@ -1,9 +1,9 @@
 import React, { FC, useState } from "react";
-import { RootState, select, useDispatch } from "util/useRedux";
+import { useDispatch } from "util/useRedux";
 import { setColorScheme } from "ic-redux/actions/settings/actionCreator";
 import { lightColorScheme } from "models/ColorScheme";
 import { darkColorScheme } from "models/ColorScheme/darkColorScheme";
-import { TouchableOpacity, View, Switch } from "react-native";
+import { Switch } from "react-native";
 
 export const DarkModeButton: FC = () => {
   const [darkMode, setIsDarkMode] = useState<boolean>(false);
