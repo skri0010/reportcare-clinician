@@ -255,24 +255,3 @@ export const setAlertRiskFilters = createAction(
     alertRiskFilters: riskFilters
   })
 )();
-
-export const setSearchingAlerts = createAction(
-  actionNames.SET_SEARCHING_ALERTS,
-  (searchingAlerts: boolean) => ({
-    searchingAlerts: searchingAlerts
-  })
-)();
-
-export const setSearchedAlerts = createAction(
-  actionNames.SET_SEARCHED_ALERTS,
-  (searchedAlerts: AlertInfo[] | undefined) => ({
-    searchedAlerts: searchedAlerts
-  })
-)();
-
-export const setPendingTab = createAction(
-  actionNames.SET_PENDING_TAB,
-  (pendingTab: boolean) => ({
-    pendingTab: pendingTab
-  })
-)();

@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { View, FlatList } from "react-native";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { RootState, select, useDispatch } from "util/useRedux";
@@ -8,13 +8,6 @@ import i18n from "util/language/i18n";
 import { NoListItemMessage } from "../Shared/NoListItemMessage";
 import { AlertRowTabProps } from "web/navigation/navigators/AlertListTabNavigator";
 import { AlertListTabsProps } from "web/navigation/types";
-import { AlertInfo } from "rc_agents/model";
-import {
-  setPendingTab,
-  setSearchedAlerts,
-  setSearchingAlerts
-} from "ic-redux/actions/agents/actionCreator";
-import { useFocusEffect } from "@react-navigation/native";
 
 interface AlertCurrentTabProps
   extends AlertRowTabProps,

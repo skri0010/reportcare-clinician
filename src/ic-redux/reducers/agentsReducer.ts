@@ -48,9 +48,6 @@ interface AgentsState {
   submittingTodo: boolean;
   updatedTodo: LocalTodo | undefined;
   todoDetails: LocalTodo | undefined;
-  searchingAlerts: boolean;
-  searchedAlerts: AlertInfo[] | undefined;
-  pendingTab: boolean;
 }
 
 const initialState: AgentsState = {
@@ -109,10 +106,7 @@ const initialState: AgentsState = {
   fetchingTodos: false,
   fetchingTodoDetails: false,
   submittingTodo: false,
-  updatedTodo: undefined,
-  searchingAlerts: false,
-  searchedAlerts: undefined,
-  pendingTab: true
+  updatedTodo: undefined
 };
 
 export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
@@ -258,12 +252,6 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
       return { ...state, updatedTodo: action.payload.updatedTodo };
     case actionNames.SET_TODO_DETAILS:
       return { ...state, todoDetails: action.payload.todoDetails };
-    case actionNames.SET_SEARCHING_ALERTS:
-      return { ...state, searchingAlerts: action.payload.searchingAlerts };
-    case actionNames.SET_SEARCHED_ALERTS:
-      return { ...state, searchedAlerts: action.payload.searchedAlerts };
-    case actionNames.SET_PENDING_TAB:
-      return { ...state, pendingTab: action.payload.pendingTab };
     default:
       return state;
   }

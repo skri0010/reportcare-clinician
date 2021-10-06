@@ -1,19 +1,13 @@
-import React, { FC, useCallback, useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { FlatList, View } from "react-native";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
-import { RootState, select, useDispatch } from "util/useRedux";
+import { RootState, select } from "util/useRedux";
 import { AlertRow } from "components/RowComponents/AlertRow";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import i18n from "util/language/i18n";
 import { NoListItemMessage } from "../Shared/NoListItemMessage";
 import { AlertListTabsProps } from "web/navigation/types";
 import { AlertRowTabProps } from "web/navigation/navigators/AlertListTabNavigator";
-import { AlertInfo } from "rc_agents/model";
-import {
-  setPendingTab,
-  setSearchedAlerts,
-  setSearchingAlerts
-} from "ic-redux/actions/agents/actionCreator";
 
 interface AlertCompletedTabProps
   extends AlertRowTabProps,

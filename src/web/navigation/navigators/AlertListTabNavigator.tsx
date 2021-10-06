@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { FC, useState, useEffect } from "react";
+import React, { FC, useState } from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { AlertListTabParamList } from "../paramLists";
@@ -11,11 +11,7 @@ import { AlertListTabsProps } from "../types";
 import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { RiskFilterPillList } from "components/Buttons/RiskFilterPillList";
 import { AlertInfo } from "rc_agents/model";
-import {
-  setAlertInfo,
-  setSearchedAlerts,
-  setSearchingAlerts
-} from "ic-redux/actions/agents/actionCreator";
+import { setAlertInfo } from "ic-redux/actions/agents/actionCreator";
 import { AgentTrigger } from "rc_agents/trigger";
 import Fuse from "fuse.js";
 
