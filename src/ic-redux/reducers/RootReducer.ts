@@ -7,11 +7,7 @@ import {
 import { alertReducer } from "./agents/alertReducer";
 import { clinicianReducer } from "./agents/clinicianReducer";
 import { configurationReducer } from "./agents/configurationReducer";
-import {
-  filterReducer,
-  FilterState,
-  filtersPersistConfig
-} from "./agents/filterReducer";
+import { filterReducer } from "./agents/filterReducer";
 import { patientAssignmentReducer } from "./agents/patientAssignmentReducer";
 import { patientReducer } from "./agents/patientReducer";
 import { procedureReducer } from "./agents/procedureReducer";
@@ -24,10 +20,7 @@ export const RootReducer = combineReducers({
     settingsPersistConfig,
     settingsReducer
   ),
-  filters: persistReducer<FilterState, RootAction>(
-    filtersPersistConfig,
-    filterReducer
-  ),
+  filters: filterReducer,
   alerts: alertReducer,
   clinicians: clinicianReducer,
   configurations: configurationReducer,

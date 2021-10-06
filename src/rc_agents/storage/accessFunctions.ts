@@ -25,14 +25,6 @@ export const removeAll = async (): Promise<void> => {
       keys.splice(index, 1);
     }
 
-    // Retain the persist:Filters key
-    const persistFilterIndex = keys.findIndex(
-      (k) => k === `persist:${AsyncStorageKeys.PERSIST_FILTERS}`
-    );
-    if (persistFilterIndex >= 0) {
-      keys.splice(persistFilterIndex, 1);
-    }
-
     // Retain the persist:Settings key
     const persistSettingsIndex = keys.findIndex(
       (k) => k === `persist:${AsyncStorageKeys.PERSIST_SETTINGS}`

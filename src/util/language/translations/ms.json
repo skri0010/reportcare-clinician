@@ -152,7 +152,7 @@
     "PatientsList": {
       "NoPatients": "Tiada pesakit yang dijumpai!",
       "Class": "Kelas",
-      "Age": "Umur,"
+      "Age": "Umur"
     },
     "SearchBarPlaceholder": "Cari pesakit (contohnya John)",
     "Overview": "Ringkasan",
@@ -204,7 +204,7 @@
     "NoSymptoms": "No symptoms recorded"
   },
   "Patient_ICD/CRT": {
-    "ICD/CRTRecords": "Rekod ICD/CRT",
+    "IcdCrtRecords": "Rekod ICD/CRT",
     "NoIcdCrtRecords": "Tiada rekod ICD/CRT dijumpai!",
     "Title": "Tajuk",
     "TitleInputPlaceholder": "Berikan tajuk kepada rekod ini",
@@ -271,11 +271,15 @@
     "SearchBarPlaceholder": "Cari pakar(contohnya John)",
     "NoSelection": "Pilih salah satu pakar untuk melihat butirannya",
     "Role": "Peranan",
-    "HospitalName": "Nama Hospital"
+    "HospitalName": "Nama Hospital",
+    "GeneralDetails": "Informasi Umum"
   },
   "Alerts": {
+    "Current": "Semasa",
+    "Completed": "Selesai",
     "SearchBarPlaceholder": "Cari amaran",
     "NoSelection": "Pilih salah satu amaran untuk melihat butirannya",
+    "AlertSummary": "Ringkasan Amaran",
     "Symptoms": "Simptom",
     "Signs": "Tanda",
     "HighRisk": "Risiko Tinggi",
@@ -288,7 +292,8 @@
     },
     "AlertVitals": {
       "HeartRate": "Kadar Jantung"
-    }
+    },
+    "CreateTodoButton": "Cipta Todo"
   },
   "MobileMessage": {
     "ViewList": "Lihat Senarai",
@@ -304,5 +309,11 @@
   "UnexpectedError": "Ralat yang tidak disangkai telah berlaku",
   "Keywords": {
     "remaining": "yang tinggal"
+  },
+  "Filter": {
+    "High": "Tinggi",
+    "Medium": "Sederhana",
+    "Low": "Rendah",
+    "Unassigned": "Belum tetap"
   }
 }
