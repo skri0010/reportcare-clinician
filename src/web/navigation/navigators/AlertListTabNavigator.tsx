@@ -33,18 +33,16 @@ export interface AlertRowTabProps {
 export const AlertListTabNavigator: FC<AlertListTabNavigatorProps> = ({
   setIsEmptyAlert
 }) => {
-  const { colors, fonts, completedAlerts, pendingAlerts, pendingTab } = select(
+  const { colors, fonts, completedAlerts, pendingAlerts } = select(
     (state: RootState) => ({
       colors: state.settings.colors,
       fonts: state.settings.fonts,
       completedAlerts: state.agents.completedAlerts,
-      pendingAlerts: state.agents.pendingAlerts,
-      pendingTab: state.agents.pendingTab
+      pendingAlerts: state.agents.pendingAlerts
     })
   );
 
   const dispatch = useDispatch();
-  const [pending, setPending] = useState<boolean>(pendingTab);
 
   // When the alert item is pressed, trigger the retrieval of alert info
   const onAlertRowPress = (alert: AlertInfo) => {
@@ -55,9 +53,9 @@ export const AlertListTabNavigator: FC<AlertListTabNavigatorProps> = ({
     }
   };
 
-  useEffect(() => {
-    setPending(pendingTab);
-  }, [pendingTab]);
+  const [searching, setSearching] = useState<boolean>(false);
+  const [pendingResult, setPendingResult] = useState<AlertInfo[]>([]);
+  const [completedResult, setCompletedResult] = useState<AlertInfo[]>([]);
 
   return (
     <>
@@ -67,20 +65,28 @@ export const AlertListTabNavigator: FC<AlertListTabNavigatorProps> = ({
         }}
         onSearchClick={(searchString: string) => {
           if (searchString.length === 0) {
-            dispatch(setSearchingAlerts(false));
+            setSearching(false);
           } else if (pendingAlerts || completedAlerts) {
-            dispatch(setSearchingAlerts(true));
+            setSearching(true);
             const options = {
               includeScore: true,
               keys: ["patientName"]
             };
-            const searchingAlerts = pending ? pendingAlerts : completedAlerts;
-            if (searchingAlerts) {
-              const fuse = new Fuse(searchingAlerts, options);
+
+            if (pendingAlerts) {
+              const fuse = new Fuse(pendingAlerts, options);
               const result = fuse.search(searchString);
-              const searchResults: AlertInfo[] = [];
-              result.forEach((item) => searchResults.push(item.item));
-              dispatch(setSearchedAlerts(searchResults));
+              const searchPendingResults: AlertInfo[] = [];
+              result.forEach((item) => searchPendingResults.push(item.item));
+              setPendingResult(searchPendingResults);
+            }
+
+            if (completedAlerts) {
+              const fuse = new Fuse(completedAlerts, options);
+              const result = fuse.search(searchString);
+              const searchCompletedResults: AlertInfo[] = [];
+              result.forEach((item) => searchCompletedResults.push(item.item));
+              setCompletedResult(searchCompletedResults);
             }
           }
         }}
@@ -101,13 +107,21 @@ export const AlertListTabNavigator: FC<AlertListTabNavigatorProps> = ({
         {/* Current Alert List */}
         <Tab.Screen name={AlertListTabName.CURRENT}>
           {(props: AlertListTabsProps.CurrentTabProps) => (
-            <AlertCurrentTab {...props} onRowPress={onAlertRowPress} />
+            <AlertCurrentTab
+              {...props}
+              onRowPress={onAlertRowPress}
+              currentSearched={searching ? pendingResult : undefined}
+            />
           )}
         </Tab.Screen>
         {/* Completed Alert List */}
         <Tab.Screen name={AlertListTabName.COMPLETED}>
           {(props: AlertListTabsProps.CompletedTabProps) => (
-            <AlertCompletedTab {...props} onRowPress={onAlertRowPress} />
+            <AlertCompletedTab
+              {...props}
+              onRowPress={onAlertRowPress}
+              completedSearched={searching ? completedResult : undefined}
+            />
           )}
         </Tab.Screen>
       </Tab.Navigator>

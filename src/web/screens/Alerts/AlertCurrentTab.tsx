@@ -22,38 +22,23 @@ interface AlertCurrentTabProps
 
 export const AlertCurrentTab: FC<AlertCurrentTabProps> = ({
   displayedAlertInfoId,
-  onRowPress
+  onRowPress,
+  currentSearched
 }) => {
-  const {
-    colors,
-    pendingAlerts,
-    fetchingPendingAlerts,
-    searching,
-    searchedAlerts
-  } = select((state: RootState) => ({
-    colors: state.settings.colors,
-    pendingAlerts: state.agents.pendingAlerts,
-    fetchingPendingAlerts: state.agents.fetchingPendingAlerts,
-    alertRiskFilters: state.agents.alertRiskFilters,
-    searching: state.agents.searchingAlerts,
-    searchedAlerts: state.agents.searchedAlerts
-  }));
+  const { colors, pendingAlerts, fetchingPendingAlerts } = select(
+    (state: RootState) => ({
+      colors: state.settings.colors,
+      pendingAlerts: state.agents.pendingAlerts,
+      fetchingPendingAlerts: state.agents.fetchingPendingAlerts,
+      alertRiskFilters: state.agents.alertRiskFilters
+    })
+  );
 
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(setPendingTab(true));
-    dispatch(setSearchedAlerts(undefined));
-    dispatch(setSearchingAlerts(false));
-  }, []);
 
   const [noPendingAlertsNotice, setNoPendingAlertsNotice] =
     useState<string>("");
 
-  const [searchResults, setSearchResult] = useState<AlertInfo[] | undefined>(
-    searchedAlerts
-  );
-
-  const [isSearching, setIsSearching] = useState<boolean>(searching);
   // Prepare text notice to be displayed after fetching patients
   useEffect(() => {
     if (fetchingPendingAlerts) {
@@ -69,22 +54,17 @@ export const AlertCurrentTab: FC<AlertCurrentTabProps> = ({
     }
   }, [pendingAlerts, fetchingPendingAlerts]);
 
-  useEffect(() => {
-    setIsSearching(searching);
-    setSearchResult(searchedAlerts);
-  }, [searching, searchedAlerts]);
-
   return (
     <View style={{ flex: 1, backgroundColor: colors.primaryContrastTextColor }}>
       {/* Show no alerts message if no alert found */}
       {fetchingPendingAlerts ? (
         // Show loading indicator if fetching patients
         <LoadingIndicator flex={1} />
-      ) : isSearching ? (
+      ) : currentSearched ? (
         <FlatList
           showsVerticalScrollIndicator={false}
           ItemSeparatorComponent={() => <ItemSeparator />}
-          data={searchResults}
+          data={currentSearched}
           renderItem={({ item }) => (
             <AlertRow
               alertDetails={item}

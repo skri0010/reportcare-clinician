@@ -14,7 +14,6 @@ import {
   setSearchedAlerts,
   setSearchingAlerts
 } from "ic-redux/actions/agents/actionCreator";
-import { useFocusEffect } from "@react-navigation/native";
 
 interface AlertCompletedTabProps
   extends AlertRowTabProps,
@@ -22,37 +21,19 @@ interface AlertCompletedTabProps
 
 export const AlertCompletedTab: FC<AlertCompletedTabProps> = ({
   displayedAlertInfoId,
-  onRowPress
+  onRowPress,
+  completedSearched
 }) => {
-  const {
-    colors,
-    completedAlerts,
-    fetchingCompletedAlerts,
-    searching,
-    searchedAlerts
-  } = select((state: RootState) => ({
-    colors: state.settings.colors,
-    completedAlerts: state.agents.completedAlerts,
-    fetchingCompletedAlerts: state.agents.fetchingCompletedAlerts,
-    searching: state.agents.searchingAlerts,
-    searchedAlerts: state.agents.searchedAlerts
-  }));
-
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(setPendingTab(true));
-    dispatch(setSearchedAlerts(undefined));
-    dispatch(setSearchingAlerts(false));
-  }, []);
+  const { colors, completedAlerts, fetchingCompletedAlerts } = select(
+    (state: RootState) => ({
+      colors: state.settings.colors,
+      completedAlerts: state.agents.completedAlerts,
+      fetchingCompletedAlerts: state.agents.fetchingCompletedAlerts
+    })
+  );
 
   const [noCompletedAlertsNotice, setNoCompletedAlertsNotice] =
     useState<string>("");
-
-  const [isSearching, setIsSearching] = useState<boolean>(searching);
-  const [searchResults, setSearchResult] = useState<AlertInfo[] | undefined>(
-    searchedAlerts
-  );
 
   // Prepare text notice to be displayed after fetching patients
   useEffect(() => {
@@ -71,21 +52,16 @@ export const AlertCompletedTab: FC<AlertCompletedTabProps> = ({
     }
   }, [completedAlerts, fetchingCompletedAlerts]);
 
-  useEffect(() => {
-    setIsSearching(searching);
-    setSearchResult(searchedAlerts);
-  }, [searching, searchedAlerts]);
-
   return (
     <View style={{ flex: 1, backgroundColor: colors.primaryBackgroundColor }}>
       {/* Show loading if alerts is still being fetched */}
       {fetchingCompletedAlerts ? (
         <LoadingIndicator flex={1} />
-      ) : isSearching ? (
+      ) : completedSearched ? (
         <FlatList
           showsVerticalScrollIndicator={false}
           ItemSeparatorComponent={() => <ItemSeparator />}
-          data={searchResults}
+          data={completedSearched}
           renderItem={({ item }) => (
             <AlertRow
               alertDetails={item}
