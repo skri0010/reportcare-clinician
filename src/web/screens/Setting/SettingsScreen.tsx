@@ -1,34 +1,27 @@
-import { Platform, View, Text, Switch } from "react-native";
-import React, { FC, useState } from "react";
+import { View } from "react-native";
+import React, { FC } from "react";
 import { MainScreenProps } from "web/navigation/types";
 import { RootState, select } from "util/useRedux";
 import { ScreenName } from "web/navigation";
-import {
-  settingsReducer,
-  SettingsState
-} from "ic-redux/reducers/settingsReducer";
-import {
-  FontScheme,
-  largeWebFont,
-  normalMobileFontScheme,
-  normalWebFont
-} from "models/FontScheme";
-import { darkColorScheme } from "models/ColorScheme/darkColorScheme";
-import { LanguageID, defaultLanguage, alternateLanguage } from "util/language";
-import { isMobile } from "util/device";
-import { setColorScheme } from "ic-redux/actions/settings/actionCreator";
 import { DarkModeButton } from "./DarkModeButton";
 import { LanguageButton } from "./LanguageButton";
+import i18n from "util/language/i18n";
+import { ScreenWrapper } from "../ScreenWrapper";
+import { SettingsCard } from "./SettingsCard";
 
 export const SettingsScreen: FC<MainScreenProps[ScreenName.SETTINGS]> = () => {
-  const { colors } = select((state: RootState) => ({
-    colors: state.settings.colors
-  }));
-
   return (
-    <View>
-      <DarkModeButton />
-      <LanguageButton />
-    </View>
+    <ScreenWrapper>
+      <SettingsCard
+        title={i18n.t("Settings.DarkMode")}
+        description={i18n.t("Settings.DarkModeDescription")}
+        type
+      />
+      <SettingsCard
+        title={i18n.t("Settings.Language")}
+        description={i18n.t("Settings.LanguageDescription")}
+        type={false}
+      />
+    </ScreenWrapper>
   );
 };

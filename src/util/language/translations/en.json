@@ -162,6 +162,12 @@
     "Info": "Info",
     "NoSelection": "Select a patient to view details"
   },
+  "Settings":{
+    "DarkMode": "Dark Mode",
+    "DarkModeDescription": "This button toggles the theme according to your preference",
+    "Language": "Language",
+    "LanguageDescription": "This button toggle the language between English and Malay"
+  },
   "Patient_Configuration": {
     "Title": "Configure details",
     "Proceed": "Proceed",
