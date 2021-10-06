@@ -12,7 +12,7 @@ import {
   BeliefKeys,
   setRetryLaterTimeout
 } from "rc_agents/clinician_framework";
-import { Storage, AsyncStorageKeys } from "rc_agents/storage";
+import { LocalStorage, AsyncStorageKeys } from "rc_agents/storage";
 import { agentNWA } from "rc_agents/agents";
 import { getDetailedAlert, listClinicianPatientMaps } from "aws";
 import { AlertInfo, FetchAlertsMode } from "rc_agents/model";
@@ -40,10 +40,10 @@ class SyncProcessAlertNotifications extends Activity {
 
     try {
       // Get locally stored alert notifications
-      let alertNotifications = await Storage.getAlertNotifications();
+      let alertNotifications = await LocalStorage.getAlertNotifications();
 
       // Get locally stored clinicianID
-      const clinicianID = await Storage.getClinicianID();
+      const clinicianID = await LocalStorage.getClinicianID();
 
       if (alertNotifications) {
         // Retrieves all patient mappings of clinician
@@ -100,7 +100,7 @@ class SyncProcessAlertNotifications extends Activity {
 
           // Remove notifications based on indices
           if (successfulIds.length === alertNotifications.length) {
-            await Storage.removeItem(AsyncStorageKeys.ALERT_NOTIFICATIONS);
+            await LocalStorage.removeItem(AsyncStorageKeys.ALERT_NOTIFICATIONS);
           } else {
             // Removes successfully sync alert notifications (retrieved alerts)
             successfulIds.forEach((id) => {
@@ -129,7 +129,7 @@ class SyncProcessAlertNotifications extends Activity {
           }
 
           // Store retrieved alerts
-          await Storage.setAlertInfos(retrievedAlerts);
+          await LocalStorage.setAlertInfos(retrievedAlerts);
 
           if (successfulIds.length > 0) {
             // Trigger procedure to retrieve alerts locally

@@ -16,7 +16,7 @@ import {
   ProcedureAttributes,
   setRetryLaterTimeout
 } from "rc_agents/clinician_framework";
-import { Storage } from "rc_agents/storage";
+import { LocalStorage } from "rc_agents/storage";
 import { AlertInfo } from "rc_agents/model";
 import { getDetailedAlert, getPatientInfo } from "aws";
 import { store } from "util/useRedux";
@@ -62,11 +62,11 @@ class RetrieveDetailedAlertInfo extends Activity {
           const info = await queryAlertInfo(alert);
           if (info) {
             alertInfo = convertAlertToAlertInfo(info);
-            await Storage.setAlertInfo(alertInfo);
+            await LocalStorage.setAlertInfo(alertInfo);
           }
         } else {
           // Device is offline
-          alertInfo = await Storage.getAlertInfoByPatientId(
+          alertInfo = await LocalStorage.getAlertInfoByPatientId(
             alert.id,
             alert.patientID
           );

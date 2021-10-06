@@ -15,7 +15,7 @@ import {
   ActionFrameIDs,
   ClinicianAttributes
 } from "rc_agents/clinician_framework";
-import { Storage } from "rc_agents/storage";
+import { LocalStorage } from "rc_agents/storage";
 import { store } from "util/useRedux";
 import { setProcedureSuccessful } from "ic-redux/actions/agents/actionCreator";
 import { agentNWA } from "rc_agents/agents";
@@ -57,7 +57,7 @@ class UpdateTodo extends Activity {
       const isOnline: boolean = facts[BeliefKeys.APP]?.[AppAttributes.ONLINE];
 
       // Gets locally stored clinicianId
-      const clinicianId = await Storage.getClinicianID();
+      const clinicianId = await LocalStorage.getClinicianID();
 
       if (todoInput && !todoInput.id) {
         // Todo was created offline and not synced: Triggers CreateTodo
@@ -98,7 +98,7 @@ class UpdateTodo extends Activity {
               latestTodo?._version &&
               latestTodo._version > todoInput._version
             ) {
-              await Storage.setTodo(latestTodo);
+              await LocalStorage.setTodo(latestTodo);
             } else {
               // Updates Todo
               const updateQuery = await updateTodo(todoToUpdate);
@@ -126,7 +126,7 @@ class UpdateTodo extends Activity {
           };
 
           // Updates Todo in local storage
-          await Storage.setTodo(todoToStore);
+          await LocalStorage.setTodo(todoToStore);
 
           // Notifies NWA if the Todo to be stored has toSync set to true
           if (toSync) {

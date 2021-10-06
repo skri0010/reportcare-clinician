@@ -905,6 +905,13 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
+                "clinicianID": {
+                    "name": "clinicianID",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
                 "title": {
                     "name": "title",
                     "isArray": false,
@@ -943,9 +950,22 @@ export const schema = {
                         "rules": [
                             {
                                 "provider": "userPools",
-                                "ownerField": "owner",
+                                "ownerField": "clinicianID",
                                 "allow": "owner",
-                                "identityClaim": "cognito:username",
+                                "operations": [
+                                    "create",
+                                    "read",
+                                    "update"
+                                ],
+                                "identityClaim": "cognito:username"
+                            },
+                            {
+                                "groupClaim": "cognito:groups",
+                                "provider": "userPools",
+                                "allow": "groups",
+                                "groups": [
+                                    "Admin"
+                                ],
                                 "operations": [
                                     "create",
                                     "update",
@@ -954,11 +974,96 @@ export const schema = {
                                 ]
                             },
                             {
+                                "groupClaim": "cognito:groups",
                                 "provider": "userPools",
-                                "ownerField": "patientID",
-                                "allow": "owner",
+                                "allow": "groups",
+                                "groupsField": "patientID",
                                 "operations": [
                                     "read"
+                                ],
+                                "groupField": "groups"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        "IcdCrtRecord": {
+            "name": "IcdCrtRecord",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "patientID": {
+                    "name": "patientID",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "clinicianID": {
+                    "name": "clinicianID",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "title": {
+                    "name": "title",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "dateTime": {
+                    "name": "dateTime",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "fileKey": {
+                    "name": "fileKey",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                }
+            },
+            "syncable": true,
+            "pluralName": "IcdCrtRecords",
+            "attributes": [
+                {
+                    "type": "model",
+                    "properties": {}
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "icdCrtRecordsByDateTime",
+                        "fields": [
+                            "patientID",
+                            "dateTime"
+                        ],
+                        "queryField": "listIcdCrtRecordsByDateTime"
+                    }
+                },
+                {
+                    "type": "auth",
+                    "properties": {
+                        "rules": [
+                            {
+                                "provider": "userPools",
+                                "ownerField": "clinicianID",
+                                "allow": "owner",
+                                "operations": [
+                                    "create",
+                                    "read",
+                                    "update"
                                 ],
                                 "identityClaim": "cognito:username"
                             },
@@ -1024,6 +1129,13 @@ export const schema = {
                 },
                 "role": {
                     "name": "role",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "contactNumber": {
+                    "name": "contactNumber",
                     "isArray": false,
                     "type": "String",
                     "isRequired": true,
@@ -1338,6 +1450,16 @@ export const schema = {
                                     "delete",
                                     "read"
                                 ]
+                            },
+                            {
+                                "allow": "private",
+                                "provider": "iam",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
                             }
                         ]
                     }
@@ -1467,23 +1589,18 @@ export const schema = {
                                 "provider": "userPools",
                                 "allow": "groups",
                                 "groups": [
-                                    "EPs",
-                                    "Nurses",
-                                    "HFSpecialists",
-                                    "MedicalOfficers",
-                                    "Pharmacists"
+                                    "Admin"
                                 ],
                                 "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
                                     "read"
                                 ]
                             },
                             {
-                                "groupClaim": "cognito:groups",
-                                "provider": "userPools",
-                                "allow": "groups",
-                                "groups": [
-                                    "Admin"
-                                ],
+                                "allow": "private",
+                                "provider": "iam",
                                 "operations": [
                                     "create",
                                     "update",
@@ -1978,5 +2095,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "6ef74679fc922dc058daa89fae53a846"
+    "version": "f4edb460805e291f940b3c13bbd2113c"
 };

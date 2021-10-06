@@ -15,7 +15,7 @@ import {
   ActionFrameIDs,
   ClinicianAttributes
 } from "rc_agents/clinician_framework";
-import { Storage } from "rc_agents/storage";
+import { LocalStorage } from "rc_agents/storage";
 import { store } from "util/useRedux";
 import {
   setPendingTodos,
@@ -56,7 +56,7 @@ class RetrieveTodos extends Activity {
 
     try {
       // Gets locally stored clinicianId
-      const clinicianId = await Storage.getClinicianID();
+      const clinicianId = await LocalStorage.getClinicianID();
 
       // Gets TodoStatus from facts
       const todoStatus: TodoStatus =
@@ -124,7 +124,7 @@ class RetrieveTodos extends Activity {
             });
 
             // Saves mapped Todos to local storage
-            await Storage.setMultipleTodos(todosToDispatch);
+            await LocalStorage.setMultipleTodos(todosToDispatch);
 
             if (todoStatus === TodoStatus.PENDING) {
               store.dispatch(setPendingTodos(todosToDispatch));
@@ -134,7 +134,7 @@ class RetrieveTodos extends Activity {
           }
         } else if (todoStatus === TodoStatus.PENDING) {
           // Device is offline: get local pending Todos
-          const todosToDispatch = await Storage.getPendingTodos();
+          const todosToDispatch = await LocalStorage.getPendingTodos();
           if (todosToDispatch) {
             store.dispatch(
               setPendingTodos(sortTodosByLastModifiedDate(todosToDispatch))
@@ -142,7 +142,7 @@ class RetrieveTodos extends Activity {
           }
         } else if (todoStatus === TodoStatus.COMPLETED) {
           // Device is offline: get local completed Todos
-          const todosToDispatch = await Storage.getCompletedTodos();
+          const todosToDispatch = await LocalStorage.getCompletedTodos();
           if (todosToDispatch) {
             store.dispatch(
               setCompletedTodos(sortTodosByLastModifiedDate(todosToDispatch))

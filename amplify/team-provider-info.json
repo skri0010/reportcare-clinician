@@ -16,9 +16,13 @@
         "reportcaref82cc4af": {}
       },
       "function": {
-        "S3Triggerb0df74fe": {
+        "reportcarelambdalayer": {
           "deploymentBucketName": "amplify-reportcare-dev-213733-deployment",
-          "s3Key": "amplify-builds/S3Triggerb0df74fe-57515765397144747942-build.zip"
+          "s3Key": "amplify-builds/reportcarelambdalayer-LambdaLayerVersion2965a8ce-build.zip"
+        },
+        "patientassignmenthandler": {
+          "deploymentBucketName": "amplify-reportcare-dev-213733-deployment",
+          "s3Key": "amplify-builds/patientassignmenthandler-4a765131453239385a39-build.zip"
         }
       }
     }

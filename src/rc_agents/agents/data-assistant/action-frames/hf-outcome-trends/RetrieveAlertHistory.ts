@@ -13,10 +13,9 @@ import {
   AppAttributes,
   BeliefKeys,
   PatientAttributes,
-  ProcedureAttributes,
-  setRetryLaterTimeout
+  ProcedureAttributes
 } from "rc_agents/clinician_framework";
-import { Storage } from "rc_agents/storage";
+import { LocalStorage } from "rc_agents/storage";
 import { listPatientAlertsByDateTime } from "aws";
 import { AlertInfo } from "rc_agents/model";
 import { Alert, ModelSortDirection } from "aws/API";
@@ -90,13 +89,13 @@ class RetrieveAlertHistory extends Activity {
 
               if (alertHistory) {
                 // Store alert history
-                await Storage.setAlertInfos(alertHistory);
+                await LocalStorage.setAlertInfos(alertHistory);
               }
             }
           }
         } else {
           // Device is offline: get alert infos of current patient from local storage
-          const localAlertInfos = await Storage.getAlertInfosByPatientId(
+          const localAlertInfos = await LocalStorage.getAlertInfosByPatientId(
             patientId
           );
           if (localAlertInfos) {
@@ -137,23 +136,6 @@ class RetrieveAlertHistory extends Activity {
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
-
-      setRetryLaterTimeout(() => {
-        agent.addBelief(
-          new Belief(
-            BeliefKeys.PATIENT,
-            PatientAttributes.RETRIEVE_ALERT_HISTORY,
-            true
-          )
-        );
-        agentAPI.addFact(
-          new Belief(
-            BeliefKeys.PROCEDURE,
-            ProcedureAttributes.HF_OTP_II,
-            ProcedureConst.ACTIVE
-          )
-        );
-      });
 
       // Update Facts
       // End the procedure

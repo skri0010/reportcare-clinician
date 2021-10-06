@@ -3,6 +3,7 @@ const path = require("path");
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const WebpackObfuscator = require("webpack-obfuscator");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 
 // Set to true to analyze bundle
@@ -112,6 +113,25 @@ const svgLoaderConfiguration = {
   use: ["@svgr/webpack", "url-loader"]
 };
 
+// Loader for html tags (https://webpack.js.org/loaders/html-loader/#sources)
+const htmlLoaderConfiguration = {
+  test: /\.html$/,
+  loader: "html-loader",
+  options: {
+    sources: {
+      list: [
+        // All default supported tags and attributes
+        "..."
+      ]
+    }
+  }
+};
+
+const cssLoaderConfiguration = {
+  test: /\.css$/i,
+  use: [MiniCssExtractPlugin.loader, "css-loader"]
+};
+
 // Map key-value pairs of all alias paths
 const srcFolderAliasPaths = {};
 const srcFolderAliasKeys = [
@@ -132,9 +152,11 @@ srcFolderAliasKeys.forEach((srcFolder) => {
 });
 
 module.exports = {
-  entry: [path.resolve(appDirectory, "index.web.ts")],
+  entry: {
+    app: path.resolve(appDirectory, "index.web.ts")
+  },
   output: {
-    filename: "bundle.web.js",
+    filename: "[name].bundle.web.js",
     path: path.resolve(appDirectory, "dist")
   },
   target: "web", // Enable live reload
@@ -172,6 +194,8 @@ module.exports = {
       imageLoaderConfiguration,
       ttfLoaderConfiguration,
       svgLoaderConfiguration,
+      htmlLoaderConfiguration,
+      cssLoaderConfiguration,
       // This is required to resolve graphql imports
       // See: https://github.com/graphql/graphql-js/issues/2721
       {
@@ -188,10 +212,19 @@ module.exports = {
       __DEV__: !production
     }),
     new HtmlWebpackPlugin({
-      template: path.join(appDirectory, "public/index.html"),
-      manifest: "./public/manifest",
-      favicon: "./public/favicon.ico"
+      template: "public/index.html",
+      filename: "index.html",
+      favicon: "public/favicon.ico",
+      chunks: [] // Refers to above entry js files
     }),
+    new HtmlWebpackPlugin({
+      template: path.join(appDirectory, "public/app.html"),
+      filename: "app.html",
+      manifest: "public/manifest.json",
+      favicon: "public/favicon.ico",
+      chunks: ["app"] // Refers to above entry js files: index.web.ts
+    }),
+    new MiniCssExtractPlugin(),
     // Use web obfuscator in production
     ...(production
       ? [

@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "api": {
+      "reportcare": ["Query", "Mutation"]
+    }
+  },
+  "lambdaLayers": [
+    {
+      "type": "ProjectLayer",
+      "resourceName": "reportcarelambdalayer",
+      "env": "dev",
+      "version": "Always choose latest version",
+      "isLatestVersionSelected": true
+    }
+  ]
+}

@@ -15,7 +15,7 @@ import {
   AgentIDs,
   ActionFrameIDs
 } from "rc_agents/clinician_framework";
-import { AsyncStorageKeys, Storage } from "rc_agents/storage";
+import { AsyncStorageKeys, LocalStorage } from "rc_agents/storage";
 import { getClinicianInfo } from "aws";
 import { store } from "util/useRedux";
 import {
@@ -147,11 +147,11 @@ class RetrieveEntryData extends Activity {
           }
 
           // Stores clinicianID and clinician locally
-          await Storage.setClinicianID(clinician.clinicianID);
-          await Storage.setClinician(clinician);
+          await LocalStorage.setClinicianID(clinician.clinicianID);
+          await LocalStorage.setClinician(clinician);
 
           // Removes username from local storage
-          await Storage.removeItem(AsyncStorageKeys.USERNAME);
+          await LocalStorage.removeItem(AsyncStorageKeys.USERNAME);
 
           // Dispatch to front end that sign in was successful
           store.dispatch(setProcedureSuccessful(true));
