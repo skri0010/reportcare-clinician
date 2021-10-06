@@ -1,9 +1,8 @@
 import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
-import { View, Image, TextStyle } from "react-native";
+import { View, TextStyle } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { H5, H6 } from "components/Text";
-import i18n from "util/language/i18n";
 import { DarkModeButton } from "./DarkModeButton";
 import { LanguageButton } from "./LanguageButton";
 
