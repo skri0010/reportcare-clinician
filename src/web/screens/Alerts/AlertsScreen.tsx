@@ -15,7 +15,7 @@ import {
   setSubmittingTodo
 } from "ic-redux/actions/agents/actionCreator";
 import i18n from "util/language/i18n";
-import { LoadingIndicator } from "components/Indicators2/LoadingIndicator";
+import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AlertListTabNavigator } from "web/navigation/navigators/AlertListTabNavigator";
 import { AlertDetailsScreen } from "./AlertDetailsScreen";
 

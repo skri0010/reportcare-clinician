@@ -6,12 +6,11 @@ import { AuthStackNavigator } from "web/navigation/navigators/AuthStackNavigator
 import awsconfig from "aws/aws-exports";
 import { Amplify } from "@aws-amplify/core";
 import { Auth } from "@aws-amplify/auth";
-import { Storage } from "@aws-amplify/storage";
 import { AuthState } from "web/auth_screens";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import { LocalStorage } from "rc_agents/storage";
-import { ToastProviderComponent } from "components/Indicators2/ToastProvider";
-import { LoadingIndicator } from "components/Indicators2/LoadingIndicator";
+import { ToastProviderComponent } from "components/Indicators/ToastProvider";
+import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AgentIDs } from "rc_agents/clinician_framework";
 import {
   subscribeAlertNotification,

@@ -7,7 +7,7 @@ import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { RootState, select, store } from "util/useRedux";
 import i18n from "util/language/i18n";
 import { LocalTodo, TodoStatus, TodoInput } from "rc_agents/model";
-import { LoadingIndicator } from "components/Indicators2/LoadingIndicator";
+import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import {
   setProcedureOngoing,
   setSubmittingTodo
@@ -16,7 +16,7 @@ import { AgentTrigger } from "rc_agents/trigger";
 import { TodoListTabsProps } from "web/navigation/types";
 import { TodoRowTabProps } from "web/navigation/navigators/TodoListTabNavigator";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
-import { NoItemsTextIndicator } from "components/Indicators2/NoItemsTextIndicator";
+import { NoItemsTextIndicator } from "components/Indicators/NoItemsTextIndicator";
 
 interface TodoCurrentTabProps
   extends TodoRowTabProps,

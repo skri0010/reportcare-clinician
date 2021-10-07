@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { FlatList, View } from "react-native";
-import { LoadingIndicator } from "components/Indicators2/LoadingIndicator";
+import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import i18n from "util/language/i18n";
 import { RootState, select, store } from "util/useRedux";

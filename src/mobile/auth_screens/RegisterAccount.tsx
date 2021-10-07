@@ -16,7 +16,7 @@ import {
 import i18n from "util/language/i18n";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useToast } from "react-native-toast-notifications";
-import { LoadingIndicator } from "components/Indicators2/LoadingIndicator";
+import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AuthButton } from "components/Buttons/AuthButton";
 import { TextField } from "components/InputComponents/TextField";
 import { LocalStorage } from "rc_agents/storage";

@@ -8,7 +8,7 @@ import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { validatePassword, validateUsername } from "util/validation";
 import i18n from "util/language/i18n";
 import { useToast } from "react-native-toast-notifications";
-import { LoadingIndicator } from "components/Indicators2/LoadingIndicator";
+import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { agentAPS } from "rc_agents/agents";
 import { Belief } from "agents-framework";
 import { ProcedureConst } from "agents-framework/Enums";

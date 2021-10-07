@@ -7,8 +7,8 @@ import { MedicalRecordRow } from "./MedicalRecordRow";
 import i18n from "util/language/i18n";
 import { IconButton, IconType } from "components/Buttons/IconButton";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
-import { EmptyListIndicator } from "components/Indicators2/EmptyListIndicator";
-import { LoadingIndicator } from "components/Indicators2/LoadingIndicator";
+import { EmptyListIndicator } from "components/Indicators/EmptyListIndicator";
+import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { MedicalRecord } from "aws/API";
 import { useNetInfo } from "@react-native-community/netinfo";
 
