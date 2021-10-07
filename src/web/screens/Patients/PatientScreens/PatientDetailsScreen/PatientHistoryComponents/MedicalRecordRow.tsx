@@ -5,7 +5,7 @@ import { Linking, View } from "react-native";
 import { RowButton } from "components/Buttons/TextButton";
 import { MedicalRecord } from "aws/API";
 import { RootState, select, useDispatch } from "util/useRedux";
-import { setMedicalRecordContent } from "ic-redux/actions/agents/actionCreator";
+import { setMedicalRecordContent } from "ic-redux/actions/agents/patientActionCreator";
 
 interface MedicalRecordRowProps {
   medicalRecord: MedicalRecord;
@@ -20,7 +20,7 @@ export const MedicalRecordRow: FC<MedicalRecordRowProps> = ({
 }) => {
   const { colors, medicalRecordContent } = select((state: RootState) => ({
     colors: state.settings.colors,
-    medicalRecordContent: state.agents.medicalRecordContent
+    medicalRecordContent: state.patients.medicalRecordContent
   }));
 
   const dispatch = useDispatch();

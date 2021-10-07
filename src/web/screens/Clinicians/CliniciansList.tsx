@@ -6,7 +6,7 @@ import i18n from "util/language/i18n";
 import { RootState, select, store } from "util/useRedux";
 import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { ClinicianContactRow } from "components/RowComponents/ClinicianRow/ClinicianContactRow";
-import { setClinicianSelected } from "ic-redux/actions/agents/actionCreator";
+import { setClinicianSelected } from "ic-redux/actions/agents/clinicianActionCreator";
 
 interface CliniciansListScreen {
   flex?: number;
@@ -16,8 +16,8 @@ export const CliniciansList: FC<CliniciansListScreen> = ({ flex = 1 }) => {
   const { colors, clinicians, fetchingClinicians } = select(
     (state: RootState) => ({
       colors: state.settings.colors,
-      clinicians: state.agents.clinicianContacts,
-      fetchingClinicians: state.agents.fetchingClinianContacts
+      clinicians: state.clinicians.clinicianContacts,
+      fetchingClinicians: state.clinicians.fetchingClinianContacts
     })
   );
 

@@ -17,7 +17,7 @@ import { agentNWA } from "rc_agents/agents";
 import { store } from "util/useRedux";
 import { PatientAssignment } from "aws/API";
 import { getPatientAssignment } from "aws";
-import { setPendingPatientAssignments } from "ic-redux/actions/agents/actionCreator";
+import { setPendingPatientAssignments } from "ic-redux/actions/agents/patientAssignmentActionCreator";
 
 /**
  * Class to represent the activity for processing local patient assignment subscriptions.
@@ -80,7 +80,7 @@ class SyncProcessPatientAssignmentSubscriptions extends Activity {
 
           // Adds to the front of current list of pending patient assignments
           let currentPendingPatientAssignments =
-            store.getState().agents.pendingPatientAssignments;
+            store.getState().patientAssignments.pendingPatientAssignments;
           if (!currentPendingPatientAssignments) {
             currentPendingPatientAssignments = [];
           }

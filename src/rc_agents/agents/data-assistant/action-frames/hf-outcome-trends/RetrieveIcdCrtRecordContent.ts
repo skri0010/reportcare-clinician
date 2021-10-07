@@ -17,7 +17,7 @@ import {
 } from "rc_agents/clinician_framework";
 import { IcdCrtRecord } from "aws/API";
 import { store } from "util/useRedux";
-import { setFetchingIcdCrtRecordContent } from "ic-redux/actions/agents/actionCreator";
+import { setFetchingIcdCrtRecordContent } from "ic-redux/actions/agents/patientActionCreator";
 import { Storage } from "@aws-amplify/storage";
 import { StorageFolderPath } from "aws";
 

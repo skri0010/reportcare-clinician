@@ -11,7 +11,7 @@ import { ScreenName } from "web/navigation";
 
 export const ClinicianDetails: FC = () => {
   const { clinicianSelected } = select((state: RootState) => ({
-    clinicianSelected: state.agents.clinicianSelected
+    clinicianSelected: state.clinicians.clinicianSelected
   }));
 
   return (
@@ -25,7 +25,7 @@ export const ClinicianDetails: FC = () => {
         <View>
           <ContactTitle name={clinicianSelected?.name} isPatient={false} />
           <View style={{ marginHorizontal: ms(40) }}>
-            <InfoTitleBar title="General Details" />
+            <InfoTitleBar title={i18n.t("Clinicians.GeneralDetails")} />
             <View style={styles.infoSection}>
               <ClinicianInfoRow
                 title={i18n.t("Clinicians.Role")}

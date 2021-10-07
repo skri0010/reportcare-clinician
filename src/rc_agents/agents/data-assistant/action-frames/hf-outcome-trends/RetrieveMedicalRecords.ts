@@ -18,7 +18,7 @@ import {
 import { LocalStorage } from "rc_agents/storage";
 import { MedicalRecord } from "aws/API";
 import { store } from "util/useRedux";
-import { setFetchingMedicalRecords } from "ic-redux/actions/agents/actionCreator";
+import { setFetchingMedicalRecords } from "ic-redux/actions/agents/patientActionCreator";
 import { listMedicalRecordsByPatientID } from "aws";
 
 /**

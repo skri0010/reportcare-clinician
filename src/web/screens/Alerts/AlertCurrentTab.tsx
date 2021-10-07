@@ -20,9 +20,9 @@ export const AlertCurrentTab: FC<AlertCurrentTabProps> = ({
   const { colors, pendingAlerts, fetchingPendingAlerts } = select(
     (state: RootState) => ({
       colors: state.settings.colors,
-      pendingAlerts: state.agents.pendingAlerts,
-      fetchingPendingAlerts: state.agents.fetchingPendingAlerts,
-      alertRiskFilters: state.agents.alertRiskFilters
+      pendingAlerts: state.alerts.pendingAlerts,
+      fetchingPendingAlerts: state.alerts.fetchingPendingAlerts,
+      alertRiskFilters: state.filters.alertRiskFilters
     })
   );
 

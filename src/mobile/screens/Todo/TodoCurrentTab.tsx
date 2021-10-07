@@ -13,7 +13,7 @@ export const TodoCurrentTab: FC = () => {
   // JH-TODO Remove mock data
 
   const { pendingTodos } = select((state: RootState) => ({
-    pendingTodos: state.agents.pendingTodos
+    pendingTodos: state.todos.pendingTodos
   }));
 
   return (

@@ -18,7 +18,7 @@ import { store } from "util/useRedux";
 import {
   setFetchingMedicalRecords,
   setMedicalRecords
-} from "ic-redux/actions/agents/actionCreator";
+} from "ic-redux/actions/agents/patientActionCreator";
 import { MedicalRecord } from "aws/API";
 
 /**

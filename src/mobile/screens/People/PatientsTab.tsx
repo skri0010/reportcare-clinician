@@ -16,14 +16,14 @@ import {
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
 import { RootState, select, useDispatch } from "util/useRedux";
-import { setProcedureOngoing } from "ic-redux/actions/agents/actionCreator";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { useNetInfo } from "@react-native-community/netinfo";
+import { setProcedureOngoing } from "ic-redux/actions/agents/procedureActionCreator";
 
 export const PatientsTab: FC = () => {
   const { patients, procedureOngoing } = select((state: RootState) => ({
-    patients: state.agents.patients,
-    procedureOngoing: state.agents.procedureOngoing
+    patients: state.patients.patients,
+    procedureOngoing: state.procedures.procedureOngoing
   }));
 
   const [retrieving, setRetrieving] = useState(false); // used locally to indicate ongoing retrieval of details

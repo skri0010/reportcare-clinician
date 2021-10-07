@@ -21,7 +21,7 @@ import { LocalStorage } from "rc_agents/storage";
 import {
   setCreateMedicalRecordSuccessful,
   setCreatingMedicalRecord
-} from "ic-redux/actions/agents/actionCreator";
+} from "ic-redux/actions/agents/patientActionCreator";
 import { store } from "util/useRedux";
 import { MedicalRecordInput } from "rc_agents/model";
 import { Storage } from "@aws-amplify/storage";
@@ -70,7 +70,7 @@ class CreateMedicalRecord extends Activity {
           store.dispatch(setCreateMedicalRecordSuccessful(true));
 
           // Add new medical record into the existing list of medical records
-          let existingMedicalRecords = store.getState().agents.medicalRecords;
+          let existingMedicalRecords = store.getState().patients.medicalRecords;
           if (!existingMedicalRecords) {
             existingMedicalRecords = [];
           }

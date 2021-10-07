@@ -28,10 +28,10 @@ export const IcdCrtCard: FC<IcdCrtProps> = ({
     fetchingIcdCrtRecordContent
   } = select((state: RootState) => ({
     colors: state.settings.colors,
-    alertHistory: state.agents.alertHistory,
-    fetchingIcdCrtRecords: state.agents.fetchingIcdCrtRecords,
-    icdCrtRecords: state.agents.icdCrtRecords,
-    fetchingIcdCrtRecordContent: state.agents.fetchingIcdCrtRecordContent
+    alertHistory: state.patients.alertHistory,
+    fetchingIcdCrtRecords: state.patients.fetchingIcdCrtRecords,
+    icdCrtRecords: state.patients.icdCrtRecords,
+    fetchingIcdCrtRecordContent: state.patients.fetchingIcdCrtRecordContent
   }));
 
   const [isOnline, setIsOnline] = useState<boolean>(false); // Whether app is online

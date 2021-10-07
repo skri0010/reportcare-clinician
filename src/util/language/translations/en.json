@@ -277,11 +277,15 @@
     "SearchBarPlaceholder": "Search clinician (eg John)",
     "NoSelection": "Select a clinician to view more details",
     "Role": "Role",
-    "HospitalName": "Hospital Name"
+    "HospitalName": "Hospital Name",
+    "GeneralDetails": "General Information"
   },
   "Alerts": {
+    "Current": "Current",
+    "Completed": "Completed",
     "SearchBarPlaceholder": "Search alerts",
     "NoSelection": "Select an alert to view more details",
+    "AlertSummary": "Alert Summary",
     "Symptoms": "Symptoms",
     "Signs": "Signs",
     "HighRisk": "High Risk",
@@ -294,7 +298,8 @@
     },
     "AlertVitals": {
       "HeartRate": "Heart Rate"
-    }
+    },
+    "CreateTodoButton": "Create Todo"
   },
   "MobileMessage": {
     "ViewList": "View List",
@@ -310,5 +315,11 @@
   "UnexpectedError": "An unexpected error has occured",
   "Keywords": {
     "remaining": "remaining"
+  },
+  "Filter": {
+    "High": "Tinggi",
+    "Medium": "Sederhana",
+    "Low": "Rendah",
+    "Unassigned": "Belum tetap"
   }
 }

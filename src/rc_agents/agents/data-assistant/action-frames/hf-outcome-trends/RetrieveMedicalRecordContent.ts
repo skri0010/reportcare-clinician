@@ -17,7 +17,7 @@ import {
 } from "rc_agents/clinician_framework";
 import { MedicalRecord } from "aws/API";
 import { store } from "util/useRedux";
-import { setFetchingMedicalRecordContent } from "ic-redux/actions/agents/actionCreator";
+import { setFetchingMedicalRecordContent } from "ic-redux/actions/agents/patientActionCreator";
 import { Storage } from "@aws-amplify/storage";
 import { StorageFolderPath } from "aws";
 

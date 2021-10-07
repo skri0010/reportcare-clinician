@@ -10,14 +10,12 @@ import { AgentTrigger } from "rc_agents/trigger";
 import { FetchAlertsMode } from "rc_agents/model";
 import { AddTodoScreen } from "web/screens/Todo/modals/AddTodoScreen";
 import { useToast } from "react-native-toast-notifications";
-import {
-  setProcedureSuccessful,
-  setSubmittingTodo
-} from "ic-redux/actions/agents/actionCreator";
 import i18n from "util/language/i18n";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AlertListTabNavigator } from "web/navigation/navigators/AlertListTabNavigator";
 import { AlertDetailsScreen } from "./AlertDetailsScreen";
+import { setProcedureSuccessful } from "ic-redux/actions/agents/procedureActionCreator";
+import { setSubmittingTodo } from "ic-redux/actions/agents/todoActionCreator";
 
 export const AlertScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
   const {
@@ -28,11 +26,11 @@ export const AlertScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
     fetchingAlertInfo
   } = select((state: RootState) => ({
     colors: state.settings.colors, // Used to detect completion of updateTodo procedure
-    procedureOngoing: state.agents.procedureOngoing,
-    procedureSuccessful: state.agents.procedureSuccessful,
-    submittingTodo: state.agents.submittingTodo,
-    fetchingAlertInfo: state.agents.fetchingAlertInfo,
-    alertInfo: state.agents.alertInfo
+    procedureOngoing: state.procedures.procedureOngoing,
+    procedureSuccessful: state.procedures.procedureSuccessful,
+    submittingTodo: state.todos.submittingTodo,
+    fetchingAlertInfo: state.alerts.fetchingAlertInfo,
+    alertInfo: state.alerts.alertInfo
   }));
 
   // For pointer events

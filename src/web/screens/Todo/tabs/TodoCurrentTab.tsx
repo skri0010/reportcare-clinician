@@ -8,15 +8,13 @@ import { RootState, select, store } from "util/useRedux";
 import i18n from "util/language/i18n";
 import { LocalTodo, TodoStatus, TodoInput } from "rc_agents/model";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
-import {
-  setProcedureOngoing,
-  setSubmittingTodo
-} from "ic-redux/actions/agents/actionCreator";
 import { AgentTrigger } from "rc_agents/trigger";
 import { TodoListTabsProps } from "web/navigation/types";
 import { TodoRowTabProps } from "web/navigation/navigators/TodoListTabNavigator";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { NoItemsTextIndicator } from "components/Indicators/NoItemsTextIndicator";
+import { setProcedureOngoing } from "ic-redux/actions/agents/procedureActionCreator";
+import { setSubmittingTodo } from "ic-redux/actions/agents/todoActionCreator";
 
 interface TodoCurrentTabProps
   extends TodoRowTabProps,
@@ -42,8 +40,8 @@ export const TodoCurrentTab: FC<TodoCurrentTabProps> = ({
   const { colors, pendingTodos, fetchingTodos } = select(
     (state: RootState) => ({
       colors: state.settings.colors,
-      pendingTodos: state.agents.pendingTodos,
-      fetchingTodos: state.agents.fetchingTodos
+      pendingTodos: state.todos.pendingTodos,
+      fetchingTodos: state.todos.fetchingTodos
     })
   );
 

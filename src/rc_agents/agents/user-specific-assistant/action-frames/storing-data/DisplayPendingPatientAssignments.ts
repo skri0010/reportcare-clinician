@@ -18,7 +18,7 @@ import { store } from "util/useRedux";
 import {
   setFetchingPendingPatientAssignments,
   setPendingPatientAssignments
-} from "ic-redux/actions/agents/actionCreator";
+} from "ic-redux/actions/agents/patientAssignmentActionCreator";
 
 /**
  * Class to represent an activity for displaying pending patient assignments.

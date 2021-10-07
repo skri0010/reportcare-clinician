@@ -31,9 +31,9 @@ export const PatientMedicalRecordCard: FC<PatientMedicalRecordProps> = ({
     fetchingMedicalRecordContent
   } = select((state: RootState) => ({
     colors: state.settings.colors,
-    fetchingMedicalRecords: state.agents.fetchingMedicalRecords,
-    medicalRecords: state.agents.medicalRecords,
-    fetchingMedicalRecordContent: state.agents.fetchingMedicalRecordContent
+    fetchingMedicalRecords: state.patients.fetchingMedicalRecords,
+    medicalRecords: state.patients.medicalRecords,
+    fetchingMedicalRecordContent: state.patients.fetchingMedicalRecordContent
   }));
 
   const [isOnline, setIsOnline] = useState<boolean>(false); // Whether file upload is allowed (is online)

@@ -11,8 +11,9 @@ import { AlertListTabsProps } from "../types";
 import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { RiskFilterPillList } from "components/Buttons/RiskFilterPillList";
 import { AlertInfo } from "rc_agents/model";
-import { setAlertInfo } from "ic-redux/actions/agents/actionCreator";
 import { AgentTrigger } from "rc_agents/trigger";
+import { setAlertInfo } from "ic-redux/actions/agents/alertActionCreator";
+import i18n from "util/language/i18n";
 
 const Tab = createMaterialTopTabNavigator<AlertListTabParamList>();
 
@@ -56,7 +57,7 @@ export const AlertListTabNavigator: FC<AlertListTabNavigatorProps> = ({
         containerStyle={{
           backgroundColor: colors.primaryContrastTextColor
         }}
-        placeholder="Search..."
+        placeholder={i18n.t("Alerts.SearchBarPlaceholder")}
       />
 
       {/* Filter for Pending Alerts */}
@@ -68,13 +69,19 @@ export const AlertListTabNavigator: FC<AlertListTabNavigatorProps> = ({
         })}
       >
         {/* Current Alert List */}
-        <Tab.Screen name={AlertListTabName.CURRENT}>
+        <Tab.Screen
+          name={AlertListTabName.CURRENT}
+          options={{ title: i18n.t("Alerts.Current") }}
+        >
           {(props: AlertListTabsProps.CurrentTabProps) => (
             <AlertCurrentTab {...props} onRowPress={onAlertRowPress} />
           )}
         </Tab.Screen>
         {/* Completed Alert List */}
-        <Tab.Screen name={AlertListTabName.COMPLETED}>
+        <Tab.Screen
+          name={AlertListTabName.COMPLETED}
+          options={{ title: i18n.t("Alerts.Completed") }}
+        >
           {(props: AlertListTabsProps.CompletedTabProps) => (
             <AlertCompletedTab {...props} onRowPress={onAlertRowPress} />
           )}

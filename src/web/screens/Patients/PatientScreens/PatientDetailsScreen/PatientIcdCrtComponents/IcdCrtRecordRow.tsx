@@ -5,7 +5,7 @@ import { Linking, View } from "react-native";
 import { RowButton } from "components/Buttons/TextButton";
 import { IcdCrtRecord } from "aws/API";
 import { RootState, select, useDispatch } from "util/useRedux";
-import { setIcdCrtRecordContent } from "ic-redux/actions/agents/actionCreator";
+import { setIcdCrtRecordContent } from "ic-redux/actions/agents/patientActionCreator";
 import { getLocalDateTime } from "util/utilityFunctions";
 
 interface IcdCrtRecordRowProps {
@@ -21,7 +21,7 @@ export const IcdCrtRecordRow: FC<IcdCrtRecordRowProps> = ({
 }) => {
   const { colors, icdCrtRecordContent } = select((state: RootState) => ({
     colors: state.settings.colors,
-    icdCrtRecordContent: state.agents.icdCrtRecordContent
+    icdCrtRecordContent: state.patients.icdCrtRecordContent
   }));
 
   const dispatch = useDispatch();

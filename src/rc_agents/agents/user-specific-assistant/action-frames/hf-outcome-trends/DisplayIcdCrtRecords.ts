@@ -18,7 +18,7 @@ import { store } from "util/useRedux";
 import {
   setFetchingIcdCrtRecords,
   setIcdCrtRecords
-} from "ic-redux/actions/agents/actionCreator";
+} from "ic-redux/actions/agents/patientActionCreator";
 import { IcdCrtRecord } from "aws/API";
 
 /**

@@ -21,7 +21,7 @@ import { LocalStorage } from "rc_agents/storage";
 import {
   setCreateIcdCrtRecordSuccessful,
   setCreatingIcdCrtRecord
-} from "ic-redux/actions/agents/actionCreator";
+} from "ic-redux/actions/agents/patientActionCreator";
 import { store } from "util/useRedux";
 import { IcdCrtRecordInput } from "rc_agents/model";
 import { Storage } from "@aws-amplify/storage";
@@ -70,7 +70,7 @@ class CreateIcdCrtRecord extends Activity {
           store.dispatch(setCreateIcdCrtRecordSuccessful(true));
 
           // Add new ICD/CRT record into the existing list of ICD/CRT records
-          let existingIcdCrtRecords = store.getState().agents.icdCrtRecords;
+          let existingIcdCrtRecords = store.getState().patients.icdCrtRecords;
           if (!existingIcdCrtRecords) {
             existingIcdCrtRecords = [];
           }

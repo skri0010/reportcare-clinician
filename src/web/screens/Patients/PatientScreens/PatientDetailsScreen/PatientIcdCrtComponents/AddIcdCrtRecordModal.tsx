@@ -12,7 +12,7 @@ import { triggerCreateIcdCrtRecord } from "rc_agents/triggers";
 import {
   setCreateIcdCrtRecordSuccessful,
   setCreatingIcdCrtRecord
-} from "ic-redux/actions/agents/actionCreator";
+} from "ic-redux/actions/agents/patientActionCreator";
 import { useToast } from "react-native-toast-notifications";
 import { FileDropbox } from "components/InputComponents/FileDropbox";
 
@@ -29,8 +29,8 @@ export const AddIcdCrtRecordModal: FC<AddIcdCrtRecordModalProps> = ({
     select((state: RootState) => ({
       colors: state.settings.colors,
       fonts: state.settings.fonts,
-      creatingIcdCrtRecord: state.agents.creatingIcdCrtRecord,
-      createIcdCrtRecordSuccessful: state.agents.createIcdCrtRecordSuccessful
+      creatingIcdCrtRecord: state.patients.creatingIcdCrtRecord,
+      createIcdCrtRecordSuccessful: state.patients.createIcdCrtRecordSuccessful
     }));
 
   const [title, setTitle] = useState<string>("");

@@ -18,7 +18,7 @@ import {
 import { LocalStorage } from "rc_agents/storage";
 import { IcdCrtRecord, ModelSortDirection } from "aws/API";
 import { store } from "util/useRedux";
-import { setFetchingIcdCrtRecords } from "ic-redux/actions/agents/actionCreator";
+import { setFetchingIcdCrtRecords } from "ic-redux/actions/agents/patientActionCreator";
 import { listIcdCrtRecordsByDateTime } from "aws";
 
 /**

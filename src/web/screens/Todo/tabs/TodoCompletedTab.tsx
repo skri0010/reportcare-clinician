@@ -9,14 +9,12 @@ import { RootState, select, store } from "util/useRedux";
 import i18n from "util/language/i18n";
 import { LocalTodo, TodoStatus, TodoInput } from "rc_agents/model";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
-import {
-  setProcedureOngoing,
-  setSubmittingTodo
-} from "ic-redux/actions/agents/actionCreator";
 import { AgentTrigger } from "rc_agents/trigger";
 import { TodoListTabsProps } from "web/navigation/types";
 import { TodoRowTabProps } from "web/navigation/navigators/TodoListTabNavigator";
 import { NoItemsTextIndicator } from "components/Indicators/NoItemsTextIndicator";
+import { setProcedureOngoing } from "ic-redux/actions/agents/procedureActionCreator";
+import { setSubmittingTodo } from "ic-redux/actions/agents/todoActionCreator";
 
 interface TodoCompleteTabProps
   extends TodoRowTabProps,
@@ -42,8 +40,8 @@ export const TodoCompletedTab: FC<TodoCompleteTabProps> = ({
   const { colors, completedTodos, fetchingTodos } = select(
     (state: RootState) => ({
       colors: state.settings.colors,
-      completedTodos: state.agents.completedTodos,
-      fetchingTodos: state.agents.fetchingTodos
+      completedTodos: state.todos.completedTodos,
+      fetchingTodos: state.todos.fetchingTodos
     })
   );
 

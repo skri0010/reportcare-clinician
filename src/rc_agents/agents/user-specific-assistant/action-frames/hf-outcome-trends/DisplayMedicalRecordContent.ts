@@ -18,7 +18,7 @@ import { store } from "util/useRedux";
 import {
   setFetchingMedicalRecordContent,
   setMedicalRecordContent
-} from "ic-redux/actions/agents/actionCreator";
+} from "ic-redux/actions/agents/patientActionCreator";
 
 /**
  * Class to represent the activity for displaying patient's medical record content

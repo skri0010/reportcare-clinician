@@ -1,12 +1,11 @@
 import React, { FC, useEffect, useState, useCallback } from "react";
 import { Provider } from "react-redux";
-import { store } from "util/useRedux";
+import { store, persistor } from "util/useRedux";
 import { MainNavigation } from "web/MainNavigation";
 import { AuthStackNavigator } from "web/navigation/navigators/AuthStackNavigator";
 import awsconfig from "aws/aws-exports";
 import { Amplify } from "@aws-amplify/core";
 import { Auth } from "@aws-amplify/auth";
-import { Storage } from "@aws-amplify/storage";
 import { AuthState } from "web/auth_screens";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import { LocalStorage } from "rc_agents/storage";
@@ -17,6 +16,7 @@ import {
   subscribeAlertNotification,
   subscribePatientAssignment
 } from "aws/TypedAPI/subscriptions";
+import { PersistGate } from "redux-persist/lib/integration/react";
 import "web/styles.css";
 
 Amplify.configure(awsconfig);
@@ -88,13 +88,19 @@ const App: FC = () => {
   return (
     <Provider store={store}>
       {displayApp ? (
-        <ToastProviderComponent>
-          {authState === AuthState.SIGNED_IN ? (
-            <MainNavigation setAuthState={setAuthState} />
-          ) : authState === AuthState.SIGNED_OUT ? (
-            <AuthStackNavigator setAuthState={setAuthState} />
-          ) : null}
-        </ToastProviderComponent>
+        // PersistGate delays the rendering of the UI until the persisted redux state has been retrieved
+        <PersistGate
+          loading={<LoadingIndicator overlayBackgroundColor />}
+          persistor={persistor}
+        >
+          <ToastProviderComponent>
+            {authState === AuthState.SIGNED_IN ? (
+              <MainNavigation setAuthState={setAuthState} />
+            ) : authState === AuthState.SIGNED_OUT ? (
+              <AuthStackNavigator setAuthState={setAuthState} />
+            ) : null}
+          </ToastProviderComponent>
+        </PersistGate>
       ) : (
         <LoadingIndicator overlayBackgroundColor />
       )}

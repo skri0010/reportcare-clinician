@@ -18,7 +18,7 @@ import { store } from "util/useRedux";
 import {
   setFetchingIcdCrtRecordContent,
   setIcdCrtRecordContent
-} from "ic-redux/actions/agents/actionCreator";
+} from "ic-redux/actions/agents/patientActionCreator";
 
 /**
  * Class to represent the activity for displaying patient's ICD/CRT record content

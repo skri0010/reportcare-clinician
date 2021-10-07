@@ -32,7 +32,7 @@ export const LineChartComponent: FC<LineChartProps> = ({
 }) => {
   const { colors, chartFilter } = select((state: RootState) => ({
     colors: state.settings.colors,
-    chartFilter: state.agents.chartFilters
+    chartFilter: state.filters.chartFilters
   }));
 
   // Store min max and avg to a form that is accepted by Victory

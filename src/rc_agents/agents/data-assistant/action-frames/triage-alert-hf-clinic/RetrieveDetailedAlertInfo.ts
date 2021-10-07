@@ -20,9 +20,9 @@ import { LocalStorage } from "rc_agents/storage";
 import { AlertInfo } from "rc_agents/model";
 import { getDetailedAlert, getPatientInfo } from "aws";
 import { store } from "util/useRedux";
-import { setFetchingAlertInfo } from "ic-redux/actions/agents/actionCreator";
 import { Alert } from "aws/API";
 import { convertAlertToAlertInfo } from "util/utilityFunctions";
+import { setFetchingAlertInfo } from "ic-redux/actions/agents/alertActionCreator";
 
 /**
  * Class to represent an activity for retrieving patient's information associated with an alert.
