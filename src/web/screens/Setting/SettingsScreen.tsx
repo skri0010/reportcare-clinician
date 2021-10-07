@@ -22,6 +22,7 @@ export const SettingsScreen: FC<MainScreenProps[ScreenName.SETTINGS]> = () => {
         description={i18n.t("Settings.LanguageDescription")}
         type={false}
       />
+      <View />
     </ScreenWrapper>
   );
 };
