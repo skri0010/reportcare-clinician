@@ -141,7 +141,7 @@ export const TodoScreen: FC<MainScreenProps[ScreenName.TODO]> = ({
               tabPressCompleted={() => {
                 setAddButton(checkNeedAddButton(TodoListTabName.COMPLETED));
               }}
-              onRowClick={onRowClick}
+              onRowClick={() => onRowClick}
             />
           }
           // Right side: Todo details

@@ -18,6 +18,7 @@ import i18n from "util/language/i18n";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AlertListTabNavigator } from "web/navigation/navigators/AlertListTabNavigator";
 import { AlertDetailsScreen } from "./AlertDetailsScreen";
+import { AdaptiveTwoScreenWrapper } from "components/Wrappers/AdaptiveTwoScreenWrapper";
 
 export const AlertScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
   const {
@@ -70,27 +71,36 @@ export const AlertScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
         style={styles.container}
         pointerEvents={modalVisible || submittingTodo ? "none" : "auto"}
       >
-        <View style={styles.rowSelection}>
-          <AlertListTabNavigator setIsEmptyAlert={setIsEmptyAlert} />
-        </View>
-        <View
-          style={{
-            flex: 2,
-            backgroundColor: colors.primaryWebBackgroundColor
-          }}
-        >
-          {fetchingAlertInfo ? (
-            <LoadingIndicator flex={1} />
-          ) : !isEmptyAlert ? (
-            <AlertDetailsScreen setModalVisible={setModalVisible} />
-          ) : (
-            <NoSelectionScreen
-              screenName={ScreenName.ALERTS}
-              subtitle="Choose Alert to view more info"
-            />
-          )}
-        </View>
+        <AdaptiveTwoScreenWrapper
+          // Left side: List of todos
+          LeftComponent={
+            <View style={styles.rowSelection}>
+              <AlertListTabNavigator setIsEmptyAlert={setIsEmptyAlert} />
+            </View>
+          }
+          // Right side: Todo details
+          RightComponent={
+            <View
+              style={{
+                flex: 2,
+                backgroundColor: colors.primaryWebBackgroundColor
+              }}
+            >
+              {fetchingAlertInfo ? (
+                <LoadingIndicator flex={1} />
+              ) : !isEmptyAlert ? (
+                <AlertDetailsScreen setModalVisible={setModalVisible} />
+              ) : (
+                <NoSelectionScreen
+                  screenName={ScreenName.ALERTS}
+                  subtitle="Choose Alert to view more info"
+                />
+              )}
+            </View>
+          }
+        />
       </View>
+
       {/* ADD TODO modal */}
       <View style={styles.modalView}>
         <Modal

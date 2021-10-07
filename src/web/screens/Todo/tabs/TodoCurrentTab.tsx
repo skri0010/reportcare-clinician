@@ -1,5 +1,5 @@
 import React, { FC, useEffect } from "react";
-import { FlatList } from "react-native";
+import { FlatList, View } from "react-native";
 import { TodoRow } from "components/RowComponents/TodoRow";
 import { RiskLevel } from "models/RiskLevel";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
@@ -15,7 +15,6 @@ import {
 import { AgentTrigger } from "rc_agents/trigger";
 import { TodoListTabsProps } from "web/navigation/types";
 import { TodoRowTabProps } from "web/navigation/navigators/TodoListTabNavigator";
-import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
 import { NoItemsTextIndicator } from "components/Indicators/NoItemsTextIndicator";
 
 interface TodoCurrentTabProps
@@ -58,9 +57,7 @@ export const TodoCurrentTab: FC<TodoCurrentTabProps> = ({
   }, []);
 
   return (
-    <ScreenWrapper
-      style={{ backgroundColor: colors.secondaryWebBackgroundColor }}
-    >
+    <View style={{ flex: 1, backgroundColor: colors.primaryContrastTextColor }}>
       {/* Search bar */}
       <SearchBarComponent
         onUserInput={() => {
@@ -97,6 +94,6 @@ export const TodoCurrentTab: FC<TodoCurrentTabProps> = ({
           pointerEvents={fetchingTodos ? "none" : "auto"}
         />
       ) : null}
-    </ScreenWrapper>
+    </View>
   );
 };

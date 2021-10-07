@@ -1,6 +1,5 @@
 import React, { FC, useEffect } from "react";
-import { FlatList } from "react-native";
-import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
+import { FlatList, View } from "react-native";
 import { RiskLevel } from "models/RiskLevel";
 import { TodoRow } from "components/RowComponents/TodoRow";
 import { SearchBarComponent } from "components/Bars/SearchBarComponent";
@@ -56,9 +55,7 @@ export const TodoCompletedTab: FC<TodoCompleteTabProps> = ({
     AgentTrigger.triggerRetrieveTodos(TodoStatus.COMPLETED);
   }, []);
   return (
-    <ScreenWrapper
-      style={{ backgroundColor: colors.secondaryWebBackgroundColor }}
-    >
+    <View style={{ flex: 1, backgroundColor: colors.primaryContrastTextColor }}>
       {/* Search bar */}
       <SearchBarComponent
         onUserInput={() => {
@@ -95,6 +92,6 @@ export const TodoCompletedTab: FC<TodoCompleteTabProps> = ({
           pointerEvents={fetchingTodos ? "none" : "auto"}
         />
       ) : null}
-    </ScreenWrapper>
+    </View>
   );
 };
