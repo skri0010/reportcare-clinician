@@ -9,7 +9,7 @@ import { Auth } from "@aws-amplify/auth";
 import { LogBox } from "react-native";
 import { AuthState } from "./auth_screens";
 import { LocalStorage } from "rc_agents/storage";
-import { ToastProviderComponent } from "components/Indicators/ToastProvider";
+import { ToastProviderComponent } from "components/Indicators2/ToastProvider";
 
 Amplify.configure(awsconfig);
 Auth.configure(awsconfig);

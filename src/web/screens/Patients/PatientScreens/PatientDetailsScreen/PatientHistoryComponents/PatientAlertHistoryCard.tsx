@@ -5,8 +5,8 @@ import { AlertHistoryRow } from "./AlertHistoryRow";
 import { FlatList } from "react-native";
 import i18n from "util/language/i18n";
 import { AlertInfo } from "rc_agents/model";
-import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
-import { EmptyListIndicator } from "components/Indicators/EmptyListIndicator";
+import { LoadingIndicator } from "components/Indicators2/LoadingIndicator";
+import { EmptyListIndicator } from "components/Indicators2/EmptyListIndicator";
 
 interface PatientAlertHistoryProps {
   patientId?: string;

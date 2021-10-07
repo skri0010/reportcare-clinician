@@ -3,7 +3,7 @@ import { View, FlatList } from "react-native";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { RootState, select } from "util/useRedux";
 import { AlertRow } from "components/RowComponents/AlertRow";
-import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
+import { LoadingIndicator } from "components/Indicators2/LoadingIndicator";
 import i18n from "util/language/i18n";
 import { NoListItemMessage } from "../Shared/NoListItemMessage";
 import { AlertRowTabProps } from "web/navigation/navigators/AlertListTabNavigator";

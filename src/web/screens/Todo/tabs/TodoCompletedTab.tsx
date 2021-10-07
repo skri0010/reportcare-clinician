@@ -8,7 +8,7 @@ import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { RootState, select, store } from "util/useRedux";
 import i18n from "util/language/i18n";
 import { LocalTodo, TodoStatus, TodoInput } from "rc_agents/model";
-import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
+import { LoadingIndicator } from "components/Indicators2/LoadingIndicator";
 import {
   setProcedureOngoing,
   setSubmittingTodo
@@ -16,7 +16,7 @@ import {
 import { AgentTrigger } from "rc_agents/trigger";
 import { TodoListTabsProps } from "web/navigation/types";
 import { TodoRowTabProps } from "web/navigation/navigators/TodoListTabNavigator";
-import { NoItemsTextIndicator } from "components/Indicators/NoItemsTextIndicator";
+import { NoItemsTextIndicator } from "components/Indicators2/NoItemsTextIndicator";
 
 interface TodoCompleteTabProps
   extends TodoRowTabProps,
