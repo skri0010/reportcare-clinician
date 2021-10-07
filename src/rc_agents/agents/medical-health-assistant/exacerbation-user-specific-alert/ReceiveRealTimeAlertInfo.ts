@@ -94,6 +94,22 @@ class ReceiveRealTimeAlertInfo extends Activity {
           )
         );
 
+        // Resets other relevant beliefs
+        agent.addBelief(
+          new Belief(
+            BeliefKeys.CLINICIAN,
+            ClinicianAttributes.REAL_TIME_ALERT_RECEIVED,
+            false
+          )
+        );
+        agent.addBelief(
+          new Belief(
+            BeliefKeys.CLINICIAN,
+            ClinicianAttributes.CONTEXT_RETRIEVED,
+            false
+          )
+        );
+
         // Updates beliefs to trigger DisplayDetailedAlertInfo of UXSA
         agentUXSA.addBelief(
           new Belief(

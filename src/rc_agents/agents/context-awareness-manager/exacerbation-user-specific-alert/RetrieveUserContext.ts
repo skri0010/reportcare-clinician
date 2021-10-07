@@ -36,7 +36,10 @@ class RetrieveUserContext extends Activity {
     try {
       // Retrieves time and location of current user
       Geolocation.getCurrentPosition((info) => {
-        const currentLocation = info;
+        const currentLocation: { latitude: number; longitude: number } = {
+          latitude: info.coords.latitude,
+          longitude: info.coords.longitude
+        };
         const currentTime = new Date().toLocaleTimeString();
 
         if (currentTime && currentLocation) {
