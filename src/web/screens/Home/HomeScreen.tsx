@@ -1,5 +1,5 @@
 import React, { FC, useEffect } from "react";
-import { Button, View } from "react-native";
+import { View } from "react-native";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { MainScreenProps } from "web/navigation/types";
 import { ScreenName } from "web/navigation";
@@ -9,7 +9,6 @@ import { RequestsByMariaCard } from "./RequestsByMariaCard";
 import { AlertsCard } from "./AlertsCard";
 import { TodosCard } from "./TodosCard";
 import { PendingPatientAssignmentsCard } from "./PendingPatientAssignmentsCard";
-import { AgentTrigger } from "rc_agents/trigger";
 import { RootState, select, useDispatch } from "util/useRedux";
 import useSound from "use-sound";
 import { PatientHistoryModal } from "../Patients/PatientScreens/PatientDetailsScreen/PatientHistoryComponents/PatientHistoryModals";
@@ -59,16 +58,6 @@ export const HomeScreen: FC<MainScreenProps[ScreenName.HOME]> = ({
         <TodosCard maxHeight={maxHeight} navigation={navigation} />
         <PendingPatientAssignmentsCard maxHeight={maxHeight} />
       </View>
-      <Button
-        title="Test"
-        onPress={() => {
-          AgentTrigger.triggerProcessAlertNotification({
-            id: "",
-            alertID: "d063a1aa-0aea-4539-95e2-a83c85ec5fc0",
-            patientID: "bea"
-          });
-        }}
-      />
       {realTimeAlert && (
         <PatientHistoryModal
           visible={showAlertPopUp}

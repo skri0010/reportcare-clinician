@@ -14,14 +14,21 @@ import { AlertListTabNavigator } from "web/navigation/navigators/AlertListTabNav
 import { AlertDetailsScreen } from "./AlertDetailsScreen";
 
 export const AlertScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
-  const { colors, submittingTodo, fetchingAlertInfo, alertInfo } = select(
-    (state: RootState) => ({
-      colors: state.settings.colors,
-      submittingTodo: state.agents.submittingTodo,
-      fetchingAlertInfo: state.agents.fetchingAlertInfo,
-      alertInfo: state.agents.alertInfo
-    })
-  );
+  const {
+    colors,
+    submittingTodo,
+    fetchingAlertInfo,
+    alertInfo,
+    pendingAlerts,
+    completedAlerts
+  } = select((state: RootState) => ({
+    colors: state.settings.colors,
+    submittingTodo: state.agents.submittingTodo,
+    fetchingAlertInfo: state.agents.fetchingAlertInfo,
+    alertInfo: state.agents.alertInfo,
+    pendingAlerts: state.agents.pendingAlerts,
+    completedAlerts: state.agents.completedAlerts
+  }));
 
   // For pointer events
   const [modalVisible, setModalVisible] = useState(false);
@@ -32,7 +39,8 @@ export const AlertScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
    */
   useEffect(() => {
     // fetchingAlertInfo will be true if the screen is navigated to for viewing a real-time alert.
-    if (!fetchingAlertInfo) {
+    // Trigger to fetch all alerts if the screen is navigated for the first time, i.e. pending and/or completed alerts are undefined.
+    if (!fetchingAlertInfo || !pendingAlerts || !completedAlerts) {
       AgentTrigger.triggerRetrieveAlerts(FetchAlertsMode.ALL);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

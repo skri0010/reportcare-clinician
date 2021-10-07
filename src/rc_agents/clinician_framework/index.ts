@@ -61,7 +61,7 @@ export const ActionFrameIDs = {
     RETRIEVE_ICDCRT_RECORD_CONTENT: "RetrieveIcdCrtRecordContent",
     REQUEST_DISPLAY_ICDCRT_RECORD_CONTENT: "RequestDisplayIcdCrtRecordContent",
 
-    // HF-EUA: Real-time alerts
+    // HF-EUA: Real-time Alerts
     RETRIEVE_MONITORING_RECORDS: "RetrieveMonitoringRecords",
     INFORM_MONITORING_RECORDS: "InformMonitoringRecords",
     REQUEST_ASSOCIATE_MONITORING_RECORDS: "RequestAssociateMonitoringRecords",
@@ -96,7 +96,7 @@ export const ActionFrameIDs = {
     // AT-CP-II: Detailed AlertInfo
     DISPLAY_DETAILED_ALERT_INFO: "DisplayDetailedAlertInfo",
 
-    // HF-EUA: Alert Notifications and refreshed AlertInfo[]
+    // HF-EUA: Real-time Alerts
     DISPLAY_REFRESHED_ALERTS: "DisplayRefreshedAlerts",
 
     // HF-OTP-I: ClinicianInfo and all patients (PatientInfo)
@@ -146,22 +146,22 @@ export const ActionFrameIDs = {
     // AT-CP-II: Detailed AlertInfo
     SYNC_UPDATE_ALERTS: "SyncUpdateAlerts",
 
-    // HF-EUA: Real-time alert notifications and refreshed AlertInfo[]
+    // HF-EUA: Real-time Alerts
     SYNC_PROCESS_ALERT_NOTIFICATIONS: "SyncProcessAlertNotifications"
   },
   ALA: {
-    // HF-EUA: Real-time alerts
+    // HF-EUA: Real-time Alerts
     PROCESS_ALERT_NOTIFICATION: "ProcessAlertNotification",
     INFORM_REAL_TIME_ALERT: "InformRealTimeAlert",
     REQUEST_RETRIEVE_USER_CONTEXT: "RequestRetrieveUserContext",
     REQUEST_DISPLAY_REFRESHED_ALERTS: "RequestDisplayRefreshedAlerts"
   },
   MHA: {
-    // HF-EUA: Real-time alerts
+    // HF-EUA: Real-time Alerts
     RECEIVE_REAL_TIME_ALERT_INFO: "ReceiveRealTimeAlertInfo"
   },
   CAM: {
-    // HF-EUA: Real-time alerts
+    // HF-EUA: Real-time Alerts
     RETRIEVE_USER_CONTEXT: "RetrieveUserContext",
     INFORM_USER_CONTEXT: "InformUserContext"
   }
@@ -247,7 +247,7 @@ export enum ClinicianAttributes {
   UPDATE_ALERT = "UpdateAlert",
   ALERTS_UPDATED = "AlertsUpdated",
 
-  // HF-EUA: Alert Notifications and refreshed AlertInfo[]
+  // HF-EUA: Real-time Alerts
   ALERT_NOTIFICATION = "AlertNotification",
   PROCESS_ALERT_NOTIFICATION = "ProcessAlertNotification",
   REAL_TIME_ALERT = "RealTimeAlert",
