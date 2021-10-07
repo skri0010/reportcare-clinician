@@ -43,7 +43,7 @@ export const WelcomeCard: FC<WelcomeCardProps> = ({ flex = 1, maxHeight }) => {
       <View
         style={[
           styles.card,
-          { backgroundColor: colors.primaryContrastTextColor }
+          { backgroundColor: colors.primaryBackgroundColor }
         ]}
       >
         <View style={styles.textContainer}>
@@ -60,7 +60,12 @@ export const WelcomeCard: FC<WelcomeCardProps> = ({ flex = 1, maxHeight }) => {
             />
           </View>
         </View>
-        <View style={styles.logoContainer}>
+        <View
+          style={[
+            styles.logoContainer,
+            { backgroundColor: colors.primaryBackgroundColor }
+          ]}
+        >
           <Image
             style={styles.logo}
             source={require("assets/heart-icon.png")}

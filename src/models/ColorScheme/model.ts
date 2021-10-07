@@ -60,6 +60,13 @@ export interface ColorScheme {
   chartPillUnselectedColor: string;
   chartPillUnselectedBorderColor: string;
 
+  // Toggle Button ColorScheme
+  trueTrackColor: string;
+  falseTrackColor: string;
+  trueThumbColor: string;
+  falseThumbColor: string;
+  ios_backgroundColor: string;
+
   // Others
   riskLevelBackgroundColors: IRiskLevelMap;
   riskLevelBorderColors: IRiskLevelMap;

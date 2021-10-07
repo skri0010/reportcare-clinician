@@ -57,7 +57,13 @@ export const SearchBarComponent: FC<SearchBarComponentProps> = ({
   // JH-TODO: Replace placeholder with i18n
   return (
     <View style={{ backgroundColor: colors.primaryBackgroundColor }}>
-      <View style={[styles.container, searchBarContainerStyle]}>
+      <View
+        style={[
+          styles.container,
+          searchBarContainerStyle,
+          { backgroundColor: colors.primaryBackgroundColor }
+        ]}
+      >
         <TextInput
           autoCorrect={false}
           onChangeText={onChangeText}
@@ -66,7 +72,11 @@ export const SearchBarComponent: FC<SearchBarComponentProps> = ({
           style={[
             styles.textField,
             searchBarTextStyle,
-            { fontSize: fonts.h4Size, paddingHorizontal: ms(5) },
+            {
+              fontSize: fonts.h4Size,
+              paddingHorizontal: ms(5),
+              backgroundColor: colors.primaryBackgroundColor
+            },
             Platform.select({
               android: {},
               ios: {},
@@ -76,10 +86,14 @@ export const SearchBarComponent: FC<SearchBarComponentProps> = ({
             } as any)
           ]}
         />
-        <TouchableOpacity onPress={onSearchClick} style={styles.button}>
+        <TouchableOpacity onPress={onSearchClick} style={[styles.button]}>
           <Icon
             name="magnify"
-            style={[searchBarTextStyle, { fontSize: fonts.h4Size }]}
+            style={[
+              searchBarTextStyle,
+              { fontSize: fonts.h4Size },
+              { backgroundColor: colors.primaryBackgroundColor }
+            ]}
           />
         </TouchableOpacity>
       </View>

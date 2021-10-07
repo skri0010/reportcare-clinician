@@ -3,19 +3,20 @@ import { RootState, select } from "util/useRedux";
 import { View, TextStyle } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { H5, H6 } from "components/Text";
-import { DarkModeButton } from "./DarkModeButton";
-import { LanguageButton } from "./LanguageButton";
+import { ToggleButton } from "components/Buttons/ToggleButton";
 
 interface SummaryCardProps {
   title: string;
   description: string;
-  type: boolean;
+  value: boolean;
+  onValueChange: () => void;
 }
 
 export const SettingsCard: FC<SummaryCardProps> = ({
   title,
   description,
-  type
+  value,
+  onValueChange
 }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
@@ -27,20 +28,19 @@ export const SettingsCard: FC<SummaryCardProps> = ({
 
   return (
     <View
-      style={[
-        styles.card,
-        { backgroundColor: colors.primaryContrastTextColor }
-      ]}
+      style={[styles.card, { backgroundColor: colors.primaryBackgroundColor }]}
     >
       <View style={styles.textContainer}>
         <View style={styles.settingsContainer}>
-          {/* Welcome title */}
+          {/* Settings title */}
           <H5 text={title} style={[styles.title, cardTextColor]} />
-          {/* Welcome message */}
+          {/* Settings message */}
           <H6 style={[styles.description, cardTextColor]} text={description} />
         </View>
       </View>
-      <View>{type ? <DarkModeButton /> : <LanguageButton />}</View>
+      <View style={styles.buttonContainer}>
+        <ToggleButton value={value} onValueChange={onValueChange} />
+      </View>
     </View>
   );
 };
@@ -51,7 +51,8 @@ const styles = ScaledSheet.create({
     justifyContent: "space-between",
     padding: "10@ms",
     borderRadius: "15@ms",
-    margin: "10@ms"
+    marginTop: "15@ms",
+    width: "50%"
   },
   textContainer: {
     flex: 1,
@@ -62,7 +63,9 @@ const styles = ScaledSheet.create({
     paddingLeft: "15@ms"
   },
   buttonContainer: {
-    justifyContent: "center"
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: "20@ms"
   },
   title: {
     fontWeight: "600"

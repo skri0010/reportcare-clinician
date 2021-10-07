@@ -25,7 +25,7 @@ export const CliniciansList: FC<CliniciansListScreen> = ({ flex = 1 }) => {
     <View
       style={{
         flex: flex,
-        backgroundColor: colors.primaryContrastTextColor
+        backgroundColor: colors.primaryBackgroundColor
       }}
     >
       {/* Search bar*/}

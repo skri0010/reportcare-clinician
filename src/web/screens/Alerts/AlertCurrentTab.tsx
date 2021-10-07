@@ -45,7 +45,7 @@ export const AlertCurrentTab: FC<AlertCurrentTabProps> = ({
   }, [pendingAlerts, fetchingPendingAlerts]);
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.primaryContrastTextColor }}>
+    <View style={{ flex: 1, backgroundColor: colors.primaryBackgroundColor }}>
       {/* Show no alerts message if no alert found */}
       {fetchingPendingAlerts ? (
         // Show loading indicator if fetching patients

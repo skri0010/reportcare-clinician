@@ -5,6 +5,7 @@ import { select, RootState } from "util/useRedux";
 import { getRiskLevelColor, RiskLevel } from "../../models/RiskLevel";
 import { ScaledSheet, ms } from "react-native-size-matters";
 import i18n from "util/language/i18n";
+import { H6 } from "components/Text";
 
 interface AlertButtonProps {
   riskLevel: RiskLevel;
@@ -77,7 +78,7 @@ export const AlertButton: React.FC<AlertButtonProps> = ({
       </TouchableOpacity>
 
       {/* Label */}
-      <Text>{i18n.t(`Filter.${riskLevel}`)}</Text>
+      <H6 text={i18n.t(`Filter.${riskLevel}`)} />
     </View>
   );
 };

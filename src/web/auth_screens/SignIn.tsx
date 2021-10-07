@@ -1,5 +1,5 @@
 import React, { FC, useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, Image, Dimensions } from "react-native";
+import { View, TouchableOpacity, Image, Dimensions } from "react-native";
 import { Auth } from "@aws-amplify/auth";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { RootState, select, useDispatch } from "util/useRedux";
@@ -192,9 +192,16 @@ export const SignIn: FC<AuthScreenProps[AuthenticationScreenName.SIGN_IN]> = ({
       {/* App Logo and Name */}
       <View style={styles.logoContainer}>
         <Image style={styles.logo} source={require("assets/heart-icon.png")} />
-        <Text style={[styles.title, { fontSize: fonts.appNameSize }]}>
-          ReportCare
-        </Text>
+        <H1
+          text="ReportCare"
+          style={[
+            styles.title,
+            {
+              fontSize: fonts.appNameSize,
+              color: colors.primaryTextColor
+            }
+          ]}
+        />
       </View>
 
       {/* Sign In Content */}

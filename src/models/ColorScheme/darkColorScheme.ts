@@ -14,9 +14,9 @@ export const darkColorScheme: ColorScheme = {
   selectedTextColor: "#00ffff",
 
   // Background
-  primaryBackgroundColor: "#121212",
+  primaryBackgroundColor: "#333333",
   secondaryBackgroundColor: "#181818",
-  primaryWebBackgroundColor: "#282828",
+  primaryWebBackgroundColor: "#212121",
   secondaryWebBackgroundColor: "#181818",
 
   // Borders
@@ -25,10 +25,10 @@ export const darkColorScheme: ColorScheme = {
   selectedBorderColor: "#000000",
 
   // Separators
-  separatorColor: "#363636",
+  separatorColor: "#000000",
 
   // Bars
-  primaryBarColor: "#404040",
+  primaryBarColor: "#0d8ca8",
   secondaryBarColor: "#181818",
 
   // Indicators
@@ -64,6 +64,13 @@ export const darkColorScheme: ColorScheme = {
   chartPillSelectedColor: "#57c081",
   chartPillUnselectedColor: "#F2F2F2",
   chartPillUnselectedBorderColor: "#d1d1d1",
+
+  // Toggle Button ColorScheme
+  trueTrackColor: "#81b0ff",
+  falseTrackColor: "#767577",
+  trueThumbColor: "#f5dd4b",
+  falseThumbColor: "#f4f3f4",
+  ios_backgroundColor: "#3e3e3e",
 
   // Others
   riskLevelBackgroundColors: riskLevelBackgroundColors,

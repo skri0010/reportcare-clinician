@@ -15,7 +15,7 @@ export const getMainScreenHeaderStyle: (
   height?: number
 ) => StyleProp<ViewStyle> = (colors, height = ms(40)) => {
   return {
-    backgroundColor: colors.primaryBarColor,
+    backgroundColor: colors.secondaryBarColor,
     height: height,
     elevation: 0, // Remove shadow on Android
     shadowOpacity: 0, // Remove shadow on iOS
@@ -80,9 +80,13 @@ export const getTopTabBarOptions: (input: {
   fonts: FontScheme;
 }) => MaterialTopTabNavigationOptions = ({ colors, fonts }) => {
   return {
-    tabBarLabelStyle: { fontSize: fonts.h6Size, textTransform: "none" },
+    tabBarLabelStyle: {
+      fontSize: fonts.h6Size,
+      textTransform: "none",
+      color: colors.primaryTextColor
+    },
     tabBarIndicatorStyle: { backgroundColor: colors.primaryBarColor },
-    tabBarStyle: { backgroundColor: colors.primaryContrastTextColor }
+    tabBarStyle: { backgroundColor: colors.primaryBackgroundColor }
   };
 };
 

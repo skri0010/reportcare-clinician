@@ -164,9 +164,9 @@
   },
   "Settings": {
     "DarkMode": "Dark Mode",
-    "DarkModeDescription": "This button toggles the theme according to your preference",
+    "DarkModeDescription": "Click here to change the theme.",
     "Language": "Language",
-    "LanguageDescription": "This button toggle the language between English and Malay"
+    "LanguageDescription": "Click here to change language."
   },
   "Patient_Configuration": {
     "Title": "Configure details",
@@ -317,9 +317,9 @@
     "remaining": "remaining"
   },
   "Filter": {
-    "High": "Tinggi",
-    "Medium": "Sederhana",
-    "Low": "Rendah",
-    "Unassigned": "Belum tetap"
+    "High": "High",
+    "Medium": "Medium",
+    "Low": "Low",
+    "Unassigned": "Unassigned"
   }
 }

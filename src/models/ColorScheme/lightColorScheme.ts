@@ -65,6 +65,13 @@ export const lightColorScheme: ColorScheme = {
   chartPillUnselectedColor: "#F2F2F2",
   chartPillUnselectedBorderColor: "#d1d1d1",
 
+  // Toggle Button ColorScheme
+  trueTrackColor: "#81b0ff",
+  falseTrackColor: "#767577",
+  trueThumbColor: "#f5dd4b",
+  falseThumbColor: "#f4f3f4",
+  ios_backgroundColor: "#3e3e3e",
+
   // Others
   riskLevelBackgroundColors: riskLevelBackgroundColors,
   riskLevelBorderColors: riskLevelBorderColors,

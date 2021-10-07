@@ -162,6 +162,12 @@
     "Info": "Info",
     "NoSelection": "Pilih salah satu pesakit untuk mendapat informasi lanjut"
   },
+  "Settings": {
+    "DarkMode": "Mod Gelap",
+    "DarkModeDescription": "Tekan sini untuk menukar tema.",
+    "Language": "Bahasa",
+    "LanguageDescription": "This sini untuk menukar bahasa."
+  },
   "Patient_Configuration": {
     "Title": "Konfigurasikan butiran",
     "Proceed": "Selesai",

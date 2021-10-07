@@ -56,9 +56,7 @@ export const TodoCurrentTab: FC<TodoCurrentTabProps> = ({
   }, []);
 
   return (
-    <ScreenWrapper
-      style={{ backgroundColor: colors.secondaryWebBackgroundColor }}
-    >
+    <ScreenWrapper style={{ backgroundColor: colors.primaryBackgroundColor }}>
       {/* Search bar */}
       <SearchBarComponent
         onUserInput={() => {

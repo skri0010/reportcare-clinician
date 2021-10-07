@@ -53,14 +53,14 @@ export const RiskFilterPillList: FC<RiskFilterPillListProps> = ({
   return (
     <View
       style={
-        (styles.container, { backgroundColor: colors.primaryContrastTextColor })
+        (styles.container, { backgroundColor: colors.primaryBackgroundColor })
       }
     >
       {/* Risk filter pill list */}
       <FlatList
         contentContainerStyle={[
           styles.listContainer,
-          { backgroundColor: colors.primaryContrastTextColor }
+          { backgroundColor: colors.primaryBackgroundColor }
         ]}
         data={Object.values(RiskLevel)}
         horizontal
