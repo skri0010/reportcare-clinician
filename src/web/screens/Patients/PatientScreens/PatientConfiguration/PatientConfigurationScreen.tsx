@@ -31,7 +31,7 @@ import {
   setConfiguringPatient
 } from "ic-redux/actions/agents/actionCreator";
 import { MedicationConfigForm } from "./MedicationConfigForm";
-import { MedicationInfoList } from "./MedicationInfoList";
+import { MedicationInfoList } from "components/RowComponents/MedicationRow/MedicationInfoList";
 
 interface PatientConfigurationScreenProps {
   info: PatientInfo;

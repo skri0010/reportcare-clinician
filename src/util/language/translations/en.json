@@ -196,7 +196,7 @@
       "TargetWeight": "Please input a valid target weight (in kg)",
       "FluidIntakeGoal": "Please input a valid fluid intake goal (in ml)",
       "MedName": "Please input a valid medicine name",
-      "Dosage": "Please input a valid medication dosage(in mg)",
+      "Dosage": "Please input a valid medication dosage (in mg)",
       "Frequency": "Please input a valid medication frequency (in times per day)"
     },
     "Placeholder": {
