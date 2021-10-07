@@ -8,6 +8,15 @@ interface ScreenWrapperProps {
   padding?: boolean;
   fixed?: boolean;
   style?: StyleProp<ViewStyle>;
+  pointerEvents?: "auto" | "none" | "box-none" | "box-only" | undefined;
+  justifyContent?:
+    | "flex-start"
+    | "flex-end"
+    | "center"
+    | "space-between"
+    | "space-around"
+    | "space-evenly"
+    | undefined; // Cannot directly apply to ScrollView
 }
 
 export const ScreenWrapper: FC<ScreenWrapperProps> = ({
@@ -15,7 +24,9 @@ export const ScreenWrapper: FC<ScreenWrapperProps> = ({
   showScrollBar = false,
   padding = false,
   fixed = false,
-  style
+  style,
+  pointerEvents,
+  justifyContent
 }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
@@ -29,11 +40,15 @@ export const ScreenWrapper: FC<ScreenWrapperProps> = ({
   } as StyleProp<ViewStyle>;
 
   return fixed ? (
-    <View style={[backgroundStyle, style]}>{children}</View>
+    <View style={[backgroundStyle, style]} pointerEvents={pointerEvents}>
+      {children}
+    </View>
   ) : (
     <ScrollView
       style={[backgroundStyle, style]}
       showsVerticalScrollIndicator={showScrollBar}
+      pointerEvents={pointerEvents}
+      contentContainerStyle={{ justifyContent: justifyContent }}
     >
       {children}
     </ScrollView>

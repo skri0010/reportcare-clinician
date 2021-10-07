@@ -11,6 +11,9 @@ import { ReportSymptom, ReportVitals } from "aws/API";
 import i18n from "util/language/i18n";
 import { PatientDetailsTabProps } from "web/navigation/types";
 import { PatientDetails } from "rc_agents/model";
+import { getLatestVitalsReport } from "util/utilityFunctions";
+import { FluidIntakeCard } from "./PatientOverviewComponents/FluidIntakeCard";
+import { ActivityCard } from "./PatientOverviewComponents/ActivityCard";
 
 interface PatientOverviewProps extends PatientDetailsTabProps.OverviewTabProps {
   details: PatientDetails;
@@ -21,6 +24,8 @@ export const PatientOverview: FC<PatientOverviewProps> = ({ details }) => {
 
   const [vitals, setVitals] = useState<ReportVitals | null>(null);
   const [symptoms, setSymptoms] = useState<ReportSymptom[]>([]);
+  const [sumFluidIntake, setSumFluidIntake] = useState<number>(0);
+  const [sumStepsTaken, setSumStepsTaken] = useState<number>(0);
 
   useEffect(() => {
     // TODO: This code needs to be modified for changing days
@@ -29,18 +34,30 @@ export const PatientOverview: FC<PatientOverviewProps> = ({ details }) => {
     // Take the latest vitals report and update vitals on date
     const vitalsReportsOnDate = details.vitalsReports[date];
     if (vitalsReportsOnDate) {
-      const datetimeList = vitalsReportsOnDate.map((report) =>
-        Date.parse(report.DateTime)
-      );
-      const latestDatetime = Math.max(...datetimeList);
-      const latestVitalsReport: ReportVitals | undefined =
-        vitalsReportsOnDate.find(
-          (item) => item.DateTime === new Date(latestDatetime).toISOString()
-        );
+      const latestVitalsReport = getLatestVitalsReport(vitalsReportsOnDate);
       if (latestVitalsReport) {
         setVitals(latestVitalsReport);
       }
+
+      // Get sum of fluid taken
+      const fluidIntakeList: number[] = vitalsReportsOnDate.flatMap((data) =>
+        data.FluidIntake && parseFloat(data.FluidIntake)
+          ? [parseFloat(data.FluidIntake)]
+          : []
+      );
+      // set total fluid taken
+      setSumFluidIntake(fluidIntakeList.reduce((a, b) => a + b, 0));
+
+      // Get sum of steps taken
+      const stepsTakenList: number[] = vitalsReportsOnDate.flatMap((data) =>
+        data.NoSteps && parseFloat(data.NoSteps)
+          ? [parseFloat(data.NoSteps)]
+          : []
+      );
+      // set total fluid taken
+      setSumStepsTaken(stepsTakenList.reduce((a, b) => a + b, 0));
     }
+
     // Update symptoms on date
     const symptomsOnDate = details.symptomReports[date];
     if (symptomsOnDate) {
@@ -69,6 +86,20 @@ export const PatientOverview: FC<PatientOverviewProps> = ({ details }) => {
           <WeightCard
             weight={vitals?.Weight || noRecord}
             targetWeight={details.patientInfo.targetWeight}
+            minHeight={cardHeight}
+          />
+        </View>
+
+        <View style={[styles.container]}>
+          {/* Fluid and activity card */}
+          <FluidIntakeCard
+            fluidRequired={details.patientInfo.fluidIntakeGoal}
+            fluidTaken={sumFluidIntake.toString()}
+            minHeight={cardHeight}
+          />
+          <ActivityCard
+            stepsTaken={sumStepsTaken.toString()}
+            stepsRequired={details.patientInfo.targetActivity}
             minHeight={cardHeight}
           />
         </View>

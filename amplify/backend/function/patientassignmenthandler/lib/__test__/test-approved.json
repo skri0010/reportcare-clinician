@@ -1,0 +1,90 @@
+{
+  "Records": [
+    {
+      "eventID": "834c0c6a7f6404b920ec2bf6e1791ad1",
+      "eventName": "MODIFY",
+      "eventVersion": "1.1",
+      "eventSource": "aws:dynamodb",
+      "awsRegion": "ap-southeast-1",
+      "eventSourceARN": "arn:aws:dynamodb:ap-southeast-1:666794373206:table/PatientAssignment-xtom7ff7cjhqtnjolhvf3jvnuy-dev/stream/2021-08-02T04:05:20.755",
+      "dynamodb": {
+        "ApproximateCreationDateTime": 1632066422,
+        "Keys": {
+          "patientID": {
+            "S": "lambda-tester-streampatient"
+          },
+          "clinicianID": {
+            "S": "awstesterlim"
+          }
+        },
+        "NewImage": {
+          "createdAt": {
+            "S": "2021-09-19T15:28:21.349Z"
+          },
+          "patientName": {
+            "S": "Stream Patient"
+          },
+          "_lastChangedAt": {
+            "N": "1632066421913"
+          },
+          "patientID": {
+            "S": "lambda-tester-streampatient"
+          },
+          "__typename": {
+            "S": "PatientAssignment"
+          },
+          "resolution": {
+            "S": "APPROVED"
+          },
+          "clinicianID": {
+            "S": "awstesterlim"
+          },
+          "id": {
+            "S": "cdffb542-a996-4c41-960c-94063f1e73dc"
+          },
+          "_version": {
+            "N": "23"
+          },
+          "updatedAt": {
+            "S": "2021-09-19T15:47:01.912Z"
+          }
+        },
+        "OldImage": {
+          "createdAt": {
+            "S": "2021-09-19T15:28:21.349Z"
+          },
+          "patientName": {
+            "S": "Stream Patient"
+          },
+          "_lastChangedAt": {
+            "N": "1632066358961"
+          },
+          "patientID": {
+            "S": "lambda-tester-streampatient"
+          },
+          "__typename": {
+            "S": "PatientAssignment"
+          },
+          "pending": {
+            "S": "PENDING"
+          },
+          "clinicianID": {
+            "S": "awstesterlim"
+          },
+          "id": {
+            "S": "cdffb542-a996-4c41-960c-94063f1e73dc"
+          },
+          "_version": {
+            "N": "22"
+          },
+          "updatedAt": {
+            "S": "2021-09-19T15:34:45.912Z"
+          }
+        },
+        "SequenceNumber": "230680000000000021615622457",
+        "SizeBytes": 537,
+        "StreamViewType": "NEW_AND_OLD_IMAGES"
+      }
+    }
+  ]
+}

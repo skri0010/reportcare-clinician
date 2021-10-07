@@ -70,7 +70,8 @@ class RetrievePatientDetails extends Activity {
           symptomReports: {},
           vitalsReports: {},
           medicationInfo: [],
-          medicalRecords: {}
+          medicalRecords: {},
+          icdCrtRecords: {}
         };
         let patientDetailsRetrieved = false;
 

@@ -1134,6 +1134,13 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
+                "contactNumber": {
+                    "name": "contactNumber",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
                 "protectedInfo": {
                     "name": "protectedInfo",
                     "isArray": false,
@@ -1443,6 +1450,16 @@ export const schema = {
                                     "delete",
                                     "read"
                                 ]
+                            },
+                            {
+                                "allow": "private",
+                                "provider": "iam",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
                             }
                         ]
                     }
@@ -1572,23 +1589,18 @@ export const schema = {
                                 "provider": "userPools",
                                 "allow": "groups",
                                 "groups": [
-                                    "EPs",
-                                    "Nurses",
-                                    "HFSpecialists",
-                                    "MedicalOfficers",
-                                    "Pharmacists"
+                                    "Admin"
                                 ],
                                 "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
                                     "read"
                                 ]
                             },
                             {
-                                "groupClaim": "cognito:groups",
-                                "provider": "userPools",
-                                "allow": "groups",
-                                "groups": [
-                                    "Admin"
-                                ],
+                                "allow": "private",
+                                "provider": "iam",
                                 "operations": [
                                     "create",
                                     "update",
@@ -2083,5 +2095,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "9e94af669590cf66a358f67f08be22cc"
+    "version": "f4edb460805e291f940b3c13bbd2113c"
 };

@@ -1,7 +1,6 @@
 import React, { FC, useState, useEffect } from "react";
 import { View, Dimensions } from "react-native";
 import { Auth } from "@aws-amplify/auth";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import {
@@ -81,11 +80,8 @@ export const ForgotPassword: FC<
   }, [username, code, newPassword, codeSent]);
 
   return (
-    <ScreenWrapper>
-      <SafeAreaView
-        style={styles.safeAreaContainer}
-        pointerEvents={loading ? "none" : "auto"}
-      >
+    <ScreenWrapper pointerEvents={loading ? "none" : "auto"}>
+      <View style={styles.container}>
         {/* Before verification code is sent */}
         {!codeSent && (
           // Username
@@ -147,16 +143,16 @@ export const ForgotPassword: FC<
               : () => null
           }
         />
-      </SafeAreaView>
+      </View>
       {loading && <LoadingIndicator overlayBackgroundColor />}
     </ScreenWrapper>
   );
 };
 
 const styles = ScaledSheet.create({
-  safeAreaContainer: {
+  container: {
     margin: ms(30),
     alignSelf: "center",
-    width: Dimensions.get("window").width / 2
+    width: Dimensions.get("window").width / 3
   }
 });

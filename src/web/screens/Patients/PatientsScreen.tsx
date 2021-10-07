@@ -22,6 +22,7 @@ import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AdaptiveTwoScreenWrapper } from "web/screens/AdaptiveTwoScreenWrapper";
 import { PatientConfigurationScreen } from "web/screens/Patients/PatientScreens/PatientConfiguration/PatientConfigurationScreen";
 import { AlertColorCode, AlertInfo, AlertStatus } from "rc_agents/model";
+import { AddIcdCrtRecordModal } from "./PatientScreens/PatientDetailsScreen/PatientIcdCrtComponents/AddIcdCrtRecordModal";
 
 export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
   route
@@ -104,8 +105,9 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
   const [displayHistory, setDisplayHistory] =
     useState<AlertInfo>(initialAlertHistory);
 
-  // For add medical record modal visibility
+  // For add medical and ICD/CRT record modals visibility
   const [addMedicalRecord, setAddMedicalRecord] = useState<boolean>(false);
+  const [addIcdCrtRecord, setAddIcdCrtRecord] = useState<boolean>(false);
 
   return (
     <ScreenWrapper fixed>
@@ -149,6 +151,10 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
                       setModalAlertVisible={setModalAlertVisible}
                       onViewMedicalRecord={
                         AgentTrigger.triggerRetrieveMedicalRecordContent
+                      }
+                      setAddIcdCrtRecord={setAddIcdCrtRecord}
+                      onViewIcdCrtRecord={
+                        AgentTrigger.triggerRetrieveIcdCrtRecordContent
                       }
                     />
                   ) : (
@@ -195,6 +201,16 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
         >
           <AddMedicalRecord
             setAddMedicalRecord={setAddMedicalRecord}
+            patientID={patientDetails?.patientInfo.patientID}
+          />
+        </PatientHistoryModal>
+
+        <PatientHistoryModal
+          visible={addIcdCrtRecord}
+          onRequestClose={() => setAddIcdCrtRecord(false)}
+        >
+          <AddIcdCrtRecordModal
+            setAddIcdCrtRecord={setAddIcdCrtRecord}
             patientID={patientDetails?.patientInfo.patientID}
           />
         </PatientHistoryModal>

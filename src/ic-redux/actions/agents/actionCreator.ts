@@ -7,11 +7,13 @@ import {
 } from "rc_agents/model";
 import { actionNames } from "ic-redux/actions/actionNames";
 import { createAction } from "typesafe-actions";
+import { ChartFilter } from "models/ChartViewTypes";
 import {
   PatientAssignment,
   PatientInfo,
   ClinicianInfo,
-  MedicalRecord
+  MedicalRecord,
+  IcdCrtRecord
 } from "aws/API";
 
 export const setProcedureOngoing = createAction(
@@ -168,6 +170,48 @@ export const setMedicalRecordContent = createAction(
   })
 )();
 
+export const setCreatingIcdCrtRecord = createAction(
+  actionNames.SET_CREATING_ICDCRT_RECORD,
+  (creatingIcdCrtRecord: boolean) => ({
+    creatingIcdCrtRecord: creatingIcdCrtRecord
+  })
+)();
+
+export const setCreateIcdCrtRecordSuccessful = createAction(
+  actionNames.SET_CREATE_ICDCRT_RECORD_SUCCESSFUL,
+  (createIcdCrtRecordSuccessful: boolean) => ({
+    createIcdCrtRecordSuccessful: createIcdCrtRecordSuccessful
+  })
+)();
+
+export const setFetchingIcdCrtRecords = createAction(
+  actionNames.SET_FETCHING_ICDCRT_RECORDS,
+  (fetchingIcdCrtRecords: boolean) => ({
+    fetchingIcdCrtRecords: fetchingIcdCrtRecords
+  })
+)();
+
+export const setIcdCrtRecords = createAction(
+  actionNames.SET_ICDCRT_RECORDS,
+  (icdCrtRecords: IcdCrtRecord[]) => ({
+    icdCrtRecords: icdCrtRecords
+  })
+)();
+
+export const setFetchingIcdCrtRecordContent = createAction(
+  actionNames.SET_FETCHING_ICDCRT_RECORD_CONTENT,
+  (fetchingIcdCrtRecordContent: boolean) => ({
+    fetchingIcdCrtRecordContent: fetchingIcdCrtRecordContent
+  })
+)();
+
+export const setIcdCrtRecordContent = createAction(
+  actionNames.SET_ICDCRT_RECORD_CONTENT,
+  (icdCrtRecordContent: string | undefined) => ({
+    icdCrtRecordContent: icdCrtRecordContent
+  })
+)();
+
 export const setPendingAlertCount = createAction(
   actionNames.SET_PENDING_ALERT_COUNT,
   (pendingAlertCount: AlertsCount) => ({
@@ -300,5 +344,12 @@ export const setAlertRiskFilters = createAction(
   actionNames.SET_ALERT_RISK_FILTERS,
   (riskFilters: RiskFilters) => ({
     alertRiskFilters: riskFilters
+  })
+)();
+
+export const setChartFilters = createAction(
+  actionNames.SET_CHART_FILTERS,
+  (chartFilters: ChartFilter) => ({
+    chartFilters: chartFilters
   })
 )();

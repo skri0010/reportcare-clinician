@@ -123,6 +123,7 @@ export declare class ClinicianInfo {
   readonly name: string;
   readonly hospitalName: string;
   readonly role: string;
+  readonly contactNumber: string;
   readonly protectedInfo?: ClinicianProtectedInfo;
   constructor(init: ModelInit<ClinicianInfo>);
   static copyOf(source: ClinicianInfo, mutator: (draft: MutableModel<ClinicianInfo>) => MutableModel<ClinicianInfo> | void): ClinicianInfo;

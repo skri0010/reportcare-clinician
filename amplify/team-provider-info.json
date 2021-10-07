@@ -14,6 +14,16 @@
     "categories": {
       "auth": {
         "reportcaref82cc4af": {}
+      },
+      "function": {
+        "reportcarelambdalayer": {
+          "deploymentBucketName": "amplify-reportcare-dev-213733-deployment",
+          "s3Key": "amplify-builds/reportcarelambdalayer-LambdaLayerVersion2965a8ce-build.zip"
+        },
+        "patientassignmenthandler": {
+          "deploymentBucketName": "amplify-reportcare-dev-213733-deployment",
+          "s3Key": "amplify-builds/patientassignmenthandler-4a765131453239385a39-build.zip"
+        }
       }
     }
   }

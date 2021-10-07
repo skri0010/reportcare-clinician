@@ -10,11 +10,13 @@ import {
 } from "rc_agents/model";
 import {
   ClinicianInfo,
+  IcdCrtRecord,
   MedicalRecord,
   PatientAssignment,
   PatientInfo
 } from "aws/API";
 import { RiskLevel } from "models/RiskLevel";
+import { ChartFilter, ChartViewTypes } from "models/ChartViewTypes";
 
 interface AgentsState {
   procedureSuccessful: boolean;
@@ -36,6 +38,7 @@ interface AgentsState {
   configuringPatient: boolean;
   configurationSuccessful: boolean;
   riskFilters: RiskFilter;
+  chartFilters: ChartFilter;
   pendingAlertCount: AlertsCount;
   fetchingPendingAlerts: boolean;
   fetchingCompletedAlerts: boolean;
@@ -59,6 +62,12 @@ interface AgentsState {
   medicalRecords: MedicalRecord[] | undefined;
   fetchingMedicalRecordContent: boolean;
   medicalRecordContent: string | undefined;
+  creatingIcdCrtRecord: boolean;
+  createIcdCrtRecordSuccessful: boolean;
+  fetchingIcdCrtRecords: boolean;
+  icdCrtRecords: IcdCrtRecord[] | undefined;
+  fetchingIcdCrtRecordContent: boolean;
+  icdCrtRecordContent: string | undefined;
 }
 
 const initialState: AgentsState = {
@@ -96,6 +105,12 @@ const initialState: AgentsState = {
     [RiskLevel.LOW]: false,
     [RiskLevel.UNASSIGNED]: false
   },
+  chartFilters: {
+    [ChartViewTypes.ALL]: true,
+    [ChartViewTypes.MIN]: false,
+    [ChartViewTypes.MAX]: false,
+    [ChartViewTypes.AVERAGE]: false
+  },
   pendingAlertCount: {
     highRisk: 0,
     mediumRisk: 0,
@@ -123,7 +138,13 @@ const initialState: AgentsState = {
   fetchingMedicalRecords: false,
   medicalRecords: undefined,
   fetchingMedicalRecordContent: false,
-  medicalRecordContent: undefined
+  medicalRecordContent: undefined,
+  creatingIcdCrtRecord: false,
+  createIcdCrtRecordSuccessful: false,
+  fetchingIcdCrtRecords: false,
+  icdCrtRecords: undefined,
+  fetchingIcdCrtRecordContent: false,
+  icdCrtRecordContent: undefined
 };
 
 export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
@@ -227,6 +248,37 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
         ...state,
         medicalRecordContent: action.payload.medicalRecordContent
       };
+    case actionNames.SET_CREATING_ICDCRT_RECORD:
+      return {
+        ...state,
+        creatingIcdCrtRecord: action.payload.creatingIcdCrtRecord
+      };
+    case actionNames.SET_CREATE_ICDCRT_RECORD_SUCCESSFUL:
+      return {
+        ...state,
+        createIcdCrtRecordSuccessful:
+          action.payload.createIcdCrtRecordSuccessful
+      };
+    case actionNames.SET_FETCHING_ICDCRT_RECORDS:
+      return {
+        ...state,
+        fetchingIcdCrtRecords: action.payload.fetchingIcdCrtRecords
+      };
+    case actionNames.SET_ICDCRT_RECORDS:
+      return {
+        ...state,
+        icdCrtRecords: action.payload.icdCrtRecords
+      };
+    case actionNames.SET_FETCHING_ICDCRT_RECORD_CONTENT:
+      return {
+        ...state,
+        fetchingIcdCrtRecordContent: action.payload.fetchingIcdCrtRecordContent
+      };
+    case actionNames.SET_ICDCRT_RECORD_CONTENT:
+      return {
+        ...state,
+        icdCrtRecordContent: action.payload.icdCrtRecordContent
+      };
     case actionNames.SET_PENDING_ALERT_COUNT:
       return {
         ...state,
@@ -279,6 +331,8 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
         ...state,
         alertInfo: action.payload.alertInfo
       };
+    case actionNames.SET_CHART_FILTERS:
+      return { ...state, chartFilters: action.payload.chartFilters };
     case actionNames.SET_PATIENT_RISK_FILTERS:
       return {
         ...state,

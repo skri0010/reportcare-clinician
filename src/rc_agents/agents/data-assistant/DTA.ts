@@ -35,6 +35,11 @@ import { af_RetrieveMedicalRecords } from "./action-frames/hf-outcome-trends/Ret
 import { af_RequestDisplayMedicalRecords } from "./action-frames/hf-outcome-trends/RequestDisplayMedicalRecords";
 import { af_RetrieveMedicalRecordContent } from "./action-frames/hf-outcome-trends/RetrieveMedicalRecordContent";
 import { af_RequestDisplayMedicalRecordContent } from "./action-frames/hf-outcome-trends/RequestDisplayMedicalRecordContent";
+import { af_CreateIcdCrtRecord } from "./action-frames/hf-outcome-trends/CreateIcdCrtRecord";
+import { af_RetrieveIcdCrtRecords } from "./action-frames/hf-outcome-trends/RetrieveIcdCrtRecords";
+import { af_RequestDisplayIcdCrtRecords } from "./action-frames/hf-outcome-trends/RequestDisplayIcdCrtRecords";
+import { af_RetrieveIcdCrtRecordContent } from "./action-frames/hf-outcome-trends/RetrieveIcdCrtRecordContent";
+import { af_RequestDisplayIcdCrtRecordContent } from "./action-frames/hf-outcome-trends/RequestDisplayIcdCrtRecordContent";
 
 // Initial Beliefs of Agent
 
@@ -72,6 +77,13 @@ const agentDTA = new ClinicianAgent(
     af_RequestDisplayMedicalRecords,
     af_RetrieveMedicalRecordContent,
     af_RequestDisplayMedicalRecordContent,
+
+    // HF-OTP-IV
+    af_CreateIcdCrtRecord,
+    af_RetrieveIcdCrtRecords,
+    af_RequestDisplayIcdCrtRecords,
+    af_RetrieveIcdCrtRecordContent,
+    af_RequestDisplayIcdCrtRecordContent,
 
     // AT-CP-I
     af_RetrieveAlerts,

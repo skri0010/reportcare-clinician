@@ -58,6 +58,17 @@ export const lightColorScheme: ColorScheme = {
   // Icon background
   deleteIconBackgroundColor: "#ffffff00",
 
+  // Information
+  infoIconColor: "#2b79c2",
+
+  // Charts
+  maxLineColor: "#5fff42",
+  minLineColor: "#c43a31",
+  avgLineColor: "#edf24b",
+  chartPillSelectedColor: "#57c081",
+  chartPillUnselectedColor: "#F2F2F2",
+  chartPillUnselectedBorderColor: "#d1d1d1",
+
   // Others
   riskLevelBackgroundColors: riskLevelBackgroundColors,
   riskLevelBorderColors: riskLevelBorderColors,

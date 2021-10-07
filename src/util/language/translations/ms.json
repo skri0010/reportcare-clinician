@@ -82,16 +82,19 @@
     "OxygenSaturationUnit": "(%)",
     "Weight": "Berat Badan ",
     "WeightUnit": "(kg)",
+    "FluidIntake": "Pengambilan Air ",
+    "FluidUnit": "(ml)",
+    "Steps": "Jumlah Langkah",
+    "StepsUnit": "(langkah)",
     "NoData": "Tiada data dijumpai",
-    "Days": {
-      "Sunday": "Ahad",
-      "Monday": "Isnin",
-      "Tuesday": "Selasa",
-      "Wednesday": "Rabu",
-      "Thursday": "Khamis",
-      "Friday": "Jumaat",
-      "Saturday": "Sabtu"
-    }
+    "ViewBy": "Melihat secara: ",
+    "ChartViewTypes": {
+      "Maximum": " Maksimum",
+      "Minimum": "Minimum",
+      "Average": "Purata",
+      "All": "Semua"
+    },
+    "Information": "Jurang yang wujud dalam carta garis antara tarikh menandakan bahawa pesakit tidak mempunyai catatan penting untuk hari tertentu."
   },
   "ScreenName": {
     "Home": "Home",
@@ -223,7 +226,17 @@
     "NoRecord": "-",
     "NoSymptoms": "No symptoms recorded"
   },
-  "Patient_ICD/CRT": {},
+  "Patient_ICD/CRT": {
+    "ICD/CRTRecords": "Rekod ICD/CRT",
+    "NoIcdCrtRecords": "Tiada rekod ICD/CRT dijumpai!",
+    "Title": "Tajuk",
+    "TitleInputPlaceholder": "Berikan tajuk kepada rekod ini",
+    "TitleError": "Sila berikan tajuk yang sah",
+    "FileUpload": "Fail Muat Naik",
+    "Save": "Simpan",
+    "Cancel": "Batal",
+    "IcdCrtRecordSavedSuccessfully": "Rekod ICD/CRT telah berjaya disimpan"
+  },
   "Patient_History": {
     "Alert": "Amaran",
     "Risk": {
@@ -252,14 +265,7 @@
       "Title": "Tajuk",
       "TitleInputPlaceholder": "Berikan nama kepada rekod perubatan ini (contohnya latar belakang)",
       "TitleError": "Sila berikan tajuk yang sah",
-      "Description": "Deskripsi",
-      "DescriptionInputPlaceholder": "Apakah isi-isi deskripsi ini?",
       "FileUpload": "Fail Muat Naik",
-      "DragAndDropFile": "Seret and Lepas fail",
-      "DropFileHere": "Lepaskan fail di sini",
-      "Or": "Atau",
-      "BrowseFiles": "Semak fail",
-      "MultipleFileError": "Anda hanya boleh muat naik satu fail sahaja",
       "MedicalRecordSavedSuccessfully": "Rekod perubatan telah berjaya disimpan"
     },
     "NoAlertHistory": "Pesakit ini belum mempunyai sejarah amaran!",
@@ -310,6 +316,13 @@
   "MobileMessage": {
     "ViewList": "Lihat Senarai",
     "BackToDetails": "Balik ke Butiran"
+  },
+  "FileDropbox": {
+    "DragAndDropFile": "Seret and Lepas fail",
+    "DropFileHere": "Lepaskan fail di sini",
+    "Or": "Atau",
+    "BrowseFiles": "Semak fail",
+    "MultipleFileError": "Anda hanya boleh muat naik satu fail sahaja"
   },
   "UnexpectedError": "Ralat yang tidak disangkai telah berlaku",
   "Keywords": {

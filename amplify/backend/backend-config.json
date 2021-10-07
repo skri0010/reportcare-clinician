@@ -19,16 +19,43 @@
               "userPoolId": "authreportcaref82cc4af"
             }
           },
-          "additionalAuthenticationProviders": []
+          "additionalAuthenticationProviders": [
+            {
+              "authenticationType": "AWS_IAM"
+            }
+          ]
         }
       }
     }
   },
   "storage": {
-    "medicalrecords": {
+    "icdcrtmedicalrecords": {
       "service": "S3",
+      "providerPlugin": "awscloudformation"
+    }
+  },
+  "function": {
+    "reportcarelambdalayer": {
       "providerPlugin": "awscloudformation",
-      "dependsOn": []
+      "service": "LambdaLayer",
+      "build": true
+    },
+    "patientassignmenthandler": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "function",
+          "resourceName": "reportcarelambdalayer",
+          "attributes": ["Arn"]
+        },
+        {
+          "category": "api",
+          "resourceName": "reportcare",
+          "attributes": ["GraphQLAPIIdOutput", "GraphQLAPIEndpointOutput"]
+        }
+      ]
     }
   }
 }

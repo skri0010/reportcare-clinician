@@ -5,7 +5,8 @@ import {
   PatientInfo,
   MedicationInfo,
   MedicalRecord,
-  Alert
+  Alert,
+  IcdCrtRecord
 } from "aws/API";
 import { RiskLevel } from "models/RiskLevel";
 
@@ -104,6 +105,7 @@ export interface PatientDetails {
   vitalsReports: LocalReportVitals;
   medicationInfo: MedicationInfo[] | MedInput[];
   medicalRecords: LocalMedicalRecords;
+  icdCrtRecords: LocalIcdCrtRecords;
 }
 
 export type LocalActivityInfos = {
@@ -121,6 +123,10 @@ export type LocalReportVitals = {
 
 export type LocalMedicalRecords = {
   [id: string]: MedicalRecord;
+};
+
+export type LocalIcdCrtRecords = {
+  [id: string]: IcdCrtRecord;
 };
 
 export interface PatientAssignmentResolution {
@@ -199,5 +205,12 @@ export interface MedInput {
 export interface MedicalRecordInput {
   title: string;
   patientID: string;
+  file: RecordFile;
+}
+
+export interface IcdCrtRecordInput {
+  title: string;
+  patientID: string;
+  dateTime: string;
   file: RecordFile;
 }

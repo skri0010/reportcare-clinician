@@ -87,13 +87,9 @@ export const FileDropbox: React.FC<FileDropboxProps> = ({
                     text={
                       isDragActive
                         ? dragActivePlaceholder ||
-                          i18n.t(
-                            "Patient_History.AddMedicalRecordCard.DropFileHere"
-                          )
+                          i18n.t("FileDropbox.DropFileHere")
                         : dropSectionPlaceholder ||
-                          i18n.t(
-                            "Patient_History.AddMedicalRecordCard.DragAndDropFile"
-                          )
+                          i18n.t("FileDropbox.DragAndDropFile")
                     }
                     style={{
                       fontWeight: "bold",
@@ -105,7 +101,7 @@ export const FileDropbox: React.FC<FileDropboxProps> = ({
                   />
                 </View>
                 <H5
-                  text={i18n.t("Patient_History.AddMedicalRecordCard.Or")}
+                  text={i18n.t("FileDropbox.Or")}
                   style={{
                     paddingTop: ms(10),
                     paddingBottom: ms(5),
@@ -113,10 +109,7 @@ export const FileDropbox: React.FC<FileDropboxProps> = ({
                   }}
                 />
                 <RowButton
-                  title={
-                    browseButtonLabel ||
-                    i18n.t("Patient_History.AddMedicalRecordCard.BrowseFiles")
-                  }
+                  title={browseButtonLabel || i18n.t("FileDropbox.BrowseFiles")}
                   onPress={open}
                 />
               </View>
@@ -146,7 +139,7 @@ export const FileDropbox: React.FC<FileDropboxProps> = ({
       </View>
       {/* Error message that only one file can be uploaded at a time */}
       <H7
-        text={i18n.t("Patient_History.AddMedicalRecordCard.MultipleFileError")}
+        text={i18n.t("FileDropbox.MultipleFileError")}
         style={{
           fontWeight: "bold",
           color: colors.errorColor,

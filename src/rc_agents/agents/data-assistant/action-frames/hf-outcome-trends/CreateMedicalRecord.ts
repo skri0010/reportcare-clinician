@@ -15,7 +15,7 @@ import {
   PatientAttributes,
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
-import { createMedicalRecord } from "aws";
+import { createMedicalRecord, StorageFolderPath } from "aws";
 import { CreateMedicalRecordInput, MedicalRecord } from "aws/API";
 import { LocalStorage } from "rc_agents/storage";
 import {
@@ -147,10 +147,14 @@ export const insertMedicalRecord = async (
     // Generates unique ID as part of file key to prevent overwriting another file with the same name
     const fileID = `${medicalRecordFile.name}_${uuidv4()}`;
     // Upload file to S3 bucket
-    await Storage.put(fileID, medicalRecordFile, {
-      contentType: medicalRecordFile.type,
-      level: "private"
-    })
+    await Storage.put(
+      `${StorageFolderPath.MEDICAL_RECORDS}${fileID}`,
+      medicalRecordFile,
+      {
+        contentType: medicalRecordFile.type,
+        level: "protected"
+      }
+    )
       .then(async () => {
         // File is successfully uploaded - create a record in DynamoDB
         const input: CreateMedicalRecordInput = {

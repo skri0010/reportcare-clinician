@@ -47,6 +47,14 @@ export const AuthStackNavigator: FC<AuthStackNavigatorProps> = ({
     headerTitleStyle: headerTitleStyle
   });
 
+  // Type check params list. Required because initialParams is insufficient due to Partial<>
+  const initialParamsList: AuthenticationStackParamList = {
+    [AuthenticationScreenName.SIGN_IN]: undefined,
+    [AuthenticationScreenName.CONFIRM_REGISTRATION]: {},
+    [AuthenticationScreenName.FORGET_PASSWORD]: undefined,
+    [AuthenticationScreenName.REGISTRATION]: undefined
+  };
+
   return (
     <NavigationContainer>
       <Stack.Navigator>
@@ -54,10 +62,10 @@ export const AuthStackNavigator: FC<AuthStackNavigatorProps> = ({
           name={AuthenticationScreenName.SIGN_IN}
           options={{ headerShown: false }}
         >
-          {(screenProps) => (
+          {(props) => (
             <SignIn
-              navigation={screenProps.navigation}
-              route={screenProps.route}
+              navigation={props.navigation}
+              route={props.route}
               setAuthState={setAuthState}
             />
           )}
@@ -81,6 +89,7 @@ export const AuthStackNavigator: FC<AuthStackNavigatorProps> = ({
               )
             })
           }}
+          initialParams={initialParamsList.ConfirmRegistration}
         />
         <Stack.Screen
           name={AuthenticationScreenName.FORGET_PASSWORD}
