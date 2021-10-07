@@ -16,10 +16,13 @@ import {
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
 import { LocalStorage } from "rc_agents/storage";
-import { MedicalRecord } from "aws/API";
+import { ClinicianRecord, ModelSortDirection } from "aws/API";
 import { store } from "util/useRedux";
 import { setFetchingMedicalRecords } from "ic-redux/actions/agents/actionCreator";
-import { listMedicalRecordsByPatientID } from "aws";
+import {
+  listUploadedClinicianRecordsByPatientID,
+  PresignedUrlRecordType
+} from "aws";
 
 /**
  * Class to represent the activity for retrieving medical records of a patient.
@@ -56,20 +59,23 @@ class RetrieveMedicalRecords extends Activity {
       const isOnline: boolean = facts[BeliefKeys.APP]?.[AppAttributes.ONLINE];
 
       if (patientId) {
-        let medicalRecords: MedicalRecord[] | undefined;
+        let medicalRecords: ClinicianRecord[] | undefined;
 
         if (isOnline) {
           // Device is online - retrieve medical records of current patient
-          const query = await listMedicalRecordsByPatientID({
-            patientID: patientId
+          const recordType: PresignedUrlRecordType = "Medical";
+          const query = await listUploadedClinicianRecordsByPatientID({
+            patientID: patientId,
+            filter: { type: { eq: recordType } },
+            sortDirection: ModelSortDirection.DESC
           });
 
           if (
-            query.data.listMedicalRecordsByPatientID?.items &&
-            query.data.listMedicalRecordsByPatientID?.items.length > 0
+            query.data.listUploadedClinicianRecordsByPatientID?.items &&
+            query.data.listUploadedClinicianRecordsByPatientID?.items.length > 0
           ) {
-            medicalRecords = query.data.listMedicalRecordsByPatientID
-              .items as MedicalRecord[];
+            medicalRecords = query.data.listUploadedClinicianRecordsByPatientID
+              .items as ClinicianRecord[];
 
             // Stores medical records locally
             await LocalStorage.setPatientMedicalRecords(medicalRecords);

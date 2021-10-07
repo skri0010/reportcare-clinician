@@ -24,7 +24,9 @@ import {
   GetPatientAssignmentQuery,
   GetPatientAssignmentQueryVariables,
   GetClinicianPatientMapQuery,
-  GetClinicianPatientMapQueryVariables
+  GetClinicianPatientMapQueryVariables,
+  GetClinicianRecordQuery,
+  GetClinicianRecordQueryVariables
 } from "aws/API";
 import * as Override from "./override";
 
@@ -169,4 +171,17 @@ export const getClinicianPatientMap = async (
     query: queries.getClinicianPatientMap,
     variables: variables
   })) as GetClinicianPatientMapResponse;
+};
+
+interface GetClinicianRecordResponse extends BaseResponse {
+  data: GetClinicianRecordQuery;
+}
+
+export const getClinicianRecord = async (
+  variables: GetClinicianRecordQueryVariables
+): Promise<GetClinicianRecordResponse> => {
+  return (await API.graphql({
+    query: queries.getClinicianRecord,
+    variables: variables
+  })) as GetClinicianRecordResponse;
 };

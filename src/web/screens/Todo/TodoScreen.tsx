@@ -4,7 +4,7 @@ import { MainScreenProps } from "web/navigation/types";
 import { ScreenName, TodoListTabName } from "web/navigation";
 import { View, Modal } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
-import { ScreenWrapper } from "web/screens/ScreenWrapper";
+import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
 import { NavigationContainer } from "@react-navigation/native";
 import { AddTodoScreen } from "./modals/AddTodoScreen";
 import { NoSelectionScreen } from "../Shared/NoSelectionScreen";
@@ -21,7 +21,7 @@ import {
 } from "ic-redux/actions/agents/actionCreator";
 import { AgentTrigger } from "rc_agents/trigger";
 import { TodosList } from "web/screens/Todo/TodosList";
-import { AdaptiveTwoScreenWrapper } from "../AdaptiveTwoScreenWrapper";
+import { AdaptiveTwoScreenWrapper } from "components/Wrappers/AdaptiveTwoScreenWrapper";
 
 // Determines if the add button is needed in the header of left tab
 function checkNeedAddButton(tabName: TodoListTabName) {

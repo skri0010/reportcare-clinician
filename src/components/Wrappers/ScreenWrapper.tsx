@@ -2,13 +2,13 @@ import React, { FC } from "react";
 import { View, ScrollView, StyleProp, ViewStyle } from "react-native";
 import { RootState, select } from "util/useRedux";
 import { ms } from "react-native-size-matters";
+import { BaseWrapperProps } from "components/Wrappers/BaseWrapperProps";
 
-interface ScreenWrapperProps {
+interface ScreenWrapperProps extends BaseWrapperProps {
   showScrollBar?: boolean;
   padding?: boolean;
   fixed?: boolean;
   style?: StyleProp<ViewStyle>;
-  pointerEvents?: "auto" | "none" | "box-none" | "box-only" | undefined;
   justifyContent?:
     | "flex-start"
     | "flex-end"

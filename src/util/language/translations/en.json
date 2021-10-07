@@ -295,9 +295,9 @@
     "BackToDetails": "Back to Details"
   },
   "FileDropbox": {
-    "DragAndDropFile": "Drag and Drop file",
+    "DragAndDropFile": "Drag and drop file",
     "DropFileHere": "Drop file here",
-    "Or": "Or",
+    "Or": "or",
     "BrowseFiles": "Browse files",
     "MultipleFileError": "You can only upload one file at a time"
   },

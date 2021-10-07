@@ -1,6 +1,6 @@
 import React, { FC, useState } from "react";
 import { ms } from "react-native-size-matters";
-import { CardWrapper } from "web/screens/Home/CardWrapper";
+import { CardWrapper } from "components/Wrappers/CardWrapper";
 import { FlatList } from "react-native";
 import { mockMedicationRecord } from "mock/mockMedication";
 import { MedicationRow } from "./MedicationRow";

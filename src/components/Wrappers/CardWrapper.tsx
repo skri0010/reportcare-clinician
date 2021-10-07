@@ -3,8 +3,9 @@ import { View } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { RootState, select } from "util/useRedux";
 import { H4, H6 } from "components/Text";
+import { BaseWrapperProps } from "components/Wrappers/BaseWrapperProps";
 
-interface CardWrapperProps {
+interface CardWrapperProps extends BaseWrapperProps {
   flex?: number;
   minHeight?: number;
   maxHeight?: number;
@@ -99,6 +100,7 @@ export const CardWrapper: FC<CardWrapperProps> = ({
             <H6
               text={bottomText}
               style={{
+                flex: 1,
                 color: colors.primaryTextColor,
                 paddingLeft: ms(5),
                 textAlign: "center",
@@ -128,8 +130,8 @@ const styles = ScaledSheet.create({
   },
   bottomTextContainer: {
     position: "absolute",
-    width: "100%",
-    bottom: "10@ms"
+    bottom: "10@ms",
+    width: "100%"
   },
   item: {
     flex: 1,

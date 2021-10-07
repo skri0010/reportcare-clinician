@@ -2,7 +2,7 @@ import React, { FC, useState, useEffect } from "react";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { ScreenName } from "web/navigation";
 import { View, Modal } from "react-native";
-import { ScreenWrapper } from "web/screens/ScreenWrapper";
+import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
 import { ScaledSheet } from "react-native-size-matters";
 import { NoSelectionScreen } from "../Shared/NoSelectionScreen";
 import { MainScreenProps } from "web/navigation/types";

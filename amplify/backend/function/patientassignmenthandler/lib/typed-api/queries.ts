@@ -3,47 +3,14 @@ import {
   GetClinicianPatientMapQueryVariables,
   GetPatientAssignmentQuery,
   GetPatientAssignmentQueryVariables
-} from "lib/api/API";
+} from "../api/API";
 import { AppSyncUrl, BaseResponse } from "../types";
+import {
+  getPatientAssignment as gqlGetPatientAssignment,
+  getClinicianPatientMap as gqlGetClinicianPatientMap
+} from "../api/graphql/queries";
 // @ts-ignore
 import { request } from "/opt/appSyncRequest";
-
-// Initialize GraphQL queries
-const gqlGetPatientAssignment = /* GraphQL */ `
-  query GetPatientAssignment($patientID: String!, $clinicianID: String!) {
-    getPatientAssignment(patientID: $patientID, clinicianID: $clinicianID) {
-      id
-      patientID
-      clinicianID
-      patientName
-      pending
-      resolution
-      reassignToClinicianID
-      adminReassignFromClinicianID
-      adminCompleted
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
-    }
-  }
-`;
-
-const gqlGetClinicianPatientMap = /* GraphQL */ `
-  query GetClinicianPatientMap($clinicianID: String!, $patientID: String!) {
-    getClinicianPatientMap(clinicianID: $clinicianID, patientID: $patientID) {
-      id
-      clinicianID
-      patientID
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
-    }
-  }
-`;
 
 // Initialize interfaces for responses
 interface GetPatientAssignmentResponse extends BaseResponse {

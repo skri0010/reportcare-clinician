@@ -1,6 +1,6 @@
 import React, { FC, useState, useEffect } from "react";
 import { ms, ScaledSheet } from "react-native-size-matters";
-import { ScreenWrapper } from "web/screens/ScreenWrapper";
+import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
 import { BloodPressureCard } from "./PatientOverviewComponents/BloodPressureCard";
 import { MedicationTakenCard } from "./PatientOverviewComponents/MedicationCard";
 import { OxygenSaturationCard } from "./PatientOverviewComponents/OxygenSaturationCard";

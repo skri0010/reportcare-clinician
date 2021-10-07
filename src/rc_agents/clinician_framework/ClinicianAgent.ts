@@ -183,39 +183,6 @@ export class ClinicianAgent extends Agent {
   }
 
   /**
-   * Overrode existing inference to include checking of current running activity with returned available actions.
-   */
-  override async inference(): Promise<void> {
-    const result = await this.engine.traverseNetwork(this);
-
-    for (let i = 0; i < result.length; i += 1) {
-      let activityExists = false;
-      // Check if activity is already running
-      if (
-        this.currentActivity &&
-        this.currentActivity.getID() === result[i].getID()
-      ) {
-        activityExists = true;
-      } else {
-        // Check if activity already exists in the list
-        for (let j = 0; j < this.availableActions.length; j += 1) {
-          if (this.availableActions[j].getID() === result[i].getID()) {
-            activityExists = true;
-            break;
-          }
-        }
-      }
-      if (!activityExists) {
-        this.availableActions.push(result[i]);
-      }
-    }
-
-    if (this.availableActions.length > 0) {
-      await this.startActivity();
-    }
-  }
-
-  /**
    * Overrode existing startActivity to include tracking of current activity and whether it has been completed
    */
   override async startActivity(): Promise<void> {

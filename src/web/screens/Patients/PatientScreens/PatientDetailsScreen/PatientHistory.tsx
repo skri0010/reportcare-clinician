@@ -1,11 +1,11 @@
 import React, { FC, useEffect } from "react";
 import { ms, ScaledSheet } from "react-native-size-matters";
-import { ScreenWrapper } from "web/screens/ScreenWrapper";
+import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
 import { Dimensions, View } from "react-native";
 import { PatientAlertHistoryCard } from "./PatientHistoryComponents/PatientAlertHistoryCard";
 import { PatientMedicalRecordCard } from "./PatientHistoryComponents/PatientMedicalRecordCard";
 import { PatientDetailsTabProps } from "web/navigation/types";
-import { MedicalRecord, PatientInfo } from "aws/API";
+import { PatientInfo } from "aws/API";
 import { AlertInfo } from "rc_agents/model";
 import { AgentTrigger } from "rc_agents/trigger";
 
@@ -17,7 +17,6 @@ interface PatientHistoryProps extends PatientDetailsTabProps.HistoryTabProps {
   };
   medicalRecordFunc: {
     setAddMedicalRecord: (state: boolean) => void;
-    onViewMedicalRecord: (medicalRecord: MedicalRecord) => void;
   };
 }
 
@@ -53,7 +52,6 @@ export const PatientHistory: FC<PatientHistoryProps> = ({
           patientId={info.patientID}
           maxHeight={cardMaxHeight}
           onAddPress={() => medicalRecordFunc.setAddMedicalRecord(true)}
-          onViewMedicalRecord={medicalRecordFunc.onViewMedicalRecord}
         />
       </View>
     </ScreenWrapper>

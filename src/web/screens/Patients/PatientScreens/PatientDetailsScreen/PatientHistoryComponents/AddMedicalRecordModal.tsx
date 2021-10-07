@@ -1,13 +1,13 @@
 import React, { FC, useEffect, useState } from "react";
-import { View, TouchableOpacity } from "react-native";
+import { View, ScrollView, StyleProp, ViewProps } from "react-native";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { H3 } from "components/Text";
-import { ScaledSheet, ms } from "react-native-size-matters";
+import { ms, ScaledSheet } from "react-native-size-matters";
 import i18n from "util/language/i18n";
 import { TextField } from "components/InputComponents/TextField";
 import { notEmptyString } from "util/validation";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
-import { RecordFile, MedicalRecordInput } from "rc_agents/model";
+import { ClinicianRecordInput, RecordFile } from "rc_agents/model";
 import { triggerCreateMedicalRecord } from "rc_agents/triggers";
 import {
   setCreateMedicalRecordSuccessful,
@@ -15,13 +15,20 @@ import {
 } from "ic-redux/actions/agents/actionCreator";
 import { useToast } from "react-native-toast-notifications";
 import { FileDropbox } from "components/InputComponents/FileDropbox";
+import {
+  ModalWrapper,
+  ModalWrapperProps
+} from "components/Wrappers/ModalWrapper";
+import { ModalButton } from "components/Buttons/ModalButton";
 
-interface AddMedicalRecordProps {
+interface AddMedicalRecordModalProps extends ModalWrapperProps {
   setAddMedicalRecord: (state: boolean) => void;
   patientID?: string;
 }
 
-export const AddMedicalRecord: FC<AddMedicalRecordProps> = ({
+export const AddMedicalRecordModal: FC<AddMedicalRecordModalProps> = ({
+  visible,
+  onRequestClose,
   setAddMedicalRecord,
   patientID
 }) => {
@@ -57,7 +64,7 @@ export const AddMedicalRecord: FC<AddMedicalRecordProps> = ({
     if (file && patientID) {
       dispatch(setCreatingMedicalRecord(true));
       setSavingRecord(true);
-      const recordToSave: MedicalRecordInput = {
+      const recordToSave: ClinicianRecordInput = {
         title: title,
         patientID: patientID,
         file: file
@@ -83,6 +90,8 @@ export const AddMedicalRecord: FC<AddMedicalRecordProps> = ({
         );
         dispatch(setCreateMedicalRecordSuccessful(false));
         setAddMedicalRecord(false);
+        setTitle("");
+        setFile(undefined);
       } else {
         // Create failed
         toast.show(i18n.t("UnexpectedError"), {
@@ -101,84 +110,69 @@ export const AddMedicalRecord: FC<AddMedicalRecordProps> = ({
   ]);
 
   return (
-    <View
-      // Disable pointer events if procedure is ongoing
+    <ModalWrapper
+      visible={visible}
+      onRequestClose={onRequestClose} // Disable pointer events if procedure is ongoing
       pointerEvents={savingRecord ? "none" : "auto"}
-      style={[
-        styles.container,
-        { backgroundColor: colors.primaryContrastTextColor }
-      ]}
     >
-      {/* Title Input */}
-      <TextField
-        label={i18n.t("Patient_History.AddMedicalRecordCard.Title")}
-        labelStyle={[styles.inputTitle, { fontSize: fonts.h3Size }]}
-        value={title}
-        onChange={setTitle}
-        placeholder={i18n.t(
-          "Patient_History.AddMedicalRecordCard.TitleInputPlaceholder"
-        )}
-        error={!notEmptyString(title)}
-        errorMessage={i18n.t("Patient_History.AddMedicalRecordCard.TitleError")}
-      />
+      <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+        {/* Title Input */}
+        <TextField
+          label={i18n.t("Patient_History.AddMedicalRecordCard.Title")}
+          labelStyle={[styles.inputTitle, { fontSize: fonts.h3Size }]}
+          value={title}
+          onChange={setTitle}
+          placeholder={i18n.t(
+            "Patient_History.AddMedicalRecordCard.TitleInputPlaceholder"
+          )}
+          error={!notEmptyString(title)}
+          errorMessage={i18n.t(
+            "Patient_History.AddMedicalRecordCard.TitleError"
+          )}
+        />
 
-      {/* File Upload Label */}
-      <H3
-        text={i18n.t("Patient_History.AddMedicalRecordCard.FileUpload")}
-        style={styles.inputTitle}
-      />
+        {/* File Upload Label */}
+        <H3
+          text={i18n.t("Patient_History.AddMedicalRecordCard.FileUpload")}
+          style={[styles.inputTitle, { marginTop: ms(15) }]}
+        />
 
-      {/* File Upload Input */}
-      <FileDropbox file={file} setFile={setFile} />
+        {/* File Upload Input */}
+        <FileDropbox file={file} setFile={setFile} />
+      </ScrollView>
 
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "center",
-          paddingTop: ms(20)
-        }}
-      >
+      <View style={styles.bottomButtonsContainer}>
         {/* Save button */}
-        <TouchableOpacity
+        <ModalButton
+          title={i18n.t("Patient_ICD/CRT.Save")}
           disabled={!allInputValid}
-          style={[
-            styles.saveButton,
+          onPress={onSaveRecord}
+          style={
             {
               backgroundColor: allInputValid
                 ? colors.acceptButtonColor
                 : colors.primaryDeactivatedButtonColor,
               borderColor: colors.primaryTextColor
-            }
-          ]}
-          onPress={onSaveRecord}
-        >
-          <H3
-            text={i18n.t("Patient_History.SaveButton")}
-            style={{ color: colors.primaryTextColor }}
-          />
-        </TouchableOpacity>
+            } as StyleProp<ViewProps>
+          }
+        />
+
         {/* Cancel button */}
-        <TouchableOpacity
-          style={[
-            styles.closeButton,
+        <ModalButton
+          title={i18n.t("Patient_ICD/CRT.Cancel")}
+          onPress={() => setAddMedicalRecord(false)}
+          style={
             {
               backgroundColor: colors.primaryContrastTextColor,
-              borderColor: colors.primaryTextColor
-            }
-          ]}
-          onPress={() => {
-            setAddMedicalRecord(false);
-          }}
-        >
-          <H3
-            text={i18n.t("Patient_History.CancelButton")}
-            style={{ color: colors.primaryTextColor }}
-          />
-        </TouchableOpacity>
+              borderColor: colors.primaryTextColor,
+              borderWidth: ms(1),
+              borderRadius: ms(5)
+            } as StyleProp<ViewProps>
+          }
+        />
       </View>
       {savingRecord && <LoadingIndicator overlayBackgroundColor />}
-    </View>
+    </ModalWrapper>
   );
 };
 
@@ -208,8 +202,14 @@ const styles = ScaledSheet.create({
     marginHorizontal: "25%"
   },
   inputTitle: {
-    paddingTop: ms(25),
+    paddingTop: "5@ms",
     fontWeight: "bold",
-    paddingBottom: ms(10)
+    paddingBottom: "10@ms"
+  },
+  bottomButtonsContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingBottom: "10@ms"
   }
 });
