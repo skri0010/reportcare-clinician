@@ -4,7 +4,7 @@ import { Auth } from "@aws-amplify/auth";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { RootState, select, useDispatch } from "util/useRedux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ScreenWrapper } from "web/screens/ScreenWrapper";
+import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
 import { validatePassword, validateUsername } from "util/validation";
 import i18n from "util/language/i18n";
 import { useToast } from "react-native-toast-notifications";

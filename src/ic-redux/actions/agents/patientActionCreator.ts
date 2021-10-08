@@ -1,7 +1,7 @@
 import { AlertInfo, PatientDetails } from "rc_agents/model";
 import { actionNames } from "ic-redux/actions/actionNames";
 import { createAction } from "typesafe-actions";
-import { PatientInfo, MedicalRecord, IcdCrtRecord } from "aws/API";
+import { PatientInfo, ClinicianRecord } from "aws/API";
 
 export const setPatients = createAction(
   actionNames.SET_PATIENTS,
@@ -68,7 +68,7 @@ export const setFetchingMedicalRecords = createAction(
 
 export const setMedicalRecords = createAction(
   actionNames.SET_MEDICAL_RECORDS,
-  (medicalRecords: MedicalRecord[]) => ({
+  (medicalRecords: ClinicianRecord[]) => ({
     medicalRecords: medicalRecords
   })
 )();
@@ -77,13 +77,6 @@ export const setFetchingMedicalRecordContent = createAction(
   actionNames.SET_FETCHING_MEDICAL_RECORD_CONTENT,
   (fetchingMedicalRecordContent: boolean) => ({
     fetchingMedicalRecordContent: fetchingMedicalRecordContent
-  })
-)();
-
-export const setMedicalRecordContent = createAction(
-  actionNames.SET_MEDICAL_RECORD_CONTENT,
-  (medicalRecordContent: string | undefined) => ({
-    medicalRecordContent: medicalRecordContent
   })
 )();
 
@@ -110,7 +103,7 @@ export const setFetchingIcdCrtRecords = createAction(
 
 export const setIcdCrtRecords = createAction(
   actionNames.SET_ICDCRT_RECORDS,
-  (icdCrtRecords: IcdCrtRecord[]) => ({
+  (icdCrtRecords: ClinicianRecord[]) => ({
     icdCrtRecords: icdCrtRecords
   })
 )();
@@ -119,12 +112,5 @@ export const setFetchingIcdCrtRecordContent = createAction(
   actionNames.SET_FETCHING_ICDCRT_RECORD_CONTENT,
   (fetchingIcdCrtRecordContent: boolean) => ({
     fetchingIcdCrtRecordContent: fetchingIcdCrtRecordContent
-  })
-)();
-
-export const setIcdCrtRecordContent = createAction(
-  actionNames.SET_ICDCRT_RECORD_CONTENT,
-  (icdCrtRecordContent: string | undefined) => ({
-    icdCrtRecordContent: icdCrtRecordContent
   })
 )();

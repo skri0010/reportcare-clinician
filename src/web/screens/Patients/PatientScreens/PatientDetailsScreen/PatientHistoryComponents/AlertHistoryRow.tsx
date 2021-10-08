@@ -4,7 +4,7 @@ import { ScaledSheet } from "react-native-size-matters";
 import { H5, H6 } from "components/Text";
 import { getRiskLevelColor, RiskLevel } from "models/RiskLevel";
 import { View } from "react-native";
-import { RowButton } from "components/Buttons/TextButton";
+import { RowButton } from "components/Buttons/RowButton";
 import i18n from "util/language/i18n";
 import moment from "moment";
 

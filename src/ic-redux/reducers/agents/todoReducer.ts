@@ -5,8 +5,8 @@ import { LocalTodo } from "rc_agents/model";
 
 interface TodoState {
   // todo
-  pendingTodos: LocalTodo[] | null;
-  completedTodos: LocalTodo[] | null;
+  pendingTodos: LocalTodo[] | undefined;
+  completedTodos: LocalTodo[] | undefined;
   updatedTodo: LocalTodo | undefined;
   todoDetails: LocalTodo | undefined;
   fetchingTodos: boolean;
@@ -15,8 +15,8 @@ interface TodoState {
 }
 
 const initialState: TodoState = {
-  pendingTodos: null,
-  completedTodos: null,
+  pendingTodos: undefined,
+  completedTodos: undefined,
   updatedTodo: undefined,
   todoDetails: undefined,
   fetchingTodos: false,

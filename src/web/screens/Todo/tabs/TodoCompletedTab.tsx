@@ -1,9 +1,7 @@
 import React, { FC, useEffect } from "react";
-import { FlatList } from "react-native";
-import { ScreenWrapper } from "web/screens/ScreenWrapper";
+import { FlatList, View } from "react-native";
 import { RiskLevel } from "models/RiskLevel";
 import { TodoRow } from "components/RowComponents/TodoRow";
-import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { RootState, select, store } from "util/useRedux";
 import i18n from "util/language/i18n";
@@ -15,6 +13,7 @@ import { TodoRowTabProps } from "web/navigation/navigators/TodoListTabNavigator"
 import { NoItemsTextIndicator } from "components/Indicators/NoItemsTextIndicator";
 import { setProcedureOngoing } from "ic-redux/actions/agents/procedureActionCreator";
 import { setSubmittingTodo } from "ic-redux/actions/agents/todoActionCreator";
+import { NoListItemMessage } from "web/screens/Shared/NoListItemMessage";
 
 interface TodoCompleteTabProps
   extends TodoRowTabProps,
@@ -35,15 +34,13 @@ export const onUndoPress = (item: LocalTodo): void => {
 };
 
 export const TodoCompletedTab: FC<TodoCompleteTabProps> = ({
-  setTodoSelected
+  setTodoSelected,
+  completedTodos
 }) => {
-  const { colors, completedTodos, fetchingTodos } = select(
-    (state: RootState) => ({
-      colors: state.settings.colors,
-      completedTodos: state.todos.completedTodos,
-      fetchingTodos: state.todos.fetchingTodos
-    })
-  );
+  const { colors, fetchingTodos } = select((state: RootState) => ({
+    colors: state.settings.colors,
+    fetchingTodos: state.todos.fetchingTodos
+  }));
 
   // Set the todo item detail to be shown when the item is pressed
   function onCardPress(item: LocalTodo) {
@@ -53,25 +50,14 @@ export const TodoCompletedTab: FC<TodoCompleteTabProps> = ({
   useEffect(() => {
     AgentTrigger.triggerRetrieveTodos(TodoStatus.COMPLETED);
   }, []);
+
   return (
-    <ScreenWrapper style={{ backgroundColor: colors.primaryBackgroundColor }}>
-      {/* Search bar */}
-      <SearchBarComponent
-        onUserInput={() => {
-          null;
-        }}
-        onSearchClick={() => {
-          null;
-        }}
-        containerStyle={{ backgroundColor: colors.primaryContrastTextColor }}
-        placeholder={i18n.t("Todo.SearchBarCompletePlaceholder")}
-      />
+    <View style={{ flex: 1, backgroundColor: colors.primaryContrastTextColor }}>
       {/* List of completed todos */}
       {fetchingTodos ? (
         // Show loading indicator if fetching completed todos
         <LoadingIndicator flex={1} />
       ) : completedTodos ? (
-        // Show completed todos
         <FlatList
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={() => (
@@ -90,7 +76,9 @@ export const TodoCompletedTab: FC<TodoCompleteTabProps> = ({
           keyExtractor={(item) => item.createdAt}
           pointerEvents={fetchingTodos ? "none" : "auto"}
         />
-      ) : null}
-    </ScreenWrapper>
+      ) : (
+        <NoListItemMessage screenMessage={i18n.t("Todo.NoTodos")} />
+      )}
+    </View>
   );
 };

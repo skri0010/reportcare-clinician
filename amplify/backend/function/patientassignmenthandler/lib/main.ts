@@ -11,12 +11,15 @@ import {
   validatePendingUpdate,
   prettyPrint
 } from "./utility";
-import { getClinicianPatientMap, getPatientAssignment } from "./api/queries";
+import {
+  getClinicianPatientMap,
+  getPatientAssignment
+} from "./typed-api/queries";
 import {
   createClinicianPatientMap,
   createPatientAssignment
-} from "./api/createMutations";
-import { updatePatientAssignment } from "./api/updateMutations";
+} from "./typed-api/createMutations";
+import { updatePatientAssignment } from "./typed-api/updateMutations";
 
 export const handlePatientAssignmentResolution = async (
   event: ResolutionEvent

@@ -15,11 +15,11 @@ import {
 } from "rc_agents/clinician_framework";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import { store } from "util/useRedux";
+import { ClinicianRecord } from "aws/API";
 import {
   setFetchingIcdCrtRecords,
   setIcdCrtRecords
 } from "ic-redux/actions/agents/patientActionCreator";
-import { IcdCrtRecord } from "aws/API";
 
 /**
  * Class to represent the activity for displaying patient's ICD/CRT records
@@ -38,7 +38,7 @@ class DisplayIcdCrtRecords extends Activity {
     await super.doActivity(agent, [rule2]);
 
     // Get retrieved ICD/CRT records from facts
-    const icdCrtRecords: IcdCrtRecord[] =
+    const icdCrtRecords: ClinicianRecord[] =
       agentAPI.getFacts()[BeliefKeys.PATIENT]?.[
         PatientAttributes.ICDCRT_RECORDS
       ];

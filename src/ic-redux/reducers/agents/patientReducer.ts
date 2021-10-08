@@ -2,7 +2,7 @@ import { actionNames } from "ic-redux/actions/actionNames";
 import { RootAction } from "ic-redux/actions/RootAction";
 import { Reducer } from "redux";
 import { AlertInfo, PatientDetails } from "rc_agents/model";
-import { PatientInfo, IcdCrtRecord, MedicalRecord } from "aws/API";
+import { PatientInfo, ClinicianRecord } from "aws/API";
 
 interface PatientState {
   // patient
@@ -15,15 +15,13 @@ interface PatientState {
   creatingMedicalRecord: boolean;
   createMedicalRecordSuccessful: boolean;
   fetchingMedicalRecords: boolean;
-  medicalRecords: MedicalRecord[] | undefined;
+  medicalRecords: ClinicianRecord[] | undefined;
   fetchingMedicalRecordContent: boolean;
-  medicalRecordContent: string | undefined;
   creatingIcdCrtRecord: boolean;
   createIcdCrtRecordSuccessful: boolean;
   fetchingIcdCrtRecords: boolean;
-  icdCrtRecords: IcdCrtRecord[] | undefined;
+  icdCrtRecords: ClinicianRecord[] | undefined;
   fetchingIcdCrtRecordContent: boolean;
-  icdCrtRecordContent: string | undefined;
 }
 
 const initialState: PatientState = {
@@ -38,13 +36,11 @@ const initialState: PatientState = {
   fetchingMedicalRecords: false,
   medicalRecords: undefined,
   fetchingMedicalRecordContent: false,
-  medicalRecordContent: undefined,
   creatingIcdCrtRecord: false,
   createIcdCrtRecordSuccessful: false,
   fetchingIcdCrtRecords: false,
   icdCrtRecords: undefined,
-  fetchingIcdCrtRecordContent: false,
-  icdCrtRecordContent: undefined
+  fetchingIcdCrtRecordContent: false
 };
 
 export const patientReducer: Reducer<PatientState, RootAction> = (
@@ -97,11 +93,6 @@ export const patientReducer: Reducer<PatientState, RootAction> = (
         fetchingMedicalRecordContent:
           action.payload.fetchingMedicalRecordContent
       };
-    case actionNames.SET_MEDICAL_RECORD_CONTENT:
-      return {
-        ...state,
-        medicalRecordContent: action.payload.medicalRecordContent
-      };
     case actionNames.SET_CREATING_ICDCRT_RECORD:
       return {
         ...state,
@@ -127,11 +118,6 @@ export const patientReducer: Reducer<PatientState, RootAction> = (
       return {
         ...state,
         fetchingIcdCrtRecordContent: action.payload.fetchingIcdCrtRecordContent
-      };
-    case actionNames.SET_ICDCRT_RECORD_CONTENT:
-      return {
-        ...state,
-        icdCrtRecordContent: action.payload.icdCrtRecordContent
       };
     default:
       return state;

@@ -3,7 +3,7 @@ import { View, TouchableOpacity } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { H4 } from "components/Text";
 import { RootState, select } from "util/useRedux";
-import { ScreenWrapper } from "../ScreenWrapper";
+import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
 import { AlertDetails } from "./AlertDetails";
 import i18n from "util/language/i18n";
 

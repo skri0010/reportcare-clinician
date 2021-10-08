@@ -15,10 +15,8 @@ import {
 } from "rc_agents/clinician_framework";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import { store } from "util/useRedux";
-import {
-  setFetchingMedicalRecordContent,
-  setMedicalRecordContent
-} from "ic-redux/actions/agents/patientActionCreator";
+import { Linking } from "react-native";
+import { setFetchingMedicalRecordContent } from "ic-redux/actions/agents/patientActionCreator";
 
 /**
  * Class to represent the activity for displaying patient's medical record content
@@ -43,31 +41,31 @@ class DisplayMedicalRecordContent extends Activity {
       ];
 
     if (medicalRecordContentURL) {
-      // Dispatch medical record content to store
-      store.dispatch(setMedicalRecordContent(medicalRecordContentURL));
-
-      // Update Facts
-      // Remove medical record content from facts
-      agentAPI.addFact(
-        new Belief(
-          BeliefKeys.PATIENT,
-          PatientAttributes.MEDICAL_RECORD_CONTENT,
-          null
-        ),
-        false
-      );
-
-      // End the procedure
-      agentAPI.addFact(
-        new Belief(
-          BeliefKeys.PROCEDURE,
-          ProcedureAttributes.HF_OTP_III,
-          ProcedureConst.INACTIVE
-        ),
-        true,
-        true
-      );
+      // Open medical record content in a new tab
+      Linking.openURL(medicalRecordContentURL);
     }
+
+    // Update Facts
+    // Remove medical record content from facts
+    agentAPI.addFact(
+      new Belief(
+        BeliefKeys.PATIENT,
+        PatientAttributes.MEDICAL_RECORD_CONTENT,
+        null
+      ),
+      false
+    );
+
+    // End the procedure
+    agentAPI.addFact(
+      new Belief(
+        BeliefKeys.PROCEDURE,
+        ProcedureAttributes.HF_OTP_III,
+        ProcedureConst.INACTIVE
+      ),
+      true,
+      true
+    );
 
     // Dispatch to store to indicate that fetching has ended
     store.dispatch(setFetchingMedicalRecordContent(false));

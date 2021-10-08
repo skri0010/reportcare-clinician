@@ -2,7 +2,6 @@ import React, { FC } from "react";
 import { MainScreenProps } from "web/navigation/types";
 import { ScreenName } from "web/navigation";
 import i18n from "util/language/i18n";
-import { ScreenWrapper } from "../ScreenWrapper";
 import { SettingsCard } from "./SettingsCard";
 import { useDispatch } from "react-redux";
 import {
@@ -13,6 +12,7 @@ import { darkColorScheme, lightColorScheme } from "models/ColorScheme";
 import { View } from "react-native";
 import { RootState, select } from "util/useRedux";
 import { alternateLanguage, defaultLanguage } from "util/language";
+import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
 
 export const SettingsScreen: FC<MainScreenProps[ScreenName.SETTINGS]> = () => {
   const { colorScheme, language } = select((state: RootState) => ({

@@ -1,11 +1,12 @@
-import React, { useCallback, useState } from "react";
+/* eslint-disable react/jsx-props-no-spreading */
+import React, { CSSProperties, useCallback, useState } from "react";
 import { View } from "react-native";
 import { RootState, select } from "util/useRedux";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { H4, H5, H7 } from "components/Text";
 import { useDropzone } from "react-dropzone";
 import i18n from "util/language/i18n";
-import { RowButton } from "components/Buttons/TextButton";
+import { RowButton } from "components/Buttons/RowButton";
 import { IconButton, IconType } from "components/Buttons/IconButton";
 import { RecordFile } from "rc_agents/model";
 
@@ -33,9 +34,9 @@ export const FileDropbox: React.FC<FileDropboxProps> = ({
 
   // Handler when files are received
   const onReceiveFile = useCallback(
-    (acceptedFiles) => {
+    (acceptedFiles: File[]) => {
       if (acceptedFiles.length === 1) {
-        setFile(acceptedFiles[0]);
+        setFile(acceptedFiles[0] as RecordFile);
         setMultipleFileError(false);
       } else {
         // Trigger to show error that only one file can be uploaded at a time
@@ -53,11 +54,16 @@ export const FileDropbox: React.FC<FileDropboxProps> = ({
     noKeyboard: true
   });
 
+  const htmlStyle = {
+    height: "100%",
+    width: "100%"
+  } as CSSProperties;
+
   return (
     <View>
       <View
         style={[
-          styles.fileUploadContainer,
+          styles.mainContainer,
           {
             borderColor: multipleFileError
               ? colors.errorColor
@@ -66,23 +72,25 @@ export const FileDropbox: React.FC<FileDropboxProps> = ({
         ]}
       >
         {!file ? (
-          <View>
-            {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-            <div {...getRootProps({ className: "dropzone" })}>
-              {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-              <input {...getInputProps()} />
-              <View style={styles.fileInputContainer}>
-                <View
-                  style={[
-                    styles.fileDropSection,
-                    {
-                      borderColor: isDragActive
-                        ? colors.acceptButtonColor
-                        : colors.secondaryBackgroundColor,
-                      borderStyle: isDragActive ? "solid" : "dashed"
-                    }
-                  ]}
-                >
+          <View style={styles.fileUploadContainer}>
+            {/* Option 1: Drag and drop file */}
+            <View
+              style={[
+                styles.fileUploadContainerLeft,
+                {
+                  borderColor: isDragActive
+                    ? colors.acceptButtonColor
+                    : colors.secondaryBackgroundColor,
+                  borderStyle: isDragActive ? "solid" : "dashed"
+                }
+              ]}
+            >
+              <div
+                {...getRootProps({ className: "dropzone" })}
+                style={htmlStyle}
+              >
+                <input {...getInputProps()} />
+                <View style={styles.divInnerContainer}>
                   <H4
                     text={
                       isDragActive
@@ -91,49 +99,53 @@ export const FileDropbox: React.FC<FileDropboxProps> = ({
                         : dropSectionPlaceholder ||
                           i18n.t("FileDropbox.DragAndDropFile")
                     }
-                    style={{
-                      fontWeight: "bold",
-                      color: isDragActive
-                        ? colors.primaryTextColor
-                        : colors.secondaryTextColor,
-                      paddingVertical: ms(10)
-                    }}
+                    style={[
+                      styles.dropboxText,
+                      {
+                        color: isDragActive
+                          ? colors.primaryTextColor
+                          : colors.secondaryTextColor
+                      }
+                    ]}
                   />
                 </View>
-                <H5
-                  text={i18n.t("FileDropbox.Or")}
-                  style={{
-                    paddingTop: ms(10),
-                    paddingBottom: ms(5),
-                    fontWeight: "bold"
-                  }}
-                />
-                <RowButton
-                  title={browseButtonLabel || i18n.t("FileDropbox.BrowseFiles")}
-                  onPress={open}
-                />
-              </View>
-            </div>
-          </View>
-        ) : (
-          <View>
-            <View
-              style={[
-                styles.fileNameContainer,
-                {
-                  borderColor: colors.primaryBorderColor
-                }
-              ]}
-            >
-              <H5 text={file.name} />
-              <IconButton
-                name="times"
-                type={IconType.FONTAWESOME}
-                iconStyle={{ fontSize: fonts.h5Size, color: colors.errorColor }}
-                containerStyle={styles.iconContainerStyle}
-                onPress={() => setFile(undefined)}
+              </div>
+            </View>
+            {/* Option 2: Browse file*/}
+            <View style={styles.fileUploadContainerRight}>
+              <H5
+                text={i18n.t("FileDropbox.Or")}
+                style={[
+                  styles.orText,
+                  {
+                    color: colors.secondaryTextColor
+                  }
+                ]}
+              />
+              <RowButton
+                title={browseButtonLabel || i18n.t("FileDropbox.BrowseFiles")}
+                onPress={open}
               />
             </View>
+          </View>
+        ) : (
+          <View
+            style={[
+              styles.fileRowContainer,
+              {
+                borderColor: colors.primaryBorderColor
+              }
+            ]}
+          >
+            <H5 text={file.name} />
+            <IconButton
+              name="times"
+              type={IconType.FONTAWESOME}
+              iconStyle={{ fontSize: fonts.h5Size, color: colors.errorColor }}
+              containerStyle={styles.iconContainerStyle}
+              size={ms(5)}
+              onPress={() => setFile(undefined)}
+            />
           </View>
         )}
       </View>
@@ -151,33 +163,51 @@ export const FileDropbox: React.FC<FileDropboxProps> = ({
 };
 
 const styles = ScaledSheet.create({
-  fileUploadContainer: {
-    height: ms(125),
-    borderWidth: ms(2),
-    borderRadius: ms(3),
-    paddingBottom: ms(10)
+  mainContainer: {
+    minHeight: "100@ms",
+    borderWidth: "2@ms",
+    borderRadius: "2@ms"
   },
-  fileInputContainer: {
+  fileUploadContainer: { flexDirection: "row", height: "100%", width: "100%" },
+  fileUploadContainerLeft: {
+    flex: 1,
     height: "100%",
     width: "100%",
+    alignItems: "center",
+    borderWidth: "3@ms",
+    opacity: 0.5
+  },
+  fileUploadContainerRight: {
+    flex: 1,
+    height: "100%",
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "center",
     alignItems: "center"
   },
-  fileDropSection: {
-    alignItems: "center",
-    borderWidth: ms(5),
-    opacity: 0.5,
-    width: "100%",
-    height: "55%"
+  dropboxText: {
+    textAlign: "center",
+    textAlignVertical: "center",
+    fontWeight: "bold"
   },
-  fileNameContainer: {
+  divInnerContainer: {
+    height: "100%",
+    paddingVertical: "5@ms",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  orText: {
+    paddingRight: "7@ms",
+    opacity: 0.5
+  },
+  fileRowContainer: {
     flexDirection: "row",
-    borderWidth: ms(1),
-    padding: ms(10)
+    borderBottomWidth: "1@ms",
+    alignItems: "center",
+    padding: "10@ms"
   },
   iconContainerStyle: {
-    paddingLeft: ms(10),
-    width: "5%",
-    alignSelf: "flex-end",
+    paddingLeft: "10@ms",
     backgroundColor: "transparent"
   }
 });

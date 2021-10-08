@@ -14,7 +14,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 // Interface for Search bar component props
 interface SearchBarComponentProps {
   onUserInput: (newValue: string) => void;
-  onSearchClick?: () => void;
+  onSearchClick: (searchString: string) => void;
   placeholder?: string;
   containerStyle?: {
     backgroundColor?: string;
@@ -27,6 +27,7 @@ interface SearchBarComponentProps {
 export const SearchBarComponent: FC<SearchBarComponentProps> = ({
   onUserInput,
   onSearchClick,
+
   placeholder,
   containerStyle
 }) => {
@@ -86,7 +87,10 @@ export const SearchBarComponent: FC<SearchBarComponentProps> = ({
             } as any)
           ]}
         />
-        <TouchableOpacity onPress={onSearchClick} style={[styles.button]}>
+        <TouchableOpacity
+          onPress={() => onSearchClick(input)}
+          style={styles.button}
+        >
           <Icon
             name="magnify"
             style={[

@@ -79,6 +79,7 @@ type ErrorsArray = {
   message: string;
   path: string;
 }[];
+
 export interface BaseResponse {
   errors?: ErrorsArray;
 }

@@ -12,7 +12,7 @@ import { TodoDetailsStackScreenName } from "web/navigation";
 import { TodoSection, EditHistorySection } from "./ViewTodoScreen";
 import { H3 } from "components/Text";
 import { RootState, select, useDispatch } from "util/useRedux";
-import { ScreenWrapper } from "web/screens/ScreenWrapper";
+import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
 import i18n from "util/language/i18n";
 import { LocalTodo, TodoInput } from "rc_agents/model";
 import { AgentTrigger } from "rc_agents/trigger";

@@ -207,3 +207,16 @@ export declare class AlertNotification {
   constructor(init: ModelInit<AlertNotification>);
   static copyOf(source: AlertNotification, mutator: (draft: MutableModel<AlertNotification>) => MutableModel<AlertNotification> | void): AlertNotification;
 }
+
+export declare class ClinicianRecord {
+  readonly id: string;
+  readonly patientID: string;
+  readonly documentID: string;
+  readonly type: string;
+  readonly title: string;
+  readonly path: string;
+  readonly uploaderClinicianID: string;
+  readonly uploadDateTime?: string;
+  constructor(init: ModelInit<ClinicianRecord>);
+  static copyOf(source: ClinicianRecord, mutator: (draft: MutableModel<ClinicianRecord>) => MutableModel<ClinicianRecord> | void): ClinicianRecord;
+}

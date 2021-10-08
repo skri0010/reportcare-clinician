@@ -15,10 +15,8 @@ import {
 } from "rc_agents/clinician_framework";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import { store } from "util/useRedux";
-import {
-  setFetchingIcdCrtRecordContent,
-  setIcdCrtRecordContent
-} from "ic-redux/actions/agents/patientActionCreator";
+import { Linking } from "react-native";
+import { setFetchingIcdCrtRecordContent } from "ic-redux/actions/agents/patientActionCreator";
 
 /**
  * Class to represent the activity for displaying patient's ICD/CRT record content
@@ -43,31 +41,30 @@ class DisplayIcdCrtRecordContent extends Activity {
       ];
 
     if (icdCrtRecordContentURL) {
-      // Dispatch ICD/CRT record content to store
-      store.dispatch(setIcdCrtRecordContent(icdCrtRecordContentURL));
-
-      // Update Facts
-      // Remove ICD/CRT record content from facts
-      agentAPI.addFact(
-        new Belief(
-          BeliefKeys.PATIENT,
-          PatientAttributes.ICDCRT_RECORD_CONTENT,
-          null
-        ),
-        false
-      );
-
-      // End the procedure
-      agentAPI.addFact(
-        new Belief(
-          BeliefKeys.PROCEDURE,
-          ProcedureAttributes.HF_OTP_IV,
-          ProcedureConst.INACTIVE
-        ),
-        true,
-        true
-      );
+      // Open ICD/CRT record content in a new tab
+      Linking.openURL(icdCrtRecordContentURL);
     }
+    // Update Facts
+    // Remove ICD/CRT record content from facts
+    agentAPI.addFact(
+      new Belief(
+        BeliefKeys.PATIENT,
+        PatientAttributes.ICDCRT_RECORD_CONTENT,
+        null
+      ),
+      false
+    );
+
+    // End the procedure
+    agentAPI.addFact(
+      new Belief(
+        BeliefKeys.PROCEDURE,
+        ProcedureAttributes.HF_OTP_IV,
+        ProcedureConst.INACTIVE
+      ),
+      true,
+      true
+    );
 
     // Dispatch to store to indicate that fetching has ended
     store.dispatch(setFetchingIcdCrtRecordContent(false));

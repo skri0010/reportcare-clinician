@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { IcdCrtRecord, MedicalRecord, PatientInfo } from "aws/API";
+import { ClinicianRecord, PatientInfo } from "aws/API";
 import { PatientDetails } from "rc_agents/model";
 import { AsyncStorageKeys, AsyncStorageType } from ".";
 
@@ -128,7 +128,7 @@ export const getAllPatientDetails = async (): Promise<
  */
 export const getPatientMedicalRecords = async (
   patientId: string
-): Promise<MedicalRecord[] | null> => {
+): Promise<ClinicianRecord[] | null> => {
   const localData = await getPatientDetails(patientId);
   if (localData) {
     return Object.values(localData.medicalRecords);
@@ -143,7 +143,7 @@ export const getPatientMedicalRecords = async (
  */
 export const getPatientIcdCrtRecords = async (
   patientId: string
-): Promise<IcdCrtRecord[] | null> => {
+): Promise<ClinicianRecord[] | null> => {
   const localData = await getPatientDetails(patientId);
   if (localData) {
     return Object.values(localData.icdCrtRecords);
