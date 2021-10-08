@@ -141,21 +141,16 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
                   />
                   {patientDetails.patientInfo.configured ? (
                     // Patient is configured: Show details
-                    <View>
-                      <PatientDetailsTabNavigator
-                        details={patientDetails}
-                        selectedTab={selectedTab}
-                        setAddMedicalRecord={setAddMedicalRecord}
-                        setDisplayHistory={setDisplayHistory}
-                        setModalAlertVisible={setModalAlertVisible}
-                        onViewMedicalRecord={
-                          AgentTrigger.triggerRetrieveMedicalRecordContent
-                        }
-                      />
-                      <PatientConfigurationScreen
-                        info={patientDetails.patientInfo}
-                      />
-                    </View>
+                    <PatientDetailsTabNavigator
+                      details={patientDetails}
+                      selectedTab={selectedTab}
+                      setAddMedicalRecord={setAddMedicalRecord}
+                      setDisplayHistory={setDisplayHistory}
+                      setModalAlertVisible={setModalAlertVisible}
+                      onViewMedicalRecord={
+                        AgentTrigger.triggerRetrieveMedicalRecordContent
+                      }
+                    />
                   ) : (
                     // Patient is not configured: Show configuration screen
                     <PatientConfigurationScreen
