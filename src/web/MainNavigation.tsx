@@ -40,6 +40,7 @@ export const MainNavigation: FC<MainNavigationProps> = ({ setAuthState }) => {
 
   // Change the language of the main navigation screens
   useEffect(() => {
+    // Required to make sure language is changed upon load
     i18n.changeLanguage(language.toString());
   }, [language]);
 

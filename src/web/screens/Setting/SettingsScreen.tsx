@@ -1,5 +1,4 @@
-/* eslint-disable no-console */
-import React, { FC, useEffect } from "react";
+import React, { FC } from "react";
 import { MainScreenProps } from "web/navigation/types";
 import { ScreenName } from "web/navigation";
 import i18n from "util/language/i18n";
@@ -23,22 +22,25 @@ export const SettingsScreen: FC<MainScreenProps[ScreenName.SETTINGS]> = () => {
 
   const dispatch = useDispatch();
 
+  // Boolean for dark mode and language selected
+  const darkMode =
+    JSON.stringify(colorScheme) === JSON.stringify(darkColorScheme);
+  const bmSelected = language === alternateLanguage;
+
+  // Selected Language
+  const languageSelected =
+    bmSelected === true ? defaultLanguage : alternateLanguage;
+
   const toggleDarkMode = () => {
-    dispatch(
-      setColorScheme(
-        colorScheme === darkColorScheme ? lightColorScheme : darkColorScheme
-      )
-    );
-    console.log(colorScheme);
+    dispatch(setColorScheme(darkMode ? lightColorScheme : darkColorScheme));
   };
 
   const toggleLanguageSwitch = () => {
-    dispatch(setLanguage(language ? defaultLanguage : alternateLanguage));
+    // Change language selected in i18n
+    i18n.changeLanguage(languageSelected.toString());
+    // Trigger re render to render newly selected language
+    dispatch(setLanguage(languageSelected));
   };
-
-  useEffect(() => {
-    console.log(colorScheme);
-  });
 
   return (
     <ScreenWrapper>
@@ -54,13 +56,13 @@ export const SettingsScreen: FC<MainScreenProps[ScreenName.SETTINGS]> = () => {
           title={i18n.t("Settings.DarkMode")}
           description={i18n.t("Settings.DarkModeDescription")}
           onValueChange={() => toggleDarkMode()}
-          value={colorScheme === darkColorScheme}
+          value={darkMode}
         />
         <SettingsCard
           title={i18n.t("Settings.Language")}
           description={i18n.t("Settings.LanguageDescription")}
           onValueChange={() => toggleLanguageSwitch()}
-          value={language === defaultLanguage}
+          value={bmSelected}
         />
       </View>
     </ScreenWrapper>

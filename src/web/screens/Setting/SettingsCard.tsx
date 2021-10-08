@@ -4,6 +4,7 @@ import { View, TextStyle } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { H5, H6 } from "components/Text";
 import { ToggleButton } from "components/Buttons/ToggleButton";
+import { isMobile } from "util/device";
 
 interface SummaryCardProps {
   title: string;
@@ -28,7 +29,13 @@ export const SettingsCard: FC<SummaryCardProps> = ({
 
   return (
     <View
-      style={[styles.card, { backgroundColor: colors.primaryBackgroundColor }]}
+      style={[
+        styles.card,
+        {
+          backgroundColor: colors.primaryBackgroundColor,
+          width: isMobile ? "90%" : "50%"
+        }
+      ]}
     >
       <View style={styles.textContainer}>
         <View style={styles.settingsContainer}>
@@ -52,12 +59,11 @@ const styles = ScaledSheet.create({
     padding: "10@ms",
     borderRadius: "15@ms",
     marginTop: "15@ms",
-    width: "50%"
+    minWidth: "220@ms"
   },
   textContainer: {
     flex: 1,
-    paddingLeft: "10@ms",
-    maxWidth: "70%"
+    paddingLeft: "10@ms"
   },
   settingsContainer: {
     paddingLeft: "15@ms"
