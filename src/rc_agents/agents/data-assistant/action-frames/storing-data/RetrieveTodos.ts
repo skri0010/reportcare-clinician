@@ -129,6 +129,8 @@ class RetrieveTodos extends Activity {
             if (todoStatus === TodoStatus.PENDING) {
               store.dispatch(setPendingTodos(todosToDispatch));
             } else {
+              // eslint-disable-next-line no-console
+              console.log(todosToDispatch);
               store.dispatch(setCompletedTodos(todosToDispatch));
             }
           }
@@ -144,6 +146,8 @@ class RetrieveTodos extends Activity {
           // Device is offline: get local completed Todos
           const todosToDispatch = await LocalStorage.getCompletedTodos();
           if (todosToDispatch) {
+            // eslint-disable-next-line no-console
+            console.log(todosToDispatch);
             store.dispatch(
               setCompletedTodos(sortTodosByLastModifiedDate(todosToDispatch))
             );

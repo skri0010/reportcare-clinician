@@ -8,6 +8,7 @@ import i18n from "util/language/i18n";
 import { NoListItemMessage } from "../Shared/NoListItemMessage";
 import { AlertListTabsProps } from "web/navigation/types";
 import { AlertRowTabProps } from "web/navigation/navigators/AlertListTabNavigator";
+import { NoItemsTextIndicator } from "components/Indicators/NoItemsTextIndicator";
 
 interface AlertCompletedTabProps
   extends AlertRowTabProps,
@@ -18,13 +19,10 @@ export const AlertCompletedTab: FC<AlertCompletedTabProps> = ({
   onRowPress,
   completedSearched
 }) => {
-  const { colors, completedAlerts, fetchingCompletedAlerts } = select(
-    (state: RootState) => ({
-      colors: state.settings.colors,
-      completedAlerts: state.agents.completedAlerts,
-      fetchingCompletedAlerts: state.agents.fetchingCompletedAlerts
-    })
-  );
+  const { colors, fetchingCompletedAlerts } = select((state: RootState) => ({
+    colors: state.settings.colors,
+    fetchingCompletedAlerts: state.agents.fetchingCompletedAlerts
+  }));
 
   const [noCompletedAlertsNotice, setNoCompletedAlertsNotice] =
     useState<string>("");
@@ -32,7 +30,7 @@ export const AlertCompletedTab: FC<AlertCompletedTabProps> = ({
   // Prepare text notice to be displayed after fetching patients
   useEffect(() => {
     if (fetchingCompletedAlerts) {
-      if (completedAlerts) {
+      if (completedSearched) {
         // No patients found
         setNoCompletedAlertsNotice(
           i18n.t("Alerts.AlertList.NoCompletedAlerts")
@@ -44,7 +42,7 @@ export const AlertCompletedTab: FC<AlertCompletedTabProps> = ({
         );
       }
     }
-  }, [completedAlerts, fetchingCompletedAlerts]);
+  }, [completedSearched, fetchingCompletedAlerts]);
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.primaryBackgroundColor }}>
@@ -56,20 +54,11 @@ export const AlertCompletedTab: FC<AlertCompletedTabProps> = ({
           showsVerticalScrollIndicator={false}
           ItemSeparatorComponent={() => <ItemSeparator />}
           data={completedSearched}
-          renderItem={({ item }) => (
-            <AlertRow
-              alertDetails={item}
-              onCardPress={() => onRowPress(item)}
-              selected={displayedAlertInfoId === item.id}
+          ListEmptyComponent={() => (
+            <NoItemsTextIndicator
+              text={i18n.t("Alerts.AlertList.NoCompletedAlerts")}
             />
           )}
-          keyExtractor={(item) => item.id}
-        />
-      ) : completedAlerts && completedAlerts.length > 0 ? (
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          ItemSeparatorComponent={() => <ItemSeparator />}
-          data={completedAlerts}
           renderItem={({ item }) => (
             <AlertRow
               alertDetails={item}

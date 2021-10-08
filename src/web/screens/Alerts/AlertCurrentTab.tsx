@@ -8,6 +8,7 @@ import i18n from "util/language/i18n";
 import { NoListItemMessage } from "../Shared/NoListItemMessage";
 import { AlertRowTabProps } from "web/navigation/navigators/AlertListTabNavigator";
 import { AlertListTabsProps } from "web/navigation/types";
+import { NoItemsTextIndicator } from "components/Indicators/NoItemsTextIndicator";
 
 interface AlertCurrentTabProps
   extends AlertRowTabProps,
@@ -18,14 +19,11 @@ export const AlertCurrentTab: FC<AlertCurrentTabProps> = ({
   onRowPress,
   currentSearched
 }) => {
-  const { colors, pendingAlerts, fetchingPendingAlerts } = select(
-    (state: RootState) => ({
-      colors: state.settings.colors,
-      pendingAlerts: state.agents.pendingAlerts,
-      fetchingPendingAlerts: state.agents.fetchingPendingAlerts,
-      alertRiskFilters: state.agents.alertRiskFilters
-    })
-  );
+  const { colors, fetchingPendingAlerts } = select((state: RootState) => ({
+    colors: state.settings.colors,
+    fetchingPendingAlerts: state.agents.fetchingPendingAlerts,
+    alertRiskFilters: state.agents.alertRiskFilters
+  }));
 
   const [noPendingAlertsNotice, setNoPendingAlertsNotice] =
     useState<string>("");
@@ -33,7 +31,7 @@ export const AlertCurrentTab: FC<AlertCurrentTabProps> = ({
   // Prepare text notice to be displayed after fetching patients
   useEffect(() => {
     if (fetchingPendingAlerts) {
-      if (pendingAlerts) {
+      if (currentSearched) {
         // No patients found
         setNoPendingAlertsNotice(i18n.t("Alerts.AlertList.NoPendingAlerts"));
       } else {
@@ -43,7 +41,7 @@ export const AlertCurrentTab: FC<AlertCurrentTabProps> = ({
         );
       }
     }
-  }, [pendingAlerts, fetchingPendingAlerts]);
+  }, [currentSearched, fetchingPendingAlerts]);
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.primaryContrastTextColor }}>
@@ -55,20 +53,12 @@ export const AlertCurrentTab: FC<AlertCurrentTabProps> = ({
         <FlatList
           showsVerticalScrollIndicator={false}
           ItemSeparatorComponent={() => <ItemSeparator />}
-          data={currentSearched}
-          renderItem={({ item }) => (
-            <AlertRow
-              alertDetails={item}
-              onCardPress={() => onRowPress(item)}
-              selected={displayedAlertInfoId === item.id}
+          ListEmptyComponent={() => (
+            <NoItemsTextIndicator
+              text={i18n.t("Alerts.AlertList.NoPendingAlerts")}
             />
           )}
-        />
-      ) : pendingAlerts && pendingAlerts.length > 0 ? (
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          ItemSeparatorComponent={() => <ItemSeparator />}
-          data={pendingAlerts}
+          data={currentSearched}
           renderItem={({ item }) => (
             <AlertRow
               alertDetails={item}

@@ -1,5 +1,5 @@
 import React, { FC, useState } from "react";
-import { FlatList, View } from "react-native";
+import { FlatList, ScrollView, View } from "react-native";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import i18n from "util/language/i18n";
@@ -9,6 +9,8 @@ import { ClinicianContactRow } from "components/RowComponents/ClinicianRow/Clini
 import { setClinicianSelected } from "ic-redux/actions/agents/actionCreator";
 import { ClinicianInfo } from "aws/API";
 import Fuse from "fuse.js";
+import { NoItemsTextIndicator } from "components/Indicators/NoItemsTextIndicator";
+import { NoListItemMessage } from "../Shared/NoListItemMessage";
 
 interface CliniciansListScreen {
   flex?: number;
@@ -27,7 +29,24 @@ export const CliniciansList: FC<CliniciansListScreen> = ({ flex = 1 }) => {
   const [searching, setSearching] = useState<boolean>(false);
 
   // Store results of fuzzy search
-  const [searchedSubset, setSubset] = useState<ClinicianInfo[]>([]);
+  const [searchedSubset, setSearchedSubset] = useState<ClinicianInfo[]>([]);
+
+  const onSearchClick = (searchString: string) => {
+    if (searchString.length === 0) {
+      setSearching(false);
+    } else if (clinicians) {
+      const options = {
+        includeScore: true,
+        keys: ["name"]
+      };
+      const fuse = new Fuse(clinicians, options);
+      const result = fuse.search(searchString);
+      const searchResults: ClinicianInfo[] = [];
+      result.forEach((item) => searchResults.push(item.item));
+      setSearching(true);
+      setSearchedSubset(searchResults);
+    }
+  };
 
   return (
     <View
@@ -38,26 +57,8 @@ export const CliniciansList: FC<CliniciansListScreen> = ({ flex = 1 }) => {
     >
       {/* Search bar*/}
       <SearchBarComponent
-        onUserInput={() => {
-          null;
-        }}
-        onSearchClick={(searchString: string) => {
-          if (searchString.length === 0) {
-            setSearching(false);
-          } else if (clinicians) {
-            const options = {
-              includeScore: true,
-              keys: ["name"]
-            };
-            const fuse = new Fuse(clinicians, options);
-
-            const result = fuse.search(searchString);
-            const searchResults: ClinicianInfo[] = [];
-            result.forEach((item) => searchResults.push(item.item));
-            setSearching(true);
-            setSubset(searchResults);
-          }
-        }}
+        onUserInput={(searchString) => onSearchClick(searchString)}
+        onSearchClick={(searchString) => onSearchClick(searchString)}
         containerStyle={{
           backgroundColor: colors.primaryContrastTextColor
         }}
@@ -67,40 +68,32 @@ export const CliniciansList: FC<CliniciansListScreen> = ({ flex = 1 }) => {
         // Show loading indicator if fetching clinicians
         <LoadingIndicator flex={1} />
       ) : clinicians ? (
-        <View>
-          {searching ? (
-            <FlatList
-              showsVerticalScrollIndicator={false}
-              style={{ flex: 1 }}
-              ItemSeparatorComponent={() => <ItemSeparator />}
-              data={searchedSubset}
-              renderItem={({ item }) => (
-                <ClinicianContactRow
-                  generalDetails={item}
-                  onRowPress={() => {
-                    store.dispatch(setClinicianSelected(item));
-                  }}
-                />
-              )}
-            />
-          ) : (
-            <FlatList
-              showsVerticalScrollIndicator={false}
-              style={{ flex: 1 }}
-              ItemSeparatorComponent={() => <ItemSeparator />}
-              data={clinicians}
-              renderItem={({ item }) => (
-                <ClinicianContactRow
-                  generalDetails={item}
-                  onRowPress={() => {
-                    store.dispatch(setClinicianSelected(item));
-                  }}
-                />
-              )}
-            />
-          )}
-        </View>
-      ) : null}
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            style={{ flex: 1 }}
+            ListEmptyComponent={() => (
+              <NoItemsTextIndicator
+                text={i18n.t("Clinicians.ClincianList.NoClinicianFound")}
+              />
+            )}
+            ItemSeparatorComponent={() => <ItemSeparator />}
+            data={searching ? searchedSubset : clinicians}
+            renderItem={({ item }) => (
+              <ClinicianContactRow
+                generalDetails={item}
+                onRowPress={() => {
+                  store.dispatch(setClinicianSelected(item));
+                }}
+              />
+            )}
+          />
+        </ScrollView>
+      ) : (
+        <NoListItemMessage
+          screenMessage={i18n.t("Clinicians.ClincianList.NoClinicianFound")}
+        />
+      )}
     </View>
   );
 };

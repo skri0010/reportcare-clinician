@@ -55,10 +55,6 @@ export const SearchBarComponent: FC<SearchBarComponentProps> = ({
     onUserInput(newValue);
   };
 
-  const onSearch = () => {
-    onSearchClick(input);
-  };
-
   // JH-TODO: Replace placeholder with i18n
   return (
     <View style={{ backgroundColor: colors.primaryBackgroundColor }}>
@@ -81,7 +77,10 @@ export const SearchBarComponent: FC<SearchBarComponentProps> = ({
             } as any)
           ]}
         />
-        <TouchableOpacity onPress={onSearch} style={styles.button}>
+        <TouchableOpacity
+          onPress={() => onSearchClick(input)}
+          style={styles.button}
+        >
           <Icon
             name="magnify"
             style={[searchBarTextStyle, { fontSize: fonts.h4Size }]}

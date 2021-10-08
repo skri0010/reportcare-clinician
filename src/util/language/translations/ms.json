@@ -122,8 +122,7 @@
     "Current": "Semasa",
     "Completed": "Selesai",
     "NoPatients": "Tiada todo yang dijumpai!",
-    "SearchBarCurrentPlaceholder": "Cari todo yang semasa",
-    "SearchBarCompletePlaceholder": "Cari todo yang selesai",
+    "SearchBarPlaceholder": "Cari todo",
     "ViewTodo": "Lihat Todo",
     "EditTodo": "Edit Todo",
     "Title": "Tajuk",
@@ -271,7 +270,10 @@
     "SearchBarPlaceholder": "Cari pakar(contohnya John)",
     "NoSelection": "Pilih salah satu pakar untuk melihat butirannya",
     "Role": "Peranan",
-    "HospitalName": "Nama Hospital"
+    "HospitalName": "Nama Hospital",
+    "ClincianList": {
+      "NoClinicianFound": "Tiada pakar yang dijumpai!"
+    }
   },
   "Alerts": {
     "SearchBarPlaceholder": "Cari amaran",

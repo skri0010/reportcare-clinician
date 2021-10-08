@@ -14,6 +14,7 @@ import { AlertInfo } from "rc_agents/model";
 import { setAlertInfo } from "ic-redux/actions/agents/actionCreator";
 import { AgentTrigger } from "rc_agents/trigger";
 import Fuse from "fuse.js";
+import i18n from "util/language/i18n";
 
 const Tab = createMaterialTopTabNavigator<AlertListTabParamList>();
 
@@ -53,43 +54,43 @@ export const AlertListTabNavigator: FC<AlertListTabNavigatorProps> = ({
   const [pendingResult, setPendingResult] = useState<AlertInfo[]>([]);
   const [completedResult, setCompletedResult] = useState<AlertInfo[]>([]);
 
+  const onSearchClick = (searchString: string) => {
+    if (searchString.length === 0) {
+      setSearching(false);
+    } else if (pendingAlerts || completedAlerts) {
+      setSearching(true);
+      const options = {
+        includeScore: true,
+        keys: ["patientName"]
+      };
+
+      if (pendingAlerts) {
+        const fuse = new Fuse(pendingAlerts, options);
+        const result = fuse.search(searchString);
+        const searchPendingResults: AlertInfo[] = [];
+        result.forEach((item) => searchPendingResults.push(item.item));
+        setPendingResult(searchPendingResults);
+      }
+
+      if (completedAlerts) {
+        const fuse = new Fuse(completedAlerts, options);
+        const result = fuse.search(searchString);
+        const searchCompletedResults: AlertInfo[] = [];
+        result.forEach((item) => searchCompletedResults.push(item.item));
+        setCompletedResult(searchCompletedResults);
+      }
+    }
+  };
+
   return (
     <>
       <SearchBarComponent
-        onUserInput={() => {
-          null;
-        }}
-        onSearchClick={(searchString: string) => {
-          if (searchString.length === 0) {
-            setSearching(false);
-          } else if (pendingAlerts || completedAlerts) {
-            setSearching(true);
-            const options = {
-              includeScore: true,
-              keys: ["patientName"]
-            };
-
-            if (pendingAlerts) {
-              const fuse = new Fuse(pendingAlerts, options);
-              const result = fuse.search(searchString);
-              const searchPendingResults: AlertInfo[] = [];
-              result.forEach((item) => searchPendingResults.push(item.item));
-              setPendingResult(searchPendingResults);
-            }
-
-            if (completedAlerts) {
-              const fuse = new Fuse(completedAlerts, options);
-              const result = fuse.search(searchString);
-              const searchCompletedResults: AlertInfo[] = [];
-              result.forEach((item) => searchCompletedResults.push(item.item));
-              setCompletedResult(searchCompletedResults);
-            }
-          }
-        }}
+        onUserInput={(searchString) => onSearchClick(searchString)}
+        onSearchClick={(searchString) => onSearchClick(searchString)}
         containerStyle={{
           backgroundColor: colors.primaryContrastTextColor
         }}
-        placeholder="Search..."
+        placeholder={i18n.t("Alerts.SearchBarPlaceholder")}
       />
 
       {/* Filter for Pending Alerts */}
@@ -106,7 +107,7 @@ export const AlertListTabNavigator: FC<AlertListTabNavigatorProps> = ({
             <AlertCurrentTab
               {...props}
               onRowPress={onAlertRowPress}
-              currentSearched={searching ? pendingResult : undefined}
+              currentSearched={searching ? pendingResult : pendingAlerts}
             />
           )}
         </Tab.Screen>
@@ -116,7 +117,7 @@ export const AlertListTabNavigator: FC<AlertListTabNavigatorProps> = ({
             <AlertCompletedTab
               {...props}
               onRowPress={onAlertRowPress}
-              completedSearched={searching ? completedResult : undefined}
+              completedSearched={searching ? completedResult : completedAlerts}
             />
           )}
         </Tab.Screen>

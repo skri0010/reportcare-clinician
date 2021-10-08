@@ -48,8 +48,8 @@ interface AgentsState {
   completedAlerts: AlertInfo[] | undefined;
   fetchingAlertInfo: boolean;
   alertInfo: AlertInfo | undefined;
-  pendingTodos: LocalTodo[] | null;
-  completedTodos: LocalTodo[] | null;
+  pendingTodos: LocalTodo[] | undefined;
+  completedTodos: LocalTodo[] | undefined;
   alertHistory: AlertInfo[] | undefined;
   fetchingTodos: boolean;
   fetchingTodoDetails: boolean;
@@ -126,8 +126,8 @@ const initialState: AgentsState = {
   fetchingAlertInfo: false,
   alertInfo: undefined,
   todoDetails: undefined,
-  pendingTodos: null,
-  completedTodos: null,
+  pendingTodos: undefined,
+  completedTodos: undefined,
   alertHistory: undefined,
   fetchingTodos: false,
   fetchingTodoDetails: false,
