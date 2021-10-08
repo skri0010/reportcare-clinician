@@ -19,6 +19,7 @@ import { MedicalRecord } from "aws/API";
 import { store } from "util/useRedux";
 import { setFetchingMedicalRecordContent } from "ic-redux/actions/agents/actionCreator";
 import { Storage } from "@aws-amplify/storage";
+import { StorageFolderPath } from "aws";
 
 /**
  * Class to represent the activity for retrieving content of a patient's medical record.
@@ -53,9 +54,12 @@ class RetrieveMedicalRecordContent extends Activity {
         // Ensure that device is online
         if (facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
           // Device is online - retrieve file from S3 bucket
-          const fileURL = await Storage.get(medicalRecord.fileKey, {
-            level: "private"
-          });
+          const fileURL = await Storage.get(
+            `${StorageFolderPath.MEDICAL_RECORDS}${medicalRecord.fileKey}`,
+            {
+              level: "protected"
+            }
+          );
 
           if (fileURL) {
             // Update Facts

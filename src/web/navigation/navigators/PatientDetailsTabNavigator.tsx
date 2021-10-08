@@ -4,6 +4,7 @@ import { select, RootState } from "util/useRedux";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { PatientOverview } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientOverview";
 import { PatientParameters } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientParameters";
+import { PatientICDCRT } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientIcdCrt";
 import { PatientHistory } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientHistory";
 import { PatientInformation } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientInformation";
 import { PatientDetailsTabProps } from "web/navigation/types";
@@ -14,8 +15,7 @@ import {
 import i18n from "util/language/i18n";
 import { AlertInfo, PatientDetails } from "rc_agents/model";
 import { getTopTabBarOptions } from "util/getStyles";
-import { PatientICDCRT } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientIcdCrt";
-import { MedicalRecord } from "aws/API";
+import { IcdCrtRecord, MedicalRecord } from "aws/API";
 
 const Tab = createMaterialTopTabNavigator<PatientDetailsTabParamList>();
 
@@ -25,7 +25,9 @@ export interface PatientDetailsTabNavigatorProps {
   setDisplayHistory: (state: AlertInfo) => void; // alert history details to be shown
   setModalAlertVisible: (state: boolean) => void; // alert modal visibility
   setAddMedicalRecord: (state: boolean) => void; // add medical record modal visibility
-  onViewMedicalRecord: (medicalRecord: MedicalRecord) => void; //when content of medical content is to be shown
+  onViewMedicalRecord: (medicalRecord: MedicalRecord) => void; // when content of medical content is to be shown
+  setAddIcdCrtRecord: (state: boolean) => void; // add ICD/CRT record modal visibility
+  onViewIcdCrtRecord: (icdCrtRecord: IcdCrtRecord) => void; // when content of ICD/CRT content is to be shown
 }
 
 export const PatientDetailsTabNavigator: FC<PatientDetailsTabNavigatorProps> =
@@ -35,7 +37,9 @@ export const PatientDetailsTabNavigator: FC<PatientDetailsTabNavigatorProps> =
     setDisplayHistory,
     setModalAlertVisible,
     setAddMedicalRecord,
-    onViewMedicalRecord
+    onViewMedicalRecord,
+    setAddIcdCrtRecord,
+    onViewIcdCrtRecord
   }) => {
     const { colors, fonts } = select((state: RootState) => ({
       colors: state.settings.colors,
@@ -62,31 +66,32 @@ export const PatientDetailsTabNavigator: FC<PatientDetailsTabNavigatorProps> =
           name={PatientDetailsTabName.OVERVIEW}
           options={{ title: i18n.t("Patients.Overview") }}
         >
-          {(props: PatientDetailsTabProps.OverviewTabProps) => (
-            <PatientOverview {...props} details={details} />
-          )}
+          {(props) => <PatientOverview {...props} details={details} />}
         </Tab.Screen>
         <Tab.Screen
           name={PatientDetailsTabName.PARAMETERS}
           options={{ title: i18n.t("Patients.Parameters") }}
         >
-          {(props: PatientDetailsTabProps.ParametersTabProps) => (
-            <PatientParameters {...props} details={details} />
-          )}
+          {(props) => <PatientParameters {...props} details={details} />}
         </Tab.Screen>
         <Tab.Screen
           name={PatientDetailsTabName.ICDCRT}
           options={{ title: i18n.t("Patients.ICD/CRT") }}
         >
-          {(props: PatientDetailsTabProps.ICDCRTTabProps) => (
-            <PatientICDCRT {...props} details={details} />
+          {(props) => (
+            <PatientICDCRT
+              {...props}
+              details={details}
+              setAddIcdCrtRecord={setAddIcdCrtRecord}
+              onViewIcdCrtRecord={onViewIcdCrtRecord}
+            />
           )}
         </Tab.Screen>
         <Tab.Screen
           name={PatientDetailsTabName.HISTORY}
           options={{ title: i18n.t("Patients.History") }}
         >
-          {(props: PatientDetailsTabProps.HistoryTabProps) => (
+          {(props) => (
             <PatientHistory
               {...props}
               info={details.patientInfo}

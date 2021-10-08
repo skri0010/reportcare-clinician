@@ -38,7 +38,8 @@ export const PatientsList: FC<PatientsListScreen> = ({
           symptomReports: {},
           vitalsReports: {},
           medicationInfo: [],
-          medicalRecords: {}
+          medicalRecords: {},
+          icdCrtRecords: {}
         })
       );
       if (patient.configured) {

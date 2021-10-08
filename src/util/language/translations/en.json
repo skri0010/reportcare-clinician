@@ -82,16 +82,19 @@
     "OxygenSaturationUnit": "(%)",
     "Weight": "Weight ",
     "WeightUnit": "(kg)",
+    "FluidIntake": "Fluid Intake ",
+    "FluidUnit": "(ml)",
+    "Steps": "Steps Counter",
+    "StepsUnit": "(step)",
     "NoData": "No data was found",
-    "Days": {
-      "Sunday": "Sun",
-      "Monday": "Mon",
-      "Tuesday": "Tue",
-      "Wednesday": "Wed",
-      "Thursday": "Thu",
-      "Friday": "Fri",
-      "Saturday": "Sat"
-    }
+    "ViewBy": "View By: ",
+    "ChartViewTypes": {
+      "Maximum": " Maximum",
+      "Minimum": "Minimum",
+      "Average": "Average",
+      "All": "All"
+    },
+    "Information": "Any gap in the line chart that exist between dates signifies that the patient has no recorded vital for the specific day."
   },
   "ScreenName": {
     "Home": "Home",
@@ -196,7 +199,7 @@
       "TargetWeight": "Please input a valid target weight (in kg)",
       "FluidIntakeGoal": "Please input a valid fluid intake goal (in ml)",
       "MedName": "Please input a valid medicine name",
-      "Dosage": "Please input a valid medication dosage(in mg)",
+      "Dosage": "Please input a valid medication dosage (in mg)",
       "Frequency": "Please input a valid medication frequency (in times per day)"
     },
     "Placeholder": {
@@ -223,7 +226,17 @@
     "NoRecord": "-",
     "NoSymptoms": "No symptoms recorded"
   },
-  "Patient_ICD/CRT": {},
+  "Patient_ICD/CRT": {
+    "IcdCrtRecords": "ICD/CRT records",
+    "NoIcdCrtRecords": "No ICD/CRT records found!",
+    "Title": "Title",
+    "TitleInputPlaceholder": "Give the record a title",
+    "TitleError": "Please enter a valid title",
+    "FileUpload": "File Upload",
+    "Save": "Save",
+    "Cancel": "Cancel",
+    "IcdCrtRecordSavedSuccessfully": "ICD/CRT record has been saved successfully"
+  },
   "Patient_History": {
     "Alert": "Alert",
     "Risk": {
@@ -252,14 +265,7 @@
       "Title": "Title",
       "TitleInputPlaceholder": "Give the medical record a name (eg Family Background)",
       "TitleError": "Please enter a valid title",
-      "Description": "Description",
-      "DescriptionInputPlaceholder": "What is the content of the medical record?",
       "FileUpload": "File Upload",
-      "DragAndDropFile": "Drag and Drop file",
-      "DropFileHere": "Drop file here",
-      "Or": "Or",
-      "BrowseFiles": "Browse files",
-      "MultipleFileError": "You can only upload one file at a time",
       "MedicalRecordSavedSuccessfully": "Medical record has been saved successfully"
     },
     "NoAlertHistory": "The patient does not have any alert histories currently!",
@@ -310,6 +316,13 @@
   "MobileMessage": {
     "ViewList": "View List",
     "BackToDetails": "Back to Details"
+  },
+  "FileDropbox": {
+    "DragAndDropFile": "Drag and Drop file",
+    "DropFileHere": "Drop file here",
+    "Or": "Or",
+    "BrowseFiles": "Browse files",
+    "MultipleFileError": "You can only upload one file at a time"
   },
   "UnexpectedError": "An unexpected error has occured",
   "Keywords": {

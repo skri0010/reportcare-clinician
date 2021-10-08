@@ -1,0 +1,18 @@
+{
+  "systemParams": "win32-x64-83",
+  "modulesFolders": [
+    "node_modules"
+  ],
+  "flags": [],
+  "linkedModules": [],
+  "topLevelPatterns": [
+    "@types/node@^16.10.1",
+    "gql@^1.1.2"
+  ],
+  "lockfileEntries": {
+    "@types/node@^16.10.1": "https://registry.yarnpkg.com/@types/node/-/node-16.10.1.tgz#f3647623199ca920960006b3dccf633ea905f243",
+    "gql@^1.1.2": "https://registry.yarnpkg.com/gql/-/gql-1.1.2.tgz#355cb814f11a6d6e49e3393425628911ee100f63"
+  },
+  "files": [],
+  "artifacts": {}
+}

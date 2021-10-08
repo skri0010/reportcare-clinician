@@ -53,6 +53,17 @@ export interface ColorScheme {
   // Icon background
   deleteIconBackgroundColor: string;
 
+  // Information
+  infoIconColor: string;
+
+  // Charts
+  maxLineColor: string;
+  minLineColor: string;
+  avgLineColor: string;
+  chartPillSelectedColor: string;
+  chartPillUnselectedColor: string;
+  chartPillUnselectedBorderColor: string;
+
   // Others
   riskLevelBackgroundColors: IRiskLevelMap;
   riskLevelBorderColors: IRiskLevelMap;

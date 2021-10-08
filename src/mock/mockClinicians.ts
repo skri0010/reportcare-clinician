@@ -10,6 +10,7 @@ export const mockClinician: ClinicianInfo[] = [
     createdAt: "",
     updatedAt: "",
     _lastChangedAt: 1627604201979,
+    contactNumber: "0112222333",
     _version: 1
   }
 ];
