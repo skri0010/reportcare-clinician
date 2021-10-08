@@ -8,6 +8,7 @@ import {
   validateMedDosage,
   validateMedFreq,
   validateMedDosageInput,
+  validateNumber,
   validateMedFreqInput
 } from "util/validation";
 import { ms, ScaledSheet } from "react-native-size-matters";
@@ -42,7 +43,7 @@ export const MedicationConfigForm: FC<MedicationConfigFormProps> = ({
 
   // Update dosage
   const updateMedDosage = (dosage: string) => {
-    if (validateMedDosageInput(dosage)) {
+    if (validateNumber(dosage)) {
       setConfigMedInfo({ ...configMedInfo, dosage: parseFloat(dosage) });
     } else {
       setConfigMedInfo({ ...configMedInfo, dosage: 0 });
@@ -51,7 +52,7 @@ export const MedicationConfigForm: FC<MedicationConfigFormProps> = ({
 
   // Update frequency
   const updateMedFreq = (frequency: string) => {
-    if (validateMedFreqInput(frequency)) {
+    if (validateNumber(frequency)) {
       setConfigMedInfo({ ...configMedInfo, frequency: parseFloat(frequency) });
     } else {
       setConfigMedInfo({ ...configMedInfo, frequency: 0 });
@@ -95,7 +96,7 @@ export const MedicationConfigForm: FC<MedicationConfigFormProps> = ({
           value={configMedInfo.dosage === 0 ? "" : `${configMedInfo.dosage}`}
           onChange={(dosage) => updateMedDosage(dosage)}
           placeholder={i18n.t("Patient_Configuration.Placeholder.Dosage")}
-          error={!validateMedDosage(configMedInfo.name, configMedInfo.dosage)}
+          error={validateMedDosage(configMedInfo.name, configMedInfo.dosage)}
           errorMessage={i18n.t("Patient_Configuration.Error.Dosage")}
         />
         {/* Medicine Frequency */}
@@ -106,7 +107,10 @@ export const MedicationConfigForm: FC<MedicationConfigFormProps> = ({
           }
           onChange={(frequency) => updateMedFreq(frequency)}
           placeholder={i18n.t("Patient_Configuration.Placeholder.Frequency")}
-          error={validateMedFreq(configMedInfo.frequency)}
+          error={
+            validateMedFreqInput(configMedInfo.frequency) &&
+            !validateMedFreq(configMedInfo.frequency)
+          }
           errorMessage={i18n.t("Patient_Configuration.Error.Frequency")}
         />
       </View>
