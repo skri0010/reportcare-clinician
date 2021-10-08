@@ -109,7 +109,7 @@ class ConfigurePatient extends Activity {
                 const localMed: MedInput = {
                   id: medication.id,
                   name: medication.name,
-                  dosage: medication.dosage,
+                  dosage: `${medication.dosage}`,
                   frequency: `${medication.frequency}`,
                   patientID: medication.patientID,
                   records: medication.records
@@ -303,7 +303,7 @@ export const createMedicationConfiguration = async (
   // Creates medication info to be inserted into DB
   const medInfoToInsert: CreateMedicationInfoInput = {
     name: medicationInfo.name,
-    dosage: medicationInfo.dosage,
+    dosage: parseFloat(medicationInfo.dosage),
     frequency: parseFloat(medicationInfo.frequency),
     records: JSON.stringify({}),
     patientID: medicationInfo.patientID,

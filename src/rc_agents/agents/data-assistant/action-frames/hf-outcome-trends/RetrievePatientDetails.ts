@@ -152,7 +152,7 @@ class RetrievePatientDetails extends Activity {
                 const localMed: MedInput = {
                   id: medication.id,
                   name: medication.name,
-                  dosage: medication.dosage,
+                  dosage: `${medication.dosage}`,
                   frequency: `${medication.frequency}`,
                   patientID: medication.patientID,
                   records: medication.records

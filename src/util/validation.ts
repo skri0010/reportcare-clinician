@@ -81,13 +81,17 @@ export const validateMedDosageInput = (dosage: string): boolean => {
   return validateNumber(dosage);
 };
 
-export const validateMedDosage = (medName: string, dosage: number): boolean => {
+export const validateMedDosage = (medName: string, dosage: string): boolean => {
   // Assumed medication dosage (in mg)
   const medicine = mockMedDosages.filter((t) => t.name === medName);
   if (medicine.length > 0) {
     const minDosage = medicine[0].dosage.min;
     const maxDosage = medicine[0].dosage.max;
-    return dosage >= minDosage && dosage <= maxDosage;
+    return (
+      validateNumber(dosage) &&
+      parseFloat(dosage) >= minDosage &&
+      parseFloat(dosage) <= maxDosage
+    );
   }
   return false;
 };

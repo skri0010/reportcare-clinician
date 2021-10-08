@@ -1,11 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {
-  PatientAssignment,
-  PatientInfo,
-  Todo,
-  MedicationInfo,
-  MedicalRecord
-} from "aws/API";
+import { PatientAssignment, PatientInfo, Todo, MedicalRecord } from "aws/API";
 import { PatientAssignmentSubscription } from "aws/TypedAPI/subscriptions";
 // eslint-disable-next-line no-restricted-imports
 import {

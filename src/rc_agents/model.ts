@@ -3,7 +3,6 @@ import {
   ReportSymptom,
   ReportVitals,
   PatientInfo,
-  MedicationInfo,
   MedicalRecord,
   Alert
 } from "aws/API";
@@ -207,7 +206,7 @@ export interface TodoDetails {
 export interface MedInput {
   id?: string;
   name: string;
-  dosage: number;
+  dosage: string;
   frequency: string;
   patientID: string;
   records?: string;

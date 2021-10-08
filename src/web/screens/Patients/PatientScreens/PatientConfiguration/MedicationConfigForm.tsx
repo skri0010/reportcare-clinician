@@ -6,8 +6,7 @@ import {
   notEmptyString,
   validateMedName,
   validateMedDosage,
-  validateMedFreq,
-  validateNumber
+  validateMedFreq
 } from "util/validation";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { RootState, select } from "util/useRedux";
@@ -41,11 +40,7 @@ export const MedicationConfigForm: FC<MedicationConfigFormProps> = ({
 
   // Update dosage
   const updateMedDosage = (dosage: string) => {
-    if (validateNumber(dosage)) {
-      setConfigMedInfo({ ...configMedInfo, dosage: parseFloat(dosage) });
-    } else {
-      setConfigMedInfo({ ...configMedInfo, dosage: 0 });
-    }
+    setConfigMedInfo({ ...configMedInfo, dosage: dosage });
   };
 
   // Update frequency
@@ -87,10 +82,13 @@ export const MedicationConfigForm: FC<MedicationConfigFormProps> = ({
         {/* Medicine Dosage */}
         <TextField
           label={i18n.t("Patient_Configuration.Label.Dosage")}
-          value={configMedInfo.dosage === 0 ? "" : `${configMedInfo.dosage}`}
+          value={`${configMedInfo.dosage}`}
           onChange={(dosage) => updateMedDosage(dosage)}
           placeholder={i18n.t("Patient_Configuration.Placeholder.Dosage")}
-          error={validateMedDosage(configMedInfo.name, configMedInfo.dosage)}
+          error={
+            notEmptyString(configMedInfo.dosage) &&
+            !validateMedDosage(configMedInfo.name, configMedInfo.dosage)
+          }
           errorMessage={i18n.t("Patient_Configuration.Error.Dosage")}
         />
         {/* Medicine Frequency */}
