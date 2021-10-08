@@ -103,8 +103,22 @@ class ConfigurePatient extends Activity {
           if (medInfosCreated.length === medConfiguration.length) {
             medConfigurationSuccessful = true;
             // Stores the med info into patient details
+            const localMedInputs: MedInput[] = [];
+            medInfosCreated.forEach((medication: MedicationInfo) => {
+              if (medication) {
+                const localMed: MedInput = {
+                  id: medication.id,
+                  name: medication.name,
+                  dosage: medication.dosage,
+                  frequency: `${medication.frequency}`,
+                  patientID: medication.patientID,
+                  records: medication.records
+                };
+                localMedInputs.push(localMed);
+              }
+            });
             await LocalStorage.setPatientMedInfo(
-              medInfosCreated,
+              localMedInputs,
               configuration.patientID
             );
           }
@@ -290,7 +304,7 @@ export const createMedicationConfiguration = async (
   const medInfoToInsert: CreateMedicationInfoInput = {
     name: medicationInfo.name,
     dosage: medicationInfo.dosage,
-    frequency: medicationInfo.frequency,
+    frequency: parseFloat(medicationInfo.frequency),
     records: JSON.stringify({}),
     patientID: medicationInfo.patientID,
     active: true

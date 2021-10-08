@@ -82,9 +82,9 @@ class RetrievePatientDetails extends Activity {
             patientID: patientId
           });
 
-          /*           const activityInfoQuery = await listActivityInfosByPatientID({
+          const activityInfoQuery = await listActivityInfosByPatientID({
             patientID: patientId
-          }); */
+          });
           const symptomReportsQuery = await listReportSymptomsByPatientID({
             patientID: patientId
           });
@@ -92,8 +92,7 @@ class RetrievePatientDetails extends Activity {
             patientID: patientId
           });
 
-          // Store activity infos in patient details
-          /*           if (activityInfoQuery.data.listActivityInfosByPatientID?.items) {
+          if (activityInfoQuery.data.listActivityInfosByPatientID?.items) {
             const infos =
               activityInfoQuery.data.listActivityInfosByPatientID.items;
 
@@ -102,7 +101,7 @@ class RetrievePatientDetails extends Activity {
                 patientDetails.activityInfos[info.id] = info;
               }
             });
-          } */
+          }
 
           // Store symptom reports in patient details
           if (symptomReportsQuery.data.listReportSymptomsByPatientID?.items) {
@@ -154,7 +153,7 @@ class RetrievePatientDetails extends Activity {
                   id: medication.id,
                   name: medication.name,
                   dosage: medication.dosage,
-                  frequency: medication.frequency,
+                  frequency: `${medication.frequency}`,
                   patientID: medication.patientID,
                   records: medication.records
                 };

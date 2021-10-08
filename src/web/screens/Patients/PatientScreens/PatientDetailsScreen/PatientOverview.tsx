@@ -7,7 +7,7 @@ import { OxygenSaturationCard } from "./PatientOverviewComponents/OxygenSaturati
 import { WeightCard } from "./PatientOverviewComponents/WeightCard";
 import { SymptomsCard } from "./PatientOverviewComponents/SymptomsCard";
 import { Dimensions, View } from "react-native";
-import { MedicationInfo, ReportSymptom, ReportVitals } from "aws/API";
+import { ReportSymptom, ReportVitals } from "aws/API";
 import i18n from "util/language/i18n";
 import { PatientDetailsTabProps } from "web/navigation/types";
 import { MedInput, PatientDetails } from "rc_agents/model";
@@ -21,9 +21,7 @@ export const PatientOverview: FC<PatientOverviewProps> = ({ details }) => {
 
   const [vitals, setVitals] = useState<ReportVitals | null>(null);
   const [symptoms, setSymptoms] = useState<ReportSymptom[]>([]);
-  const [medications, setMedications] = useState<MedicationInfo[] | MedInput[]>(
-    []
-  );
+  const [medications, setMedications] = useState<MedInput[]>([]);
 
   useEffect(() => {
     // TODO: This code needs to be modified for changing days

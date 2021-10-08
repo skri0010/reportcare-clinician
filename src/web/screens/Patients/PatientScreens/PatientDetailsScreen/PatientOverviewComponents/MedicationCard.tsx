@@ -1,11 +1,9 @@
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import { ms } from "react-native-size-matters";
 import { CardWrapper } from "web/screens/Home/CardWrapper";
 import { FlatList } from "react-native";
-import { mockMedicationRecord } from "mock/mockMedication";
 import { MedicationRow } from "./MedicationRow";
 import i18n from "util/language/i18n";
-import { MedicationInfo } from "aws/API";
 import { MedInput } from "rc_agents/model";
 
 interface MedicationTakenProps {

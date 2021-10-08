@@ -55,7 +55,7 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
     const [configMedInfo, setConfigMedInfo] = useState<MedInput>({
       name: "",
       dosage: 0,
-      frequency: 0,
+      frequency: "",
       patientID: info.patientID
     });
 
@@ -81,7 +81,7 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
     const [medInfoToDelete, setMedInfoToDelete] = useState<MedInput>({
       name: "",
       dosage: 0,
-      frequency: 0,
+      frequency: "",
       patientID: info.patientID
     });
 
@@ -156,7 +156,7 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
       setConfigMedInfo({
         name: "",
         dosage: 0,
-        frequency: 0,
+        frequency: "",
         patientID: info.patientID
       });
     };

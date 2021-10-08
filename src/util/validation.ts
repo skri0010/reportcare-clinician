@@ -92,16 +92,15 @@ export const validateMedDosage = (medName: string, dosage: number): boolean => {
   return false;
 };
 
-export const validateMedFreqInput = (frequency: number): boolean => {
-  // Assumed medication frquency (in times per day)
-  return frequency > 0;
-};
-
-export const validateMedFreq = (frequency: number): boolean => {
+export const validateMedFreq = (frequency: string): boolean => {
   // Assumed medication frquency (in times per day)
   const minFrequency = 1;
   const maxFrequency = 10;
-  return frequency >= minFrequency && frequency <= maxFrequency;
+  return (
+    validateNumber(frequency) &&
+    parseFloat(frequency) >= minFrequency &&
+    parseFloat(frequency) <= maxFrequency
+  );
 };
 
 export const notEmptyString = (testString: string): boolean => {

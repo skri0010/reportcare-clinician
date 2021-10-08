@@ -208,7 +208,7 @@ export interface MedInput {
   id?: string;
   name: string;
   dosage: number;
-  frequency: number;
+  frequency: string;
   patientID: string;
   records?: string;
 }

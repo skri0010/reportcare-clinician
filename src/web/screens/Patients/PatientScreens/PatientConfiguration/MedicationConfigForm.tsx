@@ -7,9 +7,7 @@ import {
   validateMedName,
   validateMedDosage,
   validateMedFreq,
-  validateMedDosageInput,
-  validateNumber,
-  validateMedFreqInput
+  validateNumber
 } from "util/validation";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { RootState, select } from "util/useRedux";
@@ -52,11 +50,7 @@ export const MedicationConfigForm: FC<MedicationConfigFormProps> = ({
 
   // Update frequency
   const updateMedFreq = (frequency: string) => {
-    if (validateNumber(frequency)) {
-      setConfigMedInfo({ ...configMedInfo, frequency: parseFloat(frequency) });
-    } else {
-      setConfigMedInfo({ ...configMedInfo, frequency: 0 });
-    }
+    setConfigMedInfo({ ...configMedInfo, frequency: frequency });
   };
 
   // Input validations to see if the save button should be enabled or not
@@ -102,13 +96,11 @@ export const MedicationConfigForm: FC<MedicationConfigFormProps> = ({
         {/* Medicine Frequency */}
         <TextField
           label={i18n.t("Patient_Configuration.Label.Frequency")}
-          value={
-            configMedInfo.frequency === 0 ? "" : `${configMedInfo.frequency}`
-          }
+          value={`${configMedInfo.frequency}`}
           onChange={(frequency) => updateMedFreq(frequency)}
           placeholder={i18n.t("Patient_Configuration.Placeholder.Frequency")}
           error={
-            validateMedFreqInput(configMedInfo.frequency) &&
+            notEmptyString(configMedInfo.frequency) &&
             !validateMedFreq(configMedInfo.frequency)
           }
           errorMessage={i18n.t("Patient_Configuration.Error.Frequency")}
