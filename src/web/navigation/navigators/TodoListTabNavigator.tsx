@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useState } from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { TodoCurrentTab } from "web/screens/Todo/tabs/TodoCurrentTab";
 import { TodoCompletedTab } from "web/screens/Todo/tabs/TodoCompletedTab";
@@ -39,11 +39,6 @@ export const TodoListTabNavigator: FC<TodoListNavigationStackProps> = ({
       pendingTodos: state.todos.pendingTodos
     })
   );
-
-  useEffect(() => {
-    // eslint-disable-next-line no-console
-    console.log(completedTodos);
-  });
 
   const [searching, setSearching] = useState<boolean>(false);
   const [pendingResult, setPendingResult] = useState<LocalTodo[]>([]);
