@@ -1,6 +1,5 @@
 import React, { FC, useEffect } from "react";
-import { FlatList } from "react-native";
-import { ScreenWrapper } from "web/screens/ScreenWrapper";
+import { FlatList, View } from "react-native";
 import { RiskLevel } from "models/RiskLevel";
 import { TodoRow } from "components/RowComponents/TodoRow";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
@@ -55,9 +54,7 @@ export const TodoCompletedTab: FC<TodoCompleteTabProps> = ({
   }, []);
 
   return (
-    <ScreenWrapper
-      style={{ backgroundColor: colors.secondaryWebBackgroundColor }}
-    >
+    <View style={{ flex: 1, backgroundColor: colors.primaryContrastTextColor }}>
       {/* List of completed todos */}
       {fetchingTodos ? (
         // Show loading indicator if fetching completed todos
@@ -84,6 +81,6 @@ export const TodoCompletedTab: FC<TodoCompleteTabProps> = ({
       ) : (
         <NoListItemMessage screenMessage={i18n.t("Todo.NoTodos")} />
       )}
-    </ScreenWrapper>
+    </View>
   );
 };

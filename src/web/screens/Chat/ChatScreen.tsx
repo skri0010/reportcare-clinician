@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { View, FlatList } from "react-native";
-import { ScreenWrapper } from "web/screens/ScreenWrapper";
+import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
 import { PatientChatRow } from "components/RowComponents/PatientRows/PatientChatRow";
 import { mockPatients } from "mock/mockPatients";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";

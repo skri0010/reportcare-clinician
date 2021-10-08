@@ -1,16 +1,15 @@
-import React, { FC, useEffect } from "react";
+import React, { FC } from "react";
 import { ScaledSheet } from "react-native-size-matters";
 import { H5, H6 } from "components/Text";
-import { Linking, View } from "react-native";
-import { RowButton } from "components/Buttons/TextButton";
-import { IcdCrtRecord } from "aws/API";
-import { RootState, select, useDispatch } from "util/useRedux";
-import { setIcdCrtRecordContent } from "ic-redux/actions/agents/actionCreator";
+import { View } from "react-native";
+import { RowButton } from "components/Buttons/RowButton";
+import { ClinicianRecord } from "aws/API";
+import { RootState, select } from "util/useRedux";
 import { getLocalDateTime } from "util/utilityFunctions";
 
 interface IcdCrtRecordRowProps {
-  icdCrtRecord: IcdCrtRecord;
-  onViewIcdCrtRecord: (IcdCrtRecord: IcdCrtRecord) => void;
+  icdCrtRecord: ClinicianRecord;
+  onViewIcdCrtRecord: (IcdCrtRecord: ClinicianRecord) => void;
   allowView: boolean; // Whether content viewing is allowed (is online)
 }
 
@@ -19,21 +18,9 @@ export const IcdCrtRecordRow: FC<IcdCrtRecordRowProps> = ({
   onViewIcdCrtRecord,
   allowView
 }) => {
-  const { colors, icdCrtRecordContent } = select((state: RootState) => ({
-    colors: state.settings.colors,
-    icdCrtRecordContent: state.agents.icdCrtRecordContent
+  const { colors } = select((state: RootState) => ({
+    colors: state.settings.colors
   }));
-
-  const dispatch = useDispatch();
-
-  // Detects retrieved content URL
-  useEffect(() => {
-    if (icdCrtRecordContent) {
-      // Opens a new tab to show the content
-      Linking.openURL(icdCrtRecordContent);
-      dispatch(setIcdCrtRecordContent(undefined));
-    }
-  }, [dispatch, icdCrtRecordContent]);
 
   // Triggers DTA to retrieve URL for showing ICD/CRT record content
   const onRowPress = () => {
@@ -42,13 +29,15 @@ export const IcdCrtRecordRow: FC<IcdCrtRecordRowProps> = ({
 
   return (
     <View style={[styles.container]}>
-      {/* ICD/CRT record title */}
-      <H5 text={icdCrtRecord.title} style={[styles.textContainer]} />
-      {/* ICD/CRT record creation date */}
-      <H6
-        text={getLocalDateTime(icdCrtRecord.dateTime)}
-        style={styles.dateTimeContainer}
-      />
+      <View style={styles.textContainer}>
+        {/* ICD/CRT record title */}
+        <H5 text={icdCrtRecord.title} style={styles.topText} />
+        {/* ICD/CRT record creation date */}
+        <H6
+          text={getLocalDateTime(icdCrtRecord.uploadDateTime || "")}
+          style={styles.bottomText}
+        />
+      </View>
       {/* View button */}
       <View style={styles.viewButtonContainer}>
         <RowButton
@@ -66,20 +55,22 @@ export const IcdCrtRecordRow: FC<IcdCrtRecordRowProps> = ({
 
 const styles = ScaledSheet.create({
   container: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center"
+    flexDirection: "row"
   },
   textContainer: {
-    flex: 5,
     paddingRight: "5@ms",
     maxWidth: "250@ms"
   },
-  dateTimeContainer: {
-    flex: 3,
-    textAlign: "center"
+  topText: {
+    paddingTop: "2@ms"
+  },
+  bottomText: {
+    paddingVertical: "2@ms"
   },
   viewButtonContainer: {
-    flex: 2
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    alignItems: "center"
   }
 });

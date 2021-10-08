@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { CardWrapper } from "web/screens/Home/CardWrapper";
+import { CardWrapper } from "components/Wrappers/CardWrapper";
 import { ParameterGraphsProps } from "components/VisualizationComponents/ParameterGraphs";
 import { FluidIntakeChart } from "components/VisualizationComponents/FluidIntakeChart";
 

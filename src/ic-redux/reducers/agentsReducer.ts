@@ -10,8 +10,7 @@ import {
 } from "rc_agents/model";
 import {
   ClinicianInfo,
-  IcdCrtRecord,
-  MedicalRecord,
+  ClinicianRecord,
   PatientAssignment,
   PatientInfo
 } from "aws/API";
@@ -59,15 +58,13 @@ interface AgentsState {
   creatingMedicalRecord: boolean;
   createMedicalRecordSuccessful: boolean;
   fetchingMedicalRecords: boolean;
-  medicalRecords: MedicalRecord[] | undefined;
+  medicalRecords: ClinicianRecord[] | undefined;
   fetchingMedicalRecordContent: boolean;
-  medicalRecordContent: string | undefined;
   creatingIcdCrtRecord: boolean;
   createIcdCrtRecordSuccessful: boolean;
   fetchingIcdCrtRecords: boolean;
-  icdCrtRecords: IcdCrtRecord[] | undefined;
+  icdCrtRecords: ClinicianRecord[] | undefined;
   fetchingIcdCrtRecordContent: boolean;
-  icdCrtRecordContent: string | undefined;
 }
 
 const initialState: AgentsState = {
@@ -138,13 +135,11 @@ const initialState: AgentsState = {
   fetchingMedicalRecords: false,
   medicalRecords: undefined,
   fetchingMedicalRecordContent: false,
-  medicalRecordContent: undefined,
   creatingIcdCrtRecord: false,
   createIcdCrtRecordSuccessful: false,
   fetchingIcdCrtRecords: false,
   icdCrtRecords: undefined,
-  fetchingIcdCrtRecordContent: false,
-  icdCrtRecordContent: undefined
+  fetchingIcdCrtRecordContent: false
 };
 
 export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
@@ -243,11 +238,6 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
         fetchingMedicalRecordContent:
           action.payload.fetchingMedicalRecordContent
       };
-    case actionNames.SET_MEDICAL_RECORD_CONTENT:
-      return {
-        ...state,
-        medicalRecordContent: action.payload.medicalRecordContent
-      };
     case actionNames.SET_CREATING_ICDCRT_RECORD:
       return {
         ...state,
@@ -273,11 +263,6 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
       return {
         ...state,
         fetchingIcdCrtRecordContent: action.payload.fetchingIcdCrtRecordContent
-      };
-    case actionNames.SET_ICDCRT_RECORD_CONTENT:
-      return {
-        ...state,
-        icdCrtRecordContent: action.payload.icdCrtRecordContent
       };
     case actionNames.SET_PENDING_ALERT_COUNT:
       return {

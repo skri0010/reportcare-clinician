@@ -1,5 +1,5 @@
 import React, { FC, useEffect } from "react";
-import { FlatList } from "react-native";
+import { FlatList, View } from "react-native";
 import { TodoRow } from "components/RowComponents/TodoRow";
 import { RiskLevel } from "models/RiskLevel";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
@@ -14,7 +14,6 @@ import {
 import { AgentTrigger } from "rc_agents/trigger";
 import { TodoListTabsProps } from "web/navigation/types";
 import { TodoRowTabProps } from "web/navigation/navigators/TodoListTabNavigator";
-import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { NoItemsTextIndicator } from "components/Indicators/NoItemsTextIndicator";
 import { NoListItemMessage } from "web/screens/Shared/NoListItemMessage";
 
@@ -56,8 +55,8 @@ export const TodoCurrentTab: FC<TodoCurrentTabProps> = ({
   }, []);
 
   return (
-    <ScreenWrapper
-      style={{ backgroundColor: colors.secondaryWebBackgroundColor }}
+    <View
+      style={{ flex: 1, backgroundColor: colors.secondaryWebBackgroundColor }}
     >
       {/* List of current todos */}
       {fetchingTodos ? (
@@ -85,6 +84,6 @@ export const TodoCurrentTab: FC<TodoCurrentTabProps> = ({
       ) : (
         <NoListItemMessage screenMessage={i18n.t("Todo.NoTodos")} />
       )}
-    </ScreenWrapper>
+    </View>
   );
 };
