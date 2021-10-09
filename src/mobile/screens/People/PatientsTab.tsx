@@ -17,7 +17,7 @@ import {
 } from "rc_agents/clinician_framework";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { setProcedureOngoing } from "ic-redux/actions/agents/actionCreator";
-import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
+import { LoadingIndicator } from "components/Indicators2/LoadingIndicator";
 import { useNetInfo } from "@react-native-community/netinfo";
 
 export const PatientsTab: FC = () => {

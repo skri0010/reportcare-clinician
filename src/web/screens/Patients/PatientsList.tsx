@@ -1,6 +1,6 @@
 import React, { FC, useState } from "react";
 import { FlatList, ScrollView, View } from "react-native";
-import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
+import { LoadingIndicator } from "components/Indicators2/LoadingIndicator";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { PatientDetailsRow } from "components/RowComponents/PatientRows/PatientDetailsRow";
 import { AgentTrigger } from "rc_agents/trigger";
@@ -8,7 +8,7 @@ import i18n from "util/language/i18n";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { RiskFilterPillList } from "components/Buttons/RiskFilterPillList";
 import { SearchBarComponent } from "components/Bars/SearchBarComponent";
-import { NoItemsTextIndicator } from "components/Indicators/NoItemsTextIndicator";
+import { NoItemsTextIndicator } from "components/Indicators2/NoItemsTextIndicator";
 import { setPatientDetails } from "ic-redux/actions/agents/actionCreator";
 import { PatientInfo } from "aws/API";
 import Fuse from "fuse.js";

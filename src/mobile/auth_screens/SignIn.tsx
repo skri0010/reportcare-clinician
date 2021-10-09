@@ -17,7 +17,7 @@ import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import i18n from "util/language/i18n";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useToast } from "react-native-toast-notifications";
-import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
+import { LoadingIndicator } from "components/Indicators2/LoadingIndicator";
 import { BeliefKeys, AppAttributes } from "rc_agents/clinician_framework";
 import { AsyncStorageKeys } from "rc_agents/storage";
 import { useNetInfo } from "@react-native-community/netinfo";

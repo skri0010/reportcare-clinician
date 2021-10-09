@@ -5,7 +5,7 @@ import { CardWrapper } from "components/Wrappers/CardWrapper";
 import { ReportSymptom } from "aws/API";
 import { FlatList } from "react-native";
 import i18n from "util/language/i18n";
-import { EmptyListIndicator } from "components/Indicators/EmptyListIndicator";
+import { EmptyListIndicator } from "components/Indicators2/EmptyListIndicator";
 
 interface SymptomProps {
   symptoms: ReportSymptom[];
