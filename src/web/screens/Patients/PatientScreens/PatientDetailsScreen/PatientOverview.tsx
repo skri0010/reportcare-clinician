@@ -64,10 +64,8 @@ export const PatientOverview: FC<PatientOverviewProps> = ({ details }) => {
     if (symptomsOnDate) {
       setSymptoms(symptomsOnDate);
     }
-    //console.log(details);
     const medInfo = details.medicationInfo;
     if (medInfo) {
-      //console.log(medInfo);
       setMedications(medInfo);
     }
   }, [details]);
