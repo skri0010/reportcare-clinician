@@ -1256,3 +1256,57 @@ export const onDeleteAlertNotification = /* GraphQL */ `
     }
   }
 `;
+export const onCreateClinicianRecord = /* GraphQL */ `
+  subscription OnCreateClinicianRecord {
+    onCreateClinicianRecord {
+      patientID
+      documentID
+      type
+      title
+      path
+      uploaderClinicianID
+      uploadDateTime
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateClinicianRecord = /* GraphQL */ `
+  subscription OnUpdateClinicianRecord {
+    onUpdateClinicianRecord {
+      patientID
+      documentID
+      type
+      title
+      path
+      uploaderClinicianID
+      uploadDateTime
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteClinicianRecord = /* GraphQL */ `
+  subscription OnDeleteClinicianRecord {
+    onDeleteClinicianRecord {
+      patientID
+      documentID
+      type
+      title
+      path
+      uploaderClinicianID
+      uploadDateTime
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;

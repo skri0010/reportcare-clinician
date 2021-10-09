@@ -527,3 +527,48 @@ type AlertNotification
   alertID: ID!
   owner: String!
 }
+
+type ClinicianRecord
+  @model
+  @auth(
+    rules: [
+      { allow: groups, groups: ["Admin"] }
+      { allow: private, provider: iam, operations: [create, read, update] }
+      { allow: groups, groupsField: "patientID", operations: [read] }
+    ]
+  )
+  @key(fields: ["patientID", "documentID"])
+  @key(
+    name: "uploadedClinicianRecordsByPatientID"
+    fields: ["patientID", "uploadDateTime"]
+    queryField: "listUploadedClinicianRecordsByPatientID"
+  ) {
+  patientID: String!
+  documentID: String!
+  type: String!
+  title: String!
+  path: String!
+  uploaderClinicianID: String!
+  uploadDateTime: AWSDateTime
+}
+
+"""
+NOTE: Function type, name, arguments and return type must match in backend/function/s3clinicianrecordsbridge/lib/types
+Query 1: getPresignedUrlForUpload
+Input: {
+  recordType: "IcdCrt" | "Medical"
+  operation: "Upload" | "Download
+  patientId: string
+  documentID: string (should be unique by patient)
+  documentName: string
+}
+"""
+type Query {
+  getPresignedUrlForClinicianRecords(
+    recordType: String
+    operation: String
+    patientID: String
+    documentID: String
+    documentTitle: String
+  ): AWSJSON @function(name: "s3clinicianrecordsbridge-${env}")
+}

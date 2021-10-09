@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { AlertListTabParamList } from "../paramLists";
@@ -13,6 +13,8 @@ import { RiskFilterPillList } from "components/Buttons/RiskFilterPillList";
 import { AlertInfo } from "rc_agents/model";
 import { setAlertInfo } from "ic-redux/actions/agents/actionCreator";
 import { AgentTrigger } from "rc_agents/trigger";
+import Fuse from "fuse.js";
+import i18n from "util/language/i18n";
 
 const Tab = createMaterialTopTabNavigator<AlertListTabParamList>();
 
@@ -28,10 +30,14 @@ export interface AlertRowTabProps {
 export const AlertListTabNavigator: FC<AlertListTabNavigatorProps> = ({
   setIsEmptyAlert
 }) => {
-  const { colors, fonts } = select((state: RootState) => ({
-    colors: state.settings.colors,
-    fonts: state.settings.fonts
-  }));
+  const { colors, fonts, completedAlerts, pendingAlerts } = select(
+    (state: RootState) => ({
+      colors: state.settings.colors,
+      fonts: state.settings.fonts,
+      completedAlerts: state.agents.completedAlerts,
+      pendingAlerts: state.agents.pendingAlerts
+    })
+  );
 
   const dispatch = useDispatch();
 
@@ -44,19 +50,47 @@ export const AlertListTabNavigator: FC<AlertListTabNavigatorProps> = ({
     }
   };
 
+  const [searching, setSearching] = useState<boolean>(false);
+  const [pendingResult, setPendingResult] = useState<AlertInfo[]>([]);
+  const [completedResult, setCompletedResult] = useState<AlertInfo[]>([]);
+
+  const onSearchClick = (searchString: string) => {
+    if (searchString.length === 0) {
+      setSearching(false);
+    } else if (pendingAlerts || completedAlerts) {
+      setSearching(true);
+      const options = {
+        includeScore: true,
+        keys: ["patientName"]
+      };
+
+      if (pendingAlerts) {
+        const fuse = new Fuse(pendingAlerts, options);
+        const result = fuse.search(searchString);
+        const searchPendingResults: AlertInfo[] = [];
+        result.forEach((item) => searchPendingResults.push(item.item));
+        setPendingResult(searchPendingResults);
+      }
+
+      if (completedAlerts) {
+        const fuse = new Fuse(completedAlerts, options);
+        const result = fuse.search(searchString);
+        const searchCompletedResults: AlertInfo[] = [];
+        result.forEach((item) => searchCompletedResults.push(item.item));
+        setCompletedResult(searchCompletedResults);
+      }
+    }
+  };
+
   return (
     <>
       <SearchBarComponent
-        onUserInput={() => {
-          null;
-        }}
-        onSearchClick={() => {
-          null;
-        }}
+        onUserInput={(searchString) => onSearchClick(searchString)}
+        onSearchClick={(searchString) => onSearchClick(searchString)}
         containerStyle={{
           backgroundColor: colors.primaryContrastTextColor
         }}
-        placeholder="Search..."
+        placeholder={i18n.t("Alerts.SearchBarPlaceholder")}
       />
 
       {/* Filter for Pending Alerts */}
@@ -70,13 +104,21 @@ export const AlertListTabNavigator: FC<AlertListTabNavigatorProps> = ({
         {/* Current Alert List */}
         <Tab.Screen name={AlertListTabName.CURRENT}>
           {(props: AlertListTabsProps.CurrentTabProps) => (
-            <AlertCurrentTab {...props} onRowPress={onAlertRowPress} />
+            <AlertCurrentTab
+              {...props}
+              onRowPress={onAlertRowPress}
+              currentSearched={searching ? pendingResult : pendingAlerts}
+            />
           )}
         </Tab.Screen>
         {/* Completed Alert List */}
         <Tab.Screen name={AlertListTabName.COMPLETED}>
           {(props: AlertListTabsProps.CompletedTabProps) => (
-            <AlertCompletedTab {...props} onRowPress={onAlertRowPress} />
+            <AlertCompletedTab
+              {...props}
+              onRowPress={onAlertRowPress}
+              completedSearched={searching ? completedResult : completedAlerts}
+            />
           )}
         </Tab.Screen>
       </Tab.Navigator>

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import API from "@aws-amplify/api-graphql";
 import { BaseResponse } from "aws";
 import {

@@ -3,7 +3,7 @@ import { View, ScrollView, Modal } from "react-native";
 import { RootState, select } from "util/useRedux";
 import { H1, H3, H4 } from "components/Text";
 import { ScaledSheet } from "react-native-size-matters";
-import { RowButton } from "components/Buttons/TextButton";
+import { RowButton } from "components/Buttons/RowButton";
 import i18n from "util/language/i18n";
 
 interface ConsentFormModalProps {

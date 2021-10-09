@@ -3,7 +3,7 @@ import React, { FC } from "react";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import i18n from "util/language/i18n";
-import { CardWrapper } from "web/screens/Home/CardWrapper";
+import { CardWrapper } from "components/Wrappers/CardWrapper";
 
 interface SymptomCardProps {
   symptom: number | string;

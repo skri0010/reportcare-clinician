@@ -5,7 +5,7 @@ import { ms, ScaledSheet } from "react-native-size-matters";
 import { Picker } from "@react-native-picker/picker";
 import { Role, Hospital } from "rc_agents/model";
 import { RootState, select } from "util/useRedux";
-import { ScreenWrapper } from "web/screens/ScreenWrapper";
+import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
 import {
   validateEmail,
   validateHospitalName,

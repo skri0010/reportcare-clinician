@@ -1,6 +1,6 @@
 import React, { FC, useState, useEffect } from "react";
 import { ms, ScaledSheet } from "react-native-size-matters";
-import { ScreenWrapper } from "web/screens/ScreenWrapper";
+import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
 import { BloodPressureCard } from "./PatientOverviewComponents/BloodPressureCard";
 import { MedicationTakenCard } from "./PatientOverviewComponents/MedicationCard";
 import { OxygenSaturationCard } from "./PatientOverviewComponents/OxygenSaturationCard";
@@ -14,12 +14,17 @@ import { PatientDetails } from "rc_agents/model";
 import { getLatestVitalsReport } from "util/utilityFunctions";
 import { FluidIntakeCard } from "./PatientOverviewComponents/FluidIntakeCard";
 import { ActivityCard } from "./PatientOverviewComponents/ActivityCard";
+import { EditPatientDetailsButton } from "components/Buttons/EditPatientBaselineButton";
 
 interface PatientOverviewProps extends PatientDetailsTabProps.OverviewTabProps {
   details: PatientDetails;
+  setEditDetails: (state: boolean) => void; // To edit patient's details
 }
 
-export const PatientOverview: FC<PatientOverviewProps> = ({ details }) => {
+export const PatientOverview: FC<PatientOverviewProps> = ({
+  details,
+  setEditDetails
+}) => {
   const cardHeight = Math.max(ms(100), Dimensions.get("window").height * 0.3);
 
   const [vitals, setVitals] = useState<ReportVitals | null>(null);
@@ -119,6 +124,9 @@ export const PatientOverview: FC<PatientOverviewProps> = ({ details }) => {
           />
         </View>
       </>
+      <View style={styles.editButtonContainer}>
+        <EditPatientDetailsButton onPress={() => setEditDetails(true)} />
+      </View>
     </ScreenWrapper>
   );
 };
@@ -128,5 +136,10 @@ const styles = ScaledSheet.create({
     flexWrap: "wrap",
     flexDirection: "row",
     justifyContent: "space-between"
+  },
+  editButtonContainer: {
+    width: ms(100),
+    flexDirection: "row",
+    alignSelf: "center"
   }
 });

@@ -1355,3 +1355,66 @@ export const deleteAlertNotification = /* GraphQL */ `
     }
   }
 `;
+export const createClinicianRecord = /* GraphQL */ `
+  mutation CreateClinicianRecord(
+    $input: CreateClinicianRecordInput!
+    $condition: ModelClinicianRecordConditionInput
+  ) {
+    createClinicianRecord(input: $input, condition: $condition) {
+      patientID
+      documentID
+      type
+      title
+      path
+      uploaderClinicianID
+      uploadDateTime
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateClinicianRecord = /* GraphQL */ `
+  mutation UpdateClinicianRecord(
+    $input: UpdateClinicianRecordInput!
+    $condition: ModelClinicianRecordConditionInput
+  ) {
+    updateClinicianRecord(input: $input, condition: $condition) {
+      patientID
+      documentID
+      type
+      title
+      path
+      uploaderClinicianID
+      uploadDateTime
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteClinicianRecord = /* GraphQL */ `
+  mutation DeleteClinicianRecord(
+    $input: DeleteClinicianRecordInput!
+    $condition: ModelClinicianRecordConditionInput
+  ) {
+    deleteClinicianRecord(input: $input, condition: $condition) {
+      patientID
+      documentID
+      type
+      title
+      path
+      uploaderClinicianID
+      uploadDateTime
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;

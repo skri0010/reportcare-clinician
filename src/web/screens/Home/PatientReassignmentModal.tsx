@@ -9,7 +9,7 @@ import { AgentTrigger } from "rc_agents/trigger";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { ClinicianInfo, PatientAssignment } from "aws/API";
 import { ClinicianShareRow } from "components/RowComponents/ClinicianRow/ClinicianShareRow";
-import { RowButton } from "components/Buttons/TextButton";
+import { RowButton } from "components/Buttons/RowButton";
 import {
   PatientAssignmentResolution,
   PatientAssignmentStatus

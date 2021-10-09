@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { View } from "react-native";
 import { ms } from "react-native-size-matters";
-import { ScreenWrapper } from "web/screens/ScreenWrapper";
+import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
 import {
   BasicInfo,
   BasicInfoSection

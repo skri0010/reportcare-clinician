@@ -4,9 +4,6 @@
   "private": true,
   "description": "Lambda function that handles APPROVED or REASSIGNED PatientAssignments",
   "main": "index.js",
-  "scripts": {
-    "postinstall": "xcopy node_modules ..\\lib\\node_modules /E /I /y"
-  },
   "license": "UNLICENSED",
   "dependencies": {},
   "devDependencies": {
