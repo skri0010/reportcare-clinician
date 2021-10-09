@@ -15,11 +15,11 @@ import {
   PatientAttributes,
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
-import { MedicalRecord } from "aws/API";
+import { ClinicianRecord } from "aws/API";
 import { store } from "util/useRedux";
-import { setFetchingMedicalRecordContent } from "ic-redux/actions/agents/actionCreator";
-import { Storage } from "@aws-amplify/storage";
-import { StorageFolderPath } from "aws";
+
+import { downloadPDF } from "util/pdfUtilities";
+import { setFetchingMedicalRecordContent } from "ic-redux/actions/agents/patientActionCreator";
 
 /**
  * Class to represent the activity for retrieving content of a patient's medical record.
@@ -47,19 +47,16 @@ class RetrieveMedicalRecordContent extends Activity {
       const facts = agentAPI.getFacts();
 
       // Get medical record from facts
-      const medicalRecord: MedicalRecord =
+      const medicalRecord: ClinicianRecord =
         facts[BeliefKeys.PATIENT]?.[PatientAttributes.MEDICAL_RECORD_TO_VIEW];
 
       if (medicalRecord) {
         // Ensure that device is online
         if (facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
           // Device is online - retrieve file from S3 bucket
-          const fileURL = await Storage.get(
-            `${StorageFolderPath.MEDICAL_RECORDS}${medicalRecord.fileKey}`,
-            {
-              level: "protected"
-            }
-          );
+          const fileURL = await downloadPDF({
+            clinicianRecord: medicalRecord
+          });
 
           if (fileURL) {
             // Update Facts

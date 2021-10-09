@@ -1,4 +1,4 @@
-import { IcdCrtRecord, MedicalRecord, PatientInfo } from "aws/API";
+import { ClinicianRecord, PatientAssignment, PatientInfo } from "aws/API";
 import {
   BeliefKeys,
   ClinicianAttributes,
@@ -14,15 +14,11 @@ import {
   FetchAlertsMode,
   PatientAssignmentResolution,
   FetchTodosMode,
-  MedicalRecordInput,
-  IcdCrtRecordInput,
   LocalTodo,
-  RetrieveTodoDetailsMethod
+  RetrieveTodoDetailsMethod,
+  ClinicianRecordInput
 } from "rc_agents/model";
-import {
-  AlertNotification,
-  PatientAssignmentSubscription
-} from "aws/TypedAPI/subscriptions";
+import { AlertNotification } from "aws/TypedAPI/subscriptions";
 
 // HF-OTP-I
 // Triggers RetrievePatientsByRole of DTA
@@ -92,7 +88,7 @@ export const triggerRetrievePendingAssignments = (): void => {
 
 // SRD-V: Triggers ProcessPatientAssignmentSubscription of DTA
 export const triggerProcessPatientAssignmentSubscription = (
-  patientAssignmentSubscription: PatientAssignmentSubscription
+  patientAssignmentSubscription: PatientAssignment
 ): void => {
   // Adds input to facts
   agentAPI.addFact(
@@ -407,7 +403,9 @@ export const triggerRetrieveTodoDetails = (
 };
 
 // HF-OTP-III: Triggers CreateMedicalRecord of DTA
-export const triggerCreateMedicalRecord = (input: MedicalRecordInput): void => {
+export const triggerCreateMedicalRecord = (
+  input: ClinicianRecordInput
+): void => {
   agentAPI.addFact(
     new Belief(
       BeliefKeys.PATIENT,
@@ -460,7 +458,7 @@ export const triggerRetrieveMedicalRecords = (patientID: string): void => {
 
 // HF-OTP-III: Triggers RetrieveMedicalRecordContent of DTA
 export const triggerRetrieveMedicalRecordContent = (
-  input: MedicalRecord
+  input: ClinicianRecord
 ): void => {
   agentAPI.addFact(
     new Belief(
@@ -487,7 +485,9 @@ export const triggerRetrieveMedicalRecordContent = (
 };
 
 // HF-OTP-IV: Triggers CreateIcdCrtRecord of DTA
-export const triggerCreateIcdCrtRecord = (input: IcdCrtRecordInput): void => {
+export const triggerCreateIcdCrtRecord = (
+  input: ClinicianRecordInput
+): void => {
   agentAPI.addFact(
     new Belief(
       BeliefKeys.PATIENT,
@@ -536,7 +536,7 @@ export const triggerRetrieveIcdCrtRecords = (patientID: string): void => {
 
 // HF-OTP-IV: Triggers RetrieveIcdCrtRecordContent of DTA
 export const triggerRetrieveIcdCrtRecordContent = (
-  input: IcdCrtRecord
+  input: ClinicianRecord
 ): void => {
   agentAPI.addFact(
     new Belief(

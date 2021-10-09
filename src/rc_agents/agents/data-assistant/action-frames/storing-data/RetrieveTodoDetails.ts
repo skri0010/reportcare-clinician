@@ -25,7 +25,7 @@ import {
 import { Todo } from "aws/API";
 import { getTodo } from "aws/TypedAPI/getQueries";
 import { store } from "util/useRedux";
-import { setFetchingTodoDetails } from "ic-redux/actions/agents/actionCreator";
+import { setFetchingTodoDetails } from "ic-redux/actions/agents/todoActionCreator";
 
 /**
  * Class representing an activity that triggers the display of todo details.

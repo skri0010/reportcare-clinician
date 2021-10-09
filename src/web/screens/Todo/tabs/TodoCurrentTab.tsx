@@ -1,23 +1,19 @@
-import React, { FC, useEffect } from "react";
-import { FlatList } from "react-native";
+import React, { FC } from "react";
+import { FlatList, View } from "react-native";
 import { TodoRow } from "components/RowComponents/TodoRow";
 import { RiskLevel } from "models/RiskLevel";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
-import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { RootState, select, store } from "util/useRedux";
 import i18n from "util/language/i18n";
-// import { LocalTodo, TodoStatus, TodoInput } from "rc_agents/model";
-import { LocalTodo, TodoStatus } from "rc_agents/model";
+import { LocalTodo } from "rc_agents/model";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
-import {
-  setProcedureOngoing,
-  setSubmittingTodo
-} from "ic-redux/actions/agents/actionCreator";
 import { AgentTrigger } from "rc_agents/trigger";
 import { TodoListTabsProps } from "web/navigation/types";
 import { TodoRowTabProps } from "web/navigation/navigators/TodoListTabNavigator";
-import { ScreenWrapper } from "web/screens/ScreenWrapper";
 import { NoItemsTextIndicator } from "components/Indicators/NoItemsTextIndicator";
+import { setProcedureOngoing } from "ic-redux/actions/agents/procedureActionCreator";
+import { setSubmittingTodo } from "ic-redux/actions/agents/todoActionCreator";
+import { NoListItemMessage } from "web/screens/Shared/NoListItemMessage";
 
 interface TodoCurrentTabProps
   extends TodoRowTabProps,
@@ -38,15 +34,13 @@ export const onDonePress = (item: LocalTodo): void => {
 };
 
 export const TodoCurrentTab: FC<TodoCurrentTabProps> = ({
-  setTodoSelected
+  setTodoSelected,
+  currentTodos
 }) => {
-  const { colors, pendingTodos, fetchingTodos } = select(
-    (state: RootState) => ({
-      colors: state.settings.colors,
-      pendingTodos: state.agents.pendingTodos,
-      fetchingTodos: state.agents.fetchingTodos
-    })
-  );
+  const { colors, fetchingTodos } = select((state: RootState) => ({
+    colors: state.settings.colors,
+    fetchingTodos: state.todos.fetchingTodos
+  }));
 
   // Set the todo item detail to be shown when the item is pressed
   function onCardPress(item: LocalTodo) {
@@ -54,33 +48,21 @@ export const TodoCurrentTab: FC<TodoCurrentTabProps> = ({
   }
 
   return (
-    <ScreenWrapper
-      style={{ backgroundColor: colors.secondaryWebBackgroundColor }}
+    <View
+      style={{ flex: 1, backgroundColor: colors.secondaryWebBackgroundColor }}
     >
-      {/* Search bar */}
-      <SearchBarComponent
-        onUserInput={() => {
-          null;
-        }}
-        onSearchClick={() => {
-          null;
-        }}
-        containerStyle={{ backgroundColor: colors.primaryContrastTextColor }}
-        placeholder={i18n.t("Todo.SearchBarCurrentPlaceholder")}
-      />
       {/* List of current todos */}
       {fetchingTodos ? (
         // Show loading indicator if fetching pending todos
         <LoadingIndicator flex={1} />
-      ) : pendingTodos ? (
-        // Show pending todos
+      ) : currentTodos ? (
         <FlatList
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={() => (
             <NoItemsTextIndicator text={i18n.t("Todo.NoTodos")} />
           )}
           ItemSeparatorComponent={() => <ItemSeparator />}
-          data={pendingTodos}
+          data={currentTodos}
           renderItem={({ item }) => (
             <TodoRow
               todoDetails={item}
@@ -92,7 +74,9 @@ export const TodoCurrentTab: FC<TodoCurrentTabProps> = ({
           keyExtractor={(item) => item.createdAt}
           pointerEvents={fetchingTodos ? "none" : "auto"}
         />
-      ) : null}
-    </ScreenWrapper>
+      ) : (
+        <NoListItemMessage screenMessage={i18n.t("Todo.NoTodos")} />
+      )}
+    </View>
   );
 };

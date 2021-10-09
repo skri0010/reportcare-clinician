@@ -19,7 +19,7 @@ import { LocalStorage } from "rc_agents/storage";
 import { listClinicianInfos } from "aws";
 import { store } from "util/useRedux";
 import { ClinicianInfo } from "aws/API";
-import { setFetchingClinicianContacts } from "ic-redux/actions/agents/actionCreator";
+import { setFetchingClinicianContacts } from "ic-redux/actions/agents/clinicianActionCreator";
 
 /**
  * Class to represent the activity for retrieving clinician contacts.

@@ -1,17 +1,15 @@
 /* eslint-disable react/jsx-no-undef */
 import React, { FC, useEffect, useState } from "react";
 import { View } from "react-native";
-import { ScreenWrapper } from "web/screens/ScreenWrapper";
+import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
 import { mockPatients } from "mock/mockPatients";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { ContactTitle } from "components/RowComponents/ContactTitle";
 import { AlertHistoryModal } from "./PatientScreens/PatientDetailsScreen/PatientHistoryComponents/AlertHistoryModal";
 import { RiskLevel } from "models/RiskLevel";
 import { ScaledSheet } from "react-native-size-matters";
-import { AddMedicalRecord } from "./PatientScreens/PatientDetailsScreen/PatientHistoryComponents/AddMedicalRecord";
-import { setPatientDetails } from "ic-redux/actions/agents/actionCreator";
+import { AddMedicalRecordModal } from "./PatientScreens/PatientDetailsScreen/PatientHistoryComponents/AddMedicalRecordModal";
 import { PatientDetailsTabNavigator } from "web/navigation/navigators/PatientDetailsTabNavigator";
-import { PatientHistoryModal } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientHistoryComponents/PatientHistoryModals";
 import { MainScreenProps } from "web/navigation/types";
 import { ScreenName } from "web/navigation";
 import { PatientsList } from "./PatientsList";
@@ -19,9 +17,10 @@ import { AgentTrigger } from "rc_agents/trigger";
 import { NoSelectionScreen } from "../Shared/NoSelectionScreen";
 import i18n from "util/language/i18n";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
-import { AdaptiveTwoScreenWrapper } from "web/screens/AdaptiveTwoScreenWrapper";
+import { AdaptiveTwoScreenWrapper } from "components/Wrappers/AdaptiveTwoScreenWrapper";
 import { PatientConfigurationScreen } from "web/screens/Patients/PatientScreens/PatientConfiguration/PatientConfigurationScreen";
 import { AlertColorCode, AlertInfo, AlertStatus } from "rc_agents/model";
+import { setPatientDetails } from "ic-redux/actions/agents/patientActionCreator";
 import { AddIcdCrtRecordModal } from "./PatientScreens/PatientDetailsScreen/PatientIcdCrtComponents/AddIcdCrtRecordModal";
 
 export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
@@ -31,9 +30,9 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
   const { colors, patients, patientDetails, fetchingPatientDetails } = select(
     (state: RootState) => ({
       colors: state.settings.colors,
-      patients: state.agents.patients,
-      patientDetails: state.agents.patientDetails,
-      fetchingPatientDetails: state.agents.fetchingPatientDetails
+      patients: state.patients.patients,
+      patientDetails: state.patients.patientDetails,
+      fetchingPatientDetails: state.patients.fetchingPatientDetails
     })
   );
 
@@ -149,13 +148,7 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
                       setAddMedicalRecord={setAddMedicalRecord}
                       setDisplayHistory={setDisplayHistory}
                       setModalAlertVisible={setModalAlertVisible}
-                      onViewMedicalRecord={
-                        AgentTrigger.triggerRetrieveMedicalRecordContent
-                      }
                       setAddIcdCrtRecord={setAddIcdCrtRecord}
-                      onViewIcdCrtRecord={
-                        AgentTrigger.triggerRetrieveIcdCrtRecordContent
-                      }
                     />
                   ) : (
                     // Patient is not configured: Show configuration screen
@@ -179,41 +172,33 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
       {/* Container for modals */}
       <View style={styles.modalView}>
         {/* Modal to view past alert details of patient */}
-        <PatientHistoryModal
+        <AlertHistoryModal
           visible={modalAlertVisible}
           onRequestClose={() => {
             setModalAlertVisible(false);
           }}
-        >
-          <AlertHistoryModal
-            name={selectedPatient.name}
-            setModalAlertVisible={setModalAlertVisible}
-            alertHistory={displayHistory}
-          />
-        </PatientHistoryModal>
+          patientName={selectedPatient.name}
+          setModalAlertVisible={setModalAlertVisible}
+          alertHistory={displayHistory}
+        />
 
         {/* Modal to add new medical records */}
-        <PatientHistoryModal
+        <AddMedicalRecordModal
           visible={addMedicalRecord}
           onRequestClose={() => {
             setAddMedicalRecord(false);
           }}
-        >
-          <AddMedicalRecord
-            setAddMedicalRecord={setAddMedicalRecord}
-            patientID={patientDetails?.patientInfo.patientID}
-          />
-        </PatientHistoryModal>
+          setAddMedicalRecord={setAddMedicalRecord}
+          patientID={patientDetails?.patientInfo.patientID}
+        />
 
-        <PatientHistoryModal
+        {/* Modal to add new ICD/CRT Records */}
+        <AddIcdCrtRecordModal
           visible={addIcdCrtRecord}
           onRequestClose={() => setAddIcdCrtRecord(false)}
-        >
-          <AddIcdCrtRecordModal
-            setAddIcdCrtRecord={setAddIcdCrtRecord}
-            patientID={patientDetails?.patientInfo.patientID}
-          />
-        </PatientHistoryModal>
+          setAddIcdCrtRecord={setAddIcdCrtRecord}
+          patientID={patientDetails?.patientInfo.patientID}
+        />
       </View>
     </ScreenWrapper>
   );

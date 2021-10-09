@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from "react";
 import { RootState, select } from "util/useRedux";
 import { ScaledSheet } from "react-native-size-matters";
-import { CardWrapper } from "web/screens/Home/CardWrapper";
+import { CardWrapper } from "components/Wrappers/CardWrapper";
 import { FlatList, View } from "react-native";
 import { MedicalRecordRow } from "./MedicalRecordRow";
 import i18n from "util/language/i18n";
@@ -9,20 +9,19 @@ import { IconButton, IconType } from "components/Buttons/IconButton";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { EmptyListIndicator } from "components/Indicators/EmptyListIndicator";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
-import { MedicalRecord } from "aws/API";
 import { useNetInfo } from "@react-native-community/netinfo";
+import { AgentTrigger } from "rc_agents/trigger";
 
 interface PatientMedicalRecordProps {
   patientId: string;
   maxHeight: number;
   onAddPress: () => void; // action to be done when add button is pressed
-  onViewMedicalRecord: (medicalRecord: MedicalRecord) => void;
 }
 
 export const PatientMedicalRecordCard: FC<PatientMedicalRecordProps> = ({
+  patientId,
   maxHeight,
-  onAddPress,
-  onViewMedicalRecord
+  onAddPress
 }) => {
   const {
     colors,
@@ -31,9 +30,9 @@ export const PatientMedicalRecordCard: FC<PatientMedicalRecordProps> = ({
     fetchingMedicalRecordContent
   } = select((state: RootState) => ({
     colors: state.settings.colors,
-    fetchingMedicalRecords: state.agents.fetchingMedicalRecords,
-    medicalRecords: state.agents.medicalRecords,
-    fetchingMedicalRecordContent: state.agents.fetchingMedicalRecordContent
+    fetchingMedicalRecords: state.patients.fetchingMedicalRecords,
+    medicalRecords: state.patients.medicalRecords,
+    fetchingMedicalRecordContent: state.patients.fetchingMedicalRecordContent
   }));
 
   const [isOnline, setIsOnline] = useState<boolean>(false); // Whether file upload is allowed (is online)
@@ -72,15 +71,17 @@ export const PatientMedicalRecordCard: FC<PatientMedicalRecordProps> = ({
   };
 
   return (
-    <View
-      pointerEvents={
-        fetchingMedicalRecords || fetchingMedicalRecordContent ? "none" : "auto"
-      }
+    <CardWrapper
+      maxHeight={maxHeight}
+      title={i18n.t("Patient_History.MedicalRecords")}
+      ComponentNextToTitle={AddMedicalRecordButton}
     >
-      <CardWrapper
-        maxHeight={maxHeight}
-        title={i18n.t("Patient_History.MedicalRecords")}
-        ComponentNextToTitle={AddMedicalRecordButton}
+      <View
+        pointerEvents={
+          fetchingMedicalRecords || fetchingMedicalRecordContent
+            ? "none"
+            : "auto"
+        }
       >
         {/* List of medical records */}
         {medicalRecords && medicalRecords.length > 0 ? (
@@ -91,11 +92,13 @@ export const PatientMedicalRecordCard: FC<PatientMedicalRecordProps> = ({
             renderItem={({ item }) => (
               <MedicalRecordRow
                 medicalRecord={item}
-                onViewMedicalRecord={onViewMedicalRecord}
+                onViewMedicalRecord={
+                  AgentTrigger.triggerRetrieveMedicalRecordContent
+                }
                 allowView={isOnline}
               />
             )}
-            keyExtractor={(medicalRecord) => medicalRecord.id}
+            keyExtractor={(medicalRecord) => medicalRecord.documentID}
           />
         ) : !fetchingMedicalRecords ? (
           <EmptyListIndicator
@@ -105,8 +108,8 @@ export const PatientMedicalRecordCard: FC<PatientMedicalRecordProps> = ({
         {(fetchingMedicalRecords || fetchingMedicalRecordContent) && (
           <LoadingIndicator />
         )}
-      </CardWrapper>
-    </View>
+      </View>
+    </CardWrapper>
   );
 };
 

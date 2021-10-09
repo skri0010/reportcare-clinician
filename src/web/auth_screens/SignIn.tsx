@@ -1,10 +1,10 @@
 import React, { FC, useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, Image, Dimensions } from "react-native";
+import { View, TouchableOpacity, Image, Dimensions } from "react-native";
 import { Auth } from "@aws-amplify/auth";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { RootState, select, useDispatch } from "util/useRedux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ScreenWrapper } from "web/screens/ScreenWrapper";
+import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
 import { validatePassword, validateUsername } from "util/validation";
 import i18n from "util/language/i18n";
 import { useToast } from "react-native-toast-notifications";
@@ -21,13 +21,13 @@ import {
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import { AsyncStorageKeys } from "rc_agents/storage";
 import { useNetInfo } from "@react-native-community/netinfo";
-import { setProcedureOngoing } from "ic-redux/actions/agents/actionCreator";
 import { AuthButton } from "components/Buttons/AuthButton";
 import { TextField } from "components/InputComponents/TextField";
 import { H1, H4, H5 } from "components/Text";
 import { AuthScreenProps } from "web/navigation/types/AuthenticationStackProps";
 import { AuthenticationScreenName } from "web/navigation";
 import { AuthState } from ".";
+import { setProcedureOngoing } from "ic-redux/actions/agents/procedureActionCreator";
 
 export const SignIn: FC<AuthScreenProps[AuthenticationScreenName.SIGN_IN]> = ({
   navigation,
@@ -37,8 +37,8 @@ export const SignIn: FC<AuthScreenProps[AuthenticationScreenName.SIGN_IN]> = ({
     (state: RootState) => ({
       colors: state.settings.colors,
       fonts: state.settings.fonts,
-      procedureOngoing: state.agents.procedureOngoing,
-      procedureSuccessful: state.agents.procedureSuccessful
+      procedureOngoing: state.procedures.procedureOngoing,
+      procedureSuccessful: state.procedures.procedureSuccessful
     })
   );
 
@@ -192,9 +192,16 @@ export const SignIn: FC<AuthScreenProps[AuthenticationScreenName.SIGN_IN]> = ({
       {/* App Logo and Name */}
       <View style={styles.logoContainer}>
         <Image style={styles.logo} source={require("assets/heart-icon.png")} />
-        <Text style={[styles.title, { fontSize: fonts.appNameSize }]}>
-          ReportCare
-        </Text>
+        <H1
+          text="ReportCare"
+          style={[
+            styles.title,
+            {
+              fontSize: fonts.appNameSize,
+              color: colors.primaryTextColor
+            }
+          ]}
+        />
       </View>
 
       {/* Sign In Content */}

@@ -17,12 +17,11 @@ import {
 } from "rc_agents/clinician_framework";
 import { LocalStorage } from "rc_agents/storage";
 import { store } from "util/useRedux";
-import { setProcedureSuccessful } from "ic-redux/actions/agents/actionCreator";
 import { agentNWA } from "rc_agents/agents";
 import { createTodo } from "aws";
 import { AlertInfo, AlertStatus, LocalTodo, TodoStatus } from "rc_agents/model";
 import { CreateTodoInput } from "aws/API";
-import { getAlertInfo } from "rc_agents/storage/getItem";
+import { setProcedureSuccessful } from "ic-redux/actions/agents/procedureActionCreator";
 
 /**
  * Class to represent an activity for creating an entry to clinician's Todo table.
@@ -72,7 +71,7 @@ class CreateTodo extends Activity {
           todoToInsert.pending = TodoStatus.PENDING;
         }
 
-        // Triggers associated Alert to be updated if any
+        // Triggers associated Alert to be updated from pending to completed
         if (todoInput.alertId) {
           let alertToUpdate: AlertInfo | undefined | null;
 
@@ -81,10 +80,14 @@ class CreateTodo extends Activity {
             alertToUpdate = todoInput.alert;
             // Removes alert to prevent it from being stored into local storage later on
             delete todoInput.alert;
-          } else {
-            alertToUpdate = await LocalStorage.getAlertInfo(todoInput.alertId);
           }
 
+          /**
+           * Update alert status from pending to completed when:
+           * 1. The todo is created offline
+           * 2. The todo created offline is updated again while offline
+           * 3. The todo is created for the very first time
+           */
           if (alertToUpdate) {
             todoToInsert.alertID = alertToUpdate.id;
             alertToUpdate.completed = AlertStatus.COMPLETED;

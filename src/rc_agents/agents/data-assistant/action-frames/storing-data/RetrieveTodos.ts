@@ -18,11 +18,6 @@ import {
 import { LocalStorage } from "rc_agents/storage";
 import { store } from "util/useRedux";
 import {
-  setPendingTodos,
-  setCompletedTodos,
-  setFetchingTodos
-} from "ic-redux/actions/agents/actionCreator";
-import {
   listCompletedTodosByLastModifiedDate,
   listPendingTodosByLastModifiedDate,
   getDetailedAlert
@@ -34,6 +29,11 @@ import {
   mapColorCodeToRiskLevel,
   TodoStatus
 } from "rc_agents/model";
+import {
+  setCompletedTodos,
+  setFetchingTodos,
+  setPendingTodos
+} from "ic-redux/actions/agents/todoActionCreator";
 
 /**
  * Class to represent an activity for creating an entry to clinician's Todo table.

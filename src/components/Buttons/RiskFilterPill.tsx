@@ -3,6 +3,7 @@ import { RootState, select } from "util/useRedux";
 import { Text, TouchableHighlight } from "react-native";
 import { getRiskLevelColor, RiskLevel } from "models/RiskLevel";
 import { moderateScale, ms, ScaledSheet } from "react-native-size-matters";
+import i18n from "util/language/i18n";
 
 export interface RiskFilterPillProps {
   riskLevel: RiskLevel;
@@ -59,7 +60,7 @@ export const RiskFilterPill: FC<RiskFilterPillProps> = ({
             : styles.textStyle
         }
       >
-        {riskLevel}
+        {i18n.t(`Filter.${riskLevel}`)}
       </Text>
     </TouchableHighlight>
   );

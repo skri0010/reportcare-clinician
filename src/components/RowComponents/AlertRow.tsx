@@ -37,11 +37,17 @@ export const AlertRow: FC<AlertRowProps> = ({
     >
       <View style={{ flexDirection: "row" }}>
         <View style={styles.container}>
-          <H4 text={alertDetails.patientName} style={styles.mainItem} />
-          <H6 text={alertDetails.summary} style={styles.subItem} />
+          <H4
+            text={alertDetails.patientName}
+            style={[styles.mainItem, { color: colors.consistentTextColor }]}
+          />
+          <H6
+            text={alertDetails.summary}
+            style={[styles.subItem, { color: colors.consistentTextColor }]}
+          />
           <H6
             text={`${new Date(alertDetails.dateTime).toLocaleString()}`}
-            style={styles.subItem}
+            style={[styles.subItem, { color: colors.consistentTextColor }]}
           />
         </View>
       </View>

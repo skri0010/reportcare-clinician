@@ -7,7 +7,6 @@ import {
   ResettablePrecondition
 } from "agents-framework";
 import { ProcedureConst, Performative } from "agents-framework/Enums";
-import { agentUXSA } from "rc_agents/agents";
 import {
   ActionFrameIDs,
   AgentIDs,

@@ -3,7 +3,7 @@ import { RootState, select } from "util/useRedux";
 import { View, TextStyle, Image } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { H3, H5 } from "components/Text";
-import { CardWrapper } from "./CardWrapper";
+import { CardWrapper } from "components/Wrappers/CardWrapper";
 import i18n from "util/language/i18n";
 import { LocalStorage } from "rc_agents/storage";
 
@@ -43,7 +43,7 @@ export const WelcomeCard: FC<WelcomeCardProps> = ({ flex = 1, maxHeight }) => {
       <View
         style={[
           styles.card,
-          { backgroundColor: colors.primaryContrastTextColor }
+          { backgroundColor: colors.primaryBackgroundColor }
         ]}
       >
         <View style={styles.textContainer}>
@@ -60,7 +60,12 @@ export const WelcomeCard: FC<WelcomeCardProps> = ({ flex = 1, maxHeight }) => {
             />
           </View>
         </View>
-        <View style={styles.logoContainer}>
+        <View
+          style={[
+            styles.logoContainer,
+            { backgroundColor: colors.primaryBackgroundColor }
+          ]}
+        >
           <Image
             style={styles.logo}
             source={require("assets/heart-icon.png")}

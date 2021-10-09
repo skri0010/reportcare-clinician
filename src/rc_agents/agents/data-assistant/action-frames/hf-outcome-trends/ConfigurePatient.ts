@@ -18,13 +18,13 @@ import {
 } from "rc_agents/clinician_framework";
 import { getPatientInfo, updatePatientInfo } from "aws";
 import { PatientInfo, UpdatePatientInfoInput } from "aws/API";
+import { store } from "util/useRedux";
+import { agentNWA } from "rc_agents/agents";
 import { LocalStorage } from "rc_agents/storage";
 import {
   setConfigurationSuccessful,
   setConfiguringPatient
-} from "ic-redux/actions/agents/actionCreator";
-import { store } from "util/useRedux";
-import { agentNWA } from "rc_agents/agents";
+} from "ic-redux/actions/agents/configurationActionCreator";
 
 /**
  * Class to represent an activity for configuring a patient.

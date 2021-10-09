@@ -1,5 +1,11 @@
 import React, { FC, useEffect, useState } from "react";
-import { View, TouchableOpacity } from "react-native";
+import {
+  View,
+  ViewProps,
+  StyleProp,
+  ScrollView,
+  TextProps
+} from "react-native";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { H3 } from "components/Text";
 import { ScaledSheet, ms } from "react-native-size-matters";
@@ -7,21 +13,28 @@ import i18n from "util/language/i18n";
 import { TextField } from "components/InputComponents/TextField";
 import { notEmptyString } from "util/validation";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
-import { RecordFile, IcdCrtRecordInput } from "rc_agents/model";
+import { RecordFile, ClinicianRecordInput } from "rc_agents/model";
 import { triggerCreateIcdCrtRecord } from "rc_agents/triggers";
 import {
   setCreateIcdCrtRecordSuccessful,
   setCreatingIcdCrtRecord
-} from "ic-redux/actions/agents/actionCreator";
+} from "ic-redux/actions/agents/patientActionCreator";
 import { useToast } from "react-native-toast-notifications";
 import { FileDropbox } from "components/InputComponents/FileDropbox";
+import {
+  ModalWrapper,
+  ModalWrapperProps
+} from "components/Wrappers/ModalWrapper";
+import { ModalButton } from "components/Buttons/ModalButton";
 
-interface AddIcdCrtRecordModalProps {
+interface AddIcdCrtRecordModalProps extends ModalWrapperProps {
   setAddIcdCrtRecord: (state: boolean) => void;
   patientID?: string;
 }
 
 export const AddIcdCrtRecordModal: FC<AddIcdCrtRecordModalProps> = ({
+  visible,
+  onRequestClose,
   setAddIcdCrtRecord,
   patientID
 }) => {
@@ -29,8 +42,8 @@ export const AddIcdCrtRecordModal: FC<AddIcdCrtRecordModalProps> = ({
     select((state: RootState) => ({
       colors: state.settings.colors,
       fonts: state.settings.fonts,
-      creatingIcdCrtRecord: state.agents.creatingIcdCrtRecord,
-      createIcdCrtRecordSuccessful: state.agents.createIcdCrtRecordSuccessful
+      creatingIcdCrtRecord: state.patients.creatingIcdCrtRecord,
+      createIcdCrtRecordSuccessful: state.patients.createIcdCrtRecordSuccessful
     }));
 
   const [title, setTitle] = useState<string>("");
@@ -53,10 +66,9 @@ export const AddIcdCrtRecordModal: FC<AddIcdCrtRecordModalProps> = ({
     if (file && patientID) {
       dispatch(setCreatingIcdCrtRecord(true));
       setSavingRecord(true);
-      const recordToSave: IcdCrtRecordInput = {
+      const recordToSave: ClinicianRecordInput = {
         title: title,
         patientID: patientID,
-        dateTime: new Date().toISOString(),
         file: file
       };
       triggerCreateIcdCrtRecord(recordToSave);
@@ -75,6 +87,8 @@ export const AddIcdCrtRecordModal: FC<AddIcdCrtRecordModalProps> = ({
         });
         dispatch(setCreateIcdCrtRecordSuccessful(false));
         setAddIcdCrtRecord(false);
+        setTitle("");
+        setFile(undefined);
       } else {
         // Create failed
         toast.show(i18n.t("UnexpectedError"), {
@@ -93,113 +107,85 @@ export const AddIcdCrtRecordModal: FC<AddIcdCrtRecordModalProps> = ({
   ]);
 
   return (
-    <View
+    <ModalWrapper
+      visible={visible}
+      onRequestClose={onRequestClose}
       // Disable pointer events if procedure is ongoing
       pointerEvents={savingRecord ? "none" : "auto"}
-      style={[
-        styles.container,
-        { backgroundColor: colors.primaryContrastTextColor }
-      ]}
     >
-      {/* Title Input */}
-      <TextField
-        label={i18n.t("Patient_ICD/CRT.Title")}
-        labelStyle={[styles.inputTitle, { fontSize: fonts.h3Size }]}
-        value={title}
-        onChange={setTitle}
-        placeholder={i18n.t("Patient_ICD/CRT.TitleInputPlaceholder")}
-        error={!notEmptyString(title)}
-        errorMessage={i18n.t("Patient_ICD/CRT.TitleError")}
-      />
+      <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+        {/* Title Input */}
+        <TextField
+          label={i18n.t("Patient_ICD/CRT.Title")}
+          labelStyle={[
+            styles.inputTitle,
+            { fontSize: fonts.h3Size, color: colors.primaryTextColor }
+          ]}
+          value={title}
+          onChange={setTitle}
+          placeholder={i18n.t("Patient_ICD/CRT.TitleInputPlaceholder")}
+          error={!notEmptyString(title)}
+          errorMessage={i18n.t("Patient_ICD/CRT.TitleError")}
+        />
 
-      {/* File Upload Label */}
-      <H3
-        text={i18n.t("Patient_ICD/CRT.FileUpload")}
-        style={styles.inputTitle}
-      />
+        {/* File Upload Label */}
+        <H3
+          text={i18n.t("Patient_ICD/CRT.FileUpload")}
+          style={[styles.inputTitle, { marginTop: ms(15) }]}
+        />
 
-      {/* File Upload Input */}
-      <FileDropbox file={file} setFile={setFile} />
+        {/* File Upload Input */}
+        <FileDropbox file={file} setFile={setFile} />
+      </ScrollView>
 
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "center",
-          paddingTop: ms(20)
-        }}
-      >
+      <View style={styles.bottomButtonsContainer}>
         {/* Save button */}
-        <TouchableOpacity
+        <ModalButton
+          title={i18n.t("Patient_ICD/CRT.Save")}
           disabled={!allInputValid}
-          style={[
-            styles.saveButton,
+          onPress={onSaveRecord}
+          style={
             {
               backgroundColor: allInputValid
                 ? colors.acceptButtonColor
                 : colors.primaryDeactivatedButtonColor,
               borderColor: colors.primaryTextColor
-            }
-          ]}
-          onPress={onSaveRecord}
-        >
-          <H3
-            text={i18n.t("Patient_ICD/CRT.Save")}
-            style={{ color: colors.primaryTextColor }}
-          />
-        </TouchableOpacity>
+            } as StyleProp<ViewProps>
+          }
+        />
+
         {/* Cancel button */}
-        <TouchableOpacity
-          style={[
-            styles.closeButton,
+        <ModalButton
+          title={i18n.t("Patient_ICD/CRT.Cancel")}
+          onPress={() => setAddIcdCrtRecord(false)}
+          style={
             {
               backgroundColor: colors.primaryContrastTextColor,
-              borderColor: colors.primaryTextColor
-            }
-          ]}
-          onPress={() => {
-            setAddIcdCrtRecord(false);
-          }}
-        >
-          <H3
-            text={i18n.t("Patient_ICD/CRT.Cancel")}
-            style={{ color: colors.primaryTextColor }}
-          />
-        </TouchableOpacity>
+              borderColor: colors.primaryTextColor,
+              borderWidth: ms(1),
+              borderRadius: ms(5)
+            } as StyleProp<ViewProps>
+          }
+          textStyle={
+            { color: colors.consistentTextColor } as StyleProp<TextProps>
+          }
+        />
       </View>
       {savingRecord && <LoadingIndicator overlayBackgroundColor />}
-    </View>
+    </ModalWrapper>
   );
 };
 
 const styles = ScaledSheet.create({
-  closeButton: {
-    textAlign: "center",
-    justifyContent: "space-evenly",
-    borderRadius: "5@ms",
-    width: "60@ms",
-    height: "25@ms",
-    borderWidth: "1@ms",
-    margin: "10@ms"
-  },
-  saveButton: {
-    textAlign: "center",
-    width: "60@ms",
-    borderRadius: "5@ms",
-    justifyContent: "space-evenly",
-    height: "25@ms",
-    margin: "10@ms"
-  },
-  container: {
-    width: "50%",
-    height: "90%",
-    paddingHorizontal: "40@ms",
-    borderRadius: "10@ms",
-    marginHorizontal: "25%"
-  },
   inputTitle: {
-    paddingTop: ms(25),
+    paddingTop: "5@ms",
     fontWeight: "bold",
-    paddingBottom: ms(10)
+    paddingBottom: "10@ms"
+  },
+  bottomButtonsContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingBottom: "10@ms"
   }
 });

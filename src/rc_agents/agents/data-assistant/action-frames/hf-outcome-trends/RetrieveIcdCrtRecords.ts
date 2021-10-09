@@ -16,10 +16,13 @@ import {
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
 import { LocalStorage } from "rc_agents/storage";
-import { IcdCrtRecord, ModelSortDirection } from "aws/API";
+import { ClinicianRecord, ModelSortDirection } from "aws/API";
 import { store } from "util/useRedux";
-import { setFetchingIcdCrtRecords } from "ic-redux/actions/agents/actionCreator";
-import { listIcdCrtRecordsByDateTime } from "aws";
+import {
+  listUploadedClinicianRecordsByPatientID,
+  PresignedUrlRecordType
+} from "aws";
+import { setFetchingIcdCrtRecords } from "ic-redux/actions/agents/patientActionCreator";
 
 /**
  * Class to represent the activity for retrieving ICD/CRT records of a patient.
@@ -56,21 +59,23 @@ class RetrieveIcdCrtRecords extends Activity {
       const isOnline: boolean = facts[BeliefKeys.APP]?.[AppAttributes.ONLINE];
 
       if (patientId) {
-        let icdCrtRecords: IcdCrtRecord[] | undefined;
+        let icdCrtRecords: ClinicianRecord[] | undefined;
 
         if (isOnline) {
           // Device is online - retrieve ICD/CRT records of current patient
-          const query = await listIcdCrtRecordsByDateTime({
+          const recordType: PresignedUrlRecordType = "IcdCrt";
+          const query = await listUploadedClinicianRecordsByPatientID({
             patientID: patientId,
+            filter: { type: { eq: recordType } },
             sortDirection: ModelSortDirection.DESC
           });
 
           if (
-            query.data.listIcdCrtRecordsByDateTime?.items &&
-            query.data.listIcdCrtRecordsByDateTime?.items.length > 0
+            query.data.listUploadedClinicianRecordsByPatientID?.items &&
+            query.data.listUploadedClinicianRecordsByPatientID?.items.length > 0
           ) {
-            icdCrtRecords = query.data.listIcdCrtRecordsByDateTime
-              .items as IcdCrtRecord[];
+            icdCrtRecords = query.data.listUploadedClinicianRecordsByPatientID
+              .items as ClinicianRecord[];
 
             // Stores ICD/CRT records locally
             await LocalStorage.setPatientIcdCrtRecords(icdCrtRecords);

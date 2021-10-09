@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
-import { CardWrapper } from "web/screens/Home/CardWrapper";
+import { CardWrapper } from "components/Wrappers/CardWrapper";
 import { AlertHistoryRow } from "./AlertHistoryRow";
 import { FlatList } from "react-native";
 import i18n from "util/language/i18n";
@@ -22,8 +22,8 @@ export const PatientAlertHistoryCard: FC<PatientAlertHistoryProps> = ({
 }) => {
   const { alertHistory, fetchingPatientAlertHistory } = select(
     (state: RootState) => ({
-      alertHistory: state.agents.alertHistory,
-      fetchingPatientAlertHistory: state.agents.fetchingPatientAlertHistory
+      alertHistory: state.patients.alertHistory,
+      fetchingPatientAlertHistory: state.patients.fetchingPatientAlertHistory
     })
   );
 

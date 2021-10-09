@@ -15,13 +15,13 @@ import {
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
 import { store } from "util/useRedux";
+import { LocalTodo } from "rc_agents/model";
+import { setProcedureOngoing } from "ic-redux/actions/agents/procedureActionCreator";
 import {
   setCompletedTodos,
   setPendingTodos,
-  setProcedureOngoing,
   setUpdatedTodo
-} from "ic-redux/actions/agents/actionCreator";
-import { LocalTodo } from "rc_agents/model";
+} from "ic-redux/actions/agents/todoActionCreator";
 
 /**
  * Class to represent an activity for displaying Todos.
@@ -55,7 +55,7 @@ class DisplayTodos extends Activity {
 
     if (updatedTodo) {
       // Removes previous Todo from its existing list and adds it to the front of updated list
-      const currentAgentsState = store.getState().agents;
+      const currentAgentsState = store.getState().todos;
       let currentPendingTodos = currentAgentsState.pendingTodos;
       let currentCompletedTodos = currentAgentsState.completedTodos;
 
@@ -77,17 +77,17 @@ class DisplayTodos extends Activity {
             }
           }
         }
-      } else if (updatedTodo.createdAt) {
+      } else if (updatedTodo.alertId) {
         // Unsynced Todo without Id
         if (currentPendingTodos) {
           let existIndex = currentPendingTodos.findIndex(
-            (t) => t.createdAt === updatedTodo.createdAt
+            (t) => t.alertId === updatedTodo.alertId
           );
           if (existIndex >= 0) {
             currentPendingTodos.splice(existIndex, 1);
           } else if (currentCompletedTodos) {
             existIndex = currentCompletedTodos.findIndex(
-              (t) => t.createdAt === updatedTodo.createdAt
+              (t) => t.alertId === updatedTodo.alertId
             );
             if (existIndex >= 0) {
               currentCompletedTodos.splice(existIndex, 1);

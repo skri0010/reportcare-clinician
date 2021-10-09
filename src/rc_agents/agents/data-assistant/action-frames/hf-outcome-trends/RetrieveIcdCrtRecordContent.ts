@@ -15,11 +15,10 @@ import {
   PatientAttributes,
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
-import { IcdCrtRecord } from "aws/API";
+import { ClinicianRecord } from "aws/API";
 import { store } from "util/useRedux";
-import { setFetchingIcdCrtRecordContent } from "ic-redux/actions/agents/actionCreator";
-import { Storage } from "@aws-amplify/storage";
-import { StorageFolderPath } from "aws";
+import { downloadPDF } from "util/pdfUtilities";
+import { setFetchingIcdCrtRecordContent } from "ic-redux/actions/agents/patientActionCreator";
 
 /**
  * Class to represent the activity for retrieving content of a patient's ICD/CRT record.
@@ -47,19 +46,16 @@ class RetrieveIcdCrtRecordContent extends Activity {
       const facts = agentAPI.getFacts();
 
       // Get ICD/CRT record from facts
-      const icdCrtRecord: IcdCrtRecord =
+      const icdCrtRecord: ClinicianRecord =
         facts[BeliefKeys.PATIENT]?.[PatientAttributes.ICDCRT_RECORD_TO_VIEW];
 
       if (icdCrtRecord) {
         // Ensure that device is online
         if (facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
           // Device is online - retrieve file from S3 bucket
-          const fileURL = await Storage.get(
-            `${StorageFolderPath.ICDCRT_RECORDS}${icdCrtRecord.fileKey}`,
-            {
-              level: "protected"
-            }
-          );
+          const fileURL = await downloadPDF({
+            clinicianRecord: icdCrtRecord
+          });
 
           if (fileURL) {
             // Update Facts

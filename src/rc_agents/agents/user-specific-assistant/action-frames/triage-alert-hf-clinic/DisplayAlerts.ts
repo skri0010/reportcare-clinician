@@ -15,14 +15,14 @@ import {
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
 import { store } from "util/useRedux";
-import {
-  setPendingAlerts,
-  setCompletedAlerts,
-  setFetchingAlerts,
-  setPendingAlertCount
-} from "ic-redux/actions/agents/actionCreator";
 import { AlertInfo, AlertsCount, AlertStatus } from "rc_agents/model";
 import { sortAlertInfoByDescendingDateTime } from "util/utilityFunctions";
+import {
+  setCompletedAlerts,
+  setFetchingAlerts,
+  setPendingAlertCount,
+  setPendingAlerts
+} from "ic-redux/actions/agents/alertActionCreator";
 
 // LS-TODO: Irrelevant alerts should be filtered out depending on user's role
 
@@ -116,7 +116,7 @@ export const displayAlerts: (input: {
   let filteredPendingAlerts: AlertInfo[] = [];
   let filteredCompletedAlerts: AlertInfo[] = [];
 
-  const { alertRiskFilters } = store.getState().agents;
+  const { alertRiskFilters } = store.getState().filters;
   let shouldFilter = false;
 
   // If one of the risk filters is true, we must proceed to filter

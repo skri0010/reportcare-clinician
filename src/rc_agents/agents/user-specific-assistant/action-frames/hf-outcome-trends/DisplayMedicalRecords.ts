@@ -15,11 +15,11 @@ import {
 } from "rc_agents/clinician_framework";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import { store } from "util/useRedux";
+import { ClinicianRecord } from "aws/API";
 import {
   setFetchingMedicalRecords,
   setMedicalRecords
-} from "ic-redux/actions/agents/actionCreator";
-import { MedicalRecord } from "aws/API";
+} from "ic-redux/actions/agents/patientActionCreator";
 
 /**
  * Class to represent the activity for displaying patient's medical records
@@ -38,7 +38,7 @@ class DisplayMedicalRecords extends Activity {
     await super.doActivity(agent, [rule2]);
 
     // Get retrieved medical records from facts
-    const medicalRecords: MedicalRecord[] =
+    const medicalRecords: ClinicianRecord[] =
       agentAPI.getFacts()[BeliefKeys.PATIENT]?.[
         PatientAttributes.MEDICAL_RECORDS
       ];

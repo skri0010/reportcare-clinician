@@ -72,7 +72,7 @@
     "ApprovalSuccessful": "Kelulusan permintaan pesakit berjaya",
     "ApprovalFailed": "Gagal meluluskan permintaan pesakit",
     "OfflineApproval": "Tiada sambungan internet.\nKelulusan akan disimpan dan disegerakkan semasa sambungan internet dikesan.",
-    "NoPendingAssignments": "Setiap tugasan pesakit diselesai!"
+    "NoPendingAssignments": "Semua pesakit sudah diagihkan!"
   },
   "Parameter_Graphs": {
     "DiastolicBP": "Tekanan Darah Diastolik ",
@@ -121,9 +121,8 @@
   "Todo": {
     "Current": "Semasa",
     "Completed": "Selesai",
-    "NoPatients": "Tiada todo yang dijumpai!",
-    "SearchBarCurrentPlaceholder": "Cari todo yang semasa",
-    "SearchBarCompletePlaceholder": "Cari todo yang selesai",
+    "NoTodos": "Tiada todo yang dijumpai!",
+    "SearchBarPlaceholder": "Cari todo",
     "ViewTodo": "Lihat Todo",
     "EditTodo": "Edit Todo",
     "Title": "Tajuk",
@@ -152,7 +151,7 @@
     "PatientsList": {
       "NoPatients": "Tiada pesakit yang dijumpai!",
       "Class": "Kelas",
-      "Age": "Umur,"
+      "Age": "Umur"
     },
     "SearchBarPlaceholder": "Cari pesakit (contohnya John)",
     "Overview": "Ringkasan",
@@ -161,6 +160,12 @@
     "History": "Sejarah",
     "Info": "Info",
     "NoSelection": "Pilih salah satu pesakit untuk mendapat informasi lanjut"
+  },
+  "Settings": {
+    "DarkMode": "Mod Gelap",
+    "DarkModeDescription": "Tekan sini untuk menukar tema.",
+    "Language": "Bahasa",
+    "LanguageDescription": "This sini untuk menukar bahasa."
   },
   "Patient_Configuration": {
     "Title": "Konfigurasikan butiran",
@@ -204,7 +209,7 @@
     "NoSymptoms": "No symptoms recorded"
   },
   "Patient_ICD/CRT": {
-    "ICD/CRTRecords": "Rekod ICD/CRT",
+    "IcdCrtRecords": "Rekod ICD/CRT",
     "NoIcdCrtRecords": "Tiada rekod ICD/CRT dijumpai!",
     "Title": "Tajuk",
     "TitleInputPlaceholder": "Berikan tajuk kepada rekod ini",
@@ -271,11 +276,18 @@
     "SearchBarPlaceholder": "Cari pakar(contohnya John)",
     "NoSelection": "Pilih salah satu pakar untuk melihat butirannya",
     "Role": "Peranan",
-    "HospitalName": "Nama Hospital"
+    "HospitalName": "Nama Hospital",
+    "GeneralDetails": "Informasi Umum",
+    "ClincianList": {
+      "NoClinicianFound": "Tiada pakar yang dijumpai!"
+    }
   },
   "Alerts": {
+    "Current": "Semasa",
+    "Completed": "Selesai",
     "SearchBarPlaceholder": "Cari amaran",
     "NoSelection": "Pilih salah satu amaran untuk melihat butirannya",
+    "AlertSummary": "Ringkasan Amaran",
     "Symptoms": "Simptom",
     "Signs": "Tanda",
     "HighRisk": "Risiko Tinggi",
@@ -288,21 +300,28 @@
     },
     "AlertVitals": {
       "HeartRate": "Kadar Jantung"
-    }
+    },
+    "CreateTodoButton": "Cipta Todo"
   },
   "MobileMessage": {
     "ViewList": "Lihat Senarai",
     "BackToDetails": "Balik ke Butiran"
   },
   "FileDropbox": {
-    "DragAndDropFile": "Seret and Lepas fail",
+    "DragAndDropFile": "Seret and lepas fail",
     "DropFileHere": "Lepaskan fail di sini",
-    "Or": "Atau",
+    "Or": "atau",
     "BrowseFiles": "Semak fail",
     "MultipleFileError": "Anda hanya boleh muat naik satu fail sahaja"
   },
   "UnexpectedError": "Ralat yang tidak disangkai telah berlaku",
   "Keywords": {
     "remaining": "yang tinggal"
+  },
+  "Filter": {
+    "High": "Tinggi",
+    "Medium": "Sederhana",
+    "Low": "Rendah",
+    "Unassigned": "Belum tetap"
   }
 }

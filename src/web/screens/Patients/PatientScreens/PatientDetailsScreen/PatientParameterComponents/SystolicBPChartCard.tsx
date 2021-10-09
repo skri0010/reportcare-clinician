@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { CardWrapper } from "web/screens/Home/CardWrapper";
+import { CardWrapper } from "components/Wrappers/CardWrapper";
 import { SystolicBPChart } from "components/VisualizationComponents/SystolicBPChart";
 import { ParameterGraphsProps } from "components/VisualizationComponents/ParameterGraphs";
 

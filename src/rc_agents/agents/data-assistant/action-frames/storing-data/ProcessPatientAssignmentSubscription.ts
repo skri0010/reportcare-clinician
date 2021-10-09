@@ -19,10 +19,9 @@ import {
 import { LocalStorage } from "rc_agents/storage";
 import { getPatientAssignment } from "aws";
 import { store } from "util/useRedux";
-import { PatientAssignmentSubscription } from "aws/TypedAPI/subscriptions";
 import { agentNWA } from "rc_agents/agents";
-import { setPendingPatientAssignments } from "ic-redux/actions/agents/actionCreator";
 import { PatientAssignment } from "aws/API";
+import { setPendingPatientAssignments } from "ic-redux/actions/agents/patientAssignmentActionCreator";
 
 /**
  * Class to represent an activity for processing patient assignment subscription.
@@ -43,7 +42,7 @@ class ProcessPatientAssignmentSubscription extends Activity {
     try {
       const facts = agentAPI.getFacts();
       // Get patient assignment subscription from facts
-      const patientAssignmentSubscription: PatientAssignmentSubscription =
+      const patientAssignmentSubscription: PatientAssignment =
         facts[BeliefKeys.PATIENT]?.[
           PatientAttributes.PATIENT_ASSIGNMENT_SUBSCRIPTION
         ];
@@ -72,7 +71,8 @@ class ProcessPatientAssignmentSubscription extends Activity {
 
             // Adds to the front of current list of pending patient assignments
             let patientAssignmentExists: PatientAssignment | undefined;
-            let { pendingPatientAssignments } = store.getState().agents;
+            let { pendingPatientAssignments } =
+              store.getState().patientAssignments;
             if (pendingPatientAssignments) {
               // Check if patient assignment already exists
               patientAssignmentExists = pendingPatientAssignments.find(

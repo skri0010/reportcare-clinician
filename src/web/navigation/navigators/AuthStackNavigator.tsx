@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import {
   createStackNavigator,
@@ -25,10 +25,16 @@ const Stack = createStackNavigator<AuthenticationStackParamList>();
 export const AuthStackNavigator: FC<AuthStackNavigatorProps> = ({
   setAuthState
 }) => {
-  const { colors, fonts } = select((state: RootState) => ({
+  const { colors, fonts, language } = select((state: RootState) => ({
     colors: state.settings.colors,
-    fonts: state.settings.fonts
+    fonts: state.settings.fonts,
+    language: state.settings.language
   }));
+
+  // Change the language of the authentication screens
+  useEffect(() => {
+    i18n.changeLanguage(language.toString());
+  }, [language]);
 
   const screenHeaderStyle = getMainScreenHeaderStyle(colors);
 

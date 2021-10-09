@@ -1,7 +1,7 @@
 import React, { FC, useState, useEffect } from "react";
 import { Dimensions, View } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
-import { ScreenWrapper } from "web/screens/ScreenWrapper";
+import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
 import { WeightChartCard } from "./PatientParameterComponents/WeightChartCard";
 import { DiastolicBPChartCard } from "./PatientParameterComponents/DiastolicBPChartCard";
 import { OxygenSaturationChartCard } from "./PatientParameterComponents/OxygenSaturationChartCard";

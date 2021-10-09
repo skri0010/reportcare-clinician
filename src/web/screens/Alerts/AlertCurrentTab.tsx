@@ -8,6 +8,7 @@ import i18n from "util/language/i18n";
 import { NoListItemMessage } from "../Shared/NoListItemMessage";
 import { AlertRowTabProps } from "web/navigation/navigators/AlertListTabNavigator";
 import { AlertListTabsProps } from "web/navigation/types";
+import { NoItemsTextIndicator } from "components/Indicators/NoItemsTextIndicator";
 
 interface AlertCurrentTabProps
   extends AlertRowTabProps,
@@ -15,16 +16,13 @@ interface AlertCurrentTabProps
 
 export const AlertCurrentTab: FC<AlertCurrentTabProps> = ({
   displayedAlertInfoId,
-  onRowPress
+  onRowPress,
+  currentSearched
 }) => {
-  const { colors, pendingAlerts, fetchingPendingAlerts } = select(
-    (state: RootState) => ({
-      colors: state.settings.colors,
-      pendingAlerts: state.agents.pendingAlerts,
-      fetchingPendingAlerts: state.agents.fetchingPendingAlerts,
-      alertRiskFilters: state.agents.alertRiskFilters
-    })
-  );
+  const { colors, fetchingPendingAlerts } = select((state: RootState) => ({
+    colors: state.settings.colors,
+    fetchingPendingAlerts: state.alerts.fetchingPendingAlerts
+  }));
 
   const [noPendingAlertsNotice, setNoPendingAlertsNotice] =
     useState<string>("");
@@ -32,7 +30,7 @@ export const AlertCurrentTab: FC<AlertCurrentTabProps> = ({
   // Prepare text notice to be displayed after fetching patients
   useEffect(() => {
     if (fetchingPendingAlerts) {
-      if (pendingAlerts) {
+      if (currentSearched) {
         // No patients found
         setNoPendingAlertsNotice(i18n.t("Alerts.AlertList.NoPendingAlerts"));
       } else {
@@ -42,19 +40,24 @@ export const AlertCurrentTab: FC<AlertCurrentTabProps> = ({
         );
       }
     }
-  }, [pendingAlerts, fetchingPendingAlerts]);
+  }, [currentSearched, fetchingPendingAlerts]);
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.primaryContrastTextColor }}>
+    <View style={{ flex: 1, backgroundColor: colors.primaryBackgroundColor }}>
       {/* Show no alerts message if no alert found */}
       {fetchingPendingAlerts ? (
         // Show loading indicator if fetching patients
         <LoadingIndicator flex={1} />
-      ) : pendingAlerts && pendingAlerts.length > 0 ? (
+      ) : currentSearched ? (
         <FlatList
           showsVerticalScrollIndicator={false}
           ItemSeparatorComponent={() => <ItemSeparator />}
-          data={pendingAlerts}
+          ListEmptyComponent={() => (
+            <NoItemsTextIndicator
+              text={i18n.t("Alerts.AlertList.NoPendingAlerts")}
+            />
+          )}
+          data={currentSearched}
           renderItem={({ item }) => (
             <AlertRow
               alertDetails={item}

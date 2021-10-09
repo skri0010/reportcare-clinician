@@ -1,12 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {
-  IcdCrtRecord,
-  MedicalRecord,
-  PatientAssignment,
-  PatientInfo,
-  Todo
-} from "aws/API";
-import { PatientAssignmentSubscription } from "aws/TypedAPI/subscriptions";
+import { ClinicianRecord, PatientAssignment, PatientInfo, Todo } from "aws/API";
 // eslint-disable-next-line no-restricted-imports
 import {
   LocalTodo,
@@ -203,12 +196,12 @@ export const setAllPatientDetails = async (
  * Stores an array of medical records belonging to the same patient
  */
 export const setPatientMedicalRecords = async (
-  medicalRecords: MedicalRecord[]
+  medicalRecords: ClinicianRecord[]
 ): Promise<void> => {
   const localPatient = await getPatientDetails(medicalRecords[0].patientID);
   if (localPatient) {
     medicalRecords.forEach((medicalRecord) => {
-      localPatient.medicalRecords[medicalRecord.id] = medicalRecord;
+      localPatient.medicalRecords[medicalRecord.documentID] = medicalRecord;
     });
     await setPatientDetails(localPatient);
   }
@@ -218,12 +211,12 @@ export const setPatientMedicalRecords = async (
  * Stores an array of ICD/CRT records belonging to the same patient
  */
 export const setPatientIcdCrtRecords = async (
-  icdCrtRecords: IcdCrtRecord[]
+  icdCrtRecords: ClinicianRecord[]
 ): Promise<void> => {
   const localPatient = await getPatientDetails(icdCrtRecords[0].patientID);
   if (localPatient) {
     icdCrtRecords.forEach((icdCrtRecord) => {
-      localPatient.icdCrtRecords[icdCrtRecord.id] = icdCrtRecord;
+      localPatient.icdCrtRecords[icdCrtRecord.documentID] = icdCrtRecord;
     });
     await setPatientDetails(localPatient);
   }
@@ -387,7 +380,7 @@ export const setTodos = async (
  * @param patientAssignmentSubscription patient assignment subscription to be inserted
  */
 export const setPatientAssignmentSubscription = async (
-  patientAssignmentSubscription: PatientAssignmentSubscription
+  patientAssignmentSubscription: PatientAssignment
 ): Promise<void> => {
   let localData = await getPatientAssignmentSubscriptions();
   if (!localData) {
@@ -402,7 +395,7 @@ export const setPatientAssignmentSubscription = async (
  * @param patientAssignmentSubscriptions array of patient assignment subscriptions
  */
 export const setPatientAssignmentSubscriptions = async (
-  patientAssignmentSubscriptions: PatientAssignmentSubscription[]
+  patientAssignmentSubscriptions: PatientAssignment[]
 ): Promise<void> => {
   await AsyncStorage.setItem(
     AsyncStorageKeys.PATIENT_ASSIGNMENT_SUBSCRIPTIONS,

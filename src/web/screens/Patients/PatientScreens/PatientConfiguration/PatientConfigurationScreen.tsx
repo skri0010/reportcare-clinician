@@ -1,7 +1,7 @@
 import React, { FC, useState, useEffect, useCallback } from "react";
 import { View, ScrollView } from "react-native";
 import { TextField } from "components/InputComponents/TextField";
-import { ScreenWrapper } from "web/screens/ScreenWrapper";
+import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
 import i18n from "util/language/i18n";
 import { PatientInfo } from "aws/API";
 import cloneDeep from "lodash/cloneDeep";
@@ -29,7 +29,7 @@ import { useToast } from "react-native-toast-notifications";
 import {
   setConfigurationSuccessful,
   setConfiguringPatient
-} from "ic-redux/actions/agents/actionCreator";
+} from "ic-redux/actions/agents/configurationActionCreator";
 
 interface PatientConfigurationScreenProps {
   info: PatientInfo;
@@ -42,8 +42,8 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
       select((state: RootState) => ({
         colors: state.settings.colors,
         fonts: state.settings.fonts,
-        configuringPatient: state.agents.configuringPatient,
-        configurationSuccessful: state.agents.configurationSuccessful
+        configuringPatient: state.configurations.configuringPatient,
+        configurationSuccessful: state.configurations.configurationSuccessful
       }));
     const [configInfo, setConfigInfo] = useState<PatientInfo>(() => {
       return cloneDeep(info);
