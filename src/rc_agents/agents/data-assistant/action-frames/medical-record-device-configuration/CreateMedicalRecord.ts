@@ -15,18 +15,20 @@ import {
   PatientAttributes,
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
-import {
-  setCreateMedicalRecordSuccessful,
-  setCreatingMedicalRecord
-} from "ic-redux/actions/agents/patientActionCreator";
 import { store } from "util/useRedux";
 import { ClinicianRecordInput } from "rc_agents/model";
 import { uploadPDF } from "util/pdfUtilities";
-import { ClinicianRecord } from "aws/API";
+import { LocalStorage } from "rc_agents/storage";
+import {
+  setCreateMedicalRecordSuccessful,
+  setCreatingMedicalRecord,
+  setPatientDetails
+} from "ic-redux/actions/agents/patientActionCreator";
 
 /**
- * Class to represent an activity for creating a patient's medical record.
- * This happens in Procedure HF Outcome Trends (HF-OTP-III).
+ * Represents the activity for creating a patient's medical record.
+ * This happens in Procedure App-Medical Records Device Configuration (MRDC) - P-RB.
+ * Triggered directly when clinician uploads patient's medical record.
  */
 class CreateMedicalRecord extends Activity {
   constructor() {
@@ -34,8 +36,8 @@ class CreateMedicalRecord extends Activity {
   }
 
   /**
-   * Perform this activity
-   * @param {Agent} agent - context of the agent
+   * Performs the activity
+   * @param {Agent} agent current agent
    */
   async doActivity(agent: Agent): Promise<void> {
     // Reset preconditions
@@ -48,54 +50,55 @@ class CreateMedicalRecord extends Activity {
         facts[BeliefKeys.PATIENT]?.[PatientAttributes.MEDICAL_RECORD_TO_CREATE];
 
       if (medicalRecordInput) {
-        let newMedicalRecord: ClinicianRecord | undefined;
-
         // Ensure that device is online
         if (facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
           // Upload the file
-          newMedicalRecord = await uploadPDF({
+          const newMedicalRecord = await uploadPDF({
             recordInput: medicalRecordInput,
             recordType: "Medical"
           });
-        }
 
-        if (newMedicalRecord) {
-          // Dispatch to front end that create is successful
-          store.dispatch(setCreateMedicalRecordSuccessful(true));
+          if (newMedicalRecord) {
+            // Add new medical record into the existing list of medical records in patient details
+            const existingPatientDetails =
+              store.getState().patients.patientDetails;
+            if (existingPatientDetails) {
+              const existingMedicalRecords =
+                existingPatientDetails.medicalRecords;
+              existingMedicalRecords.unshift(newMedicalRecord);
+              existingPatientDetails.medicalRecords = existingMedicalRecords;
 
-          // Add new medical record into the existing list of medical records
-          let existingMedicalRecords = store.getState().patients.medicalRecords;
-          if (!existingMedicalRecords) {
-            existingMedicalRecords = [];
-          }
-          existingMedicalRecords.unshift(newMedicalRecord);
+              // Dispatch updated patient details
+              store.dispatch(setPatientDetails(existingPatientDetails));
+            }
 
-          // Update Facts
-          agentAPI.addFact(
-            new Belief(
-              BeliefKeys.PATIENT,
-              PatientAttributes.MEDICAL_RECORDS,
-              existingMedicalRecords
-            ),
-            false
-          );
-          // Trigger request to dispatch medical records to UXSA for frontend display
-          agent.addBelief(
-            new Belief(
-              BeliefKeys.PATIENT,
-              PatientAttributes.MEDICAL_RECORDS_RETRIEVED,
+            // Stores record locally
+            await LocalStorage.setMedicalRecord(newMedicalRecord);
+
+            // Remove medical record input from facts
+            agentAPI.addFact(
+              new Belief(
+                BeliefKeys.PATIENT,
+                PatientAttributes.MEDICAL_RECORD_TO_CREATE,
+                null
+              ),
+              false
+            );
+
+            // End the procedure
+            agentAPI.addFact(
+              new Belief(
+                BeliefKeys.PROCEDURE,
+                ProcedureAttributes.MRDC,
+                ProcedureConst.INACTIVE
+              ),
+              true,
               true
-            )
-          );
-          // Remove medical record input from facts
-          agentAPI.addFact(
-            new Belief(
-              BeliefKeys.PATIENT,
-              PatientAttributes.MEDICAL_RECORD_TO_CREATE,
-              null
-            ),
-            false
-          );
+            );
+
+            // Dispatch to front end that create is successful
+            store.dispatch(setCreateMedicalRecordSuccessful(true));
+          }
         }
       }
       // Dispatch to front end that create has ended
@@ -108,7 +111,7 @@ class CreateMedicalRecord extends Activity {
       agentAPI.addFact(
         new Belief(
           BeliefKeys.PROCEDURE,
-          ProcedureAttributes.HF_OTP_III,
+          ProcedureAttributes.MRDC,
           ProcedureConst.INACTIVE
         ),
         true,
@@ -123,7 +126,7 @@ class CreateMedicalRecord extends Activity {
 // Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.HF_OTP_III,
+  ProcedureAttributes.MRDC,
   ProcedureConst.ACTIVE
 );
 const rule2 = new ResettablePrecondition(

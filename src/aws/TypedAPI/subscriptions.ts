@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import API from "@aws-amplify/api-graphql";
 import { BaseResponse } from "aws";
 import {
@@ -124,8 +123,6 @@ export const subscribePatientAssignment = async (): Promise<void> => {
         const patientAssignment = response.value.data.onCreatePatientAssignment;
 
         if (patientAssignment) {
-          console.log("Create");
-          console.log(JSON.stringify(patientAssignment, null, 2));
           triggerProcessPatientAssignmentSubscription(patientAssignment);
         }
       },
@@ -144,8 +141,6 @@ export const subscribePatientAssignment = async (): Promise<void> => {
         // Trigger DTA to process patient assignment subscription
         const patientAssignment = response.value.data.onUpdatePatientAssignment;
         if (patientAssignment) {
-          console.log("Update");
-          console.log(JSON.stringify(patientAssignment, null, 2));
           triggerProcessPatientAssignmentSubscription(patientAssignment);
         }
       },

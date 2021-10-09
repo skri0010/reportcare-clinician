@@ -22,12 +22,12 @@ import {
 } from "ic-redux/actions/agents/patientActionCreator";
 
 /**
- * Class to represent an activity for visualizing parameters of a specific patient.
+ * Represents the activity for displaying details of a specific patient.
  * This happens in Procedure HF Outcome Trends (HF-OTP-II).
  */
-class VisualizeParameters extends Activity {
+class DisplayPatientDetails extends Activity {
   constructor() {
-    super(ActionFrameIDs.UXSA.VISUALIZE_PARAMETERS);
+    super(ActionFrameIDs.UXSA.DISPLAY_PATIENT_DETAILS);
   }
 
   /**
@@ -85,8 +85,8 @@ const rule2 = new ResettablePrecondition(
 );
 
 // Actionframe
-export const af_VisualizeParameters = new Actionframe(
-  `AF_${ActionFrameIDs.UXSA.VISUALIZE_PARAMETERS}`,
+export const af_DisplayPatientDetails = new Actionframe(
+  `AF_${ActionFrameIDs.UXSA.DISPLAY_PATIENT_DETAILS}`,
   [rule1, rule2],
-  new VisualizeParameters()
+  new DisplayPatientDetails()
 );

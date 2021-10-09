@@ -16,8 +16,3 @@ type ErrorsArray = [
 export interface BaseResponse {
   error: ErrorsArray;
 }
-
-export const StorageFolderPath = {
-  ICDCRT_RECORDS: "icdcrt-records/",
-  MEDICAL_RECORDS: "medical-records/"
-};

@@ -145,8 +145,8 @@ export const triggerResolvePendingAssignments = (
   );
 };
 
-// HF-OTP-II: Triggers ConfigurePatient of DTA
-export const triggerConfigurePatient = (input: PatientInfo): void => {
+// MRDC: Triggers StoreBaseline of DTA
+export const triggerStorePatientBaseline = (input: PatientInfo): void => {
   agentAPI.addFact(
     new Belief(
       BeliefKeys.PATIENT,
@@ -156,12 +156,12 @@ export const triggerConfigurePatient = (input: PatientInfo): void => {
     false
   );
   agentDTA.addBelief(
-    new Belief(BeliefKeys.PATIENT, PatientAttributes.CONFIGURE_PATIENT, true)
+    new Belief(BeliefKeys.PATIENT, PatientAttributes.STORE_BASELINE, true)
   );
   agentAPI.addFact(
     new Belief(
       BeliefKeys.PROCEDURE,
-      ProcedureAttributes.HF_OTP_II,
+      ProcedureAttributes.MRDC,
       ProcedureConst.ACTIVE
     )
   );
@@ -384,7 +384,7 @@ export const triggerRetrieveTodoDetails = (input: string): void => {
   );
 };
 
-// HF-OTP-III: Triggers CreateMedicalRecord of DTA
+// MRDC: Triggers CreateMedicalRecord of DTA
 export const triggerCreateMedicalRecord = (
   input: ClinicianRecordInput
 ): void => {
@@ -406,33 +406,7 @@ export const triggerCreateMedicalRecord = (
   agentAPI.addFact(
     new Belief(
       BeliefKeys.PROCEDURE,
-      ProcedureAttributes.HF_OTP_III,
-      ProcedureConst.ACTIVE
-    )
-  );
-};
-
-// HF-OTP-III: Triggers RetrieveMedicalRecords of DTA
-export const triggerRetrieveMedicalRecords = (patientID: string): void => {
-  agentAPI.addFact(
-    new Belief(
-      BeliefKeys.PATIENT,
-      PatientAttributes.PATIENT_TO_VIEW_MEDICAL_RECORDS,
-      patientID
-    ),
-    false
-  );
-  agentDTA.addBelief(
-    new Belief(
-      BeliefKeys.PATIENT,
-      PatientAttributes.RETRIEVE_MEDICAL_RECORDS,
-      true
-    )
-  );
-  agentAPI.addFact(
-    new Belief(
-      BeliefKeys.PROCEDURE,
-      ProcedureAttributes.HF_OTP_III,
+      ProcedureAttributes.MRDC,
       ProcedureConst.ACTIVE
     )
   );
@@ -484,33 +458,7 @@ export const triggerCreateIcdCrtRecord = (
   agentAPI.addFact(
     new Belief(
       BeliefKeys.PROCEDURE,
-      ProcedureAttributes.HF_OTP_IV,
-      ProcedureConst.ACTIVE
-    )
-  );
-};
-
-// HF-OTP-IV: Triggers RetrieveIcdCrtRecords of DTA
-export const triggerRetrieveIcdCrtRecords = (patientID: string): void => {
-  agentAPI.addFact(
-    new Belief(
-      BeliefKeys.PATIENT,
-      PatientAttributes.PATIENT_TO_VIEW_ICDCRT_RECORDS,
-      patientID
-    ),
-    false
-  );
-  agentDTA.addBelief(
-    new Belief(
-      BeliefKeys.PATIENT,
-      PatientAttributes.RETRIEVE_ICDCRT_RECORDS,
-      true
-    )
-  );
-  agentAPI.addFact(
-    new Belief(
-      BeliefKeys.PROCEDURE,
-      ProcedureAttributes.HF_OTP_IV,
+      ProcedureAttributes.MRDC,
       ProcedureConst.ACTIVE
     )
   );

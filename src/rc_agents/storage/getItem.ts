@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ClinicianRecord, PatientInfo } from "aws/API";
+import { PatientInfo } from "aws/API";
 import { PatientDetails } from "rc_agents/model";
 import { AsyncStorageKeys, AsyncStorageType } from ".";
 
@@ -122,44 +122,14 @@ export const getAllPatientDetails = async (): Promise<
 };
 
 /**
- * Gets all medical records of a specific patient from the local storage
- * @param patientId patientID
- * @returns array of medical records if any, null otherwise
- */
-export const getPatientMedicalRecords = async (
-  patientId: string
-): Promise<ClinicianRecord[] | null> => {
-  const localData = await getPatientDetails(patientId);
-  if (localData) {
-    return Object.values(localData.medicalRecords);
-  }
-  return null;
-};
-
-/**
- * Gets all ICD/CRT records of a specific patient from the local storage
- * @param patientId patientID
- * @returns array of ICD/CRT records if any, null otherwise
- */
-export const getPatientIcdCrtRecords = async (
-  patientId: string
-): Promise<ClinicianRecord[] | null> => {
-  const localData = await getPatientDetails(patientId);
-  if (localData) {
-    return Object.values(localData.icdCrtRecords);
-  }
-  return null;
-};
-
-/**
- * Gets patient configurations to be synced.
+ * Gets patient baselines to be synced.
  * @returns array of patient infos if any, otherwise null
  */
-export const getPatientConfigurations = async (): Promise<
-  AsyncStorageType[AsyncStorageKeys.PATIENT_CONFIGURATIONS] | null
+export const getPatientBaselines = async (): Promise<
+  AsyncStorageType[AsyncStorageKeys.PATIENT_BASELINES] | null
 > => {
   const localData = await AsyncStorage.getItem(
-    AsyncStorageKeys.PATIENT_CONFIGURATIONS
+    AsyncStorageKeys.PATIENT_BASELINES
   );
   if (localData) {
     return JSON.parse(localData);

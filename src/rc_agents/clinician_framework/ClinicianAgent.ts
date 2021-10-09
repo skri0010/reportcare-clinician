@@ -207,10 +207,8 @@ export class ClinicianAgent extends Agent {
 
       // Updates indicator that activity is completed
       this.setActionCompleted(true);
-    } else {
-      // No activity to perform
-      this.currentActivity = undefined;
     }
+    this.currentActivity = undefined;
     this.working = false;
 
     while (this.messageQueue.length > 0) {

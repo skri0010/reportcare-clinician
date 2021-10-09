@@ -8,7 +8,7 @@ import { af_SyncUpdateTodos } from "./action-frames/SyncUpdateTodos";
 import { af_SyncUpdateAlerts } from "./action-frames/SyncUpdateAlerts";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import { ClinicianAgent } from "rc_agents/clinician_framework/ClinicianAgent";
-import { af_SyncConfigurePatients } from "./action-frames/SyncConfigurePatients";
+import { af_SyncPatientBaselines } from "./action-frames/SyncPatientBaselines";
 import { af_SyncProcessAlertNotifications } from "./action-frames/SyncProcessAlertNotifications";
 import { af_SyncProcessPatientAssignmentSubscriptions } from "./action-frames/SyncProcessPatientAssignmentSubscriptions";
 
@@ -21,7 +21,7 @@ const agentNWA = new ClinicianAgent(
   [
     af_SyncProtectedInfo,
     af_SyncPatientAssignmentResolutions,
-    af_SyncConfigurePatients,
+    af_SyncPatientBaselines,
     af_SyncCreateTodos,
     af_SyncUpdateTodos,
     af_SyncUpdateAlerts,

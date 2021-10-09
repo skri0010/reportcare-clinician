@@ -11,29 +11,25 @@ import { EmptyListIndicator } from "components/Indicators/EmptyListIndicator";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { useNetInfo } from "@react-native-community/netinfo";
 import { AgentTrigger } from "rc_agents/trigger";
+import { ClinicianRecord } from "aws/API";
 
 interface PatientMedicalRecordProps {
-  patientId: string;
+  medicalRecords: ClinicianRecord[];
   maxHeight: number;
   onAddPress: () => void; // action to be done when add button is pressed
 }
 
 export const PatientMedicalRecordCard: FC<PatientMedicalRecordProps> = ({
-  patientId,
+  medicalRecords,
   maxHeight,
   onAddPress
 }) => {
-  const {
-    colors,
-    fetchingMedicalRecords,
-    medicalRecords,
-    fetchingMedicalRecordContent
-  } = select((state: RootState) => ({
-    colors: state.settings.colors,
-    fetchingMedicalRecords: state.patients.fetchingMedicalRecords,
-    medicalRecords: state.patients.medicalRecords,
-    fetchingMedicalRecordContent: state.patients.fetchingMedicalRecordContent
-  }));
+  const { colors, fetchingMedicalRecordContent } = select(
+    (state: RootState) => ({
+      colors: state.settings.colors,
+      fetchingMedicalRecordContent: state.patients.fetchingMedicalRecordContent
+    })
+  );
 
   const [isOnline, setIsOnline] = useState<boolean>(false); // Whether file upload is allowed (is online)
 
@@ -76,15 +72,9 @@ export const PatientMedicalRecordCard: FC<PatientMedicalRecordProps> = ({
       title={i18n.t("Patient_History.MedicalRecords")}
       ComponentNextToTitle={AddMedicalRecordButton}
     >
-      <View
-        pointerEvents={
-          fetchingMedicalRecords || fetchingMedicalRecordContent
-            ? "none"
-            : "auto"
-        }
-      >
+      <View pointerEvents={fetchingMedicalRecordContent ? "none" : "auto"}>
         {/* List of medical records */}
-        {medicalRecords && medicalRecords.length > 0 ? (
+        {medicalRecords.length > 0 ? (
           <FlatList
             showsVerticalScrollIndicator={false}
             ItemSeparatorComponent={ItemSeparator}
@@ -100,14 +90,12 @@ export const PatientMedicalRecordCard: FC<PatientMedicalRecordProps> = ({
             )}
             keyExtractor={(medicalRecord) => medicalRecord.documentID}
           />
-        ) : !fetchingMedicalRecords ? (
+        ) : (
           <EmptyListIndicator
             text={i18n.t("Patient_History.NoMedicalRecords")}
           />
-        ) : null}
-        {(fetchingMedicalRecords || fetchingMedicalRecordContent) && (
-          <LoadingIndicator />
         )}
+        {fetchingMedicalRecordContent && <LoadingIndicator />}
       </View>
     </CardWrapper>
   );
