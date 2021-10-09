@@ -37,7 +37,7 @@ export const PeopleAvatar: FC<PeopleAvatarProps> = ({ iconType }) => {
       ) : (
         <FontAwesomeIcon
           name={iconType}
-          color={colors.consistentTextColor}
+          color={colors.secondaryTextColor}
           size={ms(20)}
         />
       )}

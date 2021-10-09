@@ -26,7 +26,7 @@ export const darkColorScheme: ColorScheme = {
   selectedBorderColor: "#000000",
 
   // Separators
-  separatorColor: "#000000",
+  separatorColor: "#787878",
 
   // Bars
   primaryBarColor: "#0d8ca8",

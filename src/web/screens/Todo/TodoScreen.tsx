@@ -86,12 +86,12 @@ export const TodoScreen: FC<MainScreenProps[ScreenName.TODO]> = ({
   }, [todoDetails]);
 
   // Function to save the selected todo details to be displayed in the right screen
-  function onRowClick(item: LocalTodo) {
+  const onRowClick = (item: LocalTodo): void => {
     dispatch(setFetchingTodoDetails(true));
     if (item.id) {
       AgentTrigger.triggerRetrieveTodoDetails(item.id);
     }
-  }
+  };
 
   // Compares dispatched updatedTodo with current Todo displayed in the TodoDetailsScreen
   useEffect(() => {
@@ -141,7 +141,7 @@ export const TodoScreen: FC<MainScreenProps[ScreenName.TODO]> = ({
               tabPressCompleted={() => {
                 setAddButton(checkNeedAddButton(TodoListTabName.COMPLETED));
               }}
-              onRowClick={() => onRowClick}
+              onRowClick={onRowClick}
             />
           }
           // Right side: Todo details
