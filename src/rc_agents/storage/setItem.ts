@@ -1,12 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {
-  IcdCrtRecord,
-  MedicalRecord,
-  PatientAssignment,
-  PatientInfo,
-  Todo
-} from "aws/API";
-import { PatientAssignmentSubscription } from "aws/TypedAPI/subscriptions";
+import { ClinicianRecord, PatientAssignment, PatientInfo, Todo } from "aws/API";
 // eslint-disable-next-line no-restricted-imports
 import {
   LocalTodo,
@@ -203,7 +196,7 @@ export const setAllPatientDetails = async (
  * Stores a patient's medical record in patient details.
  */
 export const setMedicalRecord = async (
-  medicalRecord: MedicalRecord
+  medicalRecord: ClinicianRecord
 ): Promise<void> => {
   const localPatient = await getPatientDetails(medicalRecord.patientID);
   if (localPatient) {
@@ -216,7 +209,7 @@ export const setMedicalRecord = async (
  * Stores a patient's ICD/CRT record in patient details.
  */
 export const setIcdCrtRecord = async (
-  icdCrtRecord: IcdCrtRecord
+  icdCrtRecord: ClinicianRecord
 ): Promise<void> => {
   const localPatient = await getPatientDetails(icdCrtRecord.patientID);
   if (localPatient) {
@@ -383,7 +376,7 @@ export const setTodos = async (
  * @param patientAssignmentSubscription patient assignment subscription to be inserted
  */
 export const setPatientAssignmentSubscription = async (
-  patientAssignmentSubscription: PatientAssignmentSubscription
+  patientAssignmentSubscription: PatientAssignment
 ): Promise<void> => {
   let localData = await getPatientAssignmentSubscriptions();
   if (!localData) {
@@ -398,7 +391,7 @@ export const setPatientAssignmentSubscription = async (
  * @param patientAssignmentSubscriptions array of patient assignment subscriptions
  */
 export const setPatientAssignmentSubscriptions = async (
-  patientAssignmentSubscriptions: PatientAssignmentSubscription[]
+  patientAssignmentSubscriptions: PatientAssignment[]
 ): Promise<void> => {
   await AsyncStorage.setItem(
     AsyncStorageKeys.PATIENT_ASSIGNMENT_SUBSCRIPTIONS,

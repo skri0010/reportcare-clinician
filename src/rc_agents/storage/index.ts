@@ -8,10 +8,7 @@ import {
 import { ClinicianInfo, PatientAssignment, PatientInfo } from "aws/API";
 // eslint-disable-next-line no-restricted-imports
 import * as accessFunctions from "rc_agents/storage/accessFunctions";
-import {
-  AlertNotification,
-  PatientAssignmentSubscription
-} from "aws/TypedAPI/subscriptions";
+import { AlertNotification } from "aws/TypedAPI/subscriptions";
 
 /**
  * AsyncStorage access functions (SET, GET and REMOVE) with types
@@ -64,5 +61,5 @@ export type AsyncStorageType = {
   [AsyncStorageKeys.TODO_DETAILS]: LocalTodo;
   [AsyncStorageKeys.ALERTS_SYNC]: AlertInfo[];
   [AsyncStorageKeys.ALERT_NOTIFICATIONS]: AlertNotification[];
-  [AsyncStorageKeys.PATIENT_ASSIGNMENT_SUBSCRIPTIONS]: PatientAssignmentSubscription[];
+  [AsyncStorageKeys.PATIENT_ASSIGNMENT_SUBSCRIPTIONS]: PatientAssignment[];
 };

@@ -1,15 +1,14 @@
-import React, { FC, useEffect } from "react";
+import React, { FC } from "react";
 import { ScaledSheet } from "react-native-size-matters";
 import { H5 } from "components/Text";
-import { Linking, View } from "react-native";
-import { RowButton } from "components/Buttons/TextButton";
-import { MedicalRecord } from "aws/API";
-import { RootState, select, useDispatch } from "util/useRedux";
-import { setMedicalRecordContent } from "ic-redux/actions/agents/actionCreator";
+import { View } from "react-native";
+import { RowButton } from "components/Buttons/RowButton";
+import { ClinicianRecord } from "aws/API";
+import { RootState, select } from "util/useRedux";
 
 interface MedicalRecordRowProps {
-  medicalRecord: MedicalRecord;
-  onViewMedicalRecord: (medicalRecord: MedicalRecord) => void;
+  medicalRecord: ClinicianRecord;
+  onViewMedicalRecord: (medicalRecord: ClinicianRecord) => void;
   allowView: boolean; // Whether content viewing is allowed (is online)
 }
 
@@ -18,21 +17,9 @@ export const MedicalRecordRow: FC<MedicalRecordRowProps> = ({
   onViewMedicalRecord,
   allowView
 }) => {
-  const { colors, medicalRecordContent } = select((state: RootState) => ({
-    colors: state.settings.colors,
-    medicalRecordContent: state.agents.medicalRecordContent
+  const { colors } = select((state: RootState) => ({
+    colors: state.settings.colors
   }));
-
-  const dispatch = useDispatch();
-
-  // Detects retrieved content URL
-  useEffect(() => {
-    if (medicalRecordContent) {
-      // Opens a new tab to show the content
-      Linking.openURL(medicalRecordContent);
-      dispatch(setMedicalRecordContent(undefined));
-    }
-  }, [dispatch, medicalRecordContent]);
 
   // Triggers DTA to retrieve URL for showing medical record content
   const onRowPress = () => {

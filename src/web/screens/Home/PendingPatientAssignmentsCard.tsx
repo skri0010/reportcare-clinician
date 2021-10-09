@@ -3,7 +3,7 @@ import { RootState, select } from "util/useRedux";
 import { View, FlatList } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
-import { CardWrapper } from "./CardWrapper";
+import { CardWrapper } from "components/Wrappers/CardWrapper";
 import i18n from "util/language/i18n";
 import {
   PatientAssignmentStatus,

@@ -2,7 +2,7 @@ import React, { FC, useState, useEffect } from "react";
 import { View, Dimensions } from "react-native";
 import { Auth } from "@aws-amplify/auth";
 import { ms, ScaledSheet } from "react-native-size-matters";
-import { ScreenWrapper } from "web/screens/ScreenWrapper";
+import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
 import {
   validateCode,
   validatePassword,

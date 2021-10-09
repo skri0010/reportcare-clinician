@@ -18,15 +18,14 @@ import {
 import { PatientDetails } from "rc_agents/model";
 import {
   listActivityInfosByPatientID,
-  listIcdCrtRecordsByDateTime,
-  listMedicalRecordsByPatientID,
   listReportSymptomsByPatientID,
-  listReportVitalsByPatientID
+  listReportVitalsByPatientID,
+  listUploadedClinicianRecordsByPatientID,
+  PresignedUrlRecordType
 } from "aws";
 import {
   ActivityInfo,
-  IcdCrtRecord,
-  MedicalRecord,
+  ClinicianRecord,
   ModelSortDirection,
   PatientInfo,
   ReportSymptom,
@@ -91,13 +90,22 @@ class RetrievePatientDetails extends Activity {
           const vitalsReportsQuery = await listReportVitalsByPatientID({
             patientID: patientId
           });
-          const medicalRecordsQuery = await listMedicalRecordsByPatientID({
-            patientID: patientId
-          });
-          const icdCrtRecordsQuery = await listIcdCrtRecordsByDateTime({
-            patientID: patientId,
-            sortDirection: ModelSortDirection.DESC
-          });
+
+          const medicalRecordType: PresignedUrlRecordType = "Medical";
+          const medicalRecordsQuery =
+            await listUploadedClinicianRecordsByPatientID({
+              patientID: patientId,
+              filter: { type: { eq: medicalRecordType } },
+              sortDirection: ModelSortDirection.DESC
+            });
+
+          const icdCrtRecordType: PresignedUrlRecordType = "IcdCrt";
+          const icdCrtRecordsQuery =
+            await listUploadedClinicianRecordsByPatientID({
+              patientID: patientId,
+              filter: { type: { eq: icdCrtRecordType } },
+              sortDirection: ModelSortDirection.DESC
+            });
 
           // Store activity infos in patient details
           if (activityInfoQuery.data.listActivityInfosByPatientID?.items) {
@@ -152,27 +160,27 @@ class RetrievePatientDetails extends Activity {
           }
 
           // Store medical records in patient details
-          if (medicalRecordsQuery.data.listMedicalRecordsByPatientID?.items) {
-            const medicalRecords =
-              medicalRecordsQuery.data.listMedicalRecordsByPatientID?.items;
-
-            medicalRecords.forEach((record: MedicalRecord | null) => {
-              if (record) {
-                patientDetails.medicalRecords.push(record);
-              }
-            });
+          if (
+            medicalRecordsQuery.data.listUploadedClinicianRecordsByPatientID
+              ?.items &&
+            medicalRecordsQuery.data.listUploadedClinicianRecordsByPatientID
+              ?.items.length > 0
+          ) {
+            patientDetails.medicalRecords = medicalRecordsQuery.data
+              .listUploadedClinicianRecordsByPatientID
+              .items as ClinicianRecord[];
           }
 
           // Store ICD/CRT records in patient details
-          if (icdCrtRecordsQuery.data.listIcdCrtRecordsByDateTime?.items) {
-            const icdCrtRecords =
-              icdCrtRecordsQuery.data.listIcdCrtRecordsByDateTime?.items;
-
-            icdCrtRecords.forEach((record: IcdCrtRecord | null) => {
-              if (record) {
-                patientDetails.icdCrtRecords.push(record);
-              }
-            });
+          if (
+            icdCrtRecordsQuery.data.listUploadedClinicianRecordsByPatientID
+              ?.items &&
+            icdCrtRecordsQuery.data.listUploadedClinicianRecordsByPatientID
+              ?.items.length > 0
+          ) {
+            patientDetails.icdCrtRecords = icdCrtRecordsQuery.data
+              .listUploadedClinicianRecordsByPatientID
+              .items as ClinicianRecord[];
           }
 
           // Save retrieved patient

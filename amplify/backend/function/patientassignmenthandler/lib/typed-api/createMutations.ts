@@ -3,53 +3,14 @@ import {
   CreateClinicianPatientMapInput,
   CreatePatientAssignmentInput,
   PatientAssignment
-} from "lib/api/API";
+} from "../api/API";
 import { AppSyncUrl, BaseResponse } from "../types";
+import {
+  createPatientAssignment as gqlCreatePatientAssignment,
+  createClinicianPatientMap as gqlCreateClinicianPatientMap
+} from "../api/graphql/mutations";
 // @ts-ignore
 import { request } from "/opt/appSyncRequest";
-
-// Initialize GraphQL mutations
-const gqlCreatePatientAssignment = /* GraphQL */ `
-  mutation CreatePatientAssignment(
-    $input: CreatePatientAssignmentInput!
-    $condition: ModelPatientAssignmentConditionInput
-  ) {
-    createPatientAssignment(input: $input, condition: $condition) {
-      id
-      patientID
-      clinicianID
-      patientName
-      pending
-      resolution
-      reassignToClinicianID
-      adminReassignFromClinicianID
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
-      adminCompleted
-    }
-  }
-`;
-
-const gqlCreateClinicianPatientMap = /* GraphQL */ `
-  mutation CreateClinicianPatientMap(
-    $input: CreateClinicianPatientMapInput!
-    $condition: ModelClinicianPatientMapConditionInput
-  ) {
-    createClinicianPatientMap(input: $input, condition: $condition) {
-      id
-      clinicianID
-      patientID
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
-    }
-  }
-`;
 
 // Initialize interfaces for responses
 interface CreatePatientAssignmentResponse extends BaseResponse {

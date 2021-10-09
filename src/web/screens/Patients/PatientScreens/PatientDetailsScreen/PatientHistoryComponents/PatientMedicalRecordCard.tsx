@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from "react";
 import { RootState, select } from "util/useRedux";
 import { ScaledSheet } from "react-native-size-matters";
-import { CardWrapper } from "web/screens/Home/CardWrapper";
+import { CardWrapper } from "components/Wrappers/CardWrapper";
 import { FlatList, View } from "react-native";
 import { MedicalRecordRow } from "./MedicalRecordRow";
 import i18n from "util/language/i18n";
@@ -9,21 +9,20 @@ import { IconButton, IconType } from "components/Buttons/IconButton";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { EmptyListIndicator } from "components/Indicators/EmptyListIndicator";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
-import { MedicalRecord } from "aws/API";
 import { useNetInfo } from "@react-native-community/netinfo";
+import { AgentTrigger } from "rc_agents/trigger";
+import { ClinicianRecord } from "aws/API";
 
 interface PatientMedicalRecordProps {
-  medicalRecords: MedicalRecord[];
+  medicalRecords: ClinicianRecord[];
   maxHeight: number;
   onAddPress: () => void; // action to be done when add button is pressed
-  onViewMedicalRecord: (medicalRecord: MedicalRecord) => void;
 }
 
 export const PatientMedicalRecordCard: FC<PatientMedicalRecordProps> = ({
   medicalRecords,
   maxHeight,
-  onAddPress,
-  onViewMedicalRecord
+  onAddPress
 }) => {
   const { colors, fetchingMedicalRecordContent } = select(
     (state: RootState) => ({
@@ -68,12 +67,12 @@ export const PatientMedicalRecordCard: FC<PatientMedicalRecordProps> = ({
   };
 
   return (
-    <View>
-      <CardWrapper
-        maxHeight={maxHeight}
-        title={i18n.t("Patient_History.MedicalRecords")}
-        ComponentNextToTitle={AddMedicalRecordButton}
-      >
+    <CardWrapper
+      maxHeight={maxHeight}
+      title={i18n.t("Patient_History.MedicalRecords")}
+      ComponentNextToTitle={AddMedicalRecordButton}
+    >
+      <View pointerEvents={fetchingMedicalRecordContent ? "none" : "auto"}>
         {/* List of medical records */}
         {medicalRecords.length > 0 ? (
           <FlatList
@@ -83,11 +82,13 @@ export const PatientMedicalRecordCard: FC<PatientMedicalRecordProps> = ({
             renderItem={({ item }) => (
               <MedicalRecordRow
                 medicalRecord={item}
-                onViewMedicalRecord={onViewMedicalRecord}
+                onViewMedicalRecord={
+                  AgentTrigger.triggerRetrieveMedicalRecordContent
+                }
                 allowView={isOnline}
               />
             )}
-            keyExtractor={(medicalRecord) => medicalRecord.id}
+            keyExtractor={(medicalRecord) => medicalRecord.documentID}
           />
         ) : (
           <EmptyListIndicator
@@ -95,8 +96,8 @@ export const PatientMedicalRecordCard: FC<PatientMedicalRecordProps> = ({
           />
         )}
         {fetchingMedicalRecordContent && <LoadingIndicator />}
-      </CardWrapper>
-    </View>
+      </View>
+    </CardWrapper>
   );
 };
 

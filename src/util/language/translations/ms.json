@@ -122,8 +122,7 @@
     "Current": "Semasa",
     "Completed": "Selesai",
     "NoPatients": "Tiada todo yang dijumpai!",
-    "SearchBarCurrentPlaceholder": "Cari todo yang semasa",
-    "SearchBarCompletePlaceholder": "Cari todo yang selesai",
+    "SearchBarPlaceholder": "Cari todo",
     "ViewTodo": "Lihat Todo",
     "EditTodo": "Edit Todo",
     "Title": "Tajuk",
@@ -268,7 +267,10 @@
     "SearchBarPlaceholder": "Cari pakar(contohnya John)",
     "NoSelection": "Pilih salah satu pakar untuk melihat butirannya",
     "Role": "Peranan",
-    "HospitalName": "Nama Hospital"
+    "HospitalName": "Nama Hospital",
+    "ClincianList": {
+      "NoClinicianFound": "Tiada pakar yang dijumpai!"
+    }
   },
   "Alerts": {
     "SearchBarPlaceholder": "Cari amaran",
@@ -292,9 +294,9 @@
     "BackToDetails": "Balik ke Butiran"
   },
   "FileDropbox": {
-    "DragAndDropFile": "Seret and Lepas fail",
+    "DragAndDropFile": "Seret and lepas fail",
     "DropFileHere": "Lepaskan fail di sini",
-    "Or": "Atau",
+    "Or": "atau",
     "BrowseFiles": "Semak fail",
     "MultipleFileError": "Anda hanya boleh muat naik satu fail sahaja"
   },

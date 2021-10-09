@@ -8,12 +8,7 @@ import {
 import { actionNames } from "ic-redux/actions/actionNames";
 import { createAction } from "typesafe-actions";
 import { ChartFilter } from "models/ChartViewTypes";
-import {
-  PatientAssignment,
-  PatientInfo,
-  ClinicianInfo,
-  IcdCrtRecord
-} from "aws/API";
+import { PatientAssignment, PatientInfo, ClinicianInfo } from "aws/API";
 
 export const setProcedureOngoing = createAction(
   actionNames.SET_PROCEDURE_ONGOING,
@@ -148,13 +143,6 @@ export const setFetchingMedicalRecordContent = createAction(
   })
 )();
 
-export const setMedicalRecordContent = createAction(
-  actionNames.SET_MEDICAL_RECORD_CONTENT,
-  (medicalRecordContent: string | undefined) => ({
-    medicalRecordContent: medicalRecordContent
-  })
-)();
-
 export const setCreatingIcdCrtRecord = createAction(
   actionNames.SET_CREATING_ICDCRT_RECORD,
   (creatingIcdCrtRecord: boolean) => ({
@@ -173,13 +161,6 @@ export const setFetchingIcdCrtRecordContent = createAction(
   actionNames.SET_FETCHING_ICDCRT_RECORD_CONTENT,
   (fetchingIcdCrtRecordContent: boolean) => ({
     fetchingIcdCrtRecordContent: fetchingIcdCrtRecordContent
-  })
-)();
-
-export const setIcdCrtRecordContent = createAction(
-  actionNames.SET_ICDCRT_RECORD_CONTENT,
-  (icdCrtRecordContent: string | undefined) => ({
-    icdCrtRecordContent: icdCrtRecordContent
   })
 )();
 

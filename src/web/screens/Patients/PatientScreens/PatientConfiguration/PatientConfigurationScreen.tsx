@@ -1,7 +1,7 @@
 import React, { FC, useState, useEffect, useCallback } from "react";
 import { View, ScrollView } from "react-native";
 import { TextField } from "components/InputComponents/TextField";
-import { ScreenWrapper } from "web/screens/ScreenWrapper";
+import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
 import i18n from "util/language/i18n";
 import { PatientInfo } from "aws/API";
 import cloneDeep from "lodash/cloneDeep";

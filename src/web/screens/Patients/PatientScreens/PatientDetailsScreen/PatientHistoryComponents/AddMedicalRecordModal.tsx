@@ -1,13 +1,13 @@
 import React, { FC, useEffect, useState } from "react";
-import { View } from "react-native";
+import { ScrollView } from "react-native";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { H3 } from "components/Text";
-import { ScaledSheet, ms } from "react-native-size-matters";
+import { ms, ScaledSheet } from "react-native-size-matters";
 import i18n from "util/language/i18n";
 import { TextField } from "components/InputComponents/TextField";
 import { notEmptyString } from "util/validation";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
-import { RecordFile, MedicalRecordInput } from "rc_agents/model";
+import { ClinicianRecordInput, RecordFile } from "rc_agents/model";
 import { triggerCreateMedicalRecord } from "rc_agents/triggers";
 import {
   setCreateMedicalRecordSuccessful,
@@ -15,28 +15,29 @@ import {
 } from "ic-redux/actions/agents/actionCreator";
 import { useToast } from "react-native-toast-notifications";
 import { FileDropbox } from "components/InputComponents/FileDropbox";
+import {
+  ModalWrapper,
+  ModalWrapperProps
+} from "components/Wrappers/ModalWrapper";
 import { SaveAndCancelButtons } from "components/Buttons/SaveAndCancelButtons";
 
-interface AddMedicalRecordProps {
+interface AddMedicalRecordModalProps extends ModalWrapperProps {
   setAddMedicalRecord: (state: boolean) => void;
   patientID?: string;
 }
 
-export const AddMedicalRecord: FC<AddMedicalRecordProps> = ({
+export const AddMedicalRecordModal: FC<AddMedicalRecordModalProps> = ({
+  visible,
+  onRequestClose,
   setAddMedicalRecord,
   patientID
 }) => {
-  const {
-    colors,
-    fonts,
-    creatingMedicalRecord,
-    createMedicalRecordSuccessful
-  } = select((state: RootState) => ({
-    colors: state.settings.colors,
-    fonts: state.settings.fonts,
-    creatingMedicalRecord: state.agents.creatingMedicalRecord,
-    createMedicalRecordSuccessful: state.agents.createMedicalRecordSuccessful
-  }));
+  const { fonts, creatingMedicalRecord, createMedicalRecordSuccessful } =
+    select((state: RootState) => ({
+      fonts: state.settings.fonts,
+      creatingMedicalRecord: state.agents.creatingMedicalRecord,
+      createMedicalRecordSuccessful: state.agents.createMedicalRecordSuccessful
+    }));
 
   const [title, setTitle] = useState<string>("");
   const [file, setFile] = useState<RecordFile | undefined>(undefined);
@@ -58,7 +59,7 @@ export const AddMedicalRecord: FC<AddMedicalRecordProps> = ({
     if (file && patientID) {
       dispatch(setCreatingMedicalRecord(true));
       setSavingRecord(true);
-      const recordToSave: MedicalRecordInput = {
+      const recordToSave: ClinicianRecordInput = {
         title: title,
         patientID: patientID,
         file: file
@@ -84,6 +85,8 @@ export const AddMedicalRecord: FC<AddMedicalRecordProps> = ({
         );
         dispatch(setCreateMedicalRecordSuccessful(false));
         setAddMedicalRecord(false);
+        setTitle("");
+        setFile(undefined);
       } else {
         // Create failed
         toast.show(i18n.t("UnexpectedError"), {
@@ -102,46 +105,45 @@ export const AddMedicalRecord: FC<AddMedicalRecordProps> = ({
   ]);
 
   return (
-    <View
-      // Disable pointer events if procedure is ongoing
+    <ModalWrapper
+      visible={visible}
+      onRequestClose={onRequestClose} // Disable pointer events if procedure is ongoing
       pointerEvents={savingRecord ? "none" : "auto"}
-      style={[
-        styles.container,
-        { backgroundColor: colors.primaryContrastTextColor }
-      ]}
     >
-      {/* Title Input */}
-      <TextField
-        label={i18n.t("Patient_History.AddMedicalRecordCard.Title")}
-        labelStyle={[styles.inputTitle, { fontSize: fonts.h3Size }]}
-        value={title}
-        onChange={setTitle}
-        placeholder={i18n.t(
-          "Patient_History.AddMedicalRecordCard.TitleInputPlaceholder"
-        )}
-        error={!notEmptyString(title)}
-        errorMessage={i18n.t("Patient_History.AddMedicalRecordCard.TitleError")}
-      />
+      <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+        {/* Title Input */}
+        <TextField
+          label={i18n.t("Patient_History.AddMedicalRecordCard.Title")}
+          labelStyle={[styles.inputTitle, { fontSize: fonts.h3Size }]}
+          value={title}
+          onChange={setTitle}
+          placeholder={i18n.t(
+            "Patient_History.AddMedicalRecordCard.TitleInputPlaceholder"
+          )}
+          error={!notEmptyString(title)}
+          errorMessage={i18n.t(
+            "Patient_History.AddMedicalRecordCard.TitleError"
+          )}
+        />
 
-      {/* File Upload Label */}
-      <H3
-        text={i18n.t("Patient_History.AddMedicalRecordCard.FileUpload")}
-        style={styles.inputTitle}
-      />
+        {/* File Upload Label */}
+        <H3
+          text={i18n.t("Patient_History.AddMedicalRecordCard.FileUpload")}
+          style={[styles.inputTitle, { marginTop: ms(15) }]}
+        />
 
-      {/* File Upload Input */}
-      <FileDropbox file={file} setFile={setFile} />
+        {/* File Upload Input */}
+        <FileDropbox file={file} setFile={setFile} />
+      </ScrollView>
 
-      {/* Save and Cancel Buttons */}
+      {/* Save and Cancel modal buttons */}
       <SaveAndCancelButtons
         onPressSave={onSaveRecord}
-        onPressCancel={() => {
-          setAddMedicalRecord(false);
-        }}
+        onPressCancel={() => setAddMedicalRecord(false)}
         validToSave={allInputValid}
       />
       {savingRecord && <LoadingIndicator overlayBackgroundColor />}
-    </View>
+    </ModalWrapper>
   );
 };
 
@@ -154,8 +156,8 @@ const styles = ScaledSheet.create({
     marginHorizontal: "25%"
   },
   inputTitle: {
-    paddingTop: ms(25),
+    paddingTop: "5@ms",
     fontWeight: "bold",
-    paddingBottom: ms(10)
+    paddingBottom: "10@ms"
   }
 });
