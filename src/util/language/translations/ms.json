@@ -276,6 +276,36 @@
   "Alerts": {
     "SearchBarPlaceholder": "Cari amaran",
     "NoSelection": "Pilih salah satu amaran untuk melihat butirannya",
+    "RiskLevel": "Tahap risiko",
+    "TriageValue": "Nilai triase",
+    "DateTime": "Dikemukakan pada",
+    "PatientBaselines": {
+      "Baselines": "Garis panduan pesakit",
+      "NYHAClass": "Kelas NYHA",
+      "Diagnosis": "Diagnosis"
+    },
+    "AlertSymptom": {
+      "Symptoms": "Simptom pesakit",
+      "Symptom": "Simptom",
+      "Activity": "Aktiviti",
+      "Severity": "Keterukan",
+      "DateTime": "Direkodkan pada"
+    },
+    "AlertVitals": {
+      "Vitals": "Vital",
+      "BPDi": "Tekanan darah diastolik",
+      "BPSys": "Tekanan darah sistolik",
+      "FluidIntake": "Pengambilan air",
+      "NoSteps": "Jumlah langkah",
+      "OxygenSat": "Ketepuan oksigen",
+      "Weight": "Berat badan",
+      "DateTime": "Direkodkan pada",
+      "HeartRate": "Kadar degupan jantung"
+    },
+    "Medication": {
+      "Medication": "Medication",
+      "NoMedicationRecord": "No medication records found"
+    },
     "Symptoms": "Simptom",
     "Signs": "Tanda",
     "HighRisk": "Risiko Tinggi",
@@ -285,9 +315,6 @@
     "AlertList": {
       "NoPendingAlerts": "Tiada amaran belum selesai dijumpai.",
       "NoCompletedAlerts": "Tiada amaran selesai dijumpai"
-    },
-    "AlertVitals": {
-      "HeartRate": "Kadar Jantung"
     },
     "RealTimeAlert": {
       "NewAlert": "Amaran baru telah dikemukakan!",

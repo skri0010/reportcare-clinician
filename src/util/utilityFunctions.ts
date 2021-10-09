@@ -1,4 +1,5 @@
 import { ReportVitals, Alert } from "aws/API";
+import { RiskLevel } from "models/RiskLevel";
 import moment from "moment";
 import { AlertInfo, mapColorCodeToRiskLevel } from "rc_agents/model";
 
@@ -65,7 +66,7 @@ export const convertAlertToAlertInfo = (alert: Alert): AlertInfo => ({
   riskLevel: mapColorCodeToRiskLevel(alert.colorCode)
 });
 
-// Sorts AlertInfo[] in descending datetime
+// Sorts AlertInfo[] in descending date time
 export const sortAlertInfoByDescendingDateTime = (
   alerts: AlertInfo[]
 ): AlertInfo[] => {
@@ -73,5 +74,26 @@ export const sortAlertInfoByDescendingDateTime = (
     const date1 = new Date(a.dateTime);
     const date2 = new Date(b.dateTime);
     return date2.getTime() - date1.getTime();
+  });
+};
+
+// Sorts AlertInfo[] in descending risk level followed by date time
+export const sortAlertInfoByDescendingRiskLevelAndDateTime = (
+  alerts: AlertInfo[]
+): AlertInfo[] => {
+  const riskLevelOrder = {
+    [RiskLevel.HIGH]: 3,
+    [RiskLevel.MEDIUM]: 2,
+    [RiskLevel.LOW]: 1,
+    [RiskLevel.UNASSIGNED]: 0
+  };
+
+  return alerts.sort((a, b) => {
+    if (riskLevelOrder[a.riskLevel] === riskLevelOrder[b.riskLevel]) {
+      const date1 = new Date(a.dateTime);
+      const date2 = new Date(b.dateTime);
+      return date2.getTime() - date1.getTime();
+    }
+    return riskLevelOrder[b.riskLevel] - riskLevelOrder[a.riskLevel];
   });
 };

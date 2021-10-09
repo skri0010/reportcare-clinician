@@ -30,7 +30,7 @@ import {
 } from "aws";
 import { store } from "util/useRedux";
 import { setFetchingAlertInfo } from "ic-redux/actions/agents/actionCreator";
-import { Alert, ModelSortDirection } from "aws/API";
+import { Alert, MedicationInfo, ModelSortDirection } from "aws/API";
 import { convertAlertToAlertInfo } from "util/utilityFunctions";
 import moment from "moment";
 import { RiskLevel } from "models/RiskLevel";
@@ -167,7 +167,46 @@ export const queryAlertInfo = async (alert: Alert): Promise<Alert | null> => {
   }
 
   // Get MedCompliant
-  // JH-TODO-MED: New MedCompliant version
+  const medInfosQuery = await listMedicationInfosByPatientID({
+    patientID: alert.patientID
+  });
+  if (medInfosQuery.data.listMedicationInfosByPatientID?.items) {
+    const medInfos = medInfosQuery.data.listMedicationInfosByPatientID.items;
+
+    let latestCompliantDate: string;
+    let latestMedication: MedicationInfo[] = [];
+
+    // Checks compliants of each medication info
+    medInfos.forEach((medInfo) => {
+      if (medInfo?.records) {
+        const compliants: MedInfoCompliants = JSON.parse(medInfo.records);
+        // Gets the latest date from the records of the current medInfo
+        const currentLatestDate = Object.entries(compliants).reduce((a, b) => {
+          return new Date(a[0]) > new Date(b[0]) ? a : b;
+        });
+        if (latestCompliantDate) {
+          // Gets difference in days between the overall latest date and the current one
+          const dayDifference = moment(new Date(latestCompliantDate)).diff(
+            moment(new Date(currentLatestDate[0]), "days")
+          );
+          // Current latest date is after the overall latest date - update overall latest date and replace medInfo
+          if (dayDifference < 0) {
+            // eslint-disable-next-line prefer-destructuring
+            latestCompliantDate = currentLatestDate[0];
+            latestMedication = [medInfo];
+          }
+          // Current latest date is the same as the overall latest date - push medInfo
+          else if (dayDifference === 0) {
+            latestMedication.push(medInfo);
+          }
+        }
+      }
+    });
+
+    if (latestMedication.length > 0) {
+      alertInfo.lastMedication = latestMedication;
+    }
+  }
 
   // Queries activity associated with symptom report
   if (alertInfo.symptomReport?.ActivityInfo?.Actname) {
@@ -197,7 +236,7 @@ export const queryHighRiskAlertInfo = async (
   // Constructs data structure for holding records
   const alertWithMonitoringRecords: AlertWithMonitoringRecords = {
     ...alertInfo,
-    symptomsReports: [],
+    symptomReports: [],
     vitalsReports: [],
     medCompliants: []
   };
@@ -216,21 +255,21 @@ export const queryHighRiskAlertInfo = async (
   const alertDate = new Date(alert.dateTime).toISOString();
 
   // Gets symptoms reports by descending order of DateTime
-  const symptomsReportsQuery = await listReportSymptomsByDateTime({
+  const symptomReportsQuery = await listReportSymptomsByDateTime({
     patientID: alert.patientID,
     sortDirection: ModelSortDirection.DESC
   });
 
   // Only gets symptoms reports of the last 5 days from the Alert's datetime
-  if (symptomsReportsQuery.data.listReportSymptomsByDateTime?.items) {
-    const symptomsReports =
-      symptomsReportsQuery.data.listReportSymptomsByDateTime.items;
-    symptomsReports.forEach((report) => {
+  if (symptomReportsQuery.data.listReportSymptomsByDateTime?.items) {
+    const symptomReports =
+      symptomReportsQuery.data.listReportSymptomsByDateTime.items;
+    symptomReports.forEach((report) => {
       if (
         report?.DateTime &&
         moment(alertDate).diff(moment(new Date(report.DateTime)), "days") <= 5
       ) {
-        alertWithMonitoringRecords.symptomsReports.push(report);
+        alertWithMonitoringRecords.symptomReports.push(report);
       }
     });
   }

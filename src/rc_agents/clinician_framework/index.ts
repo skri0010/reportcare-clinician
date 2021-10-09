@@ -201,9 +201,9 @@ export enum ProcedureAttributes {
   SRD_III = "SRD-III",
   SRD_IV = "SRD-IV",
   SRD_V = "SRD-V",
-  AT_CP_I = "AT-CP-I",
-  AT_CP_II = "AT-CP-II",
-  HF_EUA = "HF-EUA"
+  HF_EUA = "HF-EUA",
+  P_USOR = "P-USOR",
+  AT_CP_II = "AT-CP-II"
 }
 
 // Attributes for CLINICIAN key

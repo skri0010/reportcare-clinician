@@ -13,8 +13,7 @@ import {
   AppAttributes,
   BeliefKeys,
   ClinicianAttributes,
-  ProcedureAttributes,
-  setRetryLaterTimeout
+  ProcedureAttributes
 } from "rc_agents/clinician_framework";
 import { LocalStorage } from "rc_agents/storage";
 import { listCompletedRiskAlerts, listPendingRiskAlerts } from "aws";
@@ -194,30 +193,13 @@ class RetrieveAlerts extends Activity {
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
-      // Set to retry later
-      setRetryLaterTimeout(() => {
-        agent.addBelief(
-          new Belief(
-            BeliefKeys.PATIENT,
-            ClinicianAttributes.RETRIEVE_ALERTS,
-            true
-          )
-        );
-        agentAPI.addFact(
-          new Belief(
-            BeliefKeys.PROCEDURE,
-            ProcedureAttributes.AT_CP_I,
-            ProcedureConst.ACTIVE
-          )
-        );
-      });
 
       // Update Facts
       // End the procedure
       agentAPI.addFact(
         new Belief(
           BeliefKeys.PROCEDURE,
-          ProcedureAttributes.AT_CP_I,
+          ProcedureAttributes.P_USOR,
           ProcedureConst.INACTIVE
         ),
         true,
@@ -337,7 +319,7 @@ export const getAlertsCount: (alerts: AlertInfo[]) => AlertsCount = (
 // Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.AT_CP_I,
+  ProcedureAttributes.P_USOR,
   ProcedureConst.ACTIVE
 );
 const rule2 = new ResettablePrecondition(

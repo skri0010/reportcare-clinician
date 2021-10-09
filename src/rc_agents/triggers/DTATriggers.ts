@@ -229,7 +229,7 @@ export const triggerRetrieveAlerts = (
     false
   );
 
-  // Trigger DTA to retrieve alerts
+  // P-USOR: Trigger DTA to retrieve alerts
   agentDTA.addBelief(
     new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.RETRIEVE_ALERTS, true)
   );
@@ -237,7 +237,7 @@ export const triggerRetrieveAlerts = (
   agentAPI.addFact(
     new Belief(
       BeliefKeys.PROCEDURE,
-      ProcedureAttributes.AT_CP_I,
+      ProcedureAttributes.P_USOR,
       ProcedureConst.ACTIVE
     )
   );

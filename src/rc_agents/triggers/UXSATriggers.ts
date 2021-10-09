@@ -80,7 +80,7 @@ export const triggerDisplayAlerts: (input: {
   agentAPI.addFact(
     new Belief(
       BeliefKeys.PROCEDURE,
-      ProcedureAttributes.AT_CP_I,
+      ProcedureAttributes.P_USOR,
       ProcedureConst.ACTIVE
     )
   );

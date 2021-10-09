@@ -1,43 +1,39 @@
-import { H4, H5 } from "components/Text";
+import { ReportSymptom } from "aws/API";
 import React, { FC } from "react";
-import { ms, ScaledSheet } from "react-native-size-matters";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import i18n from "util/language/i18n";
-import { CardWrapper } from "web/screens/Home/CardWrapper";
+import { getLocalDateTime } from "util/utilityFunctions";
+import { BaseDetailsCard, BaseDetailsContent } from "./BaseDetailsCard";
 
 interface SymptomCardProps {
-  symptom: number | string;
-  minHeight: number;
-  maxHeight: number;
-  signs: string;
+  symptomReport?: ReportSymptom | null;
 }
 
-export const SymptomCard: FC<SymptomCardProps> = ({
-  symptom,
-  minHeight,
-  maxHeight,
-  signs
-}) => {
-  const iconSize: number = 50;
-
+export const SymptomCard: FC<SymptomCardProps> = ({ symptomReport }) => {
   return (
-    <CardWrapper flex={1} minHeight={minHeight} maxHeight={maxHeight}>
-      <Icon name="clipboard-alert-outline" size={iconSize} />
-      <H5 text={`${i18n.t("Alerts.Symptoms")}: `} style={styles.title} />
-      <H4
-        text={`${symptom}`}
-        style={{ paddingLeft: ms(5), paddingBottom: ms(10) }}
+    <BaseDetailsCard
+      cardTitle={i18n.t("Alerts.AlertSymptom.Symptoms")}
+      iconName="clipboard-alert-outline"
+    >
+      <BaseDetailsContent
+        title={i18n.t("Alerts.AlertSymptom.Symptom")}
+        content={symptomReport?.Name || "-"}
       />
-      <H5 text={`${i18n.t("Alerts.Signs")}: `} style={styles.title} />
-      <H4 text={`${signs}`} style={{ paddingLeft: ms(5) }} />
-    </CardWrapper>
+      <BaseDetailsContent
+        title={i18n.t("Alerts.AlertSymptom.Activity")}
+        content={symptomReport?.ActivityInfo?.Actname || "-"}
+      />
+      <BaseDetailsContent
+        title={i18n.t("Alerts.AlertSymptom.Severity")}
+        content={symptomReport?.Severity || "-"}
+      />
+      <BaseDetailsContent
+        title={i18n.t("Alerts.AlertSymptom.DateTime")}
+        content={
+          symptomReport?.DateTime
+            ? getLocalDateTime(symptomReport.DateTime)
+            : "-"
+        }
+      />
+    </BaseDetailsCard>
   );
 };
-
-const styles = ScaledSheet.create({
-  title: {
-    fontWeight: "bold",
-    paddingLeft: "5@ms",
-    paddingBottom: "5@ms"
-  }
-});

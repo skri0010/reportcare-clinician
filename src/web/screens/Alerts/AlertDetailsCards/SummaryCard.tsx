@@ -1,42 +1,41 @@
-import { H4, H5 } from "components/Text";
+import { H5 } from "components/Text";
+import { AlertInfo } from "rc_agents/model";
 import React, { FC } from "react";
 import { ms } from "react-native-size-matters";
 import i18n from "util/language/i18n";
-import { CardWrapper } from "web/screens/Home/CardWrapper";
+import { getLocalDateTime } from "util/utilityFunctions";
+import { BaseDetailsCard, BaseDetailsContent } from "./BaseDetailsCard";
 
 interface SummaryCardProps {
-  summary: number | string;
-  minHeight: number;
-  maxHeight: number;
-  risk: string;
+  alertInfo?: AlertInfo;
 }
 
-export const SummaryCard: FC<SummaryCardProps> = ({
-  summary,
-  minHeight,
-  maxHeight,
-  risk
-}) => {
+export const SummaryCard: FC<SummaryCardProps> = ({ alertInfo }) => {
   return (
-    <CardWrapper
-      flex={1}
-      minHeight={minHeight}
-      maxHeight={maxHeight}
-      title={i18n.t("Alert Summary")}
+    <BaseDetailsCard
+      cardTitle={i18n.t("Patient_History.AlertSummaryCard.AlertSummary")}
     >
-      <H4
-        text={`${summary}`}
+      <H5
+        text={alertInfo?.summary || "-"}
         style={{
           paddingLeft: ms(5),
-          paddingBottom: ms(10),
-          paddingTop: ms(10)
+          paddingBottom: ms(5)
         }}
       />
-      <H5
-        text={i18n.t("Patient_History.AlertSummaryCard.Severity")}
-        style={{ paddingLeft: ms(5), paddingBottom: ms(5), fontWeight: "bold" }}
+      <BaseDetailsContent
+        title={i18n.t("Alerts.RiskLevel")}
+        content={alertInfo?.riskLevel || "-"}
       />
-      <H4 text={`${risk}`} style={{ paddingLeft: ms(5) }} />
-    </CardWrapper>
+      <BaseDetailsContent
+        title={i18n.t("Alerts.TriageValue")}
+        content={alertInfo?.triageValue || "-"}
+      />
+      <BaseDetailsContent
+        title={i18n.t("Alerts.DateTime")}
+        content={
+          alertInfo?.dateTime ? getLocalDateTime(alertInfo.dateTime) : "-"
+        }
+      />
+    </BaseDetailsCard>
   );
 };

@@ -1,11 +1,11 @@
-import React, { FC } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { View, TouchableOpacity } from "react-native";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { H3, H4, H5 } from "components/Text";
 import { ScaledSheet, ms } from "react-native-size-matters";
 import i18n from "util/language/i18n";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
-import { AlertInfo } from "rc_agents/model";
+import { AlertInfo, Role } from "rc_agents/model";
 import { getRiskLevelColor } from "models/RiskLevel";
 import { getLocalDateTime } from "util/utilityFunctions";
 import { IconButton, IconType } from "components/Buttons/IconButton";
@@ -17,6 +17,7 @@ import {
 import { HomeScreenNavigation } from "web/navigation/types/MainScreenProps";
 import { ScreenName } from "web/navigation";
 import { AgentTrigger } from "rc_agents/trigger";
+import { LocalStorage } from "rc_agents/storage";
 
 interface AlertPopUpDetailsProps {
   title: string;
@@ -64,6 +65,23 @@ export const AlertPopUp: FC<AlertPopUpProps> = ({
   }));
 
   const dispatch = useDispatch();
+  const [allowViewDetails, setAllowViewDetails] = useState(false);
+
+  useEffect(() => {
+    // Checks for clinician's role to determine whether clinician is authorized to view alert details
+    const checkClinicianRole = async () => {
+      const clinician = await LocalStorage.getClinician();
+      if (clinician) {
+        if (
+          clinician.role === Role.EP ||
+          clinician.role === Role.HF_SPECIALIST
+        ) {
+          setAllowViewDetails(true);
+        }
+      }
+    };
+    checkClinicianRole();
+  }, []);
 
   return (
     <View
@@ -124,9 +142,15 @@ export const AlertPopUp: FC<AlertPopUpProps> = ({
           details={getLocalDateTime(realTimeAlert.dateTime)}
         />
 
-        <View style={styles.buttonContainer}>
+        <View
+          style={[
+            styles.buttonContainer,
+            { opacity: allowViewDetails ? 1 : 0.4 }
+          ]}
+        >
           {/* View button */}
           <TouchableOpacity
+            disabled={!allowViewDetails}
             style={[
               styles.viewButton,
               {

@@ -152,8 +152,7 @@ type BaseAlertInfo = {
 export type AlertInfo = {
   diagnosis?: string;
   NYHAClass?: string;
-  lastMedication?: string;
-  medicationQuantity?: number;
+  lastMedication?: MedicationInfo[];
   activityDuringAlert?: string;
 } & BaseAlertInfo;
 
@@ -164,7 +163,7 @@ export type MedInfoCompliants = {
 // For viewing details of real-time Alert (triage >= 70%)
 export type AlertWithMonitoringRecords = {
   latestBaseline?: PatientInfo;
-  symptomsReports: ReportSymptom[];
+  symptomReports: ReportSymptom[];
   vitalsReports: ReportVitals[];
   medCompliants: MedicationInfo[];
 } & BaseAlertInfo;

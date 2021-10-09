@@ -276,8 +276,36 @@
   "Alerts": {
     "SearchBarPlaceholder": "Search alerts",
     "NoSelection": "Select an alert to view more details",
-    "Symptoms": "Symptoms",
-    "Signs": "Signs",
+    "RiskLevel": "Risk level",
+    "TriageValue": "Triage value",
+    "DateTime": "Raised at",
+    "PatientBaselines": {
+      "Baselines": "Patient Baselines",
+      "NYHAClass": "NYHA class",
+      "Diagnosis": "Diagnosis"
+    },
+    "AlertSymptom": {
+      "Symptoms": "Symptoms",
+      "Symptom": "Symptom",
+      "Activity": "Activity",
+      "Severity": "Severity",
+      "DateTime": "Recorded at"
+    },
+    "AlertVitals": {
+      "Vitals": "Vitals",
+      "BPDi": "Diastolic blood pressure",
+      "BPSys": "Systolic blood pressure",
+      "FluidIntake": "Fluid intake",
+      "NoSteps": "Number of steps",
+      "OxygenSat": "Oxygen saturation",
+      "Weight": "Weight",
+      "DateTime": "Recorded at",
+      "HeartRate": "Heart rate"
+    },
+    "Medication": {
+      "Medication": "Medication",
+      "NoMedicationRecord": "No medication records found"
+    },
     "HighRisk": "High Risk",
     "MediumRisk": "Medium Risk",
     "LowRisk": "Low Risk",
@@ -285,9 +313,6 @@
     "AlertList": {
       "NoPendingAlerts": "You have no pending alerts",
       "NoCompletedAlerts": "You have no completed alerts"
-    },
-    "AlertVitals": {
-      "HeartRate": "Heart Rate"
     },
     "RealTimeAlert": {
       "NewAlert": "An alert has been raised!",

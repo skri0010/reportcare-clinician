@@ -21,10 +21,12 @@ import {
   setFetchingAlerts,
   setPendingAlertCount
 } from "ic-redux/actions/agents/actionCreator";
-import { AlertInfo, AlertsCount, AlertStatus } from "rc_agents/model";
-import { sortAlertInfoByDescendingDateTime } from "util/utilityFunctions";
-
-// LS-TODO: Irrelevant alerts should be filtered out depending on user's role
+import { AlertInfo, AlertsCount, AlertStatus, Role } from "rc_agents/model";
+import { sortAlertInfoByDescendingRiskLevelAndDateTime } from "util/utilityFunctions";
+import { LocalStorage } from "rc_agents/storage";
+import { getAlertsCount } from "rc_agents/agents/data-assistant/action-frames/triage-alert-hf-clinic/RetrieveAlerts";
+import { RiskLevel } from "models/RiskLevel";
+import moment from "moment";
 
 /**
  * Class to represent an activity for triggering the display of alerts.
@@ -43,24 +45,35 @@ class DisplayAlerts extends Activity {
     await super.doActivity(agent, [rule2]);
 
     // OPTIONAL: Get pending AlertInfo[]
-    const pendingAlertInfos: AlertInfo[] | null =
+    let pendingAlertInfos: AlertInfo[] | null =
       agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[
         ClinicianAttributes.PENDING_ALERTS
       ];
 
     // OPTIONAL: Get pending alert count
-    const pendingAlertsCount: AlertsCount | null =
+    let pendingAlertsCount: AlertsCount | null =
       agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[
         ClinicianAttributes.PENDING_ALERTS_COUNT
       ];
 
     // OPTIONAL: Get completed AlertInfo[]
-    const completedAlertInfos: AlertInfo[] | null =
+    let completedAlertInfos: AlertInfo[] | null =
       agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[
         ClinicianAttributes.COMPLETED_ALERTS
       ];
 
     try {
+      // Filters pending and completed AlertInfo[] by role
+      if (pendingAlertInfos) {
+        pendingAlertInfos = await filterAlertsByRole(pendingAlertInfos);
+        // Gets corresponding pending alert count
+        pendingAlertsCount = getAlertsCount(pendingAlertInfos);
+      }
+
+      if (completedAlertInfos) {
+        completedAlertInfos = await filterAlertsByRole(completedAlertInfos);
+      }
+
       // Display alerts
       displayAlerts({
         pendingAlertInfos: pendingAlertInfos,
@@ -95,7 +108,7 @@ class DisplayAlerts extends Activity {
     agentAPI.addFact(
       new Belief(
         BeliefKeys.PROCEDURE,
-        ProcedureAttributes.AT_CP_I,
+        ProcedureAttributes.P_USOR,
         ProcedureConst.INACTIVE
       ),
       true,
@@ -103,6 +116,31 @@ class DisplayAlerts extends Activity {
     );
   }
 }
+
+export const filterAlertsByRole = async (
+  alertInfos: AlertInfo[]
+): Promise<AlertInfo[]> => {
+  // Retrieve locally stored ClinicianInfo
+  const clinicianInfo = await LocalStorage.getClinician();
+  if (clinicianInfo) {
+    switch (clinicianInfo.role) {
+      case Role.MO:
+      case Role.NURSE:
+        return alertInfos;
+      case Role.EP:
+      case Role.HF_SPECIALIST:
+        return alertInfos.filter(
+          (a) =>
+            (a.riskLevel === RiskLevel.HIGH ||
+              a.riskLevel === RiskLevel.MEDIUM) &&
+            moment(new Date()).diff(moment(new Date(a.dateTime)), "days") <= 14
+        );
+      default:
+        return [];
+    }
+  }
+  return [];
+};
 
 export const displayAlerts: (input: {
   pendingAlertInfos?: AlertInfo[] | null;
@@ -129,7 +167,7 @@ export const displayAlerts: (input: {
   // Pending AlertInfo[] exist
   if (pendingAlertInfos) {
     filteredPendingAlerts =
-      sortAlertInfoByDescendingDateTime(pendingAlertInfos);
+      sortAlertInfoByDescendingRiskLevelAndDateTime(pendingAlertInfos);
 
     if (shouldFilter) {
       // Filter pending alerts
@@ -153,7 +191,7 @@ export const displayAlerts: (input: {
   // Completed AlertInfo[] exist
   if (completedAlertInfos) {
     filteredCompletedAlerts =
-      sortAlertInfoByDescendingDateTime(completedAlertInfos);
+      sortAlertInfoByDescendingRiskLevelAndDateTime(completedAlertInfos);
 
     if (shouldFilter) {
       // Filter completed alerts
@@ -175,7 +213,7 @@ export const displayAlerts: (input: {
 // Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.AT_CP_I,
+  ProcedureAttributes.P_USOR,
   ProcedureConst.ACTIVE
 );
 const rule2 = new ResettablePrecondition(
