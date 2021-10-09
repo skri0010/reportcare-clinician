@@ -6,7 +6,7 @@ import { ScaledSheet, ms } from "react-native-size-matters";
 import i18n from "util/language/i18n";
 import { TextField } from "components/InputComponents/TextField";
 import { notEmptyString } from "util/validation";
-import { LoadingIndicator } from "components/Indicators2/LoadingIndicator";
+import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { RecordFile, ClinicianRecordInput } from "rc_agents/model";
 import { triggerCreateIcdCrtRecord } from "rc_agents/triggers";
 import {

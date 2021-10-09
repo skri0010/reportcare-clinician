@@ -7,7 +7,7 @@ import { AlertButton } from "components/Buttons/AlertButton";
 import { CardWrapper } from "components/Wrappers/CardWrapper";
 import i18n from "util/language/i18n";
 import { FetchAlertsMode, RiskFilter } from "rc_agents/model";
-import { LoadingIndicator } from "components/Indicators2/LoadingIndicator";
+import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { setAlertRiskFilters } from "ic-redux/actions/agents/actionCreator";
 import { isMobile } from "util/device";
 import { AgentTrigger } from "rc_agents/trigger";

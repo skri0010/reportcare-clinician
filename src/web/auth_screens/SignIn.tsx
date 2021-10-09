@@ -8,7 +8,7 @@ import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
 import { validatePassword, validateUsername } from "util/validation";
 import i18n from "util/language/i18n";
 import { useToast } from "react-native-toast-notifications";
-import { LoadingIndicator } from "components/Indicators2/LoadingIndicator";
+import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { Belief } from "agents-framework";
 import { BeliefKeys, AppAttributes } from "rc_agents/clinician_framework";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
