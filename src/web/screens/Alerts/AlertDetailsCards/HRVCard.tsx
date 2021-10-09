@@ -4,6 +4,7 @@ import { ms } from "react-native-size-matters";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import i18n from "util/language/i18n";
 import { CardWrapper } from "components/Wrappers/CardWrapper";
+import { RootState, select } from "util/useRedux";
 
 interface HRVCardProps {
   HRV: number;
@@ -12,6 +13,9 @@ interface HRVCardProps {
 }
 
 export const HRVCard: FC<HRVCardProps> = ({ HRV, maxHeight, minHeight }) => {
+  const { colors } = select((state: RootState) => ({
+    colors: state.settings.colors
+  }));
   const hrv = HRV;
 
   const str = `${hrv} `;
@@ -19,7 +23,11 @@ export const HRVCard: FC<HRVCardProps> = ({ HRV, maxHeight, minHeight }) => {
 
   return (
     <CardWrapper flex={1} maxHeight={maxHeight} minHeight={minHeight}>
-      <Icon name="heart-pulse" size={iconSize} />
+      <Icon
+        name="heart-pulse"
+        size={iconSize}
+        style={{ color: colors.primaryIconColor }}
+      />
       <H5
         text={i18n.t("Alerts.AlertVitals.HeartRate")}
         style={{ paddingLeft: ms(5), paddingBottom: ms(5), fontWeight: "bold" }}

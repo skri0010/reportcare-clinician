@@ -91,6 +91,8 @@ export const LineChartComponent: FC<LineChartProps> = ({
     }
   };
 
+  const axisLabelStyle = { fontSize: "bold", fill: colors.primaryTextColor };
+
   return (
     <View style={{ maxHeight: ms(275) }}>
       {/* Title */}
@@ -108,19 +110,16 @@ export const LineChartComponent: FC<LineChartProps> = ({
         <VictoryAxis
           tickValues={data.xLabels}
           tickLabelComponent={
-            <VictoryLabel
-              angle={45}
-              dy={-5}
-              dx={20}
-              style={{ fontSize: "bold" }}
-            />
+            <VictoryLabel angle={45} dy={-5} dx={20} style={axisLabelStyle} />
           }
           standalone={false}
+          style={{ grid: { stroke: colors.gridLineColor } }}
         />
         {/* Y-Axis */}
         <VictoryAxis
           dependentAxis
-          tickLabelComponent={<VictoryLabel style={{ fontSize: "bold" }} />}
+          tickLabelComponent={<VictoryLabel style={axisLabelStyle} />}
+          style={{ grid: { stroke: colors.gridLineColor } }}
         />
         {/* VictoryLine renders only a single element to represent a dataset rather than individual elements for each data point 
             min max and average are their own respective line components.
@@ -133,7 +132,11 @@ export const LineChartComponent: FC<LineChartProps> = ({
             size={5}
             style={minStyleScatter}
             labels={chartFilter.min ? ({ datum }) => datum.y : undefined}
-            labelComponent={chartFilter.min ? <VictoryLabel /> : undefined}
+            labelComponent={
+              chartFilter.min ? (
+                <VictoryLabel style={{ fill: colors.labelColor }} />
+              ) : undefined
+            }
             key={minLines[0].x}
           />
         ))}
@@ -144,7 +147,11 @@ export const LineChartComponent: FC<LineChartProps> = ({
             size={5}
             style={maxStyleScatter}
             labels={chartFilter.max ? ({ datum }) => datum.y : undefined}
-            labelComponent={chartFilter.max ? <VictoryLabel /> : undefined}
+            labelComponent={
+              chartFilter.max ? (
+                <VictoryLabel style={{ fill: colors.labelColor }} />
+              ) : undefined
+            }
             key={maxLines[0].x}
           />
         ))}
@@ -155,7 +162,11 @@ export const LineChartComponent: FC<LineChartProps> = ({
             size={5}
             style={avgStyleScatter}
             labels={chartFilter.average ? ({ datum }) => datum.y : undefined}
-            labelComponent={chartFilter.average ? <VictoryLabel /> : undefined}
+            labelComponent={
+              chartFilter.average ? (
+                <VictoryLabel style={{ fill: colors.labelColor }} />
+              ) : undefined
+            }
             key={avgLines[0].x}
           />
         ))}

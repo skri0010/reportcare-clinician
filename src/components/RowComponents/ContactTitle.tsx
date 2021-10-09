@@ -20,7 +20,7 @@ export const ContactTitle: FC<ContactTitleProps> = ({ name, isPatient }) => {
     <View
       style={[
         styles.rowStyle,
-        { backgroundColor: colors.primaryContrastTextColor }
+        { backgroundColor: colors.primaryBackgroundColor }
       ]}
     >
       {/* Image (left container) */}

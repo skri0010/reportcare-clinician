@@ -19,7 +19,7 @@ export const InfoTitleBar: FC<InfoTitleBarProps> = ({ title }) => {
       style={[
         styles.titleBarContainer,
         {
-          backgroundColor: colors.primaryContrastTextColor,
+          backgroundColor: colors.primaryBackgroundColor,
           borderBottomColor: colors.primaryBorderColor,
           borderLeftColor: colors.primaryBarColor
         }
@@ -37,7 +37,6 @@ const styles = ScaledSheet.create({
     justifyContent: "space-evenly",
     paddingVertical: "5@ms",
     paddingLeft: "10@ms",
-    opacity: 0.8,
     borderLeftWidth: "3@ms",
     borderBottomRightRadius: "5@ms",
     borderTopRightRadius: "5@ms",

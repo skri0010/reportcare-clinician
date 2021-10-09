@@ -31,13 +31,13 @@ export const PeopleAvatar: FC<PeopleAvatarProps> = ({ iconType }) => {
       {isPatient ? (
         <MaterialIcon
           name={iconType}
-          color={colors.primaryTextColor}
+          color={colors.consistentTextColor}
           size={ms(20)}
         />
       ) : (
         <FontAwesomeIcon
           name={iconType}
-          color={colors.primaryTextColor}
+          color={colors.consistentTextColor}
           size={ms(20)}
         />
       )}

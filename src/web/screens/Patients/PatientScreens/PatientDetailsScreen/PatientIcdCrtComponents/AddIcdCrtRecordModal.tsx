@@ -1,5 +1,11 @@
 import React, { FC, useEffect, useState } from "react";
-import { View, ViewProps, StyleProp, ScrollView } from "react-native";
+import {
+  View,
+  ViewProps,
+  StyleProp,
+  ScrollView,
+  TextProps
+} from "react-native";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { H3 } from "components/Text";
 import { ScaledSheet, ms } from "react-native-size-matters";
@@ -111,7 +117,10 @@ export const AddIcdCrtRecordModal: FC<AddIcdCrtRecordModalProps> = ({
         {/* Title Input */}
         <TextField
           label={i18n.t("Patient_ICD/CRT.Title")}
-          labelStyle={[styles.inputTitle, { fontSize: fonts.h3Size }]}
+          labelStyle={[
+            styles.inputTitle,
+            { fontSize: fonts.h3Size, color: colors.primaryTextColor }
+          ]}
           value={title}
           onChange={setTitle}
           placeholder={i18n.t("Patient_ICD/CRT.TitleInputPlaceholder")}
@@ -156,6 +165,9 @@ export const AddIcdCrtRecordModal: FC<AddIcdCrtRecordModalProps> = ({
               borderWidth: ms(1),
               borderRadius: ms(5)
             } as StyleProp<ViewProps>
+          }
+          textStyle={
+            { color: colors.consistentTextColor } as StyleProp<TextProps>
           }
         />
       </View>

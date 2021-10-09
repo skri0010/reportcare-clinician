@@ -2,13 +2,20 @@ import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
 import { ScaledSheet } from "react-native-size-matters";
 import { H4 } from "components/Text";
-import { StyleProp, TouchableOpacity, View, ViewProps } from "react-native";
+import {
+  StyleProp,
+  TouchableOpacity,
+  View,
+  ViewProps,
+  TextProps
+} from "react-native";
 import i18n from "util/language/i18n";
 
 interface ModalButtonProps {
   title: string;
   onPress: () => void;
   style?: StyleProp<ViewProps>;
+  textStyle?: StyleProp<TextProps>;
   disabled?: boolean;
 }
 
@@ -16,6 +23,7 @@ export const ModalButton: FC<ModalButtonProps> = ({
   title,
   onPress,
   style = {},
+  textStyle = {},
   disabled
 }) => {
   const { colors } = select((state: RootState) => ({
@@ -35,7 +43,10 @@ export const ModalButton: FC<ModalButtonProps> = ({
         onPress={onPress}
         disabled={disabled}
       >
-        <H4 text={i18n.t(title)} style={{ color: colors.primaryTextColor }} />
+        <H4
+          text={i18n.t(title)}
+          style={textStyle || { color: colors.primaryTextColor }}
+        />
       </TouchableOpacity>
     </View>
   );

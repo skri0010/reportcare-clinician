@@ -121,7 +121,7 @@
   "Todo": {
     "Current": "Semasa",
     "Completed": "Selesai",
-    "NoPatients": "Tiada todo yang dijumpai!",
+    "NoTodos": "Tiada todo yang dijumpai!",
     "SearchBarPlaceholder": "Cari todo",
     "ViewTodo": "Lihat Todo",
     "EditTodo": "Edit Todo",

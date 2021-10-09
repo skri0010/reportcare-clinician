@@ -12,15 +12,16 @@ export const darkColorScheme: ColorScheme = {
   primaryContrastTextColor: "#ffffff",
   secondaryContrastTextColor: "#B3B3B3",
   selectedTextColor: "#00ffff",
+  consistentTextColor: "#000000",
 
   // Background
   primaryBackgroundColor: "#333333",
-  secondaryBackgroundColor: "#181818",
+  secondaryBackgroundColor: "#707070",
   primaryWebBackgroundColor: "#212121",
   secondaryWebBackgroundColor: "#181818",
 
   // Borders
-  primaryBorderColor: "#D2D2D2",
+  primaryBorderColor: "#7a7a7a",
   secondaryBorderColor: "#000000",
   selectedBorderColor: "#000000",
 
@@ -40,7 +41,7 @@ export const darkColorScheme: ColorScheme = {
   // Buttons
   primaryButtonColor: "#9e3ce6",
   acceptButtonColor: "#57c081",
-  primaryDeactivatedButtonColor: "#d1d1d1",
+  primaryDeactivatedButtonColor: "#a6a6a6",
   primaryWarningButtonColor: "#D11C1C",
   primaryTodoCompleteButtonColor: "#A484FF",
 
@@ -48,7 +49,7 @@ export const darkColorScheme: ColorScheme = {
   primaryAvatarBackgroundColor: "#e0e0e0",
 
   // Icons
-  primaryIconColor: "#000000",
+  primaryIconColor: "#ffffff",
   secondaryIconColor: "#ABA9A9",
   primaryContrastIconColor: "#FFFFFF",
   selectedIconColor: "#00ffff",
@@ -62,8 +63,12 @@ export const darkColorScheme: ColorScheme = {
   minLineColor: "#c43a31",
   avgLineColor: "#edf24b",
   chartPillSelectedColor: "#57c081",
-  chartPillUnselectedColor: "#F2F2F2",
+  chartPillUnselectedColor: "#333333",
   chartPillUnselectedBorderColor: "#d1d1d1",
+  gridLineColor: "#999999",
+
+  // Scatter plot label
+  labelColor: "#ced0f0",
 
   // Toggle Button ColorScheme
   trueTrackColor: "#81b0ff",

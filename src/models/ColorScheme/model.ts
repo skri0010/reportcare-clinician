@@ -7,6 +7,7 @@ export interface ColorScheme {
   primaryContrastTextColor: string;
   secondaryContrastTextColor: string;
   selectedTextColor: string;
+  consistentTextColor: string;
 
   // Background
   primaryBackgroundColor: string;
@@ -59,6 +60,10 @@ export interface ColorScheme {
   chartPillSelectedColor: string;
   chartPillUnselectedColor: string;
   chartPillUnselectedBorderColor: string;
+  gridLineColor: string;
+
+  // Scatter plot label
+  labelColor: string;
 
   // Toggle Button ColorScheme
   trueTrackColor: string;

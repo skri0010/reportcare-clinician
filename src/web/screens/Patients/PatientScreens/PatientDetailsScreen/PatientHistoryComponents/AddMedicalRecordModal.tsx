@@ -1,5 +1,11 @@
 import React, { FC, useEffect, useState } from "react";
-import { View, ScrollView, StyleProp, ViewProps } from "react-native";
+import {
+  View,
+  ScrollView,
+  StyleProp,
+  ViewProps,
+  TextProps
+} from "react-native";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { H3 } from "components/Text";
 import { ms, ScaledSheet } from "react-native-size-matters";
@@ -168,6 +174,9 @@ export const AddMedicalRecordModal: FC<AddMedicalRecordModalProps> = ({
               borderWidth: ms(1),
               borderRadius: ms(5)
             } as StyleProp<ViewProps>
+          }
+          textStyle={
+            { color: colors.consistentTextColor } as StyleProp<TextProps>
           }
         />
       </View>
