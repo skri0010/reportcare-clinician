@@ -72,6 +72,9 @@ class CreateMedicalRecord extends Activity {
               store.dispatch(setPatientDetails(existingPatientDetails));
             }
 
+            // Stores record locally
+            await LocalStorage.setMedicalRecord(newMedicalRecord);
+
             // Remove medical record input from facts
             agentAPI.addFact(
               new Belief(
@@ -95,9 +98,6 @@ class CreateMedicalRecord extends Activity {
 
             // Dispatch to front end that create is successful
             store.dispatch(setCreateMedicalRecordSuccessful(true));
-
-            // Stores record locally
-            await LocalStorage.setMedicalRecord(newMedicalRecord);
           }
         }
       }
