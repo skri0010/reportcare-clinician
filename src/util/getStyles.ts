@@ -106,13 +106,15 @@ export const getStackOptions: (input: {
 }) => StackNavigationOptions = ({ colors, fonts }) => {
   return {
     headerStyle: {
-      height: fonts.h1Size + ms(25)
+      height: fonts.h1Size + ms(25),
+      backgroundColor: colors.primaryBackgroundColor
     },
     headerTitleStyle: {
       fontWeight: "bold",
       fontSize: fonts.h1Size,
       paddingLeft: ms(15)
-    }
+    },
+    headerTintColor: colors.primaryIconColor
   };
 };
 

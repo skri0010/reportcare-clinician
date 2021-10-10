@@ -57,8 +57,7 @@ export const ViewTodoScreen: FC<ViewTodoScreenProps> = ({
               style={[
                 styles.viewButton,
                 {
-                  backgroundColor: colors.primaryContrastTextColor,
-                  borderColor: colors.primaryTextColor
+                  backgroundColor: colors.primaryButtonColor
                 }
               ]}
               onPress={() => {
@@ -72,7 +71,7 @@ export const ViewTodoScreen: FC<ViewTodoScreenProps> = ({
             >
               <H5
                 text={i18n.t("Todo.ViewButton")}
-                style={{ color: colors.primaryTextColor }}
+                style={{ color: colors.primaryContrastTextColor }}
               />
             </TouchableOpacity>
           </View>
@@ -163,7 +162,6 @@ const styles = ScaledSheet.create({
   viewButton: {
     width: "70@ms",
     height: "20@ms",
-    borderWidth: "1@ms",
     borderRadius: "5@ms",
     justifyContent: "center",
     textAlign: "center",

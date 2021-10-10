@@ -4,7 +4,8 @@ import {
   TouchableOpacity,
   TextInput,
   StyleProp,
-  ViewStyle
+  ViewStyle,
+  TextStyle
 } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { TodoDetailsStackProps } from "web/navigation/types";
@@ -36,8 +37,12 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
   }));
 
   const inputBarColor: StyleProp<ViewStyle> = {
-    backgroundColor: colors.primaryContrastTextColor,
+    backgroundColor: colors.primaryBackgroundColor,
     borderColor: colors.primaryBorderColor
+  };
+
+  const inputTextColor: StyleProp<TextStyle> = {
+    color: colors.primaryTextColor
   };
 
   const dispatch = useDispatch();
@@ -75,6 +80,7 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
           style={[
             styles.input,
             inputBarColor,
+            inputTextColor,
             {
               height: ms(30),
               paddingLeft: ms(10)
@@ -95,10 +101,12 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
           style={[
             styles.input,
             inputBarColor,
+            inputTextColor,
             {
               height: ms(100),
               paddingLeft: ms(10),
-              paddingTop: ms(5)
+              paddingTop: ms(5),
+              color: colors.primaryTextColor
             }
           ]}
           onChangeText={setNoteInput}
@@ -118,11 +126,7 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
           <TouchableOpacity
             style={[
               styles.button,
-              {
-                backgroundColor: colors.primaryContrastTextColor,
-                borderColor: colors.primaryTextColor,
-                borderWidth: ms(1)
-              }
+              { backgroundColor: colors.primaryTodoCompleteButtonColor }
             ]}
             onPress={() => {
               onSave(todo);
@@ -130,14 +134,18 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
           >
             <H3
               text={i18n.t("Todo.SaveButton")}
-              style={{ color: colors.primaryTextColor }}
+              style={{ color: colors.primaryContrastTextColor }}
             />
           </TouchableOpacity>
           {/* Cancel button */}
           <TouchableOpacity
             style={[
               styles.button,
-              { backgroundColor: colors.primaryTodoCompleteButtonColor }
+              {
+                backgroundColor: colors.primaryContrastTextColor,
+                borderColor: colors.primaryTextColor,
+                borderWidth: ms(1)
+              }
             ]}
             onPress={() => {
               navigation.goBack();
@@ -145,7 +153,7 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
           >
             <H3
               text={i18n.t("Todo.CancelButton")}
-              style={{ color: colors.primaryContrastTextColor }}
+              style={{ color: colors.consistentTextColor }}
             />
           </TouchableOpacity>
         </View>
