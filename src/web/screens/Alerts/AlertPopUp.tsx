@@ -17,6 +17,10 @@ import {
 import { HomeScreenNavigation } from "web/navigation/types/MainScreenProps";
 import { ScreenName } from "web/navigation";
 import { AgentTrigger } from "rc_agents/trigger";
+import {
+  ModalWrapper,
+  ModalWrapperProps
+} from "components/Wrappers/ModalWrapper";
 import { LocalStorage } from "rc_agents/storage";
 
 interface AlertPopUpDetailsProps {
@@ -49,12 +53,14 @@ const AlertPopUpDetails: FC<AlertPopUpDetailsProps> = ({
   );
 };
 
-interface AlertPopUpProps {
+interface AlertPopUpProps extends ModalWrapperProps {
   navigation: HomeScreenNavigation;
   realTimeAlert: AlertInfo;
 }
 
 export const AlertPopUp: FC<AlertPopUpProps> = ({
+  visible,
+  onRequestClose,
   navigation,
   realTimeAlert
 }) => {
@@ -84,9 +90,11 @@ export const AlertPopUp: FC<AlertPopUpProps> = ({
   }, []);
 
   return (
-    <View
-      style={[
-        styles.container,
+    <ModalWrapper
+      visible={visible}
+      onRequestClose={onRequestClose}
+      modalStyle={[
+        styles.modalContainer,
         {
           backgroundColor: colors.primaryContrastTextColor,
           borderColor: getRiskLevelColor(
@@ -173,34 +181,33 @@ export const AlertPopUp: FC<AlertPopUpProps> = ({
         )}
       </View>
       {fetchingAlertInfo && <LoadingIndicator overlayBackgroundColor />}
-    </View>
+    </ModalWrapper>
   );
 };
 
 const styles = ScaledSheet.create({
-  container: {
-    width: "35%",
+  modalContainer: {
+    width: "30%",
     borderRadius: "10@ms",
-    flexDirection: "column",
-    flexWrap: "wrap",
-    justifyContent: "space-between"
+    flexDirection: "column"
+  },
+  container: {
+    justifyContent: "center"
   },
   contentContainer: {
-    paddingHorizontal: "20@ms"
+    paddingHorizontal: "10@ms"
   },
   title: {
-    paddingBottom: "15@ms",
+    paddingVertical: "15@ms",
     textAlign: "center"
   },
   iconContainerStyle: { flexDirection: "row", alignSelf: "flex-end" },
   iconStyle: {
-    paddingTop: "5@ms",
-    paddingRight: "10@ms",
     backgroundColor: "transparent"
   },
   buttonContainer: {
     alignItems: "center",
-    paddingBottom: "10@ms"
+    paddingVertical: "10@ms"
   },
   viewButton: {
     textAlign: "center",

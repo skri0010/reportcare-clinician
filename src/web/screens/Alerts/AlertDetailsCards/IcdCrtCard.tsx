@@ -1,5 +1,5 @@
 import { ClinicianRecord } from "aws/API";
-import { RowButton } from "components/Buttons/TextButton";
+import { RowButton } from "components/Buttons/RowButton";
 import React, { FC } from "react";
 import { View } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";

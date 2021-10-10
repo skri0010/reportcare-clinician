@@ -3,11 +3,9 @@ import {
   ReportSymptom,
   ReportVitals,
   PatientInfo,
-  MedicalRecord,
   Alert,
-  IcdCrtRecord,
-  MedicationInfo,
-  ClinicianRecord
+  ClinicianRecord,
+  MedicationInfo
 } from "aws/API";
 import { RiskLevel } from "models/RiskLevel";
 
@@ -92,11 +90,13 @@ export enum TodoStatus {
 }
 
 export type RecordFile = {
-  name: string;
-  path: string;
-  size: number;
-  type: string;
-};
+  path?: string;
+  size?: number;
+  name: string; // Part of File
+  type: string; // Part of File
+  lastModifiedData: string; // Part of File
+  lastModified: string; // Part of File
+} & File;
 
 // Interfaces shared with front end
 export interface PatientDetails {
@@ -104,8 +104,8 @@ export interface PatientDetails {
   activityInfos: LocalActivityInfos;
   symptomReports: LocalReportSymptoms;
   vitalsReports: LocalReportVitals;
-  medicalRecords: LocalMedicalRecords;
-  icdCrtRecords: LocalIcdCrtRecords;
+  medicalRecords: ClinicianRecord[];
+  icdCrtRecords: ClinicianRecord[];
 }
 
 export type LocalActivityInfos = {
@@ -119,14 +119,6 @@ export type LocalReportSymptoms = {
 
 export type LocalReportVitals = {
   [date: string]: ReportVitals[] | undefined;
-};
-
-export type LocalMedicalRecords = {
-  [id: string]: MedicalRecord;
-};
-
-export type LocalIcdCrtRecords = {
-  [id: string]: IcdCrtRecord;
 };
 
 export interface PatientAssignmentResolution {
@@ -209,15 +201,8 @@ export interface TodoDetails {
   id: string;
 }
 
-export interface MedicalRecordInput {
+export interface ClinicianRecordInput {
   title: string;
   patientID: string;
-  file: RecordFile;
-}
-
-export interface IcdCrtRecordInput {
-  title: string;
-  patientID: string;
-  dateTime: string;
   file: RecordFile;
 }

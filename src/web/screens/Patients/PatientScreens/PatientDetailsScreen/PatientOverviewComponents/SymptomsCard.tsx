@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { ms } from "react-native-size-matters";
 import { H4 } from "components/Text";
-import { CardWrapper } from "web/screens/Home/CardWrapper";
+import { CardWrapper } from "components/Wrappers/CardWrapper";
 import { ReportSymptom } from "aws/API";
 import { FlatList } from "react-native";
 import i18n from "util/language/i18n";

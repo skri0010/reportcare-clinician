@@ -3,12 +3,12 @@ import { View, Modal } from "react-native";
 import { RootState, select } from "util/useRedux";
 import { ScaledSheet } from "react-native-size-matters";
 
-interface PatientHistoryModalProps {
+interface HomeScreenModalsProps {
   visible: boolean;
   onRequestClose: () => void;
 }
 
-export const PatientHistoryModal: FC<PatientHistoryModalProps> = ({
+export const HomeScreenModal: FC<HomeScreenModalsProps> = ({
   visible,
   onRequestClose,
   children
@@ -17,12 +17,7 @@ export const PatientHistoryModal: FC<PatientHistoryModalProps> = ({
     colors: state.settings.colors
   }));
   return (
-    <Modal
-      transparent
-      visible={visible}
-      animationType="slide"
-      onRequestClose={onRequestClose}
-    >
+    <Modal transparent visible={visible} onRequestClose={onRequestClose}>
       <View
         style={[
           styles.modalContainer,

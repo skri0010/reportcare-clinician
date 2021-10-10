@@ -38,7 +38,11 @@
     "ConfirmPasswordError": "Passwords did not match",
     "Register": "Register",
     "CodeSent": "A 6-digit verification code has been sent to your email",
-    "RegistrationFailed": "Failed to register.\nA user with the same username may already exist."
+    "RegistrationFailed": "Failed to register.\nA user with the same username may already exist.",
+    "TermOfServices": "Terms of Services",
+    "Accept": "Accept",
+    "Decline": "Decline",
+    "ToSText": "I agree to the "
   },
   "Auth_ConfirmRegistration": {
     "ConfirmRegistration": "Confirm Registration",
@@ -72,7 +76,8 @@
     "ApprovalSuccessful": "Patient request approval successful",
     "ApprovalFailed": "Failed to approve patient request",
     "OfflineApproval": "No internet connection detected.\nThe approval will be stored and synced when internet connection is detected.",
-    "NoPendingAssignments": "All patient assignments have been resolved!"
+    "NoPendingAssignments": "All patient assignments have been resolved!",
+    "PatientReassign": "Select Clinician to Reassign to"
   },
   "Parameter_Graphs": {
     "DiastolicBP": "Diastolic Blood Pressure ",
@@ -123,8 +128,7 @@
     "Current": "Current",
     "Completed": "Completed",
     "NoTodos": "No todos found!",
-    "SearchBarCurrentPlaceholder": "Search current todo",
-    "SearchBarCompletePlaceholder": "Search completed todo",
+    "SearchBarPlaceholder": "Search todos",
     "ViewTodo": "View Todo",
     "EditTodo": "Edit Todo",
     "Title": "Title",
@@ -165,6 +169,7 @@
   },
   "Patient_Configuration": {
     "Title": "Configure details",
+    "EditDetails": "Edit details",
     "Proceed": "Proceed",
     "Label": {
       "HospitalName": "Hospital name",
@@ -211,8 +216,6 @@
     "TitleInputPlaceholder": "Give the record a title",
     "TitleError": "Please enter a valid title",
     "FileUpload": "File Upload",
-    "Save": "Save",
-    "Cancel": "Cancel",
     "IcdCrtRecordSavedSuccessfully": "ICD/CRT record has been saved successfully"
   },
   "Patient_History": {
@@ -227,8 +230,6 @@
     "MedicalRecords": "Medical Records",
     "AddButton": "Add",
     "CloseButton": "Close",
-    "SaveButton": "Save",
-    "CancelButton": "Cancel",
     "AlertSummaryCard": {
       "AlertSummary": "Alert Summary",
       "AlertDetails": "Alert Details",
@@ -272,7 +273,10 @@
     "SearchBarPlaceholder": "Search clinician (eg John)",
     "NoSelection": "Select a clinician to view more details",
     "Role": "Role",
-    "HospitalName": "Hospital Name"
+    "HospitalName": "Hospital Name",
+    "ClincianList": {
+      "NoClinicianFound": "No Clincians found!"
+    }
   },
   "Alerts": {
     "SearchBarPlaceholder": "Search alerts",
@@ -338,11 +342,15 @@
     "BackToDetails": "Back to Details"
   },
   "FileDropbox": {
-    "DragAndDropFile": "Drag and Drop file",
+    "DragAndDropFile": "Drag and drop file",
     "DropFileHere": "Drop file here",
-    "Or": "Or",
+    "Or": "or",
     "BrowseFiles": "Browse files",
     "MultipleFileError": "You can only upload one file at a time"
+  },
+  "DetailsUpdate": {
+    "Save": "Save",
+    "Cancel": "Cancel"
   },
   "UnexpectedError": "An unexpected error has occured"
 }

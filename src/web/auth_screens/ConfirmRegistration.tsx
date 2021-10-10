@@ -2,7 +2,7 @@ import React, { FC, useState, useEffect } from "react";
 import { View, Dimensions } from "react-native";
 import { Auth } from "@aws-amplify/auth";
 import { ScaledSheet } from "react-native-size-matters";
-import { ScreenWrapper } from "web/screens/ScreenWrapper";
+import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
 import { validateCode, validateUsername } from "util/validation";
 import i18n from "util/language/i18n";
 import { useToast } from "react-native-toast-notifications";

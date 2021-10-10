@@ -8,10 +8,7 @@ import {
 import { ClinicianInfo, PatientAssignment, PatientInfo } from "aws/API";
 // eslint-disable-next-line no-restricted-imports
 import * as accessFunctions from "rc_agents/storage/accessFunctions";
-import {
-  AlertNotification,
-  PatientAssignmentSubscription
-} from "aws/TypedAPI/subscriptions";
+import { AlertNotification } from "aws/TypedAPI/subscriptions";
 
 /**
  * AsyncStorage access functions (SET, GET and REMOVE) with types
@@ -31,7 +28,7 @@ export enum AsyncStorageKeys {
   ALERT_INFOS = "AlertInfos",
   PENDING_PATIENT_ASSIGNMENTS = "PendingPatientAssignments",
   PATIENT_ASSIGNMENTS_RESOLUTIONS = "PatientAssignmentsResolutions",
-  PATIENT_CONFIGURATIONS = "PatientConfigurations",
+  PATIENT_BASELINES = "PatientBaselines",
   TODOS = "Todos",
   ALERTS_SYNC = "AlertsSync",
   TODO_DETAILS = "TodoDetails",
@@ -58,11 +55,11 @@ export type AsyncStorageType = {
   [AsyncStorageKeys.ALL_PATIENT_DETAILS]: {
     [patientId: string]: PatientDetails | undefined;
   };
-  [AsyncStorageKeys.PATIENT_CONFIGURATIONS]: PatientInfo[];
+  [AsyncStorageKeys.PATIENT_BASELINES]: PatientInfo[];
   [AsyncStorageKeys.ALERT_INFOS]: ProcessedAlertInfos;
   [AsyncStorageKeys.TODOS]: LocalTodo[];
   [AsyncStorageKeys.TODO_DETAILS]: LocalTodo;
   [AsyncStorageKeys.ALERTS_SYNC]: AlertInfo[];
   [AsyncStorageKeys.ALERT_NOTIFICATIONS]: AlertNotification[];
-  [AsyncStorageKeys.PATIENT_ASSIGNMENT_SUBSCRIPTIONS]: PatientAssignmentSubscription[];
+  [AsyncStorageKeys.PATIENT_ASSIGNMENT_SUBSCRIPTIONS]: PatientAssignment[];
 };

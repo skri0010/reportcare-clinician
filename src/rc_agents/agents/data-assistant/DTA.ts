@@ -1,8 +1,8 @@
 import { AgentIDs } from "rc_agents/clinician_framework";
 import { CommonAttributes } from "agents-framework/Enums";
 import { Belief } from "agents-framework";
-import { af_RetrieveEntryData } from "./action-frames/app-device-configuration/RetrieveEntryData";
-import { af_StoreEntryData } from "./action-frames/app-device-configuration/StoreEntryData";
+import { af_RetrieveEntryData } from "./action-frames/medical-record-device-configuration/RetrieveEntryData";
+import { af_StoreEntryData } from "./action-frames/medical-record-device-configuration/StoreEntryData";
 import { af_RetrievePatientDetails } from "./action-frames/hf-outcome-trends/RetrievePatientDetails";
 import { af_RequestDisplayPatientDetails } from "./action-frames/hf-outcome-trends/RequestDisplayPatientDetails";
 import { af_RetrievePatientsByRole } from "./action-frames/hf-outcome-trends/RetrievePatientsByRole";
@@ -28,16 +28,12 @@ import { af_RetrieveAlertHistory } from "./action-frames/hf-outcome-trends/Retri
 import { af_RequestDisplayAlertHistory } from "./action-frames/hf-outcome-trends/RequestDisplayAlertHistory";
 import { af_RetrieveClinicianContacts } from "./action-frames/storing-data/RetrieveClinicianContacts";
 import { af_RequestClinicianContactDisplay } from "./action-frames/storing-data/RequestClinicianContactsDisplay";
-import { af_ConfigurePatient } from "./action-frames/hf-outcome-trends/ConfigurePatient";
 import { af_ProcessPatientAssignmentSubscription } from "./action-frames/storing-data/ProcessPatientAssignmentSubscription";
-import { af_CreateMedicalRecord } from "./action-frames/hf-outcome-trends/CreateMedicalRecord";
-import { af_RetrieveMedicalRecords } from "./action-frames/hf-outcome-trends/RetrieveMedicalRecords";
-import { af_RequestDisplayMedicalRecords } from "./action-frames/hf-outcome-trends/RequestDisplayMedicalRecords";
+import { af_CreateMedicalRecord } from "./action-frames/medical-record-device-configuration/CreateMedicalRecord";
 import { af_RetrieveMedicalRecordContent } from "./action-frames/hf-outcome-trends/RetrieveMedicalRecordContent";
 import { af_RequestDisplayMedicalRecordContent } from "./action-frames/hf-outcome-trends/RequestDisplayMedicalRecordContent";
-import { af_CreateIcdCrtRecord } from "./action-frames/hf-outcome-trends/CreateIcdCrtRecord";
-import { af_RetrieveIcdCrtRecords } from "./action-frames/hf-outcome-trends/RetrieveIcdCrtRecords";
-import { af_RequestDisplayIcdCrtRecords } from "./action-frames/hf-outcome-trends/RequestDisplayIcdCrtRecords";
+import { af_StoreBaseline } from "./action-frames/medical-record-device-configuration/StoreBaseline";
+import { af_CreateIcdCrtRecord } from "./action-frames/medical-record-device-configuration/CreateIcdCrtRecord";
 import { af_RetrieveIcdCrtRecordContent } from "./action-frames/hf-outcome-trends/RetrieveIcdCrtRecordContent";
 import { af_RequestDisplayIcdCrtRecordContent } from "./action-frames/hf-outcome-trends/RequestDisplayIcdCrtRecordContent";
 import { af_RetrieveMonitoringRecords } from "./action-frames/exacerbation-user-specific-alert/RetrieveMonitoringRecords";
@@ -52,9 +48,12 @@ const belief1 = new Belief(AgentIDs.DTA, CommonAttributes.LAST_ACTIVITY, null);
 const agentDTA = new ClinicianAgent(
   AgentIDs.DTA,
   [
-    // ADC
+    // MRDC
     af_StoreEntryData,
     af_RetrieveEntryData,
+    af_StoreBaseline,
+    af_CreateMedicalRecord,
+    af_CreateIcdCrtRecord,
 
     // SRD-I
     af_RetrievePendingPatientAssignments,
@@ -71,19 +70,12 @@ const agentDTA = new ClinicianAgent(
     af_RequestDisplayPatientDetails,
     af_RetrieveAlertHistory,
     af_RequestDisplayAlertHistory,
-    af_ConfigurePatient,
 
     // HF-OTP-III
-    af_CreateMedicalRecord,
-    af_RetrieveMedicalRecords,
-    af_RequestDisplayMedicalRecords,
     af_RetrieveMedicalRecordContent,
     af_RequestDisplayMedicalRecordContent,
 
     // HF-OTP-IV
-    af_CreateIcdCrtRecord,
-    af_RetrieveIcdCrtRecords,
-    af_RequestDisplayIcdCrtRecords,
     af_RetrieveIcdCrtRecordContent,
     af_RequestDisplayIcdCrtRecordContent,
 

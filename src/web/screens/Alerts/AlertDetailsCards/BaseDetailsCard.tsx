@@ -3,7 +3,7 @@ import React, { FC } from "react";
 import { View } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { CardWrapper } from "web/screens/Home/CardWrapper";
+import { CardWrapper } from "components/Wrappers/CardWrapper";
 
 export interface BaseDetailsContentProps {
   title: string;

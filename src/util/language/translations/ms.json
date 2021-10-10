@@ -38,7 +38,11 @@
     "ConfirmPasswordError": "Kata laluan tidak sepadan",
     "Register": "Daftar",
     "CodeSent": "Kod pengesahan 6 angka telah dihantar ke emel anda",
-    "RegistrationFailed": "Gagal untuk mendaftar.\nPengguna dengan nama pengguna yang sama mungkin telah wujud."
+    "RegistrationFailed": "Gagal untuk mendaftar.\nPengguna dengan nama pengguna yang sama mungkin telah wujud.",
+    "TermOfServices": "Terma-Terma Perkhidmatan",
+    "Accept": "Terima",
+    "Decline": "Tolak",
+    "ToSText": "Saya bersetuju dengan "
   },
   "Auth_ConfirmRegistration": {
     "ConfirmRegistration": "Sahkan Pendaftaran",
@@ -72,7 +76,8 @@
     "ApprovalSuccessful": "Kelulusan permintaan pesakit berjaya",
     "ApprovalFailed": "Gagal meluluskan permintaan pesakit",
     "OfflineApproval": "Tiada sambungan internet.\nKelulusan akan disimpan dan disegerakkan semasa sambungan internet dikesan.",
-    "NoPendingAssignments": "Setiap tugasan pesakit diselesai!"
+    "NoPendingAssignments": "Setiap tugasan pesakit diselesai!",
+    "PatientReassign": "Pilihkan Pakar untuk ditugaskan"
   },
   "Parameter_Graphs": {
     "DiastolicBP": "Tekanan Darah Diastolik ",
@@ -123,8 +128,7 @@
     "Current": "Semasa",
     "Completed": "Selesai",
     "NoPatients": "Tiada todo yang dijumpai!",
-    "SearchBarCurrentPlaceholder": "Cari todo yang semasa",
-    "SearchBarCompletePlaceholder": "Cari todo yang selesai",
+    "SearchBarPlaceholder": "Cari todo",
     "ViewTodo": "Lihat Todo",
     "EditTodo": "Edit Todo",
     "Title": "Tajuk",
@@ -165,6 +169,7 @@
   },
   "Patient_Configuration": {
     "Title": "Konfigurasikan butiran",
+    "EditDetails": "Edit butiran",
     "Proceed": "Selesai",
     "Label": {
       "HospitalName": "Nama hospital",
@@ -211,8 +216,6 @@
     "TitleInputPlaceholder": "Berikan tajuk kepada rekod ini",
     "TitleError": "Sila berikan tajuk yang sah",
     "FileUpload": "Fail Muat Naik",
-    "Save": "Simpan",
-    "Cancel": "Batal",
     "IcdCrtRecordSavedSuccessfully": "Rekod ICD/CRT telah berjaya disimpan"
   },
   "Patient_History": {
@@ -227,8 +230,6 @@
     "MedicalRecords": "Rekod perubatan",
     "AddButton": "Tambah",
     "CloseButton": "Tutup",
-    "SaveButton": "Simpan",
-    "CancelButton": "Batal",
     "AlertSummaryCard": {
       "AlertSummary": "Ringkasan Amaran",
       "AlertDetails": "Butiran Amaran",
@@ -272,7 +273,10 @@
     "SearchBarPlaceholder": "Cari pakar(contohnya John)",
     "NoSelection": "Pilih salah satu pakar untuk melihat butirannya",
     "Role": "Peranan",
-    "HospitalName": "Nama Hospital"
+    "HospitalName": "Nama Hospital",
+    "ClincianList": {
+      "NoClinicianFound": "Tiada pakar yang dijumpai!"
+    }
   },
   "Alerts": {
     "SearchBarPlaceholder": "Cari amaran",
@@ -340,11 +344,15 @@
     "BackToDetails": "Balik ke Butiran"
   },
   "FileDropbox": {
-    "DragAndDropFile": "Seret and Lepas fail",
+    "DragAndDropFile": "Seret and lepas fail",
     "DropFileHere": "Lepaskan fail di sini",
-    "Or": "Atau",
+    "Or": "atau",
     "BrowseFiles": "Semak fail",
     "MultipleFileError": "Anda hanya boleh muat naik satu fail sahaja"
+  },
+  "DetailsUpdate": {
+    "Save": "Simpan",
+    "Cancel": "Batal"
   },
   "UnexpectedError": "Ralat yang tidak disangkai telah berlaku"
 }
