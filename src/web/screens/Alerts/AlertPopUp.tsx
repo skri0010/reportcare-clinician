@@ -142,37 +142,35 @@ export const AlertPopUp: FC<AlertPopUpProps> = ({
           details={getLocalDateTime(realTimeAlert.dateTime)}
         />
 
-        <View
-          style={[
-            styles.buttonContainer,
-            { opacity: allowViewDetails ? 1 : 0.4 }
-          ]}
-        >
-          {/* View button */}
-          <TouchableOpacity
-            disabled={!allowViewDetails}
-            style={[
-              styles.viewButton,
-              {
-                backgroundColor: colors.acceptButtonColor,
-                borderColor: colors.primaryTextColor
-              }
-            ]}
-            onPress={() => {
-              // Set fetchingAlertInfo to true so that RetrieveAlerts won't be triggered when navigating to AlertsScreen
-              dispatch(setFetchingAlertInfo(true));
-              dispatch(setShowAlertPopUp(false)); // Close the pop up
-              navigation.navigate(ScreenName.ALERTS);
-              AgentTrigger.triggerRetrieveMonitoringRecords(realTimeAlert); // Trigger retrieval of monitoring records, i.e. detailed alert info
-              dispatch(setRealTimeAlert(undefined)); // Reset realTimeAlert state
-            }}
-          >
-            <H4
-              text={i18n.t("Alerts.RealTimeAlert.ViewDetails")}
-              style={{ color: colors.primaryTextColor }}
-            />
-          </TouchableOpacity>
-        </View>
+        {allowViewDetails ? (
+          <View style={styles.buttonContainer}>
+            {/* View button */}
+            <TouchableOpacity
+              style={[
+                styles.viewButton,
+                {
+                  backgroundColor: colors.acceptButtonColor,
+                  borderColor: colors.primaryTextColor
+                }
+              ]}
+              onPress={() => {
+                // Set fetchingAlertInfo to true so that RetrieveAlerts won't be triggered when navigating to AlertsScreen
+                dispatch(setFetchingAlertInfo(true));
+                dispatch(setShowAlertPopUp(false)); // Close the pop up
+                navigation.navigate(ScreenName.ALERTS);
+                AgentTrigger.triggerRetrieveMonitoringRecords(realTimeAlert); // Trigger retrieval of monitoring records, i.e. detailed alert info
+                dispatch(setRealTimeAlert(undefined)); // Reset realTimeAlert state
+              }}
+            >
+              <H4
+                text={i18n.t("Alerts.RealTimeAlert.ViewDetails")}
+                style={{ color: colors.primaryTextColor }}
+              />
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <View style={styles.buttonContainer} />
+        )}
       </View>
       {fetchingAlertInfo && <LoadingIndicator overlayBackgroundColor />}
     </View>

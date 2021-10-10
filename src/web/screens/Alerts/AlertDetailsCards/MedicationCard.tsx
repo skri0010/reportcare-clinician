@@ -12,7 +12,7 @@ interface MedicationCardProps {
 export const MedicationCard: FC<MedicationCardProps> = ({ medication }) => {
   return (
     <BaseDetailsCard
-      cardTitle={i18n.t("Alerts.Medication.Medication")}
+      cardTitle={i18n.t("Alerts.Medications.Medications")}
       iconName="pill"
     >
       {medication && medication.length > 0 ? (
@@ -29,7 +29,7 @@ export const MedicationCard: FC<MedicationCardProps> = ({ medication }) => {
         />
       ) : (
         <NoListItemMessage
-          screenMessage={i18n.t("Alerts.Medication.NoMedicationRecord")}
+          screenMessage={i18n.t("Alerts.Medications.NoMedicationRecord")}
         />
       )}
     </BaseDetailsCard>

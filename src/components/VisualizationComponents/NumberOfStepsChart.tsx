@@ -4,11 +4,10 @@ import i18n from "util/language/i18n";
 import { ParameterGraphsProps } from "./ParameterGraphs";
 import { LineChartComponent } from "./VictoryLineChartComponent";
 
-export const SystolicBPChart: FC<ParameterGraphsProps> = ({ data }) => {
+export const NumberOfStepsChart: FC<ParameterGraphsProps> = ({ data }) => {
   return data ? (
     <LineChartComponent
-      graphTitle={i18n.t("Parameter_Graphs.SystolicBP")}
-      graphSubtitle={`(${i18n.t("Parameter_Graphs.BPUnit")})`}
+      graphTitle={i18n.t("Parameter_Graphs.NoSteps")}
       data={data}
     />
   ) : (

@@ -1,10 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AlertNotification } from "aws/TypedAPI/subscriptions";
-import {
-  AlertInfo,
-  AlertStatus,
-  AlertWithMonitoringRecords
-} from "rc_agents/model";
+import { AlertInfo, AlertStatus, HighRiskAlertInfo } from "rc_agents/model";
 import { AsyncStorageKeys, AsyncStorageType } from "rc_agents/storage";
 import {
   getProcessedAlertInfos,
@@ -28,7 +24,7 @@ const setProcessedAlertInfos = async (
 
 // Insert AlertInfo[], merge based on latest _version
 export const setAlertInfos = async (
-  alertInfos: AlertInfo[] | AlertWithMonitoringRecords[]
+  alertInfos: AlertInfo[] | HighRiskAlertInfo[]
 ): Promise<void> => {
   let localProcessedAlertInfos = await getProcessedAlertInfos();
 
@@ -91,7 +87,7 @@ export const setAlertInfos = async (
 
 // Insert AlertInfo, merge based on latest _version
 export const setAlertInfo = async (
-  alertInfo: AlertInfo | AlertWithMonitoringRecords
+  alertInfo: AlertInfo | HighRiskAlertInfo
 ): Promise<void> => {
   await setAlertInfos([alertInfo]);
 };

@@ -77,15 +77,16 @@
   "Parameter_Graphs": {
     "DiastolicBP": "Diastolic Blood Pressure ",
     "SystolicBP": "Systolic Blood Pressure ",
-    "BPUnit": "(mmHg)",
+    "BPUnit": "mmHg",
     "OxygenSaturation": "Oxygen Saturation ",
-    "OxygenSaturationUnit": "(%)",
+    "OxygenSaturationUnit": "%",
     "Weight": "Weight ",
-    "WeightUnit": "(kg)",
+    "WeightUnit": "kg",
     "FluidIntake": "Fluid Intake ",
-    "FluidUnit": "(ml)",
+    "FluidUnit": "ml",
     "Steps": "Steps Counter",
-    "StepsUnit": "(step)",
+    "NoSteps": "Number of Steps",
+    "StepsUnit": "steps",
     "NoData": "No data was found",
     "ViewBy": "View By: ",
     "ChartViewTypes": {
@@ -282,7 +283,10 @@
     "PatientBaselines": {
       "Baselines": "Patient Baselines",
       "NYHAClass": "NYHA class",
-      "Diagnosis": "Diagnosis"
+      "Diagnosis": "Diagnosis",
+      "FluidIntakeGoal": "Fluid intake goal",
+      "TargetActivity": "Target number of steps",
+      "TargetWeight": "Target weight"
     },
     "AlertSymptom": {
       "Symptoms": "Symptoms",
@@ -292,7 +296,7 @@
       "DateTime": "Recorded at"
     },
     "AlertVitals": {
-      "Vitals": "Vitals",
+      "Vitals": "Activity and Vitals",
       "BPDi": "Diastolic blood pressure",
       "BPSys": "Systolic blood pressure",
       "FluidIntake": "Fluid intake",
@@ -300,11 +304,17 @@
       "OxygenSat": "Oxygen saturation",
       "Weight": "Weight",
       "DateTime": "Recorded at",
-      "HeartRate": "Heart rate"
+      "HeartRate": "Heart rate",
+      "HeartRateUnit": "bpm"
     },
-    "Medication": {
-      "Medication": "Medication",
+    "Medications": {
+      "Medications": "Medications",
       "NoMedicationRecord": "No medication records found"
+    },
+    "IcdCrt": {
+      "IcdCrtRecord": "Latest ICD/CRT Record",
+      "UploadDateTime": "Uploaded at",
+      "ViewContent": "View content"
     },
     "HighRisk": "High Risk",
     "MediumRisk": "Medium Risk",
@@ -334,8 +344,5 @@
     "BrowseFiles": "Browse files",
     "MultipleFileError": "You can only upload one file at a time"
   },
-  "UnexpectedError": "An unexpected error has occured",
-  "Keywords": {
-    "remaining": "remaining"
-  }
+  "UnexpectedError": "An unexpected error has occured"
 }

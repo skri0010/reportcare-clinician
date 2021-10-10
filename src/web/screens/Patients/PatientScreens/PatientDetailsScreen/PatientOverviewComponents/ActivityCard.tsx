@@ -36,7 +36,7 @@ export const ActivityCard: FC<ActivityCardProps> = ({
         <View style={styles.container}>
           <AbsoluteParameters
             centerText={`${stepsTaken} / ${stepsRequired}`}
-            bottomText={i18n.t("Parameter_Graphs.StepsUnit")}
+            bottomText={`(${i18n.t("Parameter_Graphs.StepsUnit")})`}
           />
         </View>
       </View>

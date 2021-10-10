@@ -6,9 +6,13 @@ import { BaseDetailsCard, BaseDetailsContent } from "./BaseDetailsCard";
 
 interface SymptomCardProps {
   symptomReport?: ReportSymptom | null;
+  activity?: string | null;
 }
 
-export const SymptomCard: FC<SymptomCardProps> = ({ symptomReport }) => {
+export const SymptomCard: FC<SymptomCardProps> = ({
+  symptomReport,
+  activity
+}) => {
   return (
     <BaseDetailsCard
       cardTitle={i18n.t("Alerts.AlertSymptom.Symptoms")}
@@ -20,7 +24,7 @@ export const SymptomCard: FC<SymptomCardProps> = ({ symptomReport }) => {
       />
       <BaseDetailsContent
         title={i18n.t("Alerts.AlertSymptom.Activity")}
-        content={symptomReport?.ActivityInfo?.Actname || "-"}
+        content={activity || "-"}
       />
       <BaseDetailsContent
         title={i18n.t("Alerts.AlertSymptom.Severity")}

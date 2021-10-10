@@ -8,7 +8,7 @@ export const FluidIntakeChart: FC<ParameterGraphsProps> = ({ data }) => {
   return data ? (
     <LineChartComponent
       graphTitle={i18n.t("Parameter_Graphs.FluidIntake")}
-      graphSubtitle={i18n.t("Parameter_Graphs.FluidUnit")}
+      graphSubtitle={`(${i18n.t("Parameter_Graphs.FluidUnit")})`}
       data={data}
     />
   ) : (

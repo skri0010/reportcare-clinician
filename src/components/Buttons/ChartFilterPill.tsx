@@ -38,13 +38,13 @@ export const ChartFilterPill: FC<ChartFilterPillProps> = ({
   // Function to get line color of min, max or avg
   const getViewTypeTranslation = () => {
     if (viewType === ChartViewTypes.AVERAGE) {
-      return i18n.t("Parameter_Graphs.ChartViewTypes.Maximum");
+      return i18n.t("Parameter_Graphs.ChartViewTypes.Average");
     }
     if (viewType === ChartViewTypes.MIN) {
       return i18n.t("Parameter_Graphs.ChartViewTypes.Minimum");
     }
     if (viewType === ChartViewTypes.MAX) {
-      return i18n.t("Parameter_Graphs.ChartViewTypes.Average");
+      return i18n.t("Parameter_Graphs.ChartViewTypes.Maximum");
     }
     return i18n.t("Parameter_Graphs.ChartViewTypes.All");
   };

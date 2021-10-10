@@ -2,14 +2,12 @@ import React, { FC } from "react";
 import { View } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { RootState, select } from "util/useRedux";
-import {
-  LeftVitalSignsCard,
-  RightVitalSignsCard
-} from "./AlertDetailsCards/VitalSignsCard";
+import { VitalSignsCard } from "./AlertDetailsCards/VitalSignsCard";
 import { SymptomCard } from "./AlertDetailsCards/SymptomCard";
 import { SummaryCard } from "./AlertDetailsCards/SummaryCard";
 import { PatientBaselinesCard } from "./AlertDetailsCards/PatientBaselinesCard";
 import { MedicationCard } from "./AlertDetailsCards/MedicationCard";
+import { AlertInfo } from "rc_agents/model";
 
 export const AlertDetails: FC = () => {
   const { alertInfo } = select((state: RootState) => ({
@@ -27,16 +25,18 @@ export const AlertDetails: FC = () => {
 
       <View style={styles.rowContainer}>
         {/* Alert symptom */}
-        <SymptomCard symptomReport={alertInfo?.symptomReport} />
+        <SymptomCard
+          symptomReport={alertInfo?.symptomReport}
+          activity={(alertInfo as AlertInfo).activityDuringAlert}
+        />
         {/* Medication */}
-        <MedicationCard medication={alertInfo?.lastMedication} />
+        <MedicationCard medication={alertInfo?.medCompliants} />
       </View>
 
       {/* Alert vital signs */}
       <View style={styles.rowContainer}>
         {/* Alert vitals */}
-        <LeftVitalSignsCard vitalsReport={alertInfo?.vitalsReport} />
-        <RightVitalSignsCard vitalsReport={alertInfo?.vitalsReport} />
+        <VitalSignsCard vitalsReport={alertInfo?.vitalsReport} />
       </View>
     </View>
   );

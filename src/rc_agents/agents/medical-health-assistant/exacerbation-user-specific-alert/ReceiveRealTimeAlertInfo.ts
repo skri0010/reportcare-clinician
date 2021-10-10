@@ -50,23 +50,23 @@ class ReceiveRealTimeAlertInfo extends Activity {
       );
 
       const beliefsWithClinicianKeys = agent.getBeliefs()[BeliefKeys.CLINICIAN];
-      const displayAlertWithMonitoringRecords =
+      const displayHighRiskAlertInfo =
         beliefsWithClinicianKeys?.[
           ClinicianAttributes.REAL_TIME_ALERT_RECEIVED
         ] &&
         beliefsWithClinicianKeys?.[ClinicianAttributes.CONTEXT_RETRIEVED] &&
         beliefsWithClinicianKeys?.[ClinicianAttributes.MONITORING_RECORDS];
 
-      if (displayAlertWithMonitoringRecords) {
-        // Gets retrieved alert with monitoring records from beliefs
-        const alertWithMonitoringRecords =
+      if (displayHighRiskAlertInfo) {
+        // Gets retrieved alert info from beliefs
+        const highRiskAlertInfo =
           beliefsWithClinicianKeys?.[ClinicianAttributes.MONITORING_RECORDS];
         // Adds the information to facts for displaying
         agentAPI.addFact(
           new Belief(
             BeliefKeys.CLINICIAN,
             ClinicianAttributes.DETAILED_ALERT_INFO,
-            alertWithMonitoringRecords
+            highRiskAlertInfo
           ),
           false
         );

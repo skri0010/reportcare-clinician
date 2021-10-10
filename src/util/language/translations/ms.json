@@ -77,15 +77,16 @@
   "Parameter_Graphs": {
     "DiastolicBP": "Tekanan Darah Diastolik ",
     "SystolicBP": "Tekanan Darah Sistolik ",
-    "BPUnit": "(mmHg)",
+    "BPUnit": "mmHg",
     "OxygenSaturation": "Ketepuan Oksigen ",
-    "OxygenSaturationUnit": "(%)",
+    "OxygenSaturationUnit": "%",
     "Weight": "Berat Badan ",
-    "WeightUnit": "(kg)",
+    "WeightUnit": "kg",
     "FluidIntake": "Pengambilan Air ",
-    "FluidUnit": "(ml)",
+    "FluidUnit": "ml",
     "Steps": "Jumlah Langkah",
-    "StepsUnit": "(langkah)",
+    "NoSteps": "Jumlah Langkah",
+    "StepsUnit": "langkah",
     "NoData": "Tiada data dijumpai",
     "ViewBy": "Melihat secara: ",
     "ChartViewTypes": {
@@ -115,7 +116,7 @@
     "Alerts": "Amaran",
     "Todos": "Todos",
     "PatientAssignments": "Pengagihan Pesakit",
-    "ItemsRemaining": "lagi",
+    "ItemsRemaining": "yang tinggal",
     "ShowMoreButton": "LIHAT LEBIH"
   },
   "Todo": {
@@ -195,7 +196,7 @@
     "BloodPressure": "Tekanan Darah",
     "Systolic": "Sistolik",
     "Diastolic": "Diastolik",
-    "Medications": "Ubatan diprediksi",
+    "Medications": "Ubat-ubatan",
     "OxygenSaturation": "Ketepuan Oxsigen",
     "Weight": "Berat Badan",
     "TargetWeight": "Sasaran berat badan",
@@ -282,7 +283,10 @@
     "PatientBaselines": {
       "Baselines": "Garis panduan pesakit",
       "NYHAClass": "Kelas NYHA",
-      "Diagnosis": "Diagnosis"
+      "Diagnosis": "Diagnosis",
+      "FluidIntakeGoal": "Sasaran pengambilan air",
+      "TargetActivity": "Sasaran jumlah langkah",
+      "TargetWeight": "Sasaran berat badan"
     },
     "AlertSymptom": {
       "Symptoms": "Simptom pesakit",
@@ -292,7 +296,7 @@
       "DateTime": "Direkodkan pada"
     },
     "AlertVitals": {
-      "Vitals": "Vital",
+      "Vitals": "Aktiviti dan Vital",
       "BPDi": "Tekanan darah diastolik",
       "BPSys": "Tekanan darah sistolik",
       "FluidIntake": "Pengambilan air",
@@ -300,11 +304,17 @@
       "OxygenSat": "Ketepuan oksigen",
       "Weight": "Berat badan",
       "DateTime": "Direkodkan pada",
-      "HeartRate": "Kadar degupan jantung"
+      "HeartRate": "Kadar degupan jantung",
+      "HeartRateUnit": "bpm"
     },
-    "Medication": {
-      "Medication": "Medication",
-      "NoMedicationRecord": "No medication records found"
+    "Medications": {
+      "Medications": "Ubat-ubatan",
+      "NoMedicationRecord": "Tiada rekod ubat dijumpai"
+    },
+    "IcdCrt": {
+      "IcdCrtRecord": "Rekod ICD/CRT Terkini",
+      "UploadDateTime": "Dimuat naik pada",
+      "ViewContent": "Lihat kandungan"
     },
     "Symptoms": "Simptom",
     "Signs": "Tanda",
@@ -336,8 +346,5 @@
     "BrowseFiles": "Semak fail",
     "MultipleFileError": "Anda hanya boleh muat naik satu fail sahaja"
   },
-  "UnexpectedError": "Ralat yang tidak disangkai telah berlaku",
-  "Keywords": {
-    "remaining": "yang tinggal"
-  }
+  "UnexpectedError": "Ralat yang tidak disangkai telah berlaku"
 }

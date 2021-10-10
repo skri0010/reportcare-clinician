@@ -14,6 +14,7 @@ export interface ParameterStats {
   weight: Stat;
   oxygenSaturation: Stat;
   fluid: Stat;
+  steps: Stat;
   date: Date;
 }
 
@@ -29,6 +30,7 @@ export interface FullChartData {
   weight: ChartData;
   oxygenSaturation: ChartData;
   fluid: ChartData;
+  steps: ChartData;
 }
 
 export interface ParameterGraphsProps {
@@ -93,6 +95,11 @@ export const getParameterStatFromOneVitalsReport = (
         : []
     );
 
+    // Steps
+    const steps: number[] = vitalsData.flatMap((data) =>
+      data.NoSteps && parseFloat(data.NoSteps) ? [parseFloat(data.NoSteps)] : []
+    );
+
     // Stats
     stats = {
       diastolic: getStat(diastolicBPVitals),
@@ -100,6 +107,7 @@ export const getParameterStatFromOneVitalsReport = (
       weight: getStat(weightVitals),
       oxygenSaturation: getStat(oxygenSaturation),
       fluid: getStat(fluidVitals),
+      steps: getStat(steps),
       date: new Date(localeDateString)
     };
   }
@@ -136,6 +144,11 @@ export const obtainFullChartData = (
       rename
         .filter((data) => data.fluid && data.date)
         .map((data) => ({ parameter: data.fluid, date: data.date }))
+    ),
+    steps: subParameterStatsToChartData(
+      rename
+        .filter((data) => data.steps && data.date)
+        .map((data) => ({ parameter: data.steps, date: data.date }))
     )
   };
 };

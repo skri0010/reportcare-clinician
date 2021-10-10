@@ -5,6 +5,8 @@ import { H4 } from "components/Text";
 import { RootState, select } from "util/useRedux";
 import { ScreenWrapper } from "../ScreenWrapper";
 import { AlertDetails } from "./AlertDetails";
+import { RiskLevel } from "models/RiskLevel";
+import { HighRiskAlertDetails } from "./HighRiskAlertDetails";
 
 interface AlertDetailsScreenProps {
   setModalVisible: (state: boolean) => void;
@@ -13,15 +15,20 @@ interface AlertDetailsScreenProps {
 export const AlertDetailsScreen: FC<AlertDetailsScreenProps> = ({
   setModalVisible
 }) => {
-  const { colors } = select((state: RootState) => ({
-    colors: state.settings.colors
+  const { colors, alertInfo } = select((state: RootState) => ({
+    colors: state.settings.colors,
+    alertInfo: state.agents.alertInfo
   }));
 
   return (
     <ScreenWrapper>
       <View style={styles.container}>
         {/* Alert details cards */}
-        <AlertDetails />
+        {!alertInfo ? null : alertInfo.riskLevel === RiskLevel.HIGH ? (
+          <HighRiskAlertDetails />
+        ) : (
+          <AlertDetails />
+        )}
         {/* Create todo button */}
         <View style={styles.buttonContainer}>
           <TouchableOpacity

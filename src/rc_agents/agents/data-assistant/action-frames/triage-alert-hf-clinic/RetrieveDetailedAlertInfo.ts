@@ -18,7 +18,7 @@ import {
 import { LocalStorage } from "rc_agents/storage";
 import {
   AlertInfo,
-  AlertWithMonitoringRecords,
+  HighRiskAlertInfo,
   MedInfoCompliants
 } from "rc_agents/model";
 import {
@@ -30,7 +30,13 @@ import {
 } from "aws";
 import { store } from "util/useRedux";
 import { setFetchingAlertInfo } from "ic-redux/actions/agents/actionCreator";
-import { Alert, MedicationInfo, ModelSortDirection } from "aws/API";
+import {
+  Alert,
+  MedicationInfo,
+  ModelSortDirection,
+  ReportSymptom,
+  ReportVitals
+} from "aws/API";
 import { convertAlertToAlertInfo } from "util/utilityFunctions";
 import moment from "moment";
 import { RiskLevel } from "models/RiskLevel";
@@ -65,11 +71,7 @@ class RetrieveDetailedAlertInfo extends Activity {
       const isOnline: boolean = facts[BeliefKeys.APP]?.[AppAttributes.ONLINE];
 
       if (alert) {
-        let alertInfo:
-          | AlertInfo
-          | AlertWithMonitoringRecords
-          | null
-          | undefined;
+        let alertInfo: AlertInfo | HighRiskAlertInfo | null | undefined;
 
         if (isOnline) {
           // Device is online
@@ -176,35 +178,52 @@ export const queryAlertInfo = async (alert: Alert): Promise<Alert | null> => {
     let latestCompliantDate: string;
     let latestMedication: MedicationInfo[] = [];
 
+    const alertDate = new Date(alert.dateTime);
+
     // Checks compliants of each medication info
     medInfos.forEach((medInfo) => {
       if (medInfo?.records) {
         const compliants: MedInfoCompliants = JSON.parse(medInfo.records);
-        // Gets the latest date from the records of the current medInfo
-        const currentLatestDate = Object.entries(compliants).reduce((a, b) => {
-          return new Date(a[0]) > new Date(b[0]) ? a : b;
-        });
-        if (latestCompliantDate) {
-          // Gets difference in days between the overall latest date and the current one
-          const dayDifference = moment(new Date(latestCompliantDate)).diff(
-            moment(new Date(currentLatestDate[0]), "days")
-          );
-          // Current latest date is after the overall latest date - update overall latest date and replace medInfo
-          if (dayDifference < 0) {
+
+        // Filters records with valid dates, i.e. recorded before alert's datetime
+        const validDates = Object.entries(compliants).filter(
+          (c) => alertDate >= new Date(c[0])
+        );
+        if (validDates.length > 0) {
+          // Gets the latest date from the valid records of the current medInfo
+          const currentLatestDate = validDates.reduce((a, b) => {
+            return new Date(a[0]) > new Date(b[0]) ? a : b;
+          });
+          if (latestCompliantDate) {
+            // Current latest date is the same day as the overall latest date - push medInfo
+            if (
+              moment(new Date(latestCompliantDate)).diff(
+                moment(new Date(currentLatestDate[0]), "days")
+              ) === 0
+            ) {
+              latestMedication.push(medInfo);
+            }
+            // Current latest date is after the overall latest date - update overall latest date and replace medInfo
+            else if (
+              new Date(currentLatestDate[0]) > new Date(latestCompliantDate)
+            ) {
+              // eslint-disable-next-line prefer-destructuring
+              latestCompliantDate = currentLatestDate[0];
+              latestMedication = [medInfo];
+            }
+          }
+          // First valid compliant date
+          else {
             // eslint-disable-next-line prefer-destructuring
             latestCompliantDate = currentLatestDate[0];
             latestMedication = [medInfo];
-          }
-          // Current latest date is the same as the overall latest date - push medInfo
-          else if (dayDifference === 0) {
-            latestMedication.push(medInfo);
           }
         }
       }
     });
 
     if (latestMedication.length > 0) {
-      alertInfo.lastMedication = latestMedication;
+      alertInfo.medCompliants = latestMedication;
     }
   }
 
@@ -224,22 +243,18 @@ export const queryAlertInfo = async (alert: Alert): Promise<Alert | null> => {
  * - Symptoms reports (includes activities)
  * - Vitals reports (includes fluid intake)
  * - Medication compliants
+ * - Latest ICD/CRT record
  * - TODO: Predicted outcomes in percentage (triage) - currently only has triage value associated with an alert
  * @param alert High Risk alert
  * @returns alert with monitoring records for the last 5 days
  */
 export const queryHighRiskAlertInfo = async (
   alert: Alert
-): Promise<AlertWithMonitoringRecords | null> => {
+): Promise<HighRiskAlertInfo | null> => {
   const alertInfo: AlertInfo = convertAlertToAlertInfo(alert);
 
   // Constructs data structure for holding records
-  const alertWithMonitoringRecords: AlertWithMonitoringRecords = {
-    ...alertInfo,
-    symptomReports: [],
-    vitalsReports: [],
-    medCompliants: []
-  };
+  const highRiskAlertInfo: HighRiskAlertInfo = alertInfo;
 
   // Gets patientInfo
   const patientInfoQuery = await getPatientInfo({
@@ -248,11 +263,11 @@ export const queryHighRiskAlertInfo = async (
 
   if (patientInfoQuery.data.getPatientInfo) {
     const patientInfo = patientInfoQuery.data.getPatientInfo;
-    alertWithMonitoringRecords.latestBaseline = patientInfo;
+    highRiskAlertInfo.latestBaseline = patientInfo;
   }
 
   // Gets date from alert dateTime
-  const alertDate = new Date(alert.dateTime).toISOString();
+  const alertDate = new Date(alert.dateTime);
 
   // Gets symptoms reports by descending order of DateTime
   const symptomReportsQuery = await listReportSymptomsByDateTime({
@@ -264,14 +279,19 @@ export const queryHighRiskAlertInfo = async (
   if (symptomReportsQuery.data.listReportSymptomsByDateTime?.items) {
     const symptomReports =
       symptomReportsQuery.data.listReportSymptomsByDateTime.items;
+    const validSymptomReports: ReportSymptom[] = [];
     symptomReports.forEach((report) => {
       if (
         report?.DateTime &&
+        alertDate >= new Date(report.DateTime) &&
         moment(alertDate).diff(moment(new Date(report.DateTime)), "days") <= 5
       ) {
-        alertWithMonitoringRecords.symptomReports.push(report);
+        validSymptomReports.push(report);
       }
     });
+    if (validSymptomReports.length > 0) {
+      highRiskAlertInfo.symptomReports = validSymptomReports;
+    }
   }
 
   // Gets vitals reports by descending order of DateTime
@@ -284,14 +304,19 @@ export const queryHighRiskAlertInfo = async (
   if (vitalsReportsQuery.data.listReportVitalsByDateTime?.items) {
     const vitalsReports =
       vitalsReportsQuery.data.listReportVitalsByDateTime.items;
+    const validVitalsReports: ReportVitals[] = [];
     vitalsReports.forEach((report) => {
       if (
         report?.DateTime &&
+        alertDate >= new Date(report.DateTime) &&
         moment(alertDate).diff(moment(new Date(report.DateTime)), "days") <= 5
       ) {
-        alertWithMonitoringRecords.vitalsReports.push(report);
+        validVitalsReports.push(report);
       }
     });
+    if (validVitalsReports.length > 0) {
+      highRiskAlertInfo.vitalsReports = validVitalsReports;
+    }
   }
 
   // Gets all medication infos of the patient
@@ -301,6 +326,8 @@ export const queryHighRiskAlertInfo = async (
   if (medInfosQuery.data.listMedicationInfosByPatientID?.items) {
     const medInfos = medInfosQuery.data.listMedicationInfosByPatientID.items;
 
+    const validMedInfos: MedicationInfo[] = [];
+
     // Checks compliants of each medication info
     medInfos.forEach((medInfo) => {
       if (medInfo?.records) {
@@ -308,6 +335,7 @@ export const queryHighRiskAlertInfo = async (
         Object.entries(compliants).forEach((compliantDate) => {
           const dateString = compliantDate[0];
           if (
+            alertDate >= new Date(dateString) &&
             moment(alertDate).diff(moment(new Date(dateString)), "days") > 5
           ) {
             // Remove records beyond the valid date range
@@ -318,15 +346,21 @@ export const queryHighRiskAlertInfo = async (
         // Only store medication infos with records
         if (Object.entries(compliants).length > 0) {
           medInfo.records = JSON.stringify(compliants);
-          alertWithMonitoringRecords.medCompliants.push(medInfo);
+          validMedInfos.push(medInfo);
         }
       }
     });
+
+    if (validMedInfos.length > 0) {
+      highRiskAlertInfo.medCompliants = validMedInfos;
+    }
   }
 
-  // Alert with monitoring records should at least contains the patient's baseline
-  if (alertWithMonitoringRecords.latestBaseline) {
-    return alertWithMonitoringRecords;
+  // TODO: Gets latest ICD/CRT record
+
+  // Alert should at least contains the patient's baseline
+  if (highRiskAlertInfo.latestBaseline) {
+    return highRiskAlertInfo;
   }
 
   // Otherwise returns null

@@ -1,6 +1,6 @@
 import { H4, H5 } from "components/Text";
 import React, { FC } from "react";
-import { Dimensions, View } from "react-native";
+import { View } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { CardWrapper } from "web/screens/Home/CardWrapper";
@@ -32,25 +32,22 @@ export const BaseDetailsCard: FC<BaseDetailsCardProps> = ({
   iconName,
   children
 }) => {
-  const iconSize: number = 40;
-  const cardHeight = Math.max(ms(120), Dimensions.get("window").height * 0.25);
+  const iconSize: number = ms(20);
 
   return (
-    <CardWrapper flex={1} minHeight={cardHeight}>
+    <CardWrapper flex={1}>
       <View style={styles.container}>
-        <View style={{ flexDirection: "column" }}>
-          <View style={styles.cardTitle}>
-            {iconName && (
-              <Icon
-                name={iconName}
-                size={iconSize}
-                style={{ paddingRight: ms(5) }}
-              />
-            )}
-            <H4 text={cardTitle} style={{ fontWeight: "bold" }} />
-          </View>
-          {children}
+        <View style={styles.cardTitle}>
+          {iconName && (
+            <Icon
+              name={iconName}
+              size={iconSize}
+              style={{ paddingRight: ms(5) }}
+            />
+          )}
+          <H4 text={cardTitle} style={{ fontWeight: "bold" }} />
         </View>
+        {children}
       </View>
     </CardWrapper>
   );
@@ -58,7 +55,7 @@ export const BaseDetailsCard: FC<BaseDetailsCardProps> = ({
 
 const styles = ScaledSheet.create({
   container: {
-    flexDirection: "row",
+    flexDirection: "column",
     width: "100%",
     height: "100%"
   },

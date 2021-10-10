@@ -6,7 +6,8 @@ import {
   PatientDetails,
   AlertsCount,
   LocalTodo,
-  RiskFilter
+  RiskFilter,
+  HighRiskAlertInfo
 } from "rc_agents/model";
 import {
   ClinicianInfo,
@@ -47,7 +48,7 @@ interface AgentsState {
   pendingAlerts: AlertInfo[] | undefined;
   completedAlerts: AlertInfo[] | undefined;
   fetchingAlertInfo: boolean;
-  alertInfo: AlertInfo | undefined;
+  alertInfo: AlertInfo | HighRiskAlertInfo | undefined;
   pendingTodos: LocalTodo[] | null;
   completedTodos: LocalTodo[] | null;
   alertHistory: AlertInfo[] | undefined;
