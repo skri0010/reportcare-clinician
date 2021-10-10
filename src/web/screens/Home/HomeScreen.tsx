@@ -1,6 +1,6 @@
 import React, { FC, useEffect } from "react";
 import { View } from "react-native";
-import { ScreenWrapper } from "web/screens/ScreenWrapper";
+import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
 import { MainScreenProps } from "web/navigation/types";
 import { ScreenName } from "web/navigation";
 import { WelcomeCard } from "./WelcomeCard";
@@ -11,7 +11,6 @@ import { TodosCard } from "./TodosCard";
 import { PendingPatientAssignmentsCard } from "./PendingPatientAssignmentsCard";
 import { RootState, select, useDispatch } from "util/useRedux";
 import useSound from "use-sound";
-import { PatientHistoryModal } from "../Patients/PatientScreens/PatientDetailsScreen/PatientHistoryComponents/PatientHistoryModals";
 import { setShowAlertPopUp } from "ic-redux/actions/agents/actionCreator";
 import { AlertPopUp } from "../Alerts/AlertPopUp";
 
@@ -59,12 +58,12 @@ export const HomeScreen: FC<MainScreenProps[ScreenName.HOME]> = ({
         <PendingPatientAssignmentsCard maxHeight={maxHeight} />
       </View>
       {realTimeAlert && (
-        <PatientHistoryModal
+        <AlertPopUp
           visible={showAlertPopUp}
           onRequestClose={() => dispatch(setShowAlertPopUp(false))}
-        >
-          <AlertPopUp navigation={navigation} realTimeAlert={realTimeAlert} />
-        </PatientHistoryModal>
+          navigation={navigation}
+          realTimeAlert={realTimeAlert}
+        />
       )}
     </ScreenWrapper>
   );

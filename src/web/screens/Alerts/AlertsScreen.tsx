@@ -2,7 +2,7 @@ import React, { FC, useState, useEffect } from "react";
 import { RootState, select } from "util/useRedux";
 import { ScreenName } from "web/navigation";
 import { View, Modal } from "react-native";
-import { ScreenWrapper } from "web/screens/ScreenWrapper";
+import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
 import { ScaledSheet } from "react-native-size-matters";
 import { NoSelectionScreen } from "../Shared/NoSelectionScreen";
 import { MainScreenProps } from "web/navigation/types";
@@ -12,6 +12,7 @@ import { AddTodoScreen } from "web/screens/Todo/modals/AddTodoScreen";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AlertListTabNavigator } from "web/navigation/navigators/AlertListTabNavigator";
 import { AlertDetailsScreen } from "./AlertDetailsScreen";
+import { AdaptiveTwoScreenWrapper } from "components/Wrappers/AdaptiveTwoScreenWrapper";
 
 export const AlertScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
   const {
@@ -61,27 +62,36 @@ export const AlertScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
         style={styles.container}
         pointerEvents={modalVisible || submittingTodo ? "none" : "auto"}
       >
-        <View style={styles.rowSelection}>
-          <AlertListTabNavigator />
-        </View>
-        <View
-          style={{
-            flex: 2,
-            backgroundColor: colors.primaryWebBackgroundColor
-          }}
-        >
-          {fetchingAlertInfo ? (
-            <LoadingIndicator flex={1} />
-          ) : !isEmptyAlert ? (
-            <AlertDetailsScreen setModalVisible={setModalVisible} />
-          ) : (
-            <NoSelectionScreen
-              screenName={ScreenName.ALERTS}
-              subtitle="Choose Alert to view more info"
-            />
-          )}
-        </View>
+        <AdaptiveTwoScreenWrapper
+          // Left side: List of alerts
+          LeftComponent={
+            <View style={styles.rowSelection}>
+              <AlertListTabNavigator />
+            </View>
+          }
+          // Right side: Alert details
+          RightComponent={
+            <View
+              style={{
+                flex: 2,
+                backgroundColor: colors.primaryWebBackgroundColor
+              }}
+            >
+              {fetchingAlertInfo ? (
+                <LoadingIndicator flex={1} />
+              ) : !isEmptyAlert ? (
+                <AlertDetailsScreen setModalVisible={setModalVisible} />
+              ) : (
+                <NoSelectionScreen
+                  screenName={ScreenName.ALERTS}
+                  subtitle="Choose Alert to view more info"
+                />
+              )}
+            </View>
+          }
+        />
       </View>
+
       {/* ADD TODO modal */}
       <View style={styles.modalView}>
         <Modal

@@ -8,13 +8,7 @@ import {
   LocalTodo,
   RiskFilter
 } from "rc_agents/model";
-import {
-  ClinicianInfo,
-  IcdCrtRecord,
-  MedicalRecord,
-  PatientAssignment,
-  PatientInfo
-} from "aws/API";
+import { ClinicianInfo, PatientAssignment, PatientInfo } from "aws/API";
 import { RiskLevel } from "models/RiskLevel";
 import { ChartFilter, ChartViewTypes } from "models/ChartViewTypes";
 
@@ -48,8 +42,8 @@ interface AgentsState {
   completedAlerts: AlertInfo[] | undefined;
   fetchingAlertInfo: boolean;
   alertInfo: AlertInfo | undefined;
-  pendingTodos: LocalTodo[] | null;
-  completedTodos: LocalTodo[] | null;
+  pendingTodos: LocalTodo[] | undefined;
+  completedTodos: LocalTodo[] | undefined;
   alertHistory: AlertInfo[] | undefined;
   fetchingTodos: boolean;
   fetchingTodoDetails: boolean;
@@ -58,16 +52,10 @@ interface AgentsState {
   todoDetails: LocalTodo | undefined;
   creatingMedicalRecord: boolean;
   createMedicalRecordSuccessful: boolean;
-  fetchingMedicalRecords: boolean;
-  medicalRecords: MedicalRecord[] | undefined;
   fetchingMedicalRecordContent: boolean;
-  medicalRecordContent: string | undefined;
   creatingIcdCrtRecord: boolean;
   createIcdCrtRecordSuccessful: boolean;
-  fetchingIcdCrtRecords: boolean;
-  icdCrtRecords: IcdCrtRecord[] | undefined;
   fetchingIcdCrtRecordContent: boolean;
-  icdCrtRecordContent: string | undefined;
   showAlertPopUp: boolean;
   realTimeAlert: AlertInfo | undefined;
 }
@@ -128,8 +116,8 @@ const initialState: AgentsState = {
   fetchingAlertInfo: false,
   alertInfo: undefined,
   todoDetails: undefined,
-  pendingTodos: null,
-  completedTodos: null,
+  pendingTodos: undefined,
+  completedTodos: undefined,
   alertHistory: undefined,
   fetchingTodos: false,
   fetchingTodoDetails: false,
@@ -137,16 +125,10 @@ const initialState: AgentsState = {
   updatedTodo: undefined,
   creatingMedicalRecord: false,
   createMedicalRecordSuccessful: false,
-  fetchingMedicalRecords: false,
-  medicalRecords: undefined,
   fetchingMedicalRecordContent: false,
-  medicalRecordContent: undefined,
   creatingIcdCrtRecord: false,
   createIcdCrtRecordSuccessful: false,
-  fetchingIcdCrtRecords: false,
-  icdCrtRecords: undefined,
   fetchingIcdCrtRecordContent: false,
-  icdCrtRecordContent: undefined,
   showAlertPopUp: false,
   realTimeAlert: undefined
 };
@@ -231,26 +213,11 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
         createMedicalRecordSuccessful:
           action.payload.createMedicalRecordSuccessful
       };
-    case actionNames.SET_FETCHING_MEDICAL_RECORDS:
-      return {
-        ...state,
-        fetchingMedicalRecords: action.payload.fetchingMedicalRecords
-      };
-    case actionNames.SET_MEDICAL_RECORDS:
-      return {
-        ...state,
-        medicalRecords: action.payload.medicalRecords
-      };
     case actionNames.SET_FETCHING_MEDICAL_RECORD_CONTENT:
       return {
         ...state,
         fetchingMedicalRecordContent:
           action.payload.fetchingMedicalRecordContent
-      };
-    case actionNames.SET_MEDICAL_RECORD_CONTENT:
-      return {
-        ...state,
-        medicalRecordContent: action.payload.medicalRecordContent
       };
     case actionNames.SET_CREATING_ICDCRT_RECORD:
       return {
@@ -263,25 +230,10 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
         createIcdCrtRecordSuccessful:
           action.payload.createIcdCrtRecordSuccessful
       };
-    case actionNames.SET_FETCHING_ICDCRT_RECORDS:
-      return {
-        ...state,
-        fetchingIcdCrtRecords: action.payload.fetchingIcdCrtRecords
-      };
-    case actionNames.SET_ICDCRT_RECORDS:
-      return {
-        ...state,
-        icdCrtRecords: action.payload.icdCrtRecords
-      };
     case actionNames.SET_FETCHING_ICDCRT_RECORD_CONTENT:
       return {
         ...state,
         fetchingIcdCrtRecordContent: action.payload.fetchingIcdCrtRecordContent
-      };
-    case actionNames.SET_ICDCRT_RECORD_CONTENT:
-      return {
-        ...state,
-        icdCrtRecordContent: action.payload.icdCrtRecordContent
       };
     case actionNames.SET_PENDING_ALERT_COUNT:
       return {

@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from "react";
 import { RootState, select } from "util/useRedux";
-import { CardWrapper } from "web/screens/Home/CardWrapper";
+import { CardWrapper } from "components/Wrappers/CardWrapper";
 import { FlatList, View } from "react-native";
 import i18n from "util/language/i18n";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
@@ -8,31 +8,28 @@ import { EmptyListIndicator } from "components/Indicators/EmptyListIndicator";
 import { IcdCrtRecordRow } from "./IcdCrtRecordRow";
 import { IconButton, IconType } from "components/Buttons/IconButton";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
-import { IcdCrtRecord } from "aws/API";
+import { ClinicianRecord } from "aws/API";
 import { useNetInfo } from "@react-native-community/netinfo";
 import { ScaledSheet } from "react-native-size-matters";
 
 interface IcdCrtProps {
+  icdCrtRecords: ClinicianRecord[];
   onAddPress: () => void; // when the add button is pressed
-  onViewIcdCrtRecord: (icdCrtRecord: IcdCrtRecord) => void;
+  onViewIcdCrtRecord: (icdCrtRecord: ClinicianRecord) => void;
 }
 
 export const IcdCrtCard: FC<IcdCrtProps> = ({
+  icdCrtRecords,
   onAddPress,
   onViewIcdCrtRecord
 }) => {
-  const {
-    colors,
-    fetchingIcdCrtRecords,
-    icdCrtRecords,
-    fetchingIcdCrtRecordContent
-  } = select((state: RootState) => ({
-    colors: state.settings.colors,
-    alertHistory: state.agents.alertHistory,
-    fetchingIcdCrtRecords: state.agents.fetchingIcdCrtRecords,
-    icdCrtRecords: state.agents.icdCrtRecords,
-    fetchingIcdCrtRecordContent: state.agents.fetchingIcdCrtRecordContent
-  }));
+  const { colors, fetchingIcdCrtRecordContent } = select(
+    (state: RootState) => ({
+      colors: state.settings.colors,
+      alertHistory: state.agents.alertHistory,
+      fetchingIcdCrtRecordContent: state.agents.fetchingIcdCrtRecordContent
+    })
+  );
 
   const [isOnline, setIsOnline] = useState<boolean>(false); // Whether app is online
 
@@ -70,40 +67,31 @@ export const IcdCrtCard: FC<IcdCrtProps> = ({
   };
 
   return (
-    <View
-      pointerEvents={
-        fetchingIcdCrtRecords || fetchingIcdCrtRecordContent ? "none" : "auto"
-      }
+    <CardWrapper
+      title={i18n.t("Patient_ICD/CRT.IcdCrtRecords")}
+      ComponentNextToTitle={AddIcdCrtRecordButton}
+      pointerEvents={fetchingIcdCrtRecordContent ? "none" : "auto"}
     >
-      <CardWrapper
-        title={i18n.t("Patient_ICD/CRT.IcdCrtRecords")}
-        ComponentNextToTitle={AddIcdCrtRecordButton}
-      >
-        {/* List of ICD/CRT records */}
-        {icdCrtRecords && icdCrtRecords.length > 0 ? (
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            ItemSeparatorComponent={ItemSeparator}
-            data={icdCrtRecords}
-            renderItem={({ item }) => (
-              <IcdCrtRecordRow
-                icdCrtRecord={item}
-                onViewIcdCrtRecord={onViewIcdCrtRecord}
-                allowView={isOnline}
-              />
-            )}
-            keyExtractor={(icdCrtRecord) => icdCrtRecord.id}
-          />
-        ) : !fetchingIcdCrtRecords ? (
-          <EmptyListIndicator
-            text={i18n.t("Patient_ICD/CRT.NoIcdCrtRecords")}
-          />
-        ) : null}
-        {(fetchingIcdCrtRecords || fetchingIcdCrtRecordContent) && (
-          <LoadingIndicator />
-        )}
-      </CardWrapper>
-    </View>
+      {/* List of ICD/CRT records */}
+      {icdCrtRecords && icdCrtRecords.length > 0 ? (
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          ItemSeparatorComponent={ItemSeparator}
+          data={icdCrtRecords}
+          renderItem={({ item }) => (
+            <IcdCrtRecordRow
+              icdCrtRecord={item}
+              onViewIcdCrtRecord={onViewIcdCrtRecord}
+              allowView={isOnline}
+            />
+          )}
+          keyExtractor={(icdCrtRecord) => icdCrtRecord.documentID}
+        />
+      ) : (
+        <EmptyListIndicator text={i18n.t("Patient_ICD/CRT.NoIcdCrtRecords")} />
+      )}
+      {fetchingIcdCrtRecordContent && <LoadingIndicator />}
+    </CardWrapper>
   );
 };
 

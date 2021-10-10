@@ -18,25 +18,25 @@ import {
 import { LocalStorage } from "rc_agents/storage";
 
 /**
- * Class to represent the activity for associating clinician id with entry data.
- * This happens in Procedure App Device Configuration (ADC).
+ * Represents the activity for associating clinician id with entry data.
+ * This happens in Procedure App-Medical Records Device Configuration (MRDC) - CP-PSB.
+ * Only being triggered when a clinician signs in.
+ * Patient configuration to store baseline data will trigger StoreBaseline of DTA directly.
  */
 class AssociateData extends Activity {
-  /**
-   * Constructor for the AssociateData class
-   */
   constructor() {
     super(ActionFrameIDs.APS.ASSOCIATE_DATA);
   }
 
   /**
-   * Perform this activity
-   * @param {Agent} agent - agent executing the activity
+   * Associates data to be passed to DTA
+   * @param {Agent} agent current agent
    */
   async doActivity(agent: Agent): Promise<void> {
     super.doActivity(agent, [rule2]);
 
     try {
+      // Gets details from local storage
       const signUpDetails = await LocalStorage.getSignUpDetails();
       const username = await LocalStorage.getUsername();
 
@@ -93,7 +93,7 @@ const rule2 = new ResettablePrecondition(
 );
 const rule3 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.ADC,
+  ProcedureAttributes.MRDC,
   ProcedureConst.ACTIVE
 );
 

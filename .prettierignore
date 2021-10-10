@@ -16,3 +16,4 @@ amplify/backend/auth
 src/aws/*
 !src/aws/index.ts
 !src/aws/typedAPI
+**/*.js

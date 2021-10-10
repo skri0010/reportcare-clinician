@@ -25,6 +25,7 @@ import {
   PatientAssignmentStatus
 } from "rc_agents/model";
 import { updatePatientAssignment } from "aws";
+import { agentNWA } from "rc_agents/agents";
 
 /**
  * Class to represent an activity for resolving patient assignment (APPROVE or REASSIGN) .
@@ -67,6 +68,7 @@ class ResolvePatientAssignment extends Activity {
         else {
           // Append current assignments to resolve to locally stored assignments to resolve
           const data = await LocalStorage.getPatientAssignmentResolutions();
+
           let resolutionList: AsyncStorageType[AsyncStorageKeys.PATIENT_ASSIGNMENTS_RESOLUTIONS];
           // Key exists in AsyncStorage
           if (data) {
@@ -83,7 +85,7 @@ class ResolvePatientAssignment extends Activity {
           LocalStorage.setPatientAssignmentResolutions(resolutionList);
 
           // Trigger request to Communicate to NWA
-          agent.addBelief(
+          agentNWA.addBelief(
             new Belief(
               BeliefKeys.APP,
               AppAttributes.SYNC_PATIENT_ASSIGNMENT_RESOLUTIONS,

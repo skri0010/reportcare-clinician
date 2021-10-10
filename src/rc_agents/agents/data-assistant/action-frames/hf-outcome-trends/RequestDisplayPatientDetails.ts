@@ -25,7 +25,7 @@ import {
  */
 class RequestDisplayPatientDetails extends Communicate {
   constructor() {
-    // Triggers VisualizeParameters action frame of UXSA
+    // Triggers DisplayPatientDetails action frame of UXSA
     super(
       ActionFrameIDs.DTA.REQUEST_DISPLAY_PATIENT_DETAILS,
       Performative.REQUEST,

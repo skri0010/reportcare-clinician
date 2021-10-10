@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
 import { View } from "react-native";
 import { ms } from "react-native-size-matters";
-import { H4 } from "components/Text";
+import { H5 } from "components/Text";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { MedicationInfo } from "aws/API";
 
@@ -20,7 +20,7 @@ export const MedicationRow: FC<MedicationRowProps> = ({ medicationInfo }) => {
       {/* JQ-TODO Add a checking here to see if the patient has taken the medicine */}
       {/* ie {medicineTaken?(<Icon name="check" color={colors.acceptButtonColor} size={ms(15)} />):(<View style={{ paddingLeft: ms(15) }} />)} */}
       <Icon name="check" color={colors.acceptButtonColor} size={ms(15)} />
-      <H4 text={`  ${medicationInfo.name}`} style={null} />
+      <H5 text={`  ${medicationInfo.name}`} style={null} />
     </View>
   );
 };

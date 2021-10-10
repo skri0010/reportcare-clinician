@@ -7,9 +7,13 @@ import { ScaledSheet, ms } from "react-native-size-matters";
 import i18n from "util/language/i18n";
 import { AlertInfo } from "rc_agents/model";
 import moment from "moment";
+import {
+  ModalWrapper,
+  ModalWrapperProps
+} from "components/Wrappers/ModalWrapper";
 
-interface AlertHistoryModalProps {
-  name: string; // patient name
+interface AlertHistoryModalProps extends ModalWrapperProps {
+  patientName: string;
   alertHistory: AlertInfo;
   setModalAlertVisible: (state: boolean) => void;
 }
@@ -50,7 +54,9 @@ const getLocalDateTime = (datetime: string) => {
 };
 
 export const AlertHistoryModal: FC<AlertHistoryModalProps> = ({
-  name,
+  visible,
+  onRequestClose,
+  patientName,
   alertHistory,
   setModalAlertVisible
 }) => {
@@ -59,18 +65,10 @@ export const AlertHistoryModal: FC<AlertHistoryModalProps> = ({
   }));
 
   return (
-    <View
-      style={[
-        styles.container,
-        {
-          backgroundColor: colors.primaryContrastTextColor,
-          borderColor: colors.primaryBorderColor
-        }
-      ]}
-    >
+    <ModalWrapper visible={visible} onRequestClose={onRequestClose}>
       <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
         <H3
-          text={`${name}`}
+          text={`${patientName}`}
           style={{ fontWeight: "bold", paddingTop: ms(20) }}
         />
         {/* Alert summary */}
@@ -157,7 +155,7 @@ export const AlertHistoryModal: FC<AlertHistoryModalProps> = ({
           />
         </TouchableOpacity>
       </View>
-    </View>
+    </ModalWrapper>
   );
 };
 
@@ -170,12 +168,5 @@ const styles = ScaledSheet.create({
     height: "25@ms",
     borderWidth: "1@ms",
     margin: "10@ms"
-  },
-  container: {
-    width: "30%",
-    minWidth: "250@ms",
-    height: "65%",
-    paddingLeft: "15@ms",
-    borderRadius: "10@ms"
   }
 });

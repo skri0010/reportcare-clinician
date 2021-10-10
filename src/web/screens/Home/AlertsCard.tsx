@@ -4,7 +4,7 @@ import { RiskLevel } from "models/RiskLevel";
 import { View } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { AlertButton } from "components/Buttons/AlertButton";
-import { CardWrapper } from "./CardWrapper";
+import { CardWrapper } from "components/Wrappers/CardWrapper";
 import i18n from "util/language/i18n";
 import { FetchAlertsMode, RiskFilter } from "rc_agents/model";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
