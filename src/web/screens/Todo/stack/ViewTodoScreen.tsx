@@ -95,7 +95,7 @@ export const ViewTodoScreen: FC<ViewTodoScreenProps> = ({
           <TouchableOpacity
             style={[
               styles.editButton,
-              { backgroundColor: colors.primaryTodoCompleteButtonColor }
+              { backgroundColor: colors.innerScreenButtonColor }
             ]}
             onPress={() => {
               navigation.navigate(TodoDetailsStackScreenName.EDIT_TODO);

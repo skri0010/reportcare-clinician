@@ -1,12 +1,13 @@
 import React, { FC } from "react";
-import { View, TouchableOpacity } from "react-native";
+import { View } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
-import { H4 } from "components/Text";
 import { RootState, select } from "util/useRedux";
 import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
 import { AlertDetails } from "./AlertDetails";
 import { RiskLevel } from "models/RiskLevel";
 import { HighRiskAlertDetails } from "./HighRiskAlertDetails";
+import { InnerScreenButton } from "components/Buttons/InnerScreenButton";
+import i18n from "util/language/i18n";
 
 interface AlertDetailsScreenProps {
   setModalVisible: (state: boolean) => void;
@@ -15,8 +16,7 @@ interface AlertDetailsScreenProps {
 export const AlertDetailsScreen: FC<AlertDetailsScreenProps> = ({
   setModalVisible
 }) => {
-  const { colors, alertInfo } = select((state: RootState) => ({
-    colors: state.settings.colors,
+  const { alertInfo } = select((state: RootState) => ({
     alertInfo: state.agents.alertInfo
   }));
 
@@ -30,23 +30,13 @@ export const AlertDetailsScreen: FC<AlertDetailsScreenProps> = ({
           <AlertDetails />
         )}
         {/* Create todo button */}
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={[
-              styles.button,
-              { backgroundColor: colors.primaryTodoCompleteButtonColor }
-            ]}
-            onPress={() => {
-              // Allows the create todo modal to be visible
-              setModalVisible(true);
-            }}
-          >
-            <H4
-              text="Create Todo"
-              style={{ color: colors.primaryContrastTextColor }}
-            />
-          </TouchableOpacity>
-        </View>
+        <InnerScreenButton
+          title={i18n.t("Alerts.CreateToDo")}
+          onPress={() => {
+            // Allows the create todo modal to be visible
+            setModalVisible(true);
+          }}
+        />
       </View>
     </ScreenWrapper>
   );
@@ -67,16 +57,5 @@ const styles = ScaledSheet.create({
   informationTitle: {
     fontWeight: "bold",
     paddingTop: "17@ms"
-  },
-  buttonContainer: {
-    marginTop: "10@ms",
-    alignItems: "center"
-  },
-  button: {
-    textAlign: "center",
-    justifyContent: "space-evenly",
-    borderRadius: "5@ms",
-    width: "80@ms",
-    height: "30@ms"
   }
 });

@@ -297,7 +297,8 @@
       "Symptom": "Simptom",
       "Activity": "Aktiviti",
       "Severity": "Keterukan",
-      "DateTime": "Direkodkan pada"
+      "DateTime": "Direkodkan pada",
+      "NoSymptomReport": "Tiada rekod simptom dijumpai"
     },
     "AlertVitals": {
       "Vitals": "Aktiviti dan Vital",
@@ -309,7 +310,8 @@
       "Weight": "Berat badan",
       "DateTime": "Direkodkan pada",
       "HeartRate": "Kadar degupan jantung",
-      "HeartRateUnit": "bpm"
+      "HeartRateUnit": "bpm",
+      "NoVitalsReport": "Tiada rekod aktiviti dan vital dijumpai"
     },
     "Medications": {
       "Medications": "Ubat-ubatan",
@@ -318,10 +320,10 @@
     "IcdCrt": {
       "IcdCrtRecord": "Rekod ICD/CRT Terkini",
       "UploadDateTime": "Dimuat naik pada",
-      "ViewContent": "Lihat kandungan"
+      "ViewContent": "Lihat kandungan",
+      "NoIcdCrtRecord": "Tiada rekod ICD/CRT dijumpai"
     },
-    "Symptoms": "Simptom",
-    "Signs": "Tanda",
+    "CreateToDo": "Cipta Todo",
     "HighRisk": "Risiko Tinggi",
     "MediumRisk": "Risiko Sederhana",
     "LowRisk": "Risiko Rendah",

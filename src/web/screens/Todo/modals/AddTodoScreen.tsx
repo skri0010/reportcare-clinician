@@ -1,11 +1,5 @@
 import React, { FC, useState, useEffect } from "react";
-import {
-  View,
-  TouchableOpacity,
-  TextInput,
-  ViewStyle,
-  StyleProp
-} from "react-native";
+import { View, TextInput, ViewStyle, StyleProp } from "react-native";
 import { ScaledSheet, ms } from "react-native-size-matters";
 import { H3 } from "components/Text";
 import { RootState, select, useDispatch } from "util/useRedux";
@@ -17,6 +11,7 @@ import { AgentTrigger } from "rc_agents/trigger";
 import { useRoute } from "@react-navigation/native";
 import { ScreenName } from "web/navigation";
 import { setUpdatingAlertIndicators } from "ic-redux/actions/agents/actionCreator";
+import { SaveAndCancelButtons } from "components/Buttons/SaveAndCancelButtons";
 
 interface AddTodoScreenProps {
   setModalVisible: (state: boolean) => void;
@@ -151,41 +146,14 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
         ]}
         onChangeText={onChangeNotes}
       />
-      {/* Save button */}
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={[
-            styles.button,
-            { backgroundColor: colors.primaryTodoCompleteButtonColor }
-          ]}
-          onPress={createTodo}
-        >
-          <H3
-            text={i18n.t("Todo.SaveButton")}
-            style={{ color: colors.primaryContrastTextColor }}
-          />
-        </TouchableOpacity>
-        {/* Cancel button */}
-        <TouchableOpacity
-          style={[
-            styles.button,
-            {
-              backgroundColor: colors.primaryContrastTextColor,
-              borderColor: colors.primaryTextColor,
-              borderWidth: ms(1)
-            }
-          ]}
-          onPress={() => {
-            setModalVisible(false);
-          }}
-        >
-          <H3
-            text={i18n.t("Todo.CancelButton")}
-            style={{ color: colors.primaryTextColor }}
-          />
-        </TouchableOpacity>
-      </View>
-
+      {/* Save and Cancel buttons */}
+      <SaveAndCancelButtons
+        onPressSave={createTodo}
+        onPressCancel={() => {
+          setModalVisible(false);
+        }}
+        validToSave
+      />
       {/* Loading Indicator while Todo is being created */}
       {updatingAlert && <LoadingIndicator />}
     </View>

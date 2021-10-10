@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from "react";
 import i18n from "util/language/i18n";
 import { ReportVitals } from "aws/API";
-import { BaseDetailsCard } from "./BaseDetailsCard";
+import { BaseDetailsCard } from "../BaseDetailsCard";
 import { LocalReportVitals } from "rc_agents/model";
 import {
   FullChartData,
@@ -10,7 +10,7 @@ import {
   ParameterStats
 } from "components/VisualizationComponents/ParameterGraphs";
 import { ChartFilterPillList } from "components/Buttons/ChartFilterPillList";
-import { Dimensions, View } from "react-native";
+import { Dimensions, ScrollView, View } from "react-native";
 import { DiastolicBPChartCard } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientParameterComponents/DiastolicBPChartCard";
 import { FluidIntakeChartCard } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientParameterComponents/FluidIntakeChart";
 import { NumberOfStepsChartCard } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientParameterComponents/NumberOfStepsChartCard";
@@ -18,6 +18,7 @@ import { OxygenSaturationChartCard } from "web/screens/Patients/PatientScreens/P
 import { SystolicBPChartCard } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientParameterComponents/SystolicBPChartCard";
 import { WeightChartCard } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientParameterComponents/WeightChartCard";
 import { ms, ScaledSheet } from "react-native-size-matters";
+import { NoListItemMessage } from "web/screens/Shared/NoListItemMessage";
 
 interface HighRiskVitalSignsCardProps {
   vitalsReports?: ReportVitals[] | null;
@@ -26,10 +27,13 @@ interface HighRiskVitalSignsCardProps {
 export const HighRiskVitalSignsCard: FC<HighRiskVitalSignsCardProps> = ({
   vitalsReports
 }) => {
-  const maxCardHeight = Math.max(
+  const maxGraphHeight = Math.max(
     ms(200),
-    Dimensions.get("window").height * 0.5
+    Dimensions.get("window").height * 0.8
   );
+
+  const maxCardHeight =
+    Math.max(ms(300), Dimensions.get("window").height) * 0.7;
 
   const [fullChartData, setFullChartData] = useState<FullChartData | undefined>(
     undefined
@@ -80,47 +84,54 @@ export const HighRiskVitalSignsCard: FC<HighRiskVitalSignsCardProps> = ({
     <BaseDetailsCard
       cardTitle={i18n.t("Alerts.AlertVitals.Vitals")}
       iconName="heart-pulse"
+      maxHeight={maxCardHeight}
     >
-      {fullChartData && (
+      {fullChartData ? (
         <>
           <ChartFilterPillList />
-          <View style={styles.rowContainer}>
-            {/* Number of Steps Graph */}
-            <NumberOfStepsChartCard
-              data={fullChartData.steps}
-              maxHeight={maxCardHeight}
-            />
-            {/* Fluid Intake Graph */}
-            <FluidIntakeChartCard
-              data={fullChartData.fluid}
-              maxHeight={maxCardHeight}
-            />
-          </View>
-          <View style={styles.rowContainer}>
-            {/* Diastolic Blood Graph */}
-            <DiastolicBPChartCard
-              data={fullChartData.diastolic}
-              maxHeight={maxCardHeight}
-            />
-            {/* Systolic Blood Graph */}
-            <SystolicBPChartCard
-              data={fullChartData.systolic}
-              maxHeight={maxCardHeight}
-            />
-          </View>
-          <View style={styles.rowContainer}>
-            {/* Oxygen Saturation Graph */}
-            <OxygenSaturationChartCard
-              data={fullChartData.oxygenSaturation}
-              maxHeight={maxCardHeight}
-            />
-            {/* Weight Graph */}
-            <WeightChartCard
-              data={fullChartData.weight}
-              maxHeight={maxCardHeight}
-            />
-          </View>
+          <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+            <View style={styles.rowContainer}>
+              {/* Number of Steps Graph */}
+              <NumberOfStepsChartCard
+                data={fullChartData.steps}
+                maxHeight={maxGraphHeight}
+              />
+              {/* Fluid Intake Graph */}
+              <FluidIntakeChartCard
+                data={fullChartData.fluid}
+                maxHeight={maxGraphHeight}
+              />
+            </View>
+            <View style={styles.rowContainer}>
+              {/* Diastolic Blood Graph */}
+              <DiastolicBPChartCard
+                data={fullChartData.diastolic}
+                maxHeight={maxGraphHeight}
+              />
+              {/* Systolic Blood Graph */}
+              <SystolicBPChartCard
+                data={fullChartData.systolic}
+                maxHeight={maxGraphHeight}
+              />
+            </View>
+            <View style={styles.rowContainer}>
+              {/* Oxygen Saturation Graph */}
+              <OxygenSaturationChartCard
+                data={fullChartData.oxygenSaturation}
+                maxHeight={maxGraphHeight}
+              />
+              {/* Weight Graph */}
+              <WeightChartCard
+                data={fullChartData.weight}
+                maxHeight={maxGraphHeight}
+              />
+            </View>
+          </ScrollView>
         </>
+      ) : (
+        <NoListItemMessage
+          screenMessage={i18n.t("Alerts.AlertVitals.NoVitalsReport")}
+        />
       )}
     </BaseDetailsCard>
   );

@@ -25,17 +25,19 @@ export const BaseDetailsContent: FC<BaseDetailsContentProps> = ({
 export interface BaseDetailsCardProps {
   cardTitle: string;
   iconName?: string;
+  maxHeight?: number;
 }
 
 export const BaseDetailsCard: FC<BaseDetailsCardProps> = ({
   cardTitle,
   iconName,
-  children
+  children,
+  maxHeight
 }) => {
   const iconSize: number = ms(20);
 
   return (
-    <CardWrapper flex={1}>
+    <CardWrapper flex={1} maxHeight={maxHeight}>
       <View style={styles.container}>
         <View style={styles.cardTitle}>
           {iconName && (

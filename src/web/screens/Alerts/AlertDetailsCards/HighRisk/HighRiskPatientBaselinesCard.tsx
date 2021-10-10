@@ -1,7 +1,7 @@
 import { PatientInfo } from "aws/API";
 import React, { FC } from "react";
 import i18n from "util/language/i18n";
-import { BaseDetailsCard, BaseDetailsContent } from "./BaseDetailsCard";
+import { BaseDetailsCard, BaseDetailsContent } from "../BaseDetailsCard";
 
 interface HighRiskPatientBaselinesCardProps {
   patientInfo?: PatientInfo;

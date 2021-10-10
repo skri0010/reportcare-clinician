@@ -26,7 +26,9 @@ import {
   getPatientInfo,
   listMedicationInfosByPatientID,
   listReportSymptomsByDateTime,
-  listReportVitalsByDateTime
+  listReportVitalsByDateTime,
+  listUploadedClinicianRecordsByPatientID,
+  PresignedUrlRecordType
 } from "aws";
 import { store } from "util/useRedux";
 import { setFetchingAlertInfo } from "ic-redux/actions/agents/actionCreator";
@@ -356,7 +358,33 @@ export const queryHighRiskAlertInfo = async (
     }
   }
 
-  // TODO: Gets latest ICD/CRT record
+  // Gets ICD/CRT records in descending date time
+  const icdCrtRecordType: PresignedUrlRecordType = "IcdCrt";
+  const icdCrtRecordsQuery = await listUploadedClinicianRecordsByPatientID({
+    patientID: alert.patientID,
+    filter: { type: { eq: icdCrtRecordType } },
+    sortDirection: ModelSortDirection.DESC
+  });
+
+  if (
+    icdCrtRecordsQuery.data.listUploadedClinicianRecordsByPatientID?.items &&
+    icdCrtRecordsQuery.data.listUploadedClinicianRecordsByPatientID?.items
+      .length > 0
+  ) {
+    const icdCrtRecords =
+      icdCrtRecordsQuery.data.listUploadedClinicianRecordsByPatientID.items;
+    // Gets the first ICD/CRT record that is uploaded before alert date
+    for (let i = 0; i < icdCrtRecords.length; i += 1) {
+      const icdCrt = icdCrtRecords[i];
+      if (
+        icdCrt?.uploadDateTime &&
+        new Date(icdCrt.uploadDateTime) <= alertDate
+      ) {
+        highRiskAlertInfo.icdCrtRecord = icdCrt;
+        break;
+      }
+    }
+  }
 
   // Alert should at least contains the patient's baseline
   if (highRiskAlertInfo.latestBaseline) {

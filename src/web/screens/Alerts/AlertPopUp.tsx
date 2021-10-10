@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from "react";
-import { View, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity, ScrollView } from "react-native";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { H3, H4, H5 } from "components/Text";
 import { ScaledSheet, ms } from "react-native-size-matters";
@@ -40,8 +40,8 @@ const AlertPopUpDetails: FC<AlertPopUpDetailsProps> = ({
   }));
 
   return (
-    <View style={{ display: "flex", flexWrap: "wrap" }}>
-      <H4 text={title} style={{ fontWeight: "600", marginBottom: ms(5) }} />
+    <View style={styles.detailsContainer}>
+      <H4 text={title} style={styles.detailsTitle} />
       <H5
         text={details}
         style={{
@@ -105,81 +105,83 @@ export const AlertPopUp: FC<AlertPopUpProps> = ({
         }
       ]}
     >
-      {/* Title */}
-      <View style={styles.iconContainerStyle}>
-        <IconButton
-          name="times"
-          type={IconType.FONTAWESOME}
-          iconStyle={{
-            fontSize: fonts.h5Size,
-            color: colors.errorColor,
-            opacity: 0.8
-          }}
-          containerStyle={styles.iconStyle}
-          onPress={() => {
-            dispatch(setRealTimeAlert(undefined)); // Reset realTimeAlert state
-            dispatch(setShowAlertPopUp(false)); // Close the pop up
-          }}
-        />
-      </View>
+      <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+        {/* Title */}
+        <View style={styles.iconContainerStyle}>
+          <IconButton
+            name="times"
+            type={IconType.FONTAWESOME}
+            iconStyle={{
+              fontSize: fonts.h5Size,
+              color: colors.errorColor,
+              opacity: 0.8
+            }}
+            containerStyle={styles.iconStyle}
+            onPress={() => {
+              dispatch(setRealTimeAlert(undefined)); // Reset realTimeAlert state
+              dispatch(setShowAlertPopUp(false)); // Close the pop up
+            }}
+          />
+        </View>
 
-      <View style={styles.contentContainer}>
-        <H3
-          text={i18n.t("Alerts.RealTimeAlert.NewAlert")}
-          style={styles.title}
-        />
+        <View style={styles.contentContainer}>
+          <H3
+            text={i18n.t("Alerts.RealTimeAlert.NewAlert")}
+            style={styles.title}
+          />
 
-        <AlertPopUpDetails
-          title={i18n.t("Alerts.RealTimeAlert.Patient")}
-          details={realTimeAlert.patientName}
-        />
+          <AlertPopUpDetails
+            title={i18n.t("Alerts.RealTimeAlert.Patient")}
+            details={realTimeAlert.patientName}
+          />
 
-        <AlertPopUpDetails
-          title={i18n.t("Alerts.RealTimeAlert.Summary")}
-          details={realTimeAlert.summary}
-        />
+          <AlertPopUpDetails
+            title={i18n.t("Alerts.RealTimeAlert.Summary")}
+            details={realTimeAlert.summary}
+          />
 
-        <AlertPopUpDetails
-          title={i18n.t("Alerts.RealTimeAlert.TriageValue")}
-          details={realTimeAlert.triageValue}
-          detailsDisplayColor={colors.errorColor}
-        />
+          <AlertPopUpDetails
+            title={i18n.t("Alerts.RealTimeAlert.TriageValue")}
+            details={realTimeAlert.triageValue}
+            detailsDisplayColor={colors.errorColor}
+          />
 
-        <AlertPopUpDetails
-          title={i18n.t("Alerts.RealTimeAlert.DateTime")}
-          details={getLocalDateTime(realTimeAlert.dateTime)}
-        />
+          <AlertPopUpDetails
+            title={i18n.t("Alerts.RealTimeAlert.DateTime")}
+            details={getLocalDateTime(realTimeAlert.dateTime)}
+          />
+        </View>
+      </ScrollView>
 
-        {allowViewDetails ? (
-          <View style={styles.buttonContainer}>
-            {/* View button */}
-            <TouchableOpacity
-              style={[
-                styles.viewButton,
-                {
-                  backgroundColor: colors.acceptButtonColor,
-                  borderColor: colors.primaryTextColor
-                }
-              ]}
-              onPress={() => {
-                // Set fetchingAlertInfo to true so that RetrieveAlerts won't be triggered when navigating to AlertsScreen
-                dispatch(setFetchingAlertInfo(true));
-                dispatch(setShowAlertPopUp(false)); // Close the pop up
-                navigation.navigate(ScreenName.ALERTS);
-                AgentTrigger.triggerRetrieveMonitoringRecords(realTimeAlert); // Trigger retrieval of monitoring records, i.e. detailed alert info
-                dispatch(setRealTimeAlert(undefined)); // Reset realTimeAlert state
-              }}
-            >
-              <H4
-                text={i18n.t("Alerts.RealTimeAlert.ViewDetails")}
-                style={{ color: colors.primaryTextColor }}
-              />
-            </TouchableOpacity>
-          </View>
-        ) : (
-          <View style={styles.buttonContainer} />
-        )}
-      </View>
+      {allowViewDetails ? (
+        <View style={styles.buttonContainer}>
+          {/* View button */}
+          <TouchableOpacity
+            style={[
+              styles.viewButton,
+              {
+                backgroundColor: colors.acceptButtonColor,
+                borderColor: colors.primaryTextColor
+              }
+            ]}
+            onPress={() => {
+              // Set fetchingAlertInfo to true so that RetrieveAlerts won't be triggered when navigating to AlertsScreen
+              dispatch(setFetchingAlertInfo(true));
+              dispatch(setShowAlertPopUp(false)); // Close the pop up
+              navigation.navigate(ScreenName.ALERTS);
+              AgentTrigger.triggerRetrieveMonitoringRecords(realTimeAlert); // Trigger retrieval of monitoring records, i.e. detailed alert info
+              dispatch(setRealTimeAlert(undefined)); // Reset realTimeAlert state
+            }}
+          >
+            <H4
+              text={i18n.t("Alerts.RealTimeAlert.ViewDetails")}
+              style={{ color: colors.primaryTextColor }}
+            />
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <View style={styles.buttonContainer} />
+      )}
       {fetchingAlertInfo && <LoadingIndicator overlayBackgroundColor />}
     </ModalWrapper>
   );
@@ -217,5 +219,7 @@ const styles = ScaledSheet.create({
     borderRadius: "5@ms",
     paddingVertical: "5@ms",
     paddingHorizontal: "10@ms"
-  }
+  },
+  detailsContainer: { display: "flex", flexWrap: "wrap" },
+  detailsTitle: { fontWeight: "600", marginBottom: ms(5) }
 });

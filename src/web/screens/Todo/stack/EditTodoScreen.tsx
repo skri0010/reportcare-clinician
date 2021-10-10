@@ -137,7 +137,7 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
           <TouchableOpacity
             style={[
               styles.button,
-              { backgroundColor: colors.primaryTodoCompleteButtonColor }
+              { backgroundColor: colors.innerScreenButtonColor }
             ]}
             onPress={() => {
               navigation.goBack();

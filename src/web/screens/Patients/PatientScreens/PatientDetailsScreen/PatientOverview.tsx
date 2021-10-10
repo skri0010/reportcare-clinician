@@ -14,7 +14,7 @@ import { PatientDetails } from "rc_agents/model";
 import { getLatestVitalsReport } from "util/utilityFunctions";
 import { FluidIntakeCard } from "./PatientOverviewComponents/FluidIntakeCard";
 import { ActivityCard } from "./PatientOverviewComponents/ActivityCard";
-import { EditPatientDetailsButton } from "components/Buttons/EditPatientBaselineButton";
+import { InnerScreenButton } from "components/Buttons/InnerScreenButton";
 
 interface PatientOverviewProps extends PatientDetailsTabProps.OverviewTabProps {
   details: PatientDetails;
@@ -124,9 +124,11 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
           />
         </View>
       </>
-      <View style={styles.editButtonContainer}>
-        <EditPatientDetailsButton onPress={() => setEditDetails(true)} />
-      </View>
+      <InnerScreenButton
+        title={i18n.t("Patient_Configuration.EditDetails")}
+        onPress={() => setEditDetails(true)}
+        style={styles.editButtonContainer}
+      />
     </ScreenWrapper>
   );
 };

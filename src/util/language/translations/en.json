@@ -297,7 +297,8 @@
       "Symptom": "Symptom",
       "Activity": "Activity",
       "Severity": "Severity",
-      "DateTime": "Recorded at"
+      "DateTime": "Recorded at",
+      "NoSymptomReport": "No symptom reports found"
     },
     "AlertVitals": {
       "Vitals": "Activity and Vitals",
@@ -309,7 +310,8 @@
       "Weight": "Weight",
       "DateTime": "Recorded at",
       "HeartRate": "Heart rate",
-      "HeartRateUnit": "bpm"
+      "HeartRateUnit": "bpm",
+      "NoVitalsReport": "No activity and vitals reports found"
     },
     "Medications": {
       "Medications": "Medications",
@@ -318,8 +320,10 @@
     "IcdCrt": {
       "IcdCrtRecord": "Latest ICD/CRT Record",
       "UploadDateTime": "Uploaded at",
-      "ViewContent": "View content"
+      "ViewContent": "View content",
+      "NoIcdCrtRecord": "No ICD/CRT records found"
     },
+    "CreateToDo": "Create Todo",
     "HighRisk": "High Risk",
     "MediumRisk": "Medium Risk",
     "LowRisk": "Low Risk",
