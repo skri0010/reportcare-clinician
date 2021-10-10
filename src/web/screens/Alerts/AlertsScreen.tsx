@@ -91,7 +91,7 @@ export const AlertScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
               ) : (
                 <NoSelectionScreen
                   screenName={ScreenName.ALERTS}
-                  subtitle="Choose Alert to view more info"
+                  subtitle={i18n.t("Alerts.NoSelection")}
                 />
               )}
             </View>
