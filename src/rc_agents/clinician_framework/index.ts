@@ -28,11 +28,11 @@ export const ActionFrameIDs = {
     CREATE_MEDICAL_RECORD: "CreateMedicalRecord",
     CREATE_ICDCRT_RECORD: "CreateIcdCrtRecord",
 
-    // AT-CP-I: AlertInfo[]
+    // P-USOR-I: AlertInfo[]
     RETRIEVE_ALERTS: "RetrieveAlerts",
     REQUEST_DISPLAY_ALERTS: "RequestDisplayAlerts",
 
-    // AT-CP-II: Detailed AlertInfo
+    // P-USOR-II: Detailed AlertInfo
     RETRIEVE_DETAILED_ALERT_INFO: "RetrieveDetailedAlertInfo",
     REQUEST_DISPLAY_DETAILED_ALERT_INFO: "RequestDisplayDetailedAlertInfo",
     UPDATE_ALERT: "UpdateAlert",
@@ -87,10 +87,10 @@ export const ActionFrameIDs = {
     REQUEST_DISPLAY_CLINICIAN_CONTACTS: "RequestDisplayClinicianContacts"
   },
   UXSA: {
-    // AT-CP-I: AlertInfo[]
+    // P-USOR-I: AlertInfo[]
     DISPLAY_ALERTS: "DisplayAlerts",
 
-    // AT-CP-II: Detailed AlertInfo
+    // P-USOR-II: Detailed AlertInfo
     DISPLAY_DETAILED_ALERT_INFO: "DisplayDetailedAlertInfo",
 
     // HF-EUA: Real-time Alerts
@@ -138,7 +138,7 @@ export const ActionFrameIDs = {
     SYNC_CREATE_TODOS: "SyncCreateTodos",
     SYNC_UPDATE_TODOS: "SyncUpdateTodos",
 
-    // AT-CP-II: Detailed AlertInfo
+    // P-USOR-II: Detailed AlertInfo
     SYNC_UPDATE_ALERTS: "SyncUpdateAlerts",
 
     // HF-EUA: Real-time Alerts
@@ -197,8 +197,8 @@ export enum ProcedureAttributes {
   SRD_IV = "SRD-IV",
   SRD_V = "SRD-V",
   HF_EUA = "HF-EUA",
-  P_USOR = "P-USOR",
-  AT_CP_II = "AT-CP-II"
+  P_USOR_I = "P-USOR-I",
+  P_USOR_II = "P-USOR-II"
 }
 
 // Attributes for CLINICIAN key
@@ -223,7 +223,7 @@ export enum ClinicianAttributes {
   TODO_DETAILS_RETRIEVED = "TodoDetailsRetrieved",
   TODO_ID = "TodoId",
 
-  // AT-CP-I: AlertInfo[]
+  // P-USOR-I: AlertInfo[]
   FETCH_ALERTS_MODE = "FetchAlertsMode",
   ALERT_RISK_LEVEL = "AlertRiskLevel",
 
@@ -234,8 +234,9 @@ export enum ClinicianAttributes {
   PENDING_ALERTS_COUNT = "PendingAlertsCount",
   COMPLETED_ALERTS = "CompletedAlerts",
   ALERTS_RETRIEVED = "AlertsRetrieved",
+  VIEW_STABLE_ALERTS = "ViewStableAlerts",
 
-  // AT-CP-II: Detailed AlertInfo
+  // P-USOR-II: Detailed AlertInfo
   ALERT_INFO = "AlertInfo",
   DETAILED_ALERT_INFO = "DetailedAlertInfo",
   RETRIEVE_DETAILED_ALERT_INFO = "RetrieveDetailedAlertInfo",

@@ -339,7 +339,9 @@
       "TriageValue": "Nilai triase",
       "DateTime": "Masa tarikh",
       "ViewDetails": "Lihat butiran"
-    }
+    },
+    "ViewStableAlerts": "LIHAT AMARAN STABIL",
+    "HideStableAlerts": "SEMBUNYIKAN AMARAN STABIL"
   },
   "MobileMessage": {
     "ViewList": "Lihat Senarai",

@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { AlertListTabParamList } from "../paramLists";
@@ -10,11 +10,16 @@ import { getTopTabBarOptions } from "util/getStyles";
 import { AlertListTabsProps } from "../types";
 import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { RiskFilterPillList } from "components/Buttons/RiskFilterPillList";
-import { AlertInfo } from "rc_agents/model";
+import { AlertInfo, FetchAlertsMode, Role } from "rc_agents/model";
 import { AgentTrigger } from "rc_agents/trigger";
 import Fuse from "fuse.js";
 import i18n from "util/language/i18n";
-import { setAlertInfo } from "ic-redux/actions/agents/actionCreator";
+import {
+  setAlertInfo,
+  setViewStableAlerts
+} from "ic-redux/actions/agents/actionCreator";
+import { FloatingBottomButton } from "components/Buttons/FloatingBottomButton";
+import { LocalStorage } from "rc_agents/storage";
 
 const Tab = createMaterialTopTabNavigator<AlertListTabParamList>();
 
@@ -24,14 +29,14 @@ export interface AlertRowTabProps {
 }
 
 export const AlertListTabNavigator: FC = () => {
-  const { colors, fonts, completedAlerts, pendingAlerts } = select(
-    (state: RootState) => ({
+  const { colors, fonts, completedAlerts, pendingAlerts, viewStableAlerts } =
+    select((state: RootState) => ({
       colors: state.settings.colors,
       fonts: state.settings.fonts,
       completedAlerts: state.agents.completedAlerts,
-      pendingAlerts: state.agents.pendingAlerts
-    })
-  );
+      pendingAlerts: state.agents.pendingAlerts,
+      viewStableAlerts: state.agents.viewStableAlerts
+    }));
 
   const dispatch = useDispatch();
 
@@ -46,6 +51,8 @@ export const AlertListTabNavigator: FC = () => {
   const [searching, setSearching] = useState<boolean>(false);
   const [pendingResult, setPendingResult] = useState<AlertInfo[]>([]);
   const [completedResult, setCompletedResult] = useState<AlertInfo[]>([]);
+  const [showViewStableAlerts, setShowViewStableAlerts] = useState(false); // Whether view stable alerts button is to be shown
+  const [stableAlertsTitle, setStableAlertsTitle] = useState("");
 
   const onSearchClick = (searchString: string) => {
     if (searchString.length === 0) {
@@ -74,6 +81,33 @@ export const AlertListTabNavigator: FC = () => {
       }
     }
   };
+
+  // Checks for clinician's role to determine whether view stable alerts button should be shown
+  useEffect(() => {
+    const checkClinicianRole = async () => {
+      const clinician = await LocalStorage.getClinician();
+      if (clinician) {
+        if (
+          clinician.role === Role.EP ||
+          clinician.role === Role.HF_SPECIALIST
+        ) {
+          setShowViewStableAlerts(true);
+        }
+      }
+    };
+    checkClinicianRole();
+  }, []);
+
+  // Toggle label of stable alerts button
+  useEffect(() => {
+    if (showViewStableAlerts) {
+      if (viewStableAlerts) {
+        setStableAlertsTitle(i18n.t("Alerts.HideStableAlerts"));
+      } else {
+        setStableAlertsTitle(i18n.t("Alerts.ViewStableAlerts"));
+      }
+    }
+  }, [showViewStableAlerts, viewStableAlerts]);
 
   return (
     <>
@@ -115,6 +149,15 @@ export const AlertListTabNavigator: FC = () => {
           )}
         </Tab.Screen>
       </Tab.Navigator>
+      {showViewStableAlerts && (
+        <FloatingBottomButton
+          title={stableAlertsTitle}
+          onPress={() => {
+            dispatch(setViewStableAlerts(!viewStableAlerts));
+            AgentTrigger.triggerRetrieveAlerts(FetchAlertsMode.ALL);
+          }}
+        />
+      )}
     </>
   );
 };

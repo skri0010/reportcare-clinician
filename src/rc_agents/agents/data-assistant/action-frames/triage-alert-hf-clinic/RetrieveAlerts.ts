@@ -199,7 +199,7 @@ class RetrieveAlerts extends Activity {
       agentAPI.addFact(
         new Belief(
           BeliefKeys.PROCEDURE,
-          ProcedureAttributes.P_USOR,
+          ProcedureAttributes.P_USOR_I,
           ProcedureConst.INACTIVE
         ),
         true,
@@ -319,7 +319,7 @@ export const getAlertsCount: (alerts: AlertInfo[]) => AlertsCount = (
 // Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.P_USOR,
+  ProcedureAttributes.P_USOR_I,
   ProcedureConst.ACTIVE
 );
 const rule2 = new ResettablePrecondition(

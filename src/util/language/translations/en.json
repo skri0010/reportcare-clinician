@@ -339,7 +339,9 @@
       "TriageValue": "Triage value",
       "DateTime": "Date time",
       "ViewDetails": "View details"
-    }
+    },
+    "ViewStableAlerts": "VIEW STABLE ALERTS",
+    "HideStableAlerts": "HIDE STABLE ALERTS"
   },
   "MobileMessage": {
     "ViewList": "View List",

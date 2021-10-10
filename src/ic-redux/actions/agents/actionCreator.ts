@@ -222,6 +222,13 @@ export const setAlerts = createAction(
   })
 )();
 
+export const setViewStableAlerts = createAction(
+  actionNames.SET_VIEW_STABLE_ALERTS,
+  (viewStableAlerts: boolean) => ({
+    viewStableAlerts: viewStableAlerts
+  })
+)();
+
 export const setFetchingAlertInfo = createAction(
   actionNames.SET_FETCHING_ALERT_INFO,
   (fetchingAlertInfo: boolean) => ({

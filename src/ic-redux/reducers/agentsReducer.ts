@@ -41,6 +41,7 @@ interface AgentsState {
   alertUpdated: boolean;
   pendingAlerts: AlertInfo[] | undefined;
   completedAlerts: AlertInfo[] | undefined;
+  viewStableAlerts: boolean;
   fetchingAlertInfo: boolean;
   alertInfo: AlertInfo | HighRiskAlertInfo | undefined;
   pendingTodos: LocalTodo[] | undefined;
@@ -114,6 +115,7 @@ const initialState: AgentsState = {
   alertUpdated: false,
   pendingAlerts: undefined,
   completedAlerts: undefined,
+  viewStableAlerts: false,
   fetchingAlertInfo: false,
   alertInfo: undefined,
   todoDetails: undefined,
@@ -277,6 +279,11 @@ export const agentsDataReducer: Reducer<AgentsState, RootAction> = (
       return {
         ...state,
         completedAlerts: action.payload.completedAlerts
+      };
+    case actionNames.SET_VIEW_STABLE_ALERTS:
+      return {
+        ...state,
+        viewStableAlerts: action.payload.viewStableAlerts
       };
     case actionNames.SET_FETCHING_ALERT_INFO:
       return {

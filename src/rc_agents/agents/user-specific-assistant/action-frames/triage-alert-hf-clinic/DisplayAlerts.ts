@@ -19,7 +19,8 @@ import {
   setPendingAlerts,
   setCompletedAlerts,
   setFetchingAlerts,
-  setPendingAlertCount
+  setPendingAlertCount,
+  setAlertRiskFilters
 } from "ic-redux/actions/agents/actionCreator";
 import { AlertInfo, AlertsCount, AlertStatus, Role } from "rc_agents/model";
 import { sortAlertInfoByDescendingRiskLevelAndDateTime } from "util/utilityFunctions";
@@ -62,15 +63,33 @@ class DisplayAlerts extends Activity {
         ClinicianAttributes.COMPLETED_ALERTS
       ];
 
+    // OPTIONAL: Include stable (low and unassigned) AlertInfo[] (Only applicable to EP and HF Specialist)
+    const viewStableAlertInfos: boolean =
+      store.getState().agents.viewStableAlerts;
+
+    // Clears filter
+    if (viewStableAlertInfos) {
+      store.dispatch(
+        setAlertRiskFilters({
+          [RiskLevel.HIGH]: false,
+          [RiskLevel.MEDIUM]: false,
+          [RiskLevel.LOW]: false,
+          [RiskLevel.UNASSIGNED]: false
+        })
+      );
+    }
+
     try {
       // Filters pending and completed AlertInfo[] by role
-      if (pendingAlertInfos) {
+      // For EP and HF Specialist: filter unless it is specified to view remaining AlertInfo[]
+      // If stable AlertInfo[] is to be shown, pending alerts count should remain for those of High and Medium risk levels
+      if (pendingAlertInfos && !viewStableAlertInfos) {
         pendingAlertInfos = await filterAlertsByRole(pendingAlertInfos);
         // Gets corresponding pending alert count
         pendingAlertsCount = getAlertsCount(pendingAlertInfos);
       }
 
-      if (completedAlertInfos) {
+      if (completedAlertInfos && !viewStableAlertInfos) {
         completedAlertInfos = await filterAlertsByRole(completedAlertInfos);
       }
 
@@ -108,7 +127,7 @@ class DisplayAlerts extends Activity {
     agentAPI.addFact(
       new Belief(
         BeliefKeys.PROCEDURE,
-        ProcedureAttributes.P_USOR,
+        ProcedureAttributes.P_USOR_I,
         ProcedureConst.INACTIVE
       ),
       true,
@@ -213,7 +232,7 @@ export const displayAlerts: (input: {
 // Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.P_USOR,
+  ProcedureAttributes.P_USOR_I,
   ProcedureConst.ACTIVE
 );
 const rule2 = new ResettablePrecondition(

@@ -49,9 +49,9 @@ const agentUXSA = new ClinicianAgent(
     // SRD-IV
     af_DisplayClinicianContacts,
 
-    // AT-CP-I
+    // P-USOR-I
     af_DisplayAlerts,
-    // AT-CP-II
+    // P-USOR-II
     af_DisplayDetailedAlertInfo,
     // HF-EUA
     af_DisplayRefreshedAlerts

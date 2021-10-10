@@ -127,7 +127,7 @@ class CreateTodo extends Activity {
             agentAPI.addFact(
               new Belief(
                 BeliefKeys.PROCEDURE,
-                ProcedureAttributes.AT_CP_II,
+                ProcedureAttributes.P_USOR_II,
                 ProcedureConst.ACTIVE
               )
             );

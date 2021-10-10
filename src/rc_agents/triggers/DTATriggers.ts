@@ -204,7 +204,7 @@ export const triggerUpdateTodo = (input: TodoInput): void => {
   );
 };
 
-// AT-CP-I: Trigger RetriveAlerts of DTA
+// P-USOR-I: Trigger RetriveAlerts of DTA
 export const triggerRetrieveAlerts = (
   fetchAlertsMode: FetchAlertsMode,
   retrieveAlertsLocally = false
@@ -235,13 +235,13 @@ export const triggerRetrieveAlerts = (
   agentAPI.addFact(
     new Belief(
       BeliefKeys.PROCEDURE,
-      ProcedureAttributes.P_USOR,
+      ProcedureAttributes.P_USOR_I,
       ProcedureConst.ACTIVE
     )
   );
 };
 
-// AT-CP-II Triggers RetrieveDetailedAlertInfo of DTA
+// P-USOR-II Triggers RetrieveDetailedAlertInfo of DTA
 export const triggerRetrieveDetailedAlertInfo = (
   alertInfo: AlertInfo
 ): void => {
@@ -262,7 +262,7 @@ export const triggerRetrieveDetailedAlertInfo = (
   agentAPI.addFact(
     new Belief(
       BeliefKeys.PROCEDURE,
-      ProcedureAttributes.AT_CP_II,
+      ProcedureAttributes.P_USOR_II,
       ProcedureConst.ACTIVE
     )
   );

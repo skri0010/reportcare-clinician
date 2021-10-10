@@ -27,7 +27,6 @@ export const HighRiskAlertDetails: FC = () => {
     const checkClinicianRole = async () => {
       const clinician = await LocalStorage.getClinician();
       if (clinician) {
-        clinician.role = Role.EP;
         if (clinician.role === Role.EP) {
           setViewIcdCrt(true);
         }

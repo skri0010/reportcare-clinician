@@ -23,7 +23,7 @@ import { AlertInfo } from "rc_agents/model";
 
 /**
  * Class to represent an activity for triggering the display of alert with patient's information.
- * This happens in Procedure Triage Alert HF Clinic (AT-CP-II).
+ * This happens in Procedure Triage Alert HF Clinic (P-USOR-II).
  */
 class DisplayDetailedAlertInfo extends Activity {
   constructor() {
@@ -66,7 +66,7 @@ class DisplayDetailedAlertInfo extends Activity {
     agentAPI.addFact(
       new Belief(
         BeliefKeys.PROCEDURE,
-        ProcedureAttributes.AT_CP_II,
+        ProcedureAttributes.P_USOR_II,
         ProcedureConst.INACTIVE
       ),
       true,
@@ -81,7 +81,7 @@ class DisplayDetailedAlertInfo extends Activity {
 // Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.AT_CP_II,
+  ProcedureAttributes.P_USOR_II,
   ProcedureConst.ACTIVE
 );
 const rule2 = new ResettablePrecondition(

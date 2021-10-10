@@ -27,7 +27,7 @@ import { AgentTrigger } from "rc_agents/trigger";
 
 /**
  * Class to represent an activity for updating a patient's Alert.
- * This happens in Procedure Triage Alert HF Clinic (AT-CP-II).
+ * This happens in Procedure Triage Alert HF Clinic (P-USOR-II).
  */
 class UpdateAlert extends Activity {
   constructor() {
@@ -119,7 +119,7 @@ class UpdateAlert extends Activity {
     agentAPI.addFact(
       new Belief(
         BeliefKeys.PROCEDURE,
-        ProcedureAttributes.AT_CP_II,
+        ProcedureAttributes.P_USOR_II,
         ProcedureConst.INACTIVE
       ),
       true,
@@ -176,7 +176,7 @@ export const updateAlertInfo = async (
 // Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.AT_CP_II,
+  ProcedureAttributes.P_USOR_II,
   ProcedureConst.ACTIVE
 );
 const rule2 = new ResettablePrecondition(

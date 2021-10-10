@@ -83,11 +83,11 @@ const agentDTA = new ClinicianAgent(
     af_RetrieveMonitoringRecords,
     af_InformMonitoringRecords,
 
-    // AT-CP-I
+    // P-USOR-I
     af_RetrieveAlerts,
     af_RequestDisplayAlerts,
 
-    // AT-CP-II
+    // P-USOR-II
     af_RetrieveDetailedAlertInfo,
     af_RequestDisplayDetailedAlertInfo,
     af_UpdateAlert,

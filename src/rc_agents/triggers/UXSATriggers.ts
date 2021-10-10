@@ -25,7 +25,7 @@ export const triggerRetrievePatientsByRole = (): void => {
   );
 };
 
-// AT-CP-I
+// P-USOR-I
 // Triggers DisplayAlerts of UXSA
 export const triggerDisplayAlerts: (input: {
   pendingAlertInfos?: AlertInfo[];
@@ -80,7 +80,7 @@ export const triggerDisplayAlerts: (input: {
   agentAPI.addFact(
     new Belief(
       BeliefKeys.PROCEDURE,
-      ProcedureAttributes.P_USOR,
+      ProcedureAttributes.P_USOR_I,
       ProcedureConst.ACTIVE
     )
   );
