@@ -150,7 +150,9 @@
     "UndoFromCompleted": "UNDO FROM COMPLETED",
     "Done": "DONE",
     "Undo": "UNDO",
-    "NoPendingTodo": "All todos have been completed!"
+    "NoPendingTodo": "All todos have been completed!",
+    "TodoTitleError": "Please enter a valid title",
+    "TodoNotesError": "Please enter some valid notes"
   },
   "Patients": {
     "PatientsList": {

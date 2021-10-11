@@ -150,7 +150,9 @@
     "UndoFromCompleted": "PINDAH DARI SELESAI",
     "Done": "SIAP",
     "Undo": "UNDO",
-    "NoPendingTodo": "Semua todo sudah disiapkan!"
+    "NoPendingTodo": "Semua todo sudah disiapkan!",
+    "TodoTitleError": "Sila masukkan tajuk yang sah",
+    "TodoNotesError": "Sila masukkan catatan yang sah"
   },
   "Patients": {
     "PatientsList": {

@@ -1,7 +1,6 @@
 import React, { FC, useState, useEffect } from "react";
 import {
   View,
-  TextInput,
   ViewStyle,
   TextStyle,
   StyleProp,
@@ -9,7 +8,6 @@ import {
   TextProps
 } from "react-native";
 import { ScaledSheet, ms } from "react-native-size-matters";
-import { H3 } from "components/Text";
 import { RootState, select, useDispatch } from "util/useRedux";
 import i18n from "util/language/i18n";
 import { LocalTodo } from "rc_agents/model";
@@ -23,6 +21,8 @@ import {
 import { setUpdatingAlertIndicators } from "ic-redux/actions/agents/alertActionCreator";
 import { setUpdatingTodoOfAlert } from "ic-redux/actions/agents/todoActionCreator";
 import { ModalButton } from "components/Buttons/ModalButton";
+import { TextField } from "components/InputComponents/TextField";
+import { notEmptyString } from "util/validation";
 
 interface AddTodoScreenProps {
   setModalVisible: (state: boolean) => void;
@@ -51,11 +51,7 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
 
   const todoInputFieldStyle: StyleProp<ViewStyle> = {
     backgroundColor: colors.primaryBackgroundColor,
-    borderColor: colors.primaryBorderColor,
     width: "100%",
-    borderWidth: ms(1),
-    borderRadius: ms(5),
-    marginBottom: ms(10),
     paddingHorizontal: ms(10)
   };
 
@@ -69,6 +65,7 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
     alertInfo?.patientName || ""
   ); // Patient name input
   const [noteInput, setNoteInput] = useState<string>(""); // Notes input
+  const [allInputValid, setAllInputValid] = useState<boolean>(false);
 
   // Functions that allow user inputs to be shown in the text inputs
   const onChangeTitle = (newTitle: string) => {
@@ -153,6 +150,15 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
     setModalVisible
   ]);
 
+  // Disable button if some inputs are empty
+  useEffect(() => {
+    if (notEmptyString(titleInput) && notEmptyString(noteInput)) {
+      setAllInputValid(true);
+    } else {
+      setAllInputValid(false);
+    }
+  }, [titleInput, noteInput]);
+
   return (
     <View
       style={[
@@ -163,38 +169,59 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
       ]}
     >
       {/* Title input */}
-      <H3 text={i18n.t("Todo.Title")} style={styles.inputTitle} />
-      <TextInput
-        value={titleInput}
-        placeholder={i18n.t("Todo.TitleInputPlaceholder")}
-        style={[todoInputFieldStyle, todoInputTextStyle, { height: ms(45) }]}
-        onChangeText={onChangeTitle}
-      />
-      {/* Patient name input */}
-      <H3 text={i18n.t("Todo.Patient")} style={styles.inputTitle} />
-      <TextInput
-        value={patientInput}
-        placeholder={i18n.t("Todo.PatientInputPlaceholder")}
-        style={[todoInputFieldStyle, todoInputTextStyle, { height: ms(45) }]}
-        editable={false}
-        selectTextOnFocus={false}
-        onChangeText={onChangePatient}
-      />
-      {/* Notes input */}
-      <H3 text={i18n.t("Todo.Notes")} style={styles.inputTitle} />
-      <TextInput
-        multiline
-        value={noteInput}
-        placeholder={i18n.t("Todo.NotesInputPlaceholder")}
-        style={[
+      <TextField
+        label={i18n.t("Todo.Title")}
+        labelStyle={[
+          styles.inputTitle,
+          { fontSize: fonts.h3Size, color: colors.primaryTextColor }
+        ]}
+        inputStyle={[
           todoInputFieldStyle,
           todoInputTextStyle,
-          {
-            height: ms(100),
-            paddingTop: ms(5)
-          }
+          { height: ms(30) }
         ]}
-        onChangeText={onChangeNotes}
+        value={titleInput}
+        onChange={onChangeTitle}
+        placeholder={i18n.t("Patient_ICD/CRT.TitleInputPlaceholder")}
+        error={!notEmptyString(titleInput)}
+        errorMessage={i18n.t("Todo.TodoTitleError")}
+      />
+      {/* Patient name input */}
+      <TextField
+        label={i18n.t("Todo.Patient")}
+        labelStyle={[
+          styles.inputTitle,
+          { fontSize: fonts.h3Size, color: colors.primaryTextColor }
+        ]}
+        inputStyle={[
+          todoInputFieldStyle,
+          todoInputTextStyle,
+          { height: ms(30) }
+        ]}
+        value={patientInput}
+        onChange={onChangePatient}
+        placeholder={i18n.t("Todo.PatientInputPlaceholder")}
+        editable={false}
+        selectTextOnFocus={false}
+      />
+      {/* Notes input */}
+      <TextField
+        label={i18n.t("Todo.Notes")}
+        labelStyle={[
+          styles.inputTitle,
+          { fontSize: fonts.h3Size, color: colors.primaryTextColor }
+        ]}
+        inputStyle={[
+          todoInputFieldStyle,
+          todoInputTextStyle,
+          { height: ms(100), paddingTop: ms(5) }
+        ]}
+        value={noteInput}
+        onChange={onChangeNotes}
+        placeholder={i18n.t("Todo.NotesInputPlaceholder")}
+        error={!notEmptyString(noteInput)}
+        errorMessage={i18n.t("Todo.TodoNotesError")}
+        multiline
       />
       {/* Save button */}
       <View style={styles.buttonContainer}>
@@ -203,10 +230,13 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
           onPress={createTodo}
           style={
             {
-              backgroundColor: colors.acceptButtonColor,
+              backgroundColor: allInputValid
+                ? colors.acceptButtonColor
+                : colors.primaryDeactivatedButtonColor,
               borderColor: colors.primaryTextColor
             } as StyleProp<ViewProps>
           }
+          disabled={!allInputValid}
         />
         {/* Cancel button */}
         <ModalButton
