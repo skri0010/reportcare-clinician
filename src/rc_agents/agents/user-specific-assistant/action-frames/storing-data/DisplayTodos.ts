@@ -43,57 +43,29 @@ class DisplayTodos extends Activity {
     const updatedTodo: LocalTodo =
       agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.TODO];
 
-    // // For Todo that is associated with alert
-    // const updatedAlertTodo: LocalTodo =
-    //   agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[
-    //     ClinicianAttributes.ALERT_TODO
-    //   ];
-
-    // if (updatedAlertTodo) {
-    //   updatedTodo = updatedAlertTodo;
-    // }
-
     if (updatedTodo) {
       // Removes previous Todo from its existing list and adds it to the front of updated list
       const currentAgentsState = store.getState().todos;
       let currentPendingTodos = currentAgentsState.pendingTodos;
       let currentCompletedTodos = currentAgentsState.completedTodos;
 
-      // Looks for Todo in the list of current Todos and removes it from the list
-      // if (updatedTodo.id) {
-      //   // Synced Todo with Id
-      //   if (currentPendingTodos) {
-      //     let existIndex = currentPendingTodos.findIndex(
-      //       (t) => t.id === updatedTodo.id
-      //     );
-      //     console.log(existIndex);
-      //     console.log("hello");
-      //     if (existIndex >= 0) {
-      //       currentPendingTodos.splice(existIndex, 1);
-      //     } else if (currentCompletedTodos) {
-      //       existIndex = currentCompletedTodos.findIndex(
-      //         (t) => t.id === updatedTodo.id
-      //       );
-      //       console.log(existIndex);
-      //       console.log("bye");
-      //       if (existIndex >= 0) {
-      //         currentCompletedTodos.splice(existIndex, 1);
-      //       }
-      //     }
-      //   }
-      // } else
+      /**
+       * Since each todo has an associated alert ID, check if the updatedTodo's alert ID
+       * is the same as the alert ID from any of current pending or completed todos
+       */
       if (updatedTodo.alertId) {
-        // Unsynced Todo without Id
         if (currentPendingTodos) {
           let existIndex = currentPendingTodos.findIndex(
             (t) => t.alertId === updatedTodo.alertId
           );
+          // If updatedTodo is in pending todos, remove it from pending todos
           if (existIndex >= 0) {
             currentPendingTodos.splice(existIndex, 1);
           } else if (currentCompletedTodos) {
             existIndex = currentCompletedTodos.findIndex(
               (t) => t.alertId === updatedTodo.alertId
             );
+            // If updatedTodo is in completed todos, remove it from completed todos
             if (existIndex >= 0) {
               currentCompletedTodos.splice(existIndex, 1);
             }
@@ -132,18 +104,6 @@ class DisplayTodos extends Activity {
         new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.TODO, null),
         false
       );
-
-      // Remove the Todo associated with alert from facts
-      // if (updatedAlertTodo) {
-      //   agentAPI.addFact(
-      //     new Belief(
-      //       BeliefKeys.CLINICIAN,
-      //       ClinicianAttributes.ALERT_TODO,
-      //       null
-      //     ),
-      //     false
-      //   );
-      // }
     }
 
     // Update Facts

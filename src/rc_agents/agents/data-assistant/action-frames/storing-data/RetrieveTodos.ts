@@ -59,6 +59,7 @@ class RetrieveTodos extends Activity {
       // Gets locally stored clinicianId
       const clinicianId = await LocalStorage.getClinicianID();
 
+      // Get retrieve todos mode
       const fetchMode: FetchTodosMode =
         facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.TODO_STATUS];
 
@@ -69,6 +70,7 @@ class RetrieveTodos extends Activity {
           let pendingTodos: Todo[] | undefined;
           let completedTodos: Todo[] | undefined;
 
+          // Fetch pending todos
           if (
             fetchMode === FetchTodosMode.ALL ||
             fetchMode === FetchTodosMode.PENDING
@@ -86,6 +88,7 @@ class RetrieveTodos extends Activity {
             }
           }
 
+          // Fetch completed todos
           if (
             fetchMode === FetchTodosMode.ALL ||
             fetchMode === FetchTodosMode.COMPLETED
@@ -105,6 +108,7 @@ class RetrieveTodos extends Activity {
 
           pendingTodos = pendingTodos || [];
           completedTodos = completedTodos || [];
+          // Join the pending and completed todos together
           // eslint-disable-next-line prefer-const
           todos = pendingTodos.concat(completedTodos);
 
@@ -151,16 +155,22 @@ class RetrieveTodos extends Activity {
               }
             });
 
+            // If the alert info for all todo is fetched
             if (todosToDispatch.length === todos.length) {
-              // Saves mapped Todos to local storage
+              // Save mapped Todos to local storage
               await LocalStorage.setMultipleTodos(todosToDispatch);
             }
 
+            // Get all the pending todos to be dispatched to frontend
             const pendingTodosToDispatch: LocalTodo[] = todosToDispatch.filter(
               (todo) => !todo.completed
             );
+
+            // Get all the completed todos to be dispatched to frontend
             const completedTodosToDispatch: LocalTodo[] =
               todosToDispatch.filter((todo) => todo.completed);
+
+            // Dispatch todos to frontend for display
             if (fetchMode === FetchTodosMode.PENDING) {
               store.dispatch(setPendingTodos(pendingTodosToDispatch));
             } else if (fetchMode === FetchTodosMode.COMPLETED) {
@@ -171,6 +181,7 @@ class RetrieveTodos extends Activity {
             }
           }
         } else {
+          // Device is offline, get todos from local storage
           if (
             fetchMode === FetchTodosMode.ALL ||
             fetchMode === FetchTodosMode.PENDING

@@ -181,6 +181,11 @@ export const getTodo = async (
   return null;
 };
 
+/**
+ * Get todo using alert ID
+ * @param alertID ID of alert associated to the todo
+ * @returns an array of LocalTodos, otherwise null
+ */
 export const getTodoFromAlertID = async (
   alertID: string
 ): Promise<AsyncStorageType[AsyncStorageKeys.TODOS] | null> => {
@@ -191,6 +196,11 @@ export const getTodoFromAlertID = async (
   return null;
 };
 
+/**
+ * Get todo details locally using todo ID
+ * @param id todo ID
+ * @returns an array of LocalTodos, otherwise undefined
+ */
 export const getTodoDetailsForTodoID = async (
   id: string
 ): Promise<AsyncStorageType[AsyncStorageKeys.TODO_DETAILS] | undefined> => {
@@ -201,6 +211,11 @@ export const getTodoDetailsForTodoID = async (
   return undefined;
 };
 
+/**
+ * Get todo details locally using alert ID
+ * @param id alert ID
+ * @returns an array of LocalTodos, otherwise undefined
+ */
 export const getTodoDetailsForAlertID = async (
   id: string
 ): Promise<LocalTodo | undefined> => {

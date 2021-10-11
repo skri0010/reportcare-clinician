@@ -110,6 +110,7 @@ class UpdateAlert extends Activity {
       );
     }
 
+    // Dispatch the updated alert status to the frontend
     store.dispatch(setAlertInfo(alertInfoInput));
     // Trigger procedure to retrieve alerts locally
     AgentTrigger.triggerRetrieveAlerts(FetchAlertsMode.ALL, true);

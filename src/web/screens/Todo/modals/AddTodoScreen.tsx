@@ -86,7 +86,6 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
 
   // Triggers CreateTodo procedure
   const createTodo = () => {
-    // const inAlertScreen = route.name === ScreenName.ALERTS;
     const todoInput: LocalTodo = {
       title: titleInput,
       patientName: patientInput,
@@ -95,8 +94,7 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
       createdAt: new Date().toISOString(),
       lastModified: new Date().toISOString(),
       _version: 1,
-      // When the todo is created in the Alert screen,
-      // include the patient info, alert info, alert id and risk level
+      // Alert related information: patient info, alert info, alert id and risk level
       patientId: alertInfo ? alertInfo.patientID : undefined,
       alert: alertInfo || undefined,
       alertId: alertInfo ? alertInfo.id : undefined,
@@ -104,11 +102,13 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
     };
 
     if (alertInfo) {
+      // If the alert status is completed, trigger UpdateTodo procedure
       if (alertInfo.completed) {
         dispatch(setProcedureOngoing(true));
         dispatch(setUpdatingTodoOfAlert(true));
         AgentTrigger.triggerUpdateTodo(todoInput);
       } else if (alertInfo.pending) {
+        // If the alert status is pending, trigger CreateTodo
         AgentTrigger.triggerCreateTodo(todoInput);
       }
     }

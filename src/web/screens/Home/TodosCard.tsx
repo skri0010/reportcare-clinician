@@ -43,6 +43,7 @@ export const TodosCard: FC<TodosCardProps> = ({ maxHeight, navigation }) => {
 
   return (
     <CardWrapper maxHeight={maxHeight} title={i18n.t("Home.Todos")}>
+      {/* Loading indicator */}
       {fetchingTodos ? (
         // Pending todos are being fetched
         <LoadingIndicator />
@@ -91,9 +92,6 @@ export const TodosCard: FC<TodosCardProps> = ({ maxHeight, navigation }) => {
           />
         </View>
       ) : null}
-
-      {/* Loading indicator */}
-      {/* {fetchingTodos && <LoadingIndicator />} */}
     </CardWrapper>
   );
 };

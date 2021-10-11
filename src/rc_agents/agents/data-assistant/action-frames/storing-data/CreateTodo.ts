@@ -84,9 +84,8 @@ class CreateTodo extends Activity {
 
           /**
            * Update alert status from pending to completed when:
-           * 1. The todo is created offline
-           * 2. The todo created offline is updated again while offline
-           * 3. The todo is created for the very first time
+           * 1. (Offline/Online) Todo is created
+           * 2. (Offline) Todo created offline is updated
            */
           if (alertToUpdate) {
             todoToInsert.alertID = alertToUpdate.id;
@@ -182,7 +181,6 @@ class CreateTodo extends Activity {
             true
           )
         );
-        // }
       }
     } catch (error) {
       // eslint-disable-next-line no-console

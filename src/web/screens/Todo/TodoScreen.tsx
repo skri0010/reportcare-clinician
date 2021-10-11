@@ -92,12 +92,14 @@ export const TodoScreen: FC<MainScreenProps[ScreenName.TODO]> = ({
   // Function to save the selected todo details to be displayed in the right screen
   const onRowClick = (item: LocalTodo): void => {
     dispatch(setFetchingTodoDetails(true));
+    // If the todo has an ID
     if (item.id) {
       AgentTrigger.triggerRetrieveTodoDetails(
         item.id,
         RetrieveTodoDetailsMethod.TODO_ID
       );
     } else if (item.alertId) {
+      // If todo does not have an ID (ie created offline), use alert ID instead
       AgentTrigger.triggerRetrieveTodoDetails(
         item.alertId,
         RetrieveTodoDetailsMethod.ALERT_ID

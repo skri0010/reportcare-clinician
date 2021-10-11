@@ -212,7 +212,7 @@
     "TargetWeight": "Sasaran berat badan",
     "Symptoms": "Simptom",
     "NoRecord": "-",
-    "NoSymptoms": "No symptoms recorded"
+    "NoSymptoms": "Tiada simptom yang direkodkan"
   },
   "Patient_ICD/CRT": {
     "IcdCrtRecords": "Rekod ICD/CRT",

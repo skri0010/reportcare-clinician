@@ -369,8 +369,8 @@ export const triggerRetrieveClinicianContacts = (): void => {
 
 // SRD-III: Triggers RetrieveTodoDetails of DTA
 export const triggerRetrieveTodoDetails = (
-  input: string,
-  retrieveMethod: RetrieveTodoDetailsMethod
+  input: string, // todo or alert ID
+  retrieveMethod: RetrieveTodoDetailsMethod // retrieve method
 ): void => {
   agentAPI.addFact(
     new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.TODO_ID, input),
