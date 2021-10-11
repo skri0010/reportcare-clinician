@@ -36,6 +36,7 @@ export interface ColorScheme {
   // Buttons
   primaryButtonColor: string;
   acceptButtonColor: string;
+  declineButtonColor: string;
   primaryDeactivatedButtonColor: string;
   primaryWarningButtonColor: string;
   primaryTodoCompleteButtonColor: string;

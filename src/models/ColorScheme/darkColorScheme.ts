@@ -26,7 +26,7 @@ export const darkColorScheme: ColorScheme = {
   selectedBorderColor: "#000000",
 
   // Separators
-  separatorColor: "#000000",
+  separatorColor: "#787878",
 
   // Bars
   primaryBarColor: "#0d8ca8",
@@ -41,6 +41,7 @@ export const darkColorScheme: ColorScheme = {
   // Buttons
   primaryButtonColor: "#9e3ce6",
   acceptButtonColor: "#57c081",
+  declineButtonColor: "#DC143C",
   primaryDeactivatedButtonColor: "#a6a6a6",
   primaryWarningButtonColor: "#D11C1C",
   primaryTodoCompleteButtonColor: "#0b9fbf",

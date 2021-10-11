@@ -58,6 +58,7 @@ const styles = ScaledSheet.create({
     flexDirection: "row"
   },
   textContainer: {
+    flex: 5,
     paddingRight: "5@ms",
     maxWidth: "250@ms"
   },

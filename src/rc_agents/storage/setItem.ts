@@ -11,7 +11,7 @@ import { AsyncStorageKeys, AsyncStorageType } from ".";
 import {
   getAllPatientDetails,
   getPatientAssignmentSubscriptions,
-  getPatientConfigurations,
+  getPatientBaselines,
   getPatientDetails,
   getPendingPatientAssignments,
   getTodos
@@ -127,8 +127,8 @@ export const setPatients = async (
         activityInfos: localPatients[patient.patientID]?.activityInfos || {},
         symptomReports: localPatients[patient.patientID]?.symptomReports || {},
         vitalsReports: localPatients[patient.patientID]?.vitalsReports || {},
-        medicalRecords: localPatients[patient.patientID]?.medicalRecords || {},
-        icdCrtRecords: localPatients[patient.patientID]?.icdCrtRecords || {}
+        medicalRecords: localPatients[patient.patientID]?.medicalRecords || [],
+        icdCrtRecords: localPatients[patient.patientID]?.icdCrtRecords || []
       };
     }
   });
@@ -147,8 +147,8 @@ export const setPatient = async (patient: PatientInfo): Promise<void> => {
     activityInfos: localPatient?.activityInfos || {},
     symptomReports: localPatient?.symptomReports || {},
     vitalsReports: localPatient?.vitalsReports || {},
-    medicalRecords: localPatient?.medicalRecords || {},
-    icdCrtRecords: localPatient?.icdCrtRecords || {}
+    medicalRecords: localPatient?.medicalRecords || [],
+    icdCrtRecords: localPatient?.icdCrtRecords || []
   });
 };
 
@@ -193,55 +193,51 @@ export const setAllPatientDetails = async (
 };
 
 /**
- * Stores an array of medical records belonging to the same patient
+ * Stores a patient's medical record in patient details.
  */
-export const setPatientMedicalRecords = async (
-  medicalRecords: ClinicianRecord[]
+export const setMedicalRecord = async (
+  medicalRecord: ClinicianRecord
 ): Promise<void> => {
-  const localPatient = await getPatientDetails(medicalRecords[0].patientID);
+  const localPatient = await getPatientDetails(medicalRecord.patientID);
   if (localPatient) {
-    medicalRecords.forEach((medicalRecord) => {
-      localPatient.medicalRecords[medicalRecord.documentID] = medicalRecord;
-    });
+    localPatient.medicalRecords.unshift(medicalRecord);
     await setPatientDetails(localPatient);
   }
 };
 
 /**
- * Stores an array of ICD/CRT records belonging to the same patient
+ * Stores a patient's ICD/CRT record in patient details.
  */
-export const setPatientIcdCrtRecords = async (
-  icdCrtRecords: ClinicianRecord[]
+export const setIcdCrtRecord = async (
+  icdCrtRecord: ClinicianRecord
 ): Promise<void> => {
-  const localPatient = await getPatientDetails(icdCrtRecords[0].patientID);
+  const localPatient = await getPatientDetails(icdCrtRecord.patientID);
   if (localPatient) {
-    icdCrtRecords.forEach((icdCrtRecord) => {
-      localPatient.icdCrtRecords[icdCrtRecord.documentID] = icdCrtRecord;
-    });
+    localPatient.icdCrtRecords.unshift(icdCrtRecord);
     await setPatientDetails(localPatient);
   }
 };
 
-export const setPatientConfigurations = async (
-  configurations: PatientInfo[]
+export const setPatientBaselines = async (
+  baselines: PatientInfo[]
 ): Promise<void> => {
-  let localData = await getPatientConfigurations();
+  let localData = await getPatientBaselines();
 
-  configurations.forEach((configuration) => {
+  baselines.forEach((baseline) => {
     if (localData) {
       // Removes existing patient configuration if any
-      const existIndex = localData.findIndex((p) => p.id === configuration.id);
+      const existIndex = localData.findIndex((p) => p.id === baseline.id);
       if (existIndex >= 0) {
         localData.splice(existIndex, 1);
       }
     } else {
       localData = [];
     }
-    localData.push(configuration);
+    localData.push(baseline);
   });
 
   await AsyncStorage.setItem(
-    AsyncStorageKeys.PATIENT_CONFIGURATIONS,
+    AsyncStorageKeys.PATIENT_BASELINES,
     JSON.stringify(localData)
   );
 };

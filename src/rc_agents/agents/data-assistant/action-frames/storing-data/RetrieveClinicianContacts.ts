@@ -19,6 +19,7 @@ import { LocalStorage } from "rc_agents/storage";
 import { listClinicianInfos } from "aws";
 import { store } from "util/useRedux";
 import { ClinicianInfo } from "aws/API";
+import { getClinicianID } from "rc_agents/storage/getItem";
 import { setFetchingClinicianContacts } from "ic-redux/actions/agents/clinicianActionCreator";
 
 /**
@@ -59,6 +60,9 @@ class RetrieveClinicianContacts extends Activity {
 
           if (query.data.listClinicianInfos?.items) {
             clinicians = query.data.listClinicianInfos.items as ClinicianInfo[];
+            // Filter out current user
+            const user = await getClinicianID();
+            clinicians = clinicians.filter((t) => t.clinicianID !== user);
             // save data locally
             await LocalStorage.setClinicianContacts(clinicians);
           }

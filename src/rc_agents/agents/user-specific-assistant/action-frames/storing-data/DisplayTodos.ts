@@ -60,24 +60,29 @@ class DisplayTodos extends Activity {
       let currentCompletedTodos = currentAgentsState.completedTodos;
 
       // Looks for Todo in the list of current Todos and removes it from the list
-      if (updatedTodo.id) {
-        // Synced Todo with Id
-        if (currentPendingTodos) {
-          let existIndex = currentPendingTodos.findIndex(
-            (t) => t.id === updatedTodo.id
-          );
-          if (existIndex >= 0) {
-            currentPendingTodos.splice(existIndex, 1);
-          } else if (currentCompletedTodos) {
-            existIndex = currentCompletedTodos.findIndex(
-              (t) => t.id === updatedTodo.id
-            );
-            if (existIndex >= 0) {
-              currentCompletedTodos.splice(existIndex, 1);
-            }
-          }
-        }
-      } else if (updatedTodo.alertId) {
+      // if (updatedTodo.id) {
+      //   // Synced Todo with Id
+      //   if (currentPendingTodos) {
+      //     let existIndex = currentPendingTodos.findIndex(
+      //       (t) => t.id === updatedTodo.id
+      //     );
+      //     console.log(existIndex);
+      //     console.log("hello");
+      //     if (existIndex >= 0) {
+      //       currentPendingTodos.splice(existIndex, 1);
+      //     } else if (currentCompletedTodos) {
+      //       existIndex = currentCompletedTodos.findIndex(
+      //         (t) => t.id === updatedTodo.id
+      //       );
+      //       console.log(existIndex);
+      //       console.log("bye");
+      //       if (existIndex >= 0) {
+      //         currentCompletedTodos.splice(existIndex, 1);
+      //       }
+      //     }
+      //   }
+      // } else
+      if (updatedTodo.alertId) {
         // Unsynced Todo without Id
         if (currentPendingTodos) {
           let existIndex = currentPendingTodos.findIndex(

@@ -4332,10 +4332,14 @@ agent-base@6:
 "agents-framework@git+https://git-codecommit.ap-southeast-1.amazonaws.com/v1/repos/agents-framework":
   version "0.1.3"
 <<<<<<< HEAD
+<<<<<<< HEAD
   resolved "git+https://git-codecommit.ap-southeast-1.amazonaws.com/v1/repos/agents-framework#8b3fad921ae818fe761a63f523bad9c6baa2d515"
 =======
   resolved "git+https://git-codecommit.ap-southeast-1.amazonaws.com/v1/repos/agents-framework#aef2bf2ffab43af128f3aaf102f74dcdfa059432"
 >>>>>>> a6cdfa58a69daee6c89e495cec6acb696a4146c8
+=======
+  resolved "git+https://git-codecommit.ap-southeast-1.amazonaws.com/v1/repos/agents-framework#8b3fad921ae818fe761a63f523bad9c6baa2d515"
+>>>>>>> d7bf82106791141192138c76acc57038de34abbc
 
 ajv-errors@^1.0.0:
   version "1.0.1"

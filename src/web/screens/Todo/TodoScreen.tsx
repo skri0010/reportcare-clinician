@@ -89,6 +89,7 @@ export const TodoScreen: FC<MainScreenProps[ScreenName.TODO]> = ({
     }
   }, [todoDetails]);
 
+  // Function to save the selected todo details to be displayed in the right screen
   const onRowClick = (item: LocalTodo): void => {
     dispatch(setFetchingTodoDetails(true));
     if (item.id) {
@@ -103,21 +104,6 @@ export const TodoScreen: FC<MainScreenProps[ScreenName.TODO]> = ({
       );
     }
   };
-  // Function to save the selected todo details to be displayed in the right screen
-  // function onRowClick(item: LocalTodo) {
-  //   dispatch(setFetchingTodoDetails(true));
-  //   if (item.id) {
-  //     AgentTrigger.triggerRetrieveTodoDetails(
-  //       item.id,
-  //       RetrieveTodoDetailsMethod.TODO_ID
-  //     );
-  //   } else if (item.alertId) {
-  //     AgentTrigger.triggerRetrieveTodoDetails(
-  //       item.alertId,
-  //       RetrieveTodoDetailsMethod.ALERT_ID
-  //     );
-  //   }
-  // }
 
   // Compares dispatched updatedTodo with current Todo displayed in the TodoDetailsScreen
   useEffect(() => {

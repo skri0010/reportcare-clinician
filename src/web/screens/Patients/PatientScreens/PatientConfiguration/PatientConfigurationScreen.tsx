@@ -23,20 +23,23 @@ import { Hospital, NYHAClass } from "rc_agents/model";
 import { getPickerStyles } from "util/getStyles";
 import { Label } from "components/Text/Label";
 import { AuthButton } from "components/Buttons/AuthButton";
-import { triggerConfigurePatient } from "rc_agents/triggers";
+import { triggerStorePatientBaseline } from "rc_agents/triggers";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { useToast } from "react-native-toast-notifications";
 import {
   setConfigurationSuccessful,
   setConfiguringPatient
 } from "ic-redux/actions/agents/configurationActionCreator";
+import { SaveAndCancelButtons } from "components/Buttons/SaveAndCancelButtons";
 
 interface PatientConfigurationScreenProps {
   info: PatientInfo;
+  editDetails: boolean; // Indicates that patient has been configured and details are to be updated
+  setEditDetails: (state: boolean) => void; // To edit patient's details
 }
 
 export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
-  ({ info }) => {
+  ({ info, editDetails, setEditDetails }) => {
     // States
     const { fonts, colors, configuringPatient, configurationSuccessful } =
       select((state: RootState) => ({
@@ -142,7 +145,7 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
       dispatch(setConfiguringPatient(true));
       setConfiguring(true);
       const infoToUpdate = { ...configInfo, configured: true };
-      triggerConfigurePatient(infoToUpdate);
+      triggerStorePatientBaseline(infoToUpdate);
     };
 
     useEffect(() => {
@@ -153,6 +156,7 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
             type: "success"
           });
           dispatch(setConfigurationSuccessful(false));
+          setEditDetails(false);
         } else {
           toast.show(i18n.t("UnexpectedError"), {
             type: "danger"
@@ -164,7 +168,8 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
       configuringPatient,
       configurationSuccessful,
       toast,
-      dispatch
+      dispatch,
+      setEditDetails
     ]);
 
     return (
@@ -298,14 +303,22 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
           />
         </ScrollView>
 
-        {/* Proceed button */}
-        <AuthButton
-          buttonTitle={i18n.t("Patient_Configuration.Proceed")}
-          onPress={onProceedPress}
-          inputValid={allInputValid && !configuringPatient}
-          noTextTransform
-        />
-
+        {/* Patient has been configured - editing patient's details should allow cancelling */}
+        {editDetails ? (
+          <SaveAndCancelButtons
+            onPressSave={onProceedPress}
+            onPressCancel={() => setEditDetails(false)}
+            validToSave={allInputValid && !configuring}
+          />
+        ) : (
+          // Patient hasn't been configured - not allowed to proceed without configuration
+          <AuthButton
+            buttonTitle={i18n.t("Patient_Configuration.Proceed")}
+            onPress={onProceedPress}
+            inputValid={allInputValid && !configuring}
+            noTextTransform
+          />
+        )}
         {configuring && <LoadingIndicator />}
       </ScreenWrapper>
     );

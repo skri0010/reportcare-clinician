@@ -44,6 +44,7 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
   const inputTextColor: StyleProp<TextStyle> = {
     color: colors.primaryTextColor
   };
+
   const dispatch = useDispatch();
 
   const [titleInput, setTitleInput] = useState<string>(todo.title); // Title input

@@ -139,7 +139,9 @@ export const getPickerStyles: (input: {
     height: "100%",
     paddingLeft: ms(10),
     borderWidth: 0,
-    fontSize: fonts.h6Size
+    fontSize: fonts.h6Size,
+    color: colors.primaryTextColor,
+    backgroundColor: colors.primaryBackgroundColor
   };
 
   return {

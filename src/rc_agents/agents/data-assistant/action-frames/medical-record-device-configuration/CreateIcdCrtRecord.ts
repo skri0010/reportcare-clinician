@@ -15,18 +15,20 @@ import {
   PatientAttributes,
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
-import {
-  setCreateIcdCrtRecordSuccessful,
-  setCreatingIcdCrtRecord
-} from "ic-redux/actions/agents/patientActionCreator";
 import { store } from "util/useRedux";
 import { ClinicianRecordInput } from "rc_agents/model";
 import { uploadPDF } from "util/pdfUtilities";
-import { ClinicianRecord } from "aws/API";
+import { LocalStorage } from "rc_agents/storage";
+import {
+  setCreateIcdCrtRecordSuccessful,
+  setCreatingIcdCrtRecord,
+  setPatientDetails
+} from "ic-redux/actions/agents/patientActionCreator";
 
 /**
- * Class to represent an activity for creating a patient's ICD/CRT record.
- * This happens in Procedure HF Outcome Trends (HF-OTP-IV).
+ * Represents the activity for creating a patient's ICD/CRT record.
+ * This happens in Procedure App-Medical Records Device Configuration (MRDC) - P-RB.
+ * Triggered directly when clinician uploads patient's ICD/CRT record.
  */
 class CreateIcdCrtRecord extends Activity {
   constructor() {
@@ -48,54 +50,57 @@ class CreateIcdCrtRecord extends Activity {
         facts[BeliefKeys.PATIENT]?.[PatientAttributes.ICDCRT_RECORD_TO_CREATE];
 
       if (icdCrtRecordInput) {
-        let newIcdCrtRecord: ClinicianRecord | undefined;
+        // let newIcdCrtRecord: ClinicianRecord | undefined;
 
         // Ensure that device is online
         if (facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
           // Upload the file
-          newIcdCrtRecord = await uploadPDF({
+          const newIcdCrtRecord = await uploadPDF({
             recordInput: icdCrtRecordInput,
             recordType: "IcdCrt"
           });
-        }
 
-        if (newIcdCrtRecord) {
-          // Dispatch to front end that create is successful
-          store.dispatch(setCreateIcdCrtRecordSuccessful(true));
+          if (newIcdCrtRecord) {
+            // Add new ICD/CRT record into the existing list of ICD/CRT records in patient details
+            const existingPatientDetails =
+              store.getState().patients.patientDetails;
+            if (existingPatientDetails) {
+              const existingIcdCrtRecords =
+                existingPatientDetails.icdCrtRecords;
+              existingIcdCrtRecords.unshift(newIcdCrtRecord);
+              existingPatientDetails.icdCrtRecords = existingIcdCrtRecords;
 
-          // Add new ICD/CRT record into the existing list of ICD/CRT records
-          let existingIcdCrtRecords = store.getState().patients.icdCrtRecords;
-          if (!existingIcdCrtRecords) {
-            existingIcdCrtRecords = [];
-          }
-          existingIcdCrtRecords.unshift(newIcdCrtRecord);
+              // Dispatch updated patient details
+              store.dispatch(setPatientDetails(existingPatientDetails));
+            }
 
-          // Update Facts
-          agentAPI.addFact(
-            new Belief(
-              BeliefKeys.PATIENT,
-              PatientAttributes.ICDCRT_RECORDS,
-              existingIcdCrtRecords
-            ),
-            false
-          );
-          // Trigger request to dispatch ICD/CRT records to UXSA for frontend display
-          agent.addBelief(
-            new Belief(
-              BeliefKeys.PATIENT,
-              PatientAttributes.ICDCRT_RECORDS_RETRIEVED,
+            // Stores record locally
+            await LocalStorage.setIcdCrtRecord(newIcdCrtRecord);
+
+            // Remove ICD/CRT record input from facts
+            agentAPI.addFact(
+              new Belief(
+                BeliefKeys.PATIENT,
+                PatientAttributes.ICDCRT_RECORD_TO_CREATE,
+                null
+              ),
+              false
+            );
+
+            // End the procedure
+            agentAPI.addFact(
+              new Belief(
+                BeliefKeys.PROCEDURE,
+                ProcedureAttributes.MRDC,
+                ProcedureConst.INACTIVE
+              ),
+              true,
               true
-            )
-          );
-          // Remove ICD/CRT record input from facts
-          agentAPI.addFact(
-            new Belief(
-              BeliefKeys.PATIENT,
-              PatientAttributes.ICDCRT_RECORD_TO_CREATE,
-              null
-            ),
-            false
-          );
+            );
+
+            // Dispatch to front end that create is successful
+            store.dispatch(setCreateIcdCrtRecordSuccessful(true));
+          }
         }
       }
       // Dispatch to front end that create has ended
@@ -108,7 +113,7 @@ class CreateIcdCrtRecord extends Activity {
       agentAPI.addFact(
         new Belief(
           BeliefKeys.PROCEDURE,
-          ProcedureAttributes.HF_OTP_IV,
+          ProcedureAttributes.MRDC,
           ProcedureConst.INACTIVE
         ),
         true,
@@ -123,7 +128,7 @@ class CreateIcdCrtRecord extends Activity {
 // Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.HF_OTP_IV,
+  ProcedureAttributes.MRDC,
   ProcedureConst.ACTIVE
 );
 const rule2 = new ResettablePrecondition(

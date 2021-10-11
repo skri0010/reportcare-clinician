@@ -108,6 +108,9 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
   const [addMedicalRecord, setAddMedicalRecord] = useState<boolean>(false);
   const [addIcdCrtRecord, setAddIcdCrtRecord] = useState<boolean>(false);
 
+  // For editing patient's details - navigate to patient configuration screen
+  const [editDetails, setEditDetails] = useState(false);
+
   return (
     <ScreenWrapper fixed>
       <View
@@ -140,7 +143,7 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
                     name={patientDetails.patientInfo.name}
                     isPatient
                   />
-                  {patientDetails.patientInfo.configured ? (
+                  {patientDetails.patientInfo.configured && !editDetails ? (
                     // Patient is configured: Show details
                     <PatientDetailsTabNavigator
                       details={patientDetails}
@@ -149,11 +152,14 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
                       setDisplayHistory={setDisplayHistory}
                       setModalAlertVisible={setModalAlertVisible}
                       setAddIcdCrtRecord={setAddIcdCrtRecord}
+                      setEditDetails={setEditDetails}
                     />
                   ) : (
-                    // Patient is not configured: Show configuration screen
+                    // Patient is not configured or details are to be updated: Show configuration screen
                     <PatientConfigurationScreen
                       info={patientDetails.patientInfo}
+                      editDetails={editDetails}
+                      setEditDetails={setEditDetails}
                     />
                   )}
                 </>

@@ -1,11 +1,5 @@
 import React, { FC, useEffect, useState } from "react";
-import {
-  View,
-  ViewProps,
-  StyleProp,
-  ScrollView,
-  TextProps
-} from "react-native";
+import { ScrollView } from "react-native";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { H3 } from "components/Text";
 import { ScaledSheet, ms } from "react-native-size-matters";
@@ -25,7 +19,7 @@ import {
   ModalWrapper,
   ModalWrapperProps
 } from "components/Wrappers/ModalWrapper";
-import { ModalButton } from "components/Buttons/ModalButton";
+import { SaveAndCancelButtons } from "components/Buttons/SaveAndCancelButtons";
 
 interface AddIcdCrtRecordModalProps extends ModalWrapperProps {
   setAddIcdCrtRecord: (state: boolean) => void;
@@ -138,39 +132,12 @@ export const AddIcdCrtRecordModal: FC<AddIcdCrtRecordModalProps> = ({
         <FileDropbox file={file} setFile={setFile} />
       </ScrollView>
 
-      <View style={styles.bottomButtonsContainer}>
-        {/* Save button */}
-        <ModalButton
-          title={i18n.t("Patient_ICD/CRT.Save")}
-          disabled={!allInputValid}
-          onPress={onSaveRecord}
-          style={
-            {
-              backgroundColor: allInputValid
-                ? colors.acceptButtonColor
-                : colors.primaryDeactivatedButtonColor,
-              borderColor: colors.primaryTextColor
-            } as StyleProp<ViewProps>
-          }
-        />
-
-        {/* Cancel button */}
-        <ModalButton
-          title={i18n.t("Patient_ICD/CRT.Cancel")}
-          onPress={() => setAddIcdCrtRecord(false)}
-          style={
-            {
-              backgroundColor: colors.primaryContrastTextColor,
-              borderColor: colors.primaryTextColor,
-              borderWidth: ms(1),
-              borderRadius: ms(5)
-            } as StyleProp<ViewProps>
-          }
-          textStyle={
-            { color: colors.consistentTextColor } as StyleProp<TextProps>
-          }
-        />
-      </View>
+      {/* Save and Cancel modal buttons */}
+      <SaveAndCancelButtons
+        onPressSave={onSaveRecord}
+        onPressCancel={() => setAddIcdCrtRecord(false)}
+        validToSave={allInputValid}
+      />
       {savingRecord && <LoadingIndicator overlayBackgroundColor />}
     </ModalWrapper>
   );
@@ -180,12 +147,6 @@ const styles = ScaledSheet.create({
   inputTitle: {
     paddingTop: "5@ms",
     fontWeight: "bold",
-    paddingBottom: "10@ms"
-  },
-  bottomButtonsContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
     paddingBottom: "10@ms"
   }
 });

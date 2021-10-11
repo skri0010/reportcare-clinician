@@ -25,6 +25,7 @@ export interface PatientDetailsTabNavigatorProps {
   setModalAlertVisible: (state: boolean) => void; // alert modal visibility
   setAddMedicalRecord: (state: boolean) => void; // add medical record modal visibility
   setAddIcdCrtRecord: (state: boolean) => void; // add ICD/CRT record modal visibility
+  setEditDetails: (state: boolean) => void; // update patient's baselines
 }
 
 export const PatientDetailsTabNavigator: FC<PatientDetailsTabNavigatorProps> =
@@ -34,7 +35,8 @@ export const PatientDetailsTabNavigator: FC<PatientDetailsTabNavigatorProps> =
     setDisplayHistory,
     setModalAlertVisible,
     setAddMedicalRecord,
-    setAddIcdCrtRecord
+    setAddIcdCrtRecord,
+    setEditDetails
   }) => {
     const { colors, fonts } = select((state: RootState) => ({
       colors: state.settings.colors,
@@ -61,7 +63,13 @@ export const PatientDetailsTabNavigator: FC<PatientDetailsTabNavigatorProps> =
           name={PatientDetailsTabName.OVERVIEW}
           options={{ title: i18n.t("Patients.Overview") }}
         >
-          {(props) => <PatientOverview {...props} details={details} />}
+          {(props) => (
+            <PatientOverview
+              {...props}
+              details={details}
+              setEditDetails={setEditDetails}
+            />
+          )}
         </Tab.Screen>
         <Tab.Screen
           name={PatientDetailsTabName.PARAMETERS}
@@ -88,7 +96,7 @@ export const PatientDetailsTabNavigator: FC<PatientDetailsTabNavigatorProps> =
           {(props) => (
             <PatientHistory
               {...props}
-              info={details.patientInfo}
+              details={details}
               alertHistoryFunc={{
                 setDisplayHistory: setDisplayHistory,
                 setModalAlertVisible: setModalAlertVisible

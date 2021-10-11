@@ -9,15 +9,8 @@ import { validatePassword, validateUsername } from "util/validation";
 import i18n from "util/language/i18n";
 import { useToast } from "react-native-toast-notifications";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
-import { agentAPS } from "rc_agents/agents";
 import { Belief } from "agents-framework";
-import { ProcedureConst } from "agents-framework/Enums";
-import {
-  BeliefKeys,
-  AppAttributes,
-  ClinicianAttributes,
-  ProcedureAttributes
-} from "rc_agents/clinician_framework";
+import { BeliefKeys, AppAttributes } from "rc_agents/clinician_framework";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import { AsyncStorageKeys } from "rc_agents/storage";
 import { useNetInfo } from "@react-native-community/netinfo";
@@ -28,6 +21,7 @@ import { AuthScreenProps } from "web/navigation/types/AuthenticationStackProps";
 import { AuthenticationScreenName } from "web/navigation";
 import { AuthState } from ".";
 import { setProcedureOngoing } from "ic-redux/actions/agents/procedureActionCreator";
+import { AgentTrigger } from "rc_agents/trigger";
 
 export const SignIn: FC<AuthScreenProps[AuthenticationScreenName.SIGN_IN]> = ({
   navigation,
@@ -75,25 +69,7 @@ export const SignIn: FC<AuthScreenProps[AuthenticationScreenName.SIGN_IN]> = ({
         await AsyncStorage.setItem(AsyncStorageKeys.USERNAME, username);
 
         // Triggers APS to retrieve existing entry or create new entry
-        setTimeout(() => {
-          agentAPS.addBelief(
-            new Belief(BeliefKeys.APP, AppAttributes.CONFIGURED, true)
-          );
-          agentAPS.addBelief(
-            new Belief(
-              BeliefKeys.CLINICIAN,
-              ClinicianAttributes.HAS_ENTRY,
-              false
-            )
-          );
-          agentAPI.addFact(
-            new Belief(
-              BeliefKeys.PROCEDURE,
-              ProcedureAttributes.ADC,
-              ProcedureConst.ACTIVE
-            )
-          );
-        }, 1000);
+        AgentTrigger.triggerAssociateData();
       })
       .catch(async (error: { code: string; message: string; name: string }) => {
         // eslint-disable-next-line no-console

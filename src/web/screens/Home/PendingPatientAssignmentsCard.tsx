@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { RootState, select } from "util/useRedux";
 import { View, FlatList } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
@@ -14,6 +14,8 @@ import { PatientAssignmentRow } from "components/RowComponents/PatientRows/Patie
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AgentTrigger } from "rc_agents/trigger";
 import { EmptyListIndicator } from "components/Indicators/EmptyListIndicator";
+import { HomeScreenModal } from "./HomeScreenModals";
+import { PatientReassignmentModal } from "./PatientReassignmentModal";
 
 interface PendingPatientAssignmentsCardProps {
   maxHeight: number;
@@ -21,17 +23,16 @@ interface PendingPatientAssignmentsCardProps {
 
 export const PendingPatientAssignmentsCard: FC<PendingPatientAssignmentsCardProps> =
   ({ maxHeight }) => {
-    const {
-      colors,
-      pendingPatientAssignments,
-      fetchingPendingPatientAssignments
-    } = select((state: RootState) => ({
-      colors: state.settings.colors,
-      pendingPatientAssignments:
-        state.patientAssignments.pendingPatientAssignments,
-      fetchingPendingPatientAssignments:
-        state.patientAssignments.fetchingPendingPatientAssignments
-    }));
+    const { pendingPatientAssignments, fetchingPendingPatientAssignments } =
+      select((state: RootState) => ({
+        pendingPatientAssignments:
+          state.patientAssignments.pendingPatientAssignments,
+        fetchingPendingPatientAssignments:
+          state.patientAssignments.fetchingPendingPatientAssignments
+      }));
+    const [viewModal, setViewModal] = useState<boolean>(false);
+    const [selectedAssignment, setSelectedAssignment] =
+      useState<null | PatientAssignment>(null);
 
     // Trigger agent to fetch pending assignments on initial load
     useEffect(() => {
@@ -45,24 +46,6 @@ export const PendingPatientAssignmentsCard: FC<PendingPatientAssignmentsCardProp
         clinicianID: assignment.clinicianID,
         resolution: PatientAssignmentStatus.APPROVED,
         patientName: assignment.patientName,
-        _version: assignment._version
-      };
-      AgentTrigger.triggerResolvePendingAssignments(
-        patientAssignmentResolution
-      );
-    };
-
-    // JH-TODO-NEW: List of clinicians and trigger
-    const reassignPatientAssignment = (
-      assignment: PatientAssignment,
-      reassignToClinicianID: string
-    ) => {
-      const patientAssignmentResolution: PatientAssignmentResolution = {
-        patientID: assignment.patientID,
-        clinicianID: assignment.clinicianID,
-        patientName: assignment.patientName,
-        resolution: PatientAssignmentStatus.REASSIGNED,
-        reassignToClinicianID: reassignToClinicianID,
         _version: assignment._version
       };
       AgentTrigger.triggerResolvePendingAssignments(
@@ -101,7 +84,10 @@ export const PendingPatientAssignmentsCard: FC<PendingPatientAssignmentsCardProp
                   <PatientAssignmentRow
                     patientName={item.patientName}
                     onApprove={() => approvePatientAssignment(item)}
-                    onReassign={() => null}
+                    onReassign={() => {
+                      setSelectedAssignment(item);
+                      setViewModal(true);
+                    }}
                   />
                 );
               }}
@@ -109,6 +95,18 @@ export const PendingPatientAssignmentsCard: FC<PendingPatientAssignmentsCardProp
             />
           </View>
         ) : null}
+
+        <HomeScreenModal
+          visible={viewModal}
+          onRequestClose={() => {
+            setViewModal(false);
+          }}
+        >
+          <PatientReassignmentModal
+            setModalVisible={setViewModal}
+            selectedAssignment={selectedAssignment}
+          />
+        </HomeScreenModal>
       </CardWrapper>
     );
   };

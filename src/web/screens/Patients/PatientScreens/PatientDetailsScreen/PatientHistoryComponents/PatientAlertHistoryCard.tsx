@@ -9,7 +9,6 @@ import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { EmptyListIndicator } from "components/Indicators/EmptyListIndicator";
 
 interface PatientAlertHistoryProps {
-  patientId?: string;
   maxHeight: number;
   setDisplayHistory: (state: AlertInfo) => void; // alert history details
   setModalAlertVisible: (state: boolean) => void; // alert modal visibility

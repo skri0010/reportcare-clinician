@@ -23,7 +23,10 @@ import { AlertInfo, AlertStatus, FetchAlertsMode } from "rc_agents/model";
 import { Alert, UpdateAlertInput } from "aws/API";
 import { convertAlertToAlertInfo } from "util/utilityFunctions";
 import { AgentTrigger } from "rc_agents/trigger";
-import { setUpdatingAlertIndicators } from "ic-redux/actions/agents/alertActionCreator";
+import {
+  setAlertInfo,
+  setUpdatingAlertIndicators
+} from "ic-redux/actions/agents/alertActionCreator";
 
 /**
  * Class to represent an activity for updating a patient's Alert.
@@ -107,6 +110,7 @@ class UpdateAlert extends Activity {
       );
     }
 
+    store.dispatch(setAlertInfo(alertInfoInput));
     // Trigger procedure to retrieve alerts locally
     AgentTrigger.triggerRetrieveAlerts(FetchAlertsMode.ALL, true);
 

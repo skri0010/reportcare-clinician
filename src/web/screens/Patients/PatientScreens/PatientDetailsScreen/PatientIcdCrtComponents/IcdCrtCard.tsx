@@ -13,26 +13,23 @@ import { useNetInfo } from "@react-native-community/netinfo";
 import { ScaledSheet } from "react-native-size-matters";
 
 interface IcdCrtProps {
+  icdCrtRecords: ClinicianRecord[];
   onAddPress: () => void; // when the add button is pressed
   onViewIcdCrtRecord: (icdCrtRecord: ClinicianRecord) => void;
 }
 
 export const IcdCrtCard: FC<IcdCrtProps> = ({
+  icdCrtRecords,
   onAddPress,
   onViewIcdCrtRecord
 }) => {
-  const {
-    colors,
-    fetchingIcdCrtRecords,
-    icdCrtRecords,
-    fetchingIcdCrtRecordContent
-  } = select((state: RootState) => ({
-    colors: state.settings.colors,
-    alertHistory: state.patients.alertHistory,
-    fetchingIcdCrtRecords: state.patients.fetchingIcdCrtRecords,
-    icdCrtRecords: state.patients.icdCrtRecords,
-    fetchingIcdCrtRecordContent: state.patients.fetchingIcdCrtRecordContent
-  }));
+  const { colors, fetchingIcdCrtRecordContent } = select(
+    (state: RootState) => ({
+      colors: state.settings.colors,
+      alertHistory: state.patients.alertHistory,
+      fetchingIcdCrtRecordContent: state.patients.fetchingIcdCrtRecordContent
+    })
+  );
 
   const [isOnline, setIsOnline] = useState<boolean>(false); // Whether app is online
 
@@ -73,9 +70,7 @@ export const IcdCrtCard: FC<IcdCrtProps> = ({
     <CardWrapper
       title={i18n.t("Patient_ICD/CRT.IcdCrtRecords")}
       ComponentNextToTitle={AddIcdCrtRecordButton}
-      pointerEvents={
-        fetchingIcdCrtRecords || fetchingIcdCrtRecordContent ? "none" : "auto"
-      }
+      pointerEvents={fetchingIcdCrtRecordContent ? "none" : "auto"}
     >
       {/* List of ICD/CRT records */}
       {icdCrtRecords && icdCrtRecords.length > 0 ? (
@@ -92,12 +87,10 @@ export const IcdCrtCard: FC<IcdCrtProps> = ({
           )}
           keyExtractor={(icdCrtRecord) => icdCrtRecord.documentID}
         />
-      ) : !fetchingIcdCrtRecords ? (
+      ) : (
         <EmptyListIndicator text={i18n.t("Patient_ICD/CRT.NoIcdCrtRecords")} />
-      ) : null}
-      {(fetchingIcdCrtRecords || fetchingIcdCrtRecordContent) && (
-        <LoadingIndicator />
       )}
+      {fetchingIcdCrtRecordContent && <LoadingIndicator />}
     </CardWrapper>
   );
 };
