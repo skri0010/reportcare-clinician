@@ -44,7 +44,7 @@ export const darkColorScheme: ColorScheme = {
   declineButtonColor: "#DC143C",
   primaryDeactivatedButtonColor: "#a6a6a6",
   primaryWarningButtonColor: "#D11C1C",
-  primaryTodoCompleteButtonColor: "#A484FF",
+  primaryTodoCompleteButtonColor: "#a484ff",
 
   // Avatar background
   primaryAvatarBackgroundColor: "#e0e0e0",
