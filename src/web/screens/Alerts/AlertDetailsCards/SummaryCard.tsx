@@ -22,7 +22,7 @@ export const SummaryCard: FC<SummaryCardProps> = ({
       flex={1}
       minHeight={minHeight}
       maxHeight={maxHeight}
-      title={i18n.t("Alert Summary")}
+      title={i18n.t("Alerts.AlertSummary")}
     >
       <H4
         text={`${summary}`}

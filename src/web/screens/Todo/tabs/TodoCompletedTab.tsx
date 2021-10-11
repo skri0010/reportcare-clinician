@@ -7,14 +7,12 @@ import { RootState, select, store } from "util/useRedux";
 import i18n from "util/language/i18n";
 import { LocalTodo, TodoStatus, TodoInput } from "rc_agents/model";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
-import {
-  setProcedureOngoing,
-  setSubmittingTodo
-} from "ic-redux/actions/agents/actionCreator";
 import { AgentTrigger } from "rc_agents/trigger";
 import { TodoListTabsProps } from "web/navigation/types";
 import { TodoRowTabProps } from "web/navigation/navigators/TodoListTabNavigator";
 import { NoItemsTextIndicator } from "components/Indicators/NoItemsTextIndicator";
+import { setProcedureOngoing } from "ic-redux/actions/agents/procedureActionCreator";
+import { setSubmittingTodo } from "ic-redux/actions/agents/todoActionCreator";
 import { NoListItemMessage } from "web/screens/Shared/NoListItemMessage";
 
 interface TodoCompleteTabProps
@@ -41,7 +39,7 @@ export const TodoCompletedTab: FC<TodoCompleteTabProps> = ({
 }) => {
   const { colors, fetchingTodos } = select((state: RootState) => ({
     colors: state.settings.colors,
-    fetchingTodos: state.agents.fetchingTodos
+    fetchingTodos: state.todos.fetchingTodos
   }));
 
   // Set the todo item detail to be shown when the item is pressed
@@ -54,7 +52,9 @@ export const TodoCompletedTab: FC<TodoCompleteTabProps> = ({
   }, []);
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.primaryContrastTextColor }}>
+    <View
+      style={{ flex: 1, backgroundColor: colors.secondaryWebBackgroundColor }}
+    >
       {/* List of completed todos */}
       {fetchingTodos ? (
         // Show loading indicator if fetching completed todos

@@ -12,9 +12,9 @@ import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { RiskFilterPillList } from "components/Buttons/RiskFilterPillList";
 import { AlertInfo } from "rc_agents/model";
 import { AgentTrigger } from "rc_agents/trigger";
+import { setAlertInfo } from "ic-redux/actions/agents/alertActionCreator";
 import Fuse from "fuse.js";
 import i18n from "util/language/i18n";
-import { setAlertInfo } from "ic-redux/actions/agents/actionCreator";
 
 const Tab = createMaterialTopTabNavigator<AlertListTabParamList>();
 
@@ -28,8 +28,8 @@ export const AlertListTabNavigator: FC = () => {
     (state: RootState) => ({
       colors: state.settings.colors,
       fonts: state.settings.fonts,
-      completedAlerts: state.agents.completedAlerts,
-      pendingAlerts: state.agents.pendingAlerts
+      completedAlerts: state.alerts.completedAlerts,
+      pendingAlerts: state.alerts.pendingAlerts
     })
   );
 
@@ -95,7 +95,10 @@ export const AlertListTabNavigator: FC = () => {
         })}
       >
         {/* Current Alert List */}
-        <Tab.Screen name={AlertListTabName.CURRENT}>
+        <Tab.Screen
+          name={AlertListTabName.CURRENT}
+          options={{ title: i18n.t("Alerts.Current") }}
+        >
           {(props: AlertListTabsProps.CurrentTabProps) => (
             <AlertCurrentTab
               {...props}
@@ -105,7 +108,10 @@ export const AlertListTabNavigator: FC = () => {
           )}
         </Tab.Screen>
         {/* Completed Alert List */}
-        <Tab.Screen name={AlertListTabName.COMPLETED}>
+        <Tab.Screen
+          name={AlertListTabName.COMPLETED}
+          options={{ title: i18n.t("Alerts.Completed") }}
+        >
           {(props: AlertListTabsProps.CompletedTabProps) => (
             <AlertCompletedTab
               {...props}

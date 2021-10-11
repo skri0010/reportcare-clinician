@@ -12,7 +12,7 @@ import { triggerCreateMedicalRecord } from "rc_agents/triggers";
 import {
   setCreateMedicalRecordSuccessful,
   setCreatingMedicalRecord
-} from "ic-redux/actions/agents/actionCreator";
+} from "ic-redux/actions/agents/patientActionCreator";
 import { useToast } from "react-native-toast-notifications";
 import { FileDropbox } from "components/InputComponents/FileDropbox";
 import {
@@ -35,8 +35,9 @@ export const AddMedicalRecordModal: FC<AddMedicalRecordModalProps> = ({
   const { fonts, creatingMedicalRecord, createMedicalRecordSuccessful } =
     select((state: RootState) => ({
       fonts: state.settings.fonts,
-      creatingMedicalRecord: state.agents.creatingMedicalRecord,
-      createMedicalRecordSuccessful: state.agents.createMedicalRecordSuccessful
+      creatingMedicalRecord: state.patients.creatingMedicalRecord,
+      createMedicalRecordSuccessful:
+        state.patients.createMedicalRecordSuccessful
     }));
 
   const [title, setTitle] = useState<string>("");

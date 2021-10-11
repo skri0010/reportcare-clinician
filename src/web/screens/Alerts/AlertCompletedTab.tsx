@@ -21,7 +21,7 @@ export const AlertCompletedTab: FC<AlertCompletedTabProps> = ({
 }) => {
   const { colors, fetchingCompletedAlerts } = select((state: RootState) => ({
     colors: state.settings.colors,
-    fetchingCompletedAlerts: state.agents.fetchingCompletedAlerts
+    fetchingCompletedAlerts: state.alerts.fetchingCompletedAlerts
   }));
 
   const [noCompletedAlertsNotice, setNoCompletedAlertsNotice] =

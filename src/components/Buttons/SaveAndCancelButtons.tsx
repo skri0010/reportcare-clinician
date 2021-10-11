@@ -42,7 +42,7 @@ export const SaveAndCancelButtons: FC<SaveAndCancelButtonsProps> = ({
         onPress={onPressCancel}
         style={
           {
-            backgroundColor: colors.primaryContrastTextColor,
+            backgroundColor: colors.primaryWebBackgroundColor,
             borderColor: colors.primaryTextColor,
             borderWidth: ms(1),
             borderRadius: ms(5)

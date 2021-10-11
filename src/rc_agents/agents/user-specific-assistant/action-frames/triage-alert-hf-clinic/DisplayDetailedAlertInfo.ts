@@ -15,11 +15,11 @@ import {
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
 import { store } from "util/useRedux";
+import { AlertInfo } from "rc_agents/model";
 import {
   setAlertInfo,
   setFetchingAlertInfo
-} from "ic-redux/actions/agents/actionCreator";
-import { AlertInfo } from "rc_agents/model";
+} from "ic-redux/actions/agents/alertActionCreator";
 
 /**
  * Class to represent an activity for triggering the display of alert with patient's information.

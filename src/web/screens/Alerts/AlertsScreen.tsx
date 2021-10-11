@@ -9,6 +9,7 @@ import { MainScreenProps } from "web/navigation/types";
 import { AgentTrigger } from "rc_agents/trigger";
 import { FetchAlertsMode } from "rc_agents/model";
 import { AddTodoScreen } from "web/screens/Todo/modals/AddTodoScreen";
+import i18n from "util/language/i18n";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AlertListTabNavigator } from "web/navigation/navigators/AlertListTabNavigator";
 import { AlertDetailsScreen } from "./AlertDetailsScreen";
@@ -23,12 +24,14 @@ export const AlertScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
     pendingAlerts,
     completedAlerts
   } = select((state: RootState) => ({
-    colors: state.settings.colors,
-    submittingTodo: state.agents.submittingTodo,
-    fetchingAlertInfo: state.agents.fetchingAlertInfo,
-    alertInfo: state.agents.alertInfo,
-    pendingAlerts: state.agents.pendingAlerts,
-    completedAlerts: state.agents.completedAlerts
+    colors: state.settings.colors, // Used to detect completion of updateTodo procedure
+    procedureOngoing: state.procedures.procedureOngoing,
+    procedureSuccessful: state.procedures.procedureSuccessful,
+    submittingTodo: state.todos.submittingTodo,
+    fetchingAlertInfo: state.alerts.fetchingAlertInfo,
+    alertInfo: state.alerts.alertInfo,
+    pendingAlerts: state.alerts.pendingAlerts,
+    completedAlerts: state.alerts.completedAlerts
   }));
 
   // For pointer events
@@ -84,7 +87,7 @@ export const AlertScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
               ) : (
                 <NoSelectionScreen
                   screenName={ScreenName.ALERTS}
-                  subtitle="Choose Alert to view more info"
+                  subtitle={i18n.t("Alerts.NoSelection")}
                 />
               )}
             </View>

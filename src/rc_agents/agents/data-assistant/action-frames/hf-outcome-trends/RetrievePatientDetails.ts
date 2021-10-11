@@ -32,8 +32,8 @@ import {
   ReportVitals
 } from "aws/API";
 import { LocalStorage } from "rc_agents/storage";
-import { setFetchingPatientDetails } from "ic-redux/actions/agents/actionCreator";
 import { store } from "util/useRedux";
+import { setFetchingPatientDetails } from "ic-redux/actions/agents/patientActionCreator";
 import { sortIcdCrtRecordsByDescendingDateTime } from "util/utilityFunctions";
 
 /**

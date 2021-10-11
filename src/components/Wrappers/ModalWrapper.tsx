@@ -31,7 +31,7 @@ export const ModalWrapper: FC<ModalWrapperProps> = ({
           style={[
             styles.modalInnerContainer,
             {
-              backgroundColor: colors.primaryContrastTextColor,
+              backgroundColor: colors.primaryBackgroundColor,
               borderColor: colors.primaryBorderColor
             },
             modalStyle

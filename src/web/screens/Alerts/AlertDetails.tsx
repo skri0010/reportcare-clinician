@@ -10,7 +10,7 @@ import { SummaryCard } from "./AlertDetailsCards/SummaryCard";
 export const AlertDetails: FC = () => {
   const cardHeight = Math.max(ms(100), Dimensions.get("window").height * 0.25);
   const { alertInfo } = select((state: RootState) => ({
-    alertInfo: state.agents.alertInfo
+    alertInfo: state.alerts.alertInfo
   }));
 
   return (

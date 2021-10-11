@@ -25,11 +25,11 @@ export const PendingPatientAssignmentsCard: FC<PendingPatientAssignmentsCardProp
   ({ maxHeight }) => {
     const { pendingPatientAssignments, fetchingPendingPatientAssignments } =
       select((state: RootState) => ({
-        pendingPatientAssignments: state.agents.pendingPatientAssignments,
+        pendingPatientAssignments:
+          state.patientAssignments.pendingPatientAssignments,
         fetchingPendingPatientAssignments:
-          state.agents.fetchingPendingPatientAssignments
+          state.patientAssignments.fetchingPendingPatientAssignments
       }));
-
     const [viewModal, setViewModal] = useState<boolean>(false);
     const [selectedAssignment, setSelectedAssignment] =
       useState<null | PatientAssignment>(null);

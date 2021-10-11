@@ -21,10 +21,10 @@ import { LocalStorage } from "rc_agents/storage";
 import { getPatientAssignment } from "aws";
 import { store } from "util/useRedux";
 import { agentNWA, agentUXSA } from "rc_agents/agents";
-import { setPendingPatientAssignments } from "ic-redux/actions/agents/actionCreator";
 import { PatientAssignment } from "aws/API";
 import { PatientAssignmentStatus } from "rc_agents/model";
 import { Auth } from "@aws-amplify/auth";
+import { setPendingPatientAssignments } from "ic-redux/actions/agents/patientAssignmentActionCreator";
 /**
  * Class to represent an activity for processing patient assignment subscription.
  * This happens in Procedure Storing Data (SRD-I).
@@ -76,7 +76,8 @@ class ProcessPatientAssignmentSubscription extends Activity {
 
               // Adds to the front of current list of pending patient assignments
               let patientAssignmentExists: PatientAssignment | undefined;
-              let { pendingPatientAssignments } = store.getState().agents;
+              let { pendingPatientAssignments } =
+                store.getState().patientAssignments;
               if (pendingPatientAssignments) {
                 // Check if patient assignment already exists
                 patientAssignmentExists = pendingPatientAssignments.find(

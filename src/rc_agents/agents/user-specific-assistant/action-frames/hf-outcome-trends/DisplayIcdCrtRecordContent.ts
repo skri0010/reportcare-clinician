@@ -15,8 +15,8 @@ import {
 } from "rc_agents/clinician_framework";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import { store } from "util/useRedux";
-import { setFetchingIcdCrtRecordContent } from "ic-redux/actions/agents/actionCreator";
 import { Linking } from "react-native";
+import { setFetchingIcdCrtRecordContent } from "ic-redux/actions/agents/patientActionCreator";
 
 /**
  * Class to represent the activity for displaying patient's ICD/CRT record content

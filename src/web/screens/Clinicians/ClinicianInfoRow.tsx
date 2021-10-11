@@ -3,6 +3,7 @@ import { ms, ScaledSheet } from "react-native-size-matters";
 import { H4, H5 } from "components/Text/index";
 import { View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { RootState, select } from "util/useRedux";
 
 interface ClinicianInfoRowProps {
   title: string;
@@ -31,9 +32,16 @@ export const ClinicianInfoRow: FC<ClinicianInfoRowProps> = ({
   iconType,
   subcontent
 }) => {
+  const { colors } = select((state: RootState) => ({
+    colors: state.settings.colors
+  }));
   return (
     <View style={styles.container}>
-      <Icon name={iconType} size={ms(15)} style={{ paddingRight: ms(10) }} />
+      <Icon
+        name={iconType}
+        size={ms(15)}
+        style={{ paddingRight: ms(10), color: colors.primaryIconColor }}
+      />
       <View style={styles.content}>
         <H4 text={`${title}:`} style={styles.infoTitle} />
         <H4 text={`${content}`} style={{ paddingRight: ms(5) }} />

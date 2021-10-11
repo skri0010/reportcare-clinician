@@ -13,7 +13,7 @@ import {
   setFetchingAlertInfo,
   setRealTimeAlert,
   setShowAlertPopUp
-} from "ic-redux/actions/agents/actionCreator";
+} from "ic-redux/actions/agents/alertActionCreator";
 import { HomeScreenNavigation } from "web/navigation/types/MainScreenProps";
 import { ScreenName } from "web/navigation";
 import { AgentTrigger } from "rc_agents/trigger";
@@ -40,7 +40,14 @@ const AlertPopUpDetails: FC<AlertPopUpDetailsProps> = ({
 
   return (
     <View style={{ display: "flex", flexWrap: "wrap" }}>
-      <H4 text={title} style={{ fontWeight: "600", marginBottom: ms(5) }} />
+      <H4
+        text={title}
+        style={{
+          fontWeight: "600",
+          marginBottom: ms(5),
+          color: colors.primaryTextColor
+        }}
+      />
       <H5
         text={details}
         style={{
@@ -66,7 +73,7 @@ export const AlertPopUp: FC<AlertPopUpProps> = ({
   const { colors, fonts, fetchingAlertInfo } = select((state: RootState) => ({
     colors: state.settings.colors,
     fonts: state.settings.fonts,
-    fetchingAlertInfo: state.agents.fetchingAlertInfo
+    fetchingAlertInfo: state.alerts.fetchingAlertInfo
   }));
 
   const dispatch = useDispatch();
@@ -78,7 +85,6 @@ export const AlertPopUp: FC<AlertPopUpProps> = ({
       modalStyle={[
         styles.modalContainer,
         {
-          backgroundColor: colors.primaryContrastTextColor,
           borderColor: getRiskLevelColor(
             colors.riskLevelSelectedBackgroundColors,
             realTimeAlert.riskLevel
@@ -108,7 +114,7 @@ export const AlertPopUp: FC<AlertPopUpProps> = ({
       <View style={styles.contentContainer}>
         <H3
           text={i18n.t("Alerts.RealTimeAlert.NewAlert")}
-          style={styles.title}
+          style={[styles.title, { color: colors.primaryTextColor }]}
         />
 
         <AlertPopUpDetails
@@ -153,7 +159,7 @@ export const AlertPopUp: FC<AlertPopUpProps> = ({
           >
             <H4
               text={i18n.t("Alerts.RealTimeAlert.ViewDetails")}
-              style={{ color: colors.primaryTextColor }}
+              style={{ color: colors.primaryContrastTextColor }}
             />
           </TouchableOpacity>
         </View>

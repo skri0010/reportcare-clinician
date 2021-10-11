@@ -1,10 +1,12 @@
 import React, { FC, useState, useEffect } from "react";
 import {
   View,
-  TouchableOpacity,
   TextInput,
   ViewStyle,
-  StyleProp
+  TextStyle,
+  StyleProp,
+  ViewProps,
+  TextProps
 } from "react-native";
 import { ScaledSheet, ms } from "react-native-size-matters";
 import { H3 } from "components/Text";
@@ -16,7 +18,8 @@ import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AgentTrigger } from "rc_agents/trigger";
 import { useRoute } from "@react-navigation/native";
 import { ScreenName } from "web/navigation";
-import { setUpdatingAlertIndicators } from "ic-redux/actions/agents/actionCreator";
+import { setUpdatingAlertIndicators } from "ic-redux/actions/agents/alertActionCreator";
+import { ModalButton } from "components/Buttons/ModalButton";
 
 interface AddTodoScreenProps {
   setModalVisible: (state: boolean) => void;
@@ -27,16 +30,25 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
     (state: RootState) => ({
       colors: state.settings.colors,
       fonts: state.settings.fonts,
-      alertInfo: state.agents.alertInfo,
-      updatingAlert: state.agents.updatingAlert,
-      alertUpdated: state.agents.alertUpdated
+      alertInfo: state.alerts.alertInfo,
+      updatingAlert: state.alerts.updatingAlert,
+      alertUpdated: state.alerts.alertUpdated
     })
   );
 
-  const shortTodoTextInputStyle: StyleProp<ViewStyle> = {
-    backgroundColor: colors.primaryContrastTextColor,
+  const todoInputFieldStyle: StyleProp<ViewStyle> = {
+    backgroundColor: colors.primaryBackgroundColor,
     borderColor: colors.primaryBorderColor,
-    height: ms(45)
+    width: "100%",
+    borderWidth: ms(1),
+    borderRadius: ms(5),
+    marginBottom: ms(10),
+    paddingHorizontal: ms(10)
+  };
+
+  const todoInputTextStyle: StyleProp<TextStyle> = {
+    fontSize: fonts.h4Size,
+    color: colors.primaryTextColor
   };
 
   const [titleInput, setTitleInput] = useState<string>(""); // Title input
@@ -103,7 +115,7 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
       style={[
         styles.container,
         {
-          backgroundColor: colors.primaryContrastTextColor
+          backgroundColor: colors.primaryBackgroundColor
         }
       ]}
     >
@@ -112,11 +124,7 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
       <TextInput
         value={titleInput}
         placeholder={i18n.t("Todo.TitleInputPlaceholder")}
-        style={[
-          styles.input,
-          shortTodoTextInputStyle,
-          { fontSize: fonts.h4Size }
-        ]}
+        style={[todoInputFieldStyle, todoInputTextStyle, { height: ms(45) }]}
         onChangeText={onChangeTitle}
       />
       {/* Patient name input */}
@@ -124,11 +132,7 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
       <TextInput
         value={patientInput}
         placeholder={i18n.t("Todo.PatientInputPlaceholder")}
-        style={[
-          styles.input,
-          shortTodoTextInputStyle,
-          { fontSize: fonts.h4Size }
-        ]}
+        style={[todoInputFieldStyle, todoInputTextStyle, { height: ms(45) }]}
         editable={false}
         selectTextOnFocus={false}
         onChangeText={onChangePatient}
@@ -140,11 +144,9 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
         value={noteInput}
         placeholder={i18n.t("Todo.NotesInputPlaceholder")}
         style={[
-          styles.input,
+          todoInputFieldStyle,
+          todoInputTextStyle,
           {
-            backgroundColor: colors.primaryContrastTextColor,
-            borderColor: colors.primaryBorderColor,
-            fontSize: fonts.h4Size,
             height: ms(100),
             paddingTop: ms(5)
           }
@@ -153,37 +155,34 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
       />
       {/* Save button */}
       <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={[
-            styles.button,
-            { backgroundColor: colors.primaryTodoCompleteButtonColor }
-          ]}
+        <ModalButton
+          title={i18n.t("Todo.SaveButton")}
           onPress={createTodo}
-        >
-          <H3
-            text={i18n.t("Todo.SaveButton")}
-            style={{ color: colors.primaryContrastTextColor }}
-          />
-        </TouchableOpacity>
-        {/* Cancel button */}
-        <TouchableOpacity
-          style={[
-            styles.button,
+          style={
             {
-              backgroundColor: colors.primaryContrastTextColor,
-              borderColor: colors.primaryTextColor,
-              borderWidth: ms(1)
-            }
-          ]}
+              backgroundColor: colors.acceptButtonColor,
+              borderColor: colors.primaryTextColor
+            } as StyleProp<ViewProps>
+          }
+        />
+        {/* Cancel button */}
+        <ModalButton
+          title={i18n.t("Todo.CancelButton")}
           onPress={() => {
             setModalVisible(false);
           }}
-        >
-          <H3
-            text={i18n.t("Todo.CancelButton")}
-            style={{ color: colors.primaryTextColor }}
-          />
-        </TouchableOpacity>
+          style={
+            {
+              backgroundColor: colors.primaryContrastTextColor,
+              borderColor: colors.primaryTextColor,
+              borderWidth: ms(1),
+              borderRadius: ms(5)
+            } as StyleProp<ViewProps>
+          }
+          textStyle={
+            { color: colors.consistentTextColor } as StyleProp<TextProps>
+          }
+        />
       </View>
 
       {/* Loading Indicator while Todo is being created */}

@@ -35,7 +35,7 @@ export const ChartFilterPill: FC<ChartFilterPillProps> = ({
     return undefined;
   };
 
-  // Function to get line color of min, max or avg
+  // Function to get translation of min, max or avg
   const getViewTypeTranslation = () => {
     switch (viewType) {
       case ChartViewTypes.MIN:

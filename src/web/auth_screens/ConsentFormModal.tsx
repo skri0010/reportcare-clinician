@@ -38,7 +38,7 @@ export const ConsentFormModal: FC<ConsentFormModalProps> = ({
           style={[
             styles.container,
             {
-              backgroundColor: colors.primaryContrastTextColor,
+              backgroundColor: colors.primaryBackgroundColor,
               borderColor: colors.primaryBorderColor
             }
           ]}
@@ -46,7 +46,7 @@ export const ConsentFormModal: FC<ConsentFormModalProps> = ({
           {/* Title */}
           <H1
             text={i18n.t("Auth_Registration.TermOfServices")}
-            style={styles.title}
+            style={[styles.title, { color: colors.primaryTextColor }]}
           />
           {/* List of Terms */}
           <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator>

@@ -15,15 +15,15 @@ import {
   PatientAttributes,
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
-import {
-  setCreateMedicalRecordSuccessful,
-  setCreatingMedicalRecord,
-  setPatientDetails
-} from "ic-redux/actions/agents/actionCreator";
 import { store } from "util/useRedux";
 import { ClinicianRecordInput } from "rc_agents/model";
 import { uploadPDF } from "util/pdfUtilities";
 import { LocalStorage } from "rc_agents/storage";
+import {
+  setCreateMedicalRecordSuccessful,
+  setCreatingMedicalRecord,
+  setPatientDetails
+} from "ic-redux/actions/agents/patientActionCreator";
 
 /**
  * Represents the activity for creating a patient's medical record.
@@ -61,7 +61,7 @@ class CreateMedicalRecord extends Activity {
           if (newMedicalRecord) {
             // Add new medical record into the existing list of medical records in patient details
             const existingPatientDetails =
-              store.getState().agents.patientDetails;
+              store.getState().patients.patientDetails;
             if (existingPatientDetails) {
               const existingMedicalRecords =
                 existingPatientDetails.medicalRecords;

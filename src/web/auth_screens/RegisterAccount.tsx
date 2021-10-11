@@ -1,5 +1,5 @@
 import React, { FC, useState, useEffect } from "react";
-import { View, Text } from "react-native";
+import { View } from "react-native";
 import { Auth } from "@aws-amplify/auth";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { Picker } from "@react-native-picker/picker";
@@ -22,6 +22,7 @@ import { getPickerStyles } from "util/getStyles";
 import { Label } from "components/Text/Label";
 import { AuthScreenProps } from "web/navigation/types/AuthenticationStackProps";
 import { AuthenticationScreenName } from "web/navigation";
+import { H3 } from "components/Text";
 import { ConsentFormModal } from "./ConsentFormModal";
 import { TOSCheckbox } from "components/TOScomponents/TOSCheckbox";
 
@@ -152,9 +153,10 @@ export const RegisterAccount: FC<
           />
 
           {/* Role */}
-          <Text style={inputLabelStyle}>
-            {i18n.t("Auth_Registration.Role")}
-          </Text>
+          <H3
+            text={i18n.t("Auth_Registration.Role")}
+            style={[inputLabelStyle, { color: colors.primaryTextColor }]}
+          />
           <View style={pickerContainerStyle}>
             <Picker
               style={pickerStyle}

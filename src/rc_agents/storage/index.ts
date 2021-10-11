@@ -33,7 +33,9 @@ export enum AsyncStorageKeys {
   ALERTS_SYNC = "AlertsSync",
   TODO_DETAILS = "TodoDetails",
   ALERT_NOTIFICATIONS = "AlertNotifications",
-  PATIENT_ASSIGNMENT_SUBSCRIPTIONS = "PatientAssignmentSubscriptions"
+  PATIENT_ASSIGNMENT_SUBSCRIPTIONS = "PatientAssignmentSubscriptions",
+  PERSIST_SETTINGS = "Settings",
+  PERSIST_FILTERS = "Filters"
 }
 
 // Types for storing data locally in AsyncStorage

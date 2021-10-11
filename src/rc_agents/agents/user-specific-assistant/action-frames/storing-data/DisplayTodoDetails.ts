@@ -16,8 +16,7 @@ import {
 } from "rc_agents/clinician_framework";
 import { store } from "util/useRedux";
 import { LocalTodo } from "rc_agents/model";
-// eslint-disable-next-line no-restricted-imports
-import { setTodoDetails } from "ic-redux/actions/agents/actionCreator";
+import { setTodoDetails } from "ic-redux/actions/agents/todoActionCreator";
 
 /**
  * Class representing an activity that triggers the display of todo details.

@@ -12,7 +12,7 @@ import { triggerCreateIcdCrtRecord } from "rc_agents/triggers";
 import {
   setCreateIcdCrtRecordSuccessful,
   setCreatingIcdCrtRecord
-} from "ic-redux/actions/agents/actionCreator";
+} from "ic-redux/actions/agents/patientActionCreator";
 import { useToast } from "react-native-toast-notifications";
 import { FileDropbox } from "components/InputComponents/FileDropbox";
 import {
@@ -32,13 +32,13 @@ export const AddIcdCrtRecordModal: FC<AddIcdCrtRecordModalProps> = ({
   setAddIcdCrtRecord,
   patientID
 }) => {
-  const { fonts, creatingIcdCrtRecord, createIcdCrtRecordSuccessful } = select(
-    (state: RootState) => ({
+  const { colors, fonts, creatingIcdCrtRecord, createIcdCrtRecordSuccessful } =
+    select((state: RootState) => ({
+      colors: state.settings.colors,
       fonts: state.settings.fonts,
-      creatingIcdCrtRecord: state.agents.creatingIcdCrtRecord,
-      createIcdCrtRecordSuccessful: state.agents.createIcdCrtRecordSuccessful
-    })
-  );
+      creatingIcdCrtRecord: state.patients.creatingIcdCrtRecord,
+      createIcdCrtRecordSuccessful: state.patients.createIcdCrtRecordSuccessful
+    }));
 
   const [title, setTitle] = useState<string>("");
   const [file, setFile] = useState<RecordFile | undefined>(undefined);
@@ -111,7 +111,10 @@ export const AddIcdCrtRecordModal: FC<AddIcdCrtRecordModalProps> = ({
         {/* Title Input */}
         <TextField
           label={i18n.t("Patient_ICD/CRT.Title")}
-          labelStyle={[styles.inputTitle, { fontSize: fonts.h3Size }]}
+          labelStyle={[
+            styles.inputTitle,
+            { fontSize: fonts.h3Size, color: colors.primaryTextColor }
+          ]}
           value={title}
           onChange={setTitle}
           placeholder={i18n.t("Patient_ICD/CRT.TitleInputPlaceholder")}

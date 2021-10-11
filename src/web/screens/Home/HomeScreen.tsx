@@ -11,7 +11,7 @@ import { TodosCard } from "./TodosCard";
 import { PendingPatientAssignmentsCard } from "./PendingPatientAssignmentsCard";
 import { RootState, select, useDispatch } from "util/useRedux";
 import useSound from "use-sound";
-import { setShowAlertPopUp } from "ic-redux/actions/agents/actionCreator";
+import { setShowAlertPopUp } from "ic-redux/actions/agents/alertActionCreator";
 import { AlertPopUp } from "../Alerts/AlertPopUp";
 
 export const HomeScreen: FC<MainScreenProps[ScreenName.HOME]> = ({
@@ -32,8 +32,8 @@ export const HomeScreen: FC<MainScreenProps[ScreenName.HOME]> = ({
   );
 
   const { showAlertPopUp, realTimeAlert } = select((state: RootState) => ({
-    showAlertPopUp: state.agents.showAlertPopUp,
-    realTimeAlert: state.agents.realTimeAlert
+    showAlertPopUp: state.alerts.showAlertPopUp,
+    realTimeAlert: state.alerts.realTimeAlert
   }));
 
   useEffect(() => {

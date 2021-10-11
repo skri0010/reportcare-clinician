@@ -4,6 +4,7 @@ import { ms, ScaledSheet } from "react-native-size-matters";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import i18n from "util/language/i18n";
 import { CardWrapper } from "components/Wrappers/CardWrapper";
+import { RootState, select } from "util/useRedux";
 
 interface SymptomCardProps {
   symptom: number | string;
@@ -19,10 +20,16 @@ export const SymptomCard: FC<SymptomCardProps> = ({
   signs
 }) => {
   const iconSize: number = 50;
-
+  const { colors } = select((state: RootState) => ({
+    colors: state.settings.colors
+  }));
   return (
     <CardWrapper flex={1} minHeight={minHeight} maxHeight={maxHeight}>
-      <Icon name="clipboard-alert-outline" size={iconSize} />
+      <Icon
+        name="clipboard-alert-outline"
+        size={iconSize}
+        style={{ color: colors.primaryIconColor }}
+      />
       <H5 text={`${i18n.t("Alerts.Symptoms")}: `} style={styles.title} />
       <H4
         text={`${symptom}`}

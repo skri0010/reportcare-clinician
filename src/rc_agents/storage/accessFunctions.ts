@@ -14,14 +14,25 @@ export const removeItem = async (key: AsyncStorageKeys): Promise<void> => {
 
 /**
  * Upon sign out, remove all locally stored items except for sign up details if it exists
+ * The persisted redux states will not be removed from local storage too
  */
 export const removeAll = async (): Promise<void> => {
   const keys = await AsyncStorage.getAllKeys();
   if (keys && keys.length > 0) {
+    // Retain the SignUpDetails key
     const index = keys.findIndex((k) => k === AsyncStorageKeys.SIGN_UP_DETAILS);
     if (index >= 0) {
       keys.splice(index, 1);
     }
+
+    // Retain the persist:Settings key
+    const persistSettingsIndex = keys.findIndex(
+      (k) => k === `persist:${AsyncStorageKeys.PERSIST_SETTINGS}`
+    );
+    if (persistSettingsIndex >= 0) {
+      keys.splice(persistSettingsIndex, 1);
+    }
+
     await AsyncStorage.multiRemove(keys);
   }
 };

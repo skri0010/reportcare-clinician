@@ -51,7 +51,8 @@ export const TextField: React.FC<TextFieldProps> = ({
           {
             fontSize: fonts.h6Size,
             backgroundColor: colors.primaryBackgroundColor,
-            borderColor: error ? colors.errorColor : colors.primaryBorderColor
+            borderColor: error ? colors.errorColor : colors.primaryBorderColor,
+            color: colors.primaryTextColor
           }
         ]}
         value={value}

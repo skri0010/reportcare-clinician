@@ -27,7 +27,7 @@ export const PatientMedicalRecordCard: FC<PatientMedicalRecordProps> = ({
   const { colors, fetchingMedicalRecordContent } = select(
     (state: RootState) => ({
       colors: state.settings.colors,
-      fetchingMedicalRecordContent: state.agents.fetchingMedicalRecordContent
+      fetchingMedicalRecordContent: state.patients.fetchingMedicalRecordContent
     })
   );
 
