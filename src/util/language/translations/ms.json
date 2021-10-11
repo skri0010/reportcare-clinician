@@ -151,8 +151,8 @@
     "Done": "SELESAI",
     "Undo": "BUAT ASAL",
     "NoPendingTodo": "Semua todo sudah diselesaikan!",
-    "TodoTitleError": "Sila masukkan tajuk yang sah",
-    "TodoNotesError": "Sila masukkan catatan yang sah"
+    "TodoTitleError": "Sila berikan tajuk yang sah",
+    "TodoNotesError": "Sila berikan catatan yang sah"
   },
   "Patients": {
     "PatientsList": {
@@ -255,7 +255,7 @@
       "MedicalRecordSavedSuccessfully": "Rekod perubatan telah berjaya disimpan"
     },
     "NoAlertHistory": "Pesakit ini belum mempunyai sejarah amaran!",
-    "NoMedicalRecords": "TIada rekod perubatan dijumpai!"
+    "NoMedicalRecords": "Tiada rekod perubatan dijumpai!"
   },
   "Patient_Info": {
     "Male": "Lelaki",
