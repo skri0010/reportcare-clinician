@@ -1,12 +1,5 @@
 import React, { FC, useState, useEffect } from "react";
-import {
-  View,
-  ViewStyle,
-  TextStyle,
-  StyleProp,
-  ViewProps,
-  TextProps
-} from "react-native";
+import { View, ViewStyle, TextStyle, StyleProp } from "react-native";
 import { ScaledSheet, ms } from "react-native-size-matters";
 import { RootState, select, useDispatch } from "util/useRedux";
 import i18n from "util/language/i18n";
@@ -20,9 +13,9 @@ import {
 } from "ic-redux/actions/agents/procedureActionCreator";
 import { setUpdatingAlertIndicators } from "ic-redux/actions/agents/alertActionCreator";
 import { setUpdatingTodoOfAlert } from "ic-redux/actions/agents/todoActionCreator";
-import { ModalButton } from "components/Buttons/ModalButton";
 import { TextField } from "components/InputComponents/TextField";
 import { notEmptyString } from "util/validation";
+import { SaveAndCancelButtons } from "components/Buttons/SaveAndCancelButtons";
 
 interface AddTodoScreenProps {
   setModalVisible: (state: boolean) => void;
@@ -223,40 +216,14 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
         errorMessage={i18n.t("Todo.TodoNotesError")}
         multiline
       />
-      {/* Save button */}
-      <View style={styles.buttonContainer}>
-        <ModalButton
-          title={i18n.t("Todo.SaveButton")}
-          onPress={createTodo}
-          style={
-            {
-              backgroundColor: allInputValid
-                ? colors.acceptButtonColor
-                : colors.primaryDeactivatedButtonColor,
-              borderColor: colors.primaryTextColor
-            } as StyleProp<ViewProps>
-          }
-          disabled={!allInputValid}
-        />
-        {/* Cancel button */}
-        <ModalButton
-          title={i18n.t("Todo.CancelButton")}
-          onPress={() => {
-            setModalVisible(false);
-          }}
-          style={
-            {
-              backgroundColor: colors.primaryContrastTextColor,
-              borderColor: colors.primaryTextColor,
-              borderWidth: ms(1),
-              borderRadius: ms(5)
-            } as StyleProp<ViewProps>
-          }
-          textStyle={
-            { color: colors.consistentTextColor } as StyleProp<TextProps>
-          }
-        />
-      </View>
+      {/* Save and cancel buttons */}
+      <SaveAndCancelButtons
+        onPressSave={createTodo}
+        onPressCancel={() => {
+          setModalVisible(false);
+        }}
+        validToSave={allInputValid}
+      />
 
       {/* Loading Indicator while Todo is being created */}
       {updatingAlert || (updatingTodo && <LoadingIndicator />)}

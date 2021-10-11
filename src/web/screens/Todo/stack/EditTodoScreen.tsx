@@ -1,10 +1,9 @@
 import React, { FC, useState, useEffect } from "react";
-import { View, TouchableOpacity } from "react-native";
+import { View } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { TodoDetailsStackProps } from "web/navigation/types";
 import { TodoDetailsStackScreenName } from "web/navigation";
 import { TodoSection, EditHistorySection } from "./ViewTodoScreen";
-import { H3 } from "components/Text";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
 import i18n from "util/language/i18n";
@@ -17,6 +16,7 @@ import {
 } from "ic-redux/actions/agents/todoActionCreator";
 import { TextField } from "components/InputComponents/TextField";
 import { notEmptyString } from "util/validation";
+import { SaveAndCancelButtons } from "components/Buttons/SaveAndCancelButtons";
 
 interface EditTodoScreenProps extends TodoDetailsStackProps.EditTodoProps {
   todo: LocalTodo;
@@ -26,8 +26,7 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
   todo,
   navigation
 }) => {
-  const { colors, updatedTodo, fonts } = select((state: RootState) => ({
-    colors: state.settings.colors,
+  const { updatedTodo, fonts } = select((state: RootState) => ({
     updatedTodo: state.todos.updatedTodo,
     fonts: state.settings.fonts
   }));
@@ -109,47 +108,16 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
           editType={i18n.t("Todo.ModifiedOn")}
           timeDate={todo.lastModified}
         />
-        <View style={styles.buttonContainer}>
-          {/* Save button */}
-          <TouchableOpacity
-            style={[
-              styles.button,
-              {
-                backgroundColor: allInputValid
-                  ? colors.primaryTodoCompleteButtonColor
-                  : colors.primaryDeactivatedButtonColor
-              }
-            ]}
-            onPress={() => {
-              onSave(todo);
-            }}
-            disabled={!allInputValid}
-          >
-            <H3
-              text={i18n.t("Todo.SaveButton")}
-              style={{ color: colors.primaryContrastTextColor }}
-            />
-          </TouchableOpacity>
-          {/* Cancel button */}
-          <TouchableOpacity
-            style={[
-              styles.button,
-              {
-                backgroundColor: colors.primaryContrastTextColor,
-                borderColor: colors.primaryTextColor,
-                borderWidth: ms(1)
-              }
-            ]}
-            onPress={() => {
-              navigation.goBack();
-            }}
-          >
-            <H3
-              text={i18n.t("Todo.CancelButton")}
-              style={{ color: colors.consistentTextColor }}
-            />
-          </TouchableOpacity>
-        </View>
+        {/* Save and cancel buttons */}
+        <SaveAndCancelButtons
+          onPressSave={() => {
+            onSave(todo);
+          }}
+          onPressCancel={() => {
+            navigation.goBack();
+          }}
+          validToSave={allInputValid}
+        />
       </View>
     </ScreenWrapper>
   );
