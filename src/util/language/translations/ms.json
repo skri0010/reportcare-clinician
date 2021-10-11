@@ -109,11 +109,11 @@
     "Todo": "Todo",
     "Chat": "Perbualan",
     "MARIA": "MARIA",
-    "Settings": "Settings",
-    "Help": "Help"
+    "Settings": "Tetapan",
+    "Help": "Bantuan"
   },
   "Home": {
-    "Dashboard": "Dashboard",
+    "Dashboard": "Papan Pemuka",
     "Welcome": "Selamat Datang Dr. ",
     "WelcomeMsg": "Menyemak kesihatan pesakit-pesakit anda, mengawasi vital mereka dan berbual dengan mereka.",
     "RequestsByMaria": "Permintaan daripada MARIA",
@@ -147,10 +147,10 @@
     "TodoCreateSuccessful": "Todo telah berjaya dicipta",
     "TodoUpdateSuccessful": "Todo telah berjaya dikemas kini",
     "MarkAsDone": "TANDA SEBAGAI SELESAI",
-    "UndoFromCompleted": "PINDAH DARI SELESAI",
-    "Done": "SIAP",
-    "Undo": "UNDO",
-    "NoPendingTodo": "Semua todo sudah disiapkan!"
+    "UndoFromCompleted": "BUAT ASAL DARI SELESAI",
+    "Done": "SELESAI",
+    "Undo": "BUAT ASAL",
+    "NoPendingTodo": "Semua todo sudah diselesaikan!"
   },
   "Patients": {
     "PatientsList": {
@@ -170,7 +170,7 @@
     "DarkMode": "Mod Gelap",
     "DarkModeDescription": "Tekan sini untuk menukar tema.",
     "Language": "Bahasa",
-    "LanguageDescription": "This sini untuk menukar bahasa."
+    "LanguageDescription": "Tekan sini untuk menukar bahasa."
   },
   "Patient_Configuration": {
     "Title": "Konfigurasikan butiran",

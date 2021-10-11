@@ -23,18 +23,18 @@ export const ClinicianDetails: FC = () => {
         />
       ) : (
         <View>
-          <ContactTitle name={clinicianSelected?.name} isPatient={false} />
+          <ContactTitle name={clinicianSelected.name} isPatient={false} />
           <View style={{ marginHorizontal: ms(40) }}>
             <InfoTitleBar title={i18n.t("Clinicians.GeneralDetails")} />
             <View style={styles.infoSection}>
               <ClinicianInfoRow
                 title={i18n.t("Clinicians.Role")}
-                content={clinicianSelected?.role}
+                content={i18n.t(`Auth_Registration.${clinicianSelected.role}`)}
                 iconType="doctor"
               />
               <ClinicianInfoRow
                 title={i18n.t("Clinicians.HospitalName")}
-                content={clinicianSelected?.hospitalName}
+                content={clinicianSelected.hospitalName}
                 iconType="hospital"
               />
             </View>
