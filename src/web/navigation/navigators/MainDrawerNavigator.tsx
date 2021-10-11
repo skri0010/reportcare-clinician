@@ -61,7 +61,8 @@ export const MainDrawerNavigator: FC<DrawerNavigationProps> = ({ signOut }) => {
   const buildOptions: (input: {
     iconName: string;
     iconLabel: string;
-  }) => DrawerNavigationOptions = ({ iconName, iconLabel }) => ({
+    headerTitle: string;
+  }) => DrawerNavigationOptions = ({ iconName, iconLabel, headerTitle }) => ({
     drawerIcon: ({ color }) => (
       <MainScreenTabButton
         name={iconName}
@@ -69,7 +70,8 @@ export const MainDrawerNavigator: FC<DrawerNavigationProps> = ({ signOut }) => {
         iconColor={color}
         textColor={color}
       />
-    )
+    ),
+    headerTitle: headerTitle
   });
 
   // Type check params list. Required because initialParams is insufficient due to Partial<>
@@ -96,7 +98,8 @@ export const MainDrawerNavigator: FC<DrawerNavigationProps> = ({ signOut }) => {
         options={{
           ...buildOptions({
             iconName: "home",
-            iconLabel: i18n.t("ScreenName.Home")
+            iconLabel: i18n.t("ScreenName.Home"),
+            headerTitle: i18n.t("ScreenName.Home")
           })
         }}
       />
@@ -106,7 +109,8 @@ export const MainDrawerNavigator: FC<DrawerNavigationProps> = ({ signOut }) => {
         options={{
           ...buildOptions({
             iconName: "account-circle",
-            iconLabel: i18n.t("ScreenName.Patients")
+            iconLabel: i18n.t("ScreenName.Patients"),
+            headerTitle: i18n.t("ScreenName.Patients")
           })
         }}
         initialParams={initialParamsList.Patients}
@@ -117,7 +121,8 @@ export const MainDrawerNavigator: FC<DrawerNavigationProps> = ({ signOut }) => {
         options={{
           ...buildOptions({
             iconName: "stethoscope",
-            iconLabel: i18n.t("ScreenName.Clinicians")
+            iconLabel: i18n.t("ScreenName.Clinicians"),
+            headerTitle: i18n.t("ScreenName.Clinicians")
           })
         }}
       />
@@ -126,8 +131,9 @@ export const MainDrawerNavigator: FC<DrawerNavigationProps> = ({ signOut }) => {
         component={AlertScreen}
         options={{
           ...buildOptions({
-            iconName: "chat",
-            iconLabel: i18n.t("ScreenName.Alerts")
+            iconName: "alert-circle-outline",
+            iconLabel: i18n.t("ScreenName.Alerts"),
+            headerTitle: i18n.t("ScreenName.Alerts")
           })
         }}
       />
@@ -137,7 +143,8 @@ export const MainDrawerNavigator: FC<DrawerNavigationProps> = ({ signOut }) => {
         options={{
           ...buildOptions({
             iconName: "note-text",
-            iconLabel: i18n.t("ScreenName.Todo")
+            iconLabel: i18n.t("ScreenName.Todo"),
+            headerTitle: i18n.t("ScreenName.Todo")
           })
         }}
         initialParams={initialParamsList.Todo}
@@ -149,7 +156,8 @@ export const MainDrawerNavigator: FC<DrawerNavigationProps> = ({ signOut }) => {
         options={{
           ...buildOptions({
             iconName: "chat",
-            iconLabel: i18n.t("ScreenName.Chat")
+            iconLabel: i18n.t("ScreenName.Chat"),
+            headerTitle: i18n.t("ScreenName.Chat")
           })
         }}
       />
@@ -159,7 +167,8 @@ export const MainDrawerNavigator: FC<DrawerNavigationProps> = ({ signOut }) => {
         options={{
           ...buildOptions({
             iconName: "face-agent",
-            iconLabel: i18n.t("ScreenName.MARIA")
+            iconLabel: i18n.t("ScreenName.MARIA"),
+            headerTitle: i18n.t("ScreenName.MARIA")
           })
         }}
       /> */}
@@ -169,7 +178,8 @@ export const MainDrawerNavigator: FC<DrawerNavigationProps> = ({ signOut }) => {
         options={{
           ...buildOptions({
             iconName: "cog",
-            iconLabel: i18n.t("ScreenName.Settings")
+            iconLabel: i18n.t("ScreenName.Settings"),
+            headerTitle: i18n.t("ScreenName.Settings")
           })
         }}
       />

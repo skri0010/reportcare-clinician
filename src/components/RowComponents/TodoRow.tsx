@@ -116,8 +116,7 @@ const styles = ScaledSheet.create({
     paddingBottom: "3@ms"
   },
   buttonContainer: {
-    paddingRight: "20@ms",
-    paddingLeft: "10@ms",
+    paddingHorizontal: "10@ms",
     alignItems: "center",
     justifyContent: "center"
   },

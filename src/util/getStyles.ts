@@ -1,4 +1,4 @@
-import { ViewStyle, StyleProp, TextStyle, View } from "react-native";
+import { ViewStyle, StyleProp, TextStyle } from "react-native";
 import { ColorScheme } from "models/ColorScheme";
 import { FontScheme } from "models/FontScheme";
 import { DrawerNavigationOptions } from "@react-navigation/drawer";
