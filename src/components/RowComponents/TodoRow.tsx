@@ -50,9 +50,21 @@ export const TodoRow: FC<TodoRowProps> = ({
           ]}
         >
           <View style={styles.texts}>
-            <H5 text={todoDetails.title} style={styles.title} />
-            <H6 text={todoDetails.patientName} style={styles.name} />
-            <H6 text={todoDetails.notes} style={{ paddingBottom: ms(1) }} />
+            <H5
+              text={todoDetails.title}
+              style={[styles.title, { color: colors.consistentTextColor }]}
+            />
+            <H6
+              text={todoDetails.patientName}
+              style={[styles.name, { color: colors.consistentTextColor }]}
+            />
+            <H6
+              text={todoDetails.notes}
+              style={{
+                paddingBottom: ms(1),
+                color: colors.consistentTextColor
+              }}
+            />
           </View>
         </View>
 
@@ -104,8 +116,7 @@ const styles = ScaledSheet.create({
     paddingBottom: "3@ms"
   },
   buttonContainer: {
-    paddingRight: "20@ms",
-    paddingLeft: "10@ms",
+    paddingHorizontal: "10@ms",
     alignItems: "center",
     justifyContent: "center"
   },

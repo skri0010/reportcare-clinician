@@ -15,19 +15,19 @@ import {
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
 import { store } from "util/useRedux";
+import { AlertInfo, AlertsCount, AlertStatus, Role } from "rc_agents/model";
+import { sortAlertInfoByDescendingRiskLevelAndDateTime } from "util/utilityFunctions";
 import {
-  setPendingAlerts,
   setCompletedAlerts,
   setFetchingAlerts,
   setPendingAlertCount,
-  setAlertRiskFilters
-} from "ic-redux/actions/agents/actionCreator";
-import { AlertInfo, AlertsCount, AlertStatus, Role } from "rc_agents/model";
-import { sortAlertInfoByDescendingRiskLevelAndDateTime } from "util/utilityFunctions";
+  setPendingAlerts
+} from "ic-redux/actions/agents/alertActionCreator";
 import { LocalStorage } from "rc_agents/storage";
 import { getAlertsCount } from "rc_agents/agents/data-assistant/action-frames/triage-alert-hf-clinic/RetrieveAlerts";
 import { RiskLevel } from "models/RiskLevel";
 import moment from "moment";
+import { setAlertRiskFilters } from "ic-redux/actions/agents/filterActionCreator";
 
 /**
  * Class to represent an activity for triggering the display of alerts.
@@ -65,7 +65,7 @@ class DisplayAlerts extends Activity {
 
     // OPTIONAL: Include stable (low and unassigned) AlertInfo[] (Only applicable to EP and HF Specialist)
     const viewStableAlertInfos: boolean =
-      store.getState().agents.viewStableAlerts;
+      store.getState().alerts.viewStableAlerts;
 
     // Clears filter
     if (viewStableAlertInfos) {
@@ -173,7 +173,7 @@ export const displayAlerts: (input: {
   let filteredPendingAlerts: AlertInfo[] = [];
   let filteredCompletedAlerts: AlertInfo[] = [];
 
-  const { alertRiskFilters } = store.getState().agents;
+  const { alertRiskFilters } = store.getState().filters;
   let shouldFilter = false;
 
   // If one of the risk filters is true, we must proceed to filter

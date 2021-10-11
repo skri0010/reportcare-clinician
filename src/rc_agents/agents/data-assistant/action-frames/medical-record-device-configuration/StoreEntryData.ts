@@ -24,7 +24,7 @@ import { store } from "util/useRedux";
 import {
   setProcedureOngoing,
   setProcedureSuccessful
-} from "ic-redux/actions/agents/actionCreator";
+} from "ic-redux/actions/agents/procedureActionCreator";
 
 /**
  * Represents the activity for storing clinician's entry data.

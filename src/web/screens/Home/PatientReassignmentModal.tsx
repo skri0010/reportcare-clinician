@@ -26,7 +26,7 @@ export const PatientReassignmentModal: FC<PatientReassignmentModalProps> = ({
 }) => {
   const { colors, clinicians, fonts } = select((state: RootState) => ({
     colors: state.settings.colors,
-    clinicians: state.agents.clinicianContacts,
+    clinicians: state.clinicians.clinicianContacts,
     fonts: state.settings.fonts
   }));
 
@@ -62,7 +62,7 @@ export const PatientReassignmentModal: FC<PatientReassignmentModalProps> = ({
       style={[
         styles.container,
         {
-          backgroundColor: colors.primaryContrastTextColor,
+          backgroundColor: colors.primaryBackgroundColor,
           borderColor: colors.primaryBorderColor
         }
       ]}
@@ -71,19 +71,30 @@ export const PatientReassignmentModal: FC<PatientReassignmentModalProps> = ({
       <View style={styles.titleContainer}>
         <H2
           text={i18n.t("Patient_Assignments.PatientReassign")}
-          style={{ fontWeight: "bold", paddingLeft: ms(5) }}
+          style={{
+            fontWeight: "bold",
+            paddingLeft: ms(5),
+            color: colors.primaryTextColor
+          }}
         />
         <TouchableOpacity
           onPress={() => setModalVisible(false)}
           style={styles.closeButton}
         >
-          <Icon name="close" size={fonts.h3Size} />
+          <Icon
+            name="close"
+            size={fonts.h3Size}
+            style={{ color: colors.primaryTextColor }}
+          />
         </TouchableOpacity>
       </View>
       {/* List of Clinicians */}
       {clinicians ? (
         <>
-          <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+          <ScrollView
+            style={{ flex: 1, marginHorizontal: ms(10) }}
+            showsVerticalScrollIndicator={false}
+          >
             {clinicians.map((data) => (
               <View key={data.clinicianID}>
                 <ClinicianShareRow
@@ -129,7 +140,6 @@ const styles = ScaledSheet.create({
     width: "45%",
     minWidth: "250@ms",
     height: "75%",
-    paddingLeft: "15@ms",
     borderRadius: "10@ms"
   },
   titleContainer: {
@@ -137,7 +147,8 @@ const styles = ScaledSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginVertical: "10@ms"
+    marginVertical: "10@ms",
+    paddingLeft: "15@ms"
   },
   buttonContainer: {
     display: "flex",

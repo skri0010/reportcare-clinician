@@ -22,7 +22,7 @@ import { agentNWA } from "rc_agents/agents";
 import { convertAlertToAlertInfo } from "util/utilityFunctions";
 import { AlertInfo, AlertStatus, FetchAlertsMode } from "rc_agents/model";
 import { store } from "util/useRedux";
-import { setRealTimeAlert } from "ic-redux/actions/agents/actionCreator";
+import { setRealTimeAlert } from "ic-redux/actions/agents/alertActionCreator";
 
 /**
  * Represents the activity for processing a real-time alert notification.

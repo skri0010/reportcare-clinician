@@ -1,11 +1,5 @@
 import React, { FC, useState, useEffect } from "react";
-import {
-  View,
-  TouchableOpacity,
-  TextInput,
-  StyleProp,
-  ViewStyle
-} from "react-native";
+import { View, TextInput, StyleProp, ViewStyle, TextStyle } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { TodoDetailsStackProps } from "web/navigation/types";
 import { TodoDetailsStackScreenName } from "web/navigation";
@@ -15,12 +9,13 @@ import { RootState, select, useDispatch } from "util/useRedux";
 import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
 import i18n from "util/language/i18n";
 import { LocalTodo, TodoInput } from "rc_agents/model";
+import { AgentTrigger } from "rc_agents/trigger";
+import { setProcedureOngoing } from "ic-redux/actions/agents/procedureActionCreator";
 import {
-  setProcedureOngoing,
   setSubmittingTodo,
   setUpdatedTodo
-} from "ic-redux/actions/agents/actionCreator";
-import { AgentTrigger } from "rc_agents/trigger";
+} from "ic-redux/actions/agents/todoActionCreator";
+import { SaveAndCancelButtons } from "components/Buttons/SaveAndCancelButtons";
 
 interface EditTodoScreenProps extends TodoDetailsStackProps.EditTodoProps {
   todo: LocalTodo;
@@ -32,12 +27,16 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
 }) => {
   const { colors, updatedTodo } = select((state: RootState) => ({
     colors: state.settings.colors,
-    updatedTodo: state.agents.updatedTodo
+    updatedTodo: state.todos.updatedTodo
   }));
 
   const inputBarColor: StyleProp<ViewStyle> = {
-    backgroundColor: colors.primaryContrastTextColor,
+    backgroundColor: colors.primaryBackgroundColor,
     borderColor: colors.primaryBorderColor
+  };
+
+  const inputTextColor: StyleProp<TextStyle> = {
+    color: colors.primaryTextColor
   };
 
   const dispatch = useDispatch();
@@ -75,6 +74,7 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
           style={[
             styles.input,
             inputBarColor,
+            inputTextColor,
             {
               height: ms(30),
               paddingLeft: ms(10)
@@ -95,10 +95,12 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
           style={[
             styles.input,
             inputBarColor,
+            inputTextColor,
             {
               height: ms(100),
               paddingLeft: ms(10),
-              paddingTop: ms(5)
+              paddingTop: ms(5),
+              color: colors.primaryTextColor
             }
           ]}
           onChangeText={setNoteInput}
@@ -113,42 +115,17 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
           editType={i18n.t("Todo.ModifiedOn")}
           timeDate={todo.lastModified}
         />
-        <View style={styles.buttonContainer}>
-          {/* Save button */}
-          <TouchableOpacity
-            style={[
-              styles.button,
-              {
-                backgroundColor: colors.primaryContrastTextColor,
-                borderColor: colors.primaryTextColor,
-                borderWidth: ms(1)
-              }
-            ]}
-            onPress={() => {
-              onSave(todo);
-            }}
-          >
-            <H3
-              text={i18n.t("Todo.SaveButton")}
-              style={{ color: colors.primaryTextColor }}
-            />
-          </TouchableOpacity>
-          {/* Cancel button */}
-          <TouchableOpacity
-            style={[
-              styles.button,
-              { backgroundColor: colors.innerScreenButtonColor }
-            ]}
-            onPress={() => {
-              navigation.goBack();
-            }}
-          >
-            <H3
-              text={i18n.t("Todo.CancelButton")}
-              style={{ color: colors.primaryContrastTextColor }}
-            />
-          </TouchableOpacity>
-        </View>
+
+        {/* Save and Cancel Buttons */}
+        <SaveAndCancelButtons
+          onPressSave={() => {
+            onSave(todo);
+          }}
+          onPressCancel={() => {
+            navigation.goBack();
+          }}
+          validToSave
+        />
       </View>
     </ScreenWrapper>
   );
@@ -164,20 +141,6 @@ const styles = ScaledSheet.create({
     borderWidth: "1@ms",
     borderRadius: "2@ms",
     marginBottom: "20@ms"
-  },
-  buttonContainer: {
-    marginBottom: "10@ms",
-    alignItem: "center",
-    justifyContent: "center",
-    flexDirection: "row"
-  },
-  button: {
-    textAlign: "center",
-    justifyContent: "space-evenly",
-    borderRadius: "5@ms",
-    width: "80@ms",
-    height: "30@ms",
-    margin: "10@ms"
   },
   detailText: {
     fontWeight: "bold",

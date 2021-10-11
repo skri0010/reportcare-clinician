@@ -15,8 +15,8 @@ import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 export const HighRiskAlertDetails: FC = () => {
   const { alertInfo, fetchingIcdCrtRecordContent } = select(
     (state: RootState) => ({
-      alertInfo: state.agents.alertInfo,
-      fetchingIcdCrtRecordContent: state.agents.fetchingIcdCrtRecordContent
+      alertInfo: state.alerts.alertInfo,
+      fetchingIcdCrtRecordContent: state.patients.fetchingIcdCrtRecordContent
     })
   );
 

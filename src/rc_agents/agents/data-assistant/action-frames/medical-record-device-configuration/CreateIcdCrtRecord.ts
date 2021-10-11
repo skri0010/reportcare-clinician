@@ -15,15 +15,15 @@ import {
   PatientAttributes,
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
-import {
-  setCreateIcdCrtRecordSuccessful,
-  setCreatingIcdCrtRecord,
-  setPatientDetails
-} from "ic-redux/actions/agents/actionCreator";
 import { store } from "util/useRedux";
 import { ClinicianRecordInput } from "rc_agents/model";
 import { uploadPDF } from "util/pdfUtilities";
 import { LocalStorage } from "rc_agents/storage";
+import {
+  setCreateIcdCrtRecordSuccessful,
+  setCreatingIcdCrtRecord,
+  setPatientDetails
+} from "ic-redux/actions/agents/patientActionCreator";
 
 /**
  * Represents the activity for creating a patient's ICD/CRT record.
@@ -63,7 +63,7 @@ class CreateIcdCrtRecord extends Activity {
           if (newIcdCrtRecord) {
             // Add new ICD/CRT record into the existing list of ICD/CRT records in patient details
             const existingPatientDetails =
-              store.getState().agents.patientDetails;
+              store.getState().patients.patientDetails;
             if (existingPatientDetails) {
               const existingIcdCrtRecords =
                 existingPatientDetails.icdCrtRecords;

@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { View, FlatList } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { select, RootState, useDispatch } from "util/useRedux";
-import { setChartFilters } from "ic-redux/actions/agents/actionCreator";
+import { setChartFilters } from "ic-redux/actions/agents/filterActionCreator";
 import { ChartFilter, ChartViewTypes } from "models/ChartViewTypes";
 import { ChartFilterPill } from "./ChartFilterPill";
 import { H6 } from "components/Text";
@@ -10,7 +10,7 @@ import i18n from "util/language/i18n";
 
 export const ChartFilterPillList: FC = () => {
   const { chartFilter } = select((state: RootState) => ({
-    chartFilter: state.agents.chartFilters
+    chartFilter: state.filters.chartFilters
   }));
 
   const dispatch = useDispatch();

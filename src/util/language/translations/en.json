@@ -167,6 +167,12 @@
     "Info": "Info",
     "NoSelection": "Select a patient to view details"
   },
+  "Settings": {
+    "DarkMode": "Dark Mode",
+    "DarkModeDescription": "Click here to change the theme.",
+    "Language": "Language",
+    "LanguageDescription": "Click here to change language."
+  },
   "Patient_Configuration": {
     "Title": "Configure details",
     "EditDetails": "Edit details",
@@ -274,11 +280,14 @@
     "NoSelection": "Select a clinician to view more details",
     "Role": "Role",
     "HospitalName": "Hospital Name",
+    "GeneralDetails": "General Information",
     "ClincianList": {
       "NoClinicianFound": "No Clincians found!"
     }
   },
   "Alerts": {
+    "Current": "Current",
+    "Completed": "Completed",
     "SearchBarPlaceholder": "Search alerts",
     "NoSelection": "Select an alert to view more details",
     "RiskLevel": "Risk level",
@@ -358,5 +367,11 @@
     "Save": "Save",
     "Cancel": "Cancel"
   },
-  "UnexpectedError": "An unexpected error has occured"
+  "UnexpectedError": "An unexpected error has occured",
+  "Filter": {
+    "High": "High",
+    "Medium": "Medium",
+    "Low": "Low",
+    "Unassigned": "Unassigned"
+  }
 }

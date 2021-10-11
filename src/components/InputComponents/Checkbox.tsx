@@ -42,6 +42,7 @@ export const Checkbox: FC<CheckboxProps> = ({
           name="check-box-outline-blank"
           size={iconSize}
           style={iconStyle}
+          color={colors.primaryIconColor}
         />
       )}
     </TouchableOpacity>

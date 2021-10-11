@@ -11,7 +11,7 @@ import { AlertInfo } from "rc_agents/model";
 
 export const AlertDetails: FC = () => {
   const { alertInfo } = select((state: RootState) => ({
-    alertInfo: state.agents.alertInfo
+    alertInfo: state.alerts.alertInfo
   }));
 
   return (

@@ -31,7 +31,6 @@ import {
   PresignedUrlRecordType
 } from "aws";
 import { store } from "util/useRedux";
-import { setFetchingAlertInfo } from "ic-redux/actions/agents/actionCreator";
 import {
   Alert,
   MedicationInfo,
@@ -40,6 +39,7 @@ import {
   ReportVitals
 } from "aws/API";
 import { convertAlertToAlertInfo } from "util/utilityFunctions";
+import { setFetchingAlertInfo } from "ic-redux/actions/agents/alertActionCreator";
 import moment from "moment";
 import { RiskLevel } from "models/RiskLevel";
 

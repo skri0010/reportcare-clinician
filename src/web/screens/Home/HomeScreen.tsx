@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { View } from "react-native";
 import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
 import { MainScreenProps } from "web/navigation/types";
@@ -11,7 +11,7 @@ import { TodosCard } from "./TodosCard";
 import { PendingPatientAssignmentsCard } from "./PendingPatientAssignmentsCard";
 import { RootState, select, useDispatch } from "util/useRedux";
 import useSound from "use-sound";
-import { setShowAlertPopUp } from "ic-redux/actions/agents/actionCreator";
+import { setShowAlertPopUp } from "ic-redux/actions/agents/alertActionCreator";
 import { AlertPopUp } from "../Alerts/AlertPopUp";
 
 export const HomeScreen: FC<MainScreenProps[ScreenName.HOME]> = ({
@@ -25,6 +25,7 @@ export const HomeScreen: FC<MainScreenProps[ScreenName.HOME]> = ({
   };
 
   const dispatch = useDispatch();
+  const [notified, setNotified] = useState(false); // Keeps track of whether user has been notified
 
   const [playNotificationSound] = useSound(
     // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -32,15 +33,16 @@ export const HomeScreen: FC<MainScreenProps[ScreenName.HOME]> = ({
   );
 
   const { showAlertPopUp, realTimeAlert } = select((state: RootState) => ({
-    showAlertPopUp: state.agents.showAlertPopUp,
-    realTimeAlert: state.agents.realTimeAlert
+    showAlertPopUp: state.alerts.showAlertPopUp,
+    realTimeAlert: state.alerts.realTimeAlert
   }));
 
   useEffect(() => {
-    if (showAlertPopUp && realTimeAlert) {
+    if (showAlertPopUp && realTimeAlert && !notified) {
       playNotificationSound();
+      setNotified(true); // Updates that user has been notified
     }
-  }, [showAlertPopUp, realTimeAlert, playNotificationSound]);
+  }, [showAlertPopUp, realTimeAlert, playNotificationSound, notified]);
 
   return (
     <ScreenWrapper padding>
@@ -63,6 +65,7 @@ export const HomeScreen: FC<MainScreenProps[ScreenName.HOME]> = ({
           onRequestClose={() => dispatch(setShowAlertPopUp(false))}
           navigation={navigation}
           realTimeAlert={realTimeAlert}
+          setNotified={setNotified}
         />
       )}
     </ScreenWrapper>

@@ -9,7 +9,6 @@ import { AlertHistoryModal } from "./PatientScreens/PatientDetailsScreen/Patient
 import { RiskLevel } from "models/RiskLevel";
 import { ScaledSheet } from "react-native-size-matters";
 import { AddMedicalRecordModal } from "./PatientScreens/PatientDetailsScreen/PatientHistoryComponents/AddMedicalRecordModal";
-import { setPatientDetails } from "ic-redux/actions/agents/actionCreator";
 import { PatientDetailsTabNavigator } from "web/navigation/navigators/PatientDetailsTabNavigator";
 import { MainScreenProps } from "web/navigation/types";
 import { ScreenName } from "web/navigation";
@@ -21,6 +20,7 @@ import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AdaptiveTwoScreenWrapper } from "components/Wrappers/AdaptiveTwoScreenWrapper";
 import { PatientConfigurationScreen } from "web/screens/Patients/PatientScreens/PatientConfiguration/PatientConfigurationScreen";
 import { AlertColorCode, AlertInfo, AlertStatus } from "rc_agents/model";
+import { setPatientDetails } from "ic-redux/actions/agents/patientActionCreator";
 import { AddIcdCrtRecordModal } from "./PatientScreens/PatientDetailsScreen/PatientIcdCrtComponents/AddIcdCrtRecordModal";
 
 export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
@@ -30,9 +30,9 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
   const { colors, patients, patientDetails, fetchingPatientDetails } = select(
     (state: RootState) => ({
       colors: state.settings.colors,
-      patients: state.agents.patients,
-      patientDetails: state.agents.patientDetails,
-      fetchingPatientDetails: state.agents.fetchingPatientDetails
+      patients: state.patients.patients,
+      patientDetails: state.patients.patientDetails,
+      fetchingPatientDetails: state.patients.fetchingPatientDetails
     })
   );
 

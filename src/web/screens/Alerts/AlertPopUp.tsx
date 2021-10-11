@@ -13,7 +13,7 @@ import {
   setFetchingAlertInfo,
   setRealTimeAlert,
   setShowAlertPopUp
-} from "ic-redux/actions/agents/actionCreator";
+} from "ic-redux/actions/agents/alertActionCreator";
 import { HomeScreenNavigation } from "web/navigation/types/MainScreenProps";
 import { ScreenName } from "web/navigation";
 import { AgentTrigger } from "rc_agents/trigger";
@@ -41,7 +41,10 @@ const AlertPopUpDetails: FC<AlertPopUpDetailsProps> = ({
 
   return (
     <View style={styles.detailsContainer}>
-      <H4 text={title} style={styles.detailsTitle} />
+      <H4
+        text={title}
+        style={[styles.detailsTitle, { color: colors.primaryTextColor }]}
+      />
       <H5
         text={details}
         style={{
@@ -56,18 +59,20 @@ const AlertPopUpDetails: FC<AlertPopUpDetailsProps> = ({
 interface AlertPopUpProps extends ModalWrapperProps {
   navigation: HomeScreenNavigation;
   realTimeAlert: AlertInfo;
+  setNotified: (state: boolean) => void; // Sets notified state
 }
 
 export const AlertPopUp: FC<AlertPopUpProps> = ({
   visible,
   onRequestClose,
   navigation,
-  realTimeAlert
+  realTimeAlert,
+  setNotified
 }) => {
   const { colors, fonts, fetchingAlertInfo } = select((state: RootState) => ({
     colors: state.settings.colors,
     fonts: state.settings.fonts,
-    fetchingAlertInfo: state.agents.fetchingAlertInfo
+    fetchingAlertInfo: state.alerts.fetchingAlertInfo
   }));
 
   const dispatch = useDispatch();
@@ -96,7 +101,6 @@ export const AlertPopUp: FC<AlertPopUpProps> = ({
       modalStyle={[
         styles.modalContainer,
         {
-          backgroundColor: colors.primaryContrastTextColor,
           borderColor: getRiskLevelColor(
             colors.riskLevelSelectedBackgroundColors,
             realTimeAlert.riskLevel
@@ -119,7 +123,8 @@ export const AlertPopUp: FC<AlertPopUpProps> = ({
             containerStyle={styles.iconStyle}
             onPress={() => {
               dispatch(setRealTimeAlert(undefined)); // Reset realTimeAlert state
-              dispatch(setShowAlertPopUp(false)); // Close the pop up
+              dispatch(setShowAlertPopUp(false));
+              setNotified(false); // Reset notified state
             }}
           />
         </View>
@@ -127,7 +132,7 @@ export const AlertPopUp: FC<AlertPopUpProps> = ({
         <View style={styles.contentContainer}>
           <H3
             text={i18n.t("Alerts.RealTimeAlert.NewAlert")}
-            style={styles.title}
+            style={[styles.title, { color: colors.primaryTextColor }]}
           />
 
           <AlertPopUpDetails
@@ -167,15 +172,18 @@ export const AlertPopUp: FC<AlertPopUpProps> = ({
             onPress={() => {
               // Set fetchingAlertInfo to true so that RetrieveAlerts won't be triggered when navigating to AlertsScreen
               dispatch(setFetchingAlertInfo(true));
-              dispatch(setShowAlertPopUp(false)); // Close the pop up
+              dispatch(setShowAlertPopUp(false));
               navigation.navigate(ScreenName.ALERTS);
-              AgentTrigger.triggerRetrieveMonitoringRecords(realTimeAlert); // Trigger retrieval of monitoring records, i.e. detailed alert info
+
+              // Trigger retrieval of monitoring records, i.e. high risk detailed alert info
+              AgentTrigger.triggerRetrieveMonitoringRecords(realTimeAlert);
               dispatch(setRealTimeAlert(undefined)); // Reset realTimeAlert state
+              setNotified(false); // Reset notified state
             }}
           >
             <H4
               text={i18n.t("Alerts.RealTimeAlert.ViewDetails")}
-              style={{ color: colors.primaryTextColor }}
+              style={{ color: colors.primaryContrastTextColor }}
             />
           </TouchableOpacity>
         </View>

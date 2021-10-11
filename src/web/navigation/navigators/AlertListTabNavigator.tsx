@@ -12,12 +12,12 @@ import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { RiskFilterPillList } from "components/Buttons/RiskFilterPillList";
 import { AlertInfo, FetchAlertsMode, Role } from "rc_agents/model";
 import { AgentTrigger } from "rc_agents/trigger";
-import Fuse from "fuse.js";
-import i18n from "util/language/i18n";
 import {
   setAlertInfo,
   setViewStableAlerts
-} from "ic-redux/actions/agents/actionCreator";
+} from "ic-redux/actions/agents/alertActionCreator";
+import Fuse from "fuse.js";
+import i18n from "util/language/i18n";
 import { FloatingBottomButton } from "components/Buttons/FloatingBottomButton";
 import { LocalStorage } from "rc_agents/storage";
 
@@ -33,9 +33,9 @@ export const AlertListTabNavigator: FC = () => {
     select((state: RootState) => ({
       colors: state.settings.colors,
       fonts: state.settings.fonts,
-      completedAlerts: state.agents.completedAlerts,
-      pendingAlerts: state.agents.pendingAlerts,
-      viewStableAlerts: state.agents.viewStableAlerts
+      completedAlerts: state.alerts.completedAlerts,
+      pendingAlerts: state.alerts.pendingAlerts,
+      viewStableAlerts: state.alerts.viewStableAlerts
     }));
 
   const dispatch = useDispatch();
@@ -129,7 +129,10 @@ export const AlertListTabNavigator: FC = () => {
         })}
       >
         {/* Current Alert List */}
-        <Tab.Screen name={AlertListTabName.CURRENT}>
+        <Tab.Screen
+          name={AlertListTabName.CURRENT}
+          options={{ title: i18n.t("Alerts.Current") }}
+        >
           {(props: AlertListTabsProps.CurrentTabProps) => (
             <AlertCurrentTab
               {...props}
@@ -139,7 +142,10 @@ export const AlertListTabNavigator: FC = () => {
           )}
         </Tab.Screen>
         {/* Completed Alert List */}
-        <Tab.Screen name={AlertListTabName.COMPLETED}>
+        <Tab.Screen
+          name={AlertListTabName.COMPLETED}
+          options={{ title: i18n.t("Alerts.Completed") }}
+        >
           {(props: AlertListTabsProps.CompletedTabProps) => (
             <AlertCompletedTab
               {...props}

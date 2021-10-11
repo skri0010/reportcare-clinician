@@ -110,11 +110,11 @@
     "Todo": "Todo",
     "Chat": "Perbualan",
     "MARIA": "MARIA",
-    "Settings": "Settings",
-    "Help": "Help"
+    "Settings": "Tetapan",
+    "Help": "Bantuan"
   },
   "Home": {
-    "Dashboard": "Dashboard",
+    "Dashboard": "Papan Pemuka",
     "Welcome": "Selamat Datang Dr. ",
     "WelcomeMsg": "Menyemak kesihatan pesakit-pesakit anda, mengawasi vital mereka dan berbual dengan mereka.",
     "RequestsByMaria": "Permintaan daripada MARIA",
@@ -127,7 +127,7 @@
   "Todo": {
     "Current": "Semasa",
     "Completed": "Selesai",
-    "NoPatients": "Tiada todo yang dijumpai!",
+    "NoTodos": "Tiada todo yang dijumpai!",
     "SearchBarPlaceholder": "Cari todo",
     "ViewTodo": "Lihat Todo",
     "EditTodo": "Edit Todo",
@@ -148,16 +148,16 @@
     "TodoCreateSuccessful": "Todo telah berjaya dicipta",
     "TodoUpdateSuccessful": "Todo telah berjaya dikemas kini",
     "MarkAsDone": "TANDA SEBAGAI SELESAI",
-    "UndoFromCompleted": "PINDAH DARI SELESAI",
-    "Done": "SIAP",
-    "Undo": "UNDO",
-    "NoPendingTodo": "Semua todo sudah disiapkan!"
+    "UndoFromCompleted": "BUAT ASAL DARI SELESAI",
+    "Done": "SELESAI",
+    "Undo": "BUAT ASAL",
+    "NoPendingTodo": "Semua todo sudah diselesaikan!"
   },
   "Patients": {
     "PatientsList": {
       "NoPatients": "Tiada pesakit yang dijumpai!",
       "Class": "Kelas",
-      "Age": "Umur,"
+      "Age": "Umur"
     },
     "SearchBarPlaceholder": "Cari pesakit (contohnya John)",
     "Overview": "Ringkasan",
@@ -166,6 +166,12 @@
     "History": "Sejarah",
     "Info": "Info",
     "NoSelection": "Pilih salah satu pesakit untuk mendapat informasi lanjut"
+  },
+  "Settings": {
+    "DarkMode": "Mod Gelap",
+    "DarkModeDescription": "Tekan sini untuk menukar tema.",
+    "Language": "Bahasa",
+    "LanguageDescription": "Tekan sini untuk menukar bahasa."
   },
   "Patient_Configuration": {
     "Title": "Konfigurasikan butiran",
@@ -210,7 +216,7 @@
     "NoSymptoms": "No symptoms recorded"
   },
   "Patient_ICD/CRT": {
-    "ICD/CRTRecords": "Rekod ICD/CRT",
+    "IcdCrtRecords": "Rekod ICD/CRT",
     "NoIcdCrtRecords": "Tiada rekod ICD/CRT dijumpai!",
     "Title": "Tajuk",
     "TitleInputPlaceholder": "Berikan tajuk kepada rekod ini",
@@ -274,11 +280,14 @@
     "NoSelection": "Pilih salah satu pakar untuk melihat butirannya",
     "Role": "Peranan",
     "HospitalName": "Nama Hospital",
+    "GeneralDetails": "Informasi Umum",
     "ClincianList": {
       "NoClinicianFound": "Tiada pakar yang dijumpai!"
     }
   },
   "Alerts": {
+    "Current": "Semasa",
+    "Completed": "Selesai",
     "SearchBarPlaceholder": "Cari amaran",
     "NoSelection": "Pilih salah satu amaran untuk melihat butirannya",
     "RiskLevel": "Tahap risiko",
@@ -358,5 +367,11 @@
     "Save": "Simpan",
     "Cancel": "Batal"
   },
-  "UnexpectedError": "Ralat yang tidak disangkai telah berlaku"
+  "UnexpectedError": "Ralat yang tidak disangkai telah berlaku",
+  "Filter": {
+    "High": "Tinggi",
+    "Medium": "Sederhana",
+    "Low": "Rendah",
+    "Unassigned": "Belum tetap"
+  }
 }

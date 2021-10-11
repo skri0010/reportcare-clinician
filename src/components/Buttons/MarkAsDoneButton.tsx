@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { View, TouchableOpacity } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import i18n from "util/language/i18n";
-import { H5 } from "components/Text";
+import { H6 } from "components/Text";
 import { RootState, select } from "util/useRedux";
 import { LocalTodo } from "rc_agents/model";
 
@@ -34,7 +34,7 @@ export const MarkAsDoneButton: FC<MarkAsDoneButtonProps> = ({
         ]}
         onPress={onPress}
       >
-        <H5
+        <H6
           text={
             !todo.completed
               ? i18n.t("Todo.MarkAsDone")

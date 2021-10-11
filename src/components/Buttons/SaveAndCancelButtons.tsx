@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { View, StyleProp, ViewProps } from "react-native";
+import { View, StyleProp, ViewProps, TextProps } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import i18n from "util/language/i18n";
 import { RootState, select } from "util/useRedux";
@@ -47,6 +47,9 @@ export const SaveAndCancelButtons: FC<SaveAndCancelButtonsProps> = ({
             borderWidth: ms(1),
             borderRadius: ms(5)
           } as StyleProp<ViewProps>
+        }
+        textStyle={
+          { color: colors.consistentTextColor } as StyleProp<TextProps>
         }
       />
     </View>

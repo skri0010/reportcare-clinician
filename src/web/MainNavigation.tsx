@@ -10,12 +10,18 @@ import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import { Belief } from "agents-framework";
 import { AppAttributes, BeliefKeys } from "rc_agents/clinician_framework";
 import { LocalStorage } from "rc_agents/storage";
+import { RootState, select } from "util/useRedux";
 
 interface MainNavigationProps {
   setAuthState: (state: string) => void;
 }
 
 export const MainNavigation: FC<MainNavigationProps> = ({ setAuthState }) => {
+  const { language } = select((state: RootState) => ({
+    colors: state.settings.colors,
+    language: state.settings.language
+  }));
+
   const toast = useToast();
   const netInfo = useNetInfo();
 
@@ -31,6 +37,12 @@ export const MainNavigation: FC<MainNavigationProps> = ({ setAuthState }) => {
       setAuthState(AuthState.SIGNED_OUT);
     });
   };
+
+  // Change the language of the main navigation screens
+  useEffect(() => {
+    // Required to make sure language is changed upon load
+    i18n.changeLanguage(language.toString());
+  }, [language]);
 
   // Detects changes in internet connection
   useEffect(() => {

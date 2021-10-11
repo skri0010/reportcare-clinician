@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { View, TouchableOpacity } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { TodoDetailsStackProps } from "web/navigation/types";
-import { H2, H3, H4, H5 } from "components/Text";
+import { H3, H4, H5 } from "components/Text";
 import { RootState, select } from "util/useRedux";
 import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
 import i18n from "util/language/i18n";
@@ -10,6 +10,7 @@ import { ScreenName, TodoDetailsStackScreenName } from "web/navigation";
 import { getLocalDateTime } from "util/utilityFunctions";
 import { LocalTodo } from "rc_agents/model";
 import { TodoScreenNavigation } from "web/navigation/types/MainScreenProps";
+import { InnerScreenButton } from "components/Buttons/InnerScreenButton";
 
 interface ViewTodoScreenProps extends TodoDetailsStackProps.ViewTodoProps {
   todo: LocalTodo;
@@ -57,8 +58,7 @@ export const ViewTodoScreen: FC<ViewTodoScreenProps> = ({
               style={[
                 styles.viewButton,
                 {
-                  backgroundColor: colors.primaryContrastTextColor,
-                  borderColor: colors.primaryTextColor
+                  backgroundColor: colors.primaryButtonColor
                 }
               ]}
               onPress={() => {
@@ -72,7 +72,7 @@ export const ViewTodoScreen: FC<ViewTodoScreenProps> = ({
             >
               <H5
                 text={i18n.t("Todo.ViewButton")}
-                style={{ color: colors.primaryTextColor }}
+                style={{ color: colors.primaryContrastTextColor }}
               />
             </TouchableOpacity>
           </View>
@@ -91,22 +91,13 @@ export const ViewTodoScreen: FC<ViewTodoScreenProps> = ({
           timeDate={todo.lastModified}
         />
         {/* Edit button */}
-        <View style={styles.editButtonContainer}>
-          <TouchableOpacity
-            style={[
-              styles.editButton,
-              { backgroundColor: colors.innerScreenButtonColor }
-            ]}
-            onPress={() => {
-              navigation.navigate(TodoDetailsStackScreenName.EDIT_TODO);
-            }}
-          >
-            <H2
-              text={i18n.t("Todo.EditButton")}
-              style={{ color: colors.primaryContrastTextColor }}
-            />
-          </TouchableOpacity>
-        </View>
+        <InnerScreenButton
+          title={i18n.t("Todo.EditButton")}
+          onPress={() => {
+            navigation.navigate(TodoDetailsStackScreenName.EDIT_TODO);
+          }}
+          style={styles.editButtonContainer}
+        />
       </View>
     </ScreenWrapper>
   );
@@ -163,21 +154,12 @@ const styles = ScaledSheet.create({
   viewButton: {
     width: "70@ms",
     height: "20@ms",
-    borderWidth: "1@ms",
     borderRadius: "5@ms",
     justifyContent: "center",
     textAlign: "center",
     marginRight: "10@ms"
   },
   editButtonContainer: {
-    marginTop: "10@ms",
-    alignItems: "center"
-  },
-  editButton: {
-    textAlign: "center",
-    justifyContent: "space-evenly",
-    borderRadius: "5@ms",
-    width: "80@ms",
-    height: "30@ms"
+    marginTop: "10@ms"
   }
 });

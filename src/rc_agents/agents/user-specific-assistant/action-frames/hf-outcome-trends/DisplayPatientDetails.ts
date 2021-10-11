@@ -17,9 +17,9 @@ import {
 import { PatientDetails } from "rc_agents/model";
 import { store } from "util/useRedux";
 import {
-  setPatientDetails,
-  setFetchingPatientDetails
-} from "ic-redux/actions/agents/actionCreator";
+  setFetchingPatientDetails,
+  setPatientDetails
+} from "ic-redux/actions/agents/patientActionCreator";
 
 /**
  * Represents the activity for displaying details of a specific patient.

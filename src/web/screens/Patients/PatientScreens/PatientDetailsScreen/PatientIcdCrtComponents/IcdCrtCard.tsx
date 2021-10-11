@@ -26,8 +26,8 @@ export const IcdCrtCard: FC<IcdCrtProps> = ({
   const { colors, fetchingIcdCrtRecordContent } = select(
     (state: RootState) => ({
       colors: state.settings.colors,
-      alertHistory: state.agents.alertHistory,
-      fetchingIcdCrtRecordContent: state.agents.fetchingIcdCrtRecordContent
+      alertHistory: state.patients.alertHistory,
+      fetchingIcdCrtRecordContent: state.patients.fetchingIcdCrtRecordContent
     })
   );
 

@@ -21,8 +21,8 @@ interface TodosCardProps {
 
 export const TodosCard: FC<TodosCardProps> = ({ maxHeight, navigation }) => {
   const { pendingTodos, fetchingTodos } = select((state: RootState) => ({
-    pendingTodos: state.agents.pendingTodos,
-    fetchingTodos: state.agents.fetchingTodos
+    pendingTodos: state.todos.pendingTodos,
+    fetchingTodos: state.todos.fetchingTodos
   }));
 
   const [lastPatientIndex, setLastPatientIndex] = useState(-1);

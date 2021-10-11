@@ -17,7 +17,7 @@ export const AlertDetailsScreen: FC<AlertDetailsScreenProps> = ({
   setModalVisible
 }) => {
   const { alertInfo } = select((state: RootState) => ({
-    alertInfo: state.agents.alertInfo
+    alertInfo: state.alerts.alertInfo
   }));
 
   return (

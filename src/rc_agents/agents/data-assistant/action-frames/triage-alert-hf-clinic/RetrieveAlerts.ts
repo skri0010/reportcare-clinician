@@ -24,14 +24,14 @@ import {
   AlertStatus
 } from "rc_agents/model";
 import { store } from "util/useRedux";
+import { Alert } from "aws/API";
+import { RiskLevel } from "models/RiskLevel";
+import { convertAlertsToAlertInfos } from "util/utilityFunctions";
 import {
   setFetchingAlerts,
   setFetchingCompletedAlerts,
   setFetchingPendingAlerts
-} from "ic-redux/actions/agents/actionCreator";
-import { Alert } from "aws/API";
-import { RiskLevel } from "models/RiskLevel";
-import { convertAlertsToAlertInfos } from "util/utilityFunctions";
+} from "ic-redux/actions/agents/alertActionCreator";
 
 /**
  * Class to represent the activity for retrieving alerts.

@@ -35,8 +35,8 @@ export const TodoListTabNavigator: FC<TodoListNavigationStackProps> = ({
     (state: RootState) => ({
       colors: state.settings.colors,
       fonts: state.settings.fonts,
-      completedTodos: state.agents.completedTodos,
-      pendingTodos: state.agents.pendingTodos
+      completedTodos: state.todos.completedTodos,
+      pendingTodos: state.todos.pendingTodos
     })
   );
 

@@ -17,9 +17,9 @@ import {
 } from "rc_agents/clinician_framework";
 import { ClinicianRecord } from "aws/API";
 import { store } from "util/useRedux";
-import { setFetchingMedicalRecordContent } from "ic-redux/actions/agents/actionCreator";
 
 import { downloadPDF } from "util/pdfUtilities";
+import { setFetchingMedicalRecordContent } from "ic-redux/actions/agents/patientActionCreator";
 
 /**
  * Class to represent the activity for retrieving content of a patient's medical record.

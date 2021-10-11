@@ -21,8 +21,7 @@ export const AlertCurrentTab: FC<AlertCurrentTabProps> = ({
 }) => {
   const { colors, fetchingPendingAlerts } = select((state: RootState) => ({
     colors: state.settings.colors,
-    fetchingPendingAlerts: state.agents.fetchingPendingAlerts,
-    alertRiskFilters: state.agents.alertRiskFilters
+    fetchingPendingAlerts: state.alerts.fetchingPendingAlerts
   }));
 
   const [noPendingAlertsNotice, setNoPendingAlertsNotice] =
@@ -44,7 +43,7 @@ export const AlertCurrentTab: FC<AlertCurrentTabProps> = ({
   }, [currentSearched, fetchingPendingAlerts]);
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.primaryContrastTextColor }}>
+    <View style={{ flex: 1, backgroundColor: colors.primaryBackgroundColor }}>
       {/* Show no alerts message if no alert found */}
       {fetchingPendingAlerts ? (
         // Show loading indicator if fetching patients

@@ -4,6 +4,7 @@ import { View } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { CardWrapper } from "components/Wrappers/CardWrapper";
+import { RootState, select } from "util/useRedux";
 
 export interface BaseDetailsContentProps {
   title: string;
@@ -36,6 +37,10 @@ export const BaseDetailsCard: FC<BaseDetailsCardProps> = ({
 }) => {
   const iconSize: number = ms(20);
 
+  const { colors } = select((state: RootState) => ({
+    colors: state.settings.colors
+  }));
+
   return (
     <CardWrapper flex={1} maxHeight={maxHeight}>
       <View style={styles.container}>
@@ -44,7 +49,7 @@ export const BaseDetailsCard: FC<BaseDetailsCardProps> = ({
             <Icon
               name={iconName}
               size={iconSize}
-              style={{ paddingRight: ms(5) }}
+              style={{ paddingRight: ms(5), color: colors.primaryIconColor }}
             />
           )}
           <H4 text={cardTitle} style={{ fontWeight: "bold" }} />

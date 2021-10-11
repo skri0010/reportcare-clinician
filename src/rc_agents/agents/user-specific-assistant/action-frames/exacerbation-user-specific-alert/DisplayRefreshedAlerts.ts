@@ -18,7 +18,7 @@ import { AlertInfo, AlertsCount } from "rc_agents/model";
 import { displayAlerts } from "rc_agents/agents/user-specific-assistant/action-frames/triage-alert-hf-clinic/DisplayAlerts";
 import { getAlertsCount } from "rc_agents/agents/data-assistant/action-frames/triage-alert-hf-clinic/RetrieveAlerts";
 import { store } from "util/useRedux";
-import { setShowAlertPopUp } from "ic-redux/actions/agents/actionCreator";
+import { setShowAlertPopUp } from "ic-redux/actions/agents/alertActionCreator";
 
 /**
  * Represents the activity for triggering the display of refreshed alerts when a real-time alert is received.

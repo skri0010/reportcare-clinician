@@ -29,7 +29,7 @@ import { useToast } from "react-native-toast-notifications";
 import {
   setConfigurationSuccessful,
   setConfiguringPatient
-} from "ic-redux/actions/agents/actionCreator";
+} from "ic-redux/actions/agents/configurationActionCreator";
 import { SaveAndCancelButtons } from "components/Buttons/SaveAndCancelButtons";
 
 interface PatientConfigurationScreenProps {
@@ -45,8 +45,8 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
       select((state: RootState) => ({
         colors: state.settings.colors,
         fonts: state.settings.fonts,
-        configuringPatient: state.agents.configuringPatient,
-        configurationSuccessful: state.agents.configurationSuccessful
+        configuringPatient: state.configurations.configuringPatient,
+        configurationSuccessful: state.configurations.configurationSuccessful
       }));
     const [configInfo, setConfigInfo] = useState<PatientInfo>(() => {
       return cloneDeep(info);

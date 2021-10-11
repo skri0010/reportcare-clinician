@@ -1,4 +1,4 @@
-import { ViewStyle, StyleProp, TextStyle, View } from "react-native";
+import { ViewStyle, StyleProp, TextStyle } from "react-native";
 import { ColorScheme } from "models/ColorScheme";
 import { FontScheme } from "models/FontScheme";
 import { DrawerNavigationOptions } from "@react-navigation/drawer";
@@ -15,7 +15,7 @@ export const getMainScreenHeaderStyle: (
   height?: number
 ) => StyleProp<ViewStyle> = (colors, height = ms(40)) => {
   return {
-    backgroundColor: colors.primaryBarColor,
+    backgroundColor: colors.secondaryBarColor,
     height: height,
     elevation: 0, // Remove shadow on Android
     shadowOpacity: 0, // Remove shadow on iOS
@@ -80,9 +80,13 @@ export const getTopTabBarOptions: (input: {
   fonts: FontScheme;
 }) => MaterialTopTabNavigationOptions = ({ colors, fonts }) => {
   return {
-    tabBarLabelStyle: { fontSize: fonts.h6Size, textTransform: "none" },
+    tabBarLabelStyle: {
+      fontSize: fonts.h6Size,
+      textTransform: "none",
+      color: colors.primaryTextColor
+    },
     tabBarIndicatorStyle: { backgroundColor: colors.primaryBarColor },
-    tabBarStyle: { backgroundColor: colors.primaryContrastTextColor }
+    tabBarStyle: { backgroundColor: colors.primaryBackgroundColor }
   };
 };
 
@@ -102,13 +106,15 @@ export const getStackOptions: (input: {
 }) => StackNavigationOptions = ({ colors, fonts }) => {
   return {
     headerStyle: {
-      height: fonts.h1Size + ms(25)
+      height: fonts.h1Size + ms(25),
+      backgroundColor: colors.primaryBackgroundColor
     },
     headerTitleStyle: {
       fontWeight: "bold",
       fontSize: fonts.h1Size,
       paddingLeft: ms(15)
-    }
+    },
+    headerTintColor: colors.primaryIconColor
   };
 };
 
@@ -133,7 +139,9 @@ export const getPickerStyles: (input: {
     height: "100%",
     paddingLeft: ms(10),
     borderWidth: 0,
-    fontSize: fonts.h6Size
+    fontSize: fonts.h6Size,
+    color: colors.primaryTextColor,
+    backgroundColor: colors.primaryBackgroundColor
   };
 
   return {
