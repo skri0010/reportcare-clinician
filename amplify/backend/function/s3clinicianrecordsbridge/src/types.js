@@ -10,7 +10,6 @@ var QueryArgument;
     QueryArgument["documentTitle"] = "documentTitle";
 })(QueryArgument = exports.QueryArgument || (exports.QueryArgument = {}));
 // == GraphQL ==
-// Note: GraphQL operations use IAM authentication
 exports.AppSyncUrl = process.env.API_REPORTCARE_GRAPHQLAPIENDPOINTOUTPUT;
 // == S3 ==
 exports.S3Prefixes = ["IcdCrt", "Medical"];

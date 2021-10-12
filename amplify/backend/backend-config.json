@@ -46,18 +46,18 @@
       "service": "Lambda",
       "dependsOn": [
         {
-          "category": "function",
-          "resourceName": "reportcarelambdalayer",
-          "attributes": [
-            "Arn"
-          ]
-        },
-        {
           "category": "api",
           "resourceName": "reportcare",
           "attributes": [
             "GraphQLAPIIdOutput",
             "GraphQLAPIEndpointOutput"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "reportcarelambdalayer",
+          "attributes": [
+            "Arn"
           ]
         }
       ]

@@ -1,26 +1,13 @@
-type OptionalString = string | undefined;
-type OptionalNumber = number | undefined;
-export type OptionalObject = { [key: string]: OptionalString };
-
-// Function type, name, arguments and return type must match in schema.graphql
-interface Event {
-  typeName: "Query" | "Mutation"; // GraphQL @function type (Dynamically filled)
-  fieldName: OptionalString; // GraphQL @function name (Dynamically filled)
-  arguments: OptionalObject; // GraphQL arguments (Dynamically filled)
-  identity: IdentityType; // AppSync identity object
-  source: OptionalString; // Object returned by parent resolver
-  request: RequestType; // AppSync request object
-  prev: OptionalObject; // Unused: If using the built-in pipeline resolver support, this contains the object returned by the previous function
-}
+import { LambdaResolverEvent, OptionalString } from "./api/lamdaResolverTypes";
 
 // == Exported types ==
-export interface QueryEvent extends Event {
+export interface QueryEvent extends LambdaResolverEvent {
   typeName: "Query";
-  fieldName: "getPresignedUrlForClinicianRecords" | OptionalString;
-  arguments: QueryArgumentsType;
+  fieldName: "queryS3ClinicianRecordsBridge" | OptionalString;
+  arguments: ArgumentsType;
 }
 
-interface MutationEvent extends Event {
+interface MutationEvent extends LambdaResolverEvent {
   typeName: "Mutation";
 }
 
@@ -34,66 +21,29 @@ export enum QueryArgument {
   documentTitle = "documentTitle"
 }
 
-type QueryArgumentsType = {
-  [QueryArgument.recordType]: "IcdCrt" | "Medical" | OptionalString;
-  [QueryArgument.operation]:
-    | "Upload"
-    | "Download"
-    | "Acknowledge"
-    | OptionalString;
+export type RecordType = "IcdCrt" | "Medical";
+type Operation = "Upload" | "Download" | "Acknowledge" | "Delete";
+
+// Query arguments type to be checked
+export type ArgumentsType = {
+  [QueryArgument.recordType]: RecordType | OptionalString;
+  [QueryArgument.operation]: Operation | OptionalString;
   [QueryArgument.patientID]: OptionalString;
   [QueryArgument.documentID]: OptionalString;
   [QueryArgument.documentTitle]: OptionalString;
 };
 
-// == Default types ==
-type IdentityType = {
-  sub: OptionalString;
-  issuer: OptionalString;
-  "cognito:username": OptionalString;
-  username: OptionalString;
-  sourceIp: OptionalString;
-  claims: ClaimsType;
-  defaultAuthStrategy: OptionalString;
-};
-
-type ClaimsType = {
-  sub: OptionalString;
-  "cognito:groups": OptionalString[];
-  email_verified: OptionalString;
-  algorithm: OptionalString;
-  iss: OptionalString;
-  "cognito:roles": OptionalString[];
-  aud: OptionalString;
-  event_id: OptionalString;
-  token_use: OptionalString;
-  phone_number: OptionalString;
-  exp: OptionalString;
-  email: OptionalString;
-  auth_time: OptionalNumber;
-  iat: OptionalNumber;
-};
-
-type RequestType = {
-  headers: {
-    host: OptionalString;
-    connection: OptionalString;
-    "content-length": OptionalString;
-    accept: OptionalString;
-    authorization: OptionalString;
-    "user-agent": OptionalString;
-    "content-type": OptionalString;
-    origin: OptionalString;
-    referer: OptionalString;
-    "accept-encoding": OptionalString;
-    "accept-language": OptionalString;
-    dnt: OptionalString;
-  };
+// Used after confirming QueryArgumentsType
+export type VerifiedArgumentsType = {
+  [QueryArgument.recordType]: RecordType;
+  [QueryArgument.operation]: Operation | OptionalString;
+  [QueryArgument.patientID]: string;
+  [QueryArgument.documentID]: string;
+  [QueryArgument.documentTitle]: string;
 };
 
 // == GraphQL ==
 
-// Note: GraphQL operations use IAM authentication
 export const AppSyncUrl = process.env.API_REPORTCARE_GRAPHQLAPIENDPOINTOUTPUT;
 
 type ErrorsArray = {
@@ -112,7 +62,7 @@ export const S3Prefixes = ["IcdCrt", "Medical"];
 export const S3Level = "private";
 
 // == Others ==
-export interface PresignedUrlObjectResponse {
+export interface EventResponse {
   success: boolean;
-  url?: string;
+  data?: string;
 }

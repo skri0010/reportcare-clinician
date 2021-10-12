@@ -560,6 +560,7 @@ export const onCreateClinicianProtectedInfo = /* GraphQL */ `
       NWA
       ALA
       MHA
+      CAM
       _version
       _deleted
       _lastChangedAt
@@ -580,6 +581,7 @@ export const onUpdateClinicianProtectedInfo = /* GraphQL */ `
       NWA
       ALA
       MHA
+      CAM
       _version
       _deleted
       _lastChangedAt
@@ -600,6 +602,7 @@ export const onDeleteClinicianProtectedInfo = /* GraphQL */ `
       NWA
       ALA
       MHA
+      CAM
       _version
       _deleted
       _lastChangedAt
@@ -684,13 +687,12 @@ export const onCreatePatientAssignment = /* GraphQL */ `
       pending
       resolution
       reassignToClinicianID
-      adminCompleted
+      sourceClinicianID
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
-      adminReassignFromClinicianID
     }
   }
 `;
@@ -710,13 +712,12 @@ export const onUpdatePatientAssignment = /* GraphQL */ `
       pending
       resolution
       reassignToClinicianID
-      adminCompleted
+      sourceClinicianID
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
-      adminReassignFromClinicianID
     }
   }
 `;
@@ -736,13 +737,12 @@ export const onDeletePatientAssignment = /* GraphQL */ `
       pending
       resolution
       reassignToClinicianID
-      adminCompleted
+      sourceClinicianID
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
-      adminReassignFromClinicianID
     }
   }
 `;
@@ -755,6 +755,7 @@ export const onCreateAlert = /* GraphQL */ `
       dateTime
       summary
       colorCode
+      triageValue
       vitalsReportID
       symptomReportID
       pending
@@ -777,6 +778,7 @@ export const onUpdateAlert = /* GraphQL */ `
       dateTime
       summary
       colorCode
+      triageValue
       vitalsReportID
       symptomReportID
       pending
@@ -799,6 +801,7 @@ export const onDeleteAlert = /* GraphQL */ `
       dateTime
       summary
       colorCode
+      triageValue
       vitalsReportID
       symptomReportID
       pending

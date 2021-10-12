@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.getClinicianPatientMap = exports.getPatientAssignment = void 0;
+exports.getClinicianInfo = exports.getClinicianPatientMap = exports.getPatientAssignment = void 0;
 var types_1 = require("../types");
 var queries_1 = require("../api/graphql/queries");
 // @ts-ignore
@@ -66,3 +66,15 @@ var getClinicianPatientMap = function (variables) { return __awaiter(void 0, voi
     });
 }); };
 exports.getClinicianPatientMap = getClinicianPatientMap;
+var getClinicianInfo = function (variables) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, (0, appSyncRequest_1.request)({
+                    query: queries_1.getClinicianInfo,
+                    variables: variables
+                }, types_1.AppSyncUrl)];
+            case 1: return [2 /*return*/, (_a.sent())];
+        }
+    });
+}); };
+exports.getClinicianInfo = getClinicianInfo;

@@ -19,6 +19,19 @@ export const getPresignedUrlForClinicianRecords = /* GraphQL */ `
     )
   }
 `;
+export const handlePatientAssignment = /* GraphQL */ `
+  query HandlePatientAssignment(
+    $patientID: String
+    $resolution: String
+    $reassignToClinicianID: String
+  ) {
+    handlePatientAssignment(
+      patientID: $patientID
+      resolution: $resolution
+      reassignToClinicianID: $reassignToClinicianID
+    )
+  }
+`;
 export const getPatientInfo = /* GraphQL */ `
   query GetPatientInfo($patientID: String!) {
     getPatientInfo(patientID: $patientID) {
@@ -707,6 +720,7 @@ export const getClinicianProtectedInfo = /* GraphQL */ `
       NWA
       ALA
       MHA
+      CAM
       _version
       _deleted
       _lastChangedAt
@@ -839,13 +853,12 @@ export const getPatientAssignment = /* GraphQL */ `
       pending
       resolution
       reassignToClinicianID
-      adminCompleted
+      sourceClinicianID
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
-      adminReassignFromClinicianID
     }
   }
 `;
@@ -920,6 +933,7 @@ export const getAlert = /* GraphQL */ `
       dateTime
       summary
       colorCode
+      triageValue
       vitalsReportID
       symptomReportID
       pending
