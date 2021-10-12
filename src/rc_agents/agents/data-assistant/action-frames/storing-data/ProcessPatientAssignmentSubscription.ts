@@ -69,62 +69,38 @@ class ProcessPatientAssignmentSubscription extends Activity {
             if (query.data.getPatientAssignment) {
               const patientAssignmentToDispatch =
                 query.data.getPatientAssignment;
-              // Saves patient assignment locally
-              await LocalStorage.setPendingPatientAssignment(
-                patientAssignmentToDispatch
-              );
 
-              // Adds to the front of current list of pending patient assignments
-              let patientAssignmentExists: PatientAssignment | undefined;
-              let { pendingPatientAssignments } =
-                store.getState().patientAssignments;
-              if (pendingPatientAssignments) {
-                // Check if patient assignment already exists
-                patientAssignmentExists = pendingPatientAssignments.find(
-                  (item) =>
-                    item.patientID === patientAssignmentSubscription.patientID
+              if (patientAssignmentToDispatch.pending) {
+                // Saves patient assignment locally
+                await LocalStorage.setPendingPatientAssignment(
+                  patientAssignmentToDispatch
                 );
-              } else {
-                pendingPatientAssignments = [];
-              }
 
-              if (!patientAssignmentExists) {
-                pendingPatientAssignments.unshift(patientAssignmentToDispatch);
-                // Dispatch updated list of pending patient assignments
-                store.dispatch(
-                  setPendingPatientAssignments(pendingPatientAssignments)
-                );
+                // Adds to the front of current list of pending patient assignments
+                let patientAssignmentExists: PatientAssignment | undefined;
+                let { pendingPatientAssignments } =
+                  store.getState().patientAssignments;
+                if (pendingPatientAssignments) {
+                  // Check if patient assignment already exists
+                  patientAssignmentExists = pendingPatientAssignments.find(
+                    (item) =>
+                      item.patientID === patientAssignmentSubscription.patientID
+                  );
+                } else {
+                  pendingPatientAssignments = [];
+                }
+
+                if (!patientAssignmentExists) {
+                  pendingPatientAssignments.unshift(
+                    patientAssignmentToDispatch
+                  );
+                  // Dispatch updated list of pending patient assignments
+                  store.dispatch(
+                    setPendingPatientAssignments(pendingPatientAssignments)
+                  );
+                }
               }
             }
-          }
-          // case when you have approved patient Assignment
-          else if (
-            patientAssignmentSubscription.resolution ===
-              PatientAssignmentStatus.APPROVED &&
-            patientAssignmentSubscription.adminCompleted
-          ) {
-            // Get new token
-            // Bypass cache is needed to ignore what is stored in cache and retrive new groups
-            // eslint-disable-next-line no-console
-            console.log(
-              await Auth.currentAuthenticatedUser({ bypassCache: true })
-            );
-            // Trigger Retrive Patients By Role
-            agentUXSA.addBelief(
-              new Belief(
-                BeliefKeys.CLINICIAN,
-                ClinicianAttributes.RETRIEVE_ROLE,
-                true
-              )
-            );
-
-            agentAPI.addFact(
-              new Belief(
-                BeliefKeys.PROCEDURE,
-                ProcedureAttributes.HF_OTP_I,
-                ProcedureConst.ACTIVE
-              )
-            );
           }
         } else {
           // Device is offline: Store patient assignment subscription locally

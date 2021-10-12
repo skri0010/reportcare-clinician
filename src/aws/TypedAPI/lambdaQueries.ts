@@ -2,48 +2,50 @@
 import API from "@aws-amplify/api";
 import { BaseResponse } from "aws";
 import {
-  GetPresignedUrlForClinicianRecordsQuery,
-  GetPresignedUrlForClinicianRecordsQueryVariables
+  QueryS3ClinicianRecordsBridgeQuery,
+  QueryS3ClinicianRecordsBridgeQueryVariables
 } from "aws/API";
 import * as queries from "aws/graphql/queries";
 
-interface GetClinicianInfoResponse extends BaseResponse {
-  data: GetPresignedUrlForClinicianRecordsQuery;
+interface QueryS3ClinicianRecordsBridgeResponse extends BaseResponse {
+  data: QueryS3ClinicianRecordsBridgeQuery;
 }
 
 // Type created with reference to schema.graphql
 
-export type PresignedUrlRecordType = "IcdCrt" | "Medical";
-export type PresignedUrlOperation = "Upload" | "Download" | "Acknowledge";
+export type ClinicianRecordType = "IcdCrt" | "Medical";
+export type ClinicianRecordOperation =
+  | "Upload"
+  | "Download"
+  | "Acknowledge"
+  | "Delete";
 interface PresignedUrlObjectVariables
-  extends GetPresignedUrlForClinicianRecordsQueryVariables {
-  recordType: PresignedUrlRecordType;
-  operation: PresignedUrlOperation;
+  extends QueryS3ClinicianRecordsBridgeQueryVariables {
+  recordType: ClinicianRecordType;
+  operation: ClinicianRecordOperation;
   patientID: string;
   documentID: string;
   documentTitle: string;
 }
 
 // Type created with reference to amplify/backend/function/s3clinicianrecordsbridge/src/index
-interface PresignedUrlObjectResponse {
+interface LambdaResolverParsedResponse {
   success: boolean;
-  url?: string;
+  data?: string;
 }
 
-export const getPresignedUrlForClinicianRecords: (
+export const queryS3ClinicianRecordsBridge: (
   variables: PresignedUrlObjectVariables
-) => Promise<PresignedUrlObjectResponse> = async (variables) => {
-  let typedResponse: PresignedUrlObjectResponse = {
+) => Promise<LambdaResolverParsedResponse> = async (variables) => {
+  let typedResponse: LambdaResolverParsedResponse = {
     success: false
   };
   const response = (await API.graphql({
-    query: queries.getPresignedUrlForClinicianRecords,
+    query: queries.queryS3ClinicianRecordsBridge,
     variables: variables
-  })) as GetClinicianInfoResponse;
-  if (response.data.getPresignedUrlForClinicianRecords) {
-    typedResponse = JSON.parse(
-      response.data.getPresignedUrlForClinicianRecords
-    );
+  })) as QueryS3ClinicianRecordsBridgeResponse;
+  if (response.data.queryS3ClinicianRecordsBridge) {
+    typedResponse = JSON.parse(response.data.queryS3ClinicianRecordsBridge);
   }
   return typedResponse;
 };

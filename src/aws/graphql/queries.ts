@@ -2,20 +2,33 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const getPresignedUrlForClinicianRecords = /* GraphQL */ `
-  query GetPresignedUrlForClinicianRecords(
+export const queryS3ClinicianRecordsBridge = /* GraphQL */ `
+  query QueryS3ClinicianRecordsBridge(
     $recordType: String
     $operation: String
     $patientID: String
     $documentID: String
     $documentTitle: String
   ) {
-    getPresignedUrlForClinicianRecords(
+    queryS3ClinicianRecordsBridge(
       recordType: $recordType
       operation: $operation
       patientID: $patientID
       documentID: $documentID
       documentTitle: $documentTitle
+    )
+  }
+`;
+export const handlePatientAssignment = /* GraphQL */ `
+  query HandlePatientAssignment(
+    $patientID: String
+    $resolution: String
+    $reassignToClinicianID: String
+  ) {
+    handlePatientAssignment(
+      patientID: $patientID
+      resolution: $resolution
+      reassignToClinicianID: $reassignToClinicianID
     )
   }
 `;
@@ -1111,6 +1124,7 @@ export const getClinicianInfo = /* GraphQL */ `
         NWA
         ALA
         MHA
+        CAM
         _version
         _deleted
         _lastChangedAt
@@ -1196,6 +1210,7 @@ export const getClinicianProtectedInfo = /* GraphQL */ `
       NWA
       ALA
       MHA
+      CAM
       _version
       _deleted
       _lastChangedAt
@@ -1229,6 +1244,7 @@ export const listClinicianProtectedInfos = /* GraphQL */ `
         NWA
         ALA
         MHA
+        CAM
         _version
         _deleted
         _lastChangedAt
@@ -1263,6 +1279,7 @@ export const syncClinicianProtectedInfos = /* GraphQL */ `
         NWA
         ALA
         MHA
+        CAM
         _version
         _deleted
         _lastChangedAt
@@ -1403,13 +1420,12 @@ export const getPatientAssignment = /* GraphQL */ `
       pending
       resolution
       reassignToClinicianID
-      adminCompleted
+      sourceClinicianID
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
-      adminReassignFromClinicianID
     }
   }
 `;
@@ -1438,13 +1454,12 @@ export const listPatientAssignments = /* GraphQL */ `
         pending
         resolution
         reassignToClinicianID
-        adminCompleted
+        sourceClinicianID
         _version
         _deleted
         _lastChangedAt
         createdAt
         updatedAt
-        adminReassignFromClinicianID
       }
       nextToken
       startedAt
@@ -1476,13 +1491,12 @@ export const listPendingPatientAssignments = /* GraphQL */ `
         pending
         resolution
         reassignToClinicianID
-        adminCompleted
+        sourceClinicianID
         _version
         _deleted
         _lastChangedAt
         createdAt
         updatedAt
-        adminReassignFromClinicianID
       }
       nextToken
       startedAt
@@ -1510,13 +1524,12 @@ export const syncPatientAssignments = /* GraphQL */ `
         pending
         resolution
         reassignToClinicianID
-        adminCompleted
+        sourceClinicianID
         _version
         _deleted
         _lastChangedAt
         createdAt
         updatedAt
-        adminReassignFromClinicianID
       }
       nextToken
       startedAt
@@ -1532,6 +1545,7 @@ export const getAlert = /* GraphQL */ `
       dateTime
       summary
       colorCode
+      triageValue
       vitalsReportID
       symptomReportID
       pending
@@ -1593,6 +1607,7 @@ export const listAlerts = /* GraphQL */ `
         dateTime
         summary
         colorCode
+        triageValue
         vitalsReportID
         symptomReportID
         pending
@@ -1633,6 +1648,7 @@ export const listPatientAlertsByDateTime = /* GraphQL */ `
         dateTime
         summary
         colorCode
+        triageValue
         vitalsReportID
         symptomReportID
         pending
@@ -1673,6 +1689,7 @@ export const listPendingAlertsByDateTime = /* GraphQL */ `
         dateTime
         summary
         colorCode
+        triageValue
         vitalsReportID
         symptomReportID
         pending
@@ -1713,6 +1730,7 @@ export const listPendingRiskAlerts = /* GraphQL */ `
         dateTime
         summary
         colorCode
+        triageValue
         vitalsReportID
         symptomReportID
         pending
@@ -1753,6 +1771,7 @@ export const listCompletedRiskAlerts = /* GraphQL */ `
         dateTime
         summary
         colorCode
+        triageValue
         vitalsReportID
         symptomReportID
         pending
@@ -1789,6 +1808,7 @@ export const syncAlerts = /* GraphQL */ `
         dateTime
         summary
         colorCode
+        triageValue
         vitalsReportID
         symptomReportID
         pending
@@ -1830,6 +1850,7 @@ export const getTodo = /* GraphQL */ `
         dateTime
         summary
         colorCode
+        triageValue
         vitalsReportID
         symptomReportID
         pending
@@ -2111,6 +2132,7 @@ export const getClinicianRecord = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -2144,6 +2166,7 @@ export const listClinicianRecords = /* GraphQL */ `
         _lastChangedAt
         createdAt
         updatedAt
+        owner
       }
       nextToken
       startedAt
@@ -2180,6 +2203,7 @@ export const listUploadedClinicianRecordsByPatientID = /* GraphQL */ `
         _lastChangedAt
         createdAt
         updatedAt
+        owner
       }
       nextToken
       startedAt
@@ -2212,6 +2236,7 @@ export const syncClinicianRecords = /* GraphQL */ `
         _lastChangedAt
         createdAt
         updatedAt
+        owner
       }
       nextToken
       startedAt

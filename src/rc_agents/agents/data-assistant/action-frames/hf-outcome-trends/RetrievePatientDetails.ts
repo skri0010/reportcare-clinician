@@ -21,7 +21,7 @@ import {
   listReportSymptomsByPatientID,
   listReportVitalsByPatientID,
   listUploadedClinicianRecordsByPatientID,
-  PresignedUrlRecordType
+  ClinicianRecordType
 } from "aws";
 import {
   ActivityInfo,
@@ -91,7 +91,7 @@ class RetrievePatientDetails extends Activity {
             patientID: patientId
           });
 
-          const medicalRecordType: PresignedUrlRecordType = "Medical";
+          const medicalRecordType: ClinicianRecordType = "Medical";
           const medicalRecordsQuery =
             await listUploadedClinicianRecordsByPatientID({
               patientID: patientId,
@@ -99,7 +99,7 @@ class RetrievePatientDetails extends Activity {
               sortDirection: ModelSortDirection.DESC
             });
 
-          const icdCrtRecordType: PresignedUrlRecordType = "IcdCrt";
+          const icdCrtRecordType: ClinicianRecordType = "IcdCrt";
           const icdCrtRecordsQuery =
             await listUploadedClinicianRecordsByPatientID({
               patientID: patientId,

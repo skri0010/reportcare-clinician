@@ -614,6 +614,7 @@ export const onCreateClinicianInfo = /* GraphQL */ `
         NWA
         ALA
         MHA
+        CAM
         _version
         _deleted
         _lastChangedAt
@@ -647,6 +648,7 @@ export const onUpdateClinicianInfo = /* GraphQL */ `
         NWA
         ALA
         MHA
+        CAM
         _version
         _deleted
         _lastChangedAt
@@ -680,6 +682,7 @@ export const onDeleteClinicianInfo = /* GraphQL */ `
         NWA
         ALA
         MHA
+        CAM
         _version
         _deleted
         _lastChangedAt
@@ -701,6 +704,7 @@ export const onCreateClinicianProtectedInfo = /* GraphQL */ `
       NWA
       ALA
       MHA
+      CAM
       _version
       _deleted
       _lastChangedAt
@@ -721,6 +725,7 @@ export const onUpdateClinicianProtectedInfo = /* GraphQL */ `
       NWA
       ALA
       MHA
+      CAM
       _version
       _deleted
       _lastChangedAt
@@ -741,6 +746,7 @@ export const onDeleteClinicianProtectedInfo = /* GraphQL */ `
       NWA
       ALA
       MHA
+      CAM
       _version
       _deleted
       _lastChangedAt
@@ -864,13 +870,12 @@ export const onCreatePatientAssignment = /* GraphQL */ `
       pending
       resolution
       reassignToClinicianID
-      adminCompleted
+      sourceClinicianID
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
-      adminReassignFromClinicianID
     }
   }
 `;
@@ -890,13 +895,12 @@ export const onUpdatePatientAssignment = /* GraphQL */ `
       pending
       resolution
       reassignToClinicianID
-      adminCompleted
+      sourceClinicianID
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
-      adminReassignFromClinicianID
     }
   }
 `;
@@ -916,13 +920,12 @@ export const onDeletePatientAssignment = /* GraphQL */ `
       pending
       resolution
       reassignToClinicianID
-      adminCompleted
+      sourceClinicianID
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
-      adminReassignFromClinicianID
     }
   }
 `;
@@ -935,6 +938,7 @@ export const onCreateAlert = /* GraphQL */ `
       dateTime
       summary
       colorCode
+      triageValue
       vitalsReportID
       symptomReportID
       pending
@@ -991,6 +995,7 @@ export const onUpdateAlert = /* GraphQL */ `
       dateTime
       summary
       colorCode
+      triageValue
       vitalsReportID
       symptomReportID
       pending
@@ -1047,6 +1052,7 @@ export const onDeleteAlert = /* GraphQL */ `
       dateTime
       summary
       colorCode
+      triageValue
       vitalsReportID
       symptomReportID
       pending
@@ -1119,6 +1125,7 @@ export const onCreateTodo = /* GraphQL */ `
         dateTime
         summary
         colorCode
+        triageValue
         vitalsReportID
         symptomReportID
         pending
@@ -1158,6 +1165,7 @@ export const onUpdateTodo = /* GraphQL */ `
         dateTime
         summary
         colorCode
+        triageValue
         vitalsReportID
         symptomReportID
         pending
@@ -1197,6 +1205,7 @@ export const onDeleteTodo = /* GraphQL */ `
         dateTime
         summary
         colorCode
+        triageValue
         vitalsReportID
         symptomReportID
         pending
@@ -1257,8 +1266,8 @@ export const onDeleteAlertNotification = /* GraphQL */ `
   }
 `;
 export const onCreateClinicianRecord = /* GraphQL */ `
-  subscription OnCreateClinicianRecord {
-    onCreateClinicianRecord {
+  subscription OnCreateClinicianRecord($owner: String) {
+    onCreateClinicianRecord(owner: $owner) {
       patientID
       documentID
       type
@@ -1271,12 +1280,13 @@ export const onCreateClinicianRecord = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
+      owner
     }
   }
 `;
 export const onUpdateClinicianRecord = /* GraphQL */ `
-  subscription OnUpdateClinicianRecord {
-    onUpdateClinicianRecord {
+  subscription OnUpdateClinicianRecord($owner: String) {
+    onUpdateClinicianRecord(owner: $owner) {
       patientID
       documentID
       type
@@ -1289,12 +1299,13 @@ export const onUpdateClinicianRecord = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
+      owner
     }
   }
 `;
 export const onDeleteClinicianRecord = /* GraphQL */ `
-  subscription OnDeleteClinicianRecord {
-    onDeleteClinicianRecord {
+  subscription OnDeleteClinicianRecord($owner: String) {
+    onDeleteClinicianRecord(owner: $owner) {
       patientID
       documentID
       type
@@ -1307,6 +1318,7 @@ export const onDeleteClinicianRecord = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
+      owner
     }
   }
 `;
