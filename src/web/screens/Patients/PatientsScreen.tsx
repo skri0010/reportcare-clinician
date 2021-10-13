@@ -23,6 +23,7 @@ import { AdaptiveTwoScreenWrapper } from "web/screens/AdaptiveTwoScreenWrapper";
 import { PatientConfigurationScreen } from "web/screens/Patients/PatientScreens/PatientConfiguration/PatientConfigurationScreen";
 import { AlertColorCode, AlertInfo, AlertStatus } from "rc_agents/model";
 import { AddIcdCrtRecordModal } from "./PatientScreens/PatientDetailsScreen/PatientIcdCrtComponents/AddIcdCrtRecordModal";
+import { MedConfigModal } from "./PatientScreens/PatientConfiguration/MedConfigModal";
 
 export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
   route
@@ -143,24 +144,31 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
                   />
                   {patientDetails.patientInfo.configured ? (
                     // Patient is configured: Show details
-                    <PatientDetailsTabNavigator
-                      details={patientDetails}
-                      selectedTab={selectedTab}
-                      setAddMedicalRecord={setAddMedicalRecord}
-                      setDisplayHistory={setDisplayHistory}
-                      setModalAlertVisible={setModalAlertVisible}
-                      onViewMedicalRecord={
-                        AgentTrigger.triggerRetrieveMedicalRecordContent
-                      }
-                      setAddIcdCrtRecord={setAddIcdCrtRecord}
-                      onViewIcdCrtRecord={
-                        AgentTrigger.triggerRetrieveIcdCrtRecordContent
-                      }
-                    />
+                    <View>
+                      <PatientDetailsTabNavigator
+                        details={patientDetails}
+                        selectedTab={selectedTab}
+                        setAddMedicalRecord={setAddMedicalRecord}
+                        setDisplayHistory={setDisplayHistory}
+                        setModalAlertVisible={setModalAlertVisible}
+                        onViewMedicalRecord={
+                          AgentTrigger.triggerRetrieveMedicalRecordContent
+                        }
+                        setAddIcdCrtRecord={setAddIcdCrtRecord}
+                        onViewIcdCrtRecord={
+                          AgentTrigger.triggerRetrieveIcdCrtRecordContent
+                        }
+                      />
+                      <PatientConfigurationScreen
+                        info={patientDetails.patientInfo}
+                        details={patientDetails}
+                      />
+                    </View>
                   ) : (
                     // Patient is not configured: Show configuration screen
                     <PatientConfigurationScreen
                       info={patientDetails.patientInfo}
+                      details={patientDetails}
                     />
                   )}
                 </>

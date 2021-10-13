@@ -1,4 +1,4 @@
-import { MedDosage, MedicationNames } from "rc_agents/model";
+import { MedDosage, MedicationNames, MedPrescription } from "rc_agents/model";
 
 export const mockMedDosages: MedDosage[] = [
   {
@@ -16,3 +16,12 @@ export const mockMedDosages: MedDosage[] = [
     }
   }
 ];
+
+export const mockMedPrescriptions: MedPrescription = {
+  name: MedicationNames.BISOPROLOL,
+  dosages: {
+    startDose: 1.25,
+    targetDose: 10,
+    increment: "1.25mg - 2.5mg"
+  }
+};

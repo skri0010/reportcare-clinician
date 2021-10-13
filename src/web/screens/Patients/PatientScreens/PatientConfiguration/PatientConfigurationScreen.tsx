@@ -19,7 +19,7 @@ import { H3, H4 } from "components/Text";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { Picker } from "@react-native-picker/picker";
-import { Hospital, NYHAClass, MedInput } from "rc_agents/model";
+import { Hospital, NYHAClass, MedInput, PatientDetails } from "rc_agents/model";
 import { getPickerStyles } from "util/getStyles";
 import { Label } from "components/Text/Label";
 import { AuthButton } from "components/Buttons/AuthButton";
@@ -32,13 +32,15 @@ import {
 } from "ic-redux/actions/agents/actionCreator";
 import { MedicationConfigForm } from "./MedicationConfigForm";
 import { MedicationInfoList } from "components/RowComponents/MedicationRow/MedicationInfoList";
+import { MedConfigModal } from "./MedConfigModal";
 
 interface PatientConfigurationScreenProps {
   info: PatientInfo;
+  details: PatientDetails;
 }
 
 export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
-  ({ info }) => {
+  ({ info, details }) => {
     // States
     const { fonts, colors, configuringPatient, configurationSuccessful } =
       select((state: RootState) => ({
@@ -437,12 +439,7 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
                 { backgroundColor: colors.overlayColor }
               ]}
             >
-              <MedicationConfigForm
-                configMedInfo={configMedInfo}
-                setConfigMedInfo={setConfigMedInfo}
-                saveMedInput={saveMedInput}
-                setAddMedInfo={setMedConfigFormVisible}
-              />
+              <MedConfigModal details={details} />
             </View>
           </Modal>
         </View>

@@ -64,13 +64,25 @@ export enum AlertColorCode {
 
 export enum MedicationNames {
   ASPIRIN = "Aspirin",
+  BISOPROLOL = "Bisoprolol",
   BENAZEPRIL = "Benazepril",
   SACUBITRIL = "Sacubitril"
 }
 
+type MedRecommendations = {
+  startDose: number;
+  targetDose: number;
+  increment: string;
+};
+
 type Dosage = {
   min: number;
   max: number;
+};
+
+export type MedPrescription = {
+  name: MedicationNames;
+  dosages: MedRecommendations;
 };
 
 export type MedDosage = {

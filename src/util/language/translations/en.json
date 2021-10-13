@@ -173,6 +173,9 @@
       "Dosage": "mg",
       "Frequency": "time(s) per day"
     },
+    "MedInfo": {
+      "CurrentDosage": "Dosage: "
+    },
     "MedicationRow": {
       "Name": "Name: ",
       "Dosage": "Dosage: ",
@@ -188,7 +191,8 @@
       "FluidIntakeGoal": "Fluid intake goal (in ml)",
       "MedName": "Medicine name",
       "Dosage": "Dosage (in mg)",
-      "Frequency": "Frequency (in times per day)"
+      "Frequency": "Frequency (in times per day)",
+      "MedicationForm": "Medication Form"
     },
     "Prompt": {
       "DeviceNo": "Does this patient have a device?",
