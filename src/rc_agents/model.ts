@@ -137,6 +137,7 @@ export interface AlertsCount {
   unassignedRisk: number;
 }
 
+// Shared by AlertInfo and HighRiskAlertInfo
 type BaseAlertInfo = {
   riskLevel: RiskLevel;
   medCompliants?: MedicationInfo[];
@@ -154,6 +155,7 @@ export type MedInfoCompliants = {
 };
 
 // For viewing details of real-time Alert (triage >= 70%)
+// Only applicable to HF Specialist and EP
 export type HighRiskAlertInfo = {
   latestBaseline?: PatientInfo;
   symptomReports?: ReportSymptom[];
@@ -162,7 +164,7 @@ export type HighRiskAlertInfo = {
 } & BaseAlertInfo;
 
 export type ProcessedAlertInfos = {
-  [patientID: string]: AlertInfo[] | undefined;
+  [patientID: string]: (AlertInfo | HighRiskAlertInfo)[] | undefined;
 };
 
 export interface TodoInput {

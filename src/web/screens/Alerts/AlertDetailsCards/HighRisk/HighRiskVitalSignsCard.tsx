@@ -10,7 +10,7 @@ import {
   ParameterStats
 } from "components/VisualizationComponents/ParameterGraphs";
 import { ChartFilterPillList } from "components/Buttons/ChartFilterPillList";
-import { Dimensions, ScrollView, View } from "react-native";
+import { Dimensions, View } from "react-native";
 import { DiastolicBPChartCard } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientParameterComponents/DiastolicBPChartCard";
 import { FluidIntakeChartCard } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientParameterComponents/FluidIntakeChart";
 import { NumberOfStepsChartCard } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientParameterComponents/NumberOfStepsChartCard";
@@ -31,9 +31,6 @@ export const HighRiskVitalSignsCard: FC<HighRiskVitalSignsCardProps> = ({
     ms(200),
     Dimensions.get("window").height * 0.8
   );
-
-  const maxCardHeight =
-    Math.max(ms(300), Dimensions.get("window").height) * 0.7;
 
   const [fullChartData, setFullChartData] = useState<FullChartData | undefined>(
     undefined
@@ -84,49 +81,46 @@ export const HighRiskVitalSignsCard: FC<HighRiskVitalSignsCardProps> = ({
     <BaseDetailsCard
       cardTitle={i18n.t("Alerts.AlertVitals.Vitals")}
       iconName="heart-pulse"
-      maxHeight={maxCardHeight}
     >
       {fullChartData ? (
         <>
           <ChartFilterPillList />
-          <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
-            <View style={styles.rowContainer}>
-              {/* Number of Steps Graph */}
-              <NumberOfStepsChartCard
-                data={fullChartData.steps}
-                maxHeight={maxGraphHeight}
-              />
-              {/* Fluid Intake Graph */}
-              <FluidIntakeChartCard
-                data={fullChartData.fluid}
-                maxHeight={maxGraphHeight}
-              />
-            </View>
-            <View style={styles.rowContainer}>
-              {/* Diastolic Blood Graph */}
-              <DiastolicBPChartCard
-                data={fullChartData.diastolic}
-                maxHeight={maxGraphHeight}
-              />
-              {/* Systolic Blood Graph */}
-              <SystolicBPChartCard
-                data={fullChartData.systolic}
-                maxHeight={maxGraphHeight}
-              />
-            </View>
-            <View style={styles.rowContainer}>
-              {/* Oxygen Saturation Graph */}
-              <OxygenSaturationChartCard
-                data={fullChartData.oxygenSaturation}
-                maxHeight={maxGraphHeight}
-              />
-              {/* Weight Graph */}
-              <WeightChartCard
-                data={fullChartData.weight}
-                maxHeight={maxGraphHeight}
-              />
-            </View>
-          </ScrollView>
+          <View style={styles.rowContainer}>
+            {/* Number of Steps Graph */}
+            <NumberOfStepsChartCard
+              data={fullChartData.steps}
+              maxHeight={maxGraphHeight}
+            />
+            {/* Fluid Intake Graph */}
+            <FluidIntakeChartCard
+              data={fullChartData.fluid}
+              maxHeight={maxGraphHeight}
+            />
+          </View>
+          <View style={styles.rowContainer}>
+            {/* Diastolic Blood Graph */}
+            <DiastolicBPChartCard
+              data={fullChartData.diastolic}
+              maxHeight={maxGraphHeight}
+            />
+            {/* Systolic Blood Graph */}
+            <SystolicBPChartCard
+              data={fullChartData.systolic}
+              maxHeight={maxGraphHeight}
+            />
+          </View>
+          <View style={styles.rowContainer}>
+            {/* Oxygen Saturation Graph */}
+            <OxygenSaturationChartCard
+              data={fullChartData.oxygenSaturation}
+              maxHeight={maxGraphHeight}
+            />
+            {/* Weight Graph */}
+            <WeightChartCard
+              data={fullChartData.weight}
+              maxHeight={maxGraphHeight}
+            />
+          </View>
         </>
       ) : (
         <NoListItemMessage

@@ -3,7 +3,8 @@ import {
   ProcessedAlertInfos,
   LocalTodo,
   PatientAssignmentResolution,
-  PatientDetails
+  PatientDetails,
+  HighRiskAlertInfo
 } from "rc_agents/model";
 import { ClinicianInfo, PatientAssignment, PatientInfo } from "aws/API";
 // eslint-disable-next-line no-restricted-imports
@@ -61,7 +62,7 @@ export type AsyncStorageType = {
   [AsyncStorageKeys.ALERT_INFOS]: ProcessedAlertInfos;
   [AsyncStorageKeys.TODOS]: LocalTodo[];
   [AsyncStorageKeys.TODO_DETAILS]: LocalTodo;
-  [AsyncStorageKeys.ALERTS_SYNC]: AlertInfo[];
+  [AsyncStorageKeys.ALERTS_SYNC]: (AlertInfo | HighRiskAlertInfo)[];
   [AsyncStorageKeys.ALERT_NOTIFICATIONS]: AlertNotification[];
   [AsyncStorageKeys.PATIENT_ASSIGNMENT_SUBSCRIPTIONS]: PatientAssignment[];
 };

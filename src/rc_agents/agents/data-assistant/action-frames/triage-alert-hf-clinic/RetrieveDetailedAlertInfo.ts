@@ -241,6 +241,8 @@ export const queryAlertInfo = async (alert: Alert): Promise<Alert | null> => {
 };
 
 /**
+ * Extension of AlertInfo for high risk alerts.
+ * Only applicable to HF Specialist and EP.
  * Queries the following monitoring records for the last 5 days:
  * - Symptoms reports (includes activities)
  * - Vitals reports (includes fluid intake)

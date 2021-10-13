@@ -24,7 +24,7 @@ const setProcessedAlertInfos = async (
 
 // Insert AlertInfo[], merge based on latest _version
 export const setAlertInfos = async (
-  alertInfos: AlertInfo[] | HighRiskAlertInfo[]
+  alertInfos: (AlertInfo | HighRiskAlertInfo)[]
 ): Promise<void> => {
   let localProcessedAlertInfos = await getProcessedAlertInfos();
 
@@ -52,7 +52,8 @@ export const setAlertInfos = async (
         );
 
         if (index >= 0) {
-          const localAlertInfo: AlertInfo = localAlertInfosForPatient[index];
+          const localAlertInfo: AlertInfo | HighRiskAlertInfo =
+            localAlertInfosForPatient[index];
 
           // Merge based on alert's _version
           if (alertInfo._version >= localAlertInfo._version) {
@@ -97,7 +98,7 @@ export const setAlertsSync = async (
   alertsSync: AsyncStorageType[AsyncStorageKeys.ALERTS_SYNC],
   overwrite = false
 ): Promise<void> => {
-  let localData: AlertInfo[] | null = null;
+  let localData: (AlertInfo | HighRiskAlertInfo)[] | null = null;
   if (overwrite) {
     localData = [];
   } else {
@@ -113,7 +114,9 @@ export const setAlertsSync = async (
 };
 
 // Insert AlertInfo to be synced, merge directly
-export const setAlertSync = async (alertInfo: AlertInfo): Promise<void> => {
+export const setAlertSync = async (
+  alertInfo: AlertInfo | HighRiskAlertInfo
+): Promise<void> => {
   await replaceAlertsSync([alertInfo]);
 };
 

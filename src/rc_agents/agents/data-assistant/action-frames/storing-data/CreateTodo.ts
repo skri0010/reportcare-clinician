@@ -22,6 +22,7 @@ import { createTodo, listTodosByAlertID } from "aws";
 import {
   AlertInfo,
   AlertStatus,
+  HighRiskAlertInfo,
   LocalTodo,
   TodoInput,
   TodoStatus
@@ -83,7 +84,7 @@ class CreateTodo extends Activity {
 
         // Triggers associated Alert to be updated if any
         if (todoInput.alert || todoInput.alertId) {
-          let alertToUpdate: AlertInfo | undefined;
+          let alertToUpdate: AlertInfo | HighRiskAlertInfo | undefined;
 
           // Create Todo for the first time
           if (todoInput.alert) {

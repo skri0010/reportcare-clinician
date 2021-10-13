@@ -47,10 +47,12 @@ const AlertPopUpDetails: FC<AlertPopUpDetailsProps> = ({
       />
       <H5
         text={details}
-        style={{
-          marginBottom: ms(10),
-          color: detailsDisplayColor || colors.primaryTextColor
-        }}
+        style={[
+          styles.detailsContent,
+          {
+            color: detailsDisplayColor || colors.primaryTextColor
+          }
+        ]}
       />
     </View>
   );
@@ -105,7 +107,8 @@ export const AlertPopUp: FC<AlertPopUpProps> = ({
             colors.riskLevelSelectedBackgroundColors,
             realTimeAlert.riskLevel
           ),
-          borderWidth: ms(2)
+          borderWidth: ms(2),
+          maxHeight: allowViewDetails ? "65%" : "58%"
         }
       ]}
     >
@@ -116,7 +119,7 @@ export const AlertPopUp: FC<AlertPopUpProps> = ({
             name="times"
             type={IconType.FONTAWESOME}
             iconStyle={{
-              fontSize: fonts.h5Size,
+              fontSize: fonts.h4Size,
               color: colors.errorColor,
               opacity: 0.8
             }}
@@ -158,7 +161,7 @@ export const AlertPopUp: FC<AlertPopUpProps> = ({
         </View>
       </ScrollView>
 
-      {allowViewDetails ? (
+      {allowViewDetails && (
         <View style={styles.buttonContainer}>
           {/* View button */}
           <TouchableOpacity
@@ -187,8 +190,6 @@ export const AlertPopUp: FC<AlertPopUpProps> = ({
             />
           </TouchableOpacity>
         </View>
-      ) : (
-        <View style={styles.buttonContainer} />
       )}
       {fetchingAlertInfo && <LoadingIndicator overlayBackgroundColor />}
     </ModalWrapper>
@@ -197,27 +198,27 @@ export const AlertPopUp: FC<AlertPopUpProps> = ({
 
 const styles = ScaledSheet.create({
   modalContainer: {
-    width: "30%",
-    borderRadius: "10@ms",
-    flexDirection: "column"
-  },
-  container: {
-    justifyContent: "center"
+    width: "28%",
+    borderRadius: "10@ms"
   },
   contentContainer: {
-    paddingHorizontal: "10@ms"
+    marginHorizontal: "5@ms"
   },
   title: {
-    paddingVertical: "15@ms",
+    paddingTop: "5@ms",
+    paddingBottom: "10@ms",
     textAlign: "center"
   },
-  iconContainerStyle: { flexDirection: "row", alignSelf: "flex-end" },
+  iconContainerStyle: {
+    flexDirection: "row",
+    alignSelf: "flex-end"
+  },
   iconStyle: {
     backgroundColor: "transparent"
   },
   buttonContainer: {
     alignItems: "center",
-    paddingVertical: "10@ms"
+    marginBottom: "10@ms"
   },
   viewButton: {
     textAlign: "center",
@@ -229,5 +230,6 @@ const styles = ScaledSheet.create({
     paddingHorizontal: "10@ms"
   },
   detailsContainer: { display: "flex", flexWrap: "wrap" },
-  detailsTitle: { fontWeight: "600", marginBottom: ms(5) }
+  detailsTitle: { fontWeight: "600", marginBottom: "5@ms" },
+  detailsContent: { marginBottom: "12@ms" }
 });

@@ -15,7 +15,7 @@ import {
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
 import { store } from "util/useRedux";
-import { AlertInfo } from "rc_agents/model";
+import { AlertInfo, HighRiskAlertInfo } from "rc_agents/model";
 import {
   setAlertInfo,
   setFetchingAlertInfo
@@ -38,7 +38,7 @@ class DisplayDetailedAlertInfo extends Activity {
     await super.doActivity(agent, [rule2]);
 
     try {
-      const alertInfo: AlertInfo =
+      const alertInfo: AlertInfo | HighRiskAlertInfo =
         agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[
           ClinicianAttributes.DETAILED_ALERT_INFO
         ];

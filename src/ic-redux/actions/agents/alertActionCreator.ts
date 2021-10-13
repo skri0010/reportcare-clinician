@@ -1,4 +1,4 @@
-import { AlertInfo, AlertsCount } from "rc_agents/model";
+import { AlertInfo, AlertsCount, HighRiskAlertInfo } from "rc_agents/model";
 import { actionNames } from "ic-redux/actions/actionNames";
 import { createAction } from "typesafe-actions";
 
@@ -25,7 +25,7 @@ export const setCompletedAlerts = createAction(
 
 export const setAlertInfo = createAction(
   actionNames.SET_ALERT_INFO,
-  (alertInfo: AlertInfo | undefined) => ({
+  (alertInfo: AlertInfo | HighRiskAlertInfo | undefined) => ({
     alertInfo: alertInfo
   })
 )();

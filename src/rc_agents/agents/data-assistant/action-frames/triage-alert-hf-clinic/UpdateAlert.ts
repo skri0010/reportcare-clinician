@@ -19,7 +19,12 @@ import { LocalStorage } from "rc_agents/storage";
 import { store } from "util/useRedux";
 import { agentNWA } from "rc_agents/agents";
 import { getDetailedAlert, updateAlert } from "aws";
-import { AlertInfo, AlertStatus, FetchAlertsMode } from "rc_agents/model";
+import {
+  AlertInfo,
+  AlertStatus,
+  FetchAlertsMode,
+  HighRiskAlertInfo
+} from "rc_agents/model";
 import { Alert, UpdateAlertInput } from "aws/API";
 import { convertAlertToAlertInfo } from "util/utilityFunctions";
 import { AgentTrigger } from "rc_agents/trigger";
@@ -44,14 +49,14 @@ class UpdateAlert extends Activity {
     const facts = agentAPI.getFacts();
 
     // Get alert to be updated
-    const alertInfoInput: AlertInfo =
+    const alertInfoInput: AlertInfo | HighRiskAlertInfo =
       facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.ALERT_INFO];
 
     // Get online status from facts
     const isOnline: boolean = facts[BeliefKeys.APP]?.[AppAttributes.ONLINE];
 
     let toSync = false;
-    let alertToStore: Alert | AlertInfo | undefined;
+    let alertToStore: Alert | AlertInfo | HighRiskAlertInfo | undefined;
 
     // Convert from pending to completed
     alertInfoInput.completed = AlertStatus.COMPLETED;
@@ -129,8 +134,11 @@ class UpdateAlert extends Activity {
 }
 
 export const updateAlertInfo = async (
-  alertInfoInput: AlertInfo
-): Promise<{ alertInfo: AlertInfo; successful: boolean }> => {
+  alertInfoInput: AlertInfo | HighRiskAlertInfo
+): Promise<{
+  alertInfo: AlertInfo | HighRiskAlertInfo;
+  successful: boolean;
+}> => {
   let returnAlertInfo = alertInfoInput;
   let successful = false;
   try {

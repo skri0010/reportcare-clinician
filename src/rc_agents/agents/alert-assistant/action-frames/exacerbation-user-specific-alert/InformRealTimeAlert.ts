@@ -21,7 +21,7 @@ import {
 
 /**
  * Represents the activity for informing MHA about the real-time alert.
- * This happens in Procedure HF- Exacerbation User Specific Alert (HF-EUA) - A-AS.
+ * This happens in Procedure HF - Exacerbation User Specific Alert (HF-EUA) - A-AS.
  */
 class InformRealTimeAlert extends Communicate {
   constructor() {
