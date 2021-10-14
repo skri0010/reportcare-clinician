@@ -5,13 +5,5 @@ import { ParameterGraphsProps } from "./ParameterGraphs";
 import { LineChartComponent } from "./VictoryLineChartComponent";
 
 export const WeightChart: FC<ParameterGraphsProps> = ({ data }) => {
-  return data ? (
-    <LineChartComponent
-      graphTitle={i18n.t("Parameter_Graphs.Weight")}
-      graphSubtitle={i18n.t("Parameter_Graphs.WeightUnit")}
-      data={data}
-    />
-  ) : (
-    <LoadingIndicator />
-  );
+  return <LoadingIndicator />;
 };

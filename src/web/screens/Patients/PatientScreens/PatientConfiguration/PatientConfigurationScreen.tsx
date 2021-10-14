@@ -30,7 +30,6 @@ import {
   setConfigurationSuccessful,
   setConfiguringPatient
 } from "ic-redux/actions/agents/actionCreator";
-import { MedicationConfigForm } from "./MedicationConfigForm";
 import { MedicationInfoList } from "components/RowComponents/MedicationRow/MedicationInfoList";
 import { MedConfigModal } from "./MedConfigModal";
 
@@ -439,7 +438,13 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
                 { backgroundColor: colors.overlayColor }
               ]}
             >
-              <MedConfigModal details={details} />
+              <MedConfigModal
+                details={details}
+                configMedInfo={configMedInfo}
+                saveMedInput={saveMedInput}
+                setConfigMedInfo={setConfigMedInfo}
+                setMedConfigFormVisible={setMedConfigFormVisible}
+              />
             </View>
           </Modal>
         </View>

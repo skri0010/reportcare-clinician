@@ -17,11 +17,37 @@ export const mockMedDosages: MedDosage[] = [
   }
 ];
 
-export const mockMedPrescriptions: MedPrescription = {
-  name: MedicationNames.BISOPROLOL,
-  dosages: {
-    startDose: 1.25,
-    targetDose: 10,
-    increment: "1.25mg - 2.5mg"
+export const mockMedPrescriptions: MedPrescription[] = [
+  {
+    name: MedicationNames.BISOPROLOL,
+    dosages: {
+      startDose: 1.25,
+      targetDose: 10,
+      increment: "1.25mg - 2.5mg"
+    }
+  },
+  {
+    name: MedicationNames.ASPIRIN,
+    dosages: {
+      startDose: 1.25,
+      targetDose: 10,
+      increment: "1.25mg - 2.5mg"
+    }
+  },
+  {
+    name: MedicationNames.SACUBITRIL,
+    dosages: {
+      startDose: 2.5,
+      targetDose: 10,
+      increment: "1.25mg - 2.5mg"
+    }
+  },
+  {
+    name: MedicationNames.VENTOLIN,
+    dosages: {
+      startDose: 2.5,
+      targetDose: 10,
+      increment: "1.25mg - 2.5mg"
+    }
   }
-};
+];

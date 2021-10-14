@@ -5,16 +5,26 @@ import { ScaledSheet } from "react-native-size-matters";
 import { RootState, select } from "util/useRedux";
 import { MedInput, PatientDetails } from "rc_agents/model";
 import { H4, H5, H6 } from "components/Text";
-import { AdaptiveTwoScreenWrapper } from "web/screens/AdaptiveTwoScreenWrapper";
 import { MedicationList } from "./MedicationList";
-import { ClinicianDetails } from "web/screens/Clinicians/ClinicianDetails";
-import { MedConfigurationScreen } from "./MedConfigurationScreen";
+import { AddNewMedication } from "./AddNewMedication";
+import { NoSelectionScreen } from "web/screens/Shared/NoSelectionScreen";
+import { ScreenName } from "web/navigation";
 
 interface MedConfigModalProps {
   details: PatientDetails;
+  configMedInfo: MedInput;
+  setConfigMedInfo: (medInfo: MedInput) => void;
+  saveMedInput: (medInput: MedInput) => void;
+  setMedConfigFormVisible: (state: boolean) => void;
 }
 
-export const MedConfigModal: FC<MedConfigModalProps> = ({ details }) => {
+export const MedConfigModal: FC<MedConfigModalProps> = ({
+  details,
+  configMedInfo,
+  setConfigMedInfo,
+  saveMedInput,
+  setMedConfigFormVisible
+}) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
   }));
@@ -23,7 +33,10 @@ export const MedConfigModal: FC<MedConfigModalProps> = ({ details }) => {
     undefined
   );
 
+  const [addingNewMed, setAddingNewMed] = useState<boolean>(false);
+
   const updateMed = (medInfo: MedInput) => {
+    setConfigMedInfo(medInfo);
     setMedToUpdate(medInfo);
   };
 
@@ -36,24 +49,41 @@ export const MedConfigModal: FC<MedConfigModalProps> = ({ details }) => {
         }
       ]}
     >
-      <View>
-        <H5 text={i18n.t("Patient_Configuration.Label.MedicationForm")} />
-        <View style={styles.container}>
-          <AdaptiveTwoScreenWrapper
-            LeftComponent={
-              <MedicationList details={details} updateMed={updateMed} />
-            }
-            RightComponent={
-              <View
-                style={{
-                  flex: 2,
-                  backgroundColor: colors.primaryWebBackgroundColor
-                }}
-              >
-                <MedConfigurationScreen medInfo={medToUpdate} />
-              </View>
-            }
-          />
+      <H4 text="Medication Form" style={{ fontWeight: "bold" }} />
+      <View style={styles.container}>
+        <MedicationList
+          setAddNewMed={setAddingNewMed}
+          details={details}
+          setMedToUpdate={updateMed}
+        />
+        <View
+          style={{
+            flex: 2,
+            backgroundColor: colors.primaryWebBackgroundColor
+          }}
+        >
+          {addingNewMed ? (
+            <AddNewMedication
+              configMedInfo={configMedInfo}
+              setConfigMedInfo={setConfigMedInfo}
+              saveMedInput={saveMedInput}
+              setMedConfigFormVisible={setMedConfigFormVisible}
+              isAdding
+            />
+          ) : medToUpdate ? (
+            <AddNewMedication
+              configMedInfo={configMedInfo}
+              setConfigMedInfo={setConfigMedInfo}
+              saveMedInput={saveMedInput}
+              setMedConfigFormVisible={setMedConfigFormVisible}
+              isAdding={false}
+            />
+          ) : (
+            <NoSelectionScreen
+              screenName={ScreenName.PATIENTS}
+              subtitle="Select medication to modify or add"
+            />
+          )}
         </View>
       </View>
     </View>
@@ -71,6 +101,7 @@ const styles = ScaledSheet.create({
     paddingHorizontal: "60@ms"
   },
   form: {
+    paddingHorizontal: "10@ms",
     paddingTop: "5@ms",
     borderRadius: "3@ms"
   }

@@ -2,20 +2,21 @@ import React, { FC, useState } from "react";
 import { FlatList, View } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { RootState, select } from "util/useRedux";
-import { MedInput, PatientDetails } from "rc_agents/model";
 import { RowButton } from "components/Buttons/TextButton";
-import { ItemSeparator } from "components/RowComponents/ItemSeparator";
-import { MedicationRow } from "../PatientDetailsScreen/PatientOverviewComponents/MedicationRow";
+import { MedInput, PatientDetails } from "rc_agents/model";
 import { MedInfoRow } from "./MedInfoRow";
+import { H5 } from "components/Text";
 
 interface MedicationListProps {
+  setAddNewMed: (setAdding: boolean) => void;
+  setMedToUpdate: (medToUpdate: MedInput) => void;
   details: PatientDetails;
-  updateMed: (medInfo: MedInput) => void;
 }
 
 export const MedicationList: FC<MedicationListProps> = ({
-  details,
-  updateMed
+  setAddNewMed,
+  setMedToUpdate,
+  details
 }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
@@ -25,19 +26,26 @@ export const MedicationList: FC<MedicationListProps> = ({
     <View
       style={{
         flex: 1,
-        backgroundColor: colors.primaryContrastTextColor,
-        padding: "10@ms"
+        backgroundColor: colors.primaryContrastTextColor
       }}
     >
-      <RowButton title="Add Medication" onPress={() => null} />
+      <RowButton
+        title="Add New Medication"
+        onPress={() => setAddNewMed(true)}
+      />
+      <H5
+        text="List of active medications: "
+        style={{
+          fontWeight: "600",
+          paddingBottom: 10,
+          paddingTop: 20
+        }}
+      />
       <FlatList
-        style={{ flex: 1 }}
-        ItemSeparatorComponent={() => <ItemSeparator />}
         data={details.medicationInfo}
         renderItem={({ item }) => (
-          <MedInfoRow medicationInfo={item} updateMedInfo={updateMed} />
+          <MedInfoRow medicationInfo={item} updateMedInfo={setMedToUpdate} />
         )}
-        keyExtractor={(item) => item.name}
       />
     </View>
   );

@@ -66,7 +66,8 @@ export enum MedicationNames {
   ASPIRIN = "Aspirin",
   BISOPROLOL = "Bisoprolol",
   BENAZEPRIL = "Benazepril",
-  SACUBITRIL = "Sacubitril"
+  SACUBITRIL = "Sacubitril",
+  VENTOLIN = "Ventolin"
 }
 
 type MedRecommendations = {

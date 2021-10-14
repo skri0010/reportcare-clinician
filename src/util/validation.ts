@@ -1,7 +1,7 @@
 // Functions for validating authentication inputs
 
 import { Hospital, NYHAClass, MedicationNames } from "rc_agents/model";
-import { mockMedDosages } from "mock/mockMedDosages";
+import { mockMedDosages, mockMedPrescriptions } from "mock/mockMedDosages";
 
 // Checks that username has 3 to 16 characters
 export const validateUsername = (username: string): boolean => {
@@ -83,12 +83,12 @@ export const validateMedDosageInput = (dosage: string): boolean => {
 
 export const validateMedDosage = (medName: string, dosage: string): boolean => {
   // Assumed medication dosage (in mg)
-  const medicine = mockMedDosages.filter((t) => t.name === medName);
+  const medicine = mockMedPrescriptions.filter((t) => t.name === medName);
   if (medicine.length > 0) {
-    const minDosage = medicine[0].dosage.min;
-    const maxDosage = medicine[0].dosage.max;
+    const minDosage = medicine[0].dosages.startDose;
+    const maxDosage = medicine[0].dosages.targetDose;
     return (
-      validateNumber(dosage) &&
+      validateFloat(dosage) &&
       parseFloat(dosage) >= minDosage &&
       parseFloat(dosage) <= maxDosage
     );
@@ -113,6 +113,10 @@ export const notEmptyString = (testString: string): boolean => {
 
 export const validateNumber = (testString: string): boolean => {
   return /^\d+$/.test(testString);
+};
+
+export const validateFloat = (testString: string): boolean => {
+  return /^-{0,1}\d*\.{0,1}\d+$/.test(testString);
 };
 
 // Checks that code has 6 digits
