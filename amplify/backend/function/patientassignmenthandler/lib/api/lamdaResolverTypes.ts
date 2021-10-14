@@ -16,11 +16,11 @@ export interface LambdaResolverEvent {
 type IdentityType = {
   sub: OptionalString;
   issuer: OptionalString;
-  "cognito:username": OptionalString;
   username: OptionalString;
   sourceIp: OptionalString;
   claims: ClaimsType;
   defaultAuthStrategy: OptionalString;
+  groups: string[];
 };
 
 type ClaimsType = {
@@ -30,6 +30,7 @@ type ClaimsType = {
   algorithm: OptionalString;
   iss: OptionalString;
   "cognito:roles": OptionalString[];
+  "cognito:username": OptionalString;
   aud: OptionalString;
   event_id: OptionalString;
   token_use: OptionalString;

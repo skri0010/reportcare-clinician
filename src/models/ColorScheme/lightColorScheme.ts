@@ -55,6 +55,7 @@ export const lightColorScheme: ColorScheme = {
   primaryContrastIconColor: "#FFFFFF",
   selectedIconColor: "#00ffff",
   acceptIconColor: "#6AC574",
+  rejectIconColor: "#c20000",
 
   // Information
   infoIconColor: "#2b79c2",

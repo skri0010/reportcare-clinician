@@ -13,7 +13,12 @@ import { updatePatientAssignment } from "./typed-api/updateMutations";
 export const handleApprovedResolution: (input: {
   clinicianID: string;
   patientID: string;
-}) => Promise<EventResponse> = async ({ clinicianID, patientID }) => {
+  resolution: Resolution;
+}) => Promise<EventResponse> = async ({
+  clinicianID,
+  patientID,
+  resolution
+}) => {
   const successMessage = `Successfully handled approved resolution for PatientAssignment ${keysAsString(
     patientID,
     clinicianID
@@ -21,31 +26,43 @@ export const handleApprovedResolution: (input: {
   let eventResponse = createNewEventResponse();
 
   try {
+    let mapExists = false;
+
     // Check if ClinicianPatientMap already exists
     const getResult = await getClinicianPatientMap({
       patientID: patientID,
       clinicianID: clinicianID
     });
 
-    // If it does not exist, create new ClinicianPatientMap
-    if (!getResult.data.getClinicianPatientMap) {
+    // ClinicianPatientMap already exists
+    if (getResult.data.getClinicianPatientMap) {
+      mapExists = true;
+    }
+    // ClinicianPatientMap does not exist (if no errors). Create new ClinicianPatientMap
+    else if (!getResult.errors) {
       const createResult = await createClinicianPatientMap({
         patientID: patientID,
         clinicianID: clinicianID
       });
 
       if (createResult.data.createClinicianPatientMap) {
+        mapExists = true;
       } else {
         throw Error("Failed to create ClinicianPatientMap");
       }
+    } else {
+      throw new Error(prettify(getResult.errors));
     }
 
-    // Update source PatientAssignment
-    eventResponse = await updateSourcePatientAssignment(
-      patientID,
-      clinicianID,
-      successMessage
-    );
+    if (mapExists) {
+      // Update source PatientAssignment
+      eventResponse = await updateSourcePatientAssignment({
+        patientID,
+        sourceClinicianID: clinicianID,
+        successMessage,
+        resolution
+      });
+    }
   } catch (error) {
     // Print error message
     const errorMessage = `${error}\n${keysAsString(patientID, clinicianID)}`;
@@ -60,11 +77,13 @@ export const handleReassignedResolution: (input: {
   patientID: string;
   patientName: string;
   reassignToClinicianID: string;
+  resolution: Resolution;
 }) => Promise<EventResponse> = async ({
   clinicianID,
   patientID,
   patientName,
-  reassignToClinicianID
+  reassignToClinicianID,
+  resolution
 }) => {
   let eventResponse = createNewEventResponse();
   const successMessage = `Successfully handled reassign resolution for PatientAssignment ${keysAsString(
@@ -93,7 +112,7 @@ export const handleReassignedResolution: (input: {
           clinicianID: reassignToClinicianID,
           _version: targetPatientAssignment._version,
           pending: Pending,
-          resolution: null,
+          resolution: null, // Update back to null
           sourceClinicianID: clinicianID // Indicate source clinicianID
         });
 
@@ -139,11 +158,12 @@ export const handleReassignedResolution: (input: {
     // Check flag for target reassignment
     if (reassignedToTarget) {
       // Update source PatientAssignment
-      eventResponse = await updateSourcePatientAssignment(
+      eventResponse = await updateSourcePatientAssignment({
         patientID,
-        clinicianID,
-        successMessage
-      );
+        sourceClinicianID: clinicianID,
+        successMessage,
+        resolution
+      });
     }
   } catch (error) {
     // Print error message
@@ -154,11 +174,17 @@ export const handleReassignedResolution: (input: {
   return eventResponse;
 };
 
-const updateSourcePatientAssignment = async (
-  patientID: string,
-  sourceClinicianID: string,
-  successMessage: string
-): Promise<EventResponse> => {
+const updateSourcePatientAssignment: (input: {
+  patientID: string;
+  sourceClinicianID: string;
+  successMessage: string;
+  resolution: Resolution;
+}) => Promise<EventResponse> = async ({
+  patientID,
+  sourceClinicianID,
+  successMessage,
+  resolution
+}) => {
   let eventResponse = createNewEventResponse();
 
   // Get and update source PatientAssignment
@@ -172,6 +198,7 @@ const updateSourcePatientAssignment = async (
       const updateResult = await updatePatientAssignment({
         patientID: patientID,
         clinicianID: sourceClinicianID,
+        resolution: resolution,
         _version: sourcePatientAssignment._version
       });
       if (updateResult.data.updatePatientAssignment) {
@@ -197,4 +224,8 @@ const updateSourcePatientAssignment = async (
 
 const keysAsString = (patientID: string, clinicianID: string) => {
   return `\npatientID (partition key): ${patientID}\nclinicianID (sort key): ${clinicianID}`;
+};
+
+const prettify = (item: any) => {
+  return JSON.stringify(item, null, 2);
 };

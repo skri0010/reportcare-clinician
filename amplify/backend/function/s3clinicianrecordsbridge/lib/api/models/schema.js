@@ -2185,13 +2185,14 @@ export const schema = {
                                 ]
                             },
                             {
-                                "allow": "private",
-                                "provider": "iam",
+                                "provider": "userPools",
+                                "ownerField": "owner",
+                                "allow": "owner",
                                 "operations": [
                                     "create",
-                                    "read",
-                                    "update"
-                                ]
+                                    "read"
+                                ],
+                                "identityClaim": "cognito:username"
                             },
                             {
                                 "groupClaim": "cognito:groups",

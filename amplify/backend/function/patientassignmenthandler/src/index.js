@@ -48,61 +48,73 @@ var utility_1 = require("./utility");
     REGION
 Amplify Params - DO NOT EDIT */
 var handler = function (event) { return __awaiter(void 0, void 0, void 0, function () {
-    var eventResponse, clinicianID, patientID, resolution, getResult, patientAssignment, reassignToClinicianID, getTargetResults;
+    var eventResponse, clinicianID, patientID, resolution, getResult, patientAssignment, reassignToClinicianID, getTargetResults, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 eventResponse = (0, utility_1.createNewEventResponse)();
                 console.log((0, utility_1.prettify)(event));
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 17, , 18]);
                 if (!(event.typeName === "Query" &&
-                    event.fieldName === "handlePatientAssignment")) return [3 /*break*/, 13];
-                clinicianID = event.identity["cognito:username"];
+                    event.fieldName === "handlePatientAssignment")) return [3 /*break*/, 16];
+                clinicianID = event.identity.claims["cognito:username"];
                 patientID = event.arguments.patientID;
                 resolution = event.arguments.resolution;
-                if (!(patientID && clinicianID && resolution)) return [3 /*break*/, 13];
+                if (!(patientID && clinicianID && resolution)) return [3 /*break*/, 15];
                 return [4 /*yield*/, (0, queries_1.getPatientAssignment)({
                         patientID: patientID,
                         clinicianID: clinicianID
                     })];
-            case 1:
+            case 2:
                 getResult = _a.sent();
-                if (!getResult.data.getPatientAssignment) return [3 /*break*/, 12];
+                if (!getResult.data.getPatientAssignment) return [3 /*break*/, 13];
                 patientAssignment = getResult.data.getPatientAssignment;
-                if (!(resolution === types_1.Resolution.APPROVED)) return [3 /*break*/, 3];
+                if (!(resolution === types_1.Resolution.APPROVED)) return [3 /*break*/, 4];
                 return [4 /*yield*/, (0, main_1.handleApprovedResolution)({
                         clinicianID: clinicianID,
-                        patientID: patientID
+                        patientID: patientID,
+                        resolution: types_1.Resolution.APPROVED
                     })];
-            case 2:
-                eventResponse = _a.sent();
-                return [3 /*break*/, 11];
             case 3:
-                if (!(resolution === types_1.Resolution.REASSIGNED)) return [3 /*break*/, 10];
+                eventResponse = _a.sent();
+                return [3 /*break*/, 12];
+            case 4:
+                if (!(resolution === types_1.Resolution.REASSIGNED)) return [3 /*break*/, 11];
                 reassignToClinicianID = event.arguments.reassignToClinicianID;
-                if (!reassignToClinicianID) return [3 /*break*/, 8];
+                if (!reassignToClinicianID) return [3 /*break*/, 9];
                 return [4 /*yield*/, (0, queries_1.getClinicianInfo)({
                         clinicianID: reassignToClinicianID
                     })];
-            case 4:
+            case 5:
                 getTargetResults = _a.sent();
-                if (!getTargetResults.data.getClinicianInfo) return [3 /*break*/, 6];
+                if (!getTargetResults.data.getClinicianInfo) return [3 /*break*/, 7];
                 return [4 /*yield*/, (0, main_1.handleReassignedResolution)({
                         clinicianID: clinicianID,
                         patientID: patientID,
                         patientName: patientAssignment.patientName,
-                        reassignToClinicianID: reassignToClinicianID
+                        reassignToClinicianID: reassignToClinicianID,
+                        resolution: types_1.Resolution.REASSIGNED
                     })];
-            case 5:
+            case 6:
                 eventResponse = _a.sent();
-                return [3 /*break*/, 7];
-            case 6: throw Error("Target clinicianID " + reassignToClinicianID + " does not exist");
-            case 7: return [3 /*break*/, 9];
-            case 8: throw Error("Input did not specify reassignToClinicianID");
-            case 9: return [3 /*break*/, 11];
-            case 10: throw Error("Invalid resolution " + resolution);
-            case 11: return [3 /*break*/, 13];
-            case 12: throw Error("Failed to retrieve patient assignment");
-            case 13: return [2 /*return*/, eventResponse];
+                return [3 /*break*/, 8];
+            case 7: throw Error("Target clinicianID " + reassignToClinicianID + " does not exist");
+            case 8: return [3 /*break*/, 10];
+            case 9: throw Error("Input did not specify reassignToClinicianID");
+            case 10: return [3 /*break*/, 12];
+            case 11: throw Error("Invalid resolution " + resolution);
+            case 12: return [3 /*break*/, 14];
+            case 13: throw Error("Failed to retrieve patient assignment");
+            case 14: return [3 /*break*/, 16];
+            case 15: throw Error("Missing variable. ClinicianID: " + clinicianID + " PatientID: " + patientID + " Resolution: " + resolution);
+            case 16: return [3 /*break*/, 18];
+            case 17:
+                error_1 = _a.sent();
+                console.log(error_1);
+                return [3 /*break*/, 18];
+            case 18: return [2 /*return*/, eventResponse];
         }
     });
 }); };

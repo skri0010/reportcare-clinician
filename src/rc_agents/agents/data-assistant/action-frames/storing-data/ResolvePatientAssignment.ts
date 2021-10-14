@@ -158,6 +158,7 @@ export const resolvePatientAssignment: (params: {
 }) => Promise<boolean> = async ({ resolution, userClinicianID }) => {
   let success = false;
   try {
+    console.log(resolution);
     if (resolution.clinicianID === userClinicianID) {
       // Call Lambda resolver to handle patient assignment
       const result = await handlePatientAssignment({
@@ -165,8 +166,11 @@ export const resolvePatientAssignment: (params: {
         resolution: resolution.resolution,
         reassignToClinicianID: resolution.reassignToClinicianID || ""
       });
+      console.log(result);
       if (result.success) {
         success = true;
+      } else {
+        throw Error("Failed to resolve PatientAssignment");
       }
     }
   } catch (error) {

@@ -924,8 +924,8 @@ export const onDeleteAlertNotification = /* GraphQL */ `
   }
 `;
 export const onCreateClinicianRecord = /* GraphQL */ `
-  subscription OnCreateClinicianRecord {
-    onCreateClinicianRecord {
+  subscription OnCreateClinicianRecord($owner: String) {
+    onCreateClinicianRecord(owner: $owner) {
       patientID
       documentID
       type
@@ -938,12 +938,13 @@ export const onCreateClinicianRecord = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
+      owner
     }
   }
 `;
 export const onUpdateClinicianRecord = /* GraphQL */ `
-  subscription OnUpdateClinicianRecord {
-    onUpdateClinicianRecord {
+  subscription OnUpdateClinicianRecord($owner: String) {
+    onUpdateClinicianRecord(owner: $owner) {
       patientID
       documentID
       type
@@ -956,12 +957,13 @@ export const onUpdateClinicianRecord = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
+      owner
     }
   }
 `;
 export const onDeleteClinicianRecord = /* GraphQL */ `
-  subscription OnDeleteClinicianRecord {
-    onDeleteClinicianRecord {
+  subscription OnDeleteClinicianRecord($owner: String) {
+    onDeleteClinicianRecord(owner: $owner) {
       patientID
       documentID
       type
@@ -974,6 +976,7 @@ export const onDeleteClinicianRecord = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
+      owner
     }
   }
 `;

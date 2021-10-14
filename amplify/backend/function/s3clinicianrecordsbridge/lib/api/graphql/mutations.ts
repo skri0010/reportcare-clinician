@@ -1040,6 +1040,7 @@ export const createClinicianRecord = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -1061,6 +1062,7 @@ export const updateClinicianRecord = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -1082,6 +1084,7 @@ export const deleteClinicianRecord = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
+      owner
     }
   }
 `;

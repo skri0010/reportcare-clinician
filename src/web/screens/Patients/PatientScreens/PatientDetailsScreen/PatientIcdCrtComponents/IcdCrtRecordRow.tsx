@@ -1,11 +1,12 @@
 import React, { FC } from "react";
-import { ScaledSheet } from "react-native-size-matters";
+import { ms, ScaledSheet } from "react-native-size-matters";
 import { H5, H6 } from "components/Text";
 import { View } from "react-native";
 import { RowButton } from "components/Buttons/RowButton";
 import { ClinicianRecord } from "aws/API";
 import { RootState, select } from "util/useRedux";
 import { getLocalDateTime } from "util/utilityFunctions";
+import { IconButton, IconType } from "components/Buttons/IconButton";
 
 interface IcdCrtRecordRowProps {
   icdCrtRecord: ClinicianRecord;
@@ -23,8 +24,12 @@ export const IcdCrtRecordRow: FC<IcdCrtRecordRowProps> = ({
   }));
 
   // Triggers DTA to retrieve URL for showing ICD/CRT record content
-  const onRowPress = () => {
+  const onViewButtonPress = () => {
     onViewIcdCrtRecord(icdCrtRecord);
+  };
+
+  const onDeleteButtonPress = () => {
+    // TODO
   };
 
   return (
@@ -40,8 +45,18 @@ export const IcdCrtRecordRow: FC<IcdCrtRecordRowProps> = ({
       </View>
       {/* View button */}
       <View style={styles.viewButtonContainer}>
+        <IconButton
+          name="trash"
+          onPress={onDeleteButtonPress}
+          type={IconType.FONTAWESOME}
+          containerStyle={{
+            backgroundColor: colors.primaryBackgroundColor,
+            paddingRight: ms(5)
+          }}
+          iconStyle={{ color: colors.rejectIconColor }}
+        />
         <RowButton
-          onPress={onRowPress}
+          onPress={onViewButtonPress}
           title="Patient_History.ViewButton"
           disabled={!allowView}
           backgroundColor={

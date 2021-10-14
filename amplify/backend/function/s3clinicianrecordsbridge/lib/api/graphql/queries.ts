@@ -2,15 +2,15 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const getPresignedUrlForClinicianRecords = /* GraphQL */ `
-  query GetPresignedUrlForClinicianRecords(
+export const queryS3ClinicianRecordsBridge = /* GraphQL */ `
+  query QueryS3ClinicianRecordsBridge(
     $recordType: String
     $operation: String
     $patientID: String
     $documentID: String
     $documentTitle: String
   ) {
-    getPresignedUrlForClinicianRecords(
+    queryS3ClinicianRecordsBridge(
       recordType: $recordType
       operation: $operation
       patientID: $patientID
@@ -1246,6 +1246,7 @@ export const getClinicianRecord = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
+      owner
     }
   }
 `;

@@ -1009,6 +1009,7 @@ export type ClinicianRecord = {
   _lastChangedAt: number;
   createdAt: string;
   updatedAt: string;
+  owner?: string | null;
 };
 
 export type UpdateClinicianRecordInput = {
@@ -2522,6 +2523,7 @@ export type CreateClinicianRecordMutation = {
     _lastChangedAt: number;
     createdAt: string;
     updatedAt: string;
+    owner?: string | null;
   } | null;
 };
 
@@ -2545,6 +2547,7 @@ export type UpdateClinicianRecordMutation = {
     _lastChangedAt: number;
     createdAt: string;
     updatedAt: string;
+    owner?: string | null;
   } | null;
 };
 
@@ -2568,10 +2571,11 @@ export type DeleteClinicianRecordMutation = {
     _lastChangedAt: number;
     createdAt: string;
     updatedAt: string;
+    owner?: string | null;
   } | null;
 };
 
-export type GetPresignedUrlForClinicianRecordsQueryVariables = {
+export type QueryS3ClinicianRecordsBridgeQueryVariables = {
   recordType?: string | null;
   operation?: string | null;
   patientID?: string | null;
@@ -2579,8 +2583,8 @@ export type GetPresignedUrlForClinicianRecordsQueryVariables = {
   documentTitle?: string | null;
 };
 
-export type GetPresignedUrlForClinicianRecordsQuery = {
-  getPresignedUrlForClinicianRecords?: string | null;
+export type QueryS3ClinicianRecordsBridgeQuery = {
+  queryS3ClinicianRecordsBridge?: string | null;
 };
 
 export type HandlePatientAssignmentQueryVariables = {
@@ -3734,6 +3738,7 @@ export type GetClinicianRecordQuery = {
     _lastChangedAt: number;
     createdAt: string;
     updatedAt: string;
+    owner?: string | null;
   } | null;
 };
 
@@ -4848,6 +4853,10 @@ export type OnDeleteAlertNotificationSubscription = {
   } | null;
 };
 
+export type OnCreateClinicianRecordSubscriptionVariables = {
+  owner?: string | null;
+};
+
 export type OnCreateClinicianRecordSubscription = {
   onCreateClinicianRecord?: {
     __typename: "ClinicianRecord";
@@ -4863,7 +4872,12 @@ export type OnCreateClinicianRecordSubscription = {
     _lastChangedAt: number;
     createdAt: string;
     updatedAt: string;
+    owner?: string | null;
   } | null;
+};
+
+export type OnUpdateClinicianRecordSubscriptionVariables = {
+  owner?: string | null;
 };
 
 export type OnUpdateClinicianRecordSubscription = {
@@ -4881,7 +4895,12 @@ export type OnUpdateClinicianRecordSubscription = {
     _lastChangedAt: number;
     createdAt: string;
     updatedAt: string;
+    owner?: string | null;
   } | null;
+};
+
+export type OnDeleteClinicianRecordSubscriptionVariables = {
+  owner?: string | null;
 };
 
 export type OnDeleteClinicianRecordSubscription = {
@@ -4899,5 +4918,6 @@ export type OnDeleteClinicianRecordSubscription = {
     _lastChangedAt: number;
     createdAt: string;
     updatedAt: string;
+    owner?: string | null;
   } | null;
 };

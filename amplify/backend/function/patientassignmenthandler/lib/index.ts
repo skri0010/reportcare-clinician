@@ -14,67 +14,77 @@ export const handler = async (event: ExpectedEvent): Promise<EventResponse> => {
   let eventResponse = createNewEventResponse();
   console.log(prettify(event));
 
-  // Check event
-  if (
-    event.typeName === "Query" &&
-    event.fieldName === "handlePatientAssignment"
-  ) {
-    // Check event variables and credentials
-    const clinicianID = event.identity["cognito:username"];
-    const patientID = event.arguments.patientID;
-    const resolution = event.arguments.resolution;
+  try {
+    // Check event
+    if (
+      event.typeName === "Query" &&
+      event.fieldName === "handlePatientAssignment"
+    ) {
+      // Check event variables and credentials
+      const clinicianID = event.identity.claims["cognito:username"];
+      const patientID = event.arguments.patientID;
+      const resolution = event.arguments.resolution;
 
-    if (patientID && clinicianID && resolution) {
-      // Get PatientAssignment record
-      const getResult = await getPatientAssignment({
-        patientID: patientID,
-        clinicianID: clinicianID
-      });
+      if (patientID && clinicianID && resolution) {
+        // Get PatientAssignment record
+        const getResult = await getPatientAssignment({
+          patientID: patientID,
+          clinicianID: clinicianID
+        });
 
-      if (getResult.data.getPatientAssignment) {
-        const patientAssignment = getResult.data.getPatientAssignment;
+        if (getResult.data.getPatientAssignment) {
+          const patientAssignment = getResult.data.getPatientAssignment;
 
-        // Handle "APPROVED" resolution
-        if (resolution === Resolution.APPROVED) {
-          eventResponse = await handleApprovedResolution({
-            clinicianID: clinicianID,
-            patientID: patientID
-          });
-        }
-
-        // Handle "REASSIGNED" resolution
-        else if (resolution === Resolution.REASSIGNED) {
-          const reassignToClinicianID = event.arguments.reassignToClinicianID;
-
-          if (reassignToClinicianID) {
-            // Check that target clinicianID exists
-            const getTargetResults = await getClinicianInfo({
-              clinicianID: reassignToClinicianID
+          // Handle "APPROVED" resolution
+          if (resolution === Resolution.APPROVED) {
+            eventResponse = await handleApprovedResolution({
+              clinicianID: clinicianID,
+              patientID: patientID,
+              resolution: Resolution.APPROVED
             });
+          }
 
-            // Target clinician exists
-            if (getTargetResults.data.getClinicianInfo) {
-              eventResponse = await handleReassignedResolution({
-                clinicianID: clinicianID,
-                patientID: patientID,
-                patientName: patientAssignment.patientName,
-                reassignToClinicianID: reassignToClinicianID
+          // Handle "REASSIGNED" resolution
+          else if (resolution === Resolution.REASSIGNED) {
+            const reassignToClinicianID = event.arguments.reassignToClinicianID;
+
+            if (reassignToClinicianID) {
+              // Check that target clinicianID exists
+              const getTargetResults = await getClinicianInfo({
+                clinicianID: reassignToClinicianID
               });
+
+              // Target clinician exists
+              if (getTargetResults.data.getClinicianInfo) {
+                eventResponse = await handleReassignedResolution({
+                  clinicianID: clinicianID,
+                  patientID: patientID,
+                  patientName: patientAssignment.patientName,
+                  reassignToClinicianID: reassignToClinicianID,
+                  resolution: Resolution.REASSIGNED
+                });
+              } else {
+                throw Error(
+                  `Target clinicianID ${reassignToClinicianID} does not exist`
+                );
+              }
             } else {
-              throw Error(
-                `Target clinicianID ${reassignToClinicianID} does not exist`
-              );
+              throw Error("Input did not specify reassignToClinicianID");
             }
           } else {
-            throw Error("Input did not specify reassignToClinicianID");
+            throw Error(`Invalid resolution ${resolution}`);
           }
         } else {
-          throw Error(`Invalid resolution ${resolution}`);
+          throw Error("Failed to retrieve patient assignment");
         }
       } else {
-        throw Error("Failed to retrieve patient assignment");
+        throw Error(
+          `Missing variable. ClinicianID: ${clinicianID} PatientID: ${patientID} Resolution: ${resolution}`
+        );
       }
     }
+  } catch (error) {
+    console.log(error);
   }
 
   return eventResponse;

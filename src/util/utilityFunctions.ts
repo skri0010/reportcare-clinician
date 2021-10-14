@@ -16,6 +16,10 @@ export const getAge = (birthDate: string): string => {
   return age;
 };
 
+export const prettify = (any: any): string => {
+  return JSON.stringify(any, null, 2);
+};
+
 // Requirements: Get last 7 days of parameters.
 // This function is used to get the locale date string of the last 7 days
 export const getWeekLocaleDateString = (): string[] => {

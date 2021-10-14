@@ -7,6 +7,7 @@ import {
 import { Observable } from "zen-observable-ts";
 import { LocalStorage } from "rc_agents/storage";
 import { PatientAssignment } from "aws/API";
+import { prettify } from "util/utilityFunctions";
 
 // Override default subscription otherwise null data will be received
 // Requested fields should be a subset of CreateAlertNotification response fields
@@ -62,13 +63,12 @@ const onCreatePatientAssignment = /* GraphQL */ `
       pending
       resolution
       reassignToClinicianID
+      sourceClinicianID
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
-      adminReassignFromClinicianID
-      adminCompleted
     }
   }
 `;
@@ -83,13 +83,12 @@ const onUpdatePatientAssignment = /* GraphQL */ `
       pending
       resolution
       reassignToClinicianID
+      sourceClinicianID
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
-      adminReassignFromClinicianID
-      adminCompleted
     }
   }
 `;
@@ -127,7 +126,7 @@ export const subscribePatientAssignment = async (): Promise<void> => {
         }
       },
       // eslint-disable-next-line no-console
-      error: (error) => console.log(error)
+      error: (error) => console.log(prettify(error))
     });
 
     // Subscribe to updated patient assignments
@@ -145,7 +144,7 @@ export const subscribePatientAssignment = async (): Promise<void> => {
         }
       },
       // eslint-disable-next-line no-console
-      error: (error) => console.log(error)
+      error: (error) => console.log(prettify(error))
     });
   }
 };
