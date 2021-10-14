@@ -50,7 +50,10 @@ export interface ColorScheme {
   primaryContrastIconColor: string;
   selectedIconColor: string;
   acceptIconColor: string;
-  rejectIconColor: string;
+  deleteIconColor: string;
+
+  // Icon background
+  deleteIconBackgroundColor: string;
 
   // Information
   infoIconColor: string;

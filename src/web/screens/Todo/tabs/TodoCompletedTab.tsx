@@ -52,9 +52,7 @@ export const TodoCompletedTab: FC<TodoCompleteTabProps> = ({
   }, []);
 
   return (
-    <View
-      style={{ flex: 1, backgroundColor: colors.secondaryWebBackgroundColor }}
-    >
+    <View style={{ flex: 1, backgroundColor: colors.primaryBackgroundColor }}>
       {/* List of completed todos */}
       {fetchingTodos ? (
         // Show loading indicator if fetching completed todos

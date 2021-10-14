@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { ms } from "react-native-size-matters";
 import { RootState, select } from "util/useRedux";
-import { IconButton, IconButtonProps, IconType } from "./IconButton";
+import { IconButton, IconType } from "./IconButton";
 
 interface DeleteIconProps {
   onPress: () => void;
@@ -21,7 +21,7 @@ export const DeleteIconButton: FC<DeleteIconProps> = ({ onPress }) => {
         backgroundColor: colors.primaryBackgroundColor,
         paddingRight: ms(5)
       }}
-      iconStyle={{ color: colors.rejectIconColor }}
+      iconStyle={{ color: colors.deleteIconColor }}
     />
   );
 };

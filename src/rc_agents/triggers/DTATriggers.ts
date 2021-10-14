@@ -15,6 +15,7 @@ import {
   PatientAssignmentResolution,
   TodoInput,
   TodoStatus,
+  MedInput,
   ClinicianRecordInput
 } from "rc_agents/model";
 import { AlertNotification } from "aws/TypedAPI/subscriptions";
@@ -161,15 +162,28 @@ export const triggerResolvePendingAssignments = (
 };
 
 // MRDC: Triggers StoreBaseline of DTA
-export const triggerStorePatientBaseline = (input: PatientInfo): void => {
+export const triggerStorePatientBaseline = (
+  patientInput: PatientInfo,
+  medInput: MedInput[]
+): void => {
   agentAPI.addFact(
     new Belief(
       BeliefKeys.PATIENT,
       PatientAttributes.PATIENT_TO_CONFIGURE,
-      input
+      patientInput
     ),
     false
   );
+
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PATIENT,
+      PatientAttributes.MEDICATION_TO_CONFIGURE,
+      medInput
+    ),
+    false
+  );
+
   agentDTA.addBelief(
     new Belief(BeliefKeys.PATIENT, PatientAttributes.STORE_BASELINE, true)
   );

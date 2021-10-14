@@ -118,7 +118,7 @@ export const DeleteRecordConfirmationModal: FC<DeleteRecordConfirmationModalProp
                 {
                   backgroundColor: deletingRecord
                     ? colors.primaryDeactivatedButtonColor
-                    : colors.rejectIconColor,
+                    : colors.deleteIconColor,
                   borderColor: colors.primaryTextColor,
                   alignSelf: "flex-end"
                 } as StyleProp<ViewProps>

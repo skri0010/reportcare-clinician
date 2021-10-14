@@ -55,9 +55,12 @@ export const darkColorScheme: ColorScheme = {
   primaryContrastIconColor: "#FFFFFF",
   selectedIconColor: "#00ffff",
   acceptIconColor: "#6AC574",
-  rejectIconColor: "#c20000",
+  deleteIconColor: "#ff1e00",
 
-  // Icon background/
+  // Icon background
+  deleteIconBackgroundColor: "#ffffff00",
+
+  // Information
   infoIconColor: "#2b79c2",
 
   // Charts
