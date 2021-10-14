@@ -226,7 +226,7 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
       />
 
       {/* Loading Indicator while Todo is being created */}
-      {updatingAlert || (updatingTodo && <LoadingIndicator />)}
+      {(updatingAlert || updatingTodo) && <LoadingIndicator />}
     </View>
   );
 };
