@@ -37,6 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 exports.__esModule = true;
 exports.handler = void 0;
+var shared_1 = require("./api/shared");
 var main_1 = require("./main");
 var queries_1 = require("./typed-api/queries");
 var types_1 = require("./types");
@@ -53,13 +54,14 @@ var handler = function (event) { return __awaiter(void 0, void 0, void 0, functi
         switch (_a.label) {
             case 0:
                 eventResponse = (0, utility_1.createNewEventResponse)();
-                console.log((0, utility_1.prettify)(event));
+                console.log((0, shared_1.prettify)(event));
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 17, , 18]);
                 if (!(event.typeName === "Query" &&
                     event.fieldName === "handlePatientAssignment")) return [3 /*break*/, 16];
-                clinicianID = event.identity.claims["cognito:username"];
+                clinicianID = event.identity.claims["cognito:username"] ||
+                    event.identity.claims.username;
                 patientID = event.arguments.patientID;
                 resolution = event.arguments.resolution;
                 if (!(patientID && clinicianID && resolution)) return [3 /*break*/, 15];
@@ -106,7 +108,7 @@ var handler = function (event) { return __awaiter(void 0, void 0, void 0, functi
             case 10: return [3 /*break*/, 12];
             case 11: throw Error("Invalid resolution " + resolution);
             case 12: return [3 /*break*/, 14];
-            case 13: throw Error("Failed to retrieve patient assignment");
+            case 13: throw Error("" + (0, shared_1.prettify)(getResult.errors));
             case 14: return [3 /*break*/, 16];
             case 15: throw Error("Missing variable. ClinicianID: " + clinicianID + " PatientID: " + patientID + " Resolution: " + resolution);
             case 16: return [3 /*break*/, 18];

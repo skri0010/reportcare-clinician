@@ -41,6 +41,7 @@ var mutations_1 = require("./typed-api/mutations");
 var queries_1 = require("./typed-api/queries");
 var s3Commands_1 = require("./s3Commands");
 var types_1 = require("./types");
+var shared_1 = require("./api/shared");
 /* Amplify Params - DO NOT EDIT
     API_REPORTCARE_GRAPHQLAPIENDPOINTOUTPUT
     API_REPORTCARE_GRAPHQLAPIIDOUTPUT
@@ -145,14 +146,16 @@ var handleQuery = function (queryEvent) { return __awaiter(void 0, void 0, void 
                 error_1 = _b.sent();
                 console.log(error_1);
                 return [3 /*break*/, 18];
-            case 18: return [2 /*return*/, eventResponse];
+            case 18:
+                console.log("Response: " + (0, shared_1.prettify)(eventResponse));
+                return [2 /*return*/, eventResponse];
         }
     });
 }); };
 var handleUpload = function (_a) {
     var args = _a.args, username = _a.username, path = _a.path;
     return __awaiter(void 0, void 0, void 0, function () {
-        var eventResponse, patientID, documentID, recordType, documentTitle, createResult;
+        var eventResponse, patientID, documentID, recordType, documentTitle, createResult, error_2;
         var _b;
         return __generator(this, function (_c) {
             switch (_c.label) {
@@ -161,6 +164,9 @@ var handleUpload = function (_a) {
                         success: false
                     };
                     patientID = args.patientID, documentID = args.documentID, recordType = args.recordType, documentTitle = args.documentTitle;
+                    _c.label = 1;
+                case 1:
+                    _c.trys.push([1, 6, , 7]);
                     return [4 /*yield*/, (0, mutations_1.createClinicianRecord)({
                             patientID: patientID,
                             documentID: documentID,
@@ -169,16 +175,21 @@ var handleUpload = function (_a) {
                             path: path,
                             uploaderClinicianID: username
                         })];
-                case 1:
-                    createResult = _c.sent();
-                    if (!((_b = createResult.data) === null || _b === void 0 ? void 0 : _b.createClinicianRecord)) return [3 /*break*/, 3];
-                    return [4 /*yield*/, (0, s3Commands_1.getPresignedUploadUrl)(path)];
                 case 2:
+                    createResult = _c.sent();
+                    if (!((_b = createResult.data) === null || _b === void 0 ? void 0 : _b.createClinicianRecord)) return [3 /*break*/, 4];
+                    return [4 /*yield*/, (0, s3Commands_1.getPresignedUploadUrl)(path)];
+                case 3:
                     // Create and return a presigned URL to upload document
                     eventResponse = _c.sent();
-                    return [3 /*break*/, 4];
-                case 3: throw Error("Failed to create DynamoDB ClinicianRecord record");
-                case 4: return [2 /*return*/, eventResponse];
+                    return [3 /*break*/, 5];
+                case 4: throw Error("Failed to create DynamoDB ClinicianRecord record");
+                case 5: return [3 /*break*/, 7];
+                case 6:
+                    error_2 = _c.sent();
+                    console.log(error_2);
+                    return [3 /*break*/, 7];
+                case 7: return [2 /*return*/, eventResponse];
             }
         });
     });
@@ -186,54 +197,73 @@ var handleUpload = function (_a) {
 var handleDelete = function (_a) {
     var args = _a.args, path = _a.path;
     return __awaiter(void 0, void 0, void 0, function () {
-        var eventResponse, patientID, documentID, recordType, documentTitle, getResult, uploadDateTime, updateTimeInMs, currentTimeInMs, withinDeleteGracePeriod, deleteSuccess, deleteMutation;
-        var _b;
-        return __generator(this, function (_c) {
-            switch (_c.label) {
+        var eventResponse, patientID, documentID, recordType, documentTitle, getResult, _b, uploadDateTime, _version, updateTimeInMs, currentTimeInMs, withinDeleteGracePeriod, deleteSuccess, deleteMutation, error_3;
+        var _c;
+        return __generator(this, function (_d) {
+            switch (_d.label) {
                 case 0:
                     eventResponse = {
                         success: false
                     };
                     patientID = args.patientID, documentID = args.documentID, recordType = args.recordType, documentTitle = args.documentTitle;
+                    _d.label = 1;
+                case 1:
+                    _d.trys.push([1, 12, , 13]);
                     return [4 /*yield*/, (0, queries_1.getClinicianRecord)({
                             documentID: documentID,
                             patientID: patientID
                         })];
-                case 1:
-                    getResult = _c.sent();
-                    if (!getResult.data.getClinicianRecord) return [3 /*break*/, 9];
-                    uploadDateTime = getResult.data.getClinicianRecord.uploadDateTime;
-                    if (!uploadDateTime) return [3 /*break*/, 7];
+                case 2:
+                    getResult = _d.sent();
+                    if (!getResult.data.getClinicianRecord) return [3 /*break*/, 10];
+                    _b = getResult.data.getClinicianRecord, uploadDateTime = _b.uploadDateTime, _version = _b._version;
+                    if (!uploadDateTime) return [3 /*break*/, 8];
                     updateTimeInMs = new Date(uploadDateTime).valueOf();
                     currentTimeInMs = new Date().valueOf();
                     withinDeleteGracePeriod = currentTimeInMs - updateTimeInMs < DELETE_GRACE_PERIOD;
-                    if (!withinDeleteGracePeriod) return [3 /*break*/, 5];
+                    if (!withinDeleteGracePeriod) return [3 /*break*/, 6];
                     return [4 /*yield*/, (0, s3Commands_1.deleteObject)(path)];
-                case 2:
-                    deleteSuccess = _c.sent();
-                    if (!deleteSuccess) return [3 /*break*/, 4];
+                case 3:
+                    deleteSuccess = _d.sent();
+                    if (!deleteSuccess) return [3 /*break*/, 5];
                     return [4 /*yield*/, (0, mutations_1.deleteClinicianRecord)({
                             documentID: documentID,
-                            patientID: patientID
+                            patientID: patientID,
+                            _version: _version // Necessary for deletion with ConflictResolution on
                         })];
-                case 3:
-                    deleteMutation = _c.sent();
-                    if ((_b = deleteMutation.data) === null || _b === void 0 ? void 0 : _b.deleteClinicianRecord) {
+                case 4:
+                    deleteMutation = _d.sent();
+                    if ((_c = deleteMutation.data) === null || _c === void 0 ? void 0 : _c.deleteClinicianRecord) {
                         eventResponse = {
                             success: true
                         };
                     }
                     else {
-                        throw Error("Failed to delete ClinicianRecord for { documentID: " + documentID + ", patientID: " + patientID + "}");
+                        throw Error("Failed to delete ClinicianRecord for { documentID: " + documentID + ", patientID: " + patientID + "}. " + (0, shared_1.prettify)(deleteMutation.errors));
                     }
-                    _c.label = 4;
-                case 4: return [3 /*break*/, 6];
-                case 5: throw Error("Delete period has passed for " + documentID + " by " + patientID);
-                case 6: return [3 /*break*/, 8];
-                case 7: throw Error("Invalid record candidate for deletion. No upload date time");
-                case 8: return [3 /*break*/, 10];
-                case 9: throw Error("Failed to get clinician record to check for deletion grace period");
-                case 10: return [2 /*return*/, eventResponse];
+                    _d.label = 5;
+                case 5: return [3 /*break*/, 7];
+                case 6: throw Error("Delete period has passed for document " + documentID + " for patient " + patientID);
+                case 7: return [3 /*break*/, 9];
+                case 8: throw Error("Invalid record candidate for deletion. No upload date time");
+                case 9: return [3 /*break*/, 11];
+                case 10:
+                    if (!getResult.errors) {
+                        eventResponse = {
+                            success: true
+                        };
+                    }
+                    // Error is thrown
+                    else {
+                        throw Error("Failed to get clinician record to check for deletion grace period. Error: " + (0, shared_1.prettify)(getResult.errors));
+                    }
+                    _d.label = 11;
+                case 11: return [3 /*break*/, 13];
+                case 12:
+                    error_3 = _d.sent();
+                    console.log(error_3);
+                    return [3 /*break*/, 13];
+                case 13: return [2 /*return*/, eventResponse];
             }
         });
     });
@@ -241,7 +271,7 @@ var handleDelete = function (_a) {
 var handleAcknowledge = function (_a) {
     var args = _a.args;
     return __awaiter(void 0, void 0, void 0, function () {
-        var eventResponse, patientID, documentID, recordType, documentTitle, updateResult;
+        var eventResponse, patientID, documentID, recordType, documentTitle, updateResult, error_4;
         var _b;
         return __generator(this, function (_c) {
             switch (_c.label) {
@@ -250,20 +280,28 @@ var handleAcknowledge = function (_a) {
                         success: false
                     };
                     patientID = args.patientID, documentID = args.documentID, recordType = args.recordType, documentTitle = args.documentTitle;
+                    _c.label = 1;
+                case 1:
+                    _c.trys.push([1, 3, , 4]);
                     return [4 /*yield*/, (0, mutations_1.updateClinicianRecord)({
                             patientID: patientID,
                             documentID: documentID,
                             uploadDateTime: new Date().toISOString()
                         })];
-                case 1:
+                case 2:
                     updateResult = _c.sent();
                     if ((_b = updateResult.data) === null || _b === void 0 ? void 0 : _b.updateClinicianRecord) {
                         eventResponse = { success: true };
                     }
                     else {
-                        throw Error("Failed to acknowledge document upload through updating DynamoDB record");
+                        throw Error("Failed to acknowledge document upload through updating DynamoDB record. " + (0, shared_1.prettify)(updateResult.errors));
                     }
-                    return [2 /*return*/, eventResponse];
+                    return [3 /*break*/, 4];
+                case 3:
+                    error_4 = _c.sent();
+                    console.log(error_4);
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/, eventResponse];
             }
         });
     });

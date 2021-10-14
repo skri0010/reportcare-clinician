@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
   ViewProps,
-  TextProps
+  TextStyle
 } from "react-native";
 import i18n from "util/language/i18n";
 
@@ -15,7 +15,7 @@ interface ModalButtonProps {
   title: string;
   onPress: () => void;
   style?: StyleProp<ViewProps>;
-  textStyle?: StyleProp<TextProps>;
+  textStyle?: StyleProp<TextStyle>;
   disabled?: boolean;
 }
 

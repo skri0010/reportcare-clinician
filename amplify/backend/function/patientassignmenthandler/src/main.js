@@ -157,6 +157,7 @@ var handleReassignedResolution = function (_a) {
                             clinicianID: reassignToClinicianID,
                             patientName: patientName,
                             pending: types_1.Pending,
+                            resolution: null,
                             sourceClinicianID: clinicianID // Indicate source clinicianID
                         })];
                 case 7:
@@ -218,6 +219,7 @@ var updateSourcePatientAssignment = function (_a) {
                     return [4 /*yield*/, (0, updateMutations_1.updatePatientAssignment)({
                             patientID: patientID,
                             clinicianID: sourceClinicianID,
+                            pending: null,
                             resolution: resolution,
                             _version: sourcePatientAssignment._version
                         })];

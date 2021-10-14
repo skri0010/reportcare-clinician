@@ -1,7 +1,8 @@
+import { prettify } from "./api/shared";
 import { handleApprovedResolution, handleReassignedResolution } from "./main";
 import { getPatientAssignment, getClinicianInfo } from "./typed-api/queries";
 import { EventResponse, ExpectedEvent, Resolution } from "./types";
-import { createNewEventResponse, prettify } from "./utility";
+import { createNewEventResponse } from "./utility";
 
 /* Amplify Params - DO NOT EDIT
 	API_REPORTCARE_GRAPHQLAPIENDPOINTOUTPUT
@@ -21,7 +22,9 @@ export const handler = async (event: ExpectedEvent): Promise<EventResponse> => {
       event.fieldName === "handlePatientAssignment"
     ) {
       // Check event variables and credentials
-      const clinicianID = event.identity.claims["cognito:username"];
+      const clinicianID =
+        event.identity.claims["cognito:username"] ||
+        event.identity.claims.username;
       const patientID = event.arguments.patientID;
       const resolution = event.arguments.resolution;
 
@@ -75,7 +78,7 @@ export const handler = async (event: ExpectedEvent): Promise<EventResponse> => {
             throw Error(`Invalid resolution ${resolution}`);
           }
         } else {
-          throw Error("Failed to retrieve patient assignment");
+          throw Error(`${prettify(getResult.errors)}`);
         }
       } else {
         throw Error(

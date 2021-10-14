@@ -31,6 +31,7 @@ type ClaimsType = {
   iss: OptionalString;
   "cognito:roles": OptionalString[];
   "cognito:username": OptionalString;
+  username: OptionalString;
   aud: OptionalString;
   event_id: OptionalString;
   token_use: OptionalString;

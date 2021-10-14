@@ -114,3 +114,10 @@ export const setFetchingIcdCrtRecordContent = createAction(
     fetchingIcdCrtRecordContent: fetchingIcdCrtRecordContent
   })
 )();
+
+export const setRecordToDelete = createAction(
+  actionNames.SET_RECORD_TO_DELETE,
+  (recordToDelete: ClinicianRecord | undefined) => ({
+    recordToDelete: recordToDelete
+  })
+)();

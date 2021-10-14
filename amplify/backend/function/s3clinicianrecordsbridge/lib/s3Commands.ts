@@ -5,9 +5,11 @@ import {
   GetObjectCommand,
   S3Client
 } from "@aws-sdk/client-s3";
-import { S3 } from "aws-sdk";
+import { AWSError, S3 } from "aws-sdk";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { EventResponse } from "./types";
+import { DeleteObjectOutput } from "aws-sdk/clients/s3";
+import { prettify } from "./api/shared";
 
 // Set the AWS Region.
 const REGION = process.env.REGION!;
@@ -113,10 +115,28 @@ export const deleteObject: (path: string) => Promise<boolean> = async (
     Key: path
   };
 
-  const response = await S3Instance.deleteObject(parameters).promise();
+  try {
+    const response: DeleteObjectOutput = await new Promise(
+      (resolve, reject) => {
+        const callback = (error: AWSError, data: DeleteObjectOutput) => {
+          if (error) {
+            reject(prettify(error));
+          } else {
+            // Note: The response is actually {} with no fields
+            // Issue: https://github.com/aws/aws-sdk-js/issues/1197#issuecomment-258919580
+            resolve(data);
+          }
+        };
+        S3Instance.deleteObject(parameters, callback);
+      }
+    );
 
-  if (response.DeleteMarker) {
-    success = true;
+    // Can assume that if an error is not thrown, it was successful
+    if (response) {
+      success = true;
+    }
+  } catch (error) {
+    console.log(error);
   }
 
   return success;

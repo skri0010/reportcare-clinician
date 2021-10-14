@@ -18,6 +18,7 @@ import {
   VerifiedArgumentsType,
   RecordType
 } from "./types";
+import { prettify } from "./api/shared";
 
 /* Amplify Params - DO NOT EDIT
 	API_REPORTCARE_GRAPHQLAPIENDPOINTOUTPUT
@@ -124,9 +125,11 @@ const handleQuery = async (queryEvent: QueryEvent): Promise<EventResponse> => {
     } else {
       throw Error("Unknown field name or arguments");
     }
-  } catch (error: any) {
+  } catch (error) {
     console.log(error);
   }
+
+  console.log(`Response: ${prettify(eventResponse)}`);
 
   return eventResponse;
 };
@@ -141,20 +144,24 @@ const handleUpload: (parameters: {
   };
   const { patientID, documentID, recordType, documentTitle } = args;
 
-  // Create ClinicianRecord in DynamoDB
-  const createResult = await createClinicianRecord({
-    patientID: patientID,
-    documentID: documentID,
-    type: recordType,
-    title: documentTitle,
-    path: path,
-    uploaderClinicianID: username
-  });
-  if (createResult.data?.createClinicianRecord) {
-    // Create and return a presigned URL to upload document
-    eventResponse = await getPresignedUploadUrl(path);
-  } else {
-    throw Error("Failed to create DynamoDB ClinicianRecord record");
+  try {
+    // Create ClinicianRecord in DynamoDB
+    const createResult = await createClinicianRecord({
+      patientID: patientID,
+      documentID: documentID,
+      type: recordType,
+      title: documentTitle,
+      path: path,
+      uploaderClinicianID: username
+    });
+    if (createResult.data?.createClinicianRecord) {
+      // Create and return a presigned URL to upload document
+      eventResponse = await getPresignedUploadUrl(path);
+    } else {
+      throw Error("Failed to create DynamoDB ClinicianRecord record");
+    }
+  } catch (error) {
+    console.log(error);
   }
   return eventResponse;
 };
@@ -168,50 +175,70 @@ const handleDelete: (parameters: {
   };
   const { patientID, documentID, recordType, documentTitle } = args;
 
-  // Get ClinicianRecord from DynamoDB
-  const getResult = await getClinicianRecord({
-    documentID: documentID,
-    patientID: patientID
-  });
-  if (getResult.data.getClinicianRecord) {
-    const uploadDateTime = getResult.data.getClinicianRecord.uploadDateTime;
-    if (uploadDateTime) {
-      // Delete is only allowed when under DELETE_GRACE_PERIOD
-      const updateTimeInMs = new Date(uploadDateTime).valueOf();
-      const currentTimeInMs = new Date().valueOf();
-      const withinDeleteGracePeriod =
-        currentTimeInMs - updateTimeInMs < DELETE_GRACE_PERIOD;
-      if (withinDeleteGracePeriod) {
-        // Delete the S3 object
-        const deleteSuccess = await deleteObject(path);
-        if (deleteSuccess) {
-          // Delete the DynamoDB ClinicianRecord
-          const deleteMutation = await deleteClinicianRecord({
-            documentID: documentID,
-            patientID: patientID
-          });
-          if (deleteMutation.data?.deleteClinicianRecord) {
-            eventResponse = {
-              success: true
-            };
-          } else {
-            throw Error(
-              `Failed to delete ClinicianRecord for { documentID: ${documentID}, patientID: ${patientID}}`
-            );
+  try {
+    // Get ClinicianRecord from DynamoDB
+    const getResult = await getClinicianRecord({
+      documentID: documentID,
+      patientID: patientID
+    });
+    // Clinician record exists
+    if (getResult.data.getClinicianRecord) {
+      const { uploadDateTime, _version } = getResult.data.getClinicianRecord;
+      if (uploadDateTime) {
+        // Delete is only allowed when under DELETE_GRACE_PERIOD
+        const updateTimeInMs = new Date(uploadDateTime).valueOf();
+        const currentTimeInMs = new Date().valueOf();
+        const withinDeleteGracePeriod =
+          currentTimeInMs - updateTimeInMs < DELETE_GRACE_PERIOD;
+        if (withinDeleteGracePeriod) {
+          // Delete the S3 object
+          const deleteSuccess = await deleteObject(path);
+          if (deleteSuccess) {
+            // Delete the DynamoDB ClinicianRecord
+            const deleteMutation = await deleteClinicianRecord({
+              documentID: documentID,
+              patientID: patientID,
+              _version: _version // Necessary for deletion with ConflictResolution on
+            });
+            if (deleteMutation.data?.deleteClinicianRecord) {
+              eventResponse = {
+                success: true
+              };
+            } else {
+              throw Error(
+                `Failed to delete ClinicianRecord for { documentID: ${documentID}, patientID: ${patientID}}. ${prettify(
+                  deleteMutation.errors
+                )}`
+              );
+            }
           }
+        } else {
+          throw Error(
+            `Delete period has passed for document ${documentID} for patient ${patientID}`
+          );
         }
       } else {
         throw Error(
-          `Delete period has passed for ${documentID} by ${patientID}`
+          "Invalid record candidate for deletion. No upload date time"
         );
       }
-    } else {
-      throw Error("Invalid record candidate for deletion. No upload date time");
     }
-  } else {
-    throw Error(
-      "Failed to get clinician record to check for deletion grace period"
-    );
+    // ClinciianRecord already does not exist
+    else if (!getResult.errors) {
+      eventResponse = {
+        success: true
+      };
+    }
+    // Error is thrown
+    else {
+      throw Error(
+        `Failed to get clinician record to check for deletion grace period. Error: ${prettify(
+          getResult.errors
+        )}`
+      );
+    }
+  } catch (error) {
+    console.log(error);
   }
 
   return eventResponse;
@@ -225,18 +252,24 @@ const handleAcknowledge: (parameters: {
   };
   const { patientID, documentID, recordType, documentTitle } = args;
 
-  // Update DynamoDB ClinicianRecord with uploaderClinicianID and uploadDateTime
-  const updateResult = await updateClinicianRecord({
-    patientID: patientID,
-    documentID: documentID,
-    uploadDateTime: new Date().toISOString()
-  });
-  if (updateResult.data?.updateClinicianRecord) {
-    eventResponse = { success: true };
-  } else {
-    throw Error(
-      "Failed to acknowledge document upload through updating DynamoDB record"
-    );
+  try {
+    // Update DynamoDB ClinicianRecord with uploaderClinicianID and uploadDateTime
+    const updateResult = await updateClinicianRecord({
+      patientID: patientID,
+      documentID: documentID,
+      uploadDateTime: new Date().toISOString()
+    });
+    if (updateResult.data?.updateClinicianRecord) {
+      eventResponse = { success: true };
+    } else {
+      throw Error(
+        `Failed to acknowledge document upload through updating DynamoDB record. ${prettify(
+          updateResult.errors
+        )}`
+      );
+    }
+  } catch (error) {
+    console.log(error);
   }
 
   return eventResponse;

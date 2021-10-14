@@ -141,6 +141,7 @@ export const handleReassignedResolution: (input: {
         clinicianID: reassignToClinicianID,
         patientName: patientName,
         pending: Pending,
+        resolution: null,
         sourceClinicianID: clinicianID // Indicate source clinicianID
       });
 
@@ -198,6 +199,7 @@ const updateSourcePatientAssignment: (input: {
       const updateResult = await updatePatientAssignment({
         patientID: patientID,
         clinicianID: sourceClinicianID,
+        pending: null,
         resolution: resolution,
         _version: sourcePatientAssignment._version
       });

@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { View } from "react-native";
 import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
 import { MainScreenProps } from "web/navigation/types";
-import { ScreenName } from "web/navigation";
+import { PatientDetailsTabName, ScreenName } from "web/navigation";
 import { WelcomeCard } from "./WelcomeCard";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { RequestsByMariaCard } from "./RequestsByMariaCard";

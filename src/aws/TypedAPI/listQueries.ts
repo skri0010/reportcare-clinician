@@ -1,7 +1,7 @@
 import API from "@aws-amplify/api-graphql";
 // eslint-disable-next-line no-restricted-imports
 import * as queries from "aws/graphql/queries";
-import { BaseResponse } from "aws";
+import { BaseResponse, ClinicianRecordType } from "aws";
 import {
   ListPatientInfosQueryVariables,
   ListPatientInfosQuery,
@@ -70,7 +70,7 @@ export const listPatientInfos = async (
   })) as ListPatientInfosResponse;
 };
 
-interface ListActivityInfosByPatientIDResponse extends BaseResponse {
+export interface ListActivityInfosByPatientIDResponse extends BaseResponse {
   data: ListActivityInfosByPatientIDQuery;
 }
 
@@ -294,10 +294,14 @@ interface ListUploadedClinicianRecordsResponse extends BaseResponse {
 }
 
 export const listUploadedClinicianRecordsByPatientID = async (
-  variables: ListUploadedClinicianRecordsByPatientIDQueryVariables
+  variables: ListUploadedClinicianRecordsByPatientIDQueryVariables,
+  recordType: ClinicianRecordType
 ): Promise<ListUploadedClinicianRecordsResponse> => {
   return (await API.graphql({
     query: queries.listUploadedClinicianRecordsByPatientID,
-    variables: variables
+    variables: {
+      ...variables,
+      ...{ filter: { type: { eq: recordType } } }
+    }
   })) as ListUploadedClinicianRecordsResponse;
 };

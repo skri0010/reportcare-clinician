@@ -42,6 +42,7 @@ exports.deleteObject = exports.getPresignedDownloadUrl = exports.getPresignedUpl
 var client_s3_1 = require("@aws-sdk/client-s3");
 var aws_sdk_1 = require("aws-sdk");
 var s3_request_presigner_1 = require("@aws-sdk/s3-request-presigner");
+var shared_1 = require("./api/shared");
 // Set the AWS Region.
 var REGION = process.env.REGION;
 // Set bucket name
@@ -138,7 +139,7 @@ var getPresignedDownloadUrl = function (path) { return __awaiter(void 0, void 0,
 exports.getPresignedDownloadUrl = getPresignedDownloadUrl;
 // Delete object
 var deleteObject = function (path) { return __awaiter(void 0, void 0, void 0, function () {
-    var success, parameters, response;
+    var success, parameters, response, error_3;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -147,13 +148,34 @@ var deleteObject = function (path) { return __awaiter(void 0, void 0, void 0, fu
                     Bucket: BUCKET_NAME,
                     Key: path
                 };
-                return [4 /*yield*/, S3Instance.deleteObject(parameters).promise()];
+                _a.label = 1;
             case 1:
+                _a.trys.push([1, 3, , 4]);
+                return [4 /*yield*/, new Promise(function (resolve, reject) {
+                        var callback = function (error, data) {
+                            if (error) {
+                                reject((0, shared_1.prettify)(error));
+                            }
+                            else {
+                                // Note: The response is actually {} with no fields
+                                // Issue: https://github.com/aws/aws-sdk-js/issues/1197#issuecomment-258919580
+                                resolve(data);
+                            }
+                        };
+                        S3Instance.deleteObject(parameters, callback);
+                    })];
+            case 2:
                 response = _a.sent();
-                if (response.DeleteMarker) {
+                // Can assume that if an error is not thrown, it was successful
+                if (response) {
                     success = true;
                 }
-                return [2 /*return*/, success];
+                return [3 /*break*/, 4];
+            case 3:
+                error_3 = _a.sent();
+                console.log(error_3);
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/, success];
         }
     });
 }); };
