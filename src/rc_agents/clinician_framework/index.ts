@@ -273,6 +273,8 @@ export enum PatientAttributes {
   DISPLAY_PATIENT_DETAILS_REQUESTED = "DisplayPatientDetailsRequested",
   PATIENT_DETAILS = "PatientDetails",
   PATIENT_ALERT_HISTORY_RETRIEVED = "PatientAlertHistoryRetrieved",
+  CONFIGURE_PATIENT = "ConfigurePatient",
+  MEDICATION_TO_CONFIGURE = "MedicationToConfigure",
 
   // HF-OTP-III: Single patient's medical record content
   MEDICAL_RECORD_TO_VIEW = "MedicalRecordToView",

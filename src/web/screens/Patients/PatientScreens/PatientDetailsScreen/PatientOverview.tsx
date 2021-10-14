@@ -10,7 +10,7 @@ import { Dimensions, View } from "react-native";
 import { ReportSymptom, ReportVitals } from "aws/API";
 import i18n from "util/language/i18n";
 import { PatientDetailsTabProps } from "web/navigation/types";
-import { PatientDetails } from "rc_agents/model";
+import { MedInput, PatientDetails } from "rc_agents/model";
 import { getLatestVitalsReport } from "util/utilityFunctions";
 import { FluidIntakeCard } from "./PatientOverviewComponents/FluidIntakeCard";
 import { ActivityCard } from "./PatientOverviewComponents/ActivityCard";
@@ -29,6 +29,7 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
 
   const [vitals, setVitals] = useState<ReportVitals | null>(null);
   const [symptoms, setSymptoms] = useState<ReportSymptom[]>([]);
+  const [medications, setMedications] = useState<MedInput[]>([]);
   const [sumFluidIntake, setSumFluidIntake] = useState<number>(0);
   const [sumStepsTaken, setSumStepsTaken] = useState<number>(0);
 
@@ -67,6 +68,10 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
     const symptomsOnDate = details.symptomReports[date];
     if (symptomsOnDate) {
       setSymptoms(symptomsOnDate);
+    }
+    const medInfo = details.medicationInfo;
+    if (medInfo) {
+      setMedications(medInfo);
     }
   }, [details]);
 
@@ -113,7 +118,7 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
           {/* Medication and symptoms card */}
           {/* JH-TODO-NEW: Current data type does not support this */}
           <MedicationTakenCard
-            medications={[]}
+            medications={medications}
             maxHeight={cardHeight}
             minHeight={cardHeight}
           />

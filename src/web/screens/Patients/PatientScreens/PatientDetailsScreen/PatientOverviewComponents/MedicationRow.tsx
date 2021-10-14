@@ -2,12 +2,12 @@ import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
 import { View } from "react-native";
 import { ms } from "react-native-size-matters";
-import { H5 } from "components/Text";
+import { H4 } from "components/Text";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { MedicationInfo } from "aws/API";
+import { MedInput } from "rc_agents/model";
 
 interface MedicationRowProps {
-  medicationInfo: MedicationInfo;
+  medicationInfo: MedInput;
 }
 
 export const MedicationRow: FC<MedicationRowProps> = ({ medicationInfo }) => {
@@ -15,12 +15,29 @@ export const MedicationRow: FC<MedicationRowProps> = ({ medicationInfo }) => {
     colors: state.settings.colors
   }));
 
+  function validateMeds() {
+    if (medicationInfo.records) {
+      const recordObject = JSON.parse(medicationInfo.records);
+      const meds = recordObject[new Date().toDateString()] as string[] | null;
+      if (meds) {
+        if (meds.length === parseFloat(medicationInfo.frequency)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  const medicineTaken = validateMeds();
+
   return (
     <View style={{ flexDirection: "row", alignItems: "center" }}>
-      {/* JQ-TODO Add a checking here to see if the patient has taken the medicine */}
-      {/* ie {medicineTaken?(<Icon name="check" color={colors.acceptButtonColor} size={ms(15)} />):(<View style={{ paddingLeft: ms(15) }} />)} */}
-      <Icon name="check" color={colors.acceptButtonColor} size={ms(15)} />
-      <H5 text={`  ${medicationInfo.name}`} style={null} />
+      {medicineTaken ? (
+        <Icon name="check" color={colors.acceptButtonColor} size={ms(15)} />
+      ) : (
+        <Icon name="close" color={colors.deleteIconColor} size={ms(15)} />
+      )}
+      <H4 text={`  ${medicationInfo.name}`} style={null} />
     </View>
   );
 };
