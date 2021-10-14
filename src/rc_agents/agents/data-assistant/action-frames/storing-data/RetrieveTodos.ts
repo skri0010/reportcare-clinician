@@ -115,25 +115,20 @@ class RetrieveTodos extends Activity {
           if (todos) {
             // Find alert associated to each todo
             const todosToDispatch: LocalTodo[] = [];
-            const alertForTodo = await Promise.all(
-              todos.map(async (todo) => {
-                if (todo.alertID) {
-                  const query = getDetailedAlert({
-                    id: todo.alertID
-                  });
-                  return query;
-                }
-              })
-            );
+            const currentLocalTodos: LocalTodo[] | null =
+              await LocalStorage.getTodos();
 
-            alertForTodo.forEach((alert) => {
-              if (alert && alert.data.getAlert) {
-                const result = alert.data.getAlert;
-                if (todos) {
-                  // Find the todo with the same alert ID
-                  const todo = todos.find((t) => t.alertID === result.id);
-                  if (todo) {
-                    // Create local todo to be stored into local storage
+            /**
+             * If there are todos in the local storage,
+             * get the risk level colour, patient ID and alert ID from the local todo
+             */
+            if (currentLocalTodos && currentLocalTodos.length > 0) {
+              todos.forEach((todo) => {
+                if (todo.alertID) {
+                  const todoSameAlertID = currentLocalTodos.find(
+                    (t) => t.alertId === todo.alertID
+                  );
+                  if (todoSameAlertID && todo) {
                     const currentTodo: LocalTodo = {
                       id: todo.id,
                       title: todo.title,
@@ -144,16 +139,58 @@ class RetrieveTodos extends Activity {
                       lastModified: todo.lastModified,
                       toSync: false,
                       _version: todo._version,
-                      alertId: result.id,
-                      patientId: result.patientID,
-                      riskLevel: mapColorCodeToRiskLevel(result.colorCode)
+                      alertId: todoSameAlertID.alertId,
+                      patientId: todoSameAlertID.patientId,
+                      riskLevel: todoSameAlertID.riskLevel
                     };
 
                     todosToDispatch.push(currentTodo);
                   }
                 }
-              }
-            });
+              });
+            }
+            // If there are local todos, get risk level colour, patient ID and alertID from DB
+            else {
+              const alertForTodo = await Promise.all(
+                todos.map(async (todo) => {
+                  if (todo.alertID) {
+                    const query = getDetailedAlert({
+                      id: todo.alertID
+                    });
+                    return query;
+                  }
+                })
+              );
+
+              alertForTodo.forEach((alert) => {
+                if (alert && alert.data.getAlert) {
+                  const result = alert.data.getAlert;
+                  if (todos) {
+                    // Find the todo with the same alert ID
+                    const todo = todos.find((t) => t.alertID === result.id);
+                    if (todo) {
+                      // Create local todo to be stored into local storage
+                      const currentTodo: LocalTodo = {
+                        id: todo.id,
+                        title: todo.title,
+                        patientName: todo.patientName,
+                        notes: todo.notes,
+                        completed: todo.completed === TodoStatus.COMPLETED,
+                        createdAt: todo.createdAt,
+                        lastModified: todo.lastModified,
+                        toSync: false,
+                        _version: todo._version,
+                        alertId: result.id,
+                        patientId: result.patientID,
+                        riskLevel: mapColorCodeToRiskLevel(result.colorCode)
+                      };
+
+                      todosToDispatch.push(currentTodo);
+                    }
+                  }
+                }
+              });
+            }
 
             // If the alert info for all todo is fetched
             if (todosToDispatch.length === todos.length) {
