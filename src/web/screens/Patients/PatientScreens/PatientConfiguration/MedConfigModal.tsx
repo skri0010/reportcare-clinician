@@ -36,8 +36,20 @@ export const MedConfigModal: FC<MedConfigModalProps> = ({
   const [addingNewMed, setAddingNewMed] = useState<boolean>(false);
 
   const updateMed = (medInfo: MedInput) => {
+    setAddingNewMed(false);
     setConfigMedInfo(medInfo);
     setMedToUpdate(medInfo);
+  };
+
+  const addMed = () => {
+    setMedToUpdate(undefined);
+    setAddingNewMed(true);
+    setConfigMedInfo({
+      name: "",
+      dosage: "",
+      frequency: "",
+      patientID: details.patientInfo.id
+    });
   };
 
   return (
@@ -52,7 +64,7 @@ export const MedConfigModal: FC<MedConfigModalProps> = ({
       <H4 text="Medication Form" style={{ fontWeight: "bold" }} />
       <View style={styles.container}>
         <MedicationList
-          setAddNewMed={setAddingNewMed}
+          setAddNewMed={addMed}
           details={details}
           setMedToUpdate={updateMed}
         />

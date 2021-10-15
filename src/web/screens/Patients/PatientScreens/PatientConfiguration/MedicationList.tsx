@@ -8,7 +8,7 @@ import { MedInfoRow } from "./MedInfoRow";
 import { H5 } from "components/Text";
 
 interface MedicationListProps {
-  setAddNewMed: (setAdding: boolean) => void;
+  setAddNewMed: () => void;
   setMedToUpdate: (medToUpdate: MedInput) => void;
   details: PatientDetails;
 }
@@ -29,10 +29,7 @@ export const MedicationList: FC<MedicationListProps> = ({
         backgroundColor: colors.primaryContrastTextColor
       }}
     >
-      <RowButton
-        title="Add New Medication"
-        onPress={() => setAddNewMed(true)}
-      />
+      <RowButton title="Add New Medication" onPress={() => setAddNewMed()} />
       <H5
         text="List of active medications: "
         style={{
