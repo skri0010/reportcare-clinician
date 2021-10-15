@@ -24,6 +24,9 @@
     "Email": "Emel",
     "EmailPlaceholder": "Masukkan emel",
     "EmailError": "Emel tidak sah",
+    "Phone": "Nombor telefon",
+    "PhonePlaceholder": "Masukkan nombor telefon",
+    "PhoneError": "Nombor telefon tidak sah",
     "Role": "Peranan",
     "RolePlaceholder": "-- Pilih peranan --",
     "EP": "Ahli Elektrofisiologi",
@@ -302,6 +305,7 @@
     "NoSelection": "Pilih salah satu pakar untuk melihat butirannya",
     "Role": "Peranan",
     "HospitalName": "Nama Hospital",
+    "ContactNumber": "Nombor talian",
     "GeneralDetails": "Informasi Umum",
     "ClincianList": {
       "NoClinicianFound": "Tiada pakar yang dijumpai!"

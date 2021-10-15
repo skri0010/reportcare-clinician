@@ -48,6 +48,7 @@ export type AsyncStorageType = {
     name: string;
     hospitalName: string;
     role: string;
+    phone: string;
   };
   [AsyncStorageKeys.USERNAME]: string;
   [AsyncStorageKeys.CLINICIAN_ID]: string;
