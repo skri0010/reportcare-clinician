@@ -30,7 +30,6 @@ import {
   setConfigurationSuccessful,
   setConfiguringPatient
 } from "ic-redux/actions/agents/configurationActionCreator";
-import { MedicationConfigForm } from "./MedicationConfigForm";
 import { MedicationInfoList } from "components/RowComponents/MedicationRow/MedicationInfoList";
 import { SaveAndCancelButtons } from "components/Buttons/SaveAndCancelButtons";
 import { MedConfigModal } from "./MedConfigModal";

@@ -22,7 +22,6 @@ import { PatientConfigurationScreen } from "web/screens/Patients/PatientScreens/
 import { AlertColorCode, AlertInfo, AlertStatus } from "rc_agents/model";
 import { setPatientDetails } from "ic-redux/actions/agents/patientActionCreator";
 import { AddIcdCrtRecordModal } from "./PatientScreens/PatientDetailsScreen/PatientIcdCrtComponents/AddIcdCrtRecordModal";
-import { MedConfigModal } from "./PatientScreens/PatientConfiguration/MedConfigModal";
 
 export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
   route

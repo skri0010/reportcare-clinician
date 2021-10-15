@@ -1,10 +1,9 @@
 import React, { FC, useState } from "react";
 import { View } from "react-native";
-import i18n from "util/language/i18n";
 import { ScaledSheet } from "react-native-size-matters";
 import { RootState, select } from "util/useRedux";
 import { MedInput, PatientDetails } from "rc_agents/model";
-import { H4, H5, H6 } from "components/Text";
+import { H4 } from "components/Text";
 import { MedicationList } from "./MedicationList";
 import { AddNewMedication } from "./AddNewMedication";
 import { NoSelectionScreen } from "web/screens/Shared/NoSelectionScreen";

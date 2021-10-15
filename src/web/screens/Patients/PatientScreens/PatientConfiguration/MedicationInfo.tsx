@@ -1,6 +1,5 @@
 import React, { FC, useEffect, useState } from "react";
 import { View } from "react-native";
-import i18n from "util/language/i18n";
 import { MedInput, MedPrescription } from "rc_agents/model";
 import { Label } from "components/Text/Label";
 import { mockMedPrescriptions } from "mock/mockMedDosages";
