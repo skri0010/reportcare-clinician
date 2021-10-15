@@ -22,8 +22,7 @@ import { PatientInfo } from "aws/API";
 import { listPatientInfos } from "aws";
 import { Role } from "rc_agents/model";
 import { store } from "util/useRedux";
-import { setFetchingPatients } from "ic-redux/actions/agents/actionCreator";
-import Auth from "@aws-amplify/auth";
+import { setFetchingPatients } from "ic-redux/actions/agents/patientActionCreator";
 
 /**
  * Class to represent an activity for retrieving patients according to role.

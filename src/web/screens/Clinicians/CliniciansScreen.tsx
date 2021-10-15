@@ -1,12 +1,12 @@
 import React, { FC, useEffect } from "react";
 import { View } from "react-native";
-import { ScreenWrapper } from "web/screens/ScreenWrapper";
+import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
 import { RootState, select } from "util/useRedux";
 import { ScreenName } from "web/navigation";
 import { ClinicianDetails } from "web/screens/Clinicians/ClinicianDetails";
 import { MainScreenProps } from "web/navigation/types";
 import { AgentTrigger } from "rc_agents/trigger";
-import { AdaptiveTwoScreenWrapper } from "../AdaptiveTwoScreenWrapper";
+import { AdaptiveTwoScreenWrapper } from "components/Wrappers/AdaptiveTwoScreenWrapper";
 import { CliniciansList } from "./CliniciansList";
 import { ScaledSheet } from "react-native-size-matters";
 

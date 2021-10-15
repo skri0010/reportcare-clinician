@@ -5,7 +5,7 @@ import { ScaledSheet } from "react-native-size-matters";
 import { TodoRow } from "components/RowComponents/TodoRow";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { RiskLevel } from "models/RiskLevel";
-import { CardWrapper } from "./CardWrapper";
+import { CardWrapper } from "components/Wrappers/CardWrapper";
 import { FloatingBottomButton } from "components/Buttons/FloatingBottomButton";
 import i18n from "util/language/i18n";
 import { ScreenName } from "web/navigation";
@@ -21,15 +21,15 @@ interface TodosCardProps {
 
 export const TodosCard: FC<TodosCardProps> = ({ maxHeight, navigation }) => {
   const { pendingTodos, fetchingTodos } = select((state: RootState) => ({
-    pendingTodos: state.agents.pendingTodos,
-    fetchingTodos: state.agents.fetchingTodos
+    pendingTodos: state.todos.pendingTodos,
+    fetchingTodos: state.todos.fetchingTodos
   }));
 
   const [lastPatientIndex, setLastPatientIndex] = useState(-1);
 
   useEffect(() => {
     AgentTrigger.triggerRetrieveTodos(TodoStatus.PENDING);
-  }, [pendingTodos]);
+  }, []);
 
   useEffect(() => {
     if (pendingTodos && pendingTodos.length > 10) {

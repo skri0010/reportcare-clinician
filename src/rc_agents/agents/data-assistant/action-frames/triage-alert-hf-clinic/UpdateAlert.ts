@@ -17,13 +17,13 @@ import {
 } from "rc_agents/clinician_framework";
 import { LocalStorage } from "rc_agents/storage";
 import { store } from "util/useRedux";
-import { setUpdatingAlertIndicators } from "ic-redux/actions/agents/actionCreator";
 import { agentNWA } from "rc_agents/agents";
 import { getDetailedAlert, updateAlert } from "aws";
 import { AlertInfo, AlertStatus, FetchAlertsMode } from "rc_agents/model";
 import { Alert, UpdateAlertInput } from "aws/API";
 import { convertAlertToAlertInfo } from "util/utilityFunctions";
 import { AgentTrigger } from "rc_agents/trigger";
+import { setUpdatingAlertIndicators } from "ic-redux/actions/agents/alertActionCreator";
 
 /**
  * Class to represent an activity for updating a patient's Alert.

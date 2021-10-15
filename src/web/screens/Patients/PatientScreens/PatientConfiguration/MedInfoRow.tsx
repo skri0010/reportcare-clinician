@@ -3,7 +3,7 @@ import { View } from "react-native";
 import { H5 } from "components/Text";
 import { MedInput } from "rc_agents/model";
 import i18n from "util/language/i18n";
-import { RowButton } from "components/Buttons/TextButton";
+import { RowButton } from "components/Buttons/RowButton";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { RootState, select } from "util/useRedux";
 

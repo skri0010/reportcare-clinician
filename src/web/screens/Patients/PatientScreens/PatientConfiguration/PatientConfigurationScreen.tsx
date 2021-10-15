@@ -1,7 +1,7 @@
 import React, { FC, useState, useEffect, useCallback } from "react";
 import { View, ScrollView, TouchableOpacity, Modal } from "react-native";
 import { TextField } from "components/InputComponents/TextField";
-import { ScreenWrapper } from "web/screens/ScreenWrapper";
+import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
 import i18n from "util/language/i18n";
 import { PatientInfo } from "aws/API";
 import cloneDeep from "lodash/cloneDeep";
@@ -23,31 +23,37 @@ import { Hospital, NYHAClass, MedInput, PatientDetails } from "rc_agents/model";
 import { getPickerStyles } from "util/getStyles";
 import { Label } from "components/Text/Label";
 import { AuthButton } from "components/Buttons/AuthButton";
-import { triggerConfigurePatient } from "rc_agents/triggers";
+import { triggerStorePatientBaseline } from "rc_agents/triggers";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { useToast } from "react-native-toast-notifications";
 import {
   setConfigurationSuccessful,
   setConfiguringPatient
-} from "ic-redux/actions/agents/actionCreator";
+} from "ic-redux/actions/agents/configurationActionCreator";
+import { MedicationConfigForm } from "./MedicationConfigForm";
 import { MedicationInfoList } from "components/RowComponents/MedicationRow/MedicationInfoList";
+import { SaveAndCancelButtons } from "components/Buttons/SaveAndCancelButtons";
 import { MedConfigModal } from "./MedConfigModal";
 
 interface PatientConfigurationScreenProps {
-  info: PatientInfo;
   details: PatientDetails;
+  editDetails: boolean; // Indicates that patient has been configured and details are to be updated
+  setEditDetails: (state: boolean) => void; // To edit patient's details
 }
 
 export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
-  ({ info, details }) => {
+  ({ details, editDetails, setEditDetails }) => {
     // States
     const { fonts, colors, configuringPatient, configurationSuccessful } =
       select((state: RootState) => ({
         colors: state.settings.colors,
         fonts: state.settings.fonts,
-        configuringPatient: state.agents.configuringPatient,
-        configurationSuccessful: state.agents.configurationSuccessful
+        configuringPatient: state.configurations.configuringPatient,
+        configurationSuccessful: state.configurations.configurationSuccessful
       }));
+
+    const info = details.patientInfo;
+
     const [configInfo, setConfigInfo] = useState<PatientInfo>(() => {
       return cloneDeep(info);
     });
@@ -213,7 +219,7 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
       dispatch(setConfiguringPatient(true));
       setConfiguring(true);
       const infoToUpdate = { ...configInfo, configured: true };
-      triggerConfigurePatient(infoToUpdate, medInfos);
+      triggerStorePatientBaseline(infoToUpdate, medInfos);
     };
 
     useEffect(() => {
@@ -224,6 +230,7 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
             type: "success"
           });
           dispatch(setConfigurationSuccessful(false));
+          setEditDetails(false);
         } else {
           toast.show(i18n.t("UnexpectedError"), {
             type: "danger"
@@ -235,7 +242,8 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
       configuringPatient,
       configurationSuccessful,
       toast,
-      dispatch
+      dispatch,
+      setEditDetails
     ]);
 
     return (
@@ -414,13 +422,22 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
           />
         </ScrollView>
 
-        {/* Proceed button */}
-        <AuthButton
-          buttonTitle={i18n.t("Patient_Configuration.Proceed")}
-          onPress={onProceedPress}
-          inputValid={allInputValid && !configuringPatient}
-          noTextTransform
-        />
+        {/* Patient has been configured - editing patient's details should allow cancelling */}
+        {editDetails ? (
+          <SaveAndCancelButtons
+            onPressSave={onProceedPress}
+            onPressCancel={() => setEditDetails(false)}
+            validToSave={allInputValid && !configuring}
+          />
+        ) : (
+          // Patient hasn't been configured - not allowed to proceed without configuration
+          <AuthButton
+            buttonTitle={i18n.t("Patient_Configuration.Proceed")}
+            onPress={onProceedPress}
+            inputValid={allInputValid && !configuring}
+            noTextTransform
+          />
+        )}
 
         {/* Medication configuration form in a pop-up modal */}
         <View style={styles.modalView}>

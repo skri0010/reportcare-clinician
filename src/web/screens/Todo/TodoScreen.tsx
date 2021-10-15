@@ -4,7 +4,7 @@ import { MainScreenProps } from "web/navigation/types";
 import { ScreenName, TodoListTabName } from "web/navigation";
 import { View, Modal } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
-import { ScreenWrapper } from "web/screens/ScreenWrapper";
+import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
 import { NavigationContainer } from "@react-navigation/native";
 import { AddTodoScreen } from "./modals/AddTodoScreen";
 import { NoSelectionScreen } from "../Shared/NoSelectionScreen";
@@ -13,15 +13,15 @@ import { TodoDetailsStackNavigator } from "../../navigation/navigators/TodoDetai
 import { LocalTodo } from "rc_agents/model";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { useToast } from "react-native-toast-notifications";
-import {
-  setProcedureSuccessful,
-  setSubmittingTodo,
-  setFetchingTodoDetails,
-  setUpdatedTodo
-} from "ic-redux/actions/agents/actionCreator";
 import { AgentTrigger } from "rc_agents/trigger";
 import { TodosList } from "web/screens/Todo/TodosList";
-import { AdaptiveTwoScreenWrapper } from "../AdaptiveTwoScreenWrapper";
+import { setProcedureSuccessful } from "ic-redux/actions/agents/procedureActionCreator";
+import {
+  setFetchingTodoDetails,
+  setSubmittingTodo,
+  setUpdatedTodo
+} from "ic-redux/actions/agents/todoActionCreator";
+import { AdaptiveTwoScreenWrapper } from "components/Wrappers/AdaptiveTwoScreenWrapper";
 
 // Determines if the add button is needed in the header of left tab
 function checkNeedAddButton(tabName: TodoListTabName) {
@@ -46,13 +46,13 @@ export const TodoScreen: FC<MainScreenProps[ScreenName.TODO]> = ({
     submittingTodo
   } = select((state: RootState) => ({
     colors: state.settings.colors,
-    todoDetails: state.agents.todoDetails,
-    fetchingTodoDetails: state.agents.fetchingTodoDetails,
+    todoDetails: state.todos.todoDetails,
+    fetchingTodoDetails: state.todos.fetchingTodoDetails,
     // Used to detect completion of updateTodo procedure
-    procedureOngoing: state.agents.procedureOngoing,
-    procedureSuccessful: state.agents.procedureSuccessful,
-    updatedTodo: state.agents.updatedTodo,
-    submittingTodo: state.agents.submittingTodo
+    procedureOngoing: state.procedures.procedureOngoing,
+    procedureSuccessful: state.procedures.procedureSuccessful,
+    updatedTodo: state.todos.updatedTodo,
+    submittingTodo: state.todos.submittingTodo
   }));
 
   const { todoToShow, selectedListTab, selectedStackScreen } = route.params;
@@ -86,12 +86,12 @@ export const TodoScreen: FC<MainScreenProps[ScreenName.TODO]> = ({
   }, [todoDetails]);
 
   // Function to save the selected todo details to be displayed in the right screen
-  function onRowClick(item: LocalTodo) {
+  const onRowClick = (item: LocalTodo): void => {
     dispatch(setFetchingTodoDetails(true));
     if (item.id) {
       AgentTrigger.triggerRetrieveTodoDetails(item.id);
     }
-  }
+  };
 
   // Compares dispatched updatedTodo with current Todo displayed in the TodoDetailsScreen
   useEffect(() => {

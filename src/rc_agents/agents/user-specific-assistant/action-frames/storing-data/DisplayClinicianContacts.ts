@@ -18,7 +18,7 @@ import { store } from "util/useRedux";
 import {
   setClinicianContacts,
   setFetchingClinicianContacts
-} from "ic-redux/actions/agents/actionCreator";
+} from "ic-redux/actions/agents/clinicianActionCreator";
 
 /**
  * Class to represent an activity for display of clinician contacts

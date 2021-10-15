@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { View } from "react-native";
-import { ScreenWrapper } from "web/screens/ScreenWrapper";
+import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
 import { MainScreenProps } from "web/navigation/types";
 import { ScreenName } from "web/navigation";
 import { WelcomeCard } from "./WelcomeCard";

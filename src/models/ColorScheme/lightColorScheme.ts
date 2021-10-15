@@ -12,6 +12,7 @@ export const lightColorScheme: ColorScheme = {
   primaryContrastTextColor: "#ffffff",
   secondaryContrastTextColor: "#e6e6e6",
   selectedTextColor: "#00ffff",
+  consistentTextColor: "#000000",
 
   // Background
   primaryBackgroundColor: "#ffffff",
@@ -40,6 +41,7 @@ export const lightColorScheme: ColorScheme = {
   // Buttons
   primaryButtonColor: "#9e3ce6",
   acceptButtonColor: "#57c081",
+  declineButtonColor: "#DC143C",
   primaryDeactivatedButtonColor: "#d1d1d1",
   primaryWarningButtonColor: "#D11C1C",
   primaryTodoCompleteButtonColor: "#A484FF",
@@ -68,6 +70,17 @@ export const lightColorScheme: ColorScheme = {
   chartPillSelectedColor: "#57c081",
   chartPillUnselectedColor: "#F2F2F2",
   chartPillUnselectedBorderColor: "#d1d1d1",
+  gridLineColor: "#dedede",
+
+  // Scatter plot label
+  labelColor: "#4a4a4f",
+
+  // Toggle Button ColorScheme
+  trueTrackColor: "#81b0ff",
+  falseTrackColor: "#767577",
+  trueThumbColor: "#f5dd4b",
+  falseThumbColor: "#f4f3f4",
+  ios_backgroundColor: "#3e3e3e",
 
   // Others
   riskLevelBackgroundColors: riskLevelBackgroundColors,

@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { TodoCurrentTab } from "web/screens/Todo/tabs/TodoCurrentTab";
 import { TodoCompletedTab } from "web/screens/Todo/tabs/TodoCompletedTab";
@@ -9,6 +9,8 @@ import i18n from "util/language/i18n";
 import { TodoListTabName, TodoListTabParamList } from "web/navigation";
 import { LocalTodo } from "rc_agents/model";
 import { TodoListTabsProps } from "../types";
+import { SearchBarComponent } from "components/Bars/SearchBarComponent";
+import Fuse from "fuse.js";
 
 const Tab = createMaterialTopTabNavigator<TodoListTabParamList>();
 
@@ -29,48 +31,94 @@ export const TodoListTabNavigator: FC<TodoListNavigationStackProps> = ({
   tabPressCompleted,
   setTodoSelected
 }) => {
-  const { colors, fonts } = select((state: RootState) => ({
-    colors: state.settings.colors,
-    fonts: state.settings.fonts
-  }));
+  const { colors, fonts, completedTodos, pendingTodos } = select(
+    (state: RootState) => ({
+      colors: state.settings.colors,
+      fonts: state.settings.fonts,
+      completedTodos: state.todos.completedTodos,
+      pendingTodos: state.todos.pendingTodos
+    })
+  );
 
-  // Type check params list. Required because initialParams is insufficient due to Partial<>
-  // Remove eslint check if needed
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const initialParamsList: TodoListTabParamList = {
-    [TodoListTabName.CURRENT]: undefined,
-    [TodoListTabName.COMPLETED]: undefined
+  const [searching, setSearching] = useState<boolean>(false);
+  const [pendingResult, setPendingResult] = useState<LocalTodo[]>([]);
+  const [completedResult, setCompletedResult] = useState<LocalTodo[]>([]);
+
+  const onSearchClick = (searchString: string) => {
+    if (searchString.length === 0) {
+      setSearching(false);
+    } else if (pendingTodos || completedTodos) {
+      setSearching(true);
+      const options = {
+        includeScore: true,
+        keys: ["patientName"]
+      };
+
+      if (pendingTodos) {
+        const fuse = new Fuse(pendingTodos, options);
+        const result = fuse.search(searchString);
+        const searchPendingResults: LocalTodo[] = [];
+        result.forEach((item) => searchPendingResults.push(item.item));
+        setPendingResult(searchPendingResults);
+      }
+
+      if (completedTodos) {
+        const fuse = new Fuse(completedTodos, options);
+        const result = fuse.search(searchString);
+        const searchCompletedResults: LocalTodo[] = [];
+        result.forEach((item) => searchCompletedResults.push(item.item));
+        setCompletedResult(searchCompletedResults);
+      }
+    }
   };
 
   return (
-    <Tab.Navigator
-      initialRouteName={selectedTab || TodoListTabName.CURRENT}
-      screenOptions={getTopTabBarOptions({ colors: colors, fonts: fonts })}
-    >
-      {/* Current todos list */}
-      <Tab.Screen
-        name={TodoListTabName.CURRENT}
-        options={{ title: i18n.t("Todo.Current") }}
-        listeners={{
-          tabPress: tabPressCurrent
+    <>
+      <SearchBarComponent
+        onUserInput={(searchString) => onSearchClick(searchString)}
+        onSearchClick={(searchString) => onSearchClick(searchString)}
+        containerStyle={{
+          backgroundColor: colors.primaryContrastTextColor
         }}
+        placeholder={i18n.t("Todo.SearchBarPlaceholder")}
+      />
+      <Tab.Navigator
+        initialRouteName={selectedTab || TodoListTabName.CURRENT}
+        screenOptions={getTopTabBarOptions({ colors: colors, fonts: fonts })}
       >
-        {(props: TodoListTabsProps.CurrentTabProps) => (
-          <TodoCurrentTab {...props} setTodoSelected={setTodoSelected} />
-        )}
-      </Tab.Screen>
-      {/* Completed todos list */}
-      <Tab.Screen
-        name={TodoListTabName.COMPLETED}
-        options={{ title: i18n.t("Todo.Completed") }}
-        listeners={{
-          tabPress: tabPressCompleted
-        }}
-      >
-        {(props: TodoListTabsProps.CompletedTabProps) => (
-          <TodoCompletedTab {...props} setTodoSelected={setTodoSelected} />
-        )}
-      </Tab.Screen>
-    </Tab.Navigator>
+        {/* Current todos list */}
+        <Tab.Screen
+          name={TodoListTabName.CURRENT}
+          options={{ title: i18n.t("Todo.Current") }}
+          listeners={{
+            tabPress: tabPressCurrent
+          }}
+        >
+          {(props: TodoListTabsProps.CurrentTabProps) => (
+            <TodoCurrentTab
+              {...props}
+              setTodoSelected={setTodoSelected}
+              currentTodos={searching ? pendingResult : pendingTodos}
+            />
+          )}
+        </Tab.Screen>
+        {/* Completed todos list */}
+        <Tab.Screen
+          name={TodoListTabName.COMPLETED}
+          options={{ title: i18n.t("Todo.Completed") }}
+          listeners={{
+            tabPress: tabPressCompleted
+          }}
+        >
+          {(props: TodoListTabsProps.CompletedTabProps) => (
+            <TodoCompletedTab
+              {...props}
+              setTodoSelected={setTodoSelected}
+              completedTodos={searching ? completedResult : completedTodos}
+            />
+          )}
+        </Tab.Screen>
+      </Tab.Navigator>
+    </>
   );
 };

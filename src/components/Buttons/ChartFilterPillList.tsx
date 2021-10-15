@@ -1,16 +1,16 @@
 import React, { FC } from "react";
 import { View, FlatList } from "react-native";
-import { ms, ScaledSheet } from "react-native-size-matters";
+import { ScaledSheet } from "react-native-size-matters";
 import { select, RootState, useDispatch } from "util/useRedux";
-import { setChartFilters } from "ic-redux/actions/agents/actionCreator";
+import { setChartFilters } from "ic-redux/actions/agents/filterActionCreator";
 import { ChartFilter, ChartViewTypes } from "models/ChartViewTypes";
 import { ChartFilterPill } from "./ChartFilterPill";
-import { H4 } from "components/Text";
+import { H6 } from "components/Text";
 import i18n from "util/language/i18n";
 
 export const ChartFilterPillList: FC = () => {
   const { chartFilter } = select((state: RootState) => ({
-    chartFilter: state.agents.chartFilters
+    chartFilter: state.filters.chartFilters
   }));
 
   const dispatch = useDispatch();
@@ -31,10 +31,9 @@ export const ChartFilterPillList: FC = () => {
   return (
     <View style={styles.container}>
       {/* View By text */}
-      <H4
-        text={i18n.t("Parameter_Graphs.ViewBy")}
-        style={{ minWidth: ms(50) }}
-      />
+      <View style={styles.textContainer}>
+        <H6 text={i18n.t("Parameter_Graphs.ViewBy")} style={styles.text} />
+      </View>
       {/* Risk filter pill list */}
       <FlatList
         contentContainerStyle={[styles.listContainer]}
@@ -57,6 +56,12 @@ const styles = ScaledSheet.create({
   container: {
     flexDirection: "row",
     marginTop: "10@ms"
+  },
+  textContainer: {
+    justifyContent: "center"
+  },
+  text: {
+    paddingBottom: "4@ms"
   },
   listContainer: {
     flexDirection: "row",

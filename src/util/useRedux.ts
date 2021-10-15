@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-restricted-imports
-export { store } from "ic-redux/store";
+export { store, persistor } from "ic-redux/store";
 
 // eslint-disable-next-line no-restricted-imports
 export type { RootState } from "ic-redux/store";

@@ -1,8 +1,7 @@
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import { FlatList, View } from "react-native";
-import { ScaledSheet } from "react-native-size-matters";
 import { RootState, select } from "util/useRedux";
-import { RowButton } from "components/Buttons/TextButton";
+import { RowButton } from "components/Buttons/RowButton";
 import { MedInput, PatientDetails } from "rc_agents/model";
 import { MedInfoRow } from "./MedInfoRow";
 import { H5 } from "components/Text";

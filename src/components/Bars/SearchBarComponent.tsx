@@ -14,7 +14,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 // Interface for Search bar component props
 interface SearchBarComponentProps {
   onUserInput: (newValue: string) => void;
-  onSearchClick?: () => void;
+  onSearchClick: (searchString: string) => void;
   placeholder?: string;
   containerStyle?: {
     backgroundColor?: string;
@@ -27,6 +27,7 @@ interface SearchBarComponentProps {
 export const SearchBarComponent: FC<SearchBarComponentProps> = ({
   onUserInput,
   onSearchClick,
+
   placeholder,
   containerStyle
 }) => {
@@ -57,7 +58,13 @@ export const SearchBarComponent: FC<SearchBarComponentProps> = ({
   // JH-TODO: Replace placeholder with i18n
   return (
     <View style={{ backgroundColor: colors.primaryBackgroundColor }}>
-      <View style={[styles.container, searchBarContainerStyle]}>
+      <View
+        style={[
+          styles.container,
+          searchBarContainerStyle,
+          { backgroundColor: colors.primaryBackgroundColor }
+        ]}
+      >
         <TextInput
           autoCorrect={false}
           onChangeText={onChangeText}
@@ -66,7 +73,11 @@ export const SearchBarComponent: FC<SearchBarComponentProps> = ({
           style={[
             styles.textField,
             searchBarTextStyle,
-            { fontSize: fonts.h4Size, paddingHorizontal: ms(5) },
+            {
+              fontSize: fonts.h4Size,
+              paddingHorizontal: ms(5),
+              backgroundColor: colors.primaryBackgroundColor
+            },
             Platform.select({
               android: {},
               ios: {},
@@ -76,10 +87,17 @@ export const SearchBarComponent: FC<SearchBarComponentProps> = ({
             } as any)
           ]}
         />
-        <TouchableOpacity onPress={onSearchClick} style={styles.button}>
+        <TouchableOpacity
+          onPress={() => onSearchClick(input)}
+          style={styles.button}
+        >
           <Icon
             name="magnify"
-            style={[searchBarTextStyle, { fontSize: fonts.h4Size }]}
+            style={[
+              searchBarTextStyle,
+              { fontSize: fonts.h4Size },
+              { backgroundColor: colors.primaryBackgroundColor }
+            ]}
           />
         </TouchableOpacity>
       </View>

@@ -2,8 +2,9 @@ import { H4, H5 } from "components/Text";
 import React, { FC } from "react";
 import { ms } from "react-native-size-matters";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { CardWrapper } from "web/screens/Home/CardWrapper";
+import { CardWrapper } from "components/Wrappers/CardWrapper";
 import i18n from "util/language/i18n";
+import { RootState, select } from "util/useRedux";
 
 interface BloodPressureCardProps {
   bloodPressure: string;
@@ -16,11 +17,17 @@ export const BloodPressureCard: FC<BloodPressureCardProps> = ({
   maxHeight,
   minHeight
 }) => {
+  const { colors } = select((state: RootState) => ({
+    colors: state.settings.colors
+  }));
   const iconSize: number = 50;
-
   return (
     <CardWrapper flex={1} minHeight={minHeight} maxHeight={maxHeight}>
-      <Icon name="plus-outline" size={iconSize} />
+      <Icon
+        name="plus-outline"
+        size={iconSize}
+        style={{ color: colors.primaryIconColor }}
+      />
       <H5
         text={i18n.t("Patient_Overview.BloodPressure")}
         style={{ paddingLeft: ms(5), paddingBottom: ms(5), fontWeight: "bold" }}

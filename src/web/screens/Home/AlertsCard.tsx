@@ -4,13 +4,13 @@ import { RiskLevel } from "models/RiskLevel";
 import { View } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { AlertButton } from "components/Buttons/AlertButton";
-import { CardWrapper } from "./CardWrapper";
+import { CardWrapper } from "components/Wrappers/CardWrapper";
 import i18n from "util/language/i18n";
 import { FetchAlertsMode, RiskFilter } from "rc_agents/model";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
-import { setAlertRiskFilters } from "ic-redux/actions/agents/actionCreator";
 import { isMobile } from "util/device";
 import { AgentTrigger } from "rc_agents/trigger";
+import { setAlertRiskFilters } from "ic-redux/actions/agents/filterActionCreator";
 
 interface AlertsCardProps {
   flex?: number;
@@ -25,8 +25,8 @@ export const AlertsCard: FC<AlertsCardProps> = ({
 }) => {
   const { pendingAlertCount, fetchingPendingAlerts } = select(
     (state: RootState) => ({
-      pendingAlertCount: state.agents.pendingAlertCount,
-      fetchingPendingAlerts: state.agents.fetchingPendingAlerts
+      pendingAlertCount: state.alerts.pendingAlertCount,
+      fetchingPendingAlerts: state.alerts.fetchingPendingAlerts
     })
   );
 

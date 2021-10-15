@@ -9,7 +9,6 @@ import {
 import { ProcedureConst } from "agents-framework/Enums";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
-  setRetryLaterTimeout,
   ActionFrameIDs,
   AppAttributes,
   BeliefKeys,
@@ -21,20 +20,26 @@ import {
   listActivityInfosByPatientID,
   listReportSymptomsByPatientID,
   listReportVitalsByPatientID,
-  listMedicationInfosByPatientID
+  listMedicationInfosByPatientID,
+  listUploadedClinicianRecordsByPatientID,
+  PresignedUrlRecordType
 } from "aws";
 import {
   ActivityInfo,
+  ClinicianRecord,
   MedicationInfo,
+  ModelSortDirection,
   PatientInfo,
   ReportSymptom,
   ReportVitals
 } from "aws/API";
 import { LocalStorage } from "rc_agents/storage";
-import { setFetchingPatientDetails } from "ic-redux/actions/agents/actionCreator";
 import { store } from "util/useRedux";
+import { setFetchingPatientDetails } from "ic-redux/actions/agents/patientActionCreator";
+import { sortIcdCrtRecordsByDescendingDateTime } from "util/utilityFunctions";
+
 /**
- * Class to represent an activity for retrieving details of a specific patient.
+ * Represents the activity for retrieving details of a specific patient.
  * This happens in Procedure HF Outcome Trends (HF-OTP-II).
  */
 class RetrievePatientDetails extends Activity {
@@ -43,8 +48,8 @@ class RetrievePatientDetails extends Activity {
   }
 
   /**
-   * Perform this activity
-   * @param {Agent} agent - context of the agent
+   * Performs the activity
+   * @param {Agent} agent current agent
    */
   async doActivity(agent: Agent): Promise<void> {
     // Reset preconditions
@@ -65,14 +70,14 @@ class RetrievePatientDetails extends Activity {
 
       if (patientInfo) {
         const patientId = patientInfo.patientID;
-        const patientDetails: PatientDetails = {
+        let patientDetails: PatientDetails = {
           patientInfo: patientInfo,
           activityInfos: {},
           symptomReports: {},
           vitalsReports: {},
           medicationInfo: [],
-          medicalRecords: {},
-          icdCrtRecords: {}
+          medicalRecords: [],
+          icdCrtRecords: []
         };
         let patientDetailsRetrieved = false;
 
@@ -93,6 +98,23 @@ class RetrievePatientDetails extends Activity {
             patientID: patientId
           });
 
+          const medicalRecordType: PresignedUrlRecordType = "Medical";
+          const medicalRecordsQuery =
+            await listUploadedClinicianRecordsByPatientID({
+              patientID: patientId,
+              filter: { type: { eq: medicalRecordType } },
+              sortDirection: ModelSortDirection.DESC
+            });
+
+          const icdCrtRecordType: PresignedUrlRecordType = "IcdCrt";
+          const icdCrtRecordsQuery =
+            await listUploadedClinicianRecordsByPatientID({
+              patientID: patientId,
+              filter: { type: { eq: icdCrtRecordType } },
+              sortDirection: ModelSortDirection.DESC
+            });
+
+          // Store activity infos in patient details
           if (activityInfoQuery.data.listActivityInfosByPatientID?.items) {
             const infos =
               activityInfoQuery.data.listActivityInfosByPatientID.items;
@@ -162,6 +184,30 @@ class RetrievePatientDetails extends Activity {
               }
             });
           }
+          // Store medical records in patient details
+          if (
+            medicalRecordsQuery.data.listUploadedClinicianRecordsByPatientID
+              ?.items &&
+            medicalRecordsQuery.data.listUploadedClinicianRecordsByPatientID
+              ?.items.length > 0
+          ) {
+            patientDetails.medicalRecords = medicalRecordsQuery.data
+              .listUploadedClinicianRecordsByPatientID
+              .items as ClinicianRecord[];
+          }
+
+          // Store ICD/CRT records in patient details
+          if (
+            icdCrtRecordsQuery.data.listUploadedClinicianRecordsByPatientID
+              ?.items &&
+            icdCrtRecordsQuery.data.listUploadedClinicianRecordsByPatientID
+              ?.items.length > 0
+          ) {
+            patientDetails.icdCrtRecords = icdCrtRecordsQuery.data
+              .listUploadedClinicianRecordsByPatientID
+              .items as ClinicianRecord[];
+          }
+
           // Save retrieved patient
           await LocalStorage.setPatientDetails(patientDetails);
           patientDetailsRetrieved = true;
@@ -187,6 +233,16 @@ class RetrievePatientDetails extends Activity {
 
           if (localPatientDetails?.vitalsReports) {
             patientDetails.vitalsReports = localPatientDetails.vitalsReports;
+          }
+          if (localPatientDetails) {
+            // Sorts ICD/CRT records in descending order of dateTime
+            localPatientDetails.icdCrtRecords =
+              sortIcdCrtRecordsByDescendingDateTime(
+                localPatientDetails.icdCrtRecords
+              );
+
+            patientDetails = localPatientDetails;
+            patientDetailsRetrieved = true;
           }
         }
 
@@ -225,23 +281,6 @@ class RetrievePatientDetails extends Activity {
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
-      // Set to retry later
-      setRetryLaterTimeout(() => {
-        agent.addBelief(
-          new Belief(
-            BeliefKeys.PATIENT,
-            PatientAttributes.RETRIEVE_PATIENT_DETAILS,
-            true
-          )
-        );
-        agentAPI.addFact(
-          new Belief(
-            BeliefKeys.PROCEDURE,
-            ProcedureAttributes.HF_OTP_II,
-            ProcedureConst.ACTIVE
-          )
-        );
-      });
 
       // Update Facts
       // End the procedure

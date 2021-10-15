@@ -4,6 +4,7 @@ import { ScaledSheet } from "react-native-size-matters";
 import { ClinicianRowBase } from "./ClinicianRowBase";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { ClinicianInfo } from "aws/API";
+import i18n from "util/language/i18n";
 
 export interface ClinicanContactRowProps {
   generalDetails: ClinicianInfo;
@@ -20,11 +21,12 @@ export const ClinicianContactRow: FC<ClinicanContactRowProps> = ({
 }) => {
   return (
     <View style={{ flexWrap: "wrap" }}>
-      {/* TODO-JH: i18n translation */}
       {/* TODO-JH: Tick for sent */}
       <ClinicianRowBase
         title={generalDetails.name}
-        subtitleOne={{ value: generalDetails.role }}
+        subtitleOne={{
+          value: i18n.t(`Auth_Registration.${generalDetails.role}`)
+        }}
         subtitleTwo={{ value: generalDetails.hospitalName }}
         onRowPress={onRowPress}
       >

@@ -7,3 +7,4 @@ export enum LanguageID {
 }
 
 export const defaultLanguage: LanguageID = LanguageID.en;
+export const alternateLanguage: LanguageID = LanguageID.ms;

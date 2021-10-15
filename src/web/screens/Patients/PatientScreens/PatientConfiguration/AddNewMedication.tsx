@@ -11,7 +11,7 @@ import {
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { RootState, select } from "util/useRedux";
 import { MedicationNames, MedInput } from "rc_agents/model";
-import { RowButton } from "components/Buttons/TextButton";
+import { RowButton } from "components/Buttons/RowButton";
 import { Picker } from "@react-native-picker/picker";
 import { Label } from "components/Text/Label";
 import { MedicationInfo } from "./MedicationInfo";

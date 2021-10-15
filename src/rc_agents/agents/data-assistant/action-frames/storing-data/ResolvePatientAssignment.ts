@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import {
   Actionframe,
   Agent,
@@ -32,6 +33,7 @@ import {
   getPatientAssignment
 } from "aws";
 import Auth from "@aws-amplify/auth";
+import { agentNWA } from "rc_agents/agents";
 
 /**
  * Class to represent an activity for resolving patient assignment (APPROVE or REASSIGN) .
@@ -74,6 +76,7 @@ class ResolvePatientAssignment extends Activity {
         else {
           // Append current assignments to resolve to locally stored assignments to resolve
           const data = await LocalStorage.getPatientAssignmentResolutions();
+          console.log("triggered to do later");
           let resolutionList: AsyncStorageType[AsyncStorageKeys.PATIENT_ASSIGNMENTS_RESOLUTIONS];
           // Key exists in AsyncStorage
           if (data) {
@@ -89,8 +92,9 @@ class ResolvePatientAssignment extends Activity {
           // Store updated resolutions
           LocalStorage.setPatientAssignmentResolutions(resolutionList);
 
+          console.log(resolutionList);
           // Trigger request to Communicate to NWA
-          agent.addBelief(
+          agentNWA.addBelief(
             new Belief(
               BeliefKeys.APP,
               AppAttributes.SYNC_PATIENT_ASSIGNMENT_RESOLUTIONS,

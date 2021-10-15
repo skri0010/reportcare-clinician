@@ -1,5 +1,5 @@
 import React from "react";
-import { Platform, Dimensions } from "react-native";
+import { Platform } from "react-native";
 import { RootState, select } from "util/useRedux";
 import { ScaledSheet, ms } from "react-native-size-matters";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -16,8 +16,7 @@ export const ToastProviderComponent: React.FC = ({ children }) => {
   return (
     <ToastProvider
       placement="top"
-      offset={ms(15)}
-      duration={4000}
+      duration={3000}
       successColor="#229c00"
       successIcon={
         <Icon
@@ -45,10 +44,13 @@ export const ToastProviderComponent: React.FC = ({ children }) => {
           style={styles.iconStyle}
         />
       }
-      textStyle={{
-        fontSize: Platform.OS === "web" ? fonts.h4Size : fonts.h5Size,
-        color: colors.primaryContrastTextColor
-      }}
+      textStyle={[
+        styles.titleStyle,
+        {
+          fontSize: Platform.OS === "web" ? fonts.h5Size : fonts.h6Size,
+          color: colors.primaryContrastTextColor
+        }
+      ]}
       style={styles.containerStyle}
     >
       {children}
@@ -58,13 +60,14 @@ export const ToastProviderComponent: React.FC = ({ children }) => {
 
 const styles = ScaledSheet.create({
   containerStyle: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignItems: "center",
     paddingVertical: ms(10),
-    paddingRight: Platform.OS === "web" ? ms(20) : ms(30),
-    borderRadius: ms(5),
-    maxWidth:
-      Platform.OS === "web"
-        ? Dimensions.get("window").width / 4
-        : (Dimensions.get("window").width * 4) / 5
+    borderRadius: ms(5)
   },
-  iconStyle: { marginLeft: ms(5), marginRight: ms(10) }
+  titleStyle: {
+    textAlign: "center"
+  },
+  iconStyle: { marginHorizontal: ms(5) }
 });

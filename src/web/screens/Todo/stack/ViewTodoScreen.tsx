@@ -4,7 +4,7 @@ import { ms, ScaledSheet } from "react-native-size-matters";
 import { TodoDetailsStackProps } from "web/navigation/types";
 import { H2, H3, H4, H5 } from "components/Text";
 import { RootState, select } from "util/useRedux";
-import { ScreenWrapper } from "web/screens/ScreenWrapper";
+import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
 import i18n from "util/language/i18n";
 import { ScreenName, TodoDetailsStackScreenName } from "web/navigation";
 import { getLocalDateTime } from "util/utilityFunctions";
@@ -57,8 +57,7 @@ export const ViewTodoScreen: FC<ViewTodoScreenProps> = ({
               style={[
                 styles.viewButton,
                 {
-                  backgroundColor: colors.primaryContrastTextColor,
-                  borderColor: colors.primaryTextColor
+                  backgroundColor: colors.primaryButtonColor
                 }
               ]}
               onPress={() => {
@@ -72,7 +71,7 @@ export const ViewTodoScreen: FC<ViewTodoScreenProps> = ({
             >
               <H5
                 text={i18n.t("Todo.ViewButton")}
-                style={{ color: colors.primaryTextColor }}
+                style={{ color: colors.primaryContrastTextColor }}
               />
             </TouchableOpacity>
           </View>
@@ -163,7 +162,6 @@ const styles = ScaledSheet.create({
   viewButton: {
     width: "70@ms",
     height: "20@ms",
-    borderWidth: "1@ms",
     borderRadius: "5@ms",
     justifyContent: "center",
     textAlign: "center",

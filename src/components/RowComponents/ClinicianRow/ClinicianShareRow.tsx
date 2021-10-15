@@ -5,6 +5,7 @@ import { ClinicianRowBase } from "./ClinicianRowBase";
 import { select, RootState } from "util/useRedux";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { ClinicianInfo } from "aws/API";
+import i18n from "util/language/i18n";
 
 export interface ClinicanShareRowProps {
   generalDetails: ClinicianInfo;
@@ -39,11 +40,12 @@ export const ClinicianShareRow: FC<ClinicanShareRowProps> = ({
   };
   return (
     <View>
-      {/* TODO-JH: i18n translation */}
       {/* TODO-JH: Tick for sent */}
       <ClinicianRowBase
         title={generalDetails.name}
-        subtitleOne={{ value: generalDetails.role }}
+        subtitleOne={{
+          value: i18n.t(`Auth_Registration.${generalDetails.role}`)
+        }}
         subtitleTwo={{ value: generalDetails.hospitalName }}
         onRowPress={onRowPress}
       >

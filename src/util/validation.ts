@@ -1,7 +1,7 @@
 // Functions for validating authentication inputs
 
 import { Hospital, NYHAClass, MedicationNames } from "rc_agents/model";
-import { mockMedDosages, mockMedPrescriptions } from "mock/mockMedDosages";
+import { mockMedPrescriptions } from "mock/mockMedDosages";
 
 // Checks that username has 3 to 16 characters
 export const validateUsername = (username: string): boolean => {

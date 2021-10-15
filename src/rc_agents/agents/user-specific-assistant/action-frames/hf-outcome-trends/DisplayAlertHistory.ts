@@ -16,11 +16,11 @@ import {
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import { AlertInfo } from "rc_agents/model";
 import { store } from "util/useRedux";
+import { sortAlertInfoByDescendingDateTime } from "util/utilityFunctions";
 import {
   setAlertHistory,
   setFetchingPatientAlertHistory
-} from "ic-redux/actions/agents/actionCreator";
-import { sortAlertInfoByDescendingDateTime } from "util/utilityFunctions";
+} from "ic-redux/actions/agents/patientActionCreator";
 
 /**
  * Class to represent the activity for displaying the alert history

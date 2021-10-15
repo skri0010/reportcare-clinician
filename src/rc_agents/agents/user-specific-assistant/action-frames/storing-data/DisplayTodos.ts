@@ -15,13 +15,13 @@ import {
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
 import { store } from "util/useRedux";
+import { LocalTodo } from "rc_agents/model";
+import { setProcedureOngoing } from "ic-redux/actions/agents/procedureActionCreator";
 import {
   setCompletedTodos,
   setPendingTodos,
-  setProcedureOngoing,
   setUpdatedTodo
-} from "ic-redux/actions/agents/actionCreator";
-import { LocalTodo } from "rc_agents/model";
+} from "ic-redux/actions/agents/todoActionCreator";
 
 /**
  * Class to represent an activity for displaying Todos.
@@ -55,7 +55,7 @@ class DisplayTodos extends Activity {
 
     if (updatedTodo) {
       // Removes previous Todo from its existing list and adds it to the front of updated list
-      const currentAgentsState = store.getState().agents;
+      const currentAgentsState = store.getState().todos;
       let currentPendingTodos = currentAgentsState.pendingTodos;
       let currentCompletedTodos = currentAgentsState.completedTodos;
 

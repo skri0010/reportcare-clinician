@@ -20,8 +20,8 @@ import { LocalStorage } from "rc_agents/storage";
 import { PatientAssignmentStatus } from "rc_agents/model";
 import { listPendingPatientAssignments } from "aws";
 import { PatientAssignment } from "aws/API";
-import { setFetchingPendingPatientAssignments } from "ic-redux/actions/agents/actionCreator";
 import { store } from "util/useRedux";
+import { setFetchingPendingPatientAssignments } from "ic-redux/actions/agents/patientAssignmentActionCreator";
 
 /**
  * Class to represent an activity for retrieving pending patient assignments.
