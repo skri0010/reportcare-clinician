@@ -1,7 +1,5 @@
 import { Belief } from "agents-framework";
 import { af_DisplayPatientDetails } from "./action-frames/hf-outcome-trends/DisplayPatientDetails";
-import { af_RetrieveRole } from "./action-frames/hf-outcome-trends/RetrieveRole";
-import { af_RequestRetrievePatients } from "./action-frames/hf-outcome-trends/RequestRetrievePatients";
 import { af_DisplayAlerts } from "./action-frames/triage-alert-hf-clinic/DisplayAlerts";
 import { af_DisplayPendingPatientAssignments } from "./action-frames/storing-data/DisplayPendingPatientAssignments";
 import { af_DisplayTodoDetails } from "./action-frames/storing-data/DisplayTodoDetails";
@@ -26,8 +24,6 @@ const agentUXSA = new ClinicianAgent(
   AgentIDs.UXSA,
   [
     // HF-OTP-I
-    af_RetrieveRole,
-    af_RequestRetrievePatients,
     af_DisplayPatientsByFilter,
 
     // HF-OTP-II

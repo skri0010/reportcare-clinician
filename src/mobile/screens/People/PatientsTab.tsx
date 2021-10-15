@@ -5,13 +5,12 @@ import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { ScaledSheet } from "react-native-size-matters";
 import { PatientDetailsRow } from "components/RowComponents/PatientRows/PatientDetailsRow";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
-import { agentDTA, agentUXSA } from "rc_agents/agents";
+import { agentDTA } from "rc_agents/agents";
 import { Belief } from "agents-framework";
 import { ProcedureConst } from "agents-framework/Enums";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
   BeliefKeys,
-  ClinicianAttributes,
   PatientAttributes,
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
@@ -19,6 +18,7 @@ import { RootState, select, useDispatch } from "util/useRedux";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { useNetInfo } from "@react-native-community/netinfo";
 import { setProcedureOngoing } from "ic-redux/actions/agents/procedureActionCreator";
+import { AgentTrigger } from "rc_agents/trigger";
 
 export const PatientsTab: FC = () => {
   const { patients, procedureOngoing } = select((state: RootState) => ({
@@ -36,17 +36,7 @@ export const PatientsTab: FC = () => {
   const getPatients = () => {
     // Start of retrieval
     dispatch(setProcedureOngoing(true));
-
-    agentUXSA.addBelief(
-      new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.RETRIEVE_ROLE, true)
-    );
-    agentAPI.addFact(
-      new Belief(
-        BeliefKeys.PROCEDURE,
-        ProcedureAttributes.HF_OTP_I,
-        ProcedureConst.ACTIVE
-      )
-    );
+    AgentTrigger.triggerRetrievePatientsByRole();
   };
 
   // Triggers series of actions to retrieve details specific to a patient.

@@ -268,6 +268,22 @@ export const triggerRetrieveDetailedAlertInfo = (
   );
 };
 
+// HF-OTP-I
+// Triggers RetrievePatientsByRole of DTA
+export const triggerRetrievePatientsByRole = (): void => {
+  agentDTA.addBelief(
+    new Belief(BeliefKeys.PATIENT, PatientAttributes.RETRIEVE_PATIENTS, true)
+  );
+
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PROCEDURE,
+      ProcedureAttributes.HF_OTP_I,
+      ProcedureConst.ACTIVE
+    )
+  );
+};
+
 // HF-OTP-II Triggers retrieval of historical alerts according to patient ID
 export const triggerGetHistoricalAlerts = (patientId: string): void => {
   // Add patient ID as fact

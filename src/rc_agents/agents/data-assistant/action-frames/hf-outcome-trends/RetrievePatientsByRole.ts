@@ -9,7 +9,6 @@ import {
 import { ProcedureConst } from "agents-framework/Enums";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
-  setRetryLaterTimeout,
   BeliefKeys,
   PatientAttributes,
   ClinicianAttributes,
@@ -79,23 +78,6 @@ class RetrievePatientsByRole extends Activity {
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
-      // Set to retry later
-      setRetryLaterTimeout(() => {
-        agent.addBelief(
-          new Belief(
-            BeliefKeys.PATIENT,
-            PatientAttributes.RETRIEVE_PATIENTS,
-            true
-          )
-        );
-        agentAPI.addFact(
-          new Belief(
-            BeliefKeys.PROCEDURE,
-            ProcedureAttributes.HF_OTP_I,
-            ProcedureConst.ACTIVE
-          )
-        );
-      });
 
       // Update Facts
       // End the procedure
@@ -127,7 +109,7 @@ class RetrievePatientsByRole extends Activity {
 
     if (role) {
       // Role exists indicated clinician info has been updated
-      const localClinician = await LocalStorage.getClinician();
+      const localClinician = store.getState().clinicians.clinician;
       if (localClinician) {
         // Device is online: Retrieve and store locally
         if (isOnline) {

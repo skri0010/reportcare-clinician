@@ -5,10 +5,12 @@ import {
   ClinicianProtectedInfo
 } from "aws/API";
 import { AgentIDs, AppAttributes, BeliefKeys } from "./index";
-import { LocalStorage } from "rc_agents/storage";
 import AgentManagement from "agents-framework/management/AgentManagement";
 import { ClinicianAgent } from "./ClinicianAgent";
 import cloneDeep from "lodash/cloneDeep";
+import { store } from "util/useRedux";
+import { setClinician } from "ic-redux/actions/agents/clinicianActionCreator";
+import { LocalStorage } from "rc_agents/storage";
 
 /**
  * Base class for management of active clinician agents.
@@ -37,11 +39,11 @@ export class ClinicianAgentManagement extends AgentManagement {
     let factsSet = false;
     let protectedInfo: ClinicianProtectedInfo | null | undefined;
 
-    // TODO: Get might fail on the first attempt, set to retry every 0.5s
+    // NOTE: Get might fail on the first attempt, set to retry every 0.5s
     const timer = setInterval(async () => {
       try {
-        // Retrieves local clinician
-        const localClinician = await LocalStorage.getClinician();
+        // Retrieves clinician from global state
+        const localClinician = store.getState().clinicians.clinician;
         if (localClinician) {
           // Device is online
           if (this.facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
@@ -51,9 +53,12 @@ export class ClinicianAgentManagement extends AgentManagement {
             if (result.data.getClinicianProtectedInfo) {
               protectedInfo = result.data.getClinicianProtectedInfo;
 
-              // Updates local storage
+              // Updates local clinician's protected info
               localClinician.protectedInfo = protectedInfo;
               await LocalStorage.setClinician(localClinician);
+
+              // Dispatch clinician to global state
+              store.dispatch(setClinician(localClinician));
             }
           } else {
             // Device is offline
@@ -199,8 +204,8 @@ export class ClinicianAgentManagement extends AgentManagement {
    * @param localClinician
    */
   async updateProtectedInfo(): Promise<void> {
-    // Retrieves locally stored clinician
-    const localClinician = await LocalStorage.getClinician();
+    // Retrieves clinician from global state
+    const localClinician = store.getState().clinicians.clinician;
     if (localClinician) {
       const isOnline = this.facts[BeliefKeys.APP]?.[AppAttributes.ONLINE];
       let protectedInfo: ClinicianProtectedInfo | undefined;
@@ -314,6 +319,9 @@ export class ClinicianAgentManagement extends AgentManagement {
 
         // Updates local storage
         await LocalStorage.setClinician(localClinician);
+
+        // Dispatch clinician to global state
+        store.dispatch(setClinician(localClinician));
       }
     }
   }

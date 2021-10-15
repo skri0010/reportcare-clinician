@@ -2,12 +2,14 @@ import { Agent, Belief, Actionframe, Engine, Fact } from "agents-framework";
 import { getClinicianProtectedInfo } from "aws";
 import { AppAttributes, BeliefKeys } from "./index";
 import { CommonAttributes } from "agents-framework/Enums";
-import { LocalStorage } from "../storage";
 import { ClinicianProtectedInfo } from "aws/API";
 // eslint-disable-next-line no-restricted-imports
 import AgentAPI from "agents-framework/AgentAPI";
 import cloneDeep from "lodash/cloneDeep";
 import { ClinicianAgentAPI } from "./ClinicianAgentAPI";
+import { store } from "util/useRedux";
+import { setClinician } from "ic-redux/actions/agents/clinicianActionCreator";
+import { LocalStorage } from "rc_agents/storage";
 
 /**
  * Class representing the Agent
@@ -108,8 +110,8 @@ export class ClinicianAgent extends Agent {
     let protectedInfo: ClinicianProtectedInfo | null | undefined;
 
     try {
-      // Retrieves local clinician
-      const localClinician = await LocalStorage.getClinician();
+      // Retrieves clinician from global state
+      const localClinician = store.getState().clinicians.clinician;
       if (localClinician) {
         // Device is online
         if (this.agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
@@ -123,6 +125,8 @@ export class ClinicianAgent extends Agent {
             // Updates local storage
             localClinician.protectedInfo = result;
             await LocalStorage.setClinician(localClinician);
+            // Dispatch clinician to global state
+            store.dispatch(setClinician(localClinician));
           }
         } else {
           protectedInfo = localClinician.protectedInfo;

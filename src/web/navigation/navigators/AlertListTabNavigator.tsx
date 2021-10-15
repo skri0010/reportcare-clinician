@@ -19,7 +19,6 @@ import {
 import Fuse from "fuse.js";
 import i18n from "util/language/i18n";
 import { FloatingBottomButton } from "components/Buttons/FloatingBottomButton";
-import { LocalStorage } from "rc_agents/storage";
 
 const Tab = createMaterialTopTabNavigator<AlertListTabParamList>();
 
@@ -29,14 +28,21 @@ export interface AlertRowTabProps {
 }
 
 export const AlertListTabNavigator: FC = () => {
-  const { colors, fonts, completedAlerts, pendingAlerts, viewStableAlerts } =
-    select((state: RootState) => ({
-      colors: state.settings.colors,
-      fonts: state.settings.fonts,
-      completedAlerts: state.alerts.completedAlerts,
-      pendingAlerts: state.alerts.pendingAlerts,
-      viewStableAlerts: state.alerts.viewStableAlerts
-    }));
+  const {
+    colors,
+    fonts,
+    completedAlerts,
+    pendingAlerts,
+    clinician,
+    viewStableAlerts
+  } = select((state: RootState) => ({
+    colors: state.settings.colors,
+    fonts: state.settings.fonts,
+    completedAlerts: state.alerts.completedAlerts,
+    pendingAlerts: state.alerts.pendingAlerts,
+    clinician: state.clinicians.clinician,
+    viewStableAlerts: state.alerts.viewStableAlerts
+  }));
 
   const dispatch = useDispatch();
 
@@ -84,19 +90,13 @@ export const AlertListTabNavigator: FC = () => {
 
   // Checks for clinician's role to determine whether view stable alerts button should be shown
   useEffect(() => {
-    const checkClinicianRole = async () => {
-      const clinician = await LocalStorage.getClinician();
-      if (clinician) {
-        if (
-          clinician.role === Role.EP ||
-          clinician.role === Role.HF_SPECIALIST
-        ) {
-          setShowViewStableAlerts(true);
-        }
-      }
-    };
-    checkClinicianRole();
-  }, []);
+    if (
+      clinician &&
+      (clinician.role === Role.EP || clinician.role === Role.HF_SPECIALIST)
+    ) {
+      setShowViewStableAlerts(true);
+    }
+  }, [clinician]);
 
   // Toggle label of stable alerts button
   useEffect(() => {

@@ -10,10 +10,10 @@ import {
   AppAttributes,
   BeliefKeys
 } from "rc_agents/clinician_framework";
-import { LocalStorage } from "rc_agents/storage";
 import { updateClinicianProtectedInfo } from "aws/TypedAPI/updateMutations";
 import { UpdateClinicianProtectedInfoInput } from "aws/API";
 import { getClinicianProtectedInfo } from "aws/TypedAPI/getQueries";
+import { store } from "util/useRedux";
 
 /**
  * Class to represent the activity for syncing local updates in ClinicianProtectedInfo.
@@ -34,8 +34,8 @@ class SyncProtectedInfo extends Activity {
     await super.doActivity(agent, [rule2]);
 
     try {
-      // Retrieves local clinician
-      const localClinician = await LocalStorage.getClinician();
+      // Retrieves clinician from global state
+      const localClinician = store.getState().clinicians.clinician;
       if (localClinician) {
         if (localClinician.protectedInfo) {
           // Query protectedInfo to get the latest version

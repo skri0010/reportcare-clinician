@@ -56,8 +56,8 @@ class UpdateTodo extends Activity {
 
       const isOnline: boolean = facts[BeliefKeys.APP]?.[AppAttributes.ONLINE];
 
-      // Gets locally stored clinicianId
-      const clinicianId = await LocalStorage.getClinicianID();
+      // Gets clinicianId from global state
+      const clinicianId = store.getState().clinicians.clinician?.clinicianID;
 
       if (todoInput && !todoInput.id) {
         // Todo was created offline and not synced: Triggers CreateTodo

@@ -26,6 +26,7 @@ import {
 } from "rc_agents/model";
 import { updatePatientAssignment } from "aws";
 import { agentNWA } from "rc_agents/agents";
+import { store } from "util/useRedux";
 
 /**
  * Class to represent an activity for resolving patient assignment (APPROVE or REASSIGN) .
@@ -52,8 +53,8 @@ class ResolvePatientAssignment extends Activity {
           PatientAttributes.PATIENT_ASSIGNMENT_RESOLUTION
         ];
 
-      // Get locally stored clinicianId
-      const clinicianId = await LocalStorage.getClinicianID();
+      // Get clinicianId from global state
+      const clinicianId = store.getState().clinicians.clinician?.clinicianID;
 
       if (resolution && clinicianId) {
         // Device is online

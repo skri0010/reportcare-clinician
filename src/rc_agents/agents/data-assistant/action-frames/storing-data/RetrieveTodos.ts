@@ -55,8 +55,8 @@ class RetrieveTodos extends Activity {
     const facts = agentAPI.getFacts();
 
     try {
-      // Gets locally stored clinicianId
-      const clinicianId = await LocalStorage.getClinicianID();
+      // Gets clinicianId from global state
+      const clinicianId = store.getState().clinicians.clinician?.clinicianID;
 
       // Gets TodoStatus from facts
       const todoStatus: TodoStatus =

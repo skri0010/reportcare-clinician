@@ -22,6 +22,7 @@ import { agentDTA, agentNWA } from "rc_agents/agents";
 import { TodoStatus } from "rc_agents/model";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import { ProcedureConst } from "agents-framework/Enums";
+import { store } from "util/useRedux";
 
 /**
  * Class to represent the activity for syncing local creation of new Todos.
@@ -42,8 +43,8 @@ class SyncCreateTodos extends Activity {
     super.doActivity(agent, [rule2]);
 
     try {
-      // Gets locally stored clinicianId
-      const clinicianId = await LocalStorage.getClinicianID();
+      // Gets clinicianId from global state
+      const clinicianId = store.getState().clinicians.clinician?.clinicianID;
 
       // Gets locally stored Todos
       const localTodos = await LocalStorage.getTodos();

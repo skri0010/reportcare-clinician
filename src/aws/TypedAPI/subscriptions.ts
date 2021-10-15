@@ -1,9 +1,9 @@
 import API from "@aws-amplify/api-graphql";
 import { BaseResponse } from "aws";
 import { Observable } from "zen-observable-ts";
-import { LocalStorage } from "rc_agents/storage";
 import { AgentTrigger } from "rc_agents/trigger";
 import { PatientAssignment } from "aws/API";
+import { store } from "util/useRedux";
 
 // Override default subscription otherwise null data will be received
 // Requested fields should be a subset of CreateAlertNotification response fields
@@ -105,7 +105,7 @@ interface onUpdatePatientAssignmentResponse extends BaseResponse {
 
 export const subscribePatientAssignment = async (): Promise<void> => {
   // Subscribe with clinicianID as owner
-  const clinicianID = await LocalStorage.getClinicianID();
+  const clinicianID = store.getState().clinicians.clinician;
 
   if (clinicianID) {
     // Subscribe to created patient assignments

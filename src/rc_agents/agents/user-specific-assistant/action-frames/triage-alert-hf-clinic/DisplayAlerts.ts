@@ -23,7 +23,6 @@ import {
   setPendingAlertCount,
   setPendingAlerts
 } from "ic-redux/actions/agents/alertActionCreator";
-import { LocalStorage } from "rc_agents/storage";
 import { getAlertsCount } from "rc_agents/agents/data-assistant/action-frames/triage-alert-hf-clinic/RetrieveAlerts";
 import { RiskLevel } from "models/RiskLevel";
 import moment from "moment";
@@ -139,8 +138,8 @@ class DisplayAlerts extends Activity {
 export const filterAlertsByRole = async (
   alertInfos: AlertInfo[]
 ): Promise<AlertInfo[]> => {
-  // Retrieve locally stored ClinicianInfo
-  const clinicianInfo = await LocalStorage.getClinician();
+  // Retrieve ClinicianInfo from global state
+  const clinicianInfo = store.getState().clinicians.clinician;
   if (clinicianInfo) {
     switch (clinicianInfo.role) {
       case Role.MO:

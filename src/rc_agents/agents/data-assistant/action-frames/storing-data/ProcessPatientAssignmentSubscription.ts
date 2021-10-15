@@ -14,13 +14,12 @@ import {
   AppAttributes,
   BeliefKeys,
   PatientAttributes,
-  ProcedureAttributes,
-  ClinicianAttributes
+  ProcedureAttributes
 } from "rc_agents/clinician_framework";
 import { LocalStorage } from "rc_agents/storage";
 import { getPatientAssignment } from "aws";
 import { store } from "util/useRedux";
-import { agentNWA, agentUXSA } from "rc_agents/agents";
+import { agentDTA, agentNWA } from "rc_agents/agents";
 import { PatientAssignment } from "aws/API";
 import { PatientAssignmentStatus } from "rc_agents/model";
 import { Auth } from "@aws-amplify/auth";
@@ -49,8 +48,8 @@ class ProcessPatientAssignmentSubscription extends Activity {
           PatientAttributes.PATIENT_ASSIGNMENT_SUBSCRIPTION
         ];
 
-      // Get clinician Id
-      const clinicianId = await LocalStorage.getClinicianID();
+      // Get clinician Id from global state
+      const clinicianId = store.getState().clinicians.clinician?.clinicianID;
 
       if (
         patientAssignmentSubscription &&
@@ -110,10 +109,10 @@ class ProcessPatientAssignmentSubscription extends Activity {
               await Auth.currentAuthenticatedUser({ bypassCache: true })
             );
             // Trigger Retrive Patients By Role
-            agentUXSA.addBelief(
+            agentDTA.addBelief(
               new Belief(
-                BeliefKeys.CLINICIAN,
-                ClinicianAttributes.RETRIEVE_ROLE,
+                BeliefKeys.PATIENT,
+                PatientAttributes.RETRIEVE_PATIENTS,
                 true
               )
             );

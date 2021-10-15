@@ -55,8 +55,8 @@ class CreateTodo extends Activity {
       const todoInput: TodoInput =
         facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.TODO];
 
-      // Gets locally stored clinicianId
-      const clinicianId = await LocalStorage.getClinicianID();
+      // Retrieves clinician from global state
+      const clinicianId = store.getState().clinicians.clinician?.clinicianID;
       let alertTodoUpdate: boolean = false;
 
       if (todoInput && clinicianId) {

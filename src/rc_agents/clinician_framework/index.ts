@@ -38,7 +38,6 @@ export const ActionFrameIDs = {
     UPDATE_ALERT: "UpdateAlert",
 
     // HF-OTP-I: ClinicianInfo and all patients (PatientInfo)
-    REQUEST_RETRIEVE_ROLE: "RequestRetrieveRole",
     RETRIEVE_PATIENTS_BY_ROLE: "RetrievePatientsByRole",
     REQUEST_DISPLAY_PATIENTS: "RequestDisplayPatients",
 
@@ -97,8 +96,6 @@ export const ActionFrameIDs = {
     DISPLAY_REFRESHED_ALERTS: "DisplayRefreshedAlerts",
 
     // HF-OTP-I: ClinicianInfo and all patients (PatientInfo)
-    RETRIEVE_ROLE: "RetrieveRole",
-    REQUEST_RETRIEVE_PATIENTS: "RequestRetrievePatients",
     DISPLAY_PATIENTS_BY_FILTER: "DisplayPatientsByFilter",
 
     // HF-OTP-II: Single patient's details
@@ -213,8 +210,6 @@ export enum ClinicianAttributes {
 
   // HF-OTP-I: ClinicianInfo and all patients (PatientInfo)
   ROLE = "Role",
-  RETRIEVE_ROLE = "RetrieveRole",
-  ROLE_RETRIEVED = "RoleRetrieved",
 
   // SRD-III - Todo Details
   RETRIEVE_TODO_DETAILS = "RetrieveTodoDetails",

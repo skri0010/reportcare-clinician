@@ -7,16 +7,16 @@ import { MedicationCard } from "./AlertDetailsCards/MedicationCard";
 import { HighRiskAlertInfo, Role } from "rc_agents/model";
 import { HighRiskPatientBaselinesCard } from "./AlertDetailsCards/HighRisk/HighRiskPatientBaselinesCard";
 import { IcdCrtCard } from "./AlertDetailsCards/IcdCrtCard";
-import { LocalStorage } from "rc_agents/storage";
 import { HighRiskVitalSignsCard } from "./AlertDetailsCards/HighRisk/HighRiskVitalSignsCard";
 import { HighRiskSymptomsCard } from "./AlertDetailsCards/HighRisk/HighRiskSymptomsCard";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 
 export const HighRiskAlertDetails: FC = () => {
-  const { alertInfo, fetchingIcdCrtRecordContent } = select(
+  const { alertInfo, fetchingIcdCrtRecordContent, clinician } = select(
     (state: RootState) => ({
       alertInfo: state.alerts.alertInfo,
-      fetchingIcdCrtRecordContent: state.patients.fetchingIcdCrtRecordContent
+      fetchingIcdCrtRecordContent: state.patients.fetchingIcdCrtRecordContent,
+      clinician: state.clinicians.clinician
     })
   );
 
@@ -24,16 +24,10 @@ export const HighRiskAlertDetails: FC = () => {
 
   useEffect(() => {
     // Checks for clinician's role to determine whether ICD/CRT record should be shown
-    const checkClinicianRole = async () => {
-      const clinician = await LocalStorage.getClinician();
-      if (clinician) {
-        if (clinician.role === Role.EP) {
-          setViewIcdCrt(true);
-        }
-      }
-    };
-    checkClinicianRole();
-  }, []);
+    if (clinician && clinician.role === Role.EP) {
+      setViewIcdCrt(true);
+    }
+  }, [clinician]);
 
   return (
     <View

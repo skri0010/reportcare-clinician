@@ -2,6 +2,13 @@ import { actionNames } from "ic-redux/actions/actionNames";
 import { createAction } from "typesafe-actions";
 import { ClinicianInfo } from "aws/API";
 
+export const setClinician = createAction(
+  actionNames.SET_CLINICIAN,
+  (clinician: ClinicianInfo | undefined) => ({
+    clinician: clinician
+  })
+)();
+
 export const setClinicianContacts = createAction(
   actionNames.SET_CLINICIAN_CONTACTS,
   (clinicianContacts: ClinicianInfo[]) => ({

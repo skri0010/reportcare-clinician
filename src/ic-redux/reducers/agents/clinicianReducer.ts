@@ -5,12 +5,14 @@ import { ClinicianInfo } from "aws/API";
 
 interface ClinicianState {
   // clinician
+  clinician: ClinicianInfo | undefined;
   clinicianContacts: ClinicianInfo[] | null;
   clinicianSelected: ClinicianInfo | null;
   fetchingClinianContacts: boolean;
 }
 
 const initialState: ClinicianState = {
+  clinician: undefined,
   clinicianContacts: null,
   clinicianSelected: null,
   fetchingClinianContacts: false
@@ -21,6 +23,12 @@ export const clinicianReducer: Reducer<ClinicianState, RootAction> = (
   action
 ) => {
   switch (action.type) {
+    case actionNames.SET_CLINICIAN:
+      return {
+        ...state,
+        clinician: action.payload.clinician
+      };
+
     case actionNames.SET_CLINICIAN_CONTACTS:
       return {
         ...state,

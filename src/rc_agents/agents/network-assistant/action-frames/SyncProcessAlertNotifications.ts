@@ -19,6 +19,7 @@ import { AlertInfo, FetchAlertsMode } from "rc_agents/model";
 import { convertAlertToAlertInfo } from "util/utilityFunctions";
 import { replaceAlertNotifications } from "rc_agents/storage/setItem";
 import { AgentTrigger } from "rc_agents/trigger";
+import { store } from "util/useRedux";
 
 /**
  * Class to represent the activity for processing local alert notifications.
@@ -42,8 +43,8 @@ class SyncProcessAlertNotifications extends Activity {
       // Get locally stored alert notifications
       let alertNotifications = await LocalStorage.getAlertNotifications();
 
-      // Get locally stored clinicianID
-      const clinicianID = await LocalStorage.getClinicianID();
+      // Get lclinicianID from global state
+      const clinicianID = store.getState().clinicians.clinician?.clinicianID;
 
       if (alertNotifications) {
         // Retrieves all patient mappings of clinician

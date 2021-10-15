@@ -34,12 +34,6 @@ export const setUsername = async (
   await AsyncStorage.setItem(AsyncStorageKeys.USERNAME, username);
 };
 
-export const setClinicianID = async (
-  clinicianID: AsyncStorageType[AsyncStorageKeys.CLINICIAN_ID]
-): Promise<void> => {
-  await AsyncStorage.setItem(AsyncStorageKeys.CLINICIAN_ID, clinicianID);
-};
-
 export const setClinician = async (
   clinician: AsyncStorageType[AsyncStorageKeys.CLINICIAN]
 ): Promise<void> => {
