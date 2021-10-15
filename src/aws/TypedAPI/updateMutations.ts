@@ -13,7 +13,9 @@ import {
   Todo,
   UpdateTodoInput,
   PatientAssignment,
-  UpdatePatientAssignmentInput
+  UpdatePatientAssignmentInput,
+  MedicationInfo,
+  UpdateMedicationInfoInput
 } from "aws/API";
 
 // JH-TODO: Check if the return types are correct
@@ -69,6 +71,19 @@ export const updateAlert = async (
     query: mutations.updateAlert,
     variables: { input: input }
   })) as UpdateAlertResponse;
+};
+
+interface UpdateMedicationInfoResponse extends BaseResponse {
+  data: { updateMedicationInfo?: MedicationInfo };
+}
+
+export const updateMedicationInfo = async (
+  input: UpdateMedicationInfoInput
+): Promise<UpdateMedicationInfoResponse> => {
+  return (await API.graphql({
+    query: mutations.updateMedicationInfo,
+    variables: { input: input }
+  })) as UpdateMedicationInfoResponse;
 };
 
 interface UpdateTodoResponse extends BaseResponse {

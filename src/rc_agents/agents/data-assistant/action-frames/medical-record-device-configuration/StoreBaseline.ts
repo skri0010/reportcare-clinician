@@ -15,12 +15,19 @@ import {
   PatientAttributes,
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
-import { getPatientInfo, updatePatientInfo, createMedicationInfo } from "aws";
+import {
+  getPatientInfo,
+  updatePatientInfo,
+  createMedicationInfo,
+  updateMedicationInfo,
+  getMedicationInfo
+} from "aws";
 import {
   PatientInfo,
   UpdatePatientInfoInput,
   CreateMedicationInfoInput,
-  MedicationInfo
+  MedicationInfo,
+  UpdateMedicationInfoInput
 } from "aws/API";
 import { LocalStorage } from "rc_agents/storage";
 import {
@@ -325,23 +332,46 @@ export const updatePatientBaseline = async (
 export const createMedicationConfiguration = async (
   medicationInfo: MedInput
 ): Promise<MedicationInfo | null> => {
-  // Creates medication info to be inserted into DB
-  const medInfoToInsert: CreateMedicationInfoInput = {
-    name: medicationInfo.name,
-    dosage: parseFloat(medicationInfo.dosage),
-    frequency: parseFloat(medicationInfo.frequency),
-    records: JSON.stringify({}),
-    patientID: medicationInfo.patientID,
-    active: true
-  };
+  // Creates medication info to be inserted into DB\
+  if (!medicationInfo.id) {
+    const medInfoToInsert: CreateMedicationInfoInput = {
+      name: medicationInfo.name,
+      dosage: parseFloat(medicationInfo.dosage),
+      frequency: parseFloat(medicationInfo.frequency),
+      records: JSON.stringify({}),
+      patientID: medicationInfo.patientID,
+      active: true
+    };
 
-  // Make API call to create med info and insert into DB
-  const createMedInfoResponse = await createMedicationInfo(medInfoToInsert);
+    // Make API call to create med info and insert into DB
+    const createMedInfoResponse = await createMedicationInfo(medInfoToInsert);
 
-  if (createMedInfoResponse.data.createMedicationInfo) {
-    return createMedInfoResponse.data.createMedicationInfo;
+    if (createMedInfoResponse.data.createMedicationInfo) {
+      return createMedInfoResponse.data.createMedicationInfo;
+    }
+  } else {
+    const medInfoResponse = await getMedicationInfo({ id: medicationInfo.id });
+
+    const medInfo = medInfoResponse.data.getMedicationInfo;
+
+    if (medInfo) {
+      const medInfoToUpdate: UpdateMedicationInfoInput = {
+        id: medicationInfo.id,
+        dosage: parseFloat(medicationInfo.dosage),
+        frequency: parseFloat(medicationInfo.frequency),
+        name: medInfo.name,
+        records: medInfo.records,
+        patientID: medInfo.patientID,
+        active: true,
+        _version: medInfo._version
+      };
+
+      const updateMedInfoResponse = await updateMedicationInfo(medInfoToUpdate);
+      if (updateMedInfoResponse.data.updateMedicationInfo) {
+        return updateMedInfoResponse.data.updateMedicationInfo;
+      }
+    }
   }
-
   return null;
 };
 

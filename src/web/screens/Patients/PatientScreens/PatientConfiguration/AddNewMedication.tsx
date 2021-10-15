@@ -79,12 +79,14 @@ export const AddNewMedication: FC<AddNewMedicationProps> = ({
     >
       {!isAdding ? (
         <View>
+          <Label text="Modifying current dosage" />
           <Label text="Medication Name: " />
           <H6 text={`${configMedInfo.name}`} />
           <MedicationInfo configMedInfo={configMedInfo} isAdding={false} />
         </View>
       ) : (
         <View>
+          <Label text="Adding new medication" />
           <Label text="Select Medication To Add: " />
           <Picker
             style={pickerStyle}

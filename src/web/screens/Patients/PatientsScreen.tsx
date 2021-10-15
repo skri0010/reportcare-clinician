@@ -155,11 +155,6 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
                         setAddIcdCrtRecord={setAddIcdCrtRecord}
                         setEditDetails={setEditDetails}
                       />
-                      <PatientConfigurationScreen
-                        details={patientDetails}
-                        editDetails={editDetails}
-                        setEditDetails={setEditDetails}
-                      />
                     </View>
                   ) : (
                     // Patient is not configured or details are to be updated: Show configuration screen
