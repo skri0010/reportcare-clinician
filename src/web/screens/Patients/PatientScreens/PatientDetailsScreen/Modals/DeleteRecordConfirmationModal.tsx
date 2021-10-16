@@ -87,16 +87,16 @@ export const DeleteRecordConfirmationModal: FC<DeleteRecordConfirmationModalProp
         onRequestClose={onRequestClose}
         pointerEvents={deletingRecord ? "none" : "auto"}
       >
-        <View style={{ flex: 1, alignItems: "center" }}>
+        <View style={styles.contentContainer}>
           {/* Record name */}
           <H3 text={record.title} style={styles.title} />
 
           {/* Warning message */}
           <H6 text={i18n.t("Warnings.DeleteRecord")} style={styles.subtitle} />
 
-          {/* Delete button */}
-          <View style={{ flex: 1, justifyContent: "flex-end" }}>
-            <View style={{ flexDirection: "row", justifyContent: "center" }}>
+          <View style={styles.buttonsContainer}>
+            <View style={styles.buttonsRowContainer}>
+              {/* Delete button */}
               <ModalButton
                 title={i18n.t("Keywords.Delete")}
                 disabled={deletingRecord}
@@ -106,12 +106,12 @@ export const DeleteRecordConfirmationModal: FC<DeleteRecordConfirmationModalProp
                     backgroundColor: deletingRecord
                       ? colors.primaryDeactivatedButtonColor
                       : colors.deleteIconColor,
-                    borderColor: colors.primaryTextColor,
-                    alignSelf: "flex-end"
+                    borderColor: colors.primaryTextColor
                   } as StyleProp<ViewProps>
                 }
                 textStyle={{ color: colors.primaryContrastTextColor }}
               />
+              {/* Cancel button */}
               <ModalButton
                 title={i18n.t("DetailsUpdate.Cancel")}
                 disabled={deletingRecord}
@@ -134,13 +134,9 @@ export const DeleteRecordConfirmationModal: FC<DeleteRecordConfirmationModalProp
   };
 
 const styles = ScaledSheet.create({
-  container: {
-    width: "50%",
-    height: "90%",
-    paddingHorizontal: "40@ms",
-    borderRadius: "10@ms",
-    marginHorizontal: "25%"
-  },
+  contentContainer: { flex: 1, alignItems: "center" },
+  buttonsContainer: { flex: 1, justifyContent: "flex-end" },
+  buttonsRowContainer: { flexDirection: "row", justifyContent: "center" },
   title: {
     paddingTop: "5@ms",
     fontWeight: "bold",
