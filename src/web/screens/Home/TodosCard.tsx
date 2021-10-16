@@ -39,7 +39,7 @@ export const TodosCard: FC<TodosCardProps> = ({ maxHeight, navigation }) => {
   }, [pendingTodos]);
 
   return (
-    <CardWrapper maxHeight={maxHeight} title={i18n.t("Home.Todos")}>
+    <CardWrapper maxHeight={maxHeight} title={i18n.t("Home.Todos")} flex={1}>
       <View style={styles.listContainer}>
         <FlatList
           showsVerticalScrollIndicator={false}

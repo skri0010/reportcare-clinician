@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { View } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
-import { H4 } from "components/Text";
+import { H5 } from "components/Text";
 import { RootState, select } from "util/useRedux";
 import { ScreenName } from "web/navigation";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -67,7 +67,7 @@ export const NoSelectionScreen: FC<NoSelectionScreenProps> = ({
   return (
     <View style={styles.container}>
       {ScreenContent()}
-      <H4 text={subtitle} style={{ marginTop: ms(20) }} />
+      <H5 text={subtitle} style={{ marginTop: ms(20) }} />
     </View>
   );
 };

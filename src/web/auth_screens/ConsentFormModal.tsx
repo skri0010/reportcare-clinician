@@ -5,6 +5,7 @@ import { H1, H3, H4 } from "components/Text";
 import { ScaledSheet } from "react-native-size-matters";
 import { RowButton } from "components/Buttons/RowButton";
 import i18n from "util/language/i18n";
+import { isMobile } from "react-device-detect";
 
 interface ConsentFormModalProps {
   visible: boolean;
@@ -52,7 +53,7 @@ export const ConsentFormModal: FC<ConsentFormModalProps> = ({
           <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator>
             {tempConditions.map((item) => {
               return (
-                <View style={styles.termsContainer}>
+                <View style={styles.termsContainer} key={item.toString()}>
                   <H3 text={`Term of service No. ${item.toString()}`} />
                   <H4
                     text={`This is description for terms of service no.${item.toString()}`}
@@ -99,7 +100,7 @@ const styles = ScaledSheet.create({
     margin: "10@ms"
   },
   container: {
-    width: "50%",
+    width: isMobile ? "90%" : "50%",
     minWidth: "250@ms",
     height: "80%",
     paddingLeft: "15@ms",

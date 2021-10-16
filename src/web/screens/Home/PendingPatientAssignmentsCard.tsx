@@ -58,6 +58,7 @@ export const PendingPatientAssignmentsCard: FC<PendingPatientAssignmentsCardProp
         maxHeight={maxHeight}
         title={i18n.t("Home.PatientAssignments")}
         noChildrenPaddingHorizontal={fetchingPendingPatientAssignments}
+        flex={1}
       >
         {fetchingPendingPatientAssignments ? (
           // Pending patient assignments is being fetched

@@ -1,5 +1,5 @@
 import React, { FC, useState, useEffect } from "react";
-import { View, TouchableOpacity, Image, Dimensions } from "react-native";
+import { View, TouchableOpacity, Image } from "react-native";
 import { Auth } from "@aws-amplify/auth";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { RootState, select, useDispatch } from "util/useRedux";
@@ -16,12 +16,13 @@ import { AsyncStorageKeys } from "rc_agents/storage";
 import { useNetInfo } from "@react-native-community/netinfo";
 import { AuthButton } from "components/Buttons/AuthButton";
 import { TextField } from "components/InputComponents/TextField";
-import { H1, H4, H5 } from "components/Text";
+import { H1, H5 } from "components/Text";
 import { AuthScreenProps } from "web/navigation/types/AuthenticationStackProps";
 import { AuthenticationScreenName } from "web/navigation";
 import { AuthState } from ".";
 import { setProcedureOngoing } from "ic-redux/actions/agents/procedureActionCreator";
 import { AgentTrigger } from "rc_agents/trigger";
+import { isMobile } from "util/device";
 
 export const SignIn: FC<AuthScreenProps[AuthenticationScreenName.SIGN_IN]> = ({
   navigation,
@@ -232,7 +233,7 @@ export const SignIn: FC<AuthScreenProps[AuthenticationScreenName.SIGN_IN]> = ({
 
       {/* Prompt to Register */}
       <View style={styles.footerContainer}>
-        <H4
+        <H5
           text={i18n.t("Auth_SignIn.PromptRegister")}
           style={[footerButtonTextStyle, { color: colors.primaryTextColor }]}
         />
@@ -241,7 +242,7 @@ export const SignIn: FC<AuthScreenProps[AuthenticationScreenName.SIGN_IN]> = ({
             navigation.navigate(AuthenticationScreenName.REGISTRATION)
           }
         >
-          <H4
+          <H5
             text={i18n.t("Auth_SignIn.RedirectToRegister")}
             style={[
               footerButtonTextStyle,
@@ -270,7 +271,7 @@ const styles = ScaledSheet.create({
   },
   contentContainer: {
     alignSelf: "center",
-    width: (Dimensions.get("window").width * 2) / 5
+    width: isMobile ? "80%" : "45%"
   },
   titleContainer: {
     marginTop: "15@ms",
