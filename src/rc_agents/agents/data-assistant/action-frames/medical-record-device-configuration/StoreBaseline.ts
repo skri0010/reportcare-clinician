@@ -360,7 +360,6 @@ export const createMedicationConfiguration = async (
         dosage: parseFloat(medicationInfo.dosage),
         frequency: parseFloat(medicationInfo.frequency),
         name: medInfo.name,
-        records: medInfo.records,
         patientID: medInfo.patientID,
         active: true,
         _version: medInfo._version
