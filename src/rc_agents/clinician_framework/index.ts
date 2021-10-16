@@ -26,6 +26,7 @@ export const ActionFrameIDs = {
     STORE_BASELINE: "StoreBaseline",
     CREATE_MEDICAL_RECORD: "CreateMedicalRecord",
     CREATE_ICDCRT_RECORD: "CreateIcdCrtRecord",
+    DELETE_RECORD: "DeleteRecord",
 
     // AT-CP-I: AlertInfo[]
     RETRIEVE_ALERTS: "RetrieveAlerts",
@@ -260,6 +261,8 @@ export enum PatientAttributes {
   MEDICAL_RECORD_TO_CREATE = "MedicalRecordToCreate",
   CREATE_ICDCRT_RECORD = "CreateIcdCrtRecord",
   ICDCRT_RECORD_TO_CREATE = "IcdCrtRecordToCreate",
+  RECORD_TO_DELETE = "RecordToDelete",
+  DELETE_RECORD = "DeleteRecord",
 
   // HF-OTP-I: ClinicianInfo and all patients (PatientInfo)
   RETRIEVE_PATIENTS = "RetrievePatients",

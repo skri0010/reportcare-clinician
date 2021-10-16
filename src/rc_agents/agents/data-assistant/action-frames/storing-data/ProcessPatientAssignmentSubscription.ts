@@ -14,16 +14,13 @@ import {
   AppAttributes,
   BeliefKeys,
   PatientAttributes,
-  ProcedureAttributes,
-  ClinicianAttributes
+  ProcedureAttributes
 } from "rc_agents/clinician_framework";
 import { LocalStorage } from "rc_agents/storage";
 import { getPatientAssignment } from "aws";
 import { store } from "util/useRedux";
-import { agentNWA, agentUXSA } from "rc_agents/agents";
+import { agentNWA } from "rc_agents/agents";
 import { PatientAssignment } from "aws/API";
-import { PatientAssignmentStatus } from "rc_agents/model";
-import { Auth } from "@aws-amplify/auth";
 import { setPendingPatientAssignments } from "ic-redux/actions/agents/patientAssignmentActionCreator";
 /**
  * Class to represent an activity for processing patient assignment subscription.

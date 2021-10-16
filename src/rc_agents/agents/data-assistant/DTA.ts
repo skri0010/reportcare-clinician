@@ -36,6 +36,7 @@ import { af_StoreBaseline } from "./action-frames/medical-record-device-configur
 import { af_CreateIcdCrtRecord } from "./action-frames/medical-record-device-configuration/CreateIcdCrtRecord";
 import { af_RetrieveIcdCrtRecordContent } from "./action-frames/hf-outcome-trends/RetrieveIcdCrtRecordContent";
 import { af_RequestDisplayIcdCrtRecordContent } from "./action-frames/hf-outcome-trends/RequestDisplayIcdCrtRecordContent";
+import { af_DeleteRecord } from "./action-frames/medical-record-device-configuration/DeleteRecord";
 
 // Initial Beliefs of Agent
 
@@ -52,6 +53,7 @@ const agentDTA = new ClinicianAgent(
     af_StoreBaseline,
     af_CreateMedicalRecord,
     af_CreateIcdCrtRecord,
+    af_DeleteRecord,
 
     // SRD-I
     af_RetrievePendingPatientAssignments,

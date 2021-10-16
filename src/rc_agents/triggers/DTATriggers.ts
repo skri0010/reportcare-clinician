@@ -469,7 +469,7 @@ export const triggerRetrieveMedicalRecordContent = (
   );
 };
 
-// HF-OTP-IV: Triggers CreateIcdCrtRecord of DTA
+// MRDC: Triggers CreateIcdCrtRecord of DTA
 export const triggerCreateIcdCrtRecord = (
   input: ClinicianRecordInput
 ): void => {
@@ -516,6 +516,24 @@ export const triggerRetrieveIcdCrtRecordContent = (
     new Belief(
       BeliefKeys.PROCEDURE,
       ProcedureAttributes.HF_OTP_IV,
+      ProcedureConst.ACTIVE
+    )
+  );
+};
+
+// MRDC: Triggers DeleteRecord of DTA
+export const triggerDeleteRecord = (input: ClinicianRecord): void => {
+  agentAPI.addFact(
+    new Belief(BeliefKeys.PATIENT, PatientAttributes.RECORD_TO_DELETE, input),
+    false
+  );
+  agentDTA.addBelief(
+    new Belief(BeliefKeys.PATIENT, PatientAttributes.DELETE_RECORD, true)
+  );
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PROCEDURE,
+      ProcedureAttributes.MRDC,
       ProcedureConst.ACTIVE
     )
   );

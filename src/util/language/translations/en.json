@@ -341,7 +341,9 @@
   },
   "DetailsUpdate": {
     "Save": "Save",
-    "Cancel": "Cancel"
+    "Cancel": "Cancel",
+    "RecordDeletedSuccessfully": "Successfully deleted",
+    "FailedToDelete": "Failed to delete"
   },
   "UnexpectedError": "An unexpected error has occured",
   "Keywords": {

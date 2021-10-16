@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from "react";
+import React, { FC } from "react";
 import { ScaledSheet } from "react-native-size-matters";
 import { H5, H6 } from "components/Text";
 import { View } from "react-native";

@@ -341,7 +341,9 @@
   },
   "DetailsUpdate": {
     "Save": "Simpan",
-    "Cancel": "Batal"
+    "Cancel": "Batal",
+    "RecordDeletedSuccessfully": "Berjaya padamkan",
+    "FailedToDelete": "Gagal untuk memadam"
   },
   "UnexpectedError": "Ralat yang tidak disangkai telah berlaku",
   "Keywords": {

@@ -1,8 +1,6 @@
 import React from "react";
-import { View, TouchableOpacity } from "react-native";
+import { View } from "react-native";
 import { PatientRowBase } from "./PatientRowBase";
-import MaterialCommunityIcon from "react-native-vector-icons/MaterialCommunityIcons";
-import MaterialIcon from "react-native-vector-icons/MaterialIcons";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { select, RootState } from "util/useRedux";
 import { IconButton, IconType } from "components/Buttons/IconButton";

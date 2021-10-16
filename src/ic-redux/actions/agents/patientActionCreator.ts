@@ -121,3 +121,17 @@ export const setRecordToDelete = createAction(
     recordToDelete: recordToDelete
   })
 )();
+
+export const setDeletingRecord = createAction(
+  actionNames.SET_DELETING_RECORD,
+  (deletingRecord: boolean) => ({
+    deletingRecord: deletingRecord
+  })
+)();
+
+export const setDeleteRecordSuccessful = createAction(
+  actionNames.SET_DELETE_RECORD_SUCCESSFUL,
+  (deleteRecordSuccessful: boolean) => ({
+    deleteRecordSuccessful: deleteRecordSuccessful
+  })
+)();
