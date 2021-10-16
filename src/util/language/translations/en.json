@@ -345,7 +345,11 @@
   },
   "UnexpectedError": "An unexpected error has occured",
   "Keywords": {
-    "remaining": "remaining"
+    "remaining": "remaining",
+    "Delete": "Delete"
+  },
+  "Warnings": {
+    "DeleteRecord": "Deleting records CANNOT BE REVERSED. Records can be deleted up to 2 days from the day they are uploaded. Are you sure you want to proceed?"
   },
   "Filter": {
     "High": "High",

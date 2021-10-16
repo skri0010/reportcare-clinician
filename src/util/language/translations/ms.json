@@ -345,7 +345,11 @@
   },
   "UnexpectedError": "Ralat yang tidak disangkai telah berlaku",
   "Keywords": {
-    "remaining": "yang tinggal"
+    "remaining": "yang tinggal",
+    "Delete": "Hapus"
+  },
+  "Warnings": {
+    "DeleteRecord": "Penghapusan rekod adalah process yang TIDAK BOLEH DIBATALKAN. Rekod boleh dihapus sehingga 2 hari dari hari ia dimuat naik. Adakah anda mahu terus penghapusan?"
   },
   "Filter": {
     "High": "Tinggi",
