@@ -2,7 +2,7 @@ import React, { FC, useEffect, useState } from "react";
 import { StyleProp, View, ViewProps } from "react-native";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { H3, H6 } from "components/Text";
-import { ScaledSheet } from "react-native-size-matters";
+import { ms, ScaledSheet } from "react-native-size-matters";
 import i18n from "util/language/i18n";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import {
@@ -36,7 +36,7 @@ export const DeleteRecordConfirmationModal: FC<DeleteRecordConfirmationModalProp
     const dispatch = useDispatch();
     const toast = useToast();
 
-    // Tracks progress of creation
+    // Tracks progress of deletion
     useEffect(() => {
       // Procedure has been completed
       if (deleting && !deletingRecord) {
@@ -96,21 +96,36 @@ export const DeleteRecordConfirmationModal: FC<DeleteRecordConfirmationModalProp
 
           {/* Delete button */}
           <View style={{ flex: 1, justifyContent: "flex-end" }}>
-            <ModalButton
-              title={i18n.t("Keywords.Delete")}
-              disabled={deletingRecord}
-              onPress={onConfirmDeleteButtonPress}
-              style={
-                {
-                  backgroundColor: deletingRecord
-                    ? colors.primaryDeactivatedButtonColor
-                    : colors.deleteIconColor,
-                  borderColor: colors.primaryTextColor,
-                  alignSelf: "flex-end"
-                } as StyleProp<ViewProps>
-              }
-              textStyle={{ color: colors.primaryContrastTextColor }}
-            />
+            <View style={{ flexDirection: "row", justifyContent: "center" }}>
+              <ModalButton
+                title={i18n.t("Keywords.Delete")}
+                disabled={deletingRecord}
+                onPress={onConfirmDeleteButtonPress}
+                style={
+                  {
+                    backgroundColor: deletingRecord
+                      ? colors.primaryDeactivatedButtonColor
+                      : colors.deleteIconColor,
+                    borderColor: colors.primaryTextColor,
+                    alignSelf: "flex-end"
+                  } as StyleProp<ViewProps>
+                }
+                textStyle={{ color: colors.primaryContrastTextColor }}
+              />
+              <ModalButton
+                title={i18n.t("DetailsUpdate.Cancel")}
+                disabled={deletingRecord}
+                onPress={onRequestClose}
+                style={
+                  {
+                    backgroundColor: colors.primaryWebBackgroundColor,
+                    borderColor: colors.primaryTextColor,
+                    borderWidth: ms(1),
+                    borderRadius: ms(5)
+                  } as StyleProp<ViewProps>
+                }
+              />
+            </View>
           </View>
           {deletingRecord && <LoadingIndicator overlayBackgroundColor />}
         </View>

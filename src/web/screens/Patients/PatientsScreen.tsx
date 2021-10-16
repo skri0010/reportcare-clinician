@@ -11,7 +11,7 @@ import { ScaledSheet } from "react-native-size-matters";
 import { AddMedicalRecordModal } from "./PatientScreens/PatientDetailsScreen/PatientHistoryComponents/AddMedicalRecordModal";
 import { PatientDetailsTabNavigator } from "web/navigation/navigators/PatientDetailsTabNavigator";
 import { MainScreenProps } from "web/navigation/types";
-import { PatientDetailsTabName, ScreenName } from "web/navigation";
+import { ScreenName } from "web/navigation";
 import { PatientsList } from "./PatientsList";
 import { AgentTrigger } from "rc_agents/trigger";
 import { NoSelectionScreen } from "../Shared/NoSelectionScreen";
@@ -28,8 +28,7 @@ import { AddIcdCrtRecordModal } from "./PatientScreens/PatientDetailsScreen/Pati
 import { DeleteRecordConfirmationModal } from "./PatientScreens/PatientDetailsScreen/Modals/DeleteRecordConfirmationModal";
 
 export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
-  route,
-  navigation
+  route
 }) => {
   const { displayPatientId, selectedTab } = route.params;
   const {
