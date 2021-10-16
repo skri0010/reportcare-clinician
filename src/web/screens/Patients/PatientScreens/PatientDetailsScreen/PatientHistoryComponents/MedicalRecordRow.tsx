@@ -12,13 +12,13 @@ import { withinDeleteGracePeriod } from "util/utilityFunctions";
 interface MedicalRecordRowProps {
   medicalRecord: ClinicianRecord;
   onViewMedicalRecord: (medicalRecord: ClinicianRecord) => void;
-  allowView: boolean; // Whether content viewing is allowed (is online)
+  isOnline: boolean; // Whether application is online
 }
 
 export const MedicalRecordRow: FC<MedicalRecordRowProps> = ({
   medicalRecord,
   onViewMedicalRecord,
-  allowView
+  isOnline
 }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
@@ -42,16 +42,19 @@ export const MedicalRecordRow: FC<MedicalRecordRowProps> = ({
 
       {/* Delete button */}
       {withinDeleteGracePeriod(medicalRecord) ? (
-        <DeleteIconButton onPress={onDeleteButtonPress} />
+        <DeleteIconButton
+          onPress={onDeleteButtonPress}
+          allowDelete={isOnline}
+        />
       ) : null}
 
       {/* View button */}
       <RowButton
         onPress={onRowPress}
         title="Patient_History.ViewButton"
-        disabled={!allowView}
+        disabled={!isOnline}
         backgroundColor={
-          allowView ? colors.primaryButtonColor : colors.overlayColor
+          isOnline ? colors.primaryButtonColor : colors.overlayColor
         }
       />
     </View>

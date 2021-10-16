@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from "react";
+import React, { FC } from "react";
 import { ScaledSheet } from "react-native-size-matters";
 import { H5, H6 } from "components/Text";
 import { View } from "react-native";
@@ -15,13 +15,13 @@ import { setRecordToDelete } from "ic-redux/actions/agents/patientActionCreator"
 interface IcdCrtRecordRowProps {
   icdCrtRecord: ClinicianRecord;
   onViewIcdCrtRecord: (IcdCrtRecord: ClinicianRecord) => void;
-  allowView: boolean; // Whether content viewing is allowed (is online)
+  isOnline: boolean; // Whether application is online
 }
 
 export const IcdCrtRecordRow: FC<IcdCrtRecordRowProps> = ({
   icdCrtRecord,
   onViewIcdCrtRecord,
-  allowView
+  isOnline
 }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
@@ -52,16 +52,19 @@ export const IcdCrtRecordRow: FC<IcdCrtRecordRowProps> = ({
       <View style={styles.viewButtonContainer}>
         {/* Delete button */}
         {withinDeleteGracePeriod(icdCrtRecord) ? (
-          <DeleteIconButton onPress={onDeleteButtonPress} />
+          <DeleteIconButton
+            onPress={onDeleteButtonPress}
+            allowDelete={isOnline}
+          />
         ) : null}
 
         {/* View button */}
         <RowButton
           onPress={onViewButtonPress}
           title="Patient_History.ViewButton"
-          disabled={!allowView}
+          disabled={!isOnline}
           backgroundColor={
-            allowView ? colors.primaryButtonColor : colors.overlayColor
+            isOnline ? colors.primaryButtonColor : colors.overlayColor
           }
         />
       </View>

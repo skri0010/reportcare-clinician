@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from "react";
-import { StyleProp, View, ViewProps } from "react-native";
+import { StyleProp, TextProps, View, ViewProps } from "react-native";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { H3, H6 } from "components/Text";
 import { ms, ScaledSheet } from "react-native-size-matters";
@@ -118,11 +118,14 @@ export const DeleteRecordConfirmationModal: FC<DeleteRecordConfirmationModalProp
                 onPress={onRequestClose}
                 style={
                   {
-                    backgroundColor: colors.primaryWebBackgroundColor,
+                    backgroundColor: colors.primaryContrastTextColor,
                     borderColor: colors.primaryTextColor,
                     borderWidth: ms(1),
                     borderRadius: ms(5)
                   } as StyleProp<ViewProps>
+                }
+                textStyle={
+                  { color: colors.consistentTextColor } as StyleProp<TextProps>
                 }
               />
             </View>

@@ -5,9 +5,13 @@ import { IconButton, IconType } from "./IconButton";
 
 interface DeleteIconProps {
   onPress: () => void;
+  allowDelete: boolean;
 }
 
-export const DeleteIconButton: FC<DeleteIconProps> = ({ onPress }) => {
+export const DeleteIconButton: FC<DeleteIconProps> = ({
+  onPress,
+  allowDelete
+}) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
   }));
@@ -16,12 +20,15 @@ export const DeleteIconButton: FC<DeleteIconProps> = ({ onPress }) => {
     <IconButton
       name="trash"
       onPress={onPress}
+      disabled={!allowDelete}
       type={IconType.FONTAWESOME}
       containerStyle={{
         backgroundColor: colors.primaryBackgroundColor,
         paddingRight: ms(5)
       }}
-      iconStyle={{ color: colors.deleteIconColor }}
+      iconStyle={{
+        color: allowDelete ? colors.deleteIconColor : colors.overlayColor
+      }}
     />
   );
 };
