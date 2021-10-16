@@ -14,11 +14,10 @@ import {
   QueryEvent,
   S3Level,
   S3Prefixes,
-  EventResponse,
   VerifiedArgumentsType,
   RecordType
 } from "./types";
-import { prettify } from "./api/shared";
+import { createNewEventResponse, EventResponse, prettify } from "./api/shared";
 
 /* Amplify Params - DO NOT EDIT
 	API_REPORTCARE_GRAPHQLAPIENDPOINTOUTPUT
@@ -31,9 +30,7 @@ Amplify Params - DO NOT EDIT */
 const DELETE_GRACE_PERIOD = 2 * 24 * 60 * 60 * 1000;
 
 export const handler = async (event: ExpectedEvent): Promise<Object> => {
-  let eventResponse: EventResponse = {
-    success: false
-  };
+  let eventResponse = createNewEventResponse();
 
   // Query
   if (event.typeName === "Query") {
@@ -44,9 +41,7 @@ export const handler = async (event: ExpectedEvent): Promise<Object> => {
 };
 
 const handleQuery = async (queryEvent: QueryEvent): Promise<EventResponse> => {
-  let eventResponse: EventResponse = {
-    success: false
-  };
+  let eventResponse = createNewEventResponse();
 
   try {
     // Check field name and arguments
@@ -67,9 +62,13 @@ const handleQuery = async (queryEvent: QueryEvent): Promise<EventResponse> => {
       // Check argument attributes
       if (expectedAttributes) {
         // Check clinician authorised to patient
+        const patientGroups =
+          queryEvent.identity.claims["cognito:groups"] ||
+          queryEvent.identity.claims.groups;
         if (
           queryEvent.identity.username &&
-          queryEvent.identity.claims["cognito:groups"].includes(patientID)
+          patientGroups &&
+          patientGroups.includes(patientID)
         ) {
           // Logging purposes
           console.log(JSON.stringify(queryEvent.arguments, null, 2));
@@ -139,9 +138,7 @@ const handleUpload: (parameters: {
   username: string;
   path: string;
 }) => Promise<EventResponse> = async ({ args, username, path }) => {
-  let eventResponse: EventResponse = {
-    success: false
-  };
+  let eventResponse = createNewEventResponse();
   const { patientID, documentID, recordType, documentTitle } = args;
 
   try {
@@ -170,9 +167,7 @@ const handleDelete: (parameters: {
   args: VerifiedArgumentsType;
   path: string;
 }) => Promise<EventResponse> = async ({ args, path }) => {
-  let eventResponse: EventResponse = {
-    success: false
-  };
+  let eventResponse = createNewEventResponse();
   const { patientID, documentID, recordType, documentTitle } = args;
 
   try {
@@ -201,6 +196,7 @@ const handleDelete: (parameters: {
               _version: _version // Necessary for deletion with ConflictResolution on
             });
             if (deleteMutation.data?.deleteClinicianRecord) {
+              // Successful event response
               eventResponse = {
                 success: true
               };
@@ -223,8 +219,9 @@ const handleDelete: (parameters: {
         );
       }
     }
-    // ClinciianRecord already does not exist
+    // ClincianRecord already does not exist
     else if (!getResult.errors) {
+      // Successful event response
       eventResponse = {
         success: true
       };
@@ -247,9 +244,7 @@ const handleDelete: (parameters: {
 const handleAcknowledge: (parameters: {
   args: VerifiedArgumentsType;
 }) => Promise<EventResponse> = async ({ args }) => {
-  let eventResponse: EventResponse = {
-    success: false
-  };
+  let eventResponse = createNewEventResponse();
   const { patientID, documentID, recordType, documentTitle } = args;
 
   try {
@@ -260,6 +255,7 @@ const handleAcknowledge: (parameters: {
       uploadDateTime: new Date().toISOString()
     });
     if (updateResult.data?.updateClinicianRecord) {
+      // Successful event response
       eventResponse = { success: true };
     } else {
       throw Error(

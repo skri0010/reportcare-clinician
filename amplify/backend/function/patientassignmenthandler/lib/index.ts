@@ -1,8 +1,11 @@
-import { prettify } from "./api/shared";
-import { handleApprovedResolution, handleReassignedResolution } from "./main";
+import { createNewEventResponse, EventResponse, prettify } from "./api/shared";
+import {
+  handleApprovedResolution,
+  handleReassignedResolution,
+  sharePatientAssignment
+} from "./main";
 import { getPatientAssignment, getClinicianInfo } from "./typed-api/queries";
-import { EventResponse, ExpectedEvent, Resolution } from "./types";
-import { createNewEventResponse } from "./utility";
+import { ExpectedEvent, FieldName, Resolution } from "./types";
 
 /* Amplify Params - DO NOT EDIT
 	API_REPORTCARE_GRAPHQLAPIENDPOINTOUTPUT
@@ -16,12 +19,12 @@ export const handler = async (event: ExpectedEvent): Promise<EventResponse> => {
   console.log(prettify(event));
 
   try {
-    // Check event
+    // Handle patient assignment resolution
     if (
       event.typeName === "Query" &&
-      event.fieldName === "handlePatientAssignment"
+      event.fieldName === FieldName.HANDLE_PATIENT_ASSIGNMENT_RESOLUTION
     ) {
-      // Check event variables and credentials
+      // Check event arguments and credentials
       const clinicianID =
         event.identity.claims["cognito:username"] ||
         event.identity.claims.username;
@@ -78,11 +81,44 @@ export const handler = async (event: ExpectedEvent): Promise<EventResponse> => {
             throw Error(`Invalid resolution ${resolution}`);
           }
         } else {
-          throw Error(`${prettify(getResult.errors)}`);
+          throw Error(prettify(getResult.errors));
         }
       } else {
         throw Error(
           `Missing variable. ClinicianID: ${clinicianID} PatientID: ${patientID} Resolution: ${resolution}`
+        );
+      }
+    }
+
+    // Share patient assignment
+    else if (
+      event.typeName === "Query" &&
+      event.fieldName === FieldName.SHARE_PATIENT_ASSIGNMENT
+    ) {
+      // Check event arguments and credentials
+      const clinicianID =
+        event.identity.claims["cognito:username"] ||
+        event.identity.claims.username;
+      const patientsBelongingToClinician =
+        event.identity.claims["cognito:groups"] || event.identity.claims.groups;
+      const { patientID, patientName, shareToClinicianID } = event.arguments;
+
+      if (
+        clinicianID &&
+        patientID &&
+        patientName &&
+        shareToClinicianID &&
+        patientsBelongingToClinician.includes(patientID)
+      ) {
+        eventResponse = await sharePatientAssignment({
+          clinicianID: clinicianID,
+          patientID: patientID,
+          patientName: patientName,
+          shareToClinicianID: shareToClinicianID
+        });
+      } else {
+        throw Error(
+          `Missing variable or patient does belong to source clinician. ClinicianID: ${clinicianID} PatientID: ${patientID} Contains mapping: ${patientsBelongingToClinician}`
         );
       }
     }

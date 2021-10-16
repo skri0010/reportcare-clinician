@@ -11,33 +11,47 @@ export enum Resolution {
 
 export const Pending = "PENDING";
 
-// == Exported types ==
-export interface QueryEvent extends LambdaResolverEvent {
-  typeName: "Query";
-  fieldName: "handlePatientAssignment" | OptionalString;
-  arguments: ArgumentsType;
+export const enum FieldName {
+  HANDLE_PATIENT_ASSIGNMENT_RESOLUTION = "handlePatientAssignmentResolution",
+  SHARE_PATIENT_ASSIGNMENT = "sharePatientAssignment"
 }
+
+// == Query types ==
+interface HandlePatientAssignmentResolutionQuery extends LambdaResolverEvent {
+  typeName: "Query";
+  fieldName: FieldName.HANDLE_PATIENT_ASSIGNMENT_RESOLUTION;
+  arguments: HandlePatientAssignmentResolutionArguments;
+}
+
+interface SharePatientAssignmentQuery extends LambdaResolverEvent {
+  typeName: "Query";
+  fieldName: FieldName.SHARE_PATIENT_ASSIGNMENT;
+  arguments: SharePatientAssignmentArguments;
+}
+
+// == Narrowed query arguments type ==
+type HandlePatientAssignmentResolutionArguments = {
+  patientID: OptionalString;
+  resolution: OptionalString;
+  reassignToClinicianID: OptionalString;
+};
+
+type SharePatientAssignmentArguments = {
+  patientID: OptionalString;
+  patientName: OptionalString;
+  shareToClinicianID: OptionalString;
+};
+
+// == Exported event ==
+export type QueryEvent =
+  | HandlePatientAssignmentResolutionQuery
+  | SharePatientAssignmentQuery;
 
 interface MutationEvent extends LambdaResolverEvent {
   typeName: "Mutation";
 }
 
 export type ExpectedEvent = QueryEvent | MutationEvent;
-
-export enum QueryArgument {
-  patientID = "patientID",
-  resolution = "resolution",
-  reassignToClinicianID = "reassignToClinicianID"
-}
-
-// Query arguments type to be checked
-export type ArgumentsType = { [key in QueryArgument]: string };
-
-// == Others ==
-export interface EventResponse {
-  success: boolean;
-  data?: string;
-}
 
 // == GraphQL ==
 

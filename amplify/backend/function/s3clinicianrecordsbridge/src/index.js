@@ -55,9 +55,7 @@ var handler = function (event) { return __awaiter(void 0, void 0, void 0, functi
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                eventResponse = {
-                    success: false
-                };
+                eventResponse = (0, shared_1.createNewEventResponse)();
                 if (!(event.typeName === "Query")) return [3 /*break*/, 2];
                 return [4 /*yield*/, handleQuery(event)];
             case 1:
@@ -69,13 +67,11 @@ var handler = function (event) { return __awaiter(void 0, void 0, void 0, functi
 }); };
 exports.handler = handler;
 var handleQuery = function (queryEvent) { return __awaiter(void 0, void 0, void 0, function () {
-    var eventResponse, _a, recordType, operation, patientID, documentID, documentTitle, expectedAttributes, path, verifiedArgs, error_1;
+    var eventResponse, _a, recordType, operation, patientID, documentID, documentTitle, expectedAttributes, patientGroups, path, verifiedArgs, error_1;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                eventResponse = {
-                    success: false
-                };
+                eventResponse = (0, shared_1.createNewEventResponse)();
                 _b.label = 1;
             case 1:
                 _b.trys.push([1, 17, , 18]);
@@ -89,8 +85,11 @@ var handleQuery = function (queryEvent) { return __awaiter(void 0, void 0, void 
                     documentID &&
                     documentTitle;
                 if (!expectedAttributes) return [3 /*break*/, 13];
+                patientGroups = queryEvent.identity.claims["cognito:groups"] ||
+                    queryEvent.identity.claims.groups;
                 if (!(queryEvent.identity.username &&
-                    queryEvent.identity.claims["cognito:groups"].includes(patientID))) return [3 /*break*/, 11];
+                    patientGroups &&
+                    patientGroups.includes(patientID))) return [3 /*break*/, 11];
                 // Logging purposes
                 console.log(JSON.stringify(queryEvent.arguments, null, 2));
                 path = types_1.S3Level + "/" + recordType + "/" + patientID + "/" + documentID;
@@ -160,9 +159,7 @@ var handleUpload = function (_a) {
         return __generator(this, function (_c) {
             switch (_c.label) {
                 case 0:
-                    eventResponse = {
-                        success: false
-                    };
+                    eventResponse = (0, shared_1.createNewEventResponse)();
                     patientID = args.patientID, documentID = args.documentID, recordType = args.recordType, documentTitle = args.documentTitle;
                     _c.label = 1;
                 case 1:
@@ -202,9 +199,7 @@ var handleDelete = function (_a) {
         return __generator(this, function (_d) {
             switch (_d.label) {
                 case 0:
-                    eventResponse = {
-                        success: false
-                    };
+                    eventResponse = (0, shared_1.createNewEventResponse)();
                     patientID = args.patientID, documentID = args.documentID, recordType = args.recordType, documentTitle = args.documentTitle;
                     _d.label = 1;
                 case 1:
@@ -234,6 +229,7 @@ var handleDelete = function (_a) {
                 case 4:
                     deleteMutation = _d.sent();
                     if ((_c = deleteMutation.data) === null || _c === void 0 ? void 0 : _c.deleteClinicianRecord) {
+                        // Successful event response
                         eventResponse = {
                             success: true
                         };
@@ -249,6 +245,7 @@ var handleDelete = function (_a) {
                 case 9: return [3 /*break*/, 11];
                 case 10:
                     if (!getResult.errors) {
+                        // Successful event response
                         eventResponse = {
                             success: true
                         };
@@ -276,9 +273,7 @@ var handleAcknowledge = function (_a) {
         return __generator(this, function (_c) {
             switch (_c.label) {
                 case 0:
-                    eventResponse = {
-                        success: false
-                    };
+                    eventResponse = (0, shared_1.createNewEventResponse)();
                     patientID = args.patientID, documentID = args.documentID, recordType = args.recordType, documentTitle = args.documentTitle;
                     _c.label = 1;
                 case 1:
@@ -291,6 +286,7 @@ var handleAcknowledge = function (_a) {
                 case 2:
                     updateResult = _c.sent();
                     if ((_b = updateResult.data) === null || _b === void 0 ? void 0 : _b.updateClinicianRecord) {
+                        // Successful event response
                         eventResponse = { success: true };
                     }
                     else {

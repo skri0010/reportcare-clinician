@@ -19,16 +19,29 @@ export const queryS3ClinicianRecordsBridge = /* GraphQL */ `
     )
   }
 `;
-export const handlePatientAssignment = /* GraphQL */ `
-  query HandlePatientAssignment(
+export const handlePatientAssignmentResolution = /* GraphQL */ `
+  query HandlePatientAssignmentResolution(
     $patientID: String
     $resolution: String
     $reassignToClinicianID: String
   ) {
-    handlePatientAssignment(
+    handlePatientAssignmentResolution(
       patientID: $patientID
       resolution: $resolution
       reassignToClinicianID: $reassignToClinicianID
+    )
+  }
+`;
+export const sharePatientAssignment = /* GraphQL */ `
+  query SharePatientAssignment(
+    $patientID: String
+    $patientName: String
+    $shareToClinicianID: String
+  ) {
+    sharePatientAssignment(
+      patientID: $patientID
+      patientName: $patientName
+      shareToClinicianID: $shareToClinicianID
     )
   }
 `;

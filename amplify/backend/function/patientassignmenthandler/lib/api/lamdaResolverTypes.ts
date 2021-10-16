@@ -26,6 +26,7 @@ type IdentityType = {
 type ClaimsType = {
   sub: OptionalString;
   "cognito:groups": OptionalString[];
+  groups: OptionalString[];
   email_verified: OptionalString;
   algorithm: OptionalString;
   iss: OptionalString;

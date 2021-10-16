@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import {
   Actionframe,
   Agent,
@@ -25,7 +24,7 @@ import {
   PatientAssignmentResolution,
   PatientAssignmentStatus
 } from "rc_agents/model";
-import { handlePatientAssignment } from "aws";
+import { handlePatientAssignmentResolution } from "aws";
 import { agentNWA } from "rc_agents/agents";
 import Auth from "@aws-amplify/auth";
 
@@ -70,7 +69,6 @@ class ResolvePatientAssignment extends Activity {
         else {
           // Append current assignments to resolve to locally stored assignments to resolve
           const data = await LocalStorage.getPatientAssignmentResolutions();
-          console.log("triggered to do later");
           let resolutionList: AsyncStorageType[AsyncStorageKeys.PATIENT_ASSIGNMENTS_RESOLUTIONS];
           // Key exists in AsyncStorage
           if (data) {
@@ -86,7 +84,6 @@ class ResolvePatientAssignment extends Activity {
           // Store updated resolutions
           LocalStorage.setPatientAssignmentResolutions(resolutionList);
 
-          console.log(resolutionList);
           // Trigger request to Communicate to NWA
           agentNWA.addBelief(
             new Belief(
@@ -110,7 +107,7 @@ class ResolvePatientAssignment extends Activity {
 
           if (resolution.resolution === PatientAssignmentStatus.APPROVED) {
             // Refresh access token with new patient
-            Auth.currentAuthenticatedUser({ bypassCache: true });
+            await Auth.currentAuthenticatedUser({ bypassCache: true });
 
             // Trigger agent (self) to retrieve new patients
             agent.addBelief(
@@ -158,15 +155,13 @@ export const resolvePatientAssignment: (params: {
 }) => Promise<boolean> = async ({ resolution, userClinicianID }) => {
   let success = false;
   try {
-    console.log(resolution);
     if (resolution.clinicianID === userClinicianID) {
       // Call Lambda resolver to handle patient assignment
-      const result = await handlePatientAssignment({
+      const result = await handlePatientAssignmentResolution({
         patientID: resolution.patientID,
         resolution: resolution.resolution,
         reassignToClinicianID: resolution.reassignToClinicianID || ""
       });
-      console.log(result);
       if (result.success) {
         success = true;
       } else {

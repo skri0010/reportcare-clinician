@@ -60,9 +60,3 @@ export interface BaseResponse {
 
 export const S3Prefixes = ["IcdCrt", "Medical"];
 export const S3Level = "private";
-
-// == Others ==
-export interface EventResponse {
-  success: boolean;
-  data?: string;
-}

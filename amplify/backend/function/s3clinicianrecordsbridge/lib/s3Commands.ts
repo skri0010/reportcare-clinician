@@ -7,9 +7,8 @@ import {
 } from "@aws-sdk/client-s3";
 import { AWSError, S3 } from "aws-sdk";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { EventResponse } from "./types";
 import { DeleteObjectOutput } from "aws-sdk/clients/s3";
-import { prettify } from "./api/shared";
+import { createNewEventResponse, EventResponse, prettify } from "./api/shared";
 
 // Set the AWS Region.
 const REGION = process.env.REGION!;
@@ -29,9 +28,7 @@ const S3Instance = new S3();
 // Get presigned url for uploading specified object in path
 export const getPresignedUploadUrl: (path: string) => Promise<EventResponse> =
   async (path): Promise<EventResponse> => {
-    let returnObject: EventResponse = {
-      success: false
-    };
+    let eventResponse = createNewEventResponse();
 
     try {
       // Set the bucket parameters
@@ -49,8 +46,9 @@ export const getPresignedUploadUrl: (path: string) => Promise<EventResponse> =
       });
 
       if (signedUrl) {
+        // Successful event response
         console.log(`Created upload presigned url for ${path}`);
-        returnObject = {
+        eventResponse = {
           success: true,
           data: signedUrl
         };
@@ -61,16 +59,14 @@ export const getPresignedUploadUrl: (path: string) => Promise<EventResponse> =
       console.log(`Error: ${error}`);
     }
 
-    return returnObject;
+    return eventResponse;
   };
 
 // Get presigned url for downloading specified object in path
 export const getPresignedDownloadUrl = async (
   path: string
 ): Promise<EventResponse> => {
-  let returnObject: EventResponse = {
-    success: false
-  };
+  let eventResponse = createNewEventResponse();
 
   try {
     // Set the bucket parameters
@@ -88,8 +84,9 @@ export const getPresignedDownloadUrl = async (
     });
 
     if (signedUrl) {
+      // Successful event response
       console.log(`Created download presigned url for ${path}`);
-      returnObject = {
+      eventResponse = {
         success: true,
         data: signedUrl
       };
@@ -100,7 +97,49 @@ export const getPresignedDownloadUrl = async (
     console.log(`Error: ${error}`);
   }
 
-  return returnObject;
+  return eventResponse;
+};
+
+// Delete object
+export const deleteObject: (path: string) => Promise<EventResponse> = async (
+  path
+) => {
+  let eventResponse = createNewEventResponse();
+
+  // Declare parameters
+  const parameters = {
+    Bucket: BUCKET_NAME,
+    Key: path
+  };
+
+  try {
+    const response: DeleteObjectOutput = await new Promise(
+      (resolve, reject) => {
+        const callback = (error: AWSError, data: DeleteObjectOutput) => {
+          if (error) {
+            reject(prettify(error));
+          } else {
+            // Note: The response is actually {} with no fields
+            // Issue: https://github.com/aws/aws-sdk-js/issues/1197#issuecomment-258919580
+            resolve(data);
+          }
+        };
+        S3Instance.deleteObject(parameters, callback);
+      }
+    );
+
+    // Can assume that if an error is not thrown, it was successful
+    if (response) {
+      // Successful event response
+      eventResponse = {
+        success: true
+      };
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
+  return eventResponse;
 };
 
 // Delete object

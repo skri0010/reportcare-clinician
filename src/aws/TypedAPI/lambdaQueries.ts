@@ -4,8 +4,10 @@ import { BaseResponse } from "aws";
 import {
   QueryS3ClinicianRecordsBridgeQuery,
   QueryS3ClinicianRecordsBridgeQueryVariables,
-  HandlePatientAssignmentQuery,
-  HandlePatientAssignmentQueryVariables
+  HandlePatientAssignmentResolutionQuery,
+  HandlePatientAssignmentResolutionQueryVariables,
+  SharePatientAssignmentQueryVariables,
+  SharePatientAssignmentQuery
 } from "aws/API";
 import * as queries from "aws/graphql/queries";
 import { PatientAssignmentStatus } from "rc_agents/model";
@@ -14,8 +16,12 @@ interface QueryS3ClinicianRecordsBridgeResponse extends BaseResponse {
   data: QueryS3ClinicianRecordsBridgeQuery;
 }
 
-interface HandlePatientAssignmentResponse extends BaseResponse {
-  data: HandlePatientAssignmentQuery;
+interface HandlePatientAssignmentResolutionResponse extends BaseResponse {
+  data: HandlePatientAssignmentResolutionQuery;
+}
+
+interface SharePatientAssignmentResponse extends BaseResponse {
+  data: SharePatientAssignmentQuery;
 }
 
 // Type created with reference to schema.graphql
@@ -35,11 +41,18 @@ interface QueryS3ClinicianRecordsBridgeNarrowedVariables
   documentTitle: string;
 }
 
-interface HandlePatientAssignmentNarrowedVariables
-  extends HandlePatientAssignmentQueryVariables {
+interface HandlePatientAssignmentResolutionNarrowedVariables
+  extends HandlePatientAssignmentResolutionQueryVariables {
   patientID: string;
   resolution: PatientAssignmentStatus;
   reassignToClinicianID?: string;
+}
+
+interface SharePatientAssignmentNarrowedVariables
+  extends SharePatientAssignmentQueryVariables {
+  patientID: string;
+  patientName: string;
+  shareToClinicianID: string;
 }
 
 // Type created with reference to amplify/backend/function/s3clinicianrecordsbridge/src/index
@@ -47,6 +60,8 @@ interface LambdaResolverParsedResponse {
   success: boolean;
   data?: string;
 }
+
+// == Lambda Resolver queries with types based on schema.graphql ==
 
 export const queryS3ClinicianRecordsBridge: (
   variables: QueryS3ClinicianRecordsBridgeNarrowedVariables
@@ -64,18 +79,34 @@ export const queryS3ClinicianRecordsBridge: (
   return typedResponse;
 };
 
-export const handlePatientAssignment: (
-  variables: HandlePatientAssignmentNarrowedVariables
+export const handlePatientAssignmentResolution: (
+  variables: HandlePatientAssignmentResolutionNarrowedVariables
 ) => Promise<LambdaResolverParsedResponse> = async (variables) => {
   let typedResponse: LambdaResolverParsedResponse = {
     success: false
   };
   const response = (await API.graphql({
-    query: queries.handlePatientAssignment,
+    query: queries.handlePatientAssignmentResolution,
     variables: variables
-  })) as HandlePatientAssignmentResponse;
-  if (response.data.handlePatientAssignment) {
-    typedResponse = JSON.parse(response.data.handlePatientAssignment);
+  })) as HandlePatientAssignmentResolutionResponse;
+  if (response.data.handlePatientAssignmentResolution) {
+    typedResponse = JSON.parse(response.data.handlePatientAssignmentResolution);
+  }
+  return typedResponse;
+};
+
+export const sharePatientAssignment: (
+  variables: SharePatientAssignmentNarrowedVariables
+) => Promise<LambdaResolverParsedResponse> = async (variables) => {
+  let typedResponse: LambdaResolverParsedResponse = {
+    success: false
+  };
+  const response = (await API.graphql({
+    query: queries.sharePatientAssignment,
+    variables: variables
+  })) as SharePatientAssignmentResponse;
+  if (response.data.sharePatientAssignment) {
+    typedResponse = JSON.parse(response.data.sharePatientAssignment);
   }
   return typedResponse;
 };

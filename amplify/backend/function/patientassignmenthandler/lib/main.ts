@@ -1,5 +1,4 @@
-import { EventResponse, Pending, Resolution } from "./types";
-import { createNewEventResponse } from "./utility";
+import { Pending, Resolution } from "./types";
 import {
   getClinicianPatientMap,
   getPatientAssignment
@@ -9,6 +8,7 @@ import {
   createPatientAssignment
 } from "./typed-api/createMutations";
 import { updatePatientAssignment } from "./typed-api/updateMutations";
+import { createNewEventResponse, EventResponse, prettify } from "./api/shared";
 
 export const handleApprovedResolution: (input: {
   clinicianID: string;
@@ -175,6 +175,91 @@ export const handleReassignedResolution: (input: {
   return eventResponse;
 };
 
+export const sharePatientAssignment: (input: {
+  clinicianID: string;
+  patientID: string;
+  patientName: string;
+  shareToClinicianID: string;
+}) => Promise<EventResponse> = async ({
+  clinicianID,
+  patientID,
+  patientName,
+  shareToClinicianID
+}) => {
+  let eventResponse = createNewEventResponse();
+  let successfullyShared = false;
+  let errorMessage = "";
+
+  try {
+    // Check if PatientAssignmentRecord already exists
+    const getResult = await getPatientAssignment({
+      clinicianID: shareToClinicianID,
+      patientID: patientID
+    });
+
+    // PatientAssignment record already exists
+    if (getResult.data.getPatientAssignment) {
+      // Update PatientAssignmentRecord if it is not APPROVED
+      const record = getResult.data.getPatientAssignment;
+      if (record.resolution !== Resolution.APPROVED) {
+        const updateResult = await updatePatientAssignment({
+          clinicianID: shareToClinicianID,
+          patientID: patientID,
+          pending: Pending,
+          resolution: null,
+          sourceClinicianID: clinicianID,
+          _version: record._version
+        });
+        if (updateResult.data) {
+          successfullyShared = true;
+        } else {
+          errorMessage = prettify(updateResult.errors);
+        }
+      }
+    }
+
+    // PatientAssignment record does not exist
+    else if (!getResult.data.getPatientAssignment) {
+      // Create new PatientAssignment record
+      const createResult = await createPatientAssignment({
+        clinicianID: shareToClinicianID,
+        patientID: patientID,
+        patientName: patientName,
+        pending: Pending,
+        sourceClinicianID: clinicianID
+      });
+      if (createResult.data.createPatientAssignment) {
+        successfullyShared = true;
+      } else {
+        errorMessage = prettify(createResult.errors);
+      }
+    } else {
+      throw Error(prettify(getResult.errors));
+    }
+
+    // If succesfully shared, print success message and update event response
+    if (successfullyShared) {
+      console.log(
+        `Successfully shared patientID: ${patientID} from clinicianID: ${clinicianID} to clinicianID: ${shareToClinicianID}`
+      );
+      // Successful event response
+      eventResponse = {
+        success: true
+      };
+    }
+    // Otherwise, print error message
+    else {
+      throw Error(
+        `Failed to share patientID: ${patientID} from clinicianID: ${clinicianID} to clinicianID: ${shareToClinicianID}. Error: ${errorMessage}`
+      );
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
+  return eventResponse;
+};
+
 const updateSourcePatientAssignment: (input: {
   patientID: string;
   sourceClinicianID: string;
@@ -206,7 +291,10 @@ const updateSourcePatientAssignment: (input: {
       if (updateResult.data.updatePatientAssignment) {
         // Print success message and update event response
         console.log(successMessage);
-        eventResponse = { success: true };
+        // Successful event response
+        eventResponse = {
+          success: true
+        };
       } else {
         throw Error("Failed to update source PatientAssignment");
       }
@@ -226,8 +314,4 @@ const updateSourcePatientAssignment: (input: {
 
 const keysAsString = (patientID: string, clinicianID: string) => {
   return `\npatientID (partition key): ${patientID}\nclinicianID (sort key): ${clinicianID}`;
-};
-
-const prettify = (item: any) => {
-  return JSON.stringify(item, null, 2);
 };

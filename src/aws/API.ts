@@ -2952,14 +2952,24 @@ export type QueryS3ClinicianRecordsBridgeQuery = {
   queryS3ClinicianRecordsBridge?: string | null,
 };
 
-export type HandlePatientAssignmentQueryVariables = {
+export type HandlePatientAssignmentResolutionQueryVariables = {
   patientID?: string | null,
   resolution?: string | null,
   reassignToClinicianID?: string | null,
 };
 
-export type HandlePatientAssignmentQuery = {
-  handlePatientAssignment?: string | null,
+export type HandlePatientAssignmentResolutionQuery = {
+  handlePatientAssignmentResolution?: string | null,
+};
+
+export type SharePatientAssignmentQueryVariables = {
+  patientID?: string | null,
+  patientName?: string | null,
+  shareToClinicianID?: string | null,
+};
+
+export type SharePatientAssignmentQuery = {
+  sharePatientAssignment?: string | null,
 };
 
 export type GetPatientInfoQueryVariables = {

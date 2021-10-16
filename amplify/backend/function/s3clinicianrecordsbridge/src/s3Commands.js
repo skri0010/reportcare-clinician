@@ -55,13 +55,11 @@ var s3Client = new client_s3_1.S3Client({ region: REGION });
 var S3Instance = new aws_sdk_1.S3();
 // Get presigned url for uploading specified object in path
 var getPresignedUploadUrl = function (path) { return __awaiter(void 0, void 0, void 0, function () {
-    var returnObject, bucketParameters, command, signedUrl, error_1;
+    var eventResponse, bucketParameters, command, signedUrl, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                returnObject = {
-                    success: false
-                };
+                eventResponse = (0, shared_1.createNewEventResponse)();
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 3, , 4]);
@@ -76,8 +74,9 @@ var getPresignedUploadUrl = function (path) { return __awaiter(void 0, void 0, v
             case 2:
                 signedUrl = _a.sent();
                 if (signedUrl) {
+                    // Successful event response
                     console.log("Created upload presigned url for " + path);
-                    returnObject = {
+                    eventResponse = {
                         success: true,
                         data: signedUrl
                     };
@@ -90,20 +89,18 @@ var getPresignedUploadUrl = function (path) { return __awaiter(void 0, void 0, v
                 error_1 = _a.sent();
                 console.log("Error: " + error_1);
                 return [3 /*break*/, 4];
-            case 4: return [2 /*return*/, returnObject];
+            case 4: return [2 /*return*/, eventResponse];
         }
     });
 }); };
 exports.getPresignedUploadUrl = getPresignedUploadUrl;
 // Get presigned url for downloading specified object in path
 var getPresignedDownloadUrl = function (path) { return __awaiter(void 0, void 0, void 0, function () {
-    var returnObject, bucketParameters, command, signedUrl, error_2;
+    var eventResponse, bucketParameters, command, signedUrl, error_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                returnObject = {
-                    success: false
-                };
+                eventResponse = (0, shared_1.createNewEventResponse)();
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 3, , 4]);
@@ -118,8 +115,9 @@ var getPresignedDownloadUrl = function (path) { return __awaiter(void 0, void 0,
             case 2:
                 signedUrl = _a.sent();
                 if (signedUrl) {
+                    // Successful event response
                     console.log("Created download presigned url for " + path);
-                    returnObject = {
+                    eventResponse = {
                         success: true,
                         data: signedUrl
                     };
@@ -132,18 +130,18 @@ var getPresignedDownloadUrl = function (path) { return __awaiter(void 0, void 0,
                 error_2 = _a.sent();
                 console.log("Error: " + error_2);
                 return [3 /*break*/, 4];
-            case 4: return [2 /*return*/, returnObject];
+            case 4: return [2 /*return*/, eventResponse];
         }
     });
 }); };
 exports.getPresignedDownloadUrl = getPresignedDownloadUrl;
 // Delete object
 var deleteObject = function (path) { return __awaiter(void 0, void 0, void 0, function () {
-    var success, parameters, response, error_3;
+    var eventResponse, parameters, response, error_3;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                success = false;
+                eventResponse = (0, shared_1.createNewEventResponse)();
                 parameters = {
                     Bucket: BUCKET_NAME,
                     Key: path
@@ -168,14 +166,17 @@ var deleteObject = function (path) { return __awaiter(void 0, void 0, void 0, fu
                 response = _a.sent();
                 // Can assume that if an error is not thrown, it was successful
                 if (response) {
-                    success = true;
+                    // Successful event response
+                    eventResponse = {
+                        success: true
+                    };
                 }
                 return [3 /*break*/, 4];
             case 3:
                 error_3 = _a.sent();
                 console.log(error_3);
                 return [3 /*break*/, 4];
-            case 4: return [2 /*return*/, success];
+            case 4: return [2 /*return*/, eventResponse];
         }
     });
 }); };
