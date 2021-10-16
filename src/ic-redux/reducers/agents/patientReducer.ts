@@ -22,6 +22,7 @@ interface PatientState {
   fetchingIcdCrtRecords: boolean;
   icdCrtRecords: ClinicianRecord[] | undefined;
   fetchingIcdCrtRecordContent: boolean;
+  recordToDelete: ClinicianRecord | undefined;
 }
 
 const initialState: PatientState = {
@@ -40,7 +41,8 @@ const initialState: PatientState = {
   createIcdCrtRecordSuccessful: false,
   fetchingIcdCrtRecords: false,
   icdCrtRecords: undefined,
-  fetchingIcdCrtRecordContent: false
+  fetchingIcdCrtRecordContent: false,
+  recordToDelete: undefined
 };
 
 export const patientReducer: Reducer<PatientState, RootAction> = (
@@ -118,6 +120,11 @@ export const patientReducer: Reducer<PatientState, RootAction> = (
       return {
         ...state,
         fetchingIcdCrtRecordContent: action.payload.fetchingIcdCrtRecordContent
+      };
+    case actionNames.SET_RECORD_TO_DELETE:
+      return {
+        ...state,
+        recordToDelete: action.payload.recordToDelete
       };
     default:
       return state;

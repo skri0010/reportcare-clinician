@@ -4,7 +4,7 @@
       "reportcare": ["Query", "Mutation"]
     },
     "storage": {
-      "s3clinicianrecords": ["create", "read", "update"]
+      "s3clinicianrecords": ["create", "read", "update", "delete"]
     }
   },
   "lambdaLayers": [

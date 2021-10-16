@@ -4,9 +4,6 @@
   "description": "Lambda function that creates presigned URLs for uploading and retrieving s3clinicianrecords bucket",
   "main": "index.js",
   "license": "UNLICENSED",
-  "scripts": {
-    "postinstall": "xcopy node_modules ..\\lib\\node_modules /E /I /y"
-  },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.34.0",
     "@aws-sdk/s3-request-presigner": "^3.34.0"

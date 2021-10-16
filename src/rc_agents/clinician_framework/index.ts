@@ -269,6 +269,7 @@ export enum PatientAttributes {
   // HF-OTP-II: Single patient's details
   PATIENT_TO_VIEW_DETAILS = "ViewPatientDetailsWithPatientId",
   RETRIEVE_PATIENT_DETAILS = "RetrievePatientDetails",
+  RETRIEVE_PATIENT_DETAILS_LOCALLY = "RetrievePatientDetailsLocally",
   PATIENT_DETAILS_RETRIEVED = "PatientDetailsRetrieved",
   DISPLAY_PATIENT_DETAILS_REQUESTED = "DisplayPatientDetailsRequested",
   PATIENT_DETAILS = "PatientDetails",

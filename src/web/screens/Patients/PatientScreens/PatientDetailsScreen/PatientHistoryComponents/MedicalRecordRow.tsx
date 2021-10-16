@@ -4,7 +4,10 @@ import { H5 } from "components/Text";
 import { View } from "react-native";
 import { RowButton } from "components/Buttons/RowButton";
 import { ClinicianRecord } from "aws/API";
-import { RootState, select } from "util/useRedux";
+import { RootState, select, useDispatch } from "util/useRedux";
+import { DeleteIconButton } from "components/Buttons/DeleteIconButton";
+import { setRecordToDelete } from "ic-redux/actions/agents/patientActionCreator";
+import { withinDeleteGracePeriod } from "util/utilityFunctions";
 
 interface MedicalRecordRowProps {
   medicalRecord: ClinicianRecord;
@@ -26,10 +29,22 @@ export const MedicalRecordRow: FC<MedicalRecordRowProps> = ({
     onViewMedicalRecord(medicalRecord);
   };
 
+  const dispatch = useDispatch();
+
+  const onDeleteButtonPress = () => {
+    dispatch(setRecordToDelete(medicalRecord));
+  };
+
   return (
     <View style={[styles.container]}>
       {/* Medical record title */}
       <H5 text={medicalRecord.title} style={[styles.textContainer]} />
+
+      {/* Delete button */}
+      {withinDeleteGracePeriod(medicalRecord) ? (
+        <DeleteIconButton onPress={onDeleteButtonPress} />
+      ) : null}
+
       {/* View button */}
       <RowButton
         onPress={onRowPress}
@@ -51,6 +66,6 @@ const styles = ScaledSheet.create({
   },
   textContainer: {
     flex: 5,
-    paddingRight: "5@ms"
+    marginRight: "5@ms"
   }
 });

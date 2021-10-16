@@ -11,7 +11,7 @@ import { ScaledSheet } from "react-native-size-matters";
 import { AddMedicalRecordModal } from "./PatientScreens/PatientDetailsScreen/PatientHistoryComponents/AddMedicalRecordModal";
 import { PatientDetailsTabNavigator } from "web/navigation/navigators/PatientDetailsTabNavigator";
 import { MainScreenProps } from "web/navigation/types";
-import { ScreenName } from "web/navigation";
+import { PatientDetailsTabName, ScreenName } from "web/navigation";
 import { PatientsList } from "./PatientsList";
 import { AgentTrigger } from "rc_agents/trigger";
 import { NoSelectionScreen } from "../Shared/NoSelectionScreen";
@@ -20,21 +20,31 @@ import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AdaptiveTwoScreenWrapper } from "components/Wrappers/AdaptiveTwoScreenWrapper";
 import { PatientConfigurationScreen } from "web/screens/Patients/PatientScreens/PatientConfiguration/PatientConfigurationScreen";
 import { AlertColorCode, AlertInfo, AlertStatus } from "rc_agents/model";
-import { setPatientDetails } from "ic-redux/actions/agents/patientActionCreator";
+import {
+  setPatientDetails,
+  setRecordToDelete
+} from "ic-redux/actions/agents/patientActionCreator";
 import { AddIcdCrtRecordModal } from "./PatientScreens/PatientDetailsScreen/PatientIcdCrtComponents/AddIcdCrtRecordModal";
+import { DeleteRecordConfirmationModal } from "./PatientScreens/PatientDetailsScreen/Modals/DeleteRecordConfirmationModal";
 
 export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
-  route
+  route,
+  navigation
 }) => {
   const { displayPatientId, selectedTab } = route.params;
-  const { colors, patients, patientDetails, fetchingPatientDetails } = select(
-    (state: RootState) => ({
-      colors: state.settings.colors,
-      patients: state.patients.patients,
-      patientDetails: state.patients.patientDetails,
-      fetchingPatientDetails: state.patients.fetchingPatientDetails
-    })
-  );
+  const {
+    colors,
+    patients,
+    patientDetails,
+    fetchingPatientDetails,
+    recordToDelete
+  } = select((state: RootState) => ({
+    colors: state.settings.colors,
+    patients: state.patients.patients,
+    patientDetails: state.patients.patientDetails,
+    fetchingPatientDetails: state.patients.fetchingPatientDetails,
+    recordToDelete: state.patients.recordToDelete
+  }));
 
   const dispatch = useDispatch();
 
@@ -87,7 +97,8 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
     _lastChangedAt: new Date().getTime(),
     createdAt: "",
     updatedAt: "",
-    owner: ""
+    owner: "",
+    triageValue: ""
   };
 
   // JH-TODO-NEW: Remove
@@ -205,6 +216,14 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
           setAddIcdCrtRecord={setAddIcdCrtRecord}
           patientID={patientDetails?.patientInfo.patientID}
         />
+        {/* Modal to confirm deletion of record */}
+        {recordToDelete ? (
+          <DeleteRecordConfirmationModal
+            visible={!!recordToDelete}
+            onRequestClose={() => dispatch(setRecordToDelete(undefined))}
+            record={recordToDelete}
+          />
+        ) : null}
       </View>
     </ScreenWrapper>
   );

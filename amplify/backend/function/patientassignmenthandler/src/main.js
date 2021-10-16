@@ -36,230 +36,108 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.handlePatientAssignmentResolution = void 0;
+exports.sharePatientAssignment = exports.handleReassignedResolution = exports.handleApprovedResolution = void 0;
 var types_1 = require("./types");
-var utility_1 = require("./utility");
 var queries_1 = require("./typed-api/queries");
 var createMutations_1 = require("./typed-api/createMutations");
 var updateMutations_1 = require("./typed-api/updateMutations");
-var handlePatientAssignmentResolution = function (event) { return __awaiter(void 0, void 0, void 0, function () {
-    var returnMessages, totalCount, successCount, errorOccured, promises, results, successfulResults, failedResults;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                returnMessages = ["Successfully processed records"];
-                totalCount = null;
-                successCount = null;
-                errorOccured = false;
-                if (!(event.Records && event.Records.length > 0)) return [3 /*break*/, 2];
-                // Iterate through every record
-                promises = event.Records.map(function (record) {
-                    var returnPromise;
-                    // Check: record event is MODIFY
-                    if (record.eventName === "MODIFY") {
-                        // Check: dynamodb value exists
-                        if (record.dynamodb) {
-                            var _a = record.dynamodb, Keys = _a.Keys, NewImage = _a.NewImage, OldImage = _a.OldImage;
-                            var patientID = Keys.patientID, clinicianID = Keys.clinicianID;
-                            var newPatientID = NewImage.patientID, newClinicianID = NewImage.clinicianID, patientName = NewImage.patientName, reassignToClinicianID = NewImage.reassignToClinicianID, newResolution = NewImage.resolution, newPending = NewImage.pending;
-                            var oldPatientID = OldImage.patientID, oldClinicianID = OldImage.clinicianID, oldResolution = OldImage.resolution, oldPending = OldImage.pending;
-                            // Check: PatientID and ClinicianID is the same
-                            // Check: New pending should be null/undefined defined, old pending should be "PENDING"
-                            // Check: Resolution is defined and of type Resolution
-                            var resolution = (0, utility_1.getResolution)(newResolution);
-                            var validatePatientID = (0, utility_1.validateID)(patientID, newPatientID, oldPatientID);
-                            var validateClinicianID = (0, utility_1.validateID)(clinicianID, newClinicianID, oldClinicianID);
-                            var validatePending = (0, utility_1.validatePendingUpdate)(newPending, oldPending);
-                            if (validatePatientID &&
-                                validateClinicianID &&
-                                validatePending &&
-                                clinicianID &&
-                                patientID &&
-                                patientName &&
-                                resolution) {
-                                console.log("Handling PatientResolution " + keysAsString(patientID, clinicianID));
-                                if (resolution === types_1.Resolution.APPROVED) {
-                                    // Handle approved resolution
-                                    returnPromise = handleApprovedResolution({
-                                        clinicianID: clinicianID,
-                                        patientID: patientID
-                                    });
-                                }
-                                else if (resolution === types_1.Resolution.REASSIGNED &&
-                                    reassignToClinicianID) {
-                                    // Handle reassigned resolution
-                                    returnPromise = handleReassignedResolution({
-                                        clinicianID: clinicianID,
-                                        patientID: patientID,
-                                        patientName: patientName,
-                                        reassignToClinicianID: reassignToClinicianID
-                                    });
-                                }
-                            }
-                            else {
-                                // Log debug object
-                                var debugObject = {
-                                    validatePatientID: validatePatientID,
-                                    validateClinicianID: validateClinicianID,
-                                    validatePending: validatePending,
-                                    "new": {
-                                        pending: newPending,
-                                        resolution: newResolution
-                                    },
-                                    old: {
-                                        pending: oldPending,
-                                        resolution: oldResolution
-                                    },
-                                    clinicianID: clinicianID,
-                                    patientID: patientID,
-                                    patientName: patientName,
-                                    resolution: resolution
-                                };
-                                console.log("Error: Records do not meet validation requirements. " + (0, utility_1.prettyPrint)(debugObject));
-                                errorOccured = true;
-                            }
-                        }
-                        else {
-                            console.log("Error: dynamodb object does not exist. Unable to obtain keys, new and old images");
-                            errorOccured = true;
-                        }
-                        return returnPromise;
-                    }
-                }).flatMap(function (promise) { return (promise ? [promise] : []); });
-                return [4 /*yield*/, Promise.all(promises)];
-            case 1:
-                results = _a.sent();
-                successfulResults = results.filter(function (result) { return result.success; });
-                if (successfulResults.length > 0) {
-                    console.log("=== SUCCESSFUL ===");
-                }
-                successfulResults.forEach(function (successfulResult) {
-                    console.log(successfulResult.message);
-                });
-                failedResults = results.filter(function (result) { return !result.success; });
-                if (failedResults.length > 0) {
-                    console.log("=== FAILED ===");
-                    failedResults.forEach(function (result) { return console.log(result); });
-                    errorOccured = true;
-                }
-                // Compute overall success count for return message
-                successCount = results.filter(function (result) { return result.success; }).length;
-                totalCount = results.length;
-                if (totalCount > 0) {
-                    returnMessages.push(successCount + " / " + totalCount + " was successfully completed");
-                }
-                return [3 /*break*/, 3];
-            case 2:
-                console.log("Error: Stream records do not exist or list is empty");
-                errorOccured = true;
-                _a.label = 3;
-            case 3:
-                if (errorOccured) {
-                    returnMessages.push("NOTICE: Errors occurred during execution. Please check logs");
-                }
-                return [2 /*return*/, returnMessages.join(". ")];
-        }
-    });
-}); };
-exports.handlePatientAssignmentResolution = handlePatientAssignmentResolution;
+var shared_1 = require("./api/shared");
 var handleApprovedResolution = function (_a) {
-    var clinicianID = _a.clinicianID, patientID = _a.patientID;
+    var clinicianID = _a.clinicianID, patientID = _a.patientID, resolution = _a.resolution;
     return __awaiter(void 0, void 0, void 0, function () {
-        var successMessage, returnMessage, clinicianPatientMapCreatedOrExists, getResult, createResult, error_1, errorMessage;
-        var _b;
-        return __generator(this, function (_c) {
-            switch (_c.label) {
+        var successMessage, eventResponse, mapExists, getResult, createResult, error_1, errorMessage;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
                 case 0:
                     successMessage = "Successfully handled approved resolution for PatientAssignment " + keysAsString(patientID, clinicianID);
-                    returnMessage = {
-                        success: false,
-                        message: ""
-                    };
-                    clinicianPatientMapCreatedOrExists = false;
-                    _c.label = 1;
+                    eventResponse = (0, shared_1.createNewEventResponse)();
+                    _b.label = 1;
                 case 1:
-                    _c.trys.push([1, 6, , 7]);
+                    _b.trys.push([1, 9, , 10]);
+                    mapExists = false;
                     return [4 /*yield*/, (0, queries_1.getClinicianPatientMap)({
-                            patientID: patientID.S,
-                            clinicianID: clinicianID.S
+                            patientID: patientID,
+                            clinicianID: clinicianID
                         })];
                 case 2:
-                    getResult = _c.sent();
+                    getResult = _b.sent();
                     if (!getResult.data.getClinicianPatientMap) return [3 /*break*/, 3];
-                    // Successful since map already exists
-                    clinicianPatientMapCreatedOrExists = true;
-                    return [3 /*break*/, 5];
-                case 3: return [4 /*yield*/, (0, createMutations_1.createClinicianPatientMap)({
-                        patientID: patientID.S,
-                        clinicianID: clinicianID.S
-                    })];
+                    mapExists = true;
+                    return [3 /*break*/, 6];
+                case 3:
+                    if (!!getResult.errors) return [3 /*break*/, 5];
+                    return [4 /*yield*/, (0, createMutations_1.createClinicianPatientMap)({
+                            patientID: patientID,
+                            clinicianID: clinicianID
+                        })];
                 case 4:
-                    createResult = _c.sent();
-                    if ((_b = createResult.data) === null || _b === void 0 ? void 0 : _b.createClinicianPatientMap) {
-                        // Successful since map is created
-                        clinicianPatientMapCreatedOrExists = true;
+                    createResult = _b.sent();
+                    if (createResult.data.createClinicianPatientMap) {
+                        mapExists = true;
                     }
                     else {
-                        throw Error("Failed to create ClinicianPatientMap and it does not exist\n" +
-                            keysAsString(patientID, clinicianID));
+                        throw Error("Failed to create ClinicianPatientMap");
                     }
-                    _c.label = 5;
-                case 5: return [3 /*break*/, 7];
+                    return [3 /*break*/, 6];
+                case 5: throw new Error((0, shared_1.prettify)(getResult.errors));
                 case 6:
-                    error_1 = _c.sent();
-                    errorMessage = error_1 + keysAsString(patientID, clinicianID);
-                    returnMessage = { success: false, message: errorMessage };
-                    return [3 /*break*/, 7];
+                    if (!mapExists) return [3 /*break*/, 8];
+                    return [4 /*yield*/, updateSourcePatientAssignment({
+                            patientID: patientID,
+                            sourceClinicianID: clinicianID,
+                            successMessage: successMessage,
+                            resolution: resolution
+                        })];
                 case 7:
-                    if (!clinicianPatientMapCreatedOrExists) return [3 /*break*/, 9];
-                    return [4 /*yield*/, updateSourcePatientAssignment(patientID, clinicianID, successMessage)];
-                case 8:
                     // Update source PatientAssignment
-                    returnMessage = _c.sent();
-                    _c.label = 9;
-                case 9: return [2 /*return*/, returnMessage];
+                    eventResponse = _b.sent();
+                    _b.label = 8;
+                case 8: return [3 /*break*/, 10];
+                case 9:
+                    error_1 = _b.sent();
+                    errorMessage = error_1 + "\n" + keysAsString(patientID, clinicianID);
+                    console.log(errorMessage);
+                    return [3 /*break*/, 10];
+                case 10: return [2 /*return*/, eventResponse];
             }
         });
     });
 };
+exports.handleApprovedResolution = handleApprovedResolution;
 var handleReassignedResolution = function (_a) {
-    var clinicianID = _a.clinicianID, patientID = _a.patientID, patientName = _a.patientName, reassignToClinicianID = _a.reassignToClinicianID;
+    var clinicianID = _a.clinicianID, patientID = _a.patientID, patientName = _a.patientName, reassignToClinicianID = _a.reassignToClinicianID, resolution = _a.resolution;
     return __awaiter(void 0, void 0, void 0, function () {
-        var successMessage, returnMessage, reassignedToTarget, getResult, targetPatientAssignment, updateResult, result, error_2, errorMessage;
-        var _b, _c;
-        return __generator(this, function (_d) {
-            switch (_d.label) {
+        var eventResponse, successMessage, reassignedToTarget, getResult, targetPatientAssignment, updateResult, result, error_2, errorMessage;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
                 case 0:
+                    eventResponse = (0, shared_1.createNewEventResponse)();
                     successMessage = "Successfully handled reassign resolution for PatientAssignment " + keysAsString(patientID, clinicianID) + " to " + keysAsString(patientID, reassignToClinicianID);
-                    returnMessage = {
-                        success: false,
-                        message: ""
-                    };
                     reassignedToTarget = false;
-                    _d.label = 1;
+                    _b.label = 1;
                 case 1:
-                    _d.trys.push([1, 10, , 11]);
+                    _b.trys.push([1, 12, , 13]);
                     return [4 /*yield*/, (0, queries_1.getPatientAssignment)({
-                            patientID: patientID.S,
-                            clinicianID: reassignToClinicianID.S
+                            patientID: patientID,
+                            clinicianID: reassignToClinicianID
                         })];
                 case 2:
-                    getResult = _d.sent();
+                    getResult = _b.sent();
                     if (!getResult.data.getPatientAssignment) return [3 /*break*/, 6];
                     targetPatientAssignment = getResult.data.getPatientAssignment;
                     if (!(targetPatientAssignment.resolution === types_1.Resolution.REASSIGNED)) return [3 /*break*/, 4];
                     return [4 /*yield*/, (0, updateMutations_1.updatePatientAssignment)({
-                            patientID: patientID.S,
-                            clinicianID: reassignToClinicianID.S,
+                            patientID: patientID,
+                            clinicianID: reassignToClinicianID,
                             _version: targetPatientAssignment._version,
-                            pending: types_1.Pending.PENDING,
+                            pending: types_1.Pending,
                             resolution: null,
-                            adminReassignFromClinicianID: clinicianID.S // Indicate source clinicianID
+                            sourceClinicianID: clinicianID // Indicate source clinicianID
                         })];
                 case 3:
-                    updateResult = _d.sent();
-                    if ((_b = updateResult.data) === null || _b === void 0 ? void 0 : _b.updatePatientAssignment) {
-                        // Successfully reassigned to target
+                    updateResult = _b.sent();
+                    if (updateResult.data.updatePatientAssignment) {
+                        // Update flag for target reassignment
                         reassignedToTarget = true;
                     }
                     else {
@@ -268,104 +146,192 @@ var handleReassignedResolution = function (_a) {
                     }
                     return [3 /*break*/, 5];
                 case 4:
-                    // Either PENDING or APPROVED
-                    // Successfully reassigned to target
+                    // Update flag for target reassignment
                     reassignedToTarget = true;
-                    _d.label = 5;
+                    _b.label = 5;
                 case 5: return [3 /*break*/, 9];
                 case 6:
                     if (!!getResult.errors) return [3 /*break*/, 8];
                     return [4 /*yield*/, (0, createMutations_1.createPatientAssignment)({
-                            patientID: patientID.S,
-                            clinicianID: reassignToClinicianID.S,
-                            patientName: patientName.S,
-                            pending: types_1.Pending.PENDING,
-                            adminReassignFromClinicianID: clinicianID.S // Indicate source clinicianID
+                            patientID: patientID,
+                            clinicianID: reassignToClinicianID,
+                            patientName: patientName,
+                            pending: types_1.Pending,
+                            resolution: null,
+                            sourceClinicianID: clinicianID // Indicate source clinicianID
                         })];
                 case 7:
-                    result = _d.sent();
-                    if ((_c = result.data) === null || _c === void 0 ? void 0 : _c.createPatientAssignment) {
-                        // Successfully reassigned to target
+                    result = _b.sent();
+                    if (result.data.createPatientAssignment) {
+                        // Update flag for target reassignment
                         reassignedToTarget = true;
                     }
                     else {
-                        throw Error("Failed to create target PatientAssignment\n" +
-                            keysAsString(patientID, reassignToClinicianID));
+                        throw Error("Failed to create target PatientAssignment");
                     }
                     return [3 /*break*/, 9];
                 case 8:
                     console.log(getResult.errors.length);
-                    throw Error("Failed to check whether target PatientAssignment exists\n" +
-                        JSON.stringify(getResult.errors));
-                case 9: return [3 /*break*/, 11];
+                    throw Error("Failed to check whether target PatientAssignment exists");
+                case 9:
+                    if (!reassignedToTarget) return [3 /*break*/, 11];
+                    return [4 /*yield*/, updateSourcePatientAssignment({
+                            patientID: patientID,
+                            sourceClinicianID: clinicianID,
+                            successMessage: successMessage,
+                            resolution: resolution
+                        })];
                 case 10:
-                    error_2 = _d.sent();
-                    errorMessage = error_2 + keysAsString(patientID, clinicianID);
-                    returnMessage = { success: false, message: errorMessage };
-                    return [3 /*break*/, 11];
-                case 11:
-                    if (!reassignedToTarget) return [3 /*break*/, 13];
-                    return [4 /*yield*/, updateSourcePatientAssignment(patientID, clinicianID, successMessage)];
-                case 12:
                     // Update source PatientAssignment
-                    returnMessage = _d.sent();
-                    _d.label = 13;
-                case 13: return [2 /*return*/, returnMessage];
+                    eventResponse = _b.sent();
+                    _b.label = 11;
+                case 11: return [3 /*break*/, 13];
+                case 12:
+                    error_2 = _b.sent();
+                    errorMessage = error_2 + "\n" + keysAsString(patientID, clinicianID);
+                    console.log(errorMessage);
+                    return [3 /*break*/, 13];
+                case 13: return [2 /*return*/, eventResponse];
             }
         });
     });
 };
-var updateSourcePatientAssignment = function (patientID, sourceClinicianID, successMessage) { return __awaiter(void 0, void 0, void 0, function () {
-    var returnMessage, getResult, sourcePatientAssignment, updateResult, error_3, errorMessage;
-    var _a;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
-            case 0:
-                returnMessage = {
-                    success: false,
-                    message: ""
-                };
-                _b.label = 1;
-            case 1:
-                _b.trys.push([1, 6, , 7]);
-                return [4 /*yield*/, (0, queries_1.getPatientAssignment)({
-                        patientID: patientID.S,
-                        clinicianID: sourceClinicianID.S
-                    })];
-            case 2:
-                getResult = _b.sent();
-                if (!getResult.data.getPatientAssignment) return [3 /*break*/, 4];
-                sourcePatientAssignment = getResult.data.getPatientAssignment;
-                return [4 /*yield*/, (0, updateMutations_1.updatePatientAssignment)({
-                        patientID: patientID.S,
-                        clinicianID: sourceClinicianID.S,
-                        _version: sourcePatientAssignment._version,
-                        adminCompleted: true // Indicate that Lambda function completed its task
-                    })];
-            case 3:
-                updateResult = _b.sent();
-                if ((_a = updateResult.data) === null || _a === void 0 ? void 0 : _a.updatePatientAssignment) {
-                    // Successfully updated source
-                    // Update return message
-                    returnMessage = { success: true, message: successMessage };
-                }
-                else {
-                    throw Error("Failed to update source PatientAssignment\n" +
-                        keysAsString(patientID, sourceClinicianID));
-                }
-                return [3 /*break*/, 5];
-            case 4: throw Error("Failed to query source PatientAssignment\n" +
-                keysAsString(patientID, sourceClinicianID));
-            case 5: return [3 /*break*/, 7];
-            case 6:
-                error_3 = _b.sent();
-                errorMessage = error_3 + keysAsString(patientID, sourceClinicianID);
-                returnMessage = { success: false, message: errorMessage };
-                return [3 /*break*/, 7];
-            case 7: return [2 /*return*/, returnMessage];
-        }
+exports.handleReassignedResolution = handleReassignedResolution;
+var sharePatientAssignment = function (_a) {
+    var clinicianID = _a.clinicianID, patientID = _a.patientID, patientName = _a.patientName, shareToClinicianID = _a.shareToClinicianID;
+    return __awaiter(void 0, void 0, void 0, function () {
+        var eventResponse, successfullyShared, errorMessage, getResult, record, updateResult, createResult, error_3;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    eventResponse = (0, shared_1.createNewEventResponse)();
+                    successfullyShared = false;
+                    errorMessage = "";
+                    _b.label = 1;
+                case 1:
+                    _b.trys.push([1, 9, , 10]);
+                    return [4 /*yield*/, (0, queries_1.getPatientAssignment)({
+                            clinicianID: shareToClinicianID,
+                            patientID: patientID
+                        })];
+                case 2:
+                    getResult = _b.sent();
+                    if (!getResult.data.getPatientAssignment) return [3 /*break*/, 5];
+                    record = getResult.data.getPatientAssignment;
+                    if (!(record.resolution !== types_1.Resolution.APPROVED)) return [3 /*break*/, 4];
+                    return [4 /*yield*/, (0, updateMutations_1.updatePatientAssignment)({
+                            clinicianID: shareToClinicianID,
+                            patientID: patientID,
+                            pending: types_1.Pending,
+                            resolution: null,
+                            sourceClinicianID: clinicianID,
+                            _version: record._version
+                        })];
+                case 3:
+                    updateResult = _b.sent();
+                    if (updateResult.data) {
+                        successfullyShared = true;
+                    }
+                    else {
+                        errorMessage = (0, shared_1.prettify)(updateResult.errors);
+                    }
+                    _b.label = 4;
+                case 4: return [3 /*break*/, 8];
+                case 5:
+                    if (!!getResult.data.getPatientAssignment) return [3 /*break*/, 7];
+                    return [4 /*yield*/, (0, createMutations_1.createPatientAssignment)({
+                            clinicianID: shareToClinicianID,
+                            patientID: patientID,
+                            patientName: patientName,
+                            pending: types_1.Pending,
+                            sourceClinicianID: clinicianID
+                        })];
+                case 6:
+                    createResult = _b.sent();
+                    if (createResult.data.createPatientAssignment) {
+                        successfullyShared = true;
+                    }
+                    else {
+                        errorMessage = (0, shared_1.prettify)(createResult.errors);
+                    }
+                    return [3 /*break*/, 8];
+                case 7: throw Error((0, shared_1.prettify)(getResult.errors));
+                case 8:
+                    // If succesfully shared, print success message and update event response
+                    if (successfullyShared) {
+                        console.log("Successfully shared patientID: " + patientID + " from clinicianID: " + clinicianID + " to clinicianID: " + shareToClinicianID);
+                        // Successful event response
+                        eventResponse = {
+                            success: true
+                        };
+                    }
+                    // Otherwise, print error message
+                    else {
+                        throw Error("Failed to share patientID: " + patientID + " from clinicianID: " + clinicianID + " to clinicianID: " + shareToClinicianID + ". Error: " + errorMessage);
+                    }
+                    return [3 /*break*/, 10];
+                case 9:
+                    error_3 = _b.sent();
+                    console.log(error_3);
+                    return [3 /*break*/, 10];
+                case 10: return [2 /*return*/, eventResponse];
+            }
+        });
     });
-}); };
+};
+exports.sharePatientAssignment = sharePatientAssignment;
+var updateSourcePatientAssignment = function (_a) {
+    var patientID = _a.patientID, sourceClinicianID = _a.sourceClinicianID, successMessage = _a.successMessage, resolution = _a.resolution;
+    return __awaiter(void 0, void 0, void 0, function () {
+        var eventResponse, getResult, sourcePatientAssignment, updateResult, error_4, errorMessage;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    eventResponse = (0, shared_1.createNewEventResponse)();
+                    _b.label = 1;
+                case 1:
+                    _b.trys.push([1, 6, , 7]);
+                    return [4 /*yield*/, (0, queries_1.getPatientAssignment)({
+                            patientID: patientID,
+                            clinicianID: sourceClinicianID
+                        })];
+                case 2:
+                    getResult = _b.sent();
+                    if (!getResult.data.getPatientAssignment) return [3 /*break*/, 4];
+                    sourcePatientAssignment = getResult.data.getPatientAssignment;
+                    return [4 /*yield*/, (0, updateMutations_1.updatePatientAssignment)({
+                            patientID: patientID,
+                            clinicianID: sourceClinicianID,
+                            pending: null,
+                            resolution: resolution,
+                            _version: sourcePatientAssignment._version
+                        })];
+                case 3:
+                    updateResult = _b.sent();
+                    if (updateResult.data.updatePatientAssignment) {
+                        // Print success message and update event response
+                        console.log(successMessage);
+                        // Successful event response
+                        eventResponse = {
+                            success: true
+                        };
+                    }
+                    else {
+                        throw Error("Failed to update source PatientAssignment");
+                    }
+                    return [3 /*break*/, 5];
+                case 4: throw Error("Failed to query source PatientAssignment");
+                case 5: return [3 /*break*/, 7];
+                case 6:
+                    error_4 = _b.sent();
+                    errorMessage = error_4 + "\n" + keysAsString(patientID, sourceClinicianID);
+                    console.log(errorMessage);
+                    return [3 /*break*/, 7];
+                case 7: return [2 /*return*/, eventResponse];
+            }
+        });
+    });
+};
 var keysAsString = function (patientID, clinicianID) {
-    return "\npatientID (partition key): " + (0, utility_1.prettyPrint)(patientID) + "\nclinicianID (sort key): " + (0, utility_1.prettyPrint)(clinicianID);
+    return "\npatientID (partition key): " + patientID + "\nclinicianID (sort key): " + clinicianID;
 };

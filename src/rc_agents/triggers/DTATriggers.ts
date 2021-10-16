@@ -38,7 +38,10 @@ export const triggerRetrievePatientsByRole = (): void => {
 
 // HF-OTP-II
 // Triggers RetrievePatientDetails of DTA
-export const triggerRetrievePatientDetails = (patient: PatientInfo): void => {
+export const triggerRetrievePatientDetails = (
+  patient: PatientInfo,
+  retrieveLocally = false
+): void => {
   // Add patient as fact, no broadcast
   agentAPI.addFact(
     new Belief(
@@ -48,6 +51,17 @@ export const triggerRetrievePatientDetails = (patient: PatientInfo): void => {
     ),
     false
   );
+
+  // Add belief to retrieve locally
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PATIENT,
+      PatientAttributes.RETRIEVE_PATIENT_DETAILS_LOCALLY,
+      retrieveLocally
+    ),
+    false
+  );
+
   // Set preconditions
   agentDTA.addBelief(
     new Belief(
@@ -56,6 +70,7 @@ export const triggerRetrievePatientDetails = (patient: PatientInfo): void => {
       true
     )
   );
+
   // Broadcast active procedure
   agentAPI.addFact(
     new Belief(

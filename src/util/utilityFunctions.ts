@@ -2,6 +2,19 @@ import { ReportVitals, Alert, ClinicianRecord } from "aws/API";
 import moment from "moment";
 import { AlertInfo, mapColorCodeToRiskLevel } from "rc_agents/model";
 
+const DELETE_RECORD_GRACE_PERIOD_IN_MS = 1000 * 60 * 60 * 24 * 2; // 2 days
+
+export const withinDeleteGracePeriod = (record: ClinicianRecord): boolean => {
+  const recordCreateDateTime = new Date(
+    record.uploadDateTime || record.createdAt
+  );
+  const currentDateTime = new Date();
+  return (
+    currentDateTime.valueOf() - recordCreateDateTime.valueOf() <
+    DELETE_RECORD_GRACE_PERIOD_IN_MS
+  );
+};
+
 export const getAge = (birthDate: string): string => {
   let age = "?";
   const now = new Date();
@@ -14,6 +27,10 @@ export const getAge = (birthDate: string): string => {
     age = momentNow.diff(momentBirth, "years").toString();
   }
   return age;
+};
+
+export const prettify = (any: any): string => {
+  return JSON.stringify(any, null, 2);
 };
 
 // Requirements: Get last 7 days of parameters.

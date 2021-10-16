@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.updateClinicianRecord = exports.createClinicianRecord = void 0;
+exports.deleteClinicianRecord = exports.updateClinicianRecord = exports.createClinicianRecord = void 0;
 var types_1 = require("../types");
 var mutations_1 = require("../api/graphql/mutations");
 // @ts-ignore
@@ -66,3 +66,15 @@ var updateClinicianRecord = function (input) { return __awaiter(void 0, void 0, 
     });
 }); };
 exports.updateClinicianRecord = updateClinicianRecord;
+var deleteClinicianRecord = function (input) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, (0, appSyncRequest_1.request)({
+                    query: mutations_1.deleteClinicianRecord,
+                    variables: { input: input }
+                }, types_1.AppSyncUrl)];
+            case 1: return [2 /*return*/, (_a.sent())];
+        }
+    });
+}); };
+exports.deleteClinicianRecord = deleteClinicianRecord;

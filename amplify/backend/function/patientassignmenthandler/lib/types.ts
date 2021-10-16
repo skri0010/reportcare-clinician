@@ -1,78 +1,59 @@
-export type StringObject = { S: string };
-export type NumberObject = { N: string };
-export type BoolObject = { BOOL: boolean };
+import { LambdaResolverEvent, OptionalString } from "./api/lamdaResolverTypes";
 
-export type EventString = StringObject | undefined;
-export type EventNumber = NumberObject | undefined;
-
-// Note: GraphQL operations use IAM authentication
 export const AppSyncUrl = process.env.API_REPORTCARE_GRAPHQLAPIENDPOINTOUTPUT;
 
-// Enum
+// == Enum ==
 
 export enum Resolution {
   APPROVED = "APPROVED",
   REASSIGNED = "REASSIGNED"
 }
 
-export enum Pending {
-  PENDING = "PENDING"
+export const Pending = "PENDING";
+
+export const enum FieldName {
+  HANDLE_PATIENT_ASSIGNMENT_RESOLUTION = "handlePatientAssignmentResolution",
+  SHARE_PATIENT_ASSIGNMENT = "sharePatientAssignment"
 }
 
-export interface PromiseResolution {
-  success: boolean;
-  message: string;
+// == Query types ==
+interface HandlePatientAssignmentResolutionQuery extends LambdaResolverEvent {
+  typeName: "Query";
+  fieldName: FieldName.HANDLE_PATIENT_ASSIGNMENT_RESOLUTION;
+  arguments: HandlePatientAssignmentResolutionArguments;
 }
 
-// Event
+interface SharePatientAssignmentQuery extends LambdaResolverEvent {
+  typeName: "Query";
+  fieldName: FieldName.SHARE_PATIENT_ASSIGNMENT;
+  arguments: SharePatientAssignmentArguments;
+}
 
-export type ResolutionEvent = {
-  Records?: (TargetRecord | OtherRecord)[];
+// == Narrowed query arguments type ==
+type HandlePatientAssignmentResolutionArguments = {
+  patientID: OptionalString;
+  resolution: OptionalString;
+  reassignToClinicianID: OptionalString;
 };
 
-export const resolutionValues = Object.values(Resolution);
-export type TargetRecord = {
-  eventID: string;
-  eventName: "MODIFY";
-  eventVersion: string;
-  eventSource: "aws:dynamodb";
-  awsRegion: string;
-  dynamodb: PatientAssignmentDynamoDBObject;
-  SequenceNumber: string;
-  SizeBytes: number;
-  StreamViewType: string;
+type SharePatientAssignmentArguments = {
+  patientID: OptionalString;
+  patientName: OptionalString;
+  shareToClinicianID: OptionalString;
 };
 
-type OtherRecord = { eventName: null };
+// == Exported event ==
+export type QueryEvent =
+  | HandlePatientAssignmentResolutionQuery
+  | SharePatientAssignmentQuery;
 
-interface PatientAssignmentDynamoDBObject {
-  ApproximateCreationDateTime: number;
-  Keys: PatientAssignmentKeys;
-  NewImage: PatientAssignmentImage;
-  OldImage: PatientAssignmentImage;
+interface MutationEvent extends LambdaResolverEvent {
+  typeName: "Mutation";
 }
 
-interface PatientAssignmentKeys {
-  patientID: EventString;
-  clinicianID: EventString;
-}
+export type ExpectedEvent = QueryEvent | MutationEvent;
 
-interface PatientAssignmentImage {
-  createdAt: EventString;
-  patientName: EventString;
-  _lastChangedAt: EventNumber;
-  patientID: EventString;
-  __typename: EventString;
-  clinicianID: EventString;
-  id: EventString;
-  _version: EventNumber;
-  resolution: EventString;
-  pending: EventString;
-  updatedAt: EventString;
-  reassignToClinicianID: EventString;
-}
-
-// GraphQL
+// == GraphQL ==
 
 type ErrorsArray = {
   locations: [{ line: number; column: number; sourceName: string }];
