@@ -27,7 +27,6 @@ import { LocalStorage } from "rc_agents/storage";
 import { getAlertsCount } from "rc_agents/agents/data-assistant/action-frames/triage-alert-hf-clinic/RetrieveAlerts";
 import { RiskLevel } from "models/RiskLevel";
 import moment from "moment";
-import { setAlertRiskFilters } from "ic-redux/actions/agents/filterActionCreator";
 
 /**
  * Class to represent an activity for triggering the display of alerts.
@@ -66,18 +65,6 @@ class DisplayAlerts extends Activity {
     // OPTIONAL: Include stable (low and unassigned) AlertInfo[] (Only applicable to EP and HF Specialist)
     const viewStableAlertInfos: boolean =
       store.getState().alerts.viewStableAlerts;
-
-    // Clears filter
-    if (viewStableAlertInfos) {
-      store.dispatch(
-        setAlertRiskFilters({
-          [RiskLevel.HIGH]: false,
-          [RiskLevel.MEDIUM]: false,
-          [RiskLevel.LOW]: false,
-          [RiskLevel.UNASSIGNED]: false
-        })
-      );
-    }
 
     try {
       // Filters pending and completed AlertInfo[] by role
