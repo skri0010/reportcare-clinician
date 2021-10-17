@@ -4,6 +4,7 @@ import { MedInput, MedPrescription } from "rc_agents/model";
 import { Label } from "components/Text/Label";
 import { mockMedPrescriptions } from "mock/mockMedDosages";
 import { H6 } from "components/Text";
+import { ScaledSheet } from "react-native-size-matters";
 
 interface MedicationInfo {
   configMedInfo: MedInput;
@@ -32,12 +33,21 @@ export const MedicationInfo: FC<MedicationInfo> = ({
     <View>
       {medPrescription ? (
         <View>
-          <Label text="Recommended Start Dosage: " />
-          <H6 text={`${medPrescription.dosages.startDose} mg`} />
-          <Label text="Recommended Target Dosage: " />
-          <H6 text={`${medPrescription.dosages.targetDose} mg`} />
-          <Label text="Recommended Increments: " />
-          <H6 text={medPrescription.dosages.increment} />
+          <Label text="Recommendations: " />
+          <View style={{ flexDirection: "row" }}>
+            <View style={styles.reccomendations}>
+              <Label text="Start Dose: " />
+              <H6 text={`${medPrescription.dosages.startDose} mg`} />
+            </View>
+            <View style={styles.reccomendations}>
+              <Label text="Target Dosage: " />
+              <H6 text={`${medPrescription.dosages.targetDose} mg`} />
+            </View>
+            <View style={styles.reccomendations}>
+              <Label text="Increments: " />
+              <H6 text={medPrescription.dosages.increment} />
+            </View>
+          </View>
           <Label text="Current Dosage: " />
           {isAdding ? <H6 text="None" /> : <H6 text={configMedInfo.dosage} />}
         </View>
@@ -47,3 +57,11 @@ export const MedicationInfo: FC<MedicationInfo> = ({
     </View>
   );
 };
+
+const styles = ScaledSheet.create({
+  reccomendations: {
+    flexDirection: "column",
+    flex: 1,
+    padding: "3@ms"
+  }
+});

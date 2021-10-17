@@ -33,6 +33,7 @@ import {
 import { MedicationInfoList } from "components/RowComponents/MedicationRow/MedicationInfoList";
 import { SaveAndCancelButtons } from "components/Buttons/SaveAndCancelButtons";
 import { MedConfigModal } from "./MedConfigModal";
+import { ModalWrapper } from "components/Wrappers/ModalWrapper";
 
 interface PatientConfigurationScreenProps {
   details: PatientDetails;
@@ -439,31 +440,20 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
         )}
 
         {/* Medication configuration form in a pop-up modal */}
-        <View style={styles.modalView}>
-          <Modal
-            transparent
-            visible={medConfigFormVisible}
-            animationType="slide"
-            onRequestClose={() => {
-              setMedConfigFormVisible(false);
-            }}
-          >
-            <View
-              style={[
-                styles.modalContainer,
-                { backgroundColor: colors.overlayColor }
-              ]}
-            >
-              <MedConfigModal
-                details={details}
-                configMedInfo={configMedInfo}
-                saveMedInput={saveMedInput}
-                setConfigMedInfo={setConfigMedInfo}
-                setMedConfigFormVisible={setMedConfigFormVisible}
-              />
-            </View>
-          </Modal>
-        </View>
+        <ModalWrapper
+          visible={medConfigFormVisible}
+          onRequestClose={() => {
+            setMedConfigFormVisible(false);
+          }}
+        >
+          <MedConfigModal
+            details={details}
+            configMedInfo={configMedInfo}
+            saveMedInput={saveMedInput}
+            setConfigMedInfo={setConfigMedInfo}
+            setMedConfigFormVisible={setMedConfigFormVisible}
+          />
+        </ModalWrapper>
         {configuring && <LoadingIndicator />}
       </ScreenWrapper>
     );

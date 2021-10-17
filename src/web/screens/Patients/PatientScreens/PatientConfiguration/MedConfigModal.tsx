@@ -6,8 +6,6 @@ import { MedInput, PatientDetails } from "rc_agents/model";
 import { H4 } from "components/Text";
 import { MedicationList } from "./MedicationList";
 import { AddNewMedication } from "./AddNewMedication";
-import { NoSelectionScreen } from "web/screens/Shared/NoSelectionScreen";
-import { ScreenName } from "web/navigation";
 
 interface MedConfigModalProps {
   details: PatientDetails;
@@ -56,7 +54,10 @@ export const MedConfigModal: FC<MedConfigModalProps> = ({
       style={[
         styles.form,
         {
-          backgroundColor: colors.primaryBackgroundColor
+          backgroundColor: colors.primaryBackgroundColor,
+          flexDirection: "column",
+          height: "100%",
+          width: "100%"
         }
       ]}
     >
@@ -69,8 +70,7 @@ export const MedConfigModal: FC<MedConfigModalProps> = ({
         />
         <View
           style={{
-            flex: 2,
-            backgroundColor: colors.primaryWebBackgroundColor
+            flex: 1
           }}
         >
           {addingNewMed ? (
@@ -89,12 +89,7 @@ export const MedConfigModal: FC<MedConfigModalProps> = ({
               setMedConfigFormVisible={setMedConfigFormVisible}
               isAdding={false}
             />
-          ) : (
-            <NoSelectionScreen
-              screenName={ScreenName.PATIENTS}
-              subtitle="Select medication to modify or add"
-            />
-          )}
+          ) : undefined}
         </View>
       </View>
     </View>
@@ -102,18 +97,17 @@ export const MedConfigModal: FC<MedConfigModalProps> = ({
 };
 
 const styles = ScaledSheet.create({
-  container: { flexDirection: "row", height: "100%" },
+  container: { flexDirection: "row", maxHeight: "90%" },
   buttonContainer: {
     flexDirection: "row",
     paddingVertical: "10@ms",
     flexWrap: "wrap",
     justifyContent: "space-evenly",
     alignItems: "center",
-    paddingHorizontal: "60@ms"
+    paddingHorizontal: "25@ms"
   },
   form: {
-    paddingHorizontal: "10@ms",
-    paddingTop: "5@ms",
-    borderRadius: "3@ms"
+    paddingHorizontal: "3@ms",
+    paddingTop: "3@ms"
   }
 });

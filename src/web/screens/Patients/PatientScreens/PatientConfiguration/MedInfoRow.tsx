@@ -26,24 +26,19 @@ export const MedInfoRow: FC<MedInfoRowProps> = ({
         flexDirection: "row",
         alignItems: "center",
         backgroundColor: colors.primaryWebBackgroundColor,
-        borderRadius: ms(3)
+        borderRadius: ms(3),
+        flexWrap: "wrap"
       }}
     >
       <View style={styles.contentContainer}>
-        <View style={styles.texts}>
-          <H5
-            text={`${medicationInfo.name}`}
-            style={{
-              paddingRight: ms(10),
-              paddingBottom: ms(5),
-              fontWeight: "600"
-            }}
-          />
-          <View style={{ flexDirection: "row" }}>
-            <H5 text={i18n.t("Patient_Configuration.MedInfo.CurrentDosage")} />
-            <H5 text={medicationInfo.dosage} />
-          </View>
-        </View>
+        <H5
+          text={`${medicationInfo.name}`}
+          style={{
+            paddingRight: ms(5),
+            paddingBottom: ms(5),
+            fontWeight: "300"
+          }}
+        />
         <View style={styles.buttonContainer}>
           <View style={styles.button}>
             <RowButton
@@ -64,19 +59,19 @@ const styles = ScaledSheet.create({
   contentContainer: {
     paddingTop: "5@ms",
     paddingLeft: "5@ms",
-    paddingRight: ms(5),
+    paddingRight: "5@ms",
     flex: 1,
     flexDirection: "row",
     justifyContent: "space-between"
   },
   texts: {
     flexDirection: "column",
-    padding: ms(5),
+    padding: "3@ms",
     justifyContent: "space-between"
   },
   buttonContainer: {
-    paddingRight: "20@ms",
-    paddingLeft: "10@ms",
+    paddingRight: "10@ms",
+    paddingLeft: "5@ms",
     alignItems: "center",
     justifyContent: "center"
   },
@@ -84,6 +79,5 @@ const styles = ScaledSheet.create({
     borderRadius: "5@ms",
     alignItems: "center",
     justifyContent: "center"
-  },
-  buttonText: { fontWeight: "bold", padding: "5@ms" }
+  }
 });

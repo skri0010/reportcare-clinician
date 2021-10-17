@@ -1,5 +1,5 @@
 import React, { FC, useState, useEffect } from "react";
-import { View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { TextField } from "components/InputComponents/TextField";
 import i18n from "util/language/i18n";
 import {
@@ -69,7 +69,7 @@ export const AddNewMedication: FC<AddNewMedicationProps> = ({
   }, [configMedInfo]);
 
   return (
-    <View
+    <ScrollView
       style={[
         styles.form,
         {
@@ -79,15 +79,15 @@ export const AddNewMedication: FC<AddNewMedicationProps> = ({
     >
       {!isAdding ? (
         <View>
-          <Label text="Modifying current dosage" />
+          <Label text="Modifying Active Medication: " />
           <Label text="Medication Name: " />
           <H6 text={`${configMedInfo.name}`} />
           <MedicationInfo configMedInfo={configMedInfo} isAdding={false} />
         </View>
       ) : (
         <View>
-          <Label text="Adding new medication" />
-          <Label text="Select Medication To Add: " />
+          <Label text="Prescribing New Medication: " />
+          <Label text="Select Medication To Presrcribe: " />
           <Picker
             style={pickerStyle}
             selectedValue={configMedInfo.name}
@@ -159,7 +159,7 @@ export const AddNewMedication: FC<AddNewMedicationProps> = ({
           height={ms(20)}
         />
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -170,17 +170,20 @@ const styles = ScaledSheet.create({
     flexWrap: "wrap",
     justifyContent: "space-evenly",
     alignItems: "center",
-    paddingHorizontal: "60@ms"
+    paddingHorizontal: "25@ms"
   },
   form: {
-    paddingHorizontal: "20@ms",
-    paddingTop: "5@ms",
-    borderRadius: "3@ms"
+    paddingHorizontal: "3@ms",
+    borderRadius: "3@ms",
+    alignSelf: "center",
+    width: "100%",
+    height: "100%",
+    flexWrap: "wrap"
   },
   picker: {
-    borderWidth: ms(2),
-    height: ms(20),
-    marginBottom: ms(5),
+    borderWidth: "2@ms",
+    height: "20@ms",
+    marginBottom: "5@ms",
     justifyContent: "center"
   },
   pickerItem: {
