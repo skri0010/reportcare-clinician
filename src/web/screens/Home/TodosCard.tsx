@@ -40,7 +40,7 @@ export const TodosCard: FC<TodosCardProps> = ({ maxHeight, navigation }) => {
       setLastPatientIndex(9);
     }
   }, [pendingTodos]);
-
+  
   return (
     <CardWrapper
       maxHeight={maxHeight}
