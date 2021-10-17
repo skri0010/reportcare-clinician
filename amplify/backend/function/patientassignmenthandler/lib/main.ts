@@ -1,16 +1,4 @@
-import {
-  ResolutionEvent,
-  Resolution,
-  StringObject,
-  PromiseResolution,
-  Pending
-} from "./types";
-import {
-  getResolution,
-  validateID,
-  validatePendingUpdate,
-  prettyPrint
-} from "./utility";
+import { Pending, Resolution } from "./types";
 import {
   getClinicianPatientMap,
   getPatientAssignment
@@ -20,265 +8,116 @@ import {
   createPatientAssignment
 } from "./typed-api/createMutations";
 import { updatePatientAssignment } from "./typed-api/updateMutations";
+import { createNewEventResponse, EventResponse, prettify } from "./api/shared";
 
-export const handlePatientAssignmentResolution = async (
-  event: ResolutionEvent
-): Promise<string> => {
-  // Stats to be returned
-  let returnMessages = ["Successfully processed records"];
-  let totalCount: number | null = null;
-  let successCount: number | null = null;
-  let errorOccured: boolean = false;
-
-  let promises: Promise<PromiseResolution>[] | undefined;
-  // Check: records exists and length > 0
-  if (event.Records && event.Records.length > 0) {
-    // Iterate through every record
-    promises = event.Records.map((record) => {
-      let returnPromise: Promise<PromiseResolution> | undefined;
-      // Check: record event is MODIFY
-      if (record.eventName === "MODIFY") {
-        // Check: dynamodb value exists
-        if (record.dynamodb) {
-          const { Keys, NewImage, OldImage } = record.dynamodb;
-          const { patientID, clinicianID } = Keys;
-          const {
-            patientID: newPatientID,
-            clinicianID: newClinicianID,
-            patientName,
-            reassignToClinicianID,
-            resolution: newResolution,
-            pending: newPending
-          } = NewImage;
-          const {
-            patientID: oldPatientID,
-            clinicianID: oldClinicianID,
-            resolution: oldResolution,
-            pending: oldPending
-          } = OldImage;
-          // Check: PatientID and ClinicianID is the same
-          // Check: New pending should be null/undefined defined, old pending should be "PENDING"
-          // Check: Resolution is defined and of type Resolution
-          const resolution = getResolution(newResolution);
-          const validatePatientID = validateID(
-            patientID,
-            newPatientID,
-            oldPatientID
-          );
-          const validateClinicianID = validateID(
-            clinicianID,
-            newClinicianID,
-            oldClinicianID
-          );
-          const validatePending = validatePendingUpdate(newPending, oldPending);
-          if (
-            validatePatientID &&
-            validateClinicianID &&
-            validatePending &&
-            clinicianID &&
-            patientID &&
-            patientName &&
-            resolution
-          ) {
-            console.log(
-              `Handling PatientResolution ${keysAsString(
-                patientID,
-                clinicianID
-              )}`
-            );
-            if (resolution === Resolution.APPROVED) {
-              // Handle approved resolution
-              returnPromise = handleApprovedResolution({
-                clinicianID: clinicianID,
-                patientID: patientID
-              });
-            } else if (
-              resolution === Resolution.REASSIGNED &&
-              reassignToClinicianID
-            ) {
-              // Handle reassigned resolution
-              returnPromise = handleReassignedResolution({
-                clinicianID: clinicianID,
-                patientID: patientID,
-                patientName: patientName,
-                reassignToClinicianID: reassignToClinicianID
-              });
-            }
-          } else {
-            // Log debug object
-            const debugObject = {
-              validatePatientID,
-              validateClinicianID,
-              validatePending,
-              new: {
-                pending: newPending,
-                resolution: newResolution
-              },
-              old: {
-                pending: oldPending,
-                resolution: oldResolution
-              },
-              clinicianID,
-              patientID,
-              patientName,
-              resolution
-            };
-            console.log(
-              `Error: Records do not meet validation requirements. ${prettyPrint(
-                debugObject
-              )}`
-            );
-            errorOccured = true;
-          }
-        } else {
-          console.log(
-            "Error: dynamodb object does not exist. Unable to obtain keys, new and old images"
-          );
-          errorOccured = true;
-        }
-        return returnPromise;
-      }
-    }).flatMap((promise) => (promise ? [promise] : []));
-
-    const results = await Promise.all(promises);
-    // Log successful results
-    const successfulResults = results.filter((result) => result.success);
-    if (successfulResults.length > 0) {
-      console.log("=== SUCCESSFUL ===");
-    }
-    successfulResults.forEach((successfulResult) => {
-      console.log(successfulResult.message);
-    });
-
-    // Log failed results
-    const failedResults = results.filter((result) => !result.success);
-    if (failedResults.length > 0) {
-      console.log("=== FAILED ===");
-      failedResults.forEach((result) => console.log(result));
-      errorOccured = true;
-    }
-
-    // Compute overall success count for return message
-    successCount = results.filter((result) => result.success).length;
-    totalCount = results.length;
-    if (totalCount > 0) {
-      returnMessages.push(
-        `${successCount} / ${totalCount} was successfully completed`
-      );
-    }
-  } else {
-    console.log("Error: Stream records do not exist or list is empty");
-    errorOccured = true;
-  }
-
-  if (errorOccured) {
-    returnMessages.push(
-      "NOTICE: Errors occurred during execution. Please check logs"
-    );
-  }
-  return returnMessages.join(". ");
-};
-
-const handleApprovedResolution: (input: {
-  clinicianID: StringObject;
-  patientID: StringObject;
-}) => Promise<PromiseResolution> = async ({ clinicianID, patientID }) => {
+export const handleApprovedResolution: (input: {
+  clinicianID: string;
+  patientID: string;
+  resolution: Resolution;
+}) => Promise<EventResponse> = async ({
+  clinicianID,
+  patientID,
+  resolution
+}) => {
   const successMessage = `Successfully handled approved resolution for PatientAssignment ${keysAsString(
     patientID,
     clinicianID
   )}`;
-  let returnMessage: PromiseResolution = {
-    success: false,
-    message: ""
-  };
-
-  let clinicianPatientMapCreatedOrExists = false;
+  let eventResponse = createNewEventResponse();
 
   try {
-    // Resolved if ClinicianPatientMap exists
+    let mapExists = false;
+
+    // Check if ClinicianPatientMap already exists
     const getResult = await getClinicianPatientMap({
-      patientID: patientID.S,
-      clinicianID: clinicianID.S
+      patientID: patientID,
+      clinicianID: clinicianID
     });
+
+    // ClinicianPatientMap already exists
     if (getResult.data.getClinicianPatientMap) {
-      // Successful since map already exists
-      clinicianPatientMapCreatedOrExists = true;
-    } else {
-      // Otherwise, create new ClinicianPatientMap
+      mapExists = true;
+    }
+    // ClinicianPatientMap does not exist (if no errors). Create new ClinicianPatientMap
+    else if (!getResult.errors) {
       const createResult = await createClinicianPatientMap({
-        patientID: patientID.S,
-        clinicianID: clinicianID.S
+        patientID: patientID,
+        clinicianID: clinicianID
       });
-      if (createResult.data?.createClinicianPatientMap) {
-        // Successful since map is created
-        clinicianPatientMapCreatedOrExists = true;
+
+      if (createResult.data.createClinicianPatientMap) {
+        mapExists = true;
       } else {
-        throw Error(
-          "Failed to create ClinicianPatientMap and it does not exist\n" +
-            keysAsString(patientID, clinicianID)
-        );
+        throw Error("Failed to create ClinicianPatientMap");
       }
+    } else {
+      throw new Error(prettify(getResult.errors));
+    }
+
+    if (mapExists) {
+      // Update source PatientAssignment
+      eventResponse = await updateSourcePatientAssignment({
+        patientID,
+        sourceClinicianID: clinicianID,
+        successMessage,
+        resolution
+      });
     }
   } catch (error) {
-    const errorMessage = error + keysAsString(patientID, clinicianID);
-    returnMessage = { success: false, message: errorMessage };
+    // Print error message
+    const errorMessage = `${error}\n${keysAsString(patientID, clinicianID)}`;
+    console.log(errorMessage);
   }
 
-  if (clinicianPatientMapCreatedOrExists) {
-    // Update source PatientAssignment
-    returnMessage = await updateSourcePatientAssignment(
-      patientID,
-      clinicianID,
-      successMessage
-    );
-  }
-
-  return returnMessage;
+  return eventResponse;
 };
 
-const handleReassignedResolution: (input: {
-  clinicianID: StringObject;
-  patientID: StringObject;
-  patientName: StringObject;
-  reassignToClinicianID: StringObject;
-}) => Promise<PromiseResolution> = async ({
+export const handleReassignedResolution: (input: {
+  clinicianID: string;
+  patientID: string;
+  patientName: string;
+  reassignToClinicianID: string;
+  resolution: Resolution;
+}) => Promise<EventResponse> = async ({
   clinicianID,
   patientID,
   patientName,
-  reassignToClinicianID
+  reassignToClinicianID,
+  resolution
 }) => {
+  let eventResponse = createNewEventResponse();
   const successMessage = `Successfully handled reassign resolution for PatientAssignment ${keysAsString(
     patientID,
     clinicianID
   )} to ${keysAsString(patientID, reassignToClinicianID)}`;
-  let returnMessage: PromiseResolution = {
-    success: false,
-    message: ""
-  };
 
   let reassignedToTarget = false;
 
   try {
-    // Check if target PatientAssignment exists
+    // Check if target PatientAssignment already exists
     const getResult = await getPatientAssignment({
-      patientID: patientID.S,
-      clinicianID: reassignToClinicianID.S
+      patientID: patientID,
+      clinicianID: reassignToClinicianID
     });
+
+    // Target PatientAssignment already exists
     if (getResult.data.getPatientAssignment) {
-      // Target PatientAssignment exists
       const targetPatientAssignment = getResult.data.getPatientAssignment;
+
+      // If target PatientAssignment resolution is REASSIGNED, convert to null, add PENDING and source clinicianID
       if (targetPatientAssignment.resolution === Resolution.REASSIGNED) {
         // Update target PatientAssignment to PENDING, remove resolution, add source
         const updateResult = await updatePatientAssignment({
-          patientID: patientID.S,
-          clinicianID: reassignToClinicianID.S,
+          patientID: patientID,
+          clinicianID: reassignToClinicianID,
           _version: targetPatientAssignment._version,
-          pending: Pending.PENDING,
-          resolution: null,
-          adminReassignFromClinicianID: clinicianID.S // Indicate source clinicianID
+          pending: Pending,
+          resolution: null, // Update back to null
+          sourceClinicianID: clinicianID // Indicate source clinicianID
         });
-        if (updateResult.data?.updatePatientAssignment) {
-          // Successfully reassigned to target
+
+        if (updateResult.data.updatePatientAssignment) {
+          // Update flag for target reassignment
           reassignedToTarget = true;
         } else {
           throw Error(
@@ -286,101 +125,193 @@ const handleReassignedResolution: (input: {
               keysAsString(patientID, reassignToClinicianID)
           );
         }
-      } else {
-        // Either PENDING or APPROVED
-        // Successfully reassigned to target
+      }
+
+      // Otherwise target PatientAssignment PENDING or resolution is APPROVED
+      else {
+        // Update flag for target reassignment
         reassignedToTarget = true;
       }
     }
-    // Otherwise, if no errors, create new target PatientAssignment
+
+    // Otherwise create new target PatientAssignment (if no errors)
     else if (!getResult.errors) {
       const result = await createPatientAssignment({
-        patientID: patientID.S,
-        clinicianID: reassignToClinicianID.S,
-        patientName: patientName.S,
-        pending: Pending.PENDING,
-        adminReassignFromClinicianID: clinicianID.S // Indicate source clinicianID
+        patientID: patientID,
+        clinicianID: reassignToClinicianID,
+        patientName: patientName,
+        pending: Pending,
+        resolution: null,
+        sourceClinicianID: clinicianID // Indicate source clinicianID
       });
-      if (result.data?.createPatientAssignment) {
-        // Successfully reassigned to target
+
+      if (result.data.createPatientAssignment) {
+        // Update flag for target reassignment
         reassignedToTarget = true;
       } else {
-        throw Error(
-          "Failed to create target PatientAssignment\n" +
-            keysAsString(patientID, reassignToClinicianID)
-        );
+        throw Error("Failed to create target PatientAssignment");
       }
     } else {
       console.log(getResult.errors.length);
+      throw Error("Failed to check whether target PatientAssignment exists");
+    }
+
+    // Check flag for target reassignment
+    if (reassignedToTarget) {
+      // Update source PatientAssignment
+      eventResponse = await updateSourcePatientAssignment({
+        patientID,
+        sourceClinicianID: clinicianID,
+        successMessage,
+        resolution
+      });
+    }
+  } catch (error) {
+    // Print error message
+    const errorMessage = `${error}\n${keysAsString(patientID, clinicianID)}`;
+    console.log(errorMessage);
+  }
+
+  return eventResponse;
+};
+
+export const sharePatientAssignment: (input: {
+  clinicianID: string;
+  patientID: string;
+  patientName: string;
+  shareToClinicianID: string;
+}) => Promise<EventResponse> = async ({
+  clinicianID,
+  patientID,
+  patientName,
+  shareToClinicianID
+}) => {
+  let eventResponse = createNewEventResponse();
+  let successfullyShared = false;
+  let errorMessage = "";
+
+  try {
+    // Check if PatientAssignmentRecord already exists
+    const getResult = await getPatientAssignment({
+      clinicianID: shareToClinicianID,
+      patientID: patientID
+    });
+
+    // PatientAssignment record already exists
+    if (getResult.data.getPatientAssignment) {
+      // Update PatientAssignmentRecord if it is not APPROVED
+      const record = getResult.data.getPatientAssignment;
+      if (record.resolution !== Resolution.APPROVED) {
+        const updateResult = await updatePatientAssignment({
+          clinicianID: shareToClinicianID,
+          patientID: patientID,
+          pending: Pending,
+          resolution: null,
+          sourceClinicianID: clinicianID,
+          _version: record._version
+        });
+        if (updateResult.data) {
+          successfullyShared = true;
+        } else {
+          errorMessage = prettify(updateResult.errors);
+        }
+      }
+    }
+
+    // PatientAssignment record does not exist
+    else if (!getResult.data.getPatientAssignment) {
+      // Create new PatientAssignment record
+      const createResult = await createPatientAssignment({
+        clinicianID: shareToClinicianID,
+        patientID: patientID,
+        patientName: patientName,
+        pending: Pending,
+        sourceClinicianID: clinicianID
+      });
+      if (createResult.data.createPatientAssignment) {
+        successfullyShared = true;
+      } else {
+        errorMessage = prettify(createResult.errors);
+      }
+    } else {
+      throw Error(prettify(getResult.errors));
+    }
+
+    // If succesfully shared, print success message and update event response
+    if (successfullyShared) {
+      console.log(
+        `Successfully shared patientID: ${patientID} from clinicianID: ${clinicianID} to clinicianID: ${shareToClinicianID}`
+      );
+      // Successful event response
+      eventResponse = {
+        success: true
+      };
+    }
+    // Otherwise, print error message
+    else {
       throw Error(
-        "Failed to check whether target PatientAssignment exists\n" +
-          JSON.stringify(getResult.errors)
+        `Failed to share patientID: ${patientID} from clinicianID: ${clinicianID} to clinicianID: ${shareToClinicianID}. Error: ${errorMessage}`
       );
     }
   } catch (error) {
-    const errorMessage = error + keysAsString(patientID, clinicianID);
-    returnMessage = { success: false, message: errorMessage };
+    console.log(error);
   }
 
-  if (reassignedToTarget) {
-    // Update source PatientAssignment
-    returnMessage = await updateSourcePatientAssignment(
-      patientID,
-      clinicianID,
-      successMessage
-    );
-  }
-
-  return returnMessage;
+  return eventResponse;
 };
 
-const updateSourcePatientAssignment = async (
-  patientID: StringObject,
-  sourceClinicianID: StringObject,
-  successMessage: string
-): Promise<PromiseResolution> => {
-  let returnMessage: PromiseResolution = {
-    success: false,
-    message: ""
-  };
+const updateSourcePatientAssignment: (input: {
+  patientID: string;
+  sourceClinicianID: string;
+  successMessage: string;
+  resolution: Resolution;
+}) => Promise<EventResponse> = async ({
+  patientID,
+  sourceClinicianID,
+  successMessage,
+  resolution
+}) => {
+  let eventResponse = createNewEventResponse();
+
+  // Get and update source PatientAssignment
   try {
     const getResult = await getPatientAssignment({
-      patientID: patientID.S,
-      clinicianID: sourceClinicianID.S
+      patientID: patientID,
+      clinicianID: sourceClinicianID
     });
     if (getResult.data.getPatientAssignment) {
       const sourcePatientAssignment = getResult.data.getPatientAssignment;
       const updateResult = await updatePatientAssignment({
-        patientID: patientID.S,
-        clinicianID: sourceClinicianID.S,
-        _version: sourcePatientAssignment._version,
-        adminCompleted: true // Indicate that Lambda function completed its task
+        patientID: patientID,
+        clinicianID: sourceClinicianID,
+        pending: null,
+        resolution: resolution,
+        _version: sourcePatientAssignment._version
       });
-      if (updateResult.data?.updatePatientAssignment) {
-        // Successfully updated source
-        // Update return message
-        returnMessage = { success: true, message: successMessage };
+      if (updateResult.data.updatePatientAssignment) {
+        // Print success message and update event response
+        console.log(successMessage);
+        // Successful event response
+        eventResponse = {
+          success: true
+        };
       } else {
-        throw Error(
-          "Failed to update source PatientAssignment\n" +
-            keysAsString(patientID, sourceClinicianID)
-        );
+        throw Error("Failed to update source PatientAssignment");
       }
     } else {
-      throw Error(
-        "Failed to query source PatientAssignment\n" +
-          keysAsString(patientID, sourceClinicianID)
-      );
+      throw Error("Failed to query source PatientAssignment");
     }
   } catch (error) {
-    const errorMessage = error + keysAsString(patientID, sourceClinicianID);
-    returnMessage = { success: false, message: errorMessage };
+    // Print error message
+    const errorMessage = `${error}\n${keysAsString(
+      patientID,
+      sourceClinicianID
+    )}`;
+    console.log(errorMessage);
   }
-  return returnMessage;
+  return eventResponse;
 };
 
-const keysAsString = (patientID: StringObject, clinicianID: StringObject) => {
-  return `\npatientID (partition key): ${prettyPrint(
-    patientID
-  )}\nclinicianID (sort key): ${prettyPrint(clinicianID)}`;
+const keysAsString = (patientID: string, clinicianID: string) => {
+  return `\npatientID (partition key): ${patientID}\nclinicianID (sort key): ${clinicianID}`;
 };

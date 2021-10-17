@@ -4,18 +4,21 @@ import { H5 } from "components/Text";
 import { View } from "react-native";
 import { RowButton } from "components/Buttons/RowButton";
 import { ClinicianRecord } from "aws/API";
-import { RootState, select } from "util/useRedux";
+import { RootState, select, useDispatch } from "util/useRedux";
+import { DeleteIconButton } from "components/Buttons/DeleteIconButton";
+import { setRecordToDelete } from "ic-redux/actions/agents/patientActionCreator";
+import { withinDeleteGracePeriod } from "util/utilityFunctions";
 
 interface MedicalRecordRowProps {
   medicalRecord: ClinicianRecord;
   onViewMedicalRecord: (medicalRecord: ClinicianRecord) => void;
-  allowView: boolean; // Whether content viewing is allowed (is online)
+  isOnline: boolean; // Whether application is online
 }
 
 export const MedicalRecordRow: FC<MedicalRecordRowProps> = ({
   medicalRecord,
   onViewMedicalRecord,
-  allowView
+  isOnline
 }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
@@ -26,17 +29,32 @@ export const MedicalRecordRow: FC<MedicalRecordRowProps> = ({
     onViewMedicalRecord(medicalRecord);
   };
 
+  const dispatch = useDispatch();
+
+  const onDeleteButtonPress = () => {
+    dispatch(setRecordToDelete(medicalRecord));
+  };
+
   return (
     <View style={[styles.container]}>
       {/* Medical record title */}
       <H5 text={medicalRecord.title} style={[styles.textContainer]} />
+
+      {/* Delete button */}
+      {withinDeleteGracePeriod(medicalRecord) ? (
+        <DeleteIconButton
+          onPress={onDeleteButtonPress}
+          allowDelete={isOnline}
+        />
+      ) : null}
+
       {/* View button */}
       <RowButton
         onPress={onRowPress}
         title="Patient_History.ViewButton"
-        disabled={!allowView}
+        disabled={!isOnline}
         backgroundColor={
-          allowView ? colors.primaryButtonColor : colors.overlayColor
+          isOnline ? colors.primaryButtonColor : colors.overlayColor
         }
       />
     </View>
@@ -51,6 +69,6 @@ const styles = ScaledSheet.create({
   },
   textContainer: {
     flex: 5,
-    paddingRight: "5@ms"
+    marginRight: "5@ms"
   }
 });

@@ -108,7 +108,8 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
           editType={i18n.t("Todo.ModifiedOn")}
           timeDate={todo.lastModified}
         />
-        {/* Save and cancel buttons */}
+
+        {/* Save and Cancel Buttons */}
         <SaveAndCancelButtons
           onPressSave={() => {
             onSave(todo);
@@ -133,20 +134,6 @@ const styles = ScaledSheet.create({
     borderWidth: "1@ms",
     borderRadius: "2@ms",
     marginBottom: "20@ms"
-  },
-  buttonContainer: {
-    marginBottom: "10@ms",
-    alignItem: "center",
-    justifyContent: "center",
-    flexDirection: "row"
-  },
-  button: {
-    textAlign: "center",
-    justifyContent: "space-evenly",
-    borderRadius: "5@ms",
-    width: "80@ms",
-    height: "30@ms",
-    margin: "10@ms"
   },
   detailText: {
     fontWeight: "bold",

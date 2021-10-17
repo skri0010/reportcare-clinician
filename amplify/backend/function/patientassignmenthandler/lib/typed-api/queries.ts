@@ -1,4 +1,6 @@
 import {
+  GetClinicianInfoQuery,
+  GetClinicianInfoQueryVariables,
   GetClinicianPatientMapQuery,
   GetClinicianPatientMapQueryVariables,
   GetPatientAssignmentQuery,
@@ -7,7 +9,8 @@ import {
 import { AppSyncUrl, BaseResponse } from "../types";
 import {
   getPatientAssignment as gqlGetPatientAssignment,
-  getClinicianPatientMap as gqlGetClinicianPatientMap
+  getClinicianPatientMap as gqlGetClinicianPatientMap,
+  getClinicianInfo as gqlGetClinicianInfo
 } from "../api/graphql/queries";
 // @ts-ignore
 import { request } from "/opt/appSyncRequest";
@@ -19,6 +22,10 @@ interface GetPatientAssignmentResponse extends BaseResponse {
 
 interface GetClinicianPatientMapResponse extends BaseResponse {
   data: GetClinicianPatientMapQuery;
+}
+
+interface GetClinicianInfoResponse extends BaseResponse {
+  data: GetClinicianInfoQuery;
 }
 
 // Export typed GraphQL queries
@@ -44,4 +51,16 @@ export const getClinicianPatientMap = async (
     },
     AppSyncUrl
   )) as GetClinicianPatientMapResponse;
+};
+
+export const getClinicianInfo = async (
+  variables: GetClinicianInfoQueryVariables
+): Promise<GetClinicianInfoResponse> => {
+  return (await request(
+    {
+      query: gqlGetClinicianInfo,
+      variables: variables
+    },
+    AppSyncUrl
+  )) as GetClinicianInfoResponse;
 };

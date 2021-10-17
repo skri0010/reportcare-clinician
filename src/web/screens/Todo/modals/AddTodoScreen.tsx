@@ -224,7 +224,14 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
         }}
         validToSave={allInputValid}
       />
-
+      {/* Save and Cancel buttons */}
+      <SaveAndCancelButtons
+        onPressSave={createTodo}
+        onPressCancel={() => {
+          setModalVisible(false);
+        }}
+        validToSave
+      />
       {/* Loading Indicator while Todo is being created */}
       {(updatingAlert || updatingTodo) && <LoadingIndicator />}
     </View>

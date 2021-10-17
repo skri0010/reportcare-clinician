@@ -138,6 +138,37 @@ export const getPatientBaselines = async (): Promise<
 };
 
 /**
+ * Get the medication configurations to be synced
+ * @returns an object with an array of medication configurations mapped to a patient ID
+ */
+export const getPatientMedicationConfigurations = async (): Promise<
+  AsyncStorageType[AsyncStorageKeys.MEDICATION_CONFIGURATIONS] | null
+> => {
+  const localData = await AsyncStorage.getItem(
+    AsyncStorageKeys.MEDICATION_CONFIGURATIONS
+  );
+
+  if (localData) {
+    return JSON.parse(localData);
+  }
+  return null;
+};
+
+/**
+ * Gets Alerts with updated to be synced.
+ * @returns array of Alerts if any, otherwise null
+ */
+export const getAlertsSync = async (): Promise<
+  AsyncStorageType[AsyncStorageKeys.ALERTS_SYNC] | null
+> => {
+  const localData = await AsyncStorage.getItem(AsyncStorageKeys.ALERTS_SYNC);
+  if (localData) {
+    return JSON.parse(localData);
+  }
+  return null;
+};
+
+/**
  * Base function for getting all Todos.
  * @returns array of Todo if exist, otherwise null
  */

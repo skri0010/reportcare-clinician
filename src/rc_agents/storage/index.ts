@@ -3,7 +3,9 @@ import {
   ProcessedAlertInfos,
   LocalTodo,
   PatientAssignmentResolution,
-  PatientDetails
+  PatientDetails,
+  HighRiskAlertInfo,
+  MedInput
 } from "rc_agents/model";
 import { ClinicianInfo, PatientAssignment, PatientInfo } from "aws/API";
 // eslint-disable-next-line no-restricted-imports
@@ -28,6 +30,8 @@ export enum AsyncStorageKeys {
   ALERT_INFOS = "AlertInfos",
   PENDING_PATIENT_ASSIGNMENTS = "PendingPatientAssignments",
   PATIENT_ASSIGNMENTS_RESOLUTIONS = "PatientAssignmentsResolutions",
+  PATIENT_CONFIGURATIONS = "PatientConfigurations",
+  MEDICATION_CONFIGURATIONS = "MedicationConfigurations",
   PATIENT_BASELINES = "PatientBaselines",
   TODOS = "Todos",
   ALERTS_SYNC = "AlertsSync",
@@ -45,6 +49,7 @@ export type AsyncStorageType = {
     name: string;
     hospitalName: string;
     role: string;
+    phone: string;
   };
   [AsyncStorageKeys.USERNAME]: string;
   [AsyncStorageKeys.CLINICIAN_ID]: string;
@@ -57,11 +62,13 @@ export type AsyncStorageType = {
   [AsyncStorageKeys.ALL_PATIENT_DETAILS]: {
     [patientId: string]: PatientDetails | undefined;
   };
+  [AsyncStorageKeys.PATIENT_CONFIGURATIONS]: PatientInfo[];
+  [AsyncStorageKeys.MEDICATION_CONFIGURATIONS]: MedInput[];
   [AsyncStorageKeys.PATIENT_BASELINES]: PatientInfo[];
   [AsyncStorageKeys.ALERT_INFOS]: ProcessedAlertInfos;
   [AsyncStorageKeys.TODOS]: LocalTodo[];
   [AsyncStorageKeys.TODO_DETAILS]: LocalTodo;
-  [AsyncStorageKeys.ALERTS_SYNC]: AlertInfo[];
+  [AsyncStorageKeys.ALERTS_SYNC]: (AlertInfo | HighRiskAlertInfo)[];
   [AsyncStorageKeys.ALERT_NOTIFICATIONS]: AlertNotification[];
   [AsyncStorageKeys.PATIENT_ASSIGNMENT_SUBSCRIPTIONS]: PatientAssignment[];
 };

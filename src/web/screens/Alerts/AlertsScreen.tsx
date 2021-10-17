@@ -16,25 +16,48 @@ import { AlertDetailsScreen } from "./AlertDetailsScreen";
 import { AdaptiveTwoScreenWrapper } from "components/Wrappers/AdaptiveTwoScreenWrapper";
 
 export const AlertScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
-  const { colors, submittingTodo, fetchingAlertInfo } = select(
-    (state: RootState) => ({
-      colors: state.settings.colors,
-      submittingTodo: state.todos.submittingTodo,
-      fetchingAlertInfo: state.alerts.fetchingAlertInfo
-    })
-  );
+  const {
+    colors,
+    submittingTodo,
+    fetchingAlertInfo,
+    alertInfo,
+    pendingAlerts,
+    completedAlerts
+  } = select((state: RootState) => ({
+    colors: state.settings.colors, // Used to detect completion of updateTodo procedure
+    procedureOngoing: state.procedures.procedureOngoing,
+    procedureSuccessful: state.procedures.procedureSuccessful,
+    submittingTodo: state.todos.submittingTodo,
+    fetchingAlertInfo: state.alerts.fetchingAlertInfo,
+    alertInfo: state.alerts.alertInfo,
+    pendingAlerts: state.alerts.pendingAlerts,
+    completedAlerts: state.alerts.completedAlerts
+  }));
 
   // For pointer events
   const [modalVisible, setModalVisible] = useState(false);
+  const [isEmptyAlert, setIsEmptyAlert] = useState(true);
 
   /**
    * Trigger agent to fetch ALL alerts on initial load
    */
   useEffect(() => {
-    AgentTrigger.triggerRetrieveAlerts(FetchAlertsMode.ALL);
+    // fetchingAlertInfo will be true if the screen is navigated to for viewing a real-time alert.
+    // Trigger to fetch all alerts if the screen is navigated for the first time, i.e. pending and/or completed alerts are undefined.
+    if (!fetchingAlertInfo || !pendingAlerts || !completedAlerts) {
+      AgentTrigger.triggerRetrieveAlerts(FetchAlertsMode.ALL);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const [isEmptyAlert, setIsEmptyAlert] = useState(true);
+  // Display details screen when alertInfo is retrieved
+  useEffect(() => {
+    if (alertInfo) {
+      setIsEmptyAlert(false);
+    } else {
+      setIsEmptyAlert(true);
+    }
+  }, [alertInfo]);
 
   return (
     <ScreenWrapper fixed>
@@ -43,13 +66,13 @@ export const AlertScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
         pointerEvents={modalVisible || submittingTodo ? "none" : "auto"}
       >
         <AdaptiveTwoScreenWrapper
-          // Left side: List of todos
+          // Left side: List of alerts
           LeftComponent={
             <View style={styles.rowSelection}>
-              <AlertListTabNavigator setIsEmptyAlert={setIsEmptyAlert} />
+              <AlertListTabNavigator />
             </View>
           }
-          // Right side: Todo details
+          // Right side: Alert details
           RightComponent={
             <View
               style={{

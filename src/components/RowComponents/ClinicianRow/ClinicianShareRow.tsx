@@ -30,6 +30,9 @@ export const ClinicianShareRow: FC<ClinicanShareRowProps> = ({
         style={[styles.checkBox, { borderColor: colors.primaryBorderColor }]}
         onPress={() => {
           setChecked(!check);
+          if (onRowPress) {
+            onRowPress();
+          }
         }}
       >
         {check ? (

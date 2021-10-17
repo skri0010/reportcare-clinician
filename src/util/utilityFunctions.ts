@@ -1,6 +1,20 @@
 import { ReportVitals, Alert, ClinicianRecord } from "aws/API";
+import { RiskLevel } from "models/RiskLevel";
 import moment from "moment";
 import { AlertInfo, mapColorCodeToRiskLevel } from "rc_agents/model";
+
+const DELETE_RECORD_GRACE_PERIOD_IN_MS = 1000 * 60 * 60 * 24 * 2; // 2 days
+
+export const withinDeleteGracePeriod = (record: ClinicianRecord): boolean => {
+  const recordCreateDateTime = new Date(
+    record.uploadDateTime || record.createdAt
+  );
+  const currentDateTime = new Date();
+  return (
+    currentDateTime.valueOf() - recordCreateDateTime.valueOf() <
+    DELETE_RECORD_GRACE_PERIOD_IN_MS
+  );
+};
 
 export const getAge = (birthDate: string): string => {
   let age = "?";
@@ -14,6 +28,10 @@ export const getAge = (birthDate: string): string => {
     age = momentNow.diff(momentBirth, "years").toString();
   }
   return age;
+};
+
+export const prettify = (any: any): string => {
+  return JSON.stringify(any, null, 2);
 };
 
 // Requirements: Get last 7 days of parameters.
@@ -65,7 +83,7 @@ export const convertAlertToAlertInfo = (alert: Alert): AlertInfo => ({
   riskLevel: mapColorCodeToRiskLevel(alert.colorCode)
 });
 
-// Sorts AlertInfo[] in descending datetime
+// Sorts AlertInfo[] in descending date time
 export const sortAlertInfoByDescendingDateTime = (
   alerts: AlertInfo[]
 ): AlertInfo[] => {
@@ -73,6 +91,27 @@ export const sortAlertInfoByDescendingDateTime = (
     const date1 = new Date(a.dateTime);
     const date2 = new Date(b.dateTime);
     return date2.getTime() - date1.getTime();
+  });
+};
+
+// Sorts AlertInfo[] in descending risk level followed by date time
+export const sortAlertInfoByDescendingRiskLevelAndDateTime = (
+  alerts: AlertInfo[]
+): AlertInfo[] => {
+  const riskLevelOrder = {
+    [RiskLevel.HIGH]: 3,
+    [RiskLevel.MEDIUM]: 2,
+    [RiskLevel.LOW]: 1,
+    [RiskLevel.UNASSIGNED]: 0
+  };
+
+  return alerts.sort((a, b) => {
+    if (riskLevelOrder[a.riskLevel] === riskLevelOrder[b.riskLevel]) {
+      const date1 = new Date(a.dateTime);
+      const date2 = new Date(b.dateTime);
+      return date2.getTime() - date1.getTime();
+    }
+    return riskLevelOrder[b.riskLevel] - riskLevelOrder[a.riskLevel];
   });
 };
 

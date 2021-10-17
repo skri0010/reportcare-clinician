@@ -48,9 +48,7 @@ export const TodoCurrentTab: FC<TodoCurrentTabProps> = ({
   }
 
   return (
-    <View
-      style={{ flex: 1, backgroundColor: colors.secondaryWebBackgroundColor }}
-    >
+    <View style={{ flex: 1, backgroundColor: colors.primaryBackgroundColor }}>
       {/* List of current todos */}
       {fetchingTodos ? (
         // Show loading indicator if fetching pending todos

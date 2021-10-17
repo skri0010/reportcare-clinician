@@ -65,7 +65,7 @@ export const TodoScreen: FC<MainScreenProps[ScreenName.TODO]> = ({
   const [modalVisible, setModalVisible] = useState(false);
 
   // For add button visibility in the header of left tab
-  const [addButton, setAddButton] = useState(true);
+  const [, setAddButton] = useState(true);
 
   // Selected todo details
   const [todoSelected, setTodoSelected] = useState<LocalTodo | undefined>(

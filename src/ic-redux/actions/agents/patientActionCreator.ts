@@ -115,16 +115,23 @@ export const setFetchingIcdCrtRecordContent = createAction(
   })
 )();
 
-export const setMedicalRecordContent = createAction(
-  actionNames.SET_MEDICAL_RECORD_CONTENT,
-  (medicalRecordContent: string | undefined) => ({
-    medicalRecordContent: medicalRecordContent
+export const setRecordToDelete = createAction(
+  actionNames.SET_RECORD_TO_DELETE,
+  (recordToDelete: ClinicianRecord | undefined) => ({
+    recordToDelete: recordToDelete
   })
 )();
 
-export const setIcdCrtRecordContent = createAction(
-  actionNames.SET_ICDCRT_RECORD_CONTENT,
-  (icdCrtRecordContent: string | undefined) => ({
-    icdCrtRecordContent: icdCrtRecordContent
+export const setDeletingRecord = createAction(
+  actionNames.SET_DELETING_RECORD,
+  (deletingRecord: boolean) => ({
+    deletingRecord: deletingRecord
+  })
+)();
+
+export const setDeleteRecordSuccessful = createAction(
+  actionNames.SET_DELETE_RECORD_SUCCESSFUL,
+  (deleteRecordSuccessful: boolean) => ({
+    deleteRecordSuccessful: deleteRecordSuccessful
   })
 )();

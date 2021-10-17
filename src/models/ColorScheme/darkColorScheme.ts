@@ -44,7 +44,7 @@ export const darkColorScheme: ColorScheme = {
   declineButtonColor: "#DC143C",
   primaryDeactivatedButtonColor: "#a6a6a6",
   primaryWarningButtonColor: "#D11C1C",
-  primaryTodoCompleteButtonColor: "#A484FF",
+  innerScreenButtonColor: "#A484FF",
 
   // Avatar background
   primaryAvatarBackgroundColor: "#e0e0e0",
@@ -55,8 +55,12 @@ export const darkColorScheme: ColorScheme = {
   primaryContrastIconColor: "#FFFFFF",
   selectedIconColor: "#00ffff",
   acceptIconColor: "#6AC574",
+  deleteIconColor: "#ff1e00",
 
-  // Icon background/
+  // Icon background
+  deleteIconBackgroundColor: "#ffffff00",
+
+  // Information
   infoIconColor: "#2b79c2",
 
   // Charts

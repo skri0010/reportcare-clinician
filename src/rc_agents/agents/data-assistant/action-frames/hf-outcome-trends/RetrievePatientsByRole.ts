@@ -39,7 +39,6 @@ class RetrievePatientsByRole extends Activity {
    */
   async doActivity(agent: Agent): Promise<void> {
     await super.doActivity(agent, [rule2]);
-
     // Dispatch to store to indicate fetching
     store.dispatch(setFetchingPatients(true));
 
@@ -61,7 +60,7 @@ class RetrievePatientsByRole extends Activity {
           new Belief(BeliefKeys.PATIENT, PatientAttributes.PATIENTS, patients),
           false
         );
-        // Trigger Communicate to USXA
+        // Trigger Communicate to UXSA
         agent.addBelief(
           new Belief(
             BeliefKeys.PATIENT,
@@ -71,7 +70,7 @@ class RetrievePatientsByRole extends Activity {
         );
       } else {
         // Update Beliefs
-        // Trigger Communicate to USXA to get role
+        // Trigger Communicate to UXSA to get role
         agent.addBelief(
           new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.ROLE, true)
         );

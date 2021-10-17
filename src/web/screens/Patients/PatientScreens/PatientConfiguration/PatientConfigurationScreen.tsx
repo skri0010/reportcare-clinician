@@ -1,5 +1,5 @@
 import React, { FC, useState, useEffect, useCallback } from "react";
-import { View, ScrollView } from "react-native";
+import { View, ScrollView, TouchableOpacity, Modal } from "react-native";
 import { TextField } from "components/InputComponents/TextField";
 import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
 import i18n from "util/language/i18n";
@@ -15,11 +15,11 @@ import {
 } from "util/validation";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { CheckboxText } from "components/InputComponents/CheckboxText";
-import { H3 } from "components/Text";
+import { H3, H4 } from "components/Text";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { Picker } from "@react-native-picker/picker";
-import { Hospital, NYHAClass } from "rc_agents/model";
+import { Hospital, NYHAClass, MedInput } from "rc_agents/model";
 import { getPickerStyles } from "util/getStyles";
 import { Label } from "components/Text/Label";
 import { AuthButton } from "components/Buttons/AuthButton";
@@ -30,6 +30,8 @@ import {
   setConfigurationSuccessful,
   setConfiguringPatient
 } from "ic-redux/actions/agents/configurationActionCreator";
+import { MedicationConfigForm } from "./MedicationConfigForm";
+import { MedicationInfoList } from "components/RowComponents/MedicationRow/MedicationInfoList";
 import { SaveAndCancelButtons } from "components/Buttons/SaveAndCancelButtons";
 
 interface PatientConfigurationScreenProps {
@@ -51,10 +53,40 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
     const [configInfo, setConfigInfo] = useState<PatientInfo>(() => {
       return cloneDeep(info);
     });
+
+    // Medication configuration inputs
+    const [configMedInfo, setConfigMedInfo] = useState<MedInput>({
+      name: "",
+      dosage: "",
+      frequency: "",
+      patientID: info.patientID
+    });
+
     const [allInputValid, setAllInputValid] = useState<boolean>(false);
     const [hasDevice, setHasDevice] = useState<boolean>(
       notEmptyString(info.deviceNo)
     );
+
+    // To track all the medication infos that have been added locally
+    const [medInfos, setMedInfos] = useState<MedInput[]>([]);
+
+    // Checks for medication info input section visibility
+    const [hasMedInfo, setHasMedInfo] = useState<boolean>(medInfos.length > 0);
+
+    // Medication info input form visibility, add new medication info button disabled or not
+    const [medConfigFormVisible, setMedConfigFormVisible] =
+      useState<boolean>(false);
+
+    // Checks if there is a new medication info added
+    const [newMedInfoAdded, setNewMedInfoAdded] = useState<boolean>(false);
+
+    // Medication info to be deleted from medInfos
+    const [medInfoToDelete, setMedInfoToDelete] = useState<MedInput>({
+      name: "",
+      dosage: "",
+      frequency: "",
+      patientID: info.patientID
+    });
 
     // Used locally to keep track of ongoing configuration procedure
     const [configuring, setConfiguring] = useState<boolean>(false);
@@ -115,12 +147,49 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
       });
     };
 
+    // Save medication info inputs
+    const saveMedInput = (medInput: MedInput) => {
+      const currentMedInfos: MedInput[] = medInfos;
+      currentMedInfos.push(medInput);
+      setMedInfos(currentMedInfos);
+      setNewMedInfoAdded(true);
+      // closes the medication info input form, enable the add new medication info button
+      setMedConfigFormVisible(false);
+      // Reset the values for the medication input
+      setConfigMedInfo({
+        name: "",
+        dosage: "",
+        frequency: "",
+        patientID: info.patientID
+      });
+    };
+
+    // Side effect for when a medication info input is deleted from the list
+    useEffect(() => {
+      const currentMedInfos: MedInput[] = medInfos;
+      currentMedInfos.splice(medInfos.indexOf(medInfoToDelete), 1);
+      setMedInfos(currentMedInfos);
+      // If there are not medication infos in the array,
+      // set newMedInfoAdded as false to disable to the proceed button
+      if (currentMedInfos.length === 0) {
+        setNewMedInfoAdded(false);
+      }
+    }, [medInfoToDelete, medInfos]);
+
     // Side effects when optional fields change
     useEffect(() => {
       if (!hasDevice && notEmptyString(configInfo.deviceNo)) {
         updateDeviceNumber("");
       }
     }, [hasDevice, configInfo, updateDeviceNumber]);
+
+    // Side effect for when the checkbox for medication info is unticked
+    useEffect(() => {
+      if (!hasMedInfo) {
+        setMedInfos([]);
+        setNewMedInfoAdded(false);
+      }
+    }, [hasMedInfo]);
 
     // Side effect for final validation
     useEffect(() => {
@@ -133,19 +202,20 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
         validateFluidIntakeGoal(configInfo.fluidIntakeGoal)) as boolean;
 
       // Validation for optional fields
-      const optional = (!hasDevice || configInfo.deviceNo) as boolean;
+      const optional = ((!hasDevice || configInfo.deviceNo) &&
+        (!hasMedInfo || newMedInfoAdded)) as boolean;
 
       const valid = mandatory && optional;
 
       setAllInputValid(valid);
-    }, [configInfo, hasDevice]);
+    }, [configInfo, hasDevice, hasMedInfo, newMedInfoAdded]);
 
     // Proceed button onPress
     const onProceedPress = () => {
       dispatch(setConfiguringPatient(true));
       setConfiguring(true);
       const infoToUpdate = { ...configInfo, configured: true };
-      triggerStorePatientBaseline(infoToUpdate);
+      triggerStorePatientBaseline(infoToUpdate, medInfos);
     };
 
     useEffect(() => {
@@ -256,6 +326,51 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
           {/* Separator */}
           <ItemSeparator topSpacing={ms(25)} bottomSpacing={ms(10)} />
 
+          {/* Optional fields */}
+          {/* Medication Configuration section */}
+          <CheckboxText
+            text={i18n.t("Patient_Configuration.Prompt.MedInfo")}
+            containerStyle={styles.promptTextContainer}
+            fontSize={fonts.h6Size}
+            checked={hasMedInfo}
+            onPress={() => setHasMedInfo(!hasMedInfo)}
+          />
+          {hasMedInfo ? (
+            <View>
+              {/* Add medication info button */}
+              <View style={styles.newMedInfoButtonContainer}>
+                <TouchableOpacity
+                  disabled={medConfigFormVisible}
+                  onPress={() => setMedConfigFormVisible(true)}
+                  style={[
+                    styles.addNewMedInfo,
+                    {
+                      backgroundColor: medConfigFormVisible
+                        ? colors.primaryDeactivatedButtonColor
+                        : colors.acceptButtonColor
+                    }
+                  ]}
+                >
+                  <H4
+                    text={i18n.t("Patient_Configuration.AddNewMedicationInfo")}
+                    style={{ color: colors.primaryContrastTextColor }}
+                  />
+                </TouchableOpacity>
+              </View>
+
+              {/* List of medication infos added */}
+              {newMedInfoAdded ? (
+                <MedicationInfoList
+                  medInfos={medInfos}
+                  setMedInfoToDelete={setMedInfoToDelete}
+                />
+              ) : null}
+            </View>
+          ) : null}
+
+          {/* Separator */}
+          <ItemSeparator topSpacing={ms(25)} bottomSpacing={ms(10)} />
+
           {/* Mandatory fields for values */}
           {/* Target activity (number of steps) */}
           <TextField
@@ -319,6 +434,32 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
             noTextTransform
           />
         )}
+
+        {/* Medication configuration form in a pop-up modal */}
+        <View style={styles.modalView}>
+          <Modal
+            transparent
+            visible={medConfigFormVisible}
+            animationType="slide"
+            onRequestClose={() => {
+              setMedConfigFormVisible(false);
+            }}
+          >
+            <View
+              style={[
+                styles.modalContainer,
+                { backgroundColor: colors.overlayColor }
+              ]}
+            >
+              <MedicationConfigForm
+                configMedInfo={configMedInfo}
+                setConfigMedInfo={setConfigMedInfo}
+                saveMedInput={saveMedInput}
+                setMedConfigFormVisible={setMedConfigFormVisible}
+              />
+            </View>
+          </Modal>
+        </View>
         {configuring && <LoadingIndicator />}
       </ScreenWrapper>
     );
@@ -331,5 +472,24 @@ const styles = ScaledSheet.create({
   },
   promptTextContainer: {
     marginTop: "10@ms"
+  },
+  addNewMedInfo: {
+    width: "200@ms",
+    height: "30@ms",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingBottom: "2@ms",
+    borderRadius: "5@ms"
+  },
+  newMedInfoButtonContainer: { alignItems: "center", paddingVertical: "10@ms" },
+  modalView: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  modalContainer: {
+    justifyContent: "center",
+    height: "100%",
+    width: "100%"
   }
 });

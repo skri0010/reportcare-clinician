@@ -153,6 +153,23 @@ export class ClinicianAgent extends Agent {
   }
 
   /**
+   * Override existing adding of belief into agent's belief pool to remove unused attributes and values.
+   * @param {Belief} belief belief to be added
+   */
+  override addBelief(belief: Belief): boolean | undefined {
+    const key = belief.getKey();
+    const attribute = belief.getAttribute();
+    const value = belief.getValue();
+
+    if (value === null && key in this.beliefs) {
+      // Clears unused attributes and values from belief pool
+      delete this.beliefs[key][attribute];
+    } else {
+      return super.addBelief(belief);
+    }
+  }
+
+  /**
    * Gets beliefs that should be stored in the cloud database
    * NOTE: Currently unused since all beliefs are stored
    * @returns storableBeliefs
@@ -208,7 +225,9 @@ export class ClinicianAgent extends Agent {
       // Updates indicator that activity is completed
       this.setActionCompleted(true);
     }
+    // No activity to perform
     this.currentActivity = undefined;
+
     this.working = false;
 
     while (this.messageQueue.length > 0) {

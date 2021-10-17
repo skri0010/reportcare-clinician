@@ -36,6 +36,9 @@ import { af_StoreBaseline } from "./action-frames/medical-record-device-configur
 import { af_CreateIcdCrtRecord } from "./action-frames/medical-record-device-configuration/CreateIcdCrtRecord";
 import { af_RetrieveIcdCrtRecordContent } from "./action-frames/hf-outcome-trends/RetrieveIcdCrtRecordContent";
 import { af_RequestDisplayIcdCrtRecordContent } from "./action-frames/hf-outcome-trends/RequestDisplayIcdCrtRecordContent";
+import { af_RetrieveMonitoringRecords } from "./action-frames/exacerbation-user-specific-alert/RetrieveMonitoringRecords";
+import { af_InformMonitoringRecords } from "./action-frames/exacerbation-user-specific-alert/InformMonitoringRecords";
+import { af_DeleteRecord } from "./action-frames/medical-record-device-configuration/DeleteRecord";
 
 // Initial Beliefs of Agent
 
@@ -52,6 +55,7 @@ const agentDTA = new ClinicianAgent(
     af_StoreBaseline,
     af_CreateMedicalRecord,
     af_CreateIcdCrtRecord,
+    af_DeleteRecord,
 
     // SRD-I
     af_RetrievePendingPatientAssignments,
@@ -77,11 +81,15 @@ const agentDTA = new ClinicianAgent(
     af_RetrieveIcdCrtRecordContent,
     af_RequestDisplayIcdCrtRecordContent,
 
-    // AT-CP-I
+    // HF-EUA
+    af_RetrieveMonitoringRecords,
+    af_InformMonitoringRecords,
+
+    // P-USOR-I
     af_RetrieveAlerts,
     af_RequestDisplayAlerts,
 
-    // AT-CP-II
+    // P-USOR-II
     af_RetrieveDetailedAlertInfo,
     af_RequestDisplayDetailedAlertInfo,
     af_UpdateAlert,

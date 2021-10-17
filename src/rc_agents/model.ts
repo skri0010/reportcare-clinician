@@ -4,7 +4,8 @@ import {
   ReportVitals,
   PatientInfo,
   Alert,
-  ClinicianRecord
+  ClinicianRecord,
+  MedicationInfo
 } from "aws/API";
 import { RiskLevel } from "models/RiskLevel";
 
@@ -61,6 +62,22 @@ export enum AlertColorCode {
   UNASSIGNED = "white"
 }
 
+export enum MedicationNames {
+  ASPIRIN = "Aspirin",
+  BENAZEPRIL = "Benazepril",
+  SACUBITRIL = "Sacubitril"
+}
+
+type Dosage = {
+  min: number;
+  max: number;
+};
+
+export type MedDosage = {
+  name: MedicationNames;
+  dosage: Dosage;
+};
+
 /**
  * Maps alert's color code to risk level.
  * @param colorCode alert's color code
@@ -115,6 +132,7 @@ export interface PatientDetails {
   activityInfos: LocalActivityInfos;
   symptomReports: LocalReportSymptoms;
   vitalsReports: LocalReportVitals;
+  medicationInfo: MedInput[];
   medicalRecords: ClinicianRecord[];
   icdCrtRecords: ClinicianRecord[];
 }
@@ -148,17 +166,34 @@ export interface AlertsCount {
   unassignedRisk: number;
 }
 
-export type AlertInfo = {
+// Shared by AlertInfo and HighRiskAlertInfo
+type BaseAlertInfo = {
   riskLevel: RiskLevel;
-  diagnosis?: string;
-  NYHAClass?: string;
-  lastMedication?: string;
-  medicationQuantity?: number;
-  activityDuringAlert?: string;
+  medCompliants?: MedicationInfo[];
 } & Alert;
 
+// For viewing usual Alert details
+export type AlertInfo = {
+  diagnosis?: string;
+  NYHAClass?: string;
+  activityDuringAlert?: string;
+} & BaseAlertInfo;
+
+export type MedInfoCompliants = {
+  [date: string]: string[];
+};
+
+// For viewing details of real-time Alert (triage >= 70%)
+// Only applicable to HF Specialist and EP
+export type HighRiskAlertInfo = {
+  latestBaseline?: PatientInfo;
+  symptomReports?: ReportSymptom[];
+  vitalsReports?: ReportVitals[];
+  icdCrtRecord?: ClinicianRecord;
+} & BaseAlertInfo;
+
 export type ProcessedAlertInfos = {
-  [patientID: string]: AlertInfo[] | undefined;
+  [patientID: string]: (AlertInfo | HighRiskAlertInfo)[] | undefined;
 };
 
 export interface TodoInput {
@@ -196,6 +231,21 @@ export interface LocalTodo {
 
 export interface TodoDetails {
   id: string;
+}
+
+export interface MedInput {
+  id?: string;
+  name: string;
+  dosage: string;
+  frequency: string;
+  patientID: string;
+  records?: string;
+}
+
+export interface MedicalRecordInput {
+  title: string;
+  patientID: string;
+  file: RecordFile;
 }
 
 export interface ClinicianRecordInput {

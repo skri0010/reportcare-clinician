@@ -6,7 +6,7 @@ import {
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
 import { ProcedureConst } from "agents-framework/Enums";
-import { agentALA, agentDTA, agentUXSA } from "rc_agents/agents";
+import { agentDTA } from "rc_agents/agents";
 import { Belief } from "agents-framework";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
@@ -16,29 +16,16 @@ import {
   FetchTodosMode,
   LocalTodo,
   RetrieveTodoDetailsMethod,
-  ClinicianRecordInput
+  ClinicianRecordInput,
+  MedInput
 } from "rc_agents/model";
-import { AlertNotification } from "aws/TypedAPI/subscriptions";
-
-// HF-OTP-I
-// Triggers RetrievePatientsByRole of DTA
-export const triggerRetrievePatientsByRole = (): void => {
-  agentUXSA.addBelief(
-    new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.RETRIEVE_ROLE, true)
-  );
-
-  agentAPI.addFact(
-    new Belief(
-      BeliefKeys.PROCEDURE,
-      ProcedureAttributes.HF_OTP_I,
-      ProcedureConst.ACTIVE
-    )
-  );
-};
 
 // HF-OTP-II
 // Triggers RetrievePatientDetails of DTA
-export const triggerRetrievePatientDetails = (patient: PatientInfo): void => {
+export const triggerRetrievePatientDetails = (
+  patient: PatientInfo,
+  retrieveLocally = false
+): void => {
   // Add patient as fact, no broadcast
   agentAPI.addFact(
     new Belief(
@@ -48,6 +35,17 @@ export const triggerRetrievePatientDetails = (patient: PatientInfo): void => {
     ),
     false
   );
+
+  // Add belief to retrieve locally
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PATIENT,
+      PatientAttributes.RETRIEVE_PATIENT_DETAILS_LOCALLY,
+      retrieveLocally
+    ),
+    false
+  );
+
   // Set preconditions
   agentDTA.addBelief(
     new Belief(
@@ -56,6 +54,7 @@ export const triggerRetrievePatientDetails = (patient: PatientInfo): void => {
       true
     )
   );
+
   // Broadcast active procedure
   agentAPI.addFact(
     new Belief(
@@ -147,15 +146,28 @@ export const triggerResolvePendingAssignments = (
 };
 
 // MRDC: Triggers StoreBaseline of DTA
-export const triggerStorePatientBaseline = (input: PatientInfo): void => {
+export const triggerStorePatientBaseline = (
+  patientInput: PatientInfo,
+  medInput: MedInput[]
+): void => {
   agentAPI.addFact(
     new Belief(
       BeliefKeys.PATIENT,
       PatientAttributes.PATIENT_TO_CONFIGURE,
-      input
+      patientInput
     ),
     false
   );
+
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PATIENT,
+      PatientAttributes.MEDICATION_TO_CONFIGURE,
+      medInput
+    ),
+    false
+  );
+
   agentDTA.addBelief(
     new Belief(BeliefKeys.PATIENT, PatientAttributes.STORE_BASELINE, true)
   );
@@ -226,7 +238,7 @@ export const triggerUpdateTodo = (input: LocalTodo): void => {
   );
 };
 
-// AT-CP-I: Trigger RetriveAlerts of DTA
+// P-USOR-I: Trigger RetriveAlerts of DTA
 export const triggerRetrieveAlerts = (
   fetchAlertsMode: FetchAlertsMode,
   retrieveAlertsLocally = false
@@ -249,7 +261,7 @@ export const triggerRetrieveAlerts = (
     false
   );
 
-  // Trigger DTA to retrieve alerts
+  // P-USOR: Trigger DTA to retrieve alerts
   agentDTA.addBelief(
     new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.RETRIEVE_ALERTS, true)
   );
@@ -257,13 +269,13 @@ export const triggerRetrieveAlerts = (
   agentAPI.addFact(
     new Belief(
       BeliefKeys.PROCEDURE,
-      ProcedureAttributes.AT_CP_I,
+      ProcedureAttributes.P_USOR_I,
       ProcedureConst.ACTIVE
     )
   );
 };
 
-// AT-CP-II Triggers RetrieveDetailedAlertInfo of DTA
+// P-USOR-II Triggers RetrieveDetailedAlertInfo of DTA
 export const triggerRetrieveDetailedAlertInfo = (
   alertInfo: AlertInfo
 ): void => {
@@ -284,38 +296,7 @@ export const triggerRetrieveDetailedAlertInfo = (
   agentAPI.addFact(
     new Belief(
       BeliefKeys.PROCEDURE,
-      ProcedureAttributes.AT_CP_II,
-      ProcedureConst.ACTIVE
-    )
-  );
-};
-
-// AT-CP-III: Triggers ProcessAlertNotification of ALA
-export const triggerProcessAlertNotification = (
-  alertNotification: AlertNotification
-): void => {
-  // Adds alert notification to facts
-  agentAPI.addFact(
-    new Belief(
-      BeliefKeys.CLINICIAN,
-      ClinicianAttributes.ALERT_NOTIFICATION,
-      alertNotification
-    ),
-    false
-  );
-
-  // Triggers ALA to process AlertNotification
-  agentALA.addBelief(
-    new Belief(
-      BeliefKeys.CLINICIAN,
-      ClinicianAttributes.PROCESS_ALERT_NOTIFICATION,
-      true
-    )
-  );
-  agentAPI.addFact(
-    new Belief(
-      BeliefKeys.PROCEDURE,
-      ProcedureAttributes.AT_CP_III,
+      ProcedureAttributes.P_USOR_II,
       ProcedureConst.ACTIVE
     )
   );
@@ -458,7 +439,7 @@ export const triggerRetrieveMedicalRecordContent = (
   );
 };
 
-// HF-OTP-IV: Triggers CreateIcdCrtRecord of DTA
+// MRDC: Triggers CreateIcdCrtRecord of DTA
 export const triggerCreateIcdCrtRecord = (
   input: ClinicianRecordInput
 ): void => {
@@ -505,6 +486,50 @@ export const triggerRetrieveIcdCrtRecordContent = (
     new Belief(
       BeliefKeys.PROCEDURE,
       ProcedureAttributes.HF_OTP_IV,
+      ProcedureConst.ACTIVE
+    )
+  );
+};
+
+// HF-EUA: Triggers RetrieveMonitoringRecords of DTA
+export const triggerRetrieveMonitoringRecords = (input: AlertInfo): void => {
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.CLINICIAN,
+      ClinicianAttributes.REAL_TIME_ALERT,
+      input
+    ),
+    false
+  );
+  agentDTA.addBelief(
+    new Belief(
+      BeliefKeys.CLINICIAN,
+      ClinicianAttributes.RETRIEVE_MONITORING_RECORDS,
+      true
+    )
+  );
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PROCEDURE,
+      ProcedureAttributes.HF_EUA,
+      ProcedureConst.ACTIVE
+    )
+  );
+};
+
+// MRDC: Triggers DeleteRecord of DTA
+export const triggerDeleteRecord = (input: ClinicianRecord): void => {
+  agentAPI.addFact(
+    new Belief(BeliefKeys.PATIENT, PatientAttributes.RECORD_TO_DELETE, input),
+    false
+  );
+  agentDTA.addBelief(
+    new Belief(BeliefKeys.PATIENT, PatientAttributes.DELETE_RECORD, true)
+  );
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PROCEDURE,
+      ProcedureAttributes.MRDC,
       ProcedureConst.ACTIVE
     )
   );

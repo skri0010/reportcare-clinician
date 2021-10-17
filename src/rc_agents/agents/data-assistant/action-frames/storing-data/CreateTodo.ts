@@ -19,7 +19,13 @@ import { LocalStorage } from "rc_agents/storage";
 import { store } from "util/useRedux";
 import { agentNWA } from "rc_agents/agents";
 import { createTodo } from "aws";
-import { AlertInfo, AlertStatus, LocalTodo, TodoStatus } from "rc_agents/model";
+import {
+  AlertInfo,
+  AlertStatus,
+  LocalTodo,
+  TodoStatus,
+  HighRiskAlertInfo
+} from "rc_agents/model";
 import { CreateTodoInput } from "aws/API";
 import { setProcedureSuccessful } from "ic-redux/actions/agents/procedureActionCreator";
 
@@ -73,7 +79,7 @@ class CreateTodo extends Activity {
 
         // Triggers associated Alert to be updated from pending to completed
         if (todoInput.alertId) {
-          let alertToUpdate: AlertInfo | undefined | null;
+          let alertToUpdate: AlertInfo | HighRiskAlertInfo | undefined | null;
 
           // Create Todo for the first time
           if (todoInput.alert) {
@@ -111,7 +117,7 @@ class CreateTodo extends Activity {
             agentAPI.addFact(
               new Belief(
                 BeliefKeys.PROCEDURE,
-                ProcedureAttributes.AT_CP_II,
+                ProcedureAttributes.P_USOR_II,
                 ProcedureConst.ACTIVE
               )
             );

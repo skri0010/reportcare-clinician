@@ -66,7 +66,7 @@ export const AlertsCard: FC<AlertsCardProps> = ({
       flex={flex}
       maxHeight={maxHeight}
       title={i18n.t("Home.Alerts")}
-      subtitle={`(${remainingAlert} ${i18n.t("Keywords.remaining")})`}
+      subtitle={`(${remainingAlert} ${i18n.t("Home.ItemsRemaining")})`}
     >
       {/* Alert Button Row */}
       {fetchingPendingAlerts ? (

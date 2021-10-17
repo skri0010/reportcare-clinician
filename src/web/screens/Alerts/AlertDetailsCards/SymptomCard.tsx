@@ -1,50 +1,52 @@
-import { H4, H5 } from "components/Text";
+import { ReportSymptom } from "aws/API";
 import React, { FC } from "react";
-import { ms, ScaledSheet } from "react-native-size-matters";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import i18n from "util/language/i18n";
-import { CardWrapper } from "components/Wrappers/CardWrapper";
-import { RootState, select } from "util/useRedux";
+import { getLocalDateTime } from "util/utilityFunctions";
+import { NoListItemMessage } from "web/screens/Shared/NoListItemMessage";
+import { BaseDetailsCard, BaseDetailsContent } from "./BaseDetailsCard";
 
 interface SymptomCardProps {
-  symptom: number | string;
-  minHeight: number;
-  maxHeight: number;
-  signs: string;
+  symptomReport?: ReportSymptom | null;
+  activity?: string | null;
 }
 
 export const SymptomCard: FC<SymptomCardProps> = ({
-  symptom,
-  minHeight,
-  maxHeight,
-  signs
+  symptomReport,
+  activity
 }) => {
-  const iconSize: number = 50;
-  const { colors } = select((state: RootState) => ({
-    colors: state.settings.colors
-  }));
   return (
-    <CardWrapper flex={1} minHeight={minHeight} maxHeight={maxHeight}>
-      <Icon
-        name="clipboard-alert-outline"
-        size={iconSize}
-        style={{ color: colors.primaryIconColor }}
-      />
-      <H5 text={`${i18n.t("Alerts.Symptoms")}: `} style={styles.title} />
-      <H4
-        text={`${symptom}`}
-        style={{ paddingLeft: ms(5), paddingBottom: ms(10) }}
-      />
-      <H5 text={`${i18n.t("Alerts.Signs")}: `} style={styles.title} />
-      <H4 text={`${signs}`} style={{ paddingLeft: ms(5) }} />
-    </CardWrapper>
+    <BaseDetailsCard
+      cardTitle={i18n.t("Alerts.AlertSymptom.Symptoms")}
+      iconName="clipboard-alert-outline"
+    >
+      {symptomReport && activity ? (
+        <>
+          <BaseDetailsContent
+            title={i18n.t("Alerts.AlertSymptom.Symptom")}
+            content={symptomReport?.Name || "-"}
+          />
+          <BaseDetailsContent
+            title={i18n.t("Alerts.AlertSymptom.Activity")}
+            content={activity || "-"}
+          />
+          <BaseDetailsContent
+            title={i18n.t("Alerts.AlertSymptom.Severity")}
+            content={symptomReport?.Severity || "-"}
+          />
+          <BaseDetailsContent
+            title={i18n.t("Alerts.AlertSymptom.DateTime")}
+            content={
+              symptomReport?.DateTime
+                ? getLocalDateTime(symptomReport.DateTime)
+                : "-"
+            }
+          />
+        </>
+      ) : (
+        <NoListItemMessage
+          screenMessage={i18n.t("Alerts.AlertSymptom.NoSymptomReport")}
+        />
+      )}
+    </BaseDetailsCard>
   );
 };
-
-const styles = ScaledSheet.create({
-  title: {
-    fontWeight: "bold",
-    paddingLeft: "5@ms",
-    paddingBottom: "5@ms"
-  }
-});

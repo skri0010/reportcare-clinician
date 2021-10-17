@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AlertNotification } from "aws/TypedAPI/subscriptions";
-import { AlertInfo, AlertStatus } from "rc_agents/model";
+import { AlertInfo, AlertStatus, HighRiskAlertInfo } from "rc_agents/model";
 import { AsyncStorageKeys, AsyncStorageType } from "rc_agents/storage";
 import {
   getProcessedAlertInfos,
@@ -23,7 +23,9 @@ const setProcessedAlertInfos = async (
 };
 
 // Insert AlertInfo[], merge based on latest _version
-export const setAlertInfos = async (alertInfos: AlertInfo[]): Promise<void> => {
+export const setAlertInfos = async (
+  alertInfos: (AlertInfo | HighRiskAlertInfo)[]
+): Promise<void> => {
   let localProcessedAlertInfos = await getProcessedAlertInfos();
 
   // Create new object if it does not exist
@@ -50,7 +52,8 @@ export const setAlertInfos = async (alertInfos: AlertInfo[]): Promise<void> => {
         );
 
         if (index >= 0) {
-          const localAlertInfo: AlertInfo = localAlertInfosForPatient[index];
+          const localAlertInfo: AlertInfo | HighRiskAlertInfo =
+            localAlertInfosForPatient[index];
 
           // Merge based on alert's _version
           if (alertInfo._version >= localAlertInfo._version) {
@@ -84,7 +87,9 @@ export const setAlertInfos = async (alertInfos: AlertInfo[]): Promise<void> => {
 };
 
 // Insert AlertInfo, merge based on latest _version
-export const setAlertInfo = async (alertInfo: AlertInfo): Promise<void> => {
+export const setAlertInfo = async (
+  alertInfo: AlertInfo | HighRiskAlertInfo
+): Promise<void> => {
   await setAlertInfos([alertInfo]);
 };
 
@@ -93,7 +98,7 @@ export const setAlertsSync = async (
   alertsSync: AsyncStorageType[AsyncStorageKeys.ALERTS_SYNC],
   overwrite = false
 ): Promise<void> => {
-  let localData: AlertInfo[] | null = null;
+  let localData: (AlertInfo | HighRiskAlertInfo)[] | null = null;
   if (overwrite) {
     localData = [];
   } else {
@@ -109,7 +114,9 @@ export const setAlertsSync = async (
 };
 
 // Insert AlertInfo to be synced, merge directly
-export const setAlertSync = async (alertInfo: AlertInfo): Promise<void> => {
+export const setAlertSync = async (
+  alertInfo: AlertInfo | HighRiskAlertInfo
+): Promise<void> => {
   await replaceAlertsSync([alertInfo]);
 };
 

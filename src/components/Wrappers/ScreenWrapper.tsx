@@ -17,6 +17,7 @@ interface ScreenWrapperProps extends BaseWrapperProps {
     | "space-around"
     | "space-evenly"
     | undefined; // Cannot directly apply to ScrollView
+  fixedChildren?: React.ReactNode; // Children to be excluded from ScrollView
 }
 
 export const ScreenWrapper: FC<ScreenWrapperProps> = ({
@@ -26,7 +27,8 @@ export const ScreenWrapper: FC<ScreenWrapperProps> = ({
   fixed = false,
   style,
   pointerEvents,
-  justifyContent
+  justifyContent,
+  fixedChildren
 }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
@@ -44,13 +46,16 @@ export const ScreenWrapper: FC<ScreenWrapperProps> = ({
       {children}
     </View>
   ) : (
-    <ScrollView
-      style={[backgroundStyle, style]}
-      showsVerticalScrollIndicator={showScrollBar}
-      pointerEvents={pointerEvents}
-      contentContainerStyle={{ justifyContent: justifyContent }}
-    >
-      {children}
-    </ScrollView>
+    <>
+      {fixedChildren}
+      <ScrollView
+        style={[backgroundStyle, style]}
+        showsVerticalScrollIndicator={showScrollBar}
+        pointerEvents={pointerEvents}
+        contentContainerStyle={{ justifyContent: justifyContent }}
+      >
+        {children}
+      </ScrollView>
+    </>
   );
 };

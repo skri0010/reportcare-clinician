@@ -14,6 +14,8 @@ target 'ClinicianMobile' do
 
   pod 'RNAWSCognito', :path => '../node_modules/amazon-cognito-identity-js'
 
+  pod 'react-native-geolocation', :path => '../node_modules/@react-native-community/geolocation'
+
   target 'ClinicianMobileTests' do
     inherit! :complete
     # Pods for testing

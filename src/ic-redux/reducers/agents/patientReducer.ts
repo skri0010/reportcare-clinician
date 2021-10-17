@@ -22,8 +22,9 @@ interface PatientState {
   fetchingIcdCrtRecords: boolean;
   icdCrtRecords: ClinicianRecord[] | undefined;
   fetchingIcdCrtRecordContent: boolean;
-  medicalRecordContent: string | undefined;
-  icdCrtRecordContent: string | undefined;
+  recordToDelete: ClinicianRecord | undefined;
+  deletingRecord: boolean;
+  deleteRecordSuccessful: boolean;
 }
 
 const initialState: PatientState = {
@@ -43,8 +44,9 @@ const initialState: PatientState = {
   fetchingIcdCrtRecords: false,
   icdCrtRecords: undefined,
   fetchingIcdCrtRecordContent: false,
-  medicalRecordContent: undefined,
-  icdCrtRecordContent: undefined
+  recordToDelete: undefined,
+  deletingRecord: false,
+  deleteRecordSuccessful: false
 };
 
 export const patientReducer: Reducer<PatientState, RootAction> = (
@@ -123,15 +125,20 @@ export const patientReducer: Reducer<PatientState, RootAction> = (
         ...state,
         fetchingIcdCrtRecordContent: action.payload.fetchingIcdCrtRecordContent
       };
-    case actionNames.SET_MEDICAL_RECORD_CONTENT:
+    case actionNames.SET_RECORD_TO_DELETE:
       return {
         ...state,
-        medicalRecordContent: action.payload.medicalRecordContent
+        recordToDelete: action.payload.recordToDelete
       };
-    case actionNames.SET_ICDCRT_RECORD_CONTENT:
+    case actionNames.SET_DELETING_RECORD:
       return {
         ...state,
-        icdCrtRecordContent: action.payload.icdCrtRecordContent
+        deletingRecord: action.payload.deletingRecord
+      };
+    case actionNames.SET_DELETE_RECORD_SUCCESSFUL:
+      return {
+        ...state,
+        deleteRecordSuccessful: action.payload.deleteRecordSuccessful
       };
     default:
       return state;

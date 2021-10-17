@@ -1,24 +1,22 @@
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import { ms } from "react-native-size-matters";
 import { CardWrapper } from "components/Wrappers/CardWrapper";
 import { FlatList } from "react-native";
-import { mockMedicationRecord } from "mock/mockMedication";
 import { MedicationRow } from "./MedicationRow";
 import i18n from "util/language/i18n";
-import { MedicationInfo } from "aws/API";
+import { MedInput } from "rc_agents/model";
 
 interface MedicationTakenProps {
-  medications: MedicationInfo[];
+  medications: MedInput[];
   maxHeight: number;
   minHeight: number;
 }
 
 export const MedicationTakenCard: FC<MedicationTakenProps> = ({
+  medications,
   maxHeight,
   minHeight
 }) => {
-  const [mockMedications] = useState(mockMedicationRecord);
-
   return (
     <CardWrapper
       maxHeight={maxHeight}
@@ -29,9 +27,9 @@ export const MedicationTakenCard: FC<MedicationTakenProps> = ({
       <FlatList
         style={{ paddingLeft: ms(10), paddingTop: ms(5) }}
         showsVerticalScrollIndicator={false}
-        data={mockMedications}
+        data={medications}
         renderItem={({ item }) => <MedicationRow medicationInfo={item} />}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.name}
       />
     </CardWrapper>
   );

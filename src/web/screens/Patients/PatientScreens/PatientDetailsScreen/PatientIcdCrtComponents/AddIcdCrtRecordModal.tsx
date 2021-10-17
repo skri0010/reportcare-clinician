@@ -8,7 +8,6 @@ import { TextField } from "components/InputComponents/TextField";
 import { notEmptyString } from "util/validation";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { RecordFile, ClinicianRecordInput } from "rc_agents/model";
-import { triggerCreateIcdCrtRecord } from "rc_agents/triggers";
 import {
   setCreateIcdCrtRecordSuccessful,
   setCreatingIcdCrtRecord
@@ -20,6 +19,7 @@ import {
   ModalWrapperProps
 } from "components/Wrappers/ModalWrapper";
 import { SaveAndCancelButtons } from "components/Buttons/SaveAndCancelButtons";
+import { AgentTrigger } from "rc_agents/trigger";
 
 interface AddIcdCrtRecordModalProps extends ModalWrapperProps {
   setAddIcdCrtRecord: (state: boolean) => void;
@@ -65,7 +65,7 @@ export const AddIcdCrtRecordModal: FC<AddIcdCrtRecordModalProps> = ({
         patientID: patientID,
         file: file
       };
-      triggerCreateIcdCrtRecord(recordToSave);
+      AgentTrigger.triggerCreateIcdCrtRecord(recordToSave);
     }
   };
 
