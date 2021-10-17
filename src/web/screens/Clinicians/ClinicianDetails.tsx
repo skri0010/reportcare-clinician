@@ -37,6 +37,11 @@ export const ClinicianDetails: FC = () => {
                 content={clinicianSelected.hospitalName}
                 iconType="hospital"
               />
+              <ClinicianInfoRow
+                title={i18n.t("Clinicians.ContactNumber")}
+                content={clinicianSelected?.contactNumber}
+                iconType="phone"
+              />
             </View>
           </View>
         </View>

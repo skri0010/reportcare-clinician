@@ -19,10 +19,13 @@ import { LocalStorage } from "rc_agents/storage";
 import {
   LocalTodo,
   mapColorCodeToRiskLevel,
+  RetrieveTodoDetailsMethod,
   TodoStatus
 } from "rc_agents/model";
 import { Todo } from "aws/API";
 import { getTodo } from "aws/TypedAPI/getQueries";
+import { store } from "util/useRedux";
+import { setFetchingTodoDetails } from "ic-redux/actions/agents/todoActionCreator";
 
 /**
  * Class representing an activity that triggers the display of todo details.
@@ -45,27 +48,35 @@ class RetrieveTodoDetails extends Activity {
     const facts = agentAPI.getFacts();
 
     try {
-      // Get fact with todo details
-      const todoDetails: string =
+      // Get todo ID/ alert ID of the todo to display
+      const todoOrAlertID: string =
         agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[
           ClinicianAttributes.TODO_ID
         ];
-      if (todoDetails) {
+
+      // Get the retrieve todo details method from facts (for offline retrieval only)
+      const retrieveMethod: RetrieveTodoDetailsMethod =
+        agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[
+          ClinicianAttributes.RETRIEVE_DETAILS_METHOD
+        ];
+
+      if (todoOrAlertID) {
         let todoDetail: Todo | undefined;
+        let todoToDispatch: LocalTodo | undefined;
         // Check if device is online
         if (facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
-          // is online
-          const query = await getTodo({ id: todoDetails });
+          // Device is online, query using todo ID
+          const query = await getTodo({ id: todoOrAlertID });
           // call getTodo query
           if (query.data.getTodo) {
             const result = query.data.getTodo;
             if (result) {
-              todoDetail = result as Todo;
+              todoDetail = result;
             }
           }
           if (todoDetail) {
             // Change todo format to LocalTodo for dispatch
-            const todoToDispatch: LocalTodo = {
+            todoToDispatch = {
               id: todoDetail.id,
               title: todoDetail.title,
               patientName: todoDetail.patientName,
@@ -76,7 +87,7 @@ class RetrieveTodoDetails extends Activity {
               toSync: false,
               _version: todoDetail._version
             };
-            // check is optional alert data exists
+            // Get optional alert data
             if (todoDetail.alert) {
               todoToDispatch.alertId = todoDetail.alert.id;
               todoToDispatch.patientId = todoDetail.alert.patientID;
@@ -84,64 +95,42 @@ class RetrieveTodoDetails extends Activity {
                 todoDetail.alert.colorCode
               );
             }
-            // Save to local storage
-            await LocalStorage.setTodo(todoToDispatch);
-
-            agentAPI.addFact(
-              new Belief(
-                BeliefKeys.CLINICIAN,
-                ClinicianAttributes.TODO_DETAILS,
-                todoToDispatch
-              ),
-              false
-            );
-
-            // Trigger request for UXSA to display
-            agent.addBelief(
-              new Belief(
-                BeliefKeys.CLINICIAN,
-                ClinicianAttributes.TODO_DETAILS_RETRIEVED,
-                true
-              )
-            );
           }
+        } else if (retrieveMethod === RetrieveTodoDetailsMethod.TODO_ID) {
+          // Device is offline, todo has todo ID
+          todoToDispatch = await LocalStorage.getTodoDetailsForTodoID(
+            todoOrAlertID
+          );
         } else {
-          // check local storage for todo details
-          const todoToDispatch = await LocalStorage.getTodoDetails(todoDetails);
+          // Device is offline, retrieve using alert ID since todo has not been added into DB yet
+          todoToDispatch = await LocalStorage.getTodoDetailsForAlertID(
+            todoOrAlertID
+          );
+        }
 
-          if (todoToDispatch) {
-            agentAPI.addFact(
-              new Belief(
-                BeliefKeys.CLINICIAN,
-                ClinicianAttributes.TODO_DETAILS,
-                todoToDispatch
-              ),
-              false
-            );
+        if (todoToDispatch) {
+          // Add todo details to be dispatched to facts
+          agentAPI.addFact(
+            new Belief(
+              BeliefKeys.CLINICIAN,
+              ClinicianAttributes.TODO_DETAILS,
+              todoToDispatch
+            ),
+            false
+          );
 
-            agent.addBelief(
-              new Belief(
-                BeliefKeys.CLINICIAN,
-                ClinicianAttributes.TODO_DETAILS_RETRIEVED,
-                true
-              )
-            );
-          }
+          // Triggers request to UXSA agent
+          agent.addBelief(
+            new Belief(
+              BeliefKeys.CLINICIAN,
+              ClinicianAttributes.TODO_DETAILS_RETRIEVED,
+              true
+            )
+          );
         }
       }
 
-      /**
-       * Makes sure that the procedure stays active
-       * Since it could be ended by DisplayTodos after the Todo list finished its display
-       * while RetrieveTodoDetails is still running (happens when the Todo details is updating)
-       */
-      agentAPI.addFact(
-        new Belief(
-          BeliefKeys.PROCEDURE,
-          ProcedureAttributes.SRD_III,
-          ProcedureConst.ACTIVE
-        )
-      );
+      store.dispatch(setFetchingTodoDetails(false));
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);

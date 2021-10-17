@@ -10,7 +10,8 @@ import {
   validateEmail,
   validateHospitalName,
   validatePassword,
-  validateUsername
+  validateUsername,
+  validatePhone
 } from "util/validation";
 import i18n from "util/language/i18n";
 import { useToast } from "react-native-toast-notifications";
@@ -39,6 +40,7 @@ export const RegisterAccount: FC<
   const [passwordMatch, setPasswordMatch] = useState(true);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [role, setRole] = useState("");
   const [hospital, setHospital] = useState("");
   const [username, setUsername] = useState("");
@@ -68,7 +70,8 @@ export const RegisterAccount: FC<
           username: username,
           name: name,
           hospitalName: hospital,
-          role: role
+          role: role,
+          phone: phone
         });
         navigation.navigate(AuthenticationScreenName.CONFIRM_REGISTRATION, {
           username: username
@@ -112,9 +115,10 @@ export const RegisterAccount: FC<
         role &&
         validateHospitalName(hospital) &&
         validatePassword(password) &&
-        passwordMatch) as boolean
+        passwordMatch &&
+        validatePhone(phone)) as boolean
     );
-  }, [name, email, username, role, hospital, password, passwordMatch]);
+  }, [name, email, username, role, hospital, password, passwordMatch, phone]);
 
   // Compares confirmed password with initial password
   useEffect(() => {
@@ -151,6 +155,16 @@ export const RegisterAccount: FC<
             placeholder={i18n.t("Auth_Registration.EmailPlaceholder")}
             error={email !== "" && !validateEmail(email)}
             errorMessage={i18n.t("Auth_Registration.EmailError")}
+          />
+
+          {/* Phone */}
+          <TextField
+            label={i18n.t("Auth_Registration.Phone")}
+            value={phone}
+            onChange={(text) => setPhone(text)}
+            placeholder={i18n.t("Auth_Registration.PhonePlaceholder")}
+            error={phone !== "" && !validatePhone(phone)}
+            errorMessage={i18n.t("Auth_Registration.PhoneError")}
           />
 
           {/* Role */}

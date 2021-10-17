@@ -12,6 +12,10 @@ export const validateEmail = (email: string): boolean => {
   return /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email);
 };
 
+export const validatePhone = (phone: string): boolean => {
+  return validateNumber(phone) && phone.length === 10;
+};
+
 // Checks that password has 8 characters with at least 1 uppercase letter and number
 export const validatePassword = (password: string): boolean => {
   return /(?=(.*[0-9]))((?=.*[A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z]))^.{8,}$/i.test(

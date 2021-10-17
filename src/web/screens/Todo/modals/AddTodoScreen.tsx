@@ -1,48 +1,50 @@
 import React, { FC, useState, useEffect } from "react";
-import {
-  View,
-  TextInput,
-  ViewStyle,
-  TextStyle,
-  StyleProp,
-  ViewProps,
-  TextProps
-} from "react-native";
+import { View, ViewStyle, TextStyle, StyleProp } from "react-native";
 import { ScaledSheet, ms } from "react-native-size-matters";
-import { H3 } from "components/Text";
 import { RootState, select, useDispatch } from "util/useRedux";
 import i18n from "util/language/i18n";
-import { TodoInput } from "rc_agents/model";
+import { LocalTodo } from "rc_agents/model";
 import { useToast } from "react-native-toast-notifications";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AgentTrigger } from "rc_agents/trigger";
-import { useRoute } from "@react-navigation/native";
-import { ScreenName } from "web/navigation";
+import {
+  setProcedureOngoing,
+  setProcedureSuccessful
+} from "ic-redux/actions/agents/procedureActionCreator";
 import { setUpdatingAlertIndicators } from "ic-redux/actions/agents/alertActionCreator";
-import { ModalButton } from "components/Buttons/ModalButton";
+import { setUpdatingTodoOfAlert } from "ic-redux/actions/agents/todoActionCreator";
+import { TextField } from "components/InputComponents/TextField";
+import { notEmptyString } from "util/validation";
+import { SaveAndCancelButtons } from "components/Buttons/SaveAndCancelButtons";
 
 interface AddTodoScreenProps {
   setModalVisible: (state: boolean) => void;
 }
 
 export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
-  const { colors, fonts, alertInfo, updatingAlert, alertUpdated } = select(
-    (state: RootState) => ({
-      colors: state.settings.colors,
-      fonts: state.settings.fonts,
-      alertInfo: state.alerts.alertInfo,
-      updatingAlert: state.alerts.updatingAlert,
-      alertUpdated: state.alerts.alertUpdated
-    })
-  );
+  const {
+    colors,
+    fonts,
+    alertInfo,
+    updatingAlert,
+    alertUpdated,
+    updatingTodo,
+    procedureSuccessful,
+    procedureOngoing
+  } = select((state: RootState) => ({
+    colors: state.settings.colors,
+    fonts: state.settings.fonts,
+    alertInfo: state.alerts.alertInfo,
+    updatingAlert: state.alerts.updatingAlert,
+    alertUpdated: state.alerts.alertUpdated,
+    updatingTodo: state.todos.updatingTodo,
+    procedureOngoing: state.procedures.procedureOngoing,
+    procedureSuccessful: state.procedures.procedureSuccessful
+  }));
 
   const todoInputFieldStyle: StyleProp<ViewStyle> = {
     backgroundColor: colors.primaryBackgroundColor,
-    borderColor: colors.primaryBorderColor,
     width: "100%",
-    borderWidth: ms(1),
-    borderRadius: ms(5),
-    marginBottom: ms(10),
     paddingHorizontal: ms(10)
   };
 
@@ -56,6 +58,7 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
     alertInfo?.patientName || ""
   ); // Patient name input
   const [noteInput, setNoteInput] = useState<string>(""); // Notes input
+  const [allInputValid, setAllInputValid] = useState<boolean>(false);
 
   // Functions that allow user inputs to be shown in the text inputs
   const onChangeTitle = (newTitle: string) => {
@@ -70,27 +73,35 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
 
   const dispatch = useDispatch();
   const toast = useToast();
-  const route = useRoute();
 
   // Triggers CreateTodo procedure
   const createTodo = () => {
-    const inAlertScreen = route.name === ScreenName.ALERTS;
-    const todoInput: TodoInput = {
+    const todoInput: LocalTodo = {
       title: titleInput,
       patientName: patientInput,
       notes: noteInput,
       completed: false,
       createdAt: new Date().toISOString(),
+      lastModified: new Date().toISOString(),
       _version: 1,
-      // When the todo is created in the Alert screen,
-      // include the patient info, alert info, alert id and risk level
-      patientId: inAlertScreen && alertInfo ? alertInfo.patientID : undefined,
-      alert: inAlertScreen && alertInfo ? alertInfo : undefined,
-      alertId: inAlertScreen && alertInfo ? alertInfo.id : undefined,
-      riskLevel: inAlertScreen && alertInfo ? alertInfo.riskLevel : undefined
+      // Alert related information: patient info, alert info, alert id and risk level
+      patientId: alertInfo ? alertInfo.patientID : undefined,
+      alert: alertInfo || undefined,
+      alertId: alertInfo ? alertInfo.id : undefined,
+      riskLevel: alertInfo ? alertInfo.riskLevel : undefined
     };
 
-    AgentTrigger.triggerCreateTodo(todoInput);
+    if (alertInfo) {
+      // If the alert status is completed, trigger UpdateTodo procedure
+      if (alertInfo.completed) {
+        dispatch(setProcedureOngoing(true));
+        dispatch(setUpdatingTodoOfAlert(true));
+        AgentTrigger.triggerUpdateTodo(todoInput);
+      } else if (alertInfo.pending) {
+        // If the alert status is pending, trigger CreateTodo
+        AgentTrigger.triggerCreateTodo(todoInput);
+      }
+    }
   };
 
   // Detects completion of CreateTodo procedure and shows the appropriate toast.
@@ -110,6 +121,37 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
     }
   }, [updatingAlert, alertUpdated, dispatch, setModalVisible, toast]);
 
+  useEffect(() => {
+    if (updatingTodo && !procedureOngoing) {
+      dispatch(setUpdatingTodoOfAlert(false));
+      if (procedureSuccessful) {
+        // Operation successful
+        toast.show(i18n.t("Todo.TodoUpdateSuccessful"), { type: "success" });
+        dispatch(setProcedureSuccessful(false));
+      } else {
+        // Operation failed
+        toast.show(i18n.t("UnexpectedError"), { type: "danger" });
+      }
+      setModalVisible(false);
+    }
+  }, [
+    dispatch,
+    procedureOngoing,
+    procedureSuccessful,
+    toast,
+    updatingTodo,
+    setModalVisible
+  ]);
+
+  // Disable button if some inputs are empty
+  useEffect(() => {
+    if (notEmptyString(titleInput) && notEmptyString(noteInput)) {
+      setAllInputValid(true);
+    } else {
+      setAllInputValid(false);
+    }
+  }, [titleInput, noteInput]);
+
   return (
     <View
       style={[
@@ -120,73 +162,78 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
       ]}
     >
       {/* Title input */}
-      <H3 text={i18n.t("Todo.Title")} style={styles.inputTitle} />
-      <TextInput
-        value={titleInput}
-        placeholder={i18n.t("Todo.TitleInputPlaceholder")}
-        style={[todoInputFieldStyle, todoInputTextStyle, { height: ms(45) }]}
-        onChangeText={onChangeTitle}
-      />
-      {/* Patient name input */}
-      <H3 text={i18n.t("Todo.Patient")} style={styles.inputTitle} />
-      <TextInput
-        value={patientInput}
-        placeholder={i18n.t("Todo.PatientInputPlaceholder")}
-        style={[todoInputFieldStyle, todoInputTextStyle, { height: ms(45) }]}
-        editable={false}
-        selectTextOnFocus={false}
-        onChangeText={onChangePatient}
-      />
-      {/* Notes input */}
-      <H3 text={i18n.t("Todo.Notes")} style={styles.inputTitle} />
-      <TextInput
-        multiline
-        value={noteInput}
-        placeholder={i18n.t("Todo.NotesInputPlaceholder")}
-        style={[
+      <TextField
+        label={i18n.t("Todo.Title")}
+        labelStyle={[
+          styles.inputTitle,
+          { fontSize: fonts.h3Size, color: colors.primaryTextColor }
+        ]}
+        inputStyle={[
           todoInputFieldStyle,
           todoInputTextStyle,
-          {
-            height: ms(100),
-            paddingTop: ms(5)
-          }
+          { height: ms(30) }
         ]}
-        onChangeText={onChangeNotes}
+        value={titleInput}
+        onChange={onChangeTitle}
+        placeholder={i18n.t("Patient_ICD/CRT.TitleInputPlaceholder")}
+        error={!notEmptyString(titleInput)}
+        errorMessage={i18n.t("Todo.TodoTitleError")}
       />
-      {/* Save button */}
-      <View style={styles.buttonContainer}>
-        <ModalButton
-          title={i18n.t("Todo.SaveButton")}
-          onPress={createTodo}
-          style={
-            {
-              backgroundColor: colors.acceptButtonColor,
-              borderColor: colors.primaryTextColor
-            } as StyleProp<ViewProps>
-          }
-        />
-        {/* Cancel button */}
-        <ModalButton
-          title={i18n.t("Todo.CancelButton")}
-          onPress={() => {
-            setModalVisible(false);
-          }}
-          style={
-            {
-              backgroundColor: colors.primaryContrastTextColor,
-              borderColor: colors.primaryTextColor,
-              borderWidth: ms(1),
-              borderRadius: ms(5)
-            } as StyleProp<ViewProps>
-          }
-          textStyle={
-            { color: colors.consistentTextColor } as StyleProp<TextProps>
-          }
-        />
-      </View>
-
+      {/* Patient name input */}
+      <TextField
+        label={i18n.t("Todo.Patient")}
+        labelStyle={[
+          styles.inputTitle,
+          { fontSize: fonts.h3Size, color: colors.primaryTextColor }
+        ]}
+        inputStyle={[
+          todoInputFieldStyle,
+          todoInputTextStyle,
+          { height: ms(30) }
+        ]}
+        value={patientInput}
+        onChange={onChangePatient}
+        placeholder={i18n.t("Todo.PatientInputPlaceholder")}
+        editable={false}
+        selectTextOnFocus={false}
+      />
+      {/* Notes input */}
+      <TextField
+        label={i18n.t("Todo.Notes")}
+        labelStyle={[
+          styles.inputTitle,
+          { fontSize: fonts.h3Size, color: colors.primaryTextColor }
+        ]}
+        inputStyle={[
+          todoInputFieldStyle,
+          todoInputTextStyle,
+          { height: ms(100), paddingTop: ms(5) }
+        ]}
+        value={noteInput}
+        onChange={onChangeNotes}
+        placeholder={i18n.t("Todo.NotesInputPlaceholder")}
+        error={!notEmptyString(noteInput)}
+        errorMessage={i18n.t("Todo.TodoNotesError")}
+        multiline
+      />
+      {/* Save and cancel buttons */}
+      <SaveAndCancelButtons
+        onPressSave={createTodo}
+        onPressCancel={() => {
+          setModalVisible(false);
+        }}
+        validToSave={allInputValid}
+      />
+      {/* Save and Cancel buttons */}
+      <SaveAndCancelButtons
+        onPressSave={createTodo}
+        onPressCancel={() => {
+          setModalVisible(false);
+        }}
+        validToSave
+      />
       {/* Loading Indicator while Todo is being created */}
-      {updatingAlert && <LoadingIndicator />}
+      {(updatingAlert || updatingTodo) && <LoadingIndicator />}
     </View>
   );
 };

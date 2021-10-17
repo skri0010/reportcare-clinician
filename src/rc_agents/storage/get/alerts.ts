@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AlertInfo } from "rc_agents/model";
+import { AlertInfo, HighRiskAlertInfo } from "rc_agents/model";
 import { AsyncStorageKeys, AsyncStorageType } from "rc_agents/storage";
 
 // Get ProcessedAlertInfo
@@ -17,9 +17,11 @@ export const getProcessedAlertInfos = async (): Promise<
 };
 
 // Get all AlertInfo[] (unsorted)
-export const getAlertInfos = async (): Promise<AlertInfo[] | null> => {
+export const getAlertInfos = async (): Promise<
+  (AlertInfo | HighRiskAlertInfo)[] | null
+> => {
   const localData = await getProcessedAlertInfos();
-  let alertInfos: AlertInfo[] | null = null;
+  let alertInfos: (AlertInfo | HighRiskAlertInfo)[] | null = null;
   if (localData) {
     alertInfos = [];
     Object.values(localData).forEach((patientAlertInfos) => {
@@ -40,10 +42,10 @@ export const getAlertInfos = async (): Promise<AlertInfo[] | null> => {
 // Get AlertInfo by id
 export const getAlertInfo = async (
   alertId: string
-): Promise<AlertInfo | null> => {
+): Promise<AlertInfo | HighRiskAlertInfo | null> => {
   const localData = await getAlertInfos();
   if (localData) {
-    const alertInfo: AlertInfo | undefined = localData.find(
+    const alertInfo: AlertInfo | HighRiskAlertInfo | undefined = localData.find(
       (info) => info.id === alertId
     );
     if (alertInfo) {
@@ -56,7 +58,7 @@ export const getAlertInfo = async (
 // Get AlertInfo[] by patient id (unsorted)
 export const getAlertInfosByPatientId = async (
   patientId: string
-): Promise<AlertInfo[] | null> => {
+): Promise<(AlertInfo | HighRiskAlertInfo)[] | null> => {
   const localData = await getProcessedAlertInfos();
   if (localData && localData[patientId]) {
     const localAlertInfos = localData[patientId];
@@ -71,14 +73,13 @@ export const getAlertInfosByPatientId = async (
 export const getAlertInfoByPatientId = async (
   alertId: string,
   patientId: string
-): Promise<AlertInfo | null> => {
+): Promise<AlertInfo | HighRiskAlertInfo | null> => {
   const localData = await getProcessedAlertInfos();
   if (localData && localData[patientId]) {
     const localAlertInfos = localData[patientId];
     if (localAlertInfos) {
-      const alertInfo: AlertInfo | undefined = localAlertInfos.find(
-        (info) => info.id === alertId
-      );
+      const alertInfo: AlertInfo | HighRiskAlertInfo | undefined =
+        localAlertInfos.find((info) => info.id === alertId);
       if (alertInfo) {
         return alertInfo;
       }
@@ -88,7 +89,9 @@ export const getAlertInfoByPatientId = async (
 };
 
 // Get AlertInfo[] with pending attribute
-export const getPendingAlertInfos = async (): Promise<AlertInfo[] | null> => {
+export const getPendingAlertInfos = async (): Promise<
+  (AlertInfo | HighRiskAlertInfo)[] | null
+> => {
   const localData = await getAlertInfos();
   if (localData) {
     return localData.filter((item) => item.pending);
@@ -97,7 +100,9 @@ export const getPendingAlertInfos = async (): Promise<AlertInfo[] | null> => {
 };
 
 // Get AlertInfo[] with completed attribute
-export const getCompletedAlertInfos = async (): Promise<AlertInfo[] | null> => {
+export const getCompletedAlertInfos = async (): Promise<
+  (AlertInfo | HighRiskAlertInfo)[] | null
+> => {
   const localData = await getAlertInfos();
   if (localData) {
     return localData.filter((item) => item.completed);

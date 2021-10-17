@@ -17,10 +17,12 @@ import {
 import { AlertInfo, AlertsCount } from "rc_agents/model";
 import { displayAlerts } from "rc_agents/agents/user-specific-assistant/action-frames/triage-alert-hf-clinic/DisplayAlerts";
 import { getAlertsCount } from "rc_agents/agents/data-assistant/action-frames/triage-alert-hf-clinic/RetrieveAlerts";
+import { store } from "util/useRedux";
+import { setShowAlertPopUp } from "ic-redux/actions/agents/alertActionCreator";
 
 /**
- * Class to represent an activity for triggering the display of refreshed alerts.
- * This happens in Procedure Triage Alert HF Clinic (AT-CP).
+ * Represents the activity for triggering the display of refreshed alerts when a real-time alert is received.
+ * This happens in Procedure HF- Exacerbation User Specific Alert (HF-EUA).
  */
 class DisplayRefreshedAlerts extends Activity {
   constructor() {
@@ -78,28 +80,31 @@ class DisplayRefreshedAlerts extends Activity {
         ),
         false
       );
+
+      // Dispatch to indicate that a pop up should be displayed
+      store.dispatch(setShowAlertPopUp(true));
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
-    }
 
-    // End the procedure
-    agentAPI.addFact(
-      new Belief(
-        BeliefKeys.PROCEDURE,
-        ProcedureAttributes.AT_CP_III,
-        ProcedureConst.INACTIVE
-      ),
-      true,
-      true
-    );
+      // End the procedure
+      agentAPI.addFact(
+        new Belief(
+          BeliefKeys.PROCEDURE,
+          ProcedureAttributes.HF_EUA,
+          ProcedureConst.INACTIVE
+        ),
+        true,
+        true
+      );
+    }
   }
 }
 
 // Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.AT_CP_III,
+  ProcedureAttributes.HF_EUA,
   ProcedureConst.ACTIVE
 );
 const rule2 = new ResettablePrecondition(

@@ -1,8 +1,8 @@
 import {
-  ClinicianPatientMap,
-  PatientAssignment,
   UpdateClinicianInfoInput,
-  UpdatePatientAssignmentInput
+  UpdateClinicianPatientMapMutation,
+  UpdatePatientAssignmentInput,
+  UpdatePatientAssignmentMutation
 } from "../api/API";
 import { AppSyncUrl, BaseResponse } from "../types";
 import {
@@ -14,11 +14,11 @@ import { request } from "/opt/appSyncRequest";
 
 // Initialize interfaces for responses
 interface UpdatePatientAssignmentResponse extends BaseResponse {
-  data?: { updatePatientAssignment?: PatientAssignment };
+  data: UpdatePatientAssignmentMutation;
 }
 
 interface UpdateClinicianPatientMapResponse extends BaseResponse {
-  data?: { updateClinicianPatientMap?: ClinicianPatientMap };
+  data: UpdateClinicianPatientMapMutation;
 }
 
 // Export typed GraphQL queries

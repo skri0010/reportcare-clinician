@@ -82,7 +82,7 @@ class RetrieveClinicianContacts extends Activity {
           ),
           false
         );
-        // Trigger request to Communicate to USXA
+        // Trigger request to Communicate to UXSA
         agent.addBelief(
           new Belief(
             BeliefKeys.CLINICIAN,

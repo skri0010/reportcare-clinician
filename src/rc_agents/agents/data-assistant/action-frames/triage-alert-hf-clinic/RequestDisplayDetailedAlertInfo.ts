@@ -55,7 +55,7 @@ class RequestDisplayDetailedAlertInfo extends Communicate {
 // Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.AT_CP_II,
+  ProcedureAttributes.P_USOR_II,
   ProcedureConst.ACTIVE
 );
 const rule2 = new Precondition(

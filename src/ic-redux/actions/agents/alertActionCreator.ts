@@ -1,4 +1,4 @@
-import { AlertInfo, AlertsCount } from "rc_agents/model";
+import { AlertInfo, AlertsCount, HighRiskAlertInfo } from "rc_agents/model";
 import { actionNames } from "ic-redux/actions/actionNames";
 import { createAction } from "typesafe-actions";
 
@@ -25,7 +25,7 @@ export const setCompletedAlerts = createAction(
 
 export const setAlertInfo = createAction(
   actionNames.SET_ALERT_INFO,
-  (alertInfo: AlertInfo) => ({
+  (alertInfo: AlertInfo | HighRiskAlertInfo | undefined) => ({
     alertInfo: alertInfo
   })
 )();
@@ -64,5 +64,26 @@ export const setFetchingAlertInfo = createAction(
   actionNames.SET_FETCHING_ALERT_INFO,
   (fetchingAlertInfo: boolean) => ({
     fetchingAlertInfo: fetchingAlertInfo
+  })
+)();
+
+export const setShowAlertPopUp = createAction(
+  actionNames.SET_SHOW_ALERT_POPUP,
+  (showAlertPopUp: boolean) => ({
+    showAlertPopUp: showAlertPopUp
+  })
+)();
+
+export const setRealTimeAlert = createAction(
+  actionNames.SET_REAL_TIME_ALERT,
+  (realTimeAlert: AlertInfo | undefined) => ({
+    realTimeAlert: realTimeAlert
+  })
+)();
+
+export const setViewStableAlerts = createAction(
+  actionNames.SET_VIEW_STABLE_ALERTS,
+  (viewStableAlerts: boolean) => ({
+    viewStableAlerts: viewStableAlerts
   })
 )();

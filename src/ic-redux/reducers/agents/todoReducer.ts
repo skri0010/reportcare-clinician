@@ -12,6 +12,7 @@ interface TodoState {
   fetchingTodos: boolean;
   fetchingTodoDetails: boolean;
   submittingTodo: boolean;
+  updatingTodo: boolean;
 }
 
 const initialState: TodoState = {
@@ -21,7 +22,8 @@ const initialState: TodoState = {
   todoDetails: undefined,
   fetchingTodos: false,
   fetchingTodoDetails: false,
-  submittingTodo: false
+  submittingTodo: false,
+  updatingTodo: false
 };
 
 export const todoReducer: Reducer<TodoState, RootAction> = (
@@ -44,6 +46,11 @@ export const todoReducer: Reducer<TodoState, RootAction> = (
       };
     case actionNames.SET_SUBMITTING_TODO:
       return { ...state, submittingTodo: action.payload.submittingTodo };
+    case actionNames.SET_UPDATING_TODO_OF_ALERT:
+      return {
+        ...state,
+        updatingTodo: action.payload.updatingTodo
+      };
     default:
       return state;
   }

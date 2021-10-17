@@ -19,7 +19,7 @@ import { LocalStorage } from "rc_agents/storage";
 import { store } from "util/useRedux";
 import { agentNWA } from "rc_agents/agents";
 import { getTodo, updateTodo } from "aws";
-import { LocalTodo, TodoStatus, TodoInput } from "rc_agents/model";
+import { LocalTodo, TodoStatus } from "rc_agents/model";
 import { UpdateTodoInput } from "aws/API";
 import { setProcedureSuccessful } from "ic-redux/actions/agents/procedureActionCreator";
 
@@ -43,32 +43,69 @@ class UpdateTodo extends Activity {
 
     try {
       // Gets Todo details to be updated
-      let todoInput: TodoInput =
+      const todoInput: LocalTodo =
         facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.TODO];
-
-      const alertTodoInput: TodoInput =
-        facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.ALERT_TODO];
-
-      // Todo associated with alert
-      if (alertTodoInput) {
-        todoInput = alertTodoInput;
-      }
 
       const isOnline: boolean = facts[BeliefKeys.APP]?.[AppAttributes.ONLINE];
 
       // Gets locally stored clinicianId
       const clinicianId = await LocalStorage.getClinicianID();
 
+      /**
+       * Updates todo when:
+       * 1. Todo is created offline then updated again while the device is still offline
+       */
       if (todoInput && !todoInput.id) {
-        // Todo was created offline and not synced: Triggers CreateTodo
-        agent.addBelief(
-          new Belief(
-            BeliefKeys.CLINICIAN,
-            ClinicianAttributes.CREATE_TODO,
-            true
-          )
-        );
-      } else if (todoInput && todoInput.id && clinicianId) {
+        if (todoInput.alertId) {
+          // Get the local todo based on the alert ID of the alert associated with the todo
+          const localTodos = await LocalStorage.getTodoFromAlertID(
+            todoInput.alertId
+          );
+
+          if (localTodos) {
+            const localTodo = localTodos[0];
+            todoInput.id = localTodo.id;
+            todoInput._version = localTodo._version;
+            todoInput.lastModified = todoInput.lastModified
+              ? todoInput.lastModified
+              : todoInput.createdAt;
+            todoInput.createdAt = localTodo.createdAt;
+            todoInput.toSync = true;
+            // Calls CreateTodo again to replace the outdated and unsynced local todo
+            if (!localTodo.id) {
+              agentAPI.addFact(
+                new Belief(
+                  BeliefKeys.CLINICIAN,
+                  ClinicianAttributes.TODO,
+                  todoInput
+                ),
+                false
+              );
+              // Trigger CreateTodo
+              agent.addBelief(
+                new Belief(
+                  BeliefKeys.CLINICIAN,
+                  ClinicianAttributes.CREATE_TODO,
+                  true
+                )
+              );
+              // Stop UpdateTodo
+              agent.addBelief(
+                new Belief(
+                  BeliefKeys.CLINICIAN,
+                  ClinicianAttributes.UPDATE_TODO,
+                  false
+                )
+              );
+            }
+          }
+          // Removes alert to avoid it from being stored into local storage
+          delete todoInput.alert;
+        }
+      }
+
+      // Updates the todo that already has an entry in the DB
+      if (todoInput && todoInput.id && clinicianId) {
         let toSync: boolean | undefined;
 
         // Constructs UpdateTodoInput to be updated

@@ -14,7 +14,7 @@ import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import { ClinicianAgent } from "rc_agents/clinician_framework/ClinicianAgent";
 import { af_DisplayAlertHistory } from "./action-frames/hf-outcome-trends/DisplayAlertHistory";
 import { af_DisplayClinicianContacts } from "./action-frames/storing-data/DisplayClinicianContacts";
-import { af_DisplayRefreshedAlerts } from "./action-frames/triage-alert-hf-clinic/DisplayRefreshedAlerts";
+import { af_DisplayRefreshedAlerts } from "./action-frames/exacerbation-user-specific-alert/DisplayRefreshedAlerts";
 import { af_DisplayMedicalRecordContent } from "./action-frames/hf-outcome-trends/DisplayMedicalRecordContent";
 import { af_DisplayIcdCrtRecordContent } from "./action-frames/hf-outcome-trends/DisplayIcdCrtRecordContent";
 
@@ -49,11 +49,11 @@ const agentUXSA = new ClinicianAgent(
     // SRD-IV
     af_DisplayClinicianContacts,
 
-    // AT-CP-I
+    // P-USOR-I
     af_DisplayAlerts,
-    // AT-CP-II
+    // P-USOR-II
     af_DisplayDetailedAlertInfo,
-    // AT-CP-III
+    // HF-EUA
     af_DisplayRefreshedAlerts
   ], // action frame
   [belief1], // beliefs

@@ -1,5 +1,5 @@
 import React, { FC, useState, useEffect } from "react";
-import { RootState, select, useDispatch } from "util/useRedux";
+import { RootState, select } from "util/useRedux";
 import { ScreenName } from "web/navigation";
 import { View, Modal } from "react-native";
 import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
@@ -9,59 +9,55 @@ import { MainScreenProps } from "web/navigation/types";
 import { AgentTrigger } from "rc_agents/trigger";
 import { FetchAlertsMode } from "rc_agents/model";
 import { AddTodoScreen } from "web/screens/Todo/modals/AddTodoScreen";
-import { useToast } from "react-native-toast-notifications";
 import i18n from "util/language/i18n";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AlertListTabNavigator } from "web/navigation/navigators/AlertListTabNavigator";
 import { AlertDetailsScreen } from "./AlertDetailsScreen";
-import { setProcedureSuccessful } from "ic-redux/actions/agents/procedureActionCreator";
-import { setSubmittingTodo } from "ic-redux/actions/agents/todoActionCreator";
 import { AdaptiveTwoScreenWrapper } from "components/Wrappers/AdaptiveTwoScreenWrapper";
 
 export const AlertScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
   const {
     colors,
-    procedureOngoing,
-    procedureSuccessful,
     submittingTodo,
-    fetchingAlertInfo
+    fetchingAlertInfo,
+    alertInfo,
+    pendingAlerts,
+    completedAlerts
   } = select((state: RootState) => ({
     colors: state.settings.colors, // Used to detect completion of updateTodo procedure
     procedureOngoing: state.procedures.procedureOngoing,
     procedureSuccessful: state.procedures.procedureSuccessful,
     submittingTodo: state.todos.submittingTodo,
     fetchingAlertInfo: state.alerts.fetchingAlertInfo,
-    alertInfo: state.alerts.alertInfo
+    alertInfo: state.alerts.alertInfo,
+    pendingAlerts: state.alerts.pendingAlerts,
+    completedAlerts: state.alerts.completedAlerts
   }));
 
   // For pointer events
   const [modalVisible, setModalVisible] = useState(false);
-  const toast = useToast();
-  const dispatch = useDispatch();
+  const [isEmptyAlert, setIsEmptyAlert] = useState(true);
 
   /**
    * Trigger agent to fetch ALL alerts on initial load
    */
   useEffect(() => {
-    AgentTrigger.triggerRetrieveAlerts(FetchAlertsMode.ALL);
+    // fetchingAlertInfo will be true if the screen is navigated to for viewing a real-time alert.
+    // Trigger to fetch all alerts if the screen is navigated for the first time, i.e. pending and/or completed alerts are undefined.
+    if (!fetchingAlertInfo || !pendingAlerts || !completedAlerts) {
+      AgentTrigger.triggerRetrieveAlerts(FetchAlertsMode.ALL);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const [isEmptyAlert, setIsEmptyAlert] = useState(true);
-
-  // Detects completion of UpdateTodo procedure and shows the appropriate toast.
+  // Display details screen when alertInfo is retrieved
   useEffect(() => {
-    if (submittingTodo && !procedureOngoing) {
-      dispatch(setSubmittingTodo(false));
-      if (procedureSuccessful) {
-        // Operation successful
-        toast.show(i18n.t("Todo.TodoUpdateSuccessful"), { type: "success" });
-        dispatch(setProcedureSuccessful(false));
-      } else {
-        // Operation failed
-        toast.show(i18n.t("UnexpectedError"), { type: "danger" });
-      }
+    if (alertInfo) {
+      setIsEmptyAlert(false);
+    } else {
+      setIsEmptyAlert(true);
     }
-  }, [dispatch, procedureOngoing, procedureSuccessful, toast, submittingTodo]);
+  }, [alertInfo]);
 
   return (
     <ScreenWrapper fixed>
@@ -70,13 +66,13 @@ export const AlertScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
         pointerEvents={modalVisible || submittingTodo ? "none" : "auto"}
       >
         <AdaptiveTwoScreenWrapper
-          // Left side: List of todos
+          // Left side: List of alerts
           LeftComponent={
             <View style={styles.rowSelection}>
-              <AlertListTabNavigator setIsEmptyAlert={setIsEmptyAlert} />
+              <AlertListTabNavigator />
             </View>
           }
-          // Right side: Todo details
+          // Right side: Alert details
           RightComponent={
             <View
               style={{

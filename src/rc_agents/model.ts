@@ -4,7 +4,8 @@ import {
   ReportVitals,
   PatientInfo,
   Alert,
-  ClinicianRecord
+  ClinicianRecord,
+  MedicationInfo
 } from "aws/API";
 import { RiskLevel } from "models/RiskLevel";
 
@@ -104,6 +105,18 @@ export enum TodoStatus {
   COMPLETED = "COMPLETED"
 }
 
+export enum FetchTodosMode {
+  ALL = "ALL",
+  PENDING = "PENDING",
+  COMPLETED = "COMPLETED",
+  NONE = "NONE"
+}
+
+export enum RetrieveTodoDetailsMethod {
+  TODO_ID = "TODO_ID",
+  ALERT_ID = "ALERT_ID"
+}
+
 export type RecordFile = {
   path?: string;
   size?: number;
@@ -153,17 +166,34 @@ export interface AlertsCount {
   unassignedRisk: number;
 }
 
-export type AlertInfo = {
+// Shared by AlertInfo and HighRiskAlertInfo
+type BaseAlertInfo = {
   riskLevel: RiskLevel;
-  diagnosis?: string;
-  NYHAClass?: string;
-  lastMedication?: string;
-  medicationQuantity?: number;
-  activityDuringAlert?: string;
+  medCompliants?: MedicationInfo[];
 } & Alert;
 
+// For viewing usual Alert details
+export type AlertInfo = {
+  diagnosis?: string;
+  NYHAClass?: string;
+  activityDuringAlert?: string;
+} & BaseAlertInfo;
+
+export type MedInfoCompliants = {
+  [date: string]: string[];
+};
+
+// For viewing details of real-time Alert (triage >= 70%)
+// Only applicable to HF Specialist and EP
+export type HighRiskAlertInfo = {
+  latestBaseline?: PatientInfo;
+  symptomReports?: ReportSymptom[];
+  vitalsReports?: ReportVitals[];
+  icdCrtRecord?: ClinicianRecord;
+} & BaseAlertInfo;
+
 export type ProcessedAlertInfos = {
-  [patientID: string]: AlertInfo[] | undefined;
+  [patientID: string]: (AlertInfo | HighRiskAlertInfo)[] | undefined;
 };
 
 export interface TodoInput {
@@ -189,12 +219,13 @@ export interface LocalTodo {
   patientName: string;
   notes: string;
   completed: boolean;
+  alert?: AlertInfo;
   alertId?: string;
   patientId?: string;
   riskLevel?: RiskLevel;
   createdAt: string;
   lastModified?: string;
-  toSync: boolean;
+  toSync?: boolean;
   _version: number;
 }
 

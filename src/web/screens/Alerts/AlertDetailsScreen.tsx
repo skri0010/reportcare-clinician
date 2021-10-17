@@ -1,11 +1,15 @@
-import React, { FC } from "react";
-import { View, TouchableOpacity } from "react-native";
+import React, { FC, useEffect, useState } from "react";
+import { View } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
-import { H4 } from "components/Text";
 import { RootState, select } from "util/useRedux";
 import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
 import { AlertDetails } from "./AlertDetails";
+import { RiskLevel } from "models/RiskLevel";
+import { HighRiskAlertDetails } from "./HighRiskAlertDetails";
+import { InnerScreenButton } from "components/Buttons/InnerScreenButton";
 import i18n from "util/language/i18n";
+import { LocalStorage } from "rc_agents/storage";
+import { Role } from "rc_agents/model";
 
 interface AlertDetailsScreenProps {
   setModalVisible: (state: boolean) => void;
@@ -14,33 +18,50 @@ interface AlertDetailsScreenProps {
 export const AlertDetailsScreen: FC<AlertDetailsScreenProps> = ({
   setModalVisible
 }) => {
-  const { colors } = select((state: RootState) => ({
-    colors: state.settings.colors
+  const { alertInfo } = select((state: RootState) => ({
+    alertInfo: state.alerts.alertInfo
   }));
 
+  const [showHighRiskDetails, setShowHighRiskDetails] = useState(false);
+
+  // Checks for clinician's role to determine which alert details component to be shown
+  useEffect(() => {
+    const checkClinicianRole = async () => {
+      const clinician = await LocalStorage.getClinician();
+      if (clinician) {
+        if (
+          clinician.role === Role.EP ||
+          clinician.role === Role.HF_SPECIALIST
+        ) {
+          setShowHighRiskDetails(true);
+        }
+      }
+    };
+    checkClinicianRole();
+  }, []);
+
   return (
-    <ScreenWrapper>
+    <ScreenWrapper
+      fixedChildren={
+        // Create Todo button
+        <InnerScreenButton
+          title={i18n.t("Alerts.CreateToDo")}
+          onPress={() => {
+            // Allows the create todo modal to be visible
+            setModalVisible(true);
+          }}
+          style={styles.buttonContainer}
+        />
+      }
+    >
       <View style={styles.container}>
         {/* Alert details cards */}
-        <AlertDetails />
-        {/* Create todo button */}
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={[
-              styles.button,
-              { backgroundColor: colors.primaryTodoCompleteButtonColor }
-            ]}
-            onPress={() => {
-              // Allows the create todo modal to be visible
-              setModalVisible(true);
-            }}
-          >
-            <H4
-              text={i18n.t("Alerts.CreateTodoButton")}
-              style={{ color: colors.primaryContrastTextColor }}
-            />
-          </TouchableOpacity>
-        </View>
+        {!alertInfo ? null : alertInfo.riskLevel === RiskLevel.HIGH &&
+          showHighRiskDetails ? (
+          <HighRiskAlertDetails />
+        ) : (
+          <AlertDetails />
+        )}
       </View>
     </ScreenWrapper>
   );
@@ -48,29 +69,14 @@ export const AlertDetailsScreen: FC<AlertDetailsScreenProps> = ({
 
 const styles = ScaledSheet.create({
   container: {
-    margin: "30@ms",
-    marginLeft: "40ms"
-  },
-  patientName: {
-    paddingBottom: "10@ms"
-  },
-  headers: {
-    fontWeight: "bold",
-    paddingBottom: "17@ms"
-  },
-  informationTitle: {
-    fontWeight: "bold",
-    paddingTop: "17@ms"
+    marginHorizontal: "25@ms",
+    marginTop: "-20@ms",
+    marginBottom: "15@ms"
   },
   buttonContainer: {
-    marginTop: "10@ms",
-    alignItems: "center"
-  },
-  button: {
-    textAlign: "center",
-    justifyContent: "space-evenly",
-    borderRadius: "5@ms",
-    width: "80@ms",
-    height: "30@ms"
+    flexDirection: "row",
+    alignSelf: "flex-end",
+    marginVertical: "10@ms",
+    marginRight: "32@ms"
   }
 });

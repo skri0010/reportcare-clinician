@@ -75,7 +75,7 @@ class RetrieveRole extends Activity {
             new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.ROLE, role),
             false
           );
-          // Trigger request to Communicate to USXA
+          // Trigger request to Communicate to UXSA
           agent.addBelief(
             new Belief(
               BeliefKeys.CLINICIAN,

@@ -95,7 +95,7 @@ export const getTopTabBarOptions: (input: {
 export const getBottomTabBarOptions: (input: {
   colors: ColorScheme;
   fonts: FontScheme;
-}) => BottomTabNavigationOptions = ({ colors, fonts }) => {
+}) => BottomTabNavigationOptions = () => {
   return {};
 };
 

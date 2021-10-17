@@ -1,19 +1,22 @@
 import { actionNames } from "ic-redux/actions/actionNames";
 import { RootAction } from "ic-redux/actions/RootAction";
 import { Reducer } from "redux";
-import { AlertInfo, AlertsCount } from "rc_agents/model";
+import { AlertInfo, AlertsCount, HighRiskAlertInfo } from "rc_agents/model";
 
 interface AlertState {
   // alert
   pendingAlertCount: AlertsCount;
   pendingAlerts: AlertInfo[] | undefined;
   completedAlerts: AlertInfo[] | undefined;
-  alertInfo: AlertInfo | undefined;
+  alertInfo: AlertInfo | HighRiskAlertInfo | undefined;
   fetchingPendingAlerts: boolean;
   fetchingCompletedAlerts: boolean;
   updatingAlert: boolean;
   fetchingAlertInfo: boolean;
   alertUpdated: boolean;
+  showAlertPopUp: boolean;
+  realTimeAlert: AlertInfo | undefined;
+  viewStableAlerts: boolean;
 }
 
 const initialState: AlertState = {
@@ -30,7 +33,10 @@ const initialState: AlertState = {
   fetchingCompletedAlerts: false,
   updatingAlert: false,
   fetchingAlertInfo: false,
-  alertUpdated: false
+  alertUpdated: false,
+  showAlertPopUp: false,
+  realTimeAlert: undefined,
+  viewStableAlerts: false
 };
 
 export const alertReducer: Reducer<AlertState, RootAction> = (
@@ -84,6 +90,21 @@ export const alertReducer: Reducer<AlertState, RootAction> = (
       return {
         ...state,
         fetchingAlertInfo: action.payload.fetchingAlertInfo
+      };
+    case actionNames.SET_SHOW_ALERT_POPUP:
+      return {
+        ...state,
+        showAlertPopUp: action.payload.showAlertPopUp
+      };
+    case actionNames.SET_REAL_TIME_ALERT:
+      return {
+        ...state,
+        realTimeAlert: action.payload.realTimeAlert
+      };
+    case actionNames.SET_VIEW_STABLE_ALERTS:
+      return {
+        ...state,
+        viewStableAlerts: action.payload.viewStableAlerts
       };
     default:
       return state;

@@ -39,7 +39,7 @@ export interface ColorScheme {
   declineButtonColor: string;
   primaryDeactivatedButtonColor: string;
   primaryWarningButtonColor: string;
-  primaryTodoCompleteButtonColor: string;
+  innerScreenButtonColor: string;
 
   // Avatar background
   primaryAvatarBackgroundColor: string;

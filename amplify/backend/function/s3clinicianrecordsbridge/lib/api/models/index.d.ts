@@ -27,8 +27,6 @@ export declare class PatientInfo {
   readonly fluidIntakeGoal: string;
   readonly configured: boolean;
   readonly patientID: string;
-  readonly createdAt?: string;
-  readonly updatedAt?: string;
   constructor(init: ModelInit<PatientInfo>);
   static copyOf(
     source: PatientInfo,
@@ -46,8 +44,6 @@ export declare class MedicationInfo {
   readonly records: string;
   readonly patientID: string;
   readonly active: boolean;
-  readonly createdAt?: string;
-  readonly updatedAt?: string;
   constructor(init: ModelInit<MedicationInfo>);
   static copyOf(
     source: MedicationInfo,
@@ -66,8 +62,6 @@ export declare class ActivityInfo {
   readonly expectedDurationMinutes?: number;
   readonly recordDateTime?: string;
   readonly patientID: string;
-  readonly createdAt?: string;
-  readonly updatedAt?: string;
   constructor(init: ModelInit<ActivityInfo>);
   static copyOf(
     source: ActivityInfo,
@@ -84,8 +78,6 @@ export declare class MedCompliant {
   readonly Verification: boolean;
   readonly Date: string;
   readonly patientID: string;
-  readonly createdAt?: string;
-  readonly updatedAt?: string;
   constructor(init: ModelInit<MedCompliant>);
   static copyOf(
     source: MedCompliant,
@@ -104,8 +96,6 @@ export declare class ReportSymptom {
   readonly DateTime: string;
   readonly Summary?: string;
   readonly patientID: string;
-  readonly createdAt?: string;
-  readonly updatedAt?: string;
   constructor(init: ModelInit<ReportSymptom>);
   static copyOf(
     source: ReportSymptom,
@@ -127,8 +117,6 @@ export declare class ReportVitals {
   readonly FluidIntake?: string;
   readonly DateTime: string;
   readonly patientID: string;
-  readonly createdAt?: string;
-  readonly updatedAt?: string;
   constructor(init: ModelInit<ReportVitals>);
   static copyOf(
     source: ReportVitals,
@@ -144,8 +132,6 @@ export declare class MedicalRecord {
   readonly clinicianID: string;
   readonly title: string;
   readonly fileKey: string;
-  readonly createdAt?: string;
-  readonly updatedAt?: string;
   constructor(init: ModelInit<MedicalRecord>);
   static copyOf(
     source: MedicalRecord,
@@ -162,8 +148,6 @@ export declare class IcdCrtRecord {
   readonly title: string;
   readonly dateTime: string;
   readonly fileKey: string;
-  readonly createdAt?: string;
-  readonly updatedAt?: string;
   constructor(init: ModelInit<IcdCrtRecord>);
   static copyOf(
     source: IcdCrtRecord,
@@ -181,8 +165,6 @@ export declare class ClinicianInfo {
   readonly role: string;
   readonly contactNumber: string;
   readonly protectedInfo?: ClinicianProtectedInfo;
-  readonly createdAt?: string;
-  readonly updatedAt?: string;
   constructor(init: ModelInit<ClinicianInfo>);
   static copyOf(
     source: ClinicianInfo,
@@ -202,8 +184,7 @@ export declare class ClinicianProtectedInfo {
   readonly NWA: string;
   readonly ALA: string;
   readonly MHA: string;
-  readonly createdAt?: string;
-  readonly updatedAt?: string;
+  readonly CAM: string;
   constructor(init: ModelInit<ClinicianProtectedInfo>);
   static copyOf(
     source: ClinicianProtectedInfo,
@@ -217,8 +198,6 @@ export declare class ClinicianPatientMap {
   readonly id: string;
   readonly patientID: string;
   readonly clinicianInfo: ClinicianInfo;
-  readonly createdAt?: string;
-  readonly updatedAt?: string;
   constructor(init: ModelInit<ClinicianPatientMap>);
   static copyOf(
     source: ClinicianPatientMap,
@@ -236,10 +215,7 @@ export declare class PatientAssignment {
   readonly pending?: string;
   readonly resolution?: string;
   readonly reassignToClinicianID?: string;
-  readonly adminReassignFromClinicianID?: string;
-  readonly adminCompleted?: boolean;
-  readonly createdAt?: string;
-  readonly updatedAt?: string;
+  readonly sourceClinicianID?: string;
   constructor(init: ModelInit<PatientAssignment>);
   static copyOf(
     source: PatientAssignment,
@@ -256,6 +232,7 @@ export declare class Alert {
   readonly dateTime: string;
   readonly summary: string;
   readonly colorCode: string;
+  readonly triageValue: string;
   readonly vitalsReportID: string;
   readonly vitalsReport?: ReportVitals;
   readonly symptomReportID: string;
@@ -263,8 +240,6 @@ export declare class Alert {
   readonly pending?: string;
   readonly completed?: string;
   readonly owner: string;
-  readonly createdAt?: string;
-  readonly updatedAt?: string;
   constructor(init: ModelInit<Alert>);
   static copyOf(
     source: Alert,
@@ -284,8 +259,6 @@ export declare class Todo {
   readonly pending?: string;
   readonly completed?: string;
   readonly owner: string;
-  readonly createdAt?: string;
-  readonly updatedAt?: string;
   constructor(init: ModelInit<Todo>);
   static copyOf(
     source: Todo,
@@ -298,8 +271,6 @@ export declare class AlertNotification {
   readonly patientID: string;
   readonly alertID: string;
   readonly owner: string;
-  readonly createdAt?: string;
-  readonly updatedAt?: string;
   constructor(init: ModelInit<AlertNotification>);
   static copyOf(
     source: AlertNotification,
@@ -318,8 +289,6 @@ export declare class ClinicianRecord {
   readonly path: string;
   readonly uploaderClinicianID: string;
   readonly uploadDateTime?: string;
-  readonly createdAt?: string;
-  readonly updatedAt?: string;
   constructor(init: ModelInit<ClinicianRecord>);
   static copyOf(
     source: ClinicianRecord,

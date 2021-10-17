@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 import {
   getClinicianRecord,
-  getPresignedUrlForClinicianRecords,
-  PresignedUrlRecordType
+  queryS3ClinicianRecordsBridge,
+  ClinicianRecordType
 } from "aws";
 import { ClinicianRecord } from "aws/API";
 import axios from "axios";
@@ -66,7 +66,7 @@ const axiosRequestForPDF: (
 
 interface UploadPDFParameters {
   recordInput: ClinicianRecordInput;
-  recordType: PresignedUrlRecordType;
+  recordType: ClinicianRecordType;
 }
 
 interface DownloadPDFParameters {
@@ -87,7 +87,7 @@ export const uploadPDF: (
     if (fileBinaryStr) {
       const documentID = createPDFDocumentID(file.name);
       // Lambda resolver: Get a presigned upload link
-      const uploadResponse = await getPresignedUrlForClinicianRecords({
+      const uploadResponse = await queryS3ClinicianRecordsBridge({
         recordType: recordType,
         operation: "Upload",
         patientID: patientID,
@@ -95,17 +95,17 @@ export const uploadPDF: (
         documentTitle: title
       });
 
-      if (uploadResponse.success && uploadResponse.url) {
+      if (uploadResponse.success && uploadResponse.data) {
         // Upload to S3
         const requestSuccess = await axiosRequestForPDF({
           method: "PUT",
-          url: uploadResponse.url,
+          url: uploadResponse.data,
           data: fileBinaryStr
         });
 
         if (requestSuccess) {
           // Lamdba resolver: Acknowledge upload
-          const acknowledgeResponse = await getPresignedUrlForClinicianRecords({
+          const acknowledgeResponse = await queryS3ClinicianRecordsBridge({
             patientID: patientID,
             operation: "Acknowledge",
             documentID: documentID,
@@ -148,15 +148,15 @@ export const downloadPDF: (
   const { patientID, documentID, title, type } = clinicianRecord;
   let downloadUrl: string | undefined;
   try {
-    const downloadResponse = await getPresignedUrlForClinicianRecords({
+    const downloadResponse = await queryS3ClinicianRecordsBridge({
       patientID: patientID,
       operation: "Download",
       documentID: documentID,
       documentTitle: title,
-      recordType: type as PresignedUrlRecordType
+      recordType: type as ClinicianRecordType
     });
-    if (downloadResponse.success && downloadResponse.url) {
-      downloadUrl = downloadResponse.url;
+    if (downloadResponse.success && downloadResponse.data) {
+      downloadUrl = downloadResponse.data;
     } else {
       throw Error("Failed to get download url");
     }
