@@ -24,6 +24,9 @@
     "Email": "Email",
     "EmailPlaceholder": "Enter email",
     "EmailError": "Invalid email address",
+    "Phone": "Phone Number",
+    "PhonePlaceholder": "Enter phone number",
+    "PhoneError": "Invalid phone number",
     "Role": "Role",
     "RolePlaceholder": "Select a role",
     "EP": "Electrophysiologist",
@@ -302,6 +305,7 @@
     "NoSelection": "Select a clinician to view more details",
     "Role": "Role",
     "HospitalName": "Hospital Name",
+    "ContactNumber": "Contact Number",
     "GeneralDetails": "General Information",
     "ClincianList": {
       "NoClinicianFound": "No Clincians found!"
