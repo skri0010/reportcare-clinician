@@ -79,15 +79,29 @@ export const AddNewMedication: FC<AddNewMedicationProps> = ({
     >
       {!isAdding ? (
         <View>
-          <Label text="Modifying Active Medication: " />
-          <Label text="Medication Name: " />
+          <Label
+            text={i18n.t(
+              "Patient_Configuration.Medications.ModifyingMedication"
+            )}
+          />
+          <Label
+            text={i18n.t("Patient_Configuration.Medications.MedicationName")}
+          />
           <H6 text={`${configMedInfo.name}`} />
           <MedicationInfo configMedInfo={configMedInfo} isAdding={false} />
         </View>
       ) : (
         <View>
-          <Label text="Prescribing New Medication: " />
-          <Label text="Select Medication To Presrcribe: " />
+          <Label
+            text={i18n.t(
+              "Patient_Configuration.Medications.PrescribingNewMeds"
+            )}
+          />
+          <Label
+            text={i18n.t(
+              "Patient_Configuration.Medications.PrescribeMedications"
+            )}
+          />
           <Picker
             style={pickerStyle}
             selectedValue={configMedInfo.name}

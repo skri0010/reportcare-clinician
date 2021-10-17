@@ -36,13 +36,13 @@ export const MedInfoRow: FC<MedInfoRowProps> = ({
           style={{
             paddingRight: ms(5),
             paddingBottom: ms(5),
-            fontWeight: "300"
+            fontWeight: "600"
           }}
         />
         <View style={styles.buttonContainer}>
           <View style={styles.button}>
             <RowButton
-              title="Modify"
+              title={i18n.t("Patient_Configuration.Medications.Modify")}
               onPress={() => updateMedInfo(medicationInfo)}
             />
           </View>

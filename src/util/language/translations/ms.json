@@ -223,6 +223,21 @@
       "Dosage": "Masukkan dos ubatan (dalam mg)",
       "Frequency": "Masukkan kekerapan pengambilan ubatan (dalam kali per hari)"
     },
+    "Medications": {
+      "Modify": "Ubah Suai",
+      "CurrentDosage": "Semasa Dos: ",
+      "Recommendations": "Cadangan: ",
+      "StartDose": "Mulakan Dose: ",
+      "TargetDose": "Sasaran Dos: ",
+      "Increments": "Kenaikan: ",
+      "ModifyingMedication": "Mengubah Ubat Aktif: ",
+      "MedicationName": "Nama Ubat: ",
+      "PrescribingNewMeds": "Menetapkan Ubat Baru: ",
+      "PrescribeMedications": "Pilih Ubat Untuk Preskripsi: ",
+      "MedicationForm":"Bentuk Ubat",
+      "AddNewMed": "Tambah Ubat Baru",
+      "ListActiveMed": "Senarai ubat aktif: "
+    },
     "ConfigurationSuccessful": "Pesakit telah berjaya dikonfigurasi"
   },
   "Patient_Overview": {

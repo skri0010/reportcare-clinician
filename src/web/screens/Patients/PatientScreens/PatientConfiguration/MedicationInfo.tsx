@@ -5,6 +5,7 @@ import { Label } from "components/Text/Label";
 import { mockMedPrescriptions } from "mock/mockMedDosages";
 import { H6 } from "components/Text";
 import { ScaledSheet } from "react-native-size-matters";
+import i18n from "util/language/i18n";
 
 interface MedicationInfo {
   configMedInfo: MedInput;
@@ -33,22 +34,32 @@ export const MedicationInfo: FC<MedicationInfo> = ({
     <View>
       {medPrescription ? (
         <View>
-          <Label text="Recommendations: " />
+          <Label
+            text={i18n.t("Patient_Configuration.Medications.Recommendations")}
+          />
           <View style={{ flexDirection: "row" }}>
             <View style={styles.reccomendations}>
-              <Label text="Start Dose: " />
+              <Label
+                text={i18n.t("Patient_Configuration.Medications.StartDose")}
+              />
               <H6 text={`${medPrescription.dosages.startDose} mg`} />
             </View>
             <View style={styles.reccomendations}>
-              <Label text="Target Dosage: " />
+              <Label
+                text={i18n.t("Patient_Configuration.Medications.TargetDose")}
+              />
               <H6 text={`${medPrescription.dosages.targetDose} mg`} />
             </View>
             <View style={styles.reccomendations}>
-              <Label text="Increments: " />
+              <Label
+                text={i18n.t("Patient_Configuration.Medications.Increments")}
+              />
               <H6 text={medPrescription.dosages.increment} />
             </View>
           </View>
-          <Label text="Current Dosage: " />
+          <Label
+            text={i18n.t("Patient_Configuration.Medications.CurrentDosage")}
+          />
           {isAdding ? <H6 text="None" /> : <H6 text={configMedInfo.dosage} />}
         </View>
       ) : (

@@ -227,6 +227,21 @@
       "Dosage": "Enter medication dosage (in mg)",
       "Frequency": "Enter medication frequency (in times per day)"
     },
+    "Medications": {
+      "Modify": "Modify",
+      "CurrentDosage": "Current Dosage: ",
+      "Recommendations": "Recommendations: ",
+      "StartDose": "Start Dose: ",
+      "TargetDose": "Target Dosage: ",
+      "Increments": "Increments: ",
+      "ModifyingMedication": "Modifying Active Medication: ",
+      "MedicationName": "Medication Name: ",
+      "PrescribingNewMeds": "Prescribing New Medication: ",
+      "PrescribeMedications": "Select Medication To Presrcribe: ",
+      "MedicationForm": "Medication Form",
+      "AddNewMed": "Add New Medication",
+      "ListActiveMed": "List of active medications: "
+    },
     "ConfigurationSuccessful": "Patient has been successfully configured"
   },
   "Patient_Overview": {

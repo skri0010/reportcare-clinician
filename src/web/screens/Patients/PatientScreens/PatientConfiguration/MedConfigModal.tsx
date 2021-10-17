@@ -6,6 +6,7 @@ import { MedInput, PatientDetails } from "rc_agents/model";
 import { H4 } from "components/Text";
 import { MedicationList } from "./MedicationList";
 import { AddNewMedication } from "./AddNewMedication";
+import i18n from "util/language/i18n";
 
 interface MedConfigModalProps {
   details: PatientDetails;
@@ -61,7 +62,10 @@ export const MedConfigModal: FC<MedConfigModalProps> = ({
         }
       ]}
     >
-      <H4 text="Medication Form" style={{ fontWeight: "bold" }} />
+      <H4
+        text={i18n.t("Patient_Configuration.Medications.MedicationForm")}
+        style={{ fontWeight: "bold" }}
+      />
       <View style={styles.container}>
         <MedicationList
           setAddNewMed={addMed}

@@ -1,5 +1,5 @@
 import React, { FC, useState, useEffect, useCallback } from "react";
-import { View, ScrollView, TouchableOpacity, Modal } from "react-native";
+import { View, ScrollView, TouchableOpacity } from "react-native";
 import { TextField } from "components/InputComponents/TextField";
 import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
 import i18n from "util/language/i18n";

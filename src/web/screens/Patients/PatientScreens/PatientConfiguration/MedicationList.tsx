@@ -5,6 +5,7 @@ import { RowButton } from "components/Buttons/RowButton";
 import { MedInput, PatientDetails } from "rc_agents/model";
 import { MedInfoRow } from "./MedInfoRow";
 import { H5 } from "components/Text";
+import i18n from "util/language/i18n";
 
 interface MedicationListProps {
   setAddNewMed: () => void;
@@ -28,9 +29,12 @@ export const MedicationList: FC<MedicationListProps> = ({
         backgroundColor: colors.primaryContrastTextColor
       }}
     >
-      <RowButton title="Add New Medication" onPress={() => setAddNewMed()} />
+      <RowButton
+        title={i18n.t("Patient_Configuration.Medications.AddNewMed")}
+        onPress={() => setAddNewMed()}
+      />
       <H5
-        text="List of active medications: "
+        text={i18n.t("Patient_Configuration.Medications.ListActiveMed")}
         style={{
           fontWeight: "600",
           paddingBottom: 10,
