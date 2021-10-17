@@ -40,7 +40,6 @@ export const PatientReassignmentModal: FC<PatientReassignmentModalProps> = ({
   const [selectedClinician, setSelectedClinician] =
     useState<null | ClinicianInfo>(null);
 
-  // JH-TODO-NEW: List of clinicians and trigger
   const reassignPatientAssignment = () => {
     if (selectedAssignment && selectedClinician) {
       const patientAssignmentResolution: PatientAssignmentResolution = {

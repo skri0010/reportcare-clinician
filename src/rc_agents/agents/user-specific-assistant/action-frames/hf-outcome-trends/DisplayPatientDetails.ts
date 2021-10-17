@@ -44,7 +44,6 @@ class DisplayPatientDetails extends Activity {
       ];
 
     if (patientDetails) {
-      // LS-TODO-NEW: Perform filtering on data according to roles
       // Dispatch patient details to front end
       store.dispatch(setPatientDetails(patientDetails));
 

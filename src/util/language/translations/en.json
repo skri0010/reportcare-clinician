@@ -178,6 +178,9 @@
     "Language": "Language",
     "LanguageDescription": "Click here to change language."
   },
+  "Maria": {
+    "CompletedRequest": "Completed Request"
+  },
   "Patient_Configuration": {
     "Title": "Configure details",
     "EditDetails": "Edit details",

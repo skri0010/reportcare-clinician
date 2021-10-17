@@ -205,7 +205,12 @@ export const RegisterAccount: FC<
         </View>
 
         {/* Right Column */}
-        <View style={styles.columnContainer}>
+        <View
+          style={[
+            styles.columnContainer,
+            { paddingTop: isMobile ? ms(35) : undefined }
+          ]}
+        >
           {/* Username */}
           <TextField
             label={i18n.t("Auth_SignIn.Username")}
@@ -276,7 +281,6 @@ const styles = ScaledSheet.create({
     flexDirection: isMobile ? "column" : "row",
     flexWrap: "wrap",
     alignItems: "flex-start",
-    marginTop: "25@ms",
     flex: 2
   },
   columnContainer: {

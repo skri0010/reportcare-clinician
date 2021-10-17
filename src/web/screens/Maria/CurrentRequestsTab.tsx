@@ -5,16 +5,15 @@ import { MainTitle } from "components/Text";
 import { PatientRequestRow } from "components/RowComponents/PatientRows/PatientRequestRow";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { mockPatients } from "mock/mockPatients";
+import i18n from "util/language/i18n";
 
 export const CurrentRequestsTab: FC = () => {
   // JH-TODO Remove mock data
-  // JH-TODO Flatlist
-  // JH-TODO: Replace titles with i18n
 
   return (
     <ScreenWrapper>
       <View>
-        <MainTitle title="Requests by MARIA" />
+        <MainTitle title={i18n.t("Home.RequestsByMaria")} />
 
         <FlatList
           ItemSeparatorComponent={() => <ItemSeparator />}

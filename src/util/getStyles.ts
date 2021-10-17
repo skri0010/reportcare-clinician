@@ -8,7 +8,6 @@ import { StackNavigationOptions } from "@react-navigation/stack";
 import { ms } from "react-native-size-matters";
 import { isMobile } from "./device";
 
-// JH-TODO-NAV: Remove export
 // Style for main screen header
 export const getMainScreenHeaderStyle: (
   colors: ColorScheme,

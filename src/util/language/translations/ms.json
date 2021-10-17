@@ -178,6 +178,9 @@
     "Language": "Bahasa",
     "LanguageDescription": "Tekan sini untuk menukar bahasa."
   },
+  "Maria": {
+    "CompletedRequest": "Permintaan Selesai"
+  },
   "Patient_Configuration": {
     "Title": "Konfigurasikan butiran",
     "EditDetails": "Edit butiran",

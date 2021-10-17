@@ -6,7 +6,6 @@ import { ScaledSheet } from "react-native-size-matters";
 import { PeopleAvatar } from "../PeopleAvatar";
 
 interface PatientImageContainerProps {
-  // JH-TODO: Image link in prop
   riskLevel: RiskLevel;
   onPress?: () => void;
 }

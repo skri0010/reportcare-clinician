@@ -8,10 +8,6 @@ import { MainScreenProps } from "web/navigation/types";
 import { ScreenName } from "web/navigation";
 
 export const ChatScreen: FC<MainScreenProps[ScreenName.CHAT]> = () => {
-  // JH-TODO Add search button later
-  // JH-TODO Flatlist
-  // JH-TODO Remove mock data
-
   return (
     <ScreenWrapper>
       <View>

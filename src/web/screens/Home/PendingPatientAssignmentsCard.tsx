@@ -56,6 +56,7 @@ export const PendingPatientAssignmentsCard: FC<PendingPatientAssignmentsCardProp
     return (
       <CardWrapper
         maxHeight={maxHeight}
+        minHeight={maxHeight}
         title={i18n.t("Home.PatientAssignments")}
         noChildrenPaddingHorizontal={fetchingPendingPatientAssignments}
         flex={1}
