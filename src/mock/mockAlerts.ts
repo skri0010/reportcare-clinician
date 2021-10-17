@@ -18,7 +18,8 @@ export const mockPendingAlerts: Alert[] = [
     _version: 1,
     _lastChangedAt: 0,
     createdAt: "",
-    updatedAt: ""
+    updatedAt: "",
+    triageValue: ""
   },
   {
     __typename: "Alert",
@@ -36,7 +37,8 @@ export const mockPendingAlerts: Alert[] = [
     _version: 1,
     _lastChangedAt: 0,
     createdAt: "",
-    updatedAt: ""
+    updatedAt: "",
+    triageValue: ""
   },
   {
     __typename: "Alert",
@@ -54,7 +56,8 @@ export const mockPendingAlerts: Alert[] = [
     _version: 1,
     _lastChangedAt: 0,
     createdAt: "",
-    updatedAt: ""
+    updatedAt: "",
+    triageValue: ""
   },
   {
     __typename: "Alert",
@@ -72,7 +75,8 @@ export const mockPendingAlerts: Alert[] = [
     _version: 1,
     _lastChangedAt: 0,
     createdAt: "",
-    updatedAt: ""
+    updatedAt: "",
+    triageValue: ""
   }
 ];
 
@@ -93,7 +97,8 @@ export const mockCompletedAlerts: Alert[] = [
     _version: 1,
     _lastChangedAt: 0,
     createdAt: "",
-    updatedAt: ""
+    updatedAt: "",
+    triageValue: ""
   },
   {
     __typename: "Alert",
@@ -111,7 +116,8 @@ export const mockCompletedAlerts: Alert[] = [
     _version: 1,
     _lastChangedAt: 0,
     createdAt: "",
-    updatedAt: ""
+    updatedAt: "",
+    triageValue: ""
   },
   {
     __typename: "Alert",
@@ -129,7 +135,8 @@ export const mockCompletedAlerts: Alert[] = [
     _version: 1,
     _lastChangedAt: 0,
     createdAt: "",
-    updatedAt: ""
+    updatedAt: "",
+    triageValue: ""
   }
 ];
 

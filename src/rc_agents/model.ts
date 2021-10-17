@@ -62,6 +62,22 @@ export enum AlertColorCode {
   UNASSIGNED = "white"
 }
 
+export enum MedicationNames {
+  ASPIRIN = "Aspirin",
+  BENAZEPRIL = "Benazepril",
+  SACUBITRIL = "Sacubitril"
+}
+
+type Dosage = {
+  min: number;
+  max: number;
+};
+
+export type MedDosage = {
+  name: MedicationNames;
+  dosage: Dosage;
+};
+
 /**
  * Maps alert's color code to risk level.
  * @param colorCode alert's color code
@@ -104,6 +120,7 @@ export interface PatientDetails {
   activityInfos: LocalActivityInfos;
   symptomReports: LocalReportSymptoms;
   vitalsReports: LocalReportVitals;
+  medicationInfo: MedInput[];
   medicalRecords: ClinicianRecord[];
   icdCrtRecords: ClinicianRecord[];
 }
@@ -201,6 +218,21 @@ export interface LocalTodo {
 
 export interface TodoDetails {
   id: string;
+}
+
+export interface MedInput {
+  id?: string;
+  name: string;
+  dosage: string;
+  frequency: string;
+  patientID: string;
+  records?: string;
+}
+
+export interface MedicalRecordInput {
+  title: string;
+  patientID: string;
+  file: RecordFile;
 }
 
 export interface ClinicianRecordInput {

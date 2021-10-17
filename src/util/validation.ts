@@ -1,6 +1,7 @@
 // Functions for validating authentication inputs
 
-import { Hospital, NYHAClass } from "rc_agents/model";
+import { Hospital, NYHAClass, MedicationNames } from "rc_agents/model";
+import { mockMedDosages } from "mock/mockMedDosages";
 
 // Checks that username has 3 to 16 characters
 export const validateUsername = (username: string): boolean => {
@@ -9,6 +10,10 @@ export const validateUsername = (username: string): boolean => {
 
 export const validateEmail = (email: string): boolean => {
   return /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email);
+};
+
+export const validatePhone = (phone: string): boolean => {
+  return validateNumber(phone) && phone.length === 10;
 };
 
 // Checks that password has 8 characters with at least 1 uppercase letter and number
@@ -65,11 +70,52 @@ export const validateFluidIntakeGoal = (fluidIntakeGoal: string): boolean => {
   );
 };
 
+export const validateMedName = (medName: string): boolean => {
+  // Assumed medicine name's length
+  const minMedNameLength = 0;
+  const maxMedNameLength = 200;
+  return (
+    medName.length > minMedNameLength &&
+    medName.length <= maxMedNameLength &&
+    Object.values(MedicationNames).includes(medName as MedicationNames)
+  );
+};
+
+export const validateMedDosageInput = (dosage: string): boolean => {
+  return validateNumber(dosage);
+};
+
+export const validateMedDosage = (medName: string, dosage: string): boolean => {
+  // Assumed medication dosage (in mg)
+  const medicine = mockMedDosages.filter((t) => t.name === medName);
+  if (medicine.length > 0) {
+    const minDosage = medicine[0].dosage.min;
+    const maxDosage = medicine[0].dosage.max;
+    return (
+      validateNumber(dosage) &&
+      parseFloat(dosage) >= minDosage &&
+      parseFloat(dosage) <= maxDosage
+    );
+  }
+  return false;
+};
+
+export const validateMedFreq = (frequency: string): boolean => {
+  // Assumed medication frquency (in times per day)
+  const minFrequency = 1;
+  const maxFrequency = 10;
+  return (
+    validateNumber(frequency) &&
+    parseFloat(frequency) >= minFrequency &&
+    parseFloat(frequency) <= maxFrequency
+  );
+};
+
 export const notEmptyString = (testString: string): boolean => {
   return testString.length > 0;
 };
 
-const validateNumber = (testString: string): boolean => {
+export const validateNumber = (testString: string): boolean => {
   return /^\d+$/.test(testString);
 };
 

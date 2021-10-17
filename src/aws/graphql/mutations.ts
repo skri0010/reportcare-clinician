@@ -935,29 +935,6 @@ export const deleteClinicianPatientMap = /* GraphQL */ `
     }
   }
 `;
-export const deletePatientAssignment = /* GraphQL */ `
-  mutation DeletePatientAssignment(
-    $input: DeletePatientAssignmentInput!
-    $condition: ModelPatientAssignmentConditionInput
-  ) {
-    deletePatientAssignment(input: $input, condition: $condition) {
-      id
-      patientID
-      clinicianID
-      patientName
-      pending
-      resolution
-      reassignToClinicianID
-      adminCompleted
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
-      adminReassignFromClinicianID
-    }
-  }
-`;
 export const createPatientAssignment = /* GraphQL */ `
   mutation CreatePatientAssignment(
     $input: CreatePatientAssignmentInput!
@@ -971,13 +948,12 @@ export const createPatientAssignment = /* GraphQL */ `
       pending
       resolution
       reassignToClinicianID
-      adminCompleted
+      sourceClinicianID
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
-      adminReassignFromClinicianID
     }
   }
 `;
@@ -994,13 +970,34 @@ export const updatePatientAssignment = /* GraphQL */ `
       pending
       resolution
       reassignToClinicianID
-      adminCompleted
+      sourceClinicianID
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
-      adminReassignFromClinicianID
+    }
+  }
+`;
+export const deletePatientAssignment = /* GraphQL */ `
+  mutation DeletePatientAssignment(
+    $input: DeletePatientAssignmentInput!
+    $condition: ModelPatientAssignmentConditionInput
+  ) {
+    deletePatientAssignment(input: $input, condition: $condition) {
+      id
+      patientID
+      clinicianID
+      patientName
+      pending
+      resolution
+      reassignToClinicianID
+      sourceClinicianID
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -1385,6 +1382,7 @@ export const createClinicianRecord = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -1406,6 +1404,7 @@ export const updateClinicianRecord = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -1427,6 +1426,7 @@ export const deleteClinicianRecord = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
+      owner
     }
   }
 `;

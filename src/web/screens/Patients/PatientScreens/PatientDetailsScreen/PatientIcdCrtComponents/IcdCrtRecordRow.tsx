@@ -4,27 +4,38 @@ import { H5, H6 } from "components/Text";
 import { View } from "react-native";
 import { RowButton } from "components/Buttons/RowButton";
 import { ClinicianRecord } from "aws/API";
-import { RootState, select } from "util/useRedux";
-import { getLocalDateTime } from "util/utilityFunctions";
+import { RootState, select, useDispatch } from "util/useRedux";
+import {
+  getLocalDateTime,
+  withinDeleteGracePeriod
+} from "util/utilityFunctions";
+import { DeleteIconButton } from "components/Buttons/DeleteIconButton";
+import { setRecordToDelete } from "ic-redux/actions/agents/patientActionCreator";
 
 interface IcdCrtRecordRowProps {
   icdCrtRecord: ClinicianRecord;
   onViewIcdCrtRecord: (IcdCrtRecord: ClinicianRecord) => void;
-  allowView: boolean; // Whether content viewing is allowed (is online)
+  isOnline: boolean; // Whether application is online
 }
 
 export const IcdCrtRecordRow: FC<IcdCrtRecordRowProps> = ({
   icdCrtRecord,
   onViewIcdCrtRecord,
-  allowView
+  isOnline
 }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
   }));
 
   // Triggers DTA to retrieve URL for showing ICD/CRT record content
-  const onRowPress = () => {
+  const onViewButtonPress = () => {
     onViewIcdCrtRecord(icdCrtRecord);
+  };
+
+  const dispatch = useDispatch();
+
+  const onDeleteButtonPress = () => {
+    dispatch(setRecordToDelete(icdCrtRecord));
   };
 
   return (
@@ -38,14 +49,22 @@ export const IcdCrtRecordRow: FC<IcdCrtRecordRowProps> = ({
           style={styles.bottomText}
         />
       </View>
-      {/* View button */}
       <View style={styles.viewButtonContainer}>
+        {/* Delete button */}
+        {withinDeleteGracePeriod(icdCrtRecord) ? (
+          <DeleteIconButton
+            onPress={onDeleteButtonPress}
+            allowDelete={isOnline}
+          />
+        ) : null}
+
+        {/* View button */}
         <RowButton
-          onPress={onRowPress}
+          onPress={onViewButtonPress}
           title="Patient_History.ViewButton"
-          disabled={!allowView}
+          disabled={!isOnline}
           backgroundColor={
-            allowView ? colors.primaryButtonColor : colors.overlayColor
+            isOnline ? colors.primaryButtonColor : colors.overlayColor
           }
         />
       </View>
@@ -59,7 +78,7 @@ const styles = ScaledSheet.create({
   },
   textContainer: {
     flex: 5,
-    paddingRight: "5@ms",
+    marginRight: "5@ms",
     maxWidth: "250@ms"
   },
   topText: {

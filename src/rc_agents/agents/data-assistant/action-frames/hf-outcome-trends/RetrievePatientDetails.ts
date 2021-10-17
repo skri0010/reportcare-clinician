@@ -15,17 +15,18 @@ import {
   PatientAttributes,
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
-import { PatientDetails } from "rc_agents/model";
+import { MedInput, PatientDetails } from "rc_agents/model";
 import {
   listActivityInfosByPatientID,
   listReportSymptomsByPatientID,
   listReportVitalsByPatientID,
-  listUploadedClinicianRecordsByPatientID,
-  PresignedUrlRecordType
+  listMedicationInfosByPatientID,
+  listUploadedClinicianRecordsByPatientID
 } from "aws";
 import {
   ActivityInfo,
   ClinicianRecord,
+  MedicationInfo,
   ModelSortDirection,
   PatientInfo,
   ReportSymptom,
@@ -62,9 +63,16 @@ class RetrievePatientDetails extends Activity {
         agentAPI.getFacts()[BeliefKeys.PATIENT]?.[
           PatientAttributes.PATIENT_TO_VIEW_DETAILS
         ];
+
       // Get online status from facts
       const isOnline =
         agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE];
+
+      // Get retrieve patient details locally from facts
+      const retrieveLocally =
+        agentAPI.getFacts()[BeliefKeys.PATIENT]?.[
+          PatientAttributes.RETRIEVE_PATIENT_DETAILS_LOCALLY
+        ];
 
       if (patientInfo) {
         const patientId = patientInfo.patientID;
@@ -73,39 +81,59 @@ class RetrievePatientDetails extends Activity {
           activityInfos: {},
           symptomReports: {},
           vitalsReports: {},
+          medicationInfo: [],
           medicalRecords: [],
           icdCrtRecords: []
         };
         let patientDetailsRetrieved = false;
 
         // Device is online
-        if (isOnline) {
+        if (isOnline && !retrieveLocally) {
           // Query for activity infos, symptom reports and vitals reports
-          const activityInfoQuery = await listActivityInfosByPatientID({
+          const activityInfoPromise = listActivityInfosByPatientID({
             patientID: patientId
           });
-          const symptomReportsQuery = await listReportSymptomsByPatientID({
+          const symptomReportsPromise = listReportSymptomsByPatientID({
             patientID: patientId
           });
-          const vitalsReportsQuery = await listReportVitalsByPatientID({
+          const vitalsReportsPromise = listReportVitalsByPatientID({
             patientID: patientId
           });
-
-          const medicalRecordType: PresignedUrlRecordType = "Medical";
-          const medicalRecordsQuery =
-            await listUploadedClinicianRecordsByPatientID({
+          const medicationInfoPromise = listMedicationInfosByPatientID({
+            patientID: patientId
+          });
+          const medicalRecordsPromise = listUploadedClinicianRecordsByPatientID(
+            {
               patientID: patientId,
-              filter: { type: { eq: medicalRecordType } },
               sortDirection: ModelSortDirection.DESC
-            });
+            },
+            "Medical"
+          );
 
-          const icdCrtRecordType: PresignedUrlRecordType = "IcdCrt";
-          const icdCrtRecordsQuery =
-            await listUploadedClinicianRecordsByPatientID({
+          const icdCrtRecordsPromise = listUploadedClinicianRecordsByPatientID(
+            {
               patientID: patientId,
-              filter: { type: { eq: icdCrtRecordType } },
               sortDirection: ModelSortDirection.DESC
-            });
+            },
+            "IcdCrt"
+          );
+
+          // Save network delay by waiting all for all the promises at the same time
+          const [
+            activityInfoQuery,
+            symptomReportsQuery,
+            vitalsReportsQuery,
+            medicationInfoQuery,
+            medicalRecordsQuery,
+            icdCrtRecordsQuery
+          ] = await Promise.all([
+            activityInfoPromise,
+            symptomReportsPromise,
+            vitalsReportsPromise,
+            medicationInfoPromise,
+            medicalRecordsPromise,
+            icdCrtRecordsPromise
+          ]);
 
           // Store activity infos in patient details
           if (activityInfoQuery.data.listActivityInfosByPatientID?.items) {
@@ -159,6 +187,24 @@ class RetrievePatientDetails extends Activity {
             });
           }
 
+          if (medicationInfoQuery.data.listMedicationInfosByPatientID?.items) {
+            const medicationInfos =
+              medicationInfoQuery.data.listMedicationInfosByPatientID?.items;
+
+            medicationInfos.forEach((medication: MedicationInfo | null) => {
+              if (medication) {
+                const localMed: MedInput = {
+                  id: medication.id,
+                  name: medication.name,
+                  dosage: `${medication.dosage}`,
+                  frequency: `${medication.frequency}`,
+                  patientID: medication.patientID,
+                  records: medication.records
+                };
+                patientDetails.medicationInfo.push(localMed);
+              }
+            });
+          }
           // Store medical records in patient details
           if (
             medicalRecordsQuery.data.listUploadedClinicianRecordsByPatientID
@@ -166,9 +212,10 @@ class RetrievePatientDetails extends Activity {
             medicalRecordsQuery.data.listUploadedClinicianRecordsByPatientID
               ?.items.length > 0
           ) {
-            patientDetails.medicalRecords = medicalRecordsQuery.data
-              .listUploadedClinicianRecordsByPatientID
-              .items as ClinicianRecord[];
+            patientDetails.medicalRecords =
+              medicalRecordsQuery.data.listUploadedClinicianRecordsByPatientID.items.filter(
+                (item) => !item?._deleted // Return undeleted items. This is a problem with DataStore
+              ) as ClinicianRecord[];
           }
 
           // Store ICD/CRT records in patient details
@@ -178,9 +225,10 @@ class RetrievePatientDetails extends Activity {
             icdCrtRecordsQuery.data.listUploadedClinicianRecordsByPatientID
               ?.items.length > 0
           ) {
-            patientDetails.icdCrtRecords = icdCrtRecordsQuery.data
-              .listUploadedClinicianRecordsByPatientID
-              .items as ClinicianRecord[];
+            patientDetails.icdCrtRecords =
+              icdCrtRecordsQuery.data.listUploadedClinicianRecordsByPatientID.items.filter(
+                (item) => !item?._deleted // Return undeleted items. This is a problem with DataStore
+              ) as ClinicianRecord[];
           }
 
           // Save retrieved patient
@@ -188,12 +236,27 @@ class RetrievePatientDetails extends Activity {
           patientDetailsRetrieved = true;
         }
         // Device is offline: Retrieve locally stored data (if any)
-        else if (!isOnline) {
+        else {
           // Get local patients' details
           const localPatientDetails = await LocalStorage.getPatientDetails(
             patientInfo.patientID
           );
+          patientDetailsRetrieved = true;
+          if (localPatientDetails?.activityInfos) {
+            patientDetails.activityInfos = localPatientDetails.activityInfos;
+          }
 
+          if (localPatientDetails?.symptomReports) {
+            patientDetails.symptomReports = localPatientDetails.symptomReports;
+          }
+
+          if (localPatientDetails?.medicationInfo) {
+            patientDetails.medicationInfo = localPatientDetails.medicationInfo;
+          }
+
+          if (localPatientDetails?.vitalsReports) {
+            patientDetails.vitalsReports = localPatientDetails.vitalsReports;
+          }
           if (localPatientDetails) {
             // Sorts ICD/CRT records in descending order of dateTime
             localPatientDetails.icdCrtRecords =
@@ -206,6 +269,7 @@ class RetrievePatientDetails extends Activity {
           }
         }
 
+        // Trigger request to Communicate to USXA
         if (patientDetailsRetrieved) {
           // Update Facts
           // Store items
@@ -226,17 +290,17 @@ class RetrievePatientDetails extends Activity {
             )
           );
         }
-
-        // Remove item
-        agentAPI.addFact(
-          new Belief(
-            BeliefKeys.PATIENT,
-            PatientAttributes.PATIENT_TO_VIEW_DETAILS,
-            null
-          ),
-          false
-        );
       }
+
+      // Removes patientInfo from facts
+      agentAPI.addFact(
+        new Belief(
+          BeliefKeys.PATIENT,
+          PatientAttributes.PATIENT_TO_VIEW_DETAILS,
+          null
+        ),
+        false
+      );
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);

@@ -15,12 +15,16 @@ import {
   PatientAssignmentResolution,
   TodoInput,
   TodoStatus,
+  MedInput,
   ClinicianRecordInput
 } from "rc_agents/model";
 
 // HF-OTP-II
 // Triggers RetrievePatientDetails of DTA
-export const triggerRetrievePatientDetails = (patient: PatientInfo): void => {
+export const triggerRetrievePatientDetails = (
+  patient: PatientInfo,
+  retrieveLocally = false
+): void => {
   // Add patient as fact, no broadcast
   agentAPI.addFact(
     new Belief(
@@ -30,6 +34,17 @@ export const triggerRetrievePatientDetails = (patient: PatientInfo): void => {
     ),
     false
   );
+
+  // Add belief to retrieve locally
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PATIENT,
+      PatientAttributes.RETRIEVE_PATIENT_DETAILS_LOCALLY,
+      retrieveLocally
+    ),
+    false
+  );
+
   // Set preconditions
   agentDTA.addBelief(
     new Belief(
@@ -38,6 +53,7 @@ export const triggerRetrievePatientDetails = (patient: PatientInfo): void => {
       true
     )
   );
+
   // Broadcast active procedure
   agentAPI.addFact(
     new Belief(
@@ -129,15 +145,28 @@ export const triggerResolvePendingAssignments = (
 };
 
 // MRDC: Triggers StoreBaseline of DTA
-export const triggerStorePatientBaseline = (input: PatientInfo): void => {
+export const triggerStorePatientBaseline = (
+  patientInput: PatientInfo,
+  medInput: MedInput[]
+): void => {
   agentAPI.addFact(
     new Belief(
       BeliefKeys.PATIENT,
       PatientAttributes.PATIENT_TO_CONFIGURE,
-      input
+      patientInput
     ),
     false
   );
+
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PATIENT,
+      PatientAttributes.MEDICATION_TO_CONFIGURE,
+      medInput
+    ),
+    false
+  );
+
   agentDTA.addBelief(
     new Belief(BeliefKeys.PATIENT, PatientAttributes.STORE_BASELINE, true)
   );
@@ -392,7 +421,7 @@ export const triggerRetrieveMedicalRecordContent = (
   );
 };
 
-// HF-OTP-IV: Triggers CreateIcdCrtRecord of DTA
+// MRDC: Triggers CreateIcdCrtRecord of DTA
 export const triggerCreateIcdCrtRecord = (
   input: ClinicianRecordInput
 ): void => {
@@ -465,6 +494,24 @@ export const triggerRetrieveMonitoringRecords = (input: AlertInfo): void => {
     new Belief(
       BeliefKeys.PROCEDURE,
       ProcedureAttributes.HF_EUA,
+      ProcedureConst.ACTIVE
+    )
+  );
+};
+
+// MRDC: Triggers DeleteRecord of DTA
+export const triggerDeleteRecord = (input: ClinicianRecord): void => {
+  agentAPI.addFact(
+    new Belief(BeliefKeys.PATIENT, PatientAttributes.RECORD_TO_DELETE, input),
+    false
+  );
+  agentDTA.addBelief(
+    new Belief(BeliefKeys.PATIENT, PatientAttributes.DELETE_RECORD, true)
+  );
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PROCEDURE,
+      ProcedureAttributes.MRDC,
       ProcedureConst.ACTIVE
     )
   );
