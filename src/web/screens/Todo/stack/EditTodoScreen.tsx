@@ -1,20 +1,21 @@
 import React, { FC, useState, useEffect } from "react";
-import { View, TextInput, StyleProp, ViewStyle, TextStyle } from "react-native";
+import { View } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { TodoDetailsStackProps } from "web/navigation/types";
 import { TodoDetailsStackScreenName } from "web/navigation";
 import { TodoSection, EditHistorySection } from "./ViewTodoScreen";
-import { H3 } from "components/Text";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
 import i18n from "util/language/i18n";
-import { LocalTodo, TodoInput } from "rc_agents/model";
+import { LocalTodo } from "rc_agents/model";
 import { AgentTrigger } from "rc_agents/trigger";
 import { setProcedureOngoing } from "ic-redux/actions/agents/procedureActionCreator";
 import {
   setSubmittingTodo,
   setUpdatedTodo
 } from "ic-redux/actions/agents/todoActionCreator";
+import { TextField } from "components/InputComponents/TextField";
+import { notEmptyString } from "util/validation";
 import { SaveAndCancelButtons } from "components/Buttons/SaveAndCancelButtons";
 
 interface EditTodoScreenProps extends TodoDetailsStackProps.EditTodoProps {
@@ -25,30 +26,22 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
   todo,
   navigation
 }) => {
-  const { colors, updatedTodo } = select((state: RootState) => ({
-    colors: state.settings.colors,
-    updatedTodo: state.todos.updatedTodo
+  const { updatedTodo, fonts } = select((state: RootState) => ({
+    updatedTodo: state.todos.updatedTodo,
+    fonts: state.settings.fonts
   }));
-
-  const inputBarColor: StyleProp<ViewStyle> = {
-    backgroundColor: colors.primaryBackgroundColor,
-    borderColor: colors.primaryBorderColor
-  };
-
-  const inputTextColor: StyleProp<TextStyle> = {
-    color: colors.primaryTextColor
-  };
 
   const dispatch = useDispatch();
 
   const [titleInput, setTitleInput] = useState<string>(todo.title); // Title input
   const [noteInput, setNoteInput] = useState<string>(todo.notes); // Notes input
+  const [allInputValid, setAllInputValid] = useState<boolean>(false);
 
   const onSave = (item: LocalTodo) => {
     dispatch(setProcedureOngoing(true));
     dispatch(setSubmittingTodo(true));
 
-    const todoToUpdate: TodoInput = {
+    const todoToUpdate: LocalTodo = {
       ...item,
       title: titleInput,
       notes: noteInput,
@@ -64,23 +57,29 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
     }
   }, [dispatch, navigation, updatedTodo]);
 
+  // Disable button if some inputs are empty
+  useEffect(() => {
+    if (notEmptyString(titleInput) && notEmptyString(noteInput)) {
+      setAllInputValid(true);
+    } else {
+      setAllInputValid(false);
+    }
+  }, [titleInput, noteInput]);
+
   return (
     <ScreenWrapper>
       <View style={styles.container}>
         {/* Title input */}
-        <H3 text={i18n.t("Todo.Title")} style={styles.detailText} />
-        <TextInput
+        <TextField
+          label={i18n.t("Todo.Title")}
+          labelStyle={[styles.detailText, { fontSize: fonts.h3Size }]}
+          inputStyle={{ height: ms(30) }}
           value={titleInput}
-          style={[
-            styles.input,
-            inputBarColor,
-            inputTextColor,
-            {
-              height: ms(30),
-              paddingLeft: ms(10)
-            }
-          ]}
-          onChangeText={setTitleInput}
+          onChange={setTitleInput}
+          placeholder={i18n.t("Patient_ICD/CRT.TitleInputPlaceholder")}
+          error={!notEmptyString(titleInput)}
+          errorMessage={i18n.t("Todo.TodoTitleError")}
+          errorBottomMargin={25}
         />
         {/* Patient name (not editable) */}
         <TodoSection
@@ -88,24 +87,18 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
           content={todo.patientName}
         />
         {/* Notes input */}
-        <H3 text={i18n.t("Todo.Notes")} style={styles.detailText} />
-        <TextInput
-          multiline
+        <TextField
+          label={i18n.t("Todo.Notes")}
+          labelStyle={[styles.detailText, { fontSize: fonts.h3Size }]}
+          inputStyle={[{ height: ms(100), paddingTop: ms(5) }]}
           value={noteInput}
-          style={[
-            styles.input,
-            inputBarColor,
-            inputTextColor,
-            {
-              height: ms(100),
-              paddingLeft: ms(10),
-              paddingTop: ms(5),
-              color: colors.primaryTextColor
-            }
-          ]}
-          onChangeText={setNoteInput}
+          onChange={setNoteInput}
+          placeholder={i18n.t("Todo.NotesInputPlaceholder")}
+          error={!notEmptyString(noteInput)}
+          errorMessage={i18n.t("Todo.TodoNotesError")}
+          multiline
+          errorBottomMargin={25}
         />
-
         {/* Edit history (created and modified datetime) */}
         <EditHistorySection
           editType={i18n.t("Todo.CreatedOn")}
@@ -124,7 +117,7 @@ export const EditTodoScreen: FC<EditTodoScreenProps> = ({
           onPressCancel={() => {
             navigation.goBack();
           }}
-          validToSave
+          validToSave={allInputValid}
         />
       </View>
     </ScreenWrapper>

@@ -19,10 +19,8 @@ import {
 import { LocalStorage } from "rc_agents/storage";
 import { getPatientAssignment } from "aws";
 import { store } from "util/useRedux";
-import { agentDTA, agentNWA } from "rc_agents/agents";
+import { agentNWA } from "rc_agents/agents";
 import { PatientAssignment } from "aws/API";
-import { PatientAssignmentStatus } from "rc_agents/model";
-import { Auth } from "@aws-amplify/auth";
 import { setPendingPatientAssignments } from "ic-redux/actions/agents/patientAssignmentActionCreator";
 /**
  * Class to represent an activity for processing patient assignment subscription.
@@ -68,62 +66,38 @@ class ProcessPatientAssignmentSubscription extends Activity {
             if (query.data.getPatientAssignment) {
               const patientAssignmentToDispatch =
                 query.data.getPatientAssignment;
-              // Saves patient assignment locally
-              await LocalStorage.setPendingPatientAssignment(
-                patientAssignmentToDispatch
-              );
 
-              // Adds to the front of current list of pending patient assignments
-              let patientAssignmentExists: PatientAssignment | undefined;
-              let { pendingPatientAssignments } =
-                store.getState().patientAssignments;
-              if (pendingPatientAssignments) {
-                // Check if patient assignment already exists
-                patientAssignmentExists = pendingPatientAssignments.find(
-                  (item) =>
-                    item.patientID === patientAssignmentSubscription.patientID
+              if (patientAssignmentToDispatch.pending) {
+                // Saves patient assignment locally
+                await LocalStorage.setPendingPatientAssignment(
+                  patientAssignmentToDispatch
                 );
-              } else {
-                pendingPatientAssignments = [];
-              }
 
-              if (!patientAssignmentExists) {
-                pendingPatientAssignments.unshift(patientAssignmentToDispatch);
-                // Dispatch updated list of pending patient assignments
-                store.dispatch(
-                  setPendingPatientAssignments(pendingPatientAssignments)
-                );
+                // Adds to the front of current list of pending patient assignments
+                let patientAssignmentExists: PatientAssignment | undefined;
+                let { pendingPatientAssignments } =
+                  store.getState().patientAssignments;
+                if (pendingPatientAssignments) {
+                  // Check if patient assignment already exists
+                  patientAssignmentExists = pendingPatientAssignments.find(
+                    (item) =>
+                      item.patientID === patientAssignmentSubscription.patientID
+                  );
+                } else {
+                  pendingPatientAssignments = [];
+                }
+
+                if (!patientAssignmentExists) {
+                  pendingPatientAssignments.unshift(
+                    patientAssignmentToDispatch
+                  );
+                  // Dispatch updated list of pending patient assignments
+                  store.dispatch(
+                    setPendingPatientAssignments(pendingPatientAssignments)
+                  );
+                }
               }
             }
-          }
-          // case when you have approved patient Assignment
-          else if (
-            patientAssignmentSubscription.resolution ===
-              PatientAssignmentStatus.APPROVED &&
-            patientAssignmentSubscription.adminCompleted
-          ) {
-            // Get new token
-            // Bypass cache is needed to ignore what is stored in cache and retrive new groups
-            // eslint-disable-next-line no-console
-            console.log(
-              await Auth.currentAuthenticatedUser({ bypassCache: true })
-            );
-            // Trigger Retrive Patients By Role
-            agentDTA.addBelief(
-              new Belief(
-                BeliefKeys.PATIENT,
-                PatientAttributes.RETRIEVE_PATIENTS,
-                true
-              )
-            );
-
-            agentAPI.addFact(
-              new Belief(
-                BeliefKeys.PROCEDURE,
-                ProcedureAttributes.HF_OTP_I,
-                ProcedureConst.ACTIVE
-              )
-            );
           }
         } else {
           // Device is offline: Store patient assignment subscription locally

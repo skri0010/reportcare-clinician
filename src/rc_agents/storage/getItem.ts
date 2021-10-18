@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { PatientInfo } from "aws/API";
-import { PatientDetails } from "rc_agents/model";
+import { LocalTodo, PatientDetails } from "rc_agents/model";
 import { AsyncStorageKeys, AsyncStorageType } from ".";
 
 export * from "rc_agents/storage/get/alerts";
@@ -131,6 +131,37 @@ export const getPatientBaselines = async (): Promise<
 };
 
 /**
+ * Get the medication configurations to be synced
+ * @returns an object with an array of medication configurations mapped to a patient ID
+ */
+export const getPatientMedicationConfigurations = async (): Promise<
+  AsyncStorageType[AsyncStorageKeys.MEDICATION_CONFIGURATIONS] | null
+> => {
+  const localData = await AsyncStorage.getItem(
+    AsyncStorageKeys.MEDICATION_CONFIGURATIONS
+  );
+
+  if (localData) {
+    return JSON.parse(localData);
+  }
+  return null;
+};
+
+/**
+ * Gets Alerts with updated to be synced.
+ * @returns array of Alerts if any, otherwise null
+ */
+export const getAlertsSync = async (): Promise<
+  AsyncStorageType[AsyncStorageKeys.ALERTS_SYNC] | null
+> => {
+  const localData = await AsyncStorage.getItem(AsyncStorageKeys.ALERTS_SYNC);
+  if (localData) {
+    return JSON.parse(localData);
+  }
+  return null;
+};
+
+/**
  * Base function for getting all Todos.
  * @returns array of Todo if exist, otherwise null
  */
@@ -174,12 +205,47 @@ export const getTodo = async (
   return null;
 };
 
-export const getTodoDetails = async (
+/**
+ * Get todo using alert ID
+ * @param alertID ID of alert associated to the todo
+ * @returns an array of LocalTodos, otherwise null
+ */
+export const getTodoFromAlertID = async (
+  alertID: string
+): Promise<AsyncStorageType[AsyncStorageKeys.TODOS] | null> => {
+  const localData = await getTodos();
+  if (localData) {
+    return localData.filter((t) => t.alertId === alertID);
+  }
+  return null;
+};
+
+/**
+ * Get todo details locally using todo ID
+ * @param id todo ID
+ * @returns an array of LocalTodos, otherwise undefined
+ */
+export const getTodoDetailsForTodoID = async (
   id: string
 ): Promise<AsyncStorageType[AsyncStorageKeys.TODO_DETAILS] | undefined> => {
   const localData = await getTodos();
   if (localData) {
     return localData.find((t) => t.id === id);
+  }
+  return undefined;
+};
+
+/**
+ * Get todo details locally using alert ID
+ * @param id alert ID
+ * @returns an array of LocalTodos, otherwise undefined
+ */
+export const getTodoDetailsForAlertID = async (
+  id: string
+): Promise<LocalTodo | undefined> => {
+  const localData = await getTodos();
+  if (localData) {
+    return localData.find((t) => t.alertId === id);
   }
   return undefined;
 };

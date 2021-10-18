@@ -50,3 +50,10 @@ export const setFetchingTodoDetails = createAction(
     fetchingTodoDetails: fetchingTodoDetails
   })
 )();
+
+export const setUpdatingTodoOfAlert = createAction(
+  actionNames.SET_UPDATING_TODO_OF_ALERT,
+  (updatingTodo: boolean) => ({
+    updatingTodo: updatingTodo
+  })
+)();

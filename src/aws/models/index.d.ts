@@ -160,8 +160,7 @@ export declare class PatientAssignment {
   readonly pending?: string;
   readonly resolution?: string;
   readonly reassignToClinicianID?: string;
-  readonly adminReassignFromClinicianID?: string;
-  readonly adminCompleted?: boolean;
+  readonly sourceClinicianID?: string;
   constructor(init: ModelInit<PatientAssignment>);
   static copyOf(source: PatientAssignment, mutator: (draft: MutableModel<PatientAssignment>) => MutableModel<PatientAssignment> | void): PatientAssignment;
 }

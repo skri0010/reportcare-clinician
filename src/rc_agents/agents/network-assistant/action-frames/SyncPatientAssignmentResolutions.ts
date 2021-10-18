@@ -24,9 +24,6 @@ import { store } from "util/useRedux";
 /**
  * Class to represent the activity for syncing local resolutions of patient assignments.
  *
- * JH-TODO:
- * - Update once ResolvePatientAssignment is ready
- * - Requires Communicate from DTA to NWA
  */
 class SyncPatientAssignmentResolutions extends Activity {
   /**

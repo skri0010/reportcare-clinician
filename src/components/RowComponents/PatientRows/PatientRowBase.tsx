@@ -91,7 +91,6 @@ export const PatientRowBase: React.FC<PatientRowBaseProps> = ({
                   { backgroundColor: colors.acceptButtonColor }
                 ]}
               >
-                {/* JH-TODO i18n for button label */}
                 <H6
                   text={bottomButtonLabel || ""}
                   style={[

@@ -5,6 +5,7 @@ import { ScaledSheet } from "react-native-size-matters";
 import { H3, H5 } from "components/Text";
 import { CardWrapper } from "components/Wrappers/CardWrapper";
 import i18n from "util/language/i18n";
+import { isMobile } from "util/device";
 
 interface WelcomeCardProps {
   flex?: number;
@@ -32,7 +33,7 @@ export const WelcomeCard: FC<WelcomeCardProps> = ({ flex = 1, maxHeight }) => {
   return (
     <CardWrapper
       flex={flex}
-      maxHeight={maxHeight}
+      maxHeight={isMobile ? undefined : maxHeight}
       title={i18n.t("Home.Dashboard")}
     >
       <View

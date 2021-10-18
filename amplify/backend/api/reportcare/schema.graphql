@@ -56,7 +56,7 @@ type MedicationInfo
   ) {
   id: ID!
   name: String!
-  dosage: Int!
+  dosage: Float!
   frequency: Int!
   records: AWSJSON!
   patientID: String!
@@ -176,69 +176,6 @@ type ReportVitals
 }
 
 """
-== Authorization ==
-1. Clinicians can create and read the records
-2. Patients can read their own records
-3. Other clinicians can read records containing their patients
-"""
-type MedicalRecord
-  @model
-  @auth(
-    rules: [
-      {
-        allow: owner
-        ownerField: "clinicianID"
-        operations: [create, read, update]
-      }
-      { allow: groups, groups: ["Admin"] }
-      { allow: groups, groupsField: "patientID", operations: [read] }
-    ]
-  )
-  @key(
-    name: "medicalRecordsByPatientID"
-    fields: ["patientID"]
-    queryField: "listMedicalRecordsByPatientID"
-  ) {
-  id: ID!
-  patientID: String!
-  clinicianID: String!
-  title: String!
-  fileKey: String!
-}
-
-"""
-== Authorization ==
-1. Clinicians can create and read the records
-2. Patients can read their own records
-3. Other clinicians can read records containing their patients
-"""
-type IcdCrtRecord
-  @model
-  @auth(
-    rules: [
-      {
-        allow: owner
-        ownerField: "clinicianID"
-        operations: [create, read, update]
-      }
-      { allow: groups, groups: ["Admin"] }
-      { allow: groups, groupsField: "patientID", operations: [read] }
-    ]
-  )
-  @key(
-    name: "icdCrtRecordsByDateTime"
-    fields: ["patientID", "dateTime"]
-    queryField: "listIcdCrtRecordsByDateTime"
-  ) {
-  id: ID!
-  patientID: String!
-  clinicianID: String!
-  title: String!
-  dateTime: AWSDateTime!
-  fileKey: String!
-}
-
-"""
 #P5
 == Authorization ==
 1. Clinicians (clinicianID) can create, read and update their own records
@@ -338,7 +275,6 @@ type ClinicianPatientMap
       { allow: owner, ownerField: "patientID", operations: [read] }
       { allow: groups, groupsField: "patientID", operations: [read] }
       { allow: groups, groups: ["Admin"] }
-      { allow: private, provider: iam }
     ]
   )
   @key(fields: ["clinicianID", "patientID"])
@@ -359,7 +295,6 @@ type ClinicianPatientMap
 1. Patients (patientID) can create and read their own records
 2. Clinicians (clinicianID) can read and update their own records
 3. Clinicians can read all records
-4. Lambda function uses IAM permissions to handle PatientAssignment resolutions
 
 Owners cannot be modified since they are part of @keys
 
@@ -372,7 +307,6 @@ type PatientAssignment
     rules: [
       { allow: owner, ownerField: "patientID", operations: [create, read] }
       { allow: owner, ownerField: "clinicianID", operations: [read, update] }
-      { allow: private, provider: iam, operations: [create, read, update] }
       { allow: groups, groups: ["Admin"] }
     ]
   )
@@ -389,16 +323,7 @@ type PatientAssignment
   pending: String
   resolution: String
   reassignToClinicianID: String
-  adminReassignFromClinicianID: String
-    @auth(
-      rules: [
-        { allow: owner, ownerField: "patientID", operations: [read] }
-        { allow: owner, ownerField: "clinicianID", operations: [read] }
-        { allow: private, provider: iam, operations: [create, update] }
-        { allow: groups, groups: ["Admin"] }
-      ]
-    )
-  adminCompleted: Boolean
+  sourceClinicianID: String
 }
 
 """
@@ -530,12 +455,17 @@ type AlertNotification
   owner: String!
 }
 
+"""
+== Authorization ==
+1. Clinicians (clinicianID) can read their own records
+2. Clinicians can read other clinicians' records with similar patients (patientID)
+"""
 type ClinicianRecord
   @model
   @auth(
     rules: [
       { allow: groups, groups: ["Admin"] }
-      { allow: private, provider: iam, operations: [create, read, update] }
+      { allow: owner, operations: [create, read] }
       { allow: groups, groupsField: "patientID", operations: [read] }
     ]
   )
@@ -555,22 +485,38 @@ type ClinicianRecord
 }
 
 """
-NOTE: Function type, name, arguments and return type must match in backend/function/s3clinicianrecordsbridge/lib/types
-Query 1: getPresignedUrlForUpload
+== Lambda Resolver Query ==
+NOTE: Function type, name, arguments and return type must match in backend/function/*/lib/types
+
+Query 1:queryS3ClinicianRecordsBridge
 Input: {
   recordType: "IcdCrt" | "Medical"
-  operation: "Upload" | "Download
+  operation: "Upload" | "Download | "Delete" | "Acknowledge"
   patientId: string
   documentID: string (should be unique by patient)
   documentName: string
 }
+Query 2: handlePatientAssignmentResolution
+Query 3: sharePatientAssignment
 """
 type Query {
-  getPresignedUrlForClinicianRecords(
+  queryS3ClinicianRecordsBridge(
     recordType: String
     operation: String
     patientID: String
     documentID: String
     documentTitle: String
   ): AWSJSON @function(name: "s3clinicianrecordsbridge-${env}")
+
+  handlePatientAssignmentResolution(
+    patientID: String
+    resolution: String
+    reassignToClinicianID: String
+  ): AWSJSON @function(name: "patientassignmenthandler-${env}")
+
+  sharePatientAssignment(
+    patientID: String
+    patientName: String
+    shareToClinicianID: String
+  ): AWSJSON @function(name: "patientassignmenthandler-${env}")
 }

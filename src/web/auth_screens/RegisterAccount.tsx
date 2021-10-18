@@ -10,7 +10,8 @@ import {
   validateEmail,
   validateHospitalName,
   validatePassword,
-  validateUsername
+  validateUsername,
+  validatePhone
 } from "util/validation";
 import i18n from "util/language/i18n";
 import { useToast } from "react-native-toast-notifications";
@@ -22,9 +23,9 @@ import { getPickerStyles } from "util/getStyles";
 import { Label } from "components/Text/Label";
 import { AuthScreenProps } from "web/navigation/types/AuthenticationStackProps";
 import { AuthenticationScreenName } from "web/navigation";
-import { H3 } from "components/Text";
 import { ConsentFormModal } from "./ConsentFormModal";
 import { TOSCheckbox } from "components/TOScomponents/TOSCheckbox";
+import { isMobile } from "util/device";
 
 export const RegisterAccount: FC<
   AuthScreenProps[AuthenticationScreenName.REGISTRATION]
@@ -39,6 +40,7 @@ export const RegisterAccount: FC<
   const [passwordMatch, setPasswordMatch] = useState(true);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [role, setRole] = useState("");
   const [hospital, setHospital] = useState("");
   const [username, setUsername] = useState("");
@@ -68,7 +70,8 @@ export const RegisterAccount: FC<
           username: username,
           name: name,
           hospitalName: hospital,
-          role: role
+          role: role,
+          phone: phone
         });
         navigation.navigate(AuthenticationScreenName.CONFIRM_REGISTRATION, {
           username: username
@@ -112,24 +115,26 @@ export const RegisterAccount: FC<
         role &&
         validateHospitalName(hospital) &&
         validatePassword(password) &&
-        passwordMatch) as boolean
+        passwordMatch &&
+        validatePhone(phone)) as boolean
     );
-  }, [name, email, username, role, hospital, password, passwordMatch]);
+  }, [name, email, username, role, hospital, password, passwordMatch, phone]);
 
   // Compares confirmed password with initial password
   useEffect(() => {
     setPasswordMatch(password === confirmPassword);
   }, [password, confirmPassword]);
 
-  // Local styles
-  const inputLabelStyle = [styles.inputLabel, { fontSize: fonts.h3Size }];
   const { pickerContainerStyle, pickerStyle } = getPickerStyles({
     colors: colors,
     fonts: fonts
   });
 
   return (
-    <ScreenWrapper pointerEvents={registering ? "none" : "auto"}>
+    <ScreenWrapper
+      pointerEvents={registering ? "none" : "auto"}
+      style={{ paddingBottom: ms(10) }}
+    >
       <View style={styles.contentContainer}>
         {/* Left Column */}
         <View style={styles.columnContainer}>
@@ -152,11 +157,18 @@ export const RegisterAccount: FC<
             errorMessage={i18n.t("Auth_Registration.EmailError")}
           />
 
-          {/* Role */}
-          <H3
-            text={i18n.t("Auth_Registration.Role")}
-            style={[inputLabelStyle, { color: colors.primaryTextColor }]}
+          {/* Phone */}
+          <TextField
+            label={i18n.t("Auth_Registration.Phone")}
+            value={phone}
+            onChange={(text) => setPhone(text)}
+            placeholder={i18n.t("Auth_Registration.PhonePlaceholder")}
+            error={phone !== "" && !validatePhone(phone)}
+            errorMessage={i18n.t("Auth_Registration.PhoneError")}
           />
+
+          {/* Role */}
+          <Label text={i18n.t("Auth_Registration.Role")} />
           <View style={pickerContainerStyle}>
             <Picker
               style={pickerStyle}
@@ -193,7 +205,12 @@ export const RegisterAccount: FC<
         </View>
 
         {/* Right Column */}
-        <View style={styles.columnContainer}>
+        <View
+          style={[
+            styles.columnContainer,
+            { paddingTop: isMobile ? ms(35) : undefined }
+          ]}
+        >
           {/* Username */}
           <TextField
             label={i18n.t("Auth_SignIn.Username")}
@@ -261,15 +278,15 @@ export const RegisterAccount: FC<
 
 const styles = ScaledSheet.create({
   contentContainer: {
-    flex: 1,
-    flexDirection: "row",
+    flexDirection: isMobile ? "column" : "row",
     flexWrap: "wrap",
     alignItems: "flex-start",
-    marginTop: "25@ms"
+    flex: 2
   },
   columnContainer: {
-    width: "50%",
-    paddingHorizontal: "80@ms",
+    flex: 1,
+    width: "100%",
+    paddingHorizontal: isMobile ? "10@ms" : "80@ms",
     paddingVertical: "15@ms"
   },
   inputLabel: {

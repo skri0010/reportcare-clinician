@@ -26,17 +26,15 @@ export const BasicInfoSection: FC<BasicInfoSectionProps> = ({ info }) => {
         content={capitalizeFirstLetter(info.gender)}
         iconType={InfoIcon.GENDER}
       />
-      {/* JH-TODO-NEW: Calculate age */}
       <PatientInfoRow
         title={i18n.t("Patient_Info.DOB")}
         content={info.birthDate}
         iconType={InfoIcon.BIRTHDATE}
         subcontent={`${info.age} ${i18n.t("Patient_Info.Years")}`}
       />
-      {/* JH-TODO-NEW: Update this location attribute */}
       <PatientInfoRow
         title={i18n.t("Patient_Info.Location")}
-        content="Remote"
+        content={info.location}
         iconType={InfoIcon.LOCATION}
       />
       <PatientInfoRow

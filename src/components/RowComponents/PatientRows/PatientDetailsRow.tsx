@@ -19,8 +19,6 @@ export const PatientDetailsRow: React.FC<PatientDetailsRowProps> = ({
 }) => {
   const { name, NHYAclass, riskLevel } = patient;
 
-  // JH-TODO-NEW: Selected patient styling
-
   return (
     <TouchableOpacity
       style={

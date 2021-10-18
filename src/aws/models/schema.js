@@ -239,7 +239,7 @@ export const schema = {
                 "dosage": {
                     "name": "dosage",
                     "isArray": false,
-                    "type": "Int",
+                    "type": "Float",
                     "isRequired": true,
                     "attributes": []
                 },
@@ -888,214 +888,6 @@ export const schema = {
                 }
             ]
         },
-        "MedicalRecord": {
-            "name": "MedicalRecord",
-            "fields": {
-                "id": {
-                    "name": "id",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "patientID": {
-                    "name": "patientID",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "clinicianID": {
-                    "name": "clinicianID",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "title": {
-                    "name": "title",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "fileKey": {
-                    "name": "fileKey",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": true,
-                    "attributes": []
-                }
-            },
-            "syncable": true,
-            "pluralName": "MedicalRecords",
-            "attributes": [
-                {
-                    "type": "model",
-                    "properties": {}
-                },
-                {
-                    "type": "key",
-                    "properties": {
-                        "name": "medicalRecordsByPatientID",
-                        "fields": [
-                            "patientID"
-                        ],
-                        "queryField": "listMedicalRecordsByPatientID"
-                    }
-                },
-                {
-                    "type": "auth",
-                    "properties": {
-                        "rules": [
-                            {
-                                "provider": "userPools",
-                                "ownerField": "clinicianID",
-                                "allow": "owner",
-                                "operations": [
-                                    "create",
-                                    "read",
-                                    "update"
-                                ],
-                                "identityClaim": "cognito:username"
-                            },
-                            {
-                                "groupClaim": "cognito:groups",
-                                "provider": "userPools",
-                                "allow": "groups",
-                                "groups": [
-                                    "Admin"
-                                ],
-                                "operations": [
-                                    "create",
-                                    "update",
-                                    "delete",
-                                    "read"
-                                ]
-                            },
-                            {
-                                "groupClaim": "cognito:groups",
-                                "provider": "userPools",
-                                "allow": "groups",
-                                "groupsField": "patientID",
-                                "operations": [
-                                    "read"
-                                ],
-                                "groupField": "groups"
-                            }
-                        ]
-                    }
-                }
-            ]
-        },
-        "IcdCrtRecord": {
-            "name": "IcdCrtRecord",
-            "fields": {
-                "id": {
-                    "name": "id",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "patientID": {
-                    "name": "patientID",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "clinicianID": {
-                    "name": "clinicianID",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "title": {
-                    "name": "title",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "dateTime": {
-                    "name": "dateTime",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "fileKey": {
-                    "name": "fileKey",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": true,
-                    "attributes": []
-                }
-            },
-            "syncable": true,
-            "pluralName": "IcdCrtRecords",
-            "attributes": [
-                {
-                    "type": "model",
-                    "properties": {}
-                },
-                {
-                    "type": "key",
-                    "properties": {
-                        "name": "icdCrtRecordsByDateTime",
-                        "fields": [
-                            "patientID",
-                            "dateTime"
-                        ],
-                        "queryField": "listIcdCrtRecordsByDateTime"
-                    }
-                },
-                {
-                    "type": "auth",
-                    "properties": {
-                        "rules": [
-                            {
-                                "provider": "userPools",
-                                "ownerField": "clinicianID",
-                                "allow": "owner",
-                                "operations": [
-                                    "create",
-                                    "read",
-                                    "update"
-                                ],
-                                "identityClaim": "cognito:username"
-                            },
-                            {
-                                "groupClaim": "cognito:groups",
-                                "provider": "userPools",
-                                "allow": "groups",
-                                "groups": [
-                                    "Admin"
-                                ],
-                                "operations": [
-                                    "create",
-                                    "update",
-                                    "delete",
-                                    "read"
-                                ]
-                            },
-                            {
-                                "groupClaim": "cognito:groups",
-                                "provider": "userPools",
-                                "allow": "groups",
-                                "groupsField": "patientID",
-                                "operations": [
-                                    "read"
-                                ],
-                                "groupField": "groups"
-                            }
-                        ]
-                    }
-                }
-            ]
-        },
         "ClinicianInfo": {
             "name": "ClinicianInfo",
             "fields": {
@@ -1457,16 +1249,6 @@ export const schema = {
                                     "delete",
                                     "read"
                                 ]
-                            },
-                            {
-                                "allow": "private",
-                                "provider": "iam",
-                                "operations": [
-                                    "create",
-                                    "update",
-                                    "delete",
-                                    "read"
-                                ]
                             }
                         ]
                     }
@@ -1525,17 +1307,10 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "adminReassignFromClinicianID": {
-                    "name": "adminReassignFromClinicianID",
+                "sourceClinicianID": {
+                    "name": "sourceClinicianID",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "adminCompleted": {
-                    "name": "adminCompleted",
-                    "isArray": false,
-                    "type": "Boolean",
                     "isRequired": false,
                     "attributes": []
                 }
@@ -1590,15 +1365,6 @@ export const schema = {
                                     "update"
                                 ],
                                 "identityClaim": "cognito:username"
-                            },
-                            {
-                                "allow": "private",
-                                "provider": "iam",
-                                "operations": [
-                                    "create",
-                                    "read",
-                                    "update"
-                                ]
                             },
                             {
                                 "groupClaim": "cognito:groups",
@@ -2211,13 +1977,14 @@ export const schema = {
                                 ]
                             },
                             {
-                                "allow": "private",
-                                "provider": "iam",
+                                "provider": "userPools",
+                                "ownerField": "owner",
+                                "allow": "owner",
                                 "operations": [
                                     "create",
-                                    "read",
-                                    "update"
-                                ]
+                                    "read"
+                                ],
+                                "identityClaim": "cognito:username"
                             },
                             {
                                 "groupClaim": "cognito:groups",
@@ -2237,5 +2004,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "7a4b1e187562b6aa352560662c961929"
+    "version": "010e9b71657cf3c4647f76790c5770d9"
 };

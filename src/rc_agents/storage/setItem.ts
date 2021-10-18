@@ -5,7 +5,8 @@ import {
   LocalTodo,
   mapColorCodeToRiskLevel,
   PatientDetails,
-  TodoStatus
+  TodoStatus,
+  MedInput
 } from "rc_agents/model";
 import { AsyncStorageKeys, AsyncStorageType } from ".";
 import {
@@ -13,6 +14,7 @@ import {
   getPatientAssignmentSubscriptions,
   getPatientBaselines,
   getPatientDetails,
+  getPatientMedicationConfigurations,
   getPendingPatientAssignments,
   getTodos
 } from "./getItem";
@@ -121,6 +123,7 @@ export const setPatients = async (
         activityInfos: localPatients[patient.patientID]?.activityInfos || {},
         symptomReports: localPatients[patient.patientID]?.symptomReports || {},
         vitalsReports: localPatients[patient.patientID]?.vitalsReports || {},
+        medicationInfo: localPatients[patient.patientID]?.medicationInfo || [],
         medicalRecords: localPatients[patient.patientID]?.medicalRecords || [],
         icdCrtRecords: localPatients[patient.patientID]?.icdCrtRecords || []
       };
@@ -141,9 +144,34 @@ export const setPatient = async (patient: PatientInfo): Promise<void> => {
     activityInfos: localPatient?.activityInfos || {},
     symptomReports: localPatient?.symptomReports || {},
     vitalsReports: localPatient?.vitalsReports || {},
+    medicationInfo: localPatient?.medicationInfo || [],
     medicalRecords: localPatient?.medicalRecords || [],
     icdCrtRecords: localPatient?.icdCrtRecords || []
   });
+};
+
+/**
+ * Stores the medication infos of the patient (as PatientDetails)
+ * @param medicationInfo an array of medication info
+ * @param patientID patient ID
+ */
+export const setPatientMedInfo = async (
+  medicationInfo: MedInput[],
+  patientID: string
+): Promise<void> => {
+  const localPatient = await getPatientDetails(patientID);
+
+  if (localPatient?.patientInfo) {
+    await setPatientDetails({
+      patientInfo: localPatient?.patientInfo,
+      activityInfos: localPatient?.activityInfos || {},
+      symptomReports: localPatient?.symptomReports || {},
+      vitalsReports: localPatient?.vitalsReports || {},
+      medicationInfo: medicationInfo,
+      medicalRecords: localPatient?.medicalRecords || {},
+      icdCrtRecords: localPatient?.icdCrtRecords || {}
+    });
+  }
 };
 
 /**
@@ -168,7 +196,8 @@ export const setPatientDetails = async (
       symptomReports: patientDetails.symptomReports,
       vitalsReports: patientDetails.vitalsReports,
       medicalRecords: patientDetails.medicalRecords,
-      icdCrtRecords: patientDetails.icdCrtRecords
+      icdCrtRecords: patientDetails.icdCrtRecords,
+      medicationInfo: patientDetails.medicationInfo
     };
   }
   await AsyncStorage.setItem(
@@ -235,7 +264,29 @@ export const setPatientBaselines = async (
     JSON.stringify(localData)
   );
 };
+/**
+ * Stores the medication configuration to be synced
+ * @param patientMedConfig an object with an array of medication configurations mapped to a patient
+ */
+export const setPatientMedicationConfigurations = async (
+  patientMedConfig: AsyncStorageType[AsyncStorageKeys.MEDICATION_CONFIGURATIONS]
+): Promise<void> => {
+  // Get all the current local medication infos to be synced
+  let localMedConfiguration = await getPatientMedicationConfigurations();
 
+  // If localMedConfiguration is null, create an empty list
+  if (!localMedConfiguration) {
+    localMedConfiguration = [];
+  }
+
+  // Merged the new med configs to be synced into the current med configs to be synced
+  localMedConfiguration = localMedConfiguration.concat(patientMedConfig);
+
+  await AsyncStorage.setItem(
+    AsyncStorageKeys.MEDICATION_CONFIGURATIONS,
+    JSON.stringify(localMedConfiguration)
+  );
+};
 /**
  * Insert a Todo to the beginning of the list or replace an existing one.
  * @param todo Todo to be inserted

@@ -22,13 +22,13 @@ import {
   MedInfoCompliants
 } from "rc_agents/model";
 import {
+  ClinicianRecordType,
   getDetailedAlert,
   getPatientInfo,
   listMedicationInfosByPatientID,
   listReportSymptomsByDateTime,
   listReportVitalsByDateTime,
-  listUploadedClinicianRecordsByPatientID,
-  PresignedUrlRecordType
+  listUploadedClinicianRecordsByPatientID
 } from "aws";
 import { store } from "util/useRedux";
 import {
@@ -361,12 +361,15 @@ export const queryHighRiskAlertInfo = async (
   }
 
   // Gets ICD/CRT records in descending date time
-  const icdCrtRecordType: PresignedUrlRecordType = "IcdCrt";
-  const icdCrtRecordsQuery = await listUploadedClinicianRecordsByPatientID({
-    patientID: alert.patientID,
-    filter: { type: { eq: icdCrtRecordType } },
-    sortDirection: ModelSortDirection.DESC
-  });
+  const icdCrtRecordType: ClinicianRecordType = "IcdCrt";
+  const icdCrtRecordsQuery = await listUploadedClinicianRecordsByPatientID(
+    {
+      patientID: alert.patientID,
+      filter: { type: { eq: icdCrtRecordType } },
+      sortDirection: ModelSortDirection.DESC
+    },
+    icdCrtRecordType
+  );
 
   if (
     icdCrtRecordsQuery.data.listUploadedClinicianRecordsByPatientID?.items &&

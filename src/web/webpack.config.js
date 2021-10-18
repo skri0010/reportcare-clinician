@@ -163,7 +163,7 @@ module.exports = {
   },
   output: {
     filename: "[name].bundle.web.js",
-    path: path.resolve(appDirectory, "dist")
+    path: path.resolve(appDirectory, "build")
   },
   target: "web", // Enable live reload
   resolve: {
@@ -220,17 +220,10 @@ module.exports = {
       __DEV__: !production
     }),
     new HtmlWebpackPlugin({
-      template: "public/index.html",
+      template: path.join(appDirectory, "public/index.html"),
       filename: "index.html",
       favicon: "public/favicon.ico",
-      chunks: [] // Refers to above entry js files
-    }),
-    new HtmlWebpackPlugin({
-      template: path.join(appDirectory, "public/app.html"),
-      filename: "app.html",
-      manifest: "public/manifest.json",
-      favicon: "public/favicon.ico",
-      chunks: ["app"] // Refers to above entry js files: index.web.ts
+      chunks: ["app"] // Refers to above entry js files
     }),
     new MiniCssExtractPlugin(),
     // Use web obfuscator in production

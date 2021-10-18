@@ -62,6 +62,22 @@ export enum AlertColorCode {
   UNASSIGNED = "white"
 }
 
+export enum MedicationNames {
+  ASPIRIN = "Aspirin",
+  BENAZEPRIL = "Benazepril",
+  SACUBITRIL = "Sacubitril"
+}
+
+type Dosage = {
+  min: number;
+  max: number;
+};
+
+export type MedDosage = {
+  name: MedicationNames;
+  dosage: Dosage;
+};
+
 /**
  * Maps alert's color code to risk level.
  * @param colorCode alert's color code
@@ -89,6 +105,18 @@ export enum TodoStatus {
   COMPLETED = "COMPLETED"
 }
 
+export enum FetchTodosMode {
+  ALL = "ALL",
+  PENDING = "PENDING",
+  COMPLETED = "COMPLETED",
+  NONE = "NONE"
+}
+
+export enum RetrieveTodoDetailsMethod {
+  TODO_ID = "TODO_ID",
+  ALERT_ID = "ALERT_ID"
+}
+
 export type RecordFile = {
   path?: string;
   size?: number;
@@ -104,6 +132,7 @@ export interface PatientDetails {
   activityInfos: LocalActivityInfos;
   symptomReports: LocalReportSymptoms;
   vitalsReports: LocalReportVitals;
+  medicationInfo: MedInput[];
   medicalRecords: ClinicianRecord[];
   icdCrtRecords: ClinicianRecord[];
 }
@@ -190,17 +219,33 @@ export interface LocalTodo {
   patientName: string;
   notes: string;
   completed: boolean;
+  alert?: AlertInfo;
   alertId?: string;
   patientId?: string;
   riskLevel?: RiskLevel;
   createdAt: string;
   lastModified?: string;
-  toSync: boolean;
+  toSync?: boolean;
   _version: number;
 }
 
 export interface TodoDetails {
   id: string;
+}
+
+export interface MedInput {
+  id?: string;
+  name: string;
+  dosage: string;
+  frequency: string;
+  patientID: string;
+  records?: string;
+}
+
+export interface MedicalRecordInput {
+  title: string;
+  patientID: string;
+  file: RecordFile;
 }
 
 export interface ClinicianRecordInput {

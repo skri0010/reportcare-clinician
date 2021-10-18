@@ -5,7 +5,6 @@ import { MainScreenProps } from "web/navigation/types";
 import { ScreenName } from "web/navigation";
 import { WelcomeCard } from "./WelcomeCard";
 import { ms, ScaledSheet } from "react-native-size-matters";
-import { RequestsByMariaCard } from "./RequestsByMariaCard";
 import { AlertsCard } from "./AlertsCard";
 import { TodosCard } from "./TodosCard";
 import { PendingPatientAssignmentsCard } from "./PendingPatientAssignmentsCard";
@@ -55,7 +54,6 @@ export const HomeScreen: FC<MainScreenProps[ScreenName.HOME]> = ({
         <WelcomeCard maxHeight={topMaxHeight} flex={1.8} />
       </View>
       <View style={styles.container}>
-        <RequestsByMariaCard maxHeight={maxHeight} />
         <TodosCard maxHeight={maxHeight} navigation={navigation} />
         <PendingPatientAssignmentsCard maxHeight={maxHeight} />
       </View>

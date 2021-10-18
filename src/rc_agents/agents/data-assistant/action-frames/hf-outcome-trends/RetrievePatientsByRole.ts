@@ -38,7 +38,6 @@ class RetrievePatientsByRole extends Activity {
    */
   async doActivity(agent: Agent): Promise<void> {
     await super.doActivity(agent, [rule2]);
-
     // Dispatch to store to indicate fetching
     store.dispatch(setFetchingPatients(true));
 

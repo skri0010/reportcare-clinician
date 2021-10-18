@@ -16,8 +16,6 @@ import {
   UpdatePatientAssignmentInput
 } from "aws/API";
 
-// JH-TODO: Check if the return types are correct
-
 interface UpdateClinicianInfoResponse extends BaseResponse {
   data: { updateClinicianInfo?: ClinicianInfo };
 }
@@ -31,7 +29,6 @@ export const updateClinicianInfo = async (
   })) as UpdateClinicianInfoResponse;
 };
 
-// JH-TODO: Not sure if this is the correct return type
 interface UpdateClinicianProtectedInfoResponse extends BaseResponse {
   data: { updatedClinicianInfo?: ClinicianInfo };
 }

@@ -39,6 +39,7 @@ export const PatientsList: FC<PatientsListScreen> = ({
           activityInfos: {},
           symptomReports: {},
           vitalsReports: {},
+          medicationInfo: [],
           medicalRecords: [],
           icdCrtRecords: []
         })

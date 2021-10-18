@@ -58,7 +58,7 @@ class StoreEntryData extends Activity {
           name: data.name,
           hospitalName: data.hospitalName,
           clinicianID: clinicianID,
-          contactNumber: "0112222333",
+          contactNumber: data.phone,
           role: data.role
         });
 

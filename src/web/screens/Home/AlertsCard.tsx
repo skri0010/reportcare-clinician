@@ -73,7 +73,6 @@ export const AlertsCard: FC<AlertsCardProps> = ({
         <LoadingIndicator flex={1} />
       ) : (
         <View style={styles.alertsContainer}>
-          {/* JH-TODO: Remove hardcoding of alertCount */}
           <AlertButton
             riskLevel={RiskLevel.HIGH}
             alertCount={

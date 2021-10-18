@@ -24,9 +24,10 @@ import {
   PatientAssignmentResolution,
   PatientAssignmentStatus
 } from "rc_agents/model";
-import { updatePatientAssignment } from "aws";
+import { handlePatientAssignmentResolution } from "aws";
 import { agentNWA } from "rc_agents/agents";
 import { store } from "util/useRedux";
+import Auth from "@aws-amplify/auth";
 
 /**
  * Class to represent an activity for resolving patient assignment (APPROVE or REASSIGN) .
@@ -59,7 +60,7 @@ class ResolvePatientAssignment extends Activity {
       if (resolution && clinicianId) {
         // Device is online
         if (agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
-          // Resolve (APPROVE or REASSIGN based on assignment)
+          // Approve or reassign resolution
           resolvedOnline = await resolvePatientAssignment({
             resolution: resolution,
             userClinicianID: clinicianId
@@ -94,37 +95,43 @@ class ResolvePatientAssignment extends Activity {
             )
           );
         }
+
+        if (resolvedOnline) {
+          // Update Beliefs
+          // Retrieve new pending patient assignments
+          agent.addBelief(
+            new Belief(
+              BeliefKeys.PATIENT,
+              PatientAttributes.RETRIEVE_PENDING_PATIENT_ASSIGNMENTS,
+              true
+            )
+          );
+
+          if (resolution.resolution === PatientAssignmentStatus.APPROVED) {
+            // Refresh access token with new patient
+            await Auth.currentAuthenticatedUser({ bypassCache: true });
+
+            // Trigger agent (self) to retrieve new patients
+            agent.addBelief(
+              new Belief(
+                BeliefKeys.PATIENT,
+                PatientAttributes.RETRIEVE_PATIENTS,
+                true
+              )
+            );
+            agentAPI.addFact(
+              new Belief(
+                BeliefKeys.PROCEDURE,
+                ProcedureAttributes.HF_OTP_I,
+                ProcedureConst.ACTIVE
+              )
+            );
+          }
+        }
       }
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
-    }
-
-    if (resolvedOnline) {
-      // Update Beliefs
-      // Retrieve new pending patient assignments
-      agent.addBelief(
-        new Belief(
-          BeliefKeys.PATIENT,
-          PatientAttributes.RETRIEVE_PENDING_PATIENT_ASSIGNMENTS,
-          true
-        )
-      );
-      // Trigger agent (self) to retrieve new patients
-      agent.addBelief(
-        new Belief(
-          BeliefKeys.PATIENT,
-          PatientAttributes.RETRIEVE_PATIENTS,
-          true
-        )
-      );
-      agentAPI.addFact(
-        new Belief(
-          BeliefKeys.PROCEDURE,
-          ProcedureAttributes.HF_OTP_I,
-          ProcedureConst.ACTIVE
-        )
-      );
     }
 
     // Update Facts
@@ -141,9 +148,8 @@ class ResolvePatientAssignment extends Activity {
 }
 
 /**
- * Resolve patient assignment by updating it
- * Logic is handled by backend Lambda function (handle-patient-assignment-resolution)
- * Source for logic is in lambda-functions/handle-patient-assignment-resolution
+ * Handle APPROVED or REASSIGNED resolution
+ * Logic is handled by GraphQL Lambda resolver (patientassignmenthandler)
  */
 export const resolvePatientAssignment: (params: {
   resolution: PatientAssignmentResolution;
@@ -151,39 +157,17 @@ export const resolvePatientAssignment: (params: {
 }) => Promise<boolean> = async ({ resolution, userClinicianID }) => {
   let success = false;
   try {
-    // Approve resolution
-    if (
-      resolution.resolution === PatientAssignmentStatus.APPROVED &&
-      resolution.clinicianID === userClinicianID
-    ) {
-      const result = await updatePatientAssignment({
+    if (resolution.clinicianID === userClinicianID) {
+      // Call Lambda resolver to handle patient assignment
+      const result = await handlePatientAssignmentResolution({
         patientID: resolution.patientID,
-        clinicianID: resolution.clinicianID,
-        pending: null, // Removes it from GSI to ensure it is sparse
-        resolution: PatientAssignmentStatus.APPROVED,
-        _version: resolution._version
+        resolution: resolution.resolution,
+        reassignToClinicianID: resolution.reassignToClinicianID || ""
       });
-      if (result) {
+      if (result.success) {
         success = true;
-      }
-    }
-    // Reassign resolution
-    else if (
-      resolution.resolution === PatientAssignmentStatus.REASSIGNED &&
-      resolution.reassignToClinicianID &&
-      resolution.clinicianID !== resolution.reassignToClinicianID &&
-      resolution.clinicianID === userClinicianID
-    ) {
-      const result = await updatePatientAssignment({
-        patientID: resolution.patientID,
-        clinicianID: resolution.clinicianID,
-        pending: null, // Removes it from GSI to ensure it is sparse
-        resolution: PatientAssignmentStatus.REASSIGNED,
-        reassignToClinicianID: resolution.reassignToClinicianID,
-        _version: resolution._version
-      });
-      if (result) {
-        success = true;
+      } else {
+        throw Error("Failed to resolve PatientAssignment");
       }
     }
   } catch (error) {

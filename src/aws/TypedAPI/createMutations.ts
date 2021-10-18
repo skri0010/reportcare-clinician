@@ -13,6 +13,8 @@ import {
   CreateTodoInput,
   PatientAssignment,
   CreatePatientAssignmentInput,
+  MedicationInfo,
+  CreateMedicationInfoInput,
   MedicalRecord,
   CreateMedicalRecordInput,
   IcdCrtRecord,
@@ -81,6 +83,19 @@ export const createPatientAssignment = async (
     query: mutations.createPatientAssignment,
     variables: { input: input }
   })) as CreatePatientAssignmentResponse;
+};
+
+interface CreateMedicationInfoResponse extends BaseResponse {
+  data: { createMedicationInfo?: MedicationInfo };
+}
+
+export const createMedicationInfo = async (
+  input: CreateMedicationInfoInput
+): Promise<CreateMedicationInfoResponse> => {
+  return (await API.graphql({
+    query: mutations.createMedicationInfo,
+    variables: { input: input }
+  })) as CreateMedicationInfoResponse;
 };
 
 interface CreateMedicalRecordResponse extends BaseResponse {
