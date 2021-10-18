@@ -45,7 +45,8 @@
     "TermOfServices": "Terma-Terma Perkhidmatan",
     "Accept": "Terima",
     "Decline": "Tolak",
-    "ToSText": "Saya bersetuju dengan "
+    "ToSText": "Saya bersetuju dengan ",
+    "PlaceholderError": "Placeholder Error"
   },
   "Auth_ConfirmRegistration": {
     "ConfirmRegistration": "Sahkan Pendaftaran",

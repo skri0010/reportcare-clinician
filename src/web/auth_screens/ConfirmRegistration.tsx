@@ -100,8 +100,10 @@ export const ConfirmRegistration: FC<
 
 const styles = ScaledSheet.create({
   container: {
+    flex: 1,
     margin: "30@ms",
     alignSelf: "center",
-    width: Dimensions.get("window").width / 2
+    minWidth: "250@ms",
+    maxWidth: "400@ms"
   }
 });
