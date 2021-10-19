@@ -101,7 +101,7 @@ const rule1 = new Precondition(
 );
 const rule2 = new ResettablePrecondition(
   BeliefKeys.PATIENT,
-  PatientAttributes.PATIENTS_RETRIEVED,
+  PatientAttributes.DISPLAY_PATIENTS,
   true
 );
 

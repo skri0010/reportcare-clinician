@@ -422,7 +422,8 @@ type Todo
   title: String!
   patientName: String!
   notes: String!
-  lastModified: AWSDateTime!
+  createdAt: AWSDateTime!
+  lastModified: AWSDateTime
   alertID: ID
   alert: Alert @connection(fields: ["alertID"])
   pending: String

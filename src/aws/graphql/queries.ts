@@ -903,216 +903,6 @@ export const syncReportVitals = /* GraphQL */ `
     }
   }
 `;
-export const getMedicalRecord = /* GraphQL */ `
-  query GetMedicalRecord($id: ID!) {
-    getMedicalRecord(id: $id) {
-      id
-      patientID
-      clinicianID
-      title
-      fileKey
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listMedicalRecords = /* GraphQL */ `
-  query ListMedicalRecords(
-    $filter: ModelMedicalRecordFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listMedicalRecords(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        patientID
-        clinicianID
-        title
-        fileKey
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-      }
-      nextToken
-      startedAt
-    }
-  }
-`;
-export const listMedicalRecordsByPatientID = /* GraphQL */ `
-  query ListMedicalRecordsByPatientID(
-    $patientID: String
-    $sortDirection: ModelSortDirection
-    $filter: ModelMedicalRecordFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listMedicalRecordsByPatientID(
-      patientID: $patientID
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        patientID
-        clinicianID
-        title
-        fileKey
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-      }
-      nextToken
-      startedAt
-    }
-  }
-`;
-export const syncMedicalRecords = /* GraphQL */ `
-  query SyncMedicalRecords(
-    $filter: ModelMedicalRecordFilterInput
-    $limit: Int
-    $nextToken: String
-    $lastSync: AWSTimestamp
-  ) {
-    syncMedicalRecords(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      lastSync: $lastSync
-    ) {
-      items {
-        id
-        patientID
-        clinicianID
-        title
-        fileKey
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-      }
-      nextToken
-      startedAt
-    }
-  }
-`;
-export const getIcdCrtRecord = /* GraphQL */ `
-  query GetIcdCrtRecord($id: ID!) {
-    getIcdCrtRecord(id: $id) {
-      id
-      patientID
-      clinicianID
-      title
-      dateTime
-      fileKey
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listIcdCrtRecords = /* GraphQL */ `
-  query ListIcdCrtRecords(
-    $filter: ModelIcdCrtRecordFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listIcdCrtRecords(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        patientID
-        clinicianID
-        title
-        dateTime
-        fileKey
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-      }
-      nextToken
-      startedAt
-    }
-  }
-`;
-export const listIcdCrtRecordsByDateTime = /* GraphQL */ `
-  query ListIcdCrtRecordsByDateTime(
-    $patientID: String
-    $dateTime: ModelStringKeyConditionInput
-    $sortDirection: ModelSortDirection
-    $filter: ModelIcdCrtRecordFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listIcdCrtRecordsByDateTime(
-      patientID: $patientID
-      dateTime: $dateTime
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        patientID
-        clinicianID
-        title
-        dateTime
-        fileKey
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-      }
-      nextToken
-      startedAt
-    }
-  }
-`;
-export const syncIcdCrtRecords = /* GraphQL */ `
-  query SyncIcdCrtRecords(
-    $filter: ModelIcdCrtRecordFilterInput
-    $limit: Int
-    $nextToken: String
-    $lastSync: AWSTimestamp
-  ) {
-    syncIcdCrtRecords(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      lastSync: $lastSync
-    ) {
-      items {
-        id
-        patientID
-        clinicianID
-        title
-        dateTime
-        fileKey
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-      }
-      nextToken
-      startedAt
-    }
-  }
-`;
 export const getClinicianInfo = /* GraphQL */ `
   query GetClinicianInfo($clinicianID: String!) {
     getClinicianInfo(clinicianID: $clinicianID) {
@@ -1846,6 +1636,7 @@ export const getTodo = /* GraphQL */ `
       title
       patientName
       notes
+      createdAt
       lastModified
       alertID
       pending
@@ -1854,7 +1645,6 @@ export const getTodo = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      createdAt
       updatedAt
       alert {
         id
@@ -1891,6 +1681,7 @@ export const listTodos = /* GraphQL */ `
         title
         patientName
         notes
+        createdAt
         lastModified
         alertID
         pending
@@ -1899,7 +1690,6 @@ export const listTodos = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
-        createdAt
         updatedAt
       }
       nextToken
@@ -1930,6 +1720,7 @@ export const listPendingTodosByLastModifiedDate = /* GraphQL */ `
         title
         patientName
         notes
+        createdAt
         lastModified
         alertID
         pending
@@ -1938,7 +1729,6 @@ export const listPendingTodosByLastModifiedDate = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
-        createdAt
         updatedAt
       }
       nextToken
@@ -1969,6 +1759,7 @@ export const listCompletedTodosByLastModifiedDate = /* GraphQL */ `
         title
         patientName
         notes
+        createdAt
         lastModified
         alertID
         pending
@@ -1977,7 +1768,6 @@ export const listCompletedTodosByLastModifiedDate = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
-        createdAt
         updatedAt
       }
       nextToken
@@ -2008,6 +1798,7 @@ export const listTodosByAlertID = /* GraphQL */ `
         title
         patientName
         notes
+        createdAt
         lastModified
         alertID
         pending
@@ -2016,7 +1807,6 @@ export const listTodosByAlertID = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
-        createdAt
         updatedAt
       }
       nextToken
@@ -2043,6 +1833,7 @@ export const syncTodos = /* GraphQL */ `
         title
         patientName
         notes
+        createdAt
         lastModified
         alertID
         pending
@@ -2051,7 +1842,6 @@ export const syncTodos = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
-        createdAt
         updatedAt
       }
       nextToken

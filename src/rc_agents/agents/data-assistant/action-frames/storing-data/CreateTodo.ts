@@ -64,9 +64,8 @@ class CreateTodo extends Activity {
           title: todoInput.title,
           patientName: todoInput.patientName,
           notes: todoInput.notes,
-          lastModified: todoInput.lastModified
-            ? todoInput.lastModified
-            : todoInput.createdAt,
+          createdAt: todoInput.createdAt,
+          lastModified: todoInput.lastModified,
           owner: clinicianId
         };
 
@@ -130,17 +129,15 @@ class CreateTodo extends Activity {
          * 2. If Todo is successfully inserted, set toSync to false, otherwise set to true.
          */
         if (facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
-          if (todoInput.alertId) {
-            // Inserts Todo
-            const createResponse = await createTodo(todoToInsert);
-            if (createResponse.data.createTodo) {
-              // Gets newly inserted Todo to update local Todo id
-              const insertedTodo = createResponse.data.createTodo;
-              todoInput.id = insertedTodo.id;
+          // Inserts Todo
+          const createResponse = await createTodo(todoToInsert);
+          if (createResponse.data.createTodo) {
+            // Gets newly inserted Todo to update local Todo id
+            const insertedTodo = createResponse.data.createTodo;
+            todoInput.id = insertedTodo.id;
 
-              // Updates to indicate that Todo is successfully inserted
-              toSync = false;
-            }
+            // Updates to indicate that Todo is successfully inserted
+            toSync = false;
           }
         } else {
           // Device is offline: Todo requires syncing

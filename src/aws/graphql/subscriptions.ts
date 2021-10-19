@@ -491,105 +491,6 @@ export const onDeleteReportVitals = /* GraphQL */ `
     }
   }
 `;
-export const onCreateMedicalRecord = /* GraphQL */ `
-  subscription OnCreateMedicalRecord($clinicianID: String) {
-    onCreateMedicalRecord(clinicianID: $clinicianID) {
-      id
-      patientID
-      clinicianID
-      title
-      fileKey
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateMedicalRecord = /* GraphQL */ `
-  subscription OnUpdateMedicalRecord($clinicianID: String) {
-    onUpdateMedicalRecord(clinicianID: $clinicianID) {
-      id
-      patientID
-      clinicianID
-      title
-      fileKey
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteMedicalRecord = /* GraphQL */ `
-  subscription OnDeleteMedicalRecord($clinicianID: String) {
-    onDeleteMedicalRecord(clinicianID: $clinicianID) {
-      id
-      patientID
-      clinicianID
-      title
-      fileKey
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateIcdCrtRecord = /* GraphQL */ `
-  subscription OnCreateIcdCrtRecord($clinicianID: String) {
-    onCreateIcdCrtRecord(clinicianID: $clinicianID) {
-      id
-      patientID
-      clinicianID
-      title
-      dateTime
-      fileKey
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateIcdCrtRecord = /* GraphQL */ `
-  subscription OnUpdateIcdCrtRecord($clinicianID: String) {
-    onUpdateIcdCrtRecord(clinicianID: $clinicianID) {
-      id
-      patientID
-      clinicianID
-      title
-      dateTime
-      fileKey
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteIcdCrtRecord = /* GraphQL */ `
-  subscription OnDeleteIcdCrtRecord($clinicianID: String) {
-    onDeleteIcdCrtRecord(clinicianID: $clinicianID) {
-      id
-      patientID
-      clinicianID
-      title
-      dateTime
-      fileKey
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const onCreateClinicianInfo = /* GraphQL */ `
   subscription OnCreateClinicianInfo($clinicianID: String) {
     onCreateClinicianInfo(clinicianID: $clinicianID) {
@@ -1108,6 +1009,7 @@ export const onCreateTodo = /* GraphQL */ `
       title
       patientName
       notes
+      createdAt
       lastModified
       alertID
       pending
@@ -1116,7 +1018,6 @@ export const onCreateTodo = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      createdAt
       updatedAt
       alert {
         id
@@ -1148,6 +1049,7 @@ export const onUpdateTodo = /* GraphQL */ `
       title
       patientName
       notes
+      createdAt
       lastModified
       alertID
       pending
@@ -1156,7 +1058,6 @@ export const onUpdateTodo = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      createdAt
       updatedAt
       alert {
         id
@@ -1188,6 +1089,7 @@ export const onDeleteTodo = /* GraphQL */ `
       title
       patientName
       notes
+      createdAt
       lastModified
       alertID
       pending
@@ -1196,7 +1098,6 @@ export const onDeleteTodo = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      createdAt
       updatedAt
       alert {
         id

@@ -209,9 +209,6 @@ export enum ClinicianAttributes {
   CONFIGURED = "Configured",
   RETRIEVE_ENTRY = "RetrieveEntry",
 
-  // HF-OTP-I: ClinicianInfo and all patients (PatientInfo)
-  ROLE = "Role",
-
   // SRD-III - Todo Details
   RETRIEVE_TODO_DETAILS = "RetrieveTodoDetails",
   TODO_DETAILS = "TodoDetails",
@@ -291,7 +288,7 @@ export enum PatientAttributes {
   // HF-OTP-I: ClinicianInfo and all patients (PatientInfo)
   RETRIEVE_PATIENTS = "RetrievePatients",
   PATIENTS = "Patients",
-  PATIENTS_RETRIEVED = "PatientsRetrieved",
+  DISPLAY_PATIENTS = "DisplayPatients",
 
   // HF-OTP-II: Single patient's details
   PATIENT_TO_VIEW_DETAILS = "ViewPatientDetailsWithPatientId",

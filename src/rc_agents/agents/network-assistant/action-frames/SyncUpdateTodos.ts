@@ -67,6 +67,7 @@ class SyncUpdateTodos extends Activity {
                   todo.notes = latestTodo.notes;
                   todo.completed =
                     latestTodo.completed === TodoStatus.COMPLETED;
+                  todo.createdAt = latestTodo.createdAt;
                   todo.lastModified = latestTodo.lastModified;
                   todo._version = latestTodo._version;
                   todo.toSync = false;

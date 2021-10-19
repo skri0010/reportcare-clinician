@@ -221,6 +221,21 @@ export const getTodoFromAlertID = async (
 };
 
 /**
+ * Get todo using createdAt date time
+ * @param createdAt date time when the todo is created
+ * @returns todo with the same createdAt date time, if any
+ */
+export const getTodoFromCreatedAt = async (
+  createdAt: string
+): Promise<LocalTodo | undefined | null> => {
+  const localData = await getTodos();
+  if (localData) {
+    return localData.find((t) => t.createdAt === createdAt);
+  }
+  return null;
+};
+
+/**
  * Get todo details locally using todo ID
  * @param id todo ID
  * @returns an array of LocalTodos, otherwise undefined
