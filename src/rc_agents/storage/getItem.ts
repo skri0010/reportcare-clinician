@@ -208,14 +208,14 @@ export const getTodo = async (
 /**
  * Get todo using alert ID
  * @param alertID ID of alert associated to the todo
- * @returns an array of LocalTodos, otherwise null
+ * @returns the first local todo addressing the specified alert ID if any, otherwise null
  */
 export const getTodoFromAlertID = async (
   alertID: string
-): Promise<AsyncStorageType[AsyncStorageKeys.TODOS] | null> => {
+): Promise<LocalTodo | undefined | null> => {
   const localData = await getTodos();
   if (localData) {
-    return localData.filter((t) => t.alertId === alertID);
+    return localData.find((t) => t.alertId === alertID);
   }
   return null;
 };
@@ -223,7 +223,7 @@ export const getTodoFromAlertID = async (
 /**
  * Get todo using createdAt date time
  * @param createdAt date time when the todo is created
- * @returns todo with the same createdAt date time, if any
+ * @returns the first local todo with the same createdAt date time if any, otherwise null
  */
 export const getTodoFromCreatedAt = async (
   createdAt: string

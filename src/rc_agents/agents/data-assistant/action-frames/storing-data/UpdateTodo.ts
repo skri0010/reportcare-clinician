@@ -56,10 +56,18 @@ class UpdateTodo extends Activity {
        * 1. Todo is created offline then updated again while the device is still offline
        */
       if (todoInput && !todoInput.id) {
-        // Get the local todo based on the createdAt date time of the todo
-        const localTodo = await LocalStorage.getTodoFromCreatedAt(
-          todoInput.createdAt
-        );
+        let localTodo: LocalTodo | undefined | null;
+        if (todoInput.alertId) {
+          // Get local todo addressing the same alert
+          localTodo = await LocalStorage.getTodoFromAlertID(todoInput.alertId);
+        }
+        if (!localTodo) {
+          // Get local todo with the same createdAt date time
+          localTodo = await LocalStorage.getTodoFromCreatedAt(
+            todoInput.createdAt
+          );
+        }
+
         if (localTodo) {
           todoInput.id = localTodo.id;
           todoInput._version = localTodo._version;
@@ -104,8 +112,9 @@ class UpdateTodo extends Activity {
           delete todoInput.alert;
         }
       }
+
       // Updates the todo that already has an entry in the DB
-      else if (todoInput && todoInput.id && clinicianId) {
+      if (todoInput && todoInput.id && clinicianId) {
         let toSync: boolean | undefined;
 
         // Constructs UpdateTodoInput to be updated
