@@ -4,7 +4,8 @@ import {
   ReportVitals,
   PatientInfo,
   Alert,
-  ClinicianRecord
+  ClinicianRecord,
+  MedicationInfo
 } from "aws/API";
 import { RiskLevel } from "models/RiskLevel";
 
@@ -64,9 +65,7 @@ export enum AlertColorCode {
 export enum MedicationNames {
   ASPIRIN = "Aspirin",
   BISOPROLOL = "Bisoprolol",
-  BENAZEPRIL = "Benazepril",
-  SACUBITRIL = "Sacubitril",
-  VENTOLIN = "Ventolin"
+  SACUBITRIL = "Sacubitril"
 }
 
 type MedRecommendations = {
@@ -166,14 +165,17 @@ export interface AlertsCount {
   unassignedRisk: number;
 }
 
-export type AlertInfo = {
+// Shared by AlertInfo and HighRiskAlertInfo
+type BaseAlertInfo = {
   riskLevel: RiskLevel;
+  medCompliants?: MedicationInfo[];
+} & Alert;
+
+export type AlertInfo = {
   diagnosis?: string;
   NYHAClass?: string;
-  lastMedication?: string;
-  medicationQuantity?: number;
   activityDuringAlert?: string;
-} & Alert;
+} & BaseAlertInfo;
 
 export type ProcessedAlertInfos = {
   [patientID: string]: AlertInfo[] | undefined;

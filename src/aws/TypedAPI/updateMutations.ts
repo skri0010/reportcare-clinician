@@ -18,8 +18,6 @@ import {
   UpdateMedicationInfoInput
 } from "aws/API";
 
-// JH-TODO: Check if the return types are correct
-
 interface UpdateClinicianInfoResponse extends BaseResponse {
   data: { updateClinicianInfo?: ClinicianInfo };
 }
@@ -33,7 +31,19 @@ export const updateClinicianInfo = async (
   })) as UpdateClinicianInfoResponse;
 };
 
-// JH-TODO: Not sure if this is the correct return type
+interface UpdateMedicationInfoResponse extends BaseResponse {
+  data: { updateMedicationInfo?: MedicationInfo };
+}
+
+export const updateMedicationInfo = async (
+  input: UpdateMedicationInfoInput
+): Promise<UpdateMedicationInfoResponse> => {
+  return (await API.graphql({
+    query: mutations.updateMedicationInfo,
+    variables: { input: input }
+  })) as UpdateMedicationInfoResponse;
+};
+
 interface UpdateClinicianProtectedInfoResponse extends BaseResponse {
   data: { updatedClinicianInfo?: ClinicianInfo };
 }
@@ -71,19 +81,6 @@ export const updateAlert = async (
     query: mutations.updateAlert,
     variables: { input: input }
   })) as UpdateAlertResponse;
-};
-
-interface UpdateMedicationInfoResponse extends BaseResponse {
-  data: { updateMedicationInfo?: MedicationInfo };
-}
-
-export const updateMedicationInfo = async (
-  input: UpdateMedicationInfoInput
-): Promise<UpdateMedicationInfoResponse> => {
-  return (await API.graphql({
-    query: mutations.updateMedicationInfo,
-    variables: { input: input }
-  })) as UpdateMedicationInfoResponse;
 };
 
 interface UpdateTodoResponse extends BaseResponse {

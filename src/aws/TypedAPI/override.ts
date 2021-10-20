@@ -8,6 +8,7 @@ export const getFullAlert = /* GraphQL */ `
       dateTime
       summary
       colorCode
+      triageValue
       vitalsReportID
       vitalsReport {
         id
@@ -67,6 +68,60 @@ export const getFullAlert = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
+    }
+  }
+`;
+
+export const listReportSymptomsWithActivitiesByDateTime = /* GraphQL */ `
+  query ListReportSymptomsByDateTime(
+    $patientID: String
+    $DateTime: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelReportSymptomFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listReportSymptomsByDateTime(
+      patientID: $patientID
+      DateTime: $DateTime
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        ActId
+        ActivityInfo {
+          id
+          Actname
+          Location
+          expectedFrequency
+          expectedDays
+          expectedDurationMinutes
+          recordDateTime
+          patientID
+          _version
+          _deleted
+          _lastChangedAt
+          createdAt
+          updatedAt
+          owner
+        }
+        Name
+        Severity
+        DateTime
+        Summary
+        patientID
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+      startedAt
     }
   }
 `;

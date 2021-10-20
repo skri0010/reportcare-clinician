@@ -1,0 +1,522 @@
+"""
+Official docs for authentication: https://docs.amplify.aws/cli/graphql-transformer/auth
+Official docs for keys: https://docs.amplify.aws/cli/graphql-transformer/key#key
+
+For groupFields details: Design History: Implementation of dynamic group authorization
+#P5 - Models can be improved after implementation of Proposal 5 in https://github.com/aws-amplify/amplify-cli/issues/317
+"""
+type PatientInfo
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groupsField: "patientID", operations: [read, update] }
+    ]
+  )
+  @key(fields: ["patientID"]) {
+  id: ID!
+  name: String!
+  address: String!
+  deviceNo: String!
+  diagnosisInfo: String!
+  NHYAclass: String!
+  cardiologist: String!
+  hospitalName: String!
+  hospitalLocation: String!
+  targetWeight: String!
+  targetActivity: String!
+  riskLevel: String!
+  gender: String!
+  birthDate: AWSDate!
+  language: String!
+  phoneNumber: String!
+  email: String!
+  emergencyContactName: String!
+  emergencyContactNumber: String!
+  fluidIntakeGoal: String!
+  configured: Boolean!
+  patientID: String!
+}
+
+type MedicationInfo
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: owner, ownerField: "patientID", operations: [read, update] }
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groupsField: "patientID", operations: [read, update] }
+    ]
+  )
+  @key(
+    name: "medicationInfosByPatientID"
+    fields: ["patientID"]
+    queryField: "listMedicationInfosByPatientID"
+  ) {
+  id: ID!
+  name: String!
+  dosage: Float!
+  frequency: Int!
+  records: AWSJSON!
+  patientID: String!
+  active: Boolean!
+}
+
+type ActivityInfo
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groupsField: "patientID", operations: [read] }
+    ]
+  )
+  @key(
+    name: "activityInfosByPatientID"
+    fields: ["patientID"]
+    queryField: "listActivityInfosByPatientID"
+  ) {
+  id: ID!
+  Actname: String!
+  Location: String!
+  expectedFrequency: Int
+  expectedDays: [String!]
+  expectedDurationMinutes: Int
+  recordDateTime: AWSJSON
+  patientID: String!
+}
+
+type MedCompliant
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groupsField: "patientID", operations: [read] }
+    ]
+  )
+  @key(
+    name: "medCompliantsByPatientID"
+    fields: ["patientID"]
+    queryField: "listMedCompliantsByPatientID"
+  )
+  @key(
+    name: "medCompliantsByDate"
+    fields: ["patientID", "Date"]
+    queryField: "listMedCompliantsByDate"
+  ) {
+  id: ID!
+  MedId: ID!
+  MedicationInfo: MedicationInfo @connection(fields: ["MedId"])
+  Verification: Boolean!
+  Date: AWSDateTime!
+  patientID: String!
+}
+
+type ReportSymptom
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groupsField: "patientID", operations: [read] }
+    ]
+  )
+  @key(
+    name: "reportSymptomsByPatientID"
+    fields: ["patientID"]
+    queryField: "listReportSymptomsByPatientID"
+  )
+  @key(
+    name: "reportSymptomsByDateTime"
+    fields: ["patientID", "DateTime"]
+    queryField: "listReportSymptomsByDateTime"
+  ) {
+  id: ID!
+  ActId: ID!
+  ActivityInfo: ActivityInfo @connection(fields: ["ActId"])
+  Name: String!
+  Severity: String!
+  DateTime: AWSDateTime!
+  Summary: String
+  patientID: String!
+}
+
+type ReportVitals
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groupsField: "patientID", operations: [read] }
+    ]
+  )
+  @key(
+    name: "reportVitalsByPatientID"
+    fields: ["patientID"]
+    queryField: "listReportVitalsByPatientID"
+  )
+  @key(
+    name: "reportVitalsByDateTime"
+    fields: ["patientID", "DateTime"]
+    queryField: "listReportVitalsByDateTime"
+  ) {
+  id: ID!
+  Temperature: String
+  Humidity: String
+  Weight: String
+  BPSys: String
+  BPDi: String
+  NoSteps: String
+  OxySat: String
+  FluidIntake: String
+  DateTime: AWSDateTime!
+  patientID: String!
+}
+
+"""
+#P5
+== Authorization ==
+1. Clinicians (clinicianID) can create, read and update their own records
+2. Clinicians can read all records
+3. Patients can read all records
+
+Owners cannot be modified since they are part of @keys
+
+== Notes ==
+1. Contains basic information
+2. Sensitive information should be stored in ClinicianProtectedInfo
+"""
+type ClinicianInfo
+  @model
+  @auth(
+    rules: [
+      {
+        allow: owner
+        ownerField: "clinicianID"
+        operations: [create, read, update]
+      }
+      { allow: groups, groups: ["Patients"], operations: [read] }
+      {
+        allow: groups
+        groups: [
+          "EPs"
+          "Nurses"
+          "HFSpecialists"
+          "MedicalOfficers"
+          "Pharmacists"
+        ]
+        operations: [read]
+      }
+      { allow: groups, groups: ["Admin"] }
+    ]
+  )
+  @key(fields: ["clinicianID"]) {
+  id: ID
+  clinicianID: String!
+  name: String!
+  hospitalName: String!
+  role: String!
+  contactNumber: String!
+  protectedInfo: ClinicianProtectedInfo @connection(fields: ["clinicianID"])
+}
+
+"""
+#P5
+== Authorization ==
+1. Clinicians (clinicianID) can create, read and update their own records
+
+Owners cannot be modified since they are part of @keys
+
+== Notes ==
+1. Contains sensitive information such as agent state
+"""
+type ClinicianProtectedInfo
+  @model
+  @auth(
+    rules: [
+      {
+        allow: owner
+        ownerField: "clinicianID"
+        operations: [create, read, update]
+      }
+      { allow: groups, groups: ["Admin"] }
+    ]
+  )
+  @key(fields: ["clinicianID"]) {
+  id: ID
+  clinicianID: String!
+  facts: String!
+  APS: String!
+  DTA: String!
+  UXSA: String!
+  NWA: String!
+  ALA: String!
+  MHA: String!
+  CAM: String!
+}
+
+"""
+#P5
+== Authorization ==
+1. Clinicians (clinicianID) can read their own records
+2. Patients (patientID) can read their own records
+3. Clinicians can read other clinicians' records with similar patients (patientID)
+NOTE: AWS Lambda should create the ClincicianPatientMap records
+
+Owners cannot be modified since they are part of @keys
+"""
+type ClinicianPatientMap
+  @model
+  @auth(
+    rules: [
+      { allow: owner, ownerField: "clinicianID", operations: [read] }
+      { allow: owner, ownerField: "patientID", operations: [read] }
+      { allow: groups, groupsField: "patientID", operations: [read] }
+      { allow: groups, groups: ["Admin"] }
+    ]
+  )
+  @key(fields: ["clinicianID", "patientID"])
+  @key(
+    name: "clinicianMappingsByPatientID"
+    fields: ["patientID", "clinicianID"]
+    queryField: "listClinicianMappingsByPatientID"
+  ) {
+  id: ID
+  clinicianID: String!
+  patientID: String!
+  clinicianInfo: ClinicianInfo! @connection(fields: ["clinicianID"])
+}
+
+"""
+#P5
+== Authorization ==
+1. Patients (patientID) can create and read their own records
+2. Clinicians (clinicianID) can read and update their own records
+3. Clinicians can read all records
+
+Owners cannot be modified since they are part of @keys
+
+== Notes ==
+1. pending and resolution are optional and used for GSI efficiency
+"""
+type PatientAssignment
+  @model
+  @auth(
+    rules: [
+      { allow: owner, ownerField: "patientID", operations: [create, read] }
+      { allow: owner, ownerField: "clinicianID", operations: [read, update] }
+      { allow: groups, groups: ["Admin"] }
+    ]
+  )
+  @key(fields: ["patientID", "clinicianID"])
+  @key(
+    name: "pendingPatientAssignments"
+    fields: ["clinicianID", "pending"]
+    queryField: "listPendingPatientAssignments"
+  ) {
+  id: ID
+  patientID: String!
+  clinicianID: String!
+  patientName: String!
+  pending: String
+  resolution: String
+  reassignToClinicianID: String
+  sourceClinicianID: String
+}
+
+"""
+== Authorization ==
+1. Patients can create records
+2. Owners can read their own records
+3. Clinicians can read and update records containing their patients
+"""
+type Alert
+  @model
+  @auth(
+    rules: [
+      { allow: owner, operations: [read] }
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groupsField: "patientID", operations: [read, update] }
+      { allow: groups, groups: ["Patients"], operations: [create] }
+    ]
+  )
+  @key(
+    name: "patientAlertsByDateTime"
+    fields: ["patientID", "dateTime"]
+    queryField: "listPatientAlertsByDateTime"
+  )
+  @key(
+    name: "pendingAlertsByDateTime"
+    fields: ["pending", "dateTime"]
+    queryField: "listPendingAlertsByDateTime"
+  )
+  @key(
+    name: "pendingRiskAlerts"
+    fields: ["pending", "colorCode"]
+    queryField: "listPendingRiskAlerts"
+  )
+  @key(
+    name: "completedRiskAlerts"
+    fields: ["completed", "colorCode"]
+    queryField: "listCompletedRiskAlerts"
+  ) {
+  id: ID!
+  patientID: String!
+  patientName: String!
+  dateTime: AWSDateTime!
+  summary: String!
+  colorCode: String!
+  triageValue: String!
+  vitalsReportID: ID!
+  vitalsReport: ReportVitals @connection(fields: ["vitalsReportID"])
+  symptomReportID: ID!
+  symptomReport: ReportSymptom @connection(fields: ["symptomReportID"])
+  pending: String
+  completed: String
+  owner: String!
+}
+
+"""
+== Authorization ==
+1. Clinicians can create records
+2. Owners can read and update their own records
+"""
+type Todo
+  @model
+  @auth(
+    rules: [
+      { allow: owner, operations: [read, update] }
+      { allow: groups, groups: ["Admin"] }
+      {
+        allow: groups
+        groups: [
+          "EPs"
+          "Nurses"
+          "HFSpecialists"
+          "MedicalOfficers"
+          "Pharmacists"
+        ]
+        operations: [create]
+      }
+    ]
+  )
+  @key(
+    name: "pendingTodosByLastModifiedDate"
+    fields: ["pending", "lastModified"]
+    queryField: "listPendingTodosByLastModifiedDate"
+  )
+  @key(
+    name: "completedTodosByLastModifiedDate"
+    fields: ["completed", "lastModified"]
+    queryField: "listCompletedTodosByLastModifiedDate"
+  )
+  @key(
+    name: "todosByAlertID"
+    fields: ["clinicianID", "alertID"]
+    queryField: "listTodosByAlertID"
+  ) {
+  id: ID!
+  clinicianID: String!
+  title: String!
+  patientName: String!
+  notes: String!
+  lastModified: AWSDateTime!
+  alertID: ID
+  alert: Alert @connection(fields: ["alertID"])
+  pending: String
+  completed: String
+  owner: String!
+}
+
+type AlertNotification
+  @model
+  @auth(
+    rules: [
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groups: ["Patients"], operations: [create, read] }
+      {
+        allow: groups
+        groups: [
+          "EPs"
+          "Nurses"
+          "HFSpecialists"
+          "MedicalOfficers"
+          "Pharmacists"
+        ]
+        operations: [read]
+      }
+    ]
+  ) {
+  id: ID!
+  patientID: String!
+  alertID: ID!
+  owner: String!
+}
+
+"""
+== Authorization ==
+1. Clinicians (clinicianID) can read their own records
+2. Clinicians can read other clinicians' records with similar patients (patientID)
+"""
+type ClinicianRecord
+  @model
+  @auth(
+    rules: [
+      { allow: groups, groups: ["Admin"] }
+      { allow: owner, operations: [create, read] }
+      { allow: groups, groupsField: "patientID", operations: [read] }
+    ]
+  )
+  @key(fields: ["patientID", "documentID"])
+  @key(
+    name: "uploadedClinicianRecordsByPatientID"
+    fields: ["patientID", "uploadDateTime"]
+    queryField: "listUploadedClinicianRecordsByPatientID"
+  ) {
+  patientID: String!
+  documentID: String!
+  type: String!
+  title: String!
+  path: String!
+  uploaderClinicianID: String!
+  uploadDateTime: AWSDateTime
+}
+
+"""
+== Lambda Resolver Query ==
+NOTE: Function type, name, arguments and return type must match in backend/function/*/lib/types
+
+Query 1:queryS3ClinicianRecordsBridge
+Input: {
+  recordType: "IcdCrt" | "Medical"
+  operation: "Upload" | "Download | "Delete" | "Acknowledge"
+  patientId: string
+  documentID: string (should be unique by patient)
+  documentName: string
+}
+Query 2: handlePatientAssignmentResolution
+Query 3: sharePatientAssignment
+"""
+type Query {
+  queryS3ClinicianRecordsBridge(
+    recordType: String
+    operation: String
+    patientID: String
+    documentID: String
+    documentTitle: String
+  ): AWSJSON @function(name: "s3clinicianrecordsbridge-${env}")
+
+  handlePatientAssignmentResolution(
+    patientID: String
+    resolution: String
+    reassignToClinicianID: String
+  ): AWSJSON @function(name: "patientassignmenthandler-${env}")
+
+  sharePatientAssignment(
+    patientID: String
+    patientName: String
+    shareToClinicianID: String
+  ): AWSJSON @function(name: "patientassignmenthandler-${env}")
+}

@@ -79,6 +79,7 @@ export const MedConfigModal: FC<MedConfigModalProps> = ({
         >
           {addingNewMed ? (
             <AddNewMedication
+              details={details}
               configMedInfo={configMedInfo}
               setConfigMedInfo={setConfigMedInfo}
               saveMedInput={saveMedInput}
@@ -87,6 +88,7 @@ export const MedConfigModal: FC<MedConfigModalProps> = ({
             />
           ) : medToUpdate ? (
             <AddNewMedication
+              details={details}
               configMedInfo={configMedInfo}
               setConfigMedInfo={setConfigMedInfo}
               saveMedInput={saveMedInput}
@@ -111,7 +113,7 @@ const styles = ScaledSheet.create({
     paddingHorizontal: "25@ms"
   },
   form: {
-    paddingHorizontal: "3@ms",
+    paddingHorizontal: "1@ms",
     paddingTop: "3@ms"
   }
 });

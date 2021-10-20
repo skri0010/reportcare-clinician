@@ -7,13 +7,6 @@ export const mockMedDosages: MedDosage[] = [
       min: 10,
       max: 100
     }
-  },
-  {
-    name: MedicationNames.BENAZEPRIL,
-    dosage: {
-      min: 1,
-      max: 5
-    }
   }
 ];
 
@@ -36,14 +29,6 @@ export const mockMedPrescriptions: MedPrescription[] = [
   },
   {
     name: MedicationNames.SACUBITRIL,
-    dosages: {
-      startDose: 2.5,
-      targetDose: 10,
-      increment: "1.25mg - 2.5mg"
-    }
-  },
-  {
-    name: MedicationNames.VENTOLIN,
     dosages: {
       startDose: 2.5,
       targetDose: 10,

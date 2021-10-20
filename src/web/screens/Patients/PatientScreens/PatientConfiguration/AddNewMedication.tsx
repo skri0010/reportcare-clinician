@@ -10,7 +10,7 @@ import {
 } from "util/validation";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { RootState, select } from "util/useRedux";
-import { MedicationNames, MedInput } from "rc_agents/model";
+import { MedicationNames, MedInput, PatientDetails } from "rc_agents/model";
 import { RowButton } from "components/Buttons/RowButton";
 import { Picker } from "@react-native-picker/picker";
 import { Label } from "components/Text/Label";
@@ -22,6 +22,7 @@ interface AddNewMedicationProps {
   setConfigMedInfo: (medInfo: MedInput) => void;
   saveMedInput: (medInput: MedInput) => void;
   setMedConfigFormVisible: (state: boolean) => void;
+  details: PatientDetails;
   isAdding: boolean;
 }
 
@@ -30,6 +31,7 @@ export const AddNewMedication: FC<AddNewMedicationProps> = ({
   setConfigMedInfo,
   saveMedInput,
   setMedConfigFormVisible,
+  details,
   isAdding
 }) => {
   const { colors } = select((state: RootState) => ({
@@ -70,6 +72,7 @@ export const AddNewMedication: FC<AddNewMedicationProps> = ({
 
   return (
     <ScrollView
+      showsVerticalScrollIndicator={false}
       style={[
         styles.form,
         {
@@ -110,6 +113,13 @@ export const AddNewMedication: FC<AddNewMedicationProps> = ({
             }}
           >
             {Object.entries(MedicationNames).map(([key, value]) => {
+              const medicationExists =
+                details.medicationInfo.filter((t) => t.name === value).length >
+                0;
+
+              if (medicationExists) {
+                return null;
+              }
               return (
                 <Picker.Item
                   key={key}

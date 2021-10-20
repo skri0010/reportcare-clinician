@@ -239,7 +239,7 @@ export const schema = {
                 "dosage": {
                     "name": "dosage",
                     "isArray": false,
-                    "type": "Float",
+                    "type": "Int",
                     "isRequired": true,
                     "attributes": []
                 },
@@ -2212,5 +2212,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "1aa2c05ce19b9917039029c95692d702"
+    "version": "d2d7bfd7656e1eadb493a5b319b7dda2"
 };

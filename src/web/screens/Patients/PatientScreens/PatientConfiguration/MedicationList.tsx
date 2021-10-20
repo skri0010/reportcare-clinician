@@ -22,6 +22,8 @@ export const MedicationList: FC<MedicationListProps> = ({
     colors: state.settings.colors
   }));
 
+  const activeMedications = details.medicationInfo.length > 0;
+
   return (
     <View
       style={{
@@ -41,12 +43,16 @@ export const MedicationList: FC<MedicationListProps> = ({
           paddingTop: 20
         }}
       />
-      <FlatList
-        data={details.medicationInfo}
-        renderItem={({ item }) => (
-          <MedInfoRow medicationInfo={item} updateMedInfo={setMedToUpdate} />
-        )}
-      />
+      {activeMedications ? (
+        <FlatList
+          data={details.medicationInfo}
+          renderItem={({ item }) => (
+            <MedInfoRow medicationInfo={item} updateMedInfo={setMedToUpdate} />
+          )}
+        />
+      ) : (
+        <H5 text="There are no active medications currently" />
+      )}
     </View>
   );
 };

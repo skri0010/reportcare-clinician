@@ -21,8 +21,7 @@ import {
   listReportSymptomsByPatientID,
   listReportVitalsByPatientID,
   listMedicationInfosByPatientID,
-  listUploadedClinicianRecordsByPatientID,
-  PresignedUrlRecordType
+  listUploadedClinicianRecordsByPatientID
 } from "aws";
 import {
   ActivityInfo,
@@ -98,21 +97,23 @@ class RetrievePatientDetails extends Activity {
             patientID: patientId
           });
 
-          const medicalRecordType: PresignedUrlRecordType = "Medical";
           const medicalRecordsQuery =
-            await listUploadedClinicianRecordsByPatientID({
-              patientID: patientId,
-              filter: { type: { eq: medicalRecordType } },
-              sortDirection: ModelSortDirection.DESC
-            });
+            await listUploadedClinicianRecordsByPatientID(
+              {
+                patientID: patientId,
+                sortDirection: ModelSortDirection.DESC
+              },
+              "Medical"
+            );
 
-          const icdCrtRecordType: PresignedUrlRecordType = "IcdCrt";
           const icdCrtRecordsQuery =
-            await listUploadedClinicianRecordsByPatientID({
-              patientID: patientId,
-              filter: { type: { eq: icdCrtRecordType } },
-              sortDirection: ModelSortDirection.DESC
-            });
+            await listUploadedClinicianRecordsByPatientID(
+              {
+                patientID: patientId,
+                sortDirection: ModelSortDirection.DESC
+              },
+              "IcdCrt"
+            );
 
           // Store activity infos in patient details
           if (activityInfoQuery.data.listActivityInfosByPatientID?.items) {
@@ -169,7 +170,6 @@ class RetrievePatientDetails extends Activity {
           if (medicationInfoQuery.data.listMedicationInfosByPatientID?.items) {
             const medicationInfos =
               medicationInfoQuery.data.listMedicationInfosByPatientID?.items;
-
             medicationInfos.forEach((medication: MedicationInfo | null) => {
               if (medication) {
                 const localMed: MedInput = {

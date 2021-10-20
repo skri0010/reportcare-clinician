@@ -1,0 +1,34 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-reportcare-dev-213733-authRole",
+      "UnauthRoleArn": "arn:aws:iam::666794373206:role/amplify-reportcare-dev-213733-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::666794373206:role/amplify-reportcare-dev-213733-authRole",
+      "Region": "ap-southeast-1",
+      "DeploymentBucketName": "amplify-reportcare-dev-213733-deployment",
+      "UnauthRoleName": "amplify-reportcare-dev-213733-unauthRole",
+      "StackName": "amplify-reportcare-dev-213733",
+      "StackId": "arn:aws:cloudformation:ap-southeast-1:666794373206:stack/amplify-reportcare-dev-213733/42c82e80-9226-11eb-a53d-0a3824da1048",
+      "AmplifyAppId": "d3oryqxrlyq295"
+    },
+    "categories": {
+      "auth": {
+        "reportcaref82cc4af": {}
+      },
+      "function": {
+        "reportcarelambdalayer": {
+          "deploymentBucketName": "amplify-reportcare-dev-213733-deployment",
+          "s3Key": "amplify-builds/reportcarelambdalayer-LambdaLayerVersion2965a8ce-build.zip"
+        },
+        "patientassignmenthandler": {
+          "deploymentBucketName": "amplify-reportcare-dev-213733-deployment",
+          "s3Key": "amplify-builds/patientassignmenthandler-6a713248426266583765-build.zip"
+        },
+        "s3clinicianrecordsbridge": {
+          "deploymentBucketName": "amplify-reportcare-dev-213733-deployment",
+          "s3Key": "amplify-builds/s3clinicianrecordsbridge-62507751424f41344e53-build.zip"
+        }
+      }
+    }
+  }
+}

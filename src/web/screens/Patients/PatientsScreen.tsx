@@ -87,7 +87,8 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
     _lastChangedAt: new Date().getTime(),
     createdAt: "",
     updatedAt: "",
-    owner: ""
+    owner: "",
+    triageValue: ""
   };
 
   // JH-TODO-NEW: Remove

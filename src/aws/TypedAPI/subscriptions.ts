@@ -1,12 +1,10 @@
 import API from "@aws-amplify/api-graphql";
 import { BaseResponse } from "aws";
-import {
-  triggerProcessAlertNotification,
-  triggerProcessPatientAssignmentSubscription
-} from "rc_agents/triggers";
 import { Observable } from "zen-observable-ts";
 import { LocalStorage } from "rc_agents/storage";
+import { AgentTrigger } from "rc_agents/trigger";
 import { PatientAssignment } from "aws/API";
+import { prettify } from "util/utilityFunctions";
 
 // Override default subscription otherwise null data will be received
 // Requested fields should be a subset of CreateAlertNotification response fields
@@ -40,7 +38,7 @@ export const subscribeAlertNotification = (): void => {
       const alertNotification = response.value.data.onCreateAlertNotification;
       if (alertNotification) {
         // Trigger ALA to process AlertNotification
-        triggerProcessAlertNotification(alertNotification);
+        AgentTrigger.triggerProcessAlertNotification(alertNotification);
       }
     },
     // eslint-disable-next-line no-console
@@ -62,13 +60,12 @@ const onCreatePatientAssignment = /* GraphQL */ `
       pending
       resolution
       reassignToClinicianID
+      sourceClinicianID
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
-      adminReassignFromClinicianID
-      adminCompleted
     }
   }
 `;
@@ -83,13 +80,12 @@ const onUpdatePatientAssignment = /* GraphQL */ `
       pending
       resolution
       reassignToClinicianID
+      sourceClinicianID
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
-      adminReassignFromClinicianID
-      adminCompleted
     }
   }
 `;
@@ -123,11 +119,13 @@ export const subscribePatientAssignment = async (): Promise<void> => {
         const patientAssignment = response.value.data.onCreatePatientAssignment;
 
         if (patientAssignment) {
-          triggerProcessPatientAssignmentSubscription(patientAssignment);
+          AgentTrigger.triggerProcessPatientAssignmentSubscription(
+            patientAssignment
+          );
         }
       },
       // eslint-disable-next-line no-console
-      error: (error) => console.log(error)
+      error: (error) => console.log(prettify(error))
     });
 
     // Subscribe to updated patient assignments
@@ -141,11 +139,14 @@ export const subscribePatientAssignment = async (): Promise<void> => {
         // Trigger DTA to process patient assignment subscription
         const patientAssignment = response.value.data.onUpdatePatientAssignment;
         if (patientAssignment) {
-          triggerProcessPatientAssignmentSubscription(patientAssignment);
+          // Trigger DTA to process patient assignment subscription
+          AgentTrigger.triggerProcessPatientAssignmentSubscription(
+            patientAssignment
+          );
         }
       },
       // eslint-disable-next-line no-console
-      error: (error) => console.log(error)
+      error: (error) => console.log(prettify(error))
     });
   }
 };
