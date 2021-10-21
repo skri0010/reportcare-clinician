@@ -32,7 +32,7 @@ import {
 } from "ic-redux/actions/agents/configurationActionCreator";
 import { MedicationInfoList } from "components/RowComponents/MedicationRow/MedicationInfoList";
 import { SaveAndCancelButtons } from "components/Buttons/SaveAndCancelButtons";
-import { MedConfigModal } from "./MedConfigModal";
+import { MedConfigModal } from "./MedConfiguration/MedConfigModal";
 import { ModalWrapper } from "components/Wrappers/ModalWrapper";
 
 interface PatientConfigurationScreenProps {
