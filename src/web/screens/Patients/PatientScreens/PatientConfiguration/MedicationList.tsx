@@ -1,7 +1,6 @@
 import React, { FC } from "react";
 import { FlatList, TouchableOpacity, View } from "react-native";
 import { RootState, select } from "util/useRedux";
-import { RowButton } from "components/Buttons/RowButton";
 import { MedInput, PatientDetails } from "rc_agents/model";
 import { MedInfoRow } from "./MedInfoRow";
 import { H5 } from "components/Text";
