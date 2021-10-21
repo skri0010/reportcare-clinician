@@ -46,7 +46,7 @@ export const MedConfigModal: FC<MedConfigModalProps> = ({
       name: "",
       dosage: "",
       frequency: "",
-      patientID: details.patientInfo.id
+      patientID: details.patientInfo.patientID
     });
   };
 

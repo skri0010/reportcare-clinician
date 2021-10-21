@@ -48,7 +48,10 @@ export const AddNewMedication: FC<AddNewMedicationProps> = ({
 
   // Update medicine name
   const updateMedName = (medName: string) => {
-    setConfigMedInfo({ ...configMedInfo, name: medName });
+    setConfigMedInfo({
+      ...configMedInfo,
+      name: medName
+    });
   };
 
   // Update dosage
@@ -107,7 +110,6 @@ export const AddNewMedication: FC<AddNewMedicationProps> = ({
           />
           <Picker
             style={pickerStyle}
-            selectedValue={configMedInfo.name}
             onValueChange={(value: string) => {
               updateMedName(value);
             }}

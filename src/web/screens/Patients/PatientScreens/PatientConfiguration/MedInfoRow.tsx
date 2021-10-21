@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { View } from "react-native";
-import { H5 } from "components/Text";
+import { H5, H7 } from "components/Text";
 import { MedInput } from "rc_agents/model";
 import i18n from "util/language/i18n";
 import { RowButton } from "components/Buttons/RowButton";
@@ -31,14 +31,21 @@ export const MedInfoRow: FC<MedInfoRowProps> = ({
       }}
     >
       <View style={styles.contentContainer}>
-        <H5
-          text={`${medicationInfo.name}`}
-          style={{
-            paddingRight: ms(5),
-            paddingBottom: ms(5),
-            fontWeight: "600"
-          }}
-        />
+        <View style={{ flexDirection: "column" }}>
+          <H5
+            text={`${medicationInfo.name}`}
+            style={{
+              paddingRight: ms(5),
+              fontWeight: "600"
+            }}
+          />
+          <View style={{ flexDirection: "row" }}>
+            <H7
+              text={i18n.t("Patient_Configuration.Medications.CurrentDosage")}
+            />
+            <H7 text={medicationInfo.dosage} />
+          </View>
+        </View>
         <View style={styles.buttonContainer}>
           <View style={styles.button}>
             <RowButton
@@ -70,7 +77,7 @@ const styles = ScaledSheet.create({
     justifyContent: "space-between"
   },
   buttonContainer: {
-    paddingRight: "10@ms",
+    paddingRight: "5@ms",
     paddingLeft: "5@ms",
     alignItems: "center",
     justifyContent: "center"

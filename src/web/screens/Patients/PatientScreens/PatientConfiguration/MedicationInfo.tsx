@@ -50,12 +50,12 @@ export const MedicationInfo: FC<MedicationInfo> = ({
               />
               <H6 text={`${medPrescription.dosages.targetDose} mg`} />
             </View>
-            <View style={styles.reccomendations}>
-              <Label
-                text={i18n.t("Patient_Configuration.Medications.Increments")}
-              />
-              <H6 text={medPrescription.dosages.increment} />
-            </View>
+          </View>
+          <View style={styles.reccomendations}>
+            <Label
+              text={i18n.t("Patient_Configuration.Medications.Increments")}
+            />
+            <H6 text={medPrescription.dosages.increment} />
           </View>
           <Label
             text={i18n.t("Patient_Configuration.Medications.CurrentDosage")}

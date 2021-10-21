@@ -238,7 +238,7 @@
       "MedicationName": "Medication Name: ",
       "PrescribingNewMeds": "Prescribing New Medication: ",
       "PrescribeMedications": "Select Medication To Presrcribe: ",
-      "MedicationForm": "Medication Form",
+      "MedicationForm": "Medication Configuration",
       "AddNewMed": "Add New Medication",
       "ListActiveMed": "List of active medications: "
     },
