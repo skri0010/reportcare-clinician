@@ -28,7 +28,7 @@ export const FluidIntakeCard: FC<FluidIntakeCardProps> = ({
       <View style={styles.container}>
         <AbsoluteParameters
           centerText={`${fluidTaken} / ${fluidRequired}`}
-          bottomText={i18n.t("Parameter_Graphs.FluidUnit")}
+          bottomText={`(${i18n.t("Parameter_Graphs.FluidUnit")})`}
         />
       </View>
     </CardWrapper>

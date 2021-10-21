@@ -9,8 +9,24 @@ import { Belief } from "agents-framework";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import { AlertInfo, AlertsCount } from "rc_agents/model";
 
-// AT-CP-I
-// Triggers DisplayAlerts of USXA
+// HF-OTP-I
+// Triggers RetrieveRole of UXSA which then triggers RetrievePatientsByRole of DTA
+export const triggerRetrievePatientsByRole = (): void => {
+  agentUXSA.addBelief(
+    new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.RETRIEVE_ROLE, true)
+  );
+
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PROCEDURE,
+      ProcedureAttributes.HF_OTP_I,
+      ProcedureConst.ACTIVE
+    )
+  );
+};
+
+// P-USOR-I
+// Triggers DisplayAlerts of UXSA
 export const triggerDisplayAlerts: (input: {
   pendingAlertInfos?: AlertInfo[];
   pendingAlertsCount?: AlertsCount;
@@ -64,7 +80,7 @@ export const triggerDisplayAlerts: (input: {
   agentAPI.addFact(
     new Belief(
       BeliefKeys.PROCEDURE,
-      ProcedureAttributes.AT_CP_I,
+      ProcedureAttributes.P_USOR_I,
       ProcedureConst.ACTIVE
     )
   );

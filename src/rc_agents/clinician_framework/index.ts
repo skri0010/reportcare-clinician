@@ -10,7 +10,8 @@ export enum AgentIDs {
   UXSA = "UXSA",
   NWA = "NWA",
   ALA = "ALA",
-  MHA = "MHA"
+  MHA = "MHA",
+  CAM = "CAM"
 }
 
 export const ActionFrameIDs = {
@@ -26,12 +27,13 @@ export const ActionFrameIDs = {
     STORE_BASELINE: "StoreBaseline",
     CREATE_MEDICAL_RECORD: "CreateMedicalRecord",
     CREATE_ICDCRT_RECORD: "CreateIcdCrtRecord",
+    DELETE_RECORD: "DeleteRecord",
 
-    // AT-CP-I: AlertInfo[]
+    // P-USOR-I: AlertInfo[]
     RETRIEVE_ALERTS: "RetrieveAlerts",
     REQUEST_DISPLAY_ALERTS: "RequestDisplayAlerts",
 
-    // AT-CP-II: Detailed AlertInfo
+    // P-USOR-II: Detailed AlertInfo
     RETRIEVE_DETAILED_ALERT_INFO: "RetrieveDetailedAlertInfo",
     REQUEST_DISPLAY_DETAILED_ALERT_INFO: "RequestDisplayDetailedAlertInfo",
     UPDATE_ALERT: "UpdateAlert",
@@ -57,6 +59,11 @@ export const ActionFrameIDs = {
     RETRIEVE_ICDCRT_RECORD_CONTENT: "RetrieveIcdCrtRecordContent",
     REQUEST_DISPLAY_ICDCRT_RECORD_CONTENT: "RequestDisplayIcdCrtRecordContent",
 
+    // HF-EUA: Real-time Alerts
+    RETRIEVE_MONITORING_RECORDS: "RetrieveMonitoringRecords",
+    INFORM_MONITORING_RECORDS: "InformMonitoringRecords",
+    REQUEST_ASSOCIATE_MONITORING_RECORDS: "RequestAssociateMonitoringRecords",
+
     // SRD-I: Patient Assignments
     RETRIEVE_PENDING_PATIENT_ASSIGNMENTS: "RetrievePendingPatientAssignments",
     REQUEST_DISPLAY_PENDING_PATIENT_ASSIGNMENTS:
@@ -81,13 +88,13 @@ export const ActionFrameIDs = {
     REQUEST_DISPLAY_CLINICIAN_CONTACTS: "RequestDisplayClinicianContacts"
   },
   UXSA: {
-    // AT-CP-I: AlertInfo[]
+    // P-USOR-I: AlertInfo[]
     DISPLAY_ALERTS: "DisplayAlerts",
 
-    // AT-CP-II: Detailed AlertInfo
+    // P-USOR-II: Detailed AlertInfo
     DISPLAY_DETAILED_ALERT_INFO: "DisplayDetailedAlertInfo",
 
-    // AT-CP-III: Alert Notifications and refreshed AlertInfo[]
+    // HF-EUA: Real-time Alerts
     DISPLAY_REFRESHED_ALERTS: "DisplayRefreshedAlerts",
 
     // HF-OTP-I: ClinicianInfo and all patients (PatientInfo)
@@ -132,17 +139,27 @@ export const ActionFrameIDs = {
     SYNC_CREATE_TODOS: "SyncCreateTodos",
     SYNC_UPDATE_TODOS: "SyncUpdateTodos",
 
-    // AT-CP-II: Detailed AlertInfo
+    // P-USOR-II: Detailed AlertInfo
     SYNC_UPDATE_ALERTS: "SyncUpdateAlerts",
 
-    // AT_CP_III: Alert Notifications and refreshed AlertInfo[]
+    // HF-EUA: Real-time Alerts
     SYNC_PROCESS_ALERT_NOTIFICATIONS: "SyncProcessAlertNotifications"
   },
-  MHA: {},
   ALA: {
-    // AT_CP_III: Alert Notifications and refreshed AlertInfo[]
+    // HF-EUA: Real-time Alerts
     PROCESS_ALERT_NOTIFICATION: "ProcessAlertNotification",
+    INFORM_REAL_TIME_ALERT: "InformRealTimeAlert",
+    REQUEST_RETRIEVE_USER_CONTEXT: "RequestRetrieveUserContext",
     REQUEST_DISPLAY_REFRESHED_ALERTS: "RequestDisplayRefreshedAlerts"
+  },
+  MHA: {
+    // HF-EUA: Real-time Alerts
+    RECEIVE_REAL_TIME_ALERT_INFO: "ReceiveRealTimeAlertInfo"
+  },
+  CAM: {
+    // HF-EUA: Real-time Alerts
+    RETRIEVE_USER_CONTEXT: "RetrieveUserContext",
+    INFORM_USER_CONTEXT: "InformUserContext"
   }
 };
 
@@ -180,9 +197,9 @@ export enum ProcedureAttributes {
   SRD_III = "SRD-III",
   SRD_IV = "SRD-IV",
   SRD_V = "SRD-V",
-  AT_CP_I = "AT-CP-I",
-  AT_CP_II = "AT-CP-II",
-  AT_CP_III = "AT-CP-III"
+  HF_EUA = "HF-EUA",
+  P_USOR_I = "P-USOR-I",
+  P_USOR_II = "P-USOR-II"
 }
 
 // Attributes for CLINICIAN key
@@ -205,9 +222,10 @@ export enum ClinicianAttributes {
   TODO_DETAILS = "TodoDetails",
   DISPLAY_TODO_DETAILS = "DisplayTodoDetails",
   TODO_DETAILS_RETRIEVED = "TodoDetailsRetrieved",
-  TODO_ID = "TodoId",
+  TODO_ID = "TodoID",
+  RETRIEVE_DETAILS_METHOD = "RetrieveDetailsMethod",
 
-  // AT-CP-I: AlertInfo[]
+  // P-USOR-I: AlertInfo[]
   FETCH_ALERTS_MODE = "FetchAlertsMode",
   ALERT_RISK_LEVEL = "AlertRiskLevel",
 
@@ -218,8 +236,9 @@ export enum ClinicianAttributes {
   PENDING_ALERTS_COUNT = "PendingAlertsCount",
   COMPLETED_ALERTS = "CompletedAlerts",
   ALERTS_RETRIEVED = "AlertsRetrieved",
+  VIEW_STABLE_ALERTS = "ViewStableAlerts",
 
-  // AT-CP-II: Detailed AlertInfo
+  // P-USOR-II: Detailed AlertInfo
   ALERT_INFO = "AlertInfo",
   DETAILED_ALERT_INFO = "DetailedAlertInfo",
   RETRIEVE_DETAILED_ALERT_INFO = "RetrieveDetailedAlertInfo",
@@ -227,12 +246,23 @@ export enum ClinicianAttributes {
   UPDATE_ALERT = "UpdateAlert",
   ALERTS_UPDATED = "AlertsUpdated",
 
-  // AT_CP_III: Alert Notifications and refreshed AlertInfo[]
+  // HF-EUA: Real-time Alerts
   ALERT_NOTIFICATION = "AlertNotification",
   PROCESS_ALERT_NOTIFICATION = "ProcessAlertNotification",
+  REAL_TIME_ALERT = "RealTimeAlert",
+  INFORM_REAL_TIME_ALERT = "InformRealTimeAlert",
+  REAL_TIME_ALERT_RECEIVED = "RealTimeAlertReceived",
+  RETRIEVE_USER_CONTEXT = "RetrieveUserContext",
+  CONTEXT_RETRIEVED = "ContextRetrieved",
   REFRESHED_PENDING_ALERTS = "RefreshedPendingAlerts",
   REFRESHED_COMPLETED_ALERTS = "RefreshedCompletedAlerts",
   REFRESHED_ALERTS_RETRIEVED = "RefreshedAlertsRetrieved",
+  RETRIEVE_MONITORING_RECORDS = "RetrieveMonitoringRecords",
+  MONITORING_RECORDS = "MonitoringRecords",
+  MONITORING_RECORDS_RETRIEVED = "MonitoringRecordsRetrieved",
+  REAL_TIME_ALERT_INFO_RECEIVED = "RealTimeAlertInfoReceived",
+  CURRENT_TIME = "CurrentTime",
+  CURRENT_LOCATION = "CurrentLocation",
 
   // SRD-II - Todos
   RETRIEVE_TODOS = "RetrieveTodos",
@@ -245,7 +275,7 @@ export enum ClinicianAttributes {
   DISPLAY_TODOS = "DisplayTodos",
   ALERT_TODO = "AlertTodo",
 
-  //SRD-IV - Clinician Contacts
+  // SRD-IV - Clinician Contacts
   RETRIEVE_CLINICIAN_CONTACTS = "RetrieveClinicianContacts",
   CLINICIAN_CONTACTS_RETRIEVED = "ClinicianContactsRetrieved",
   CLINICIAN_CONTACTS = "ClinicianContacts"
@@ -260,6 +290,8 @@ export enum PatientAttributes {
   MEDICAL_RECORD_TO_CREATE = "MedicalRecordToCreate",
   CREATE_ICDCRT_RECORD = "CreateIcdCrtRecord",
   ICDCRT_RECORD_TO_CREATE = "IcdCrtRecordToCreate",
+  RECORD_TO_DELETE = "RecordToDelete",
+  DELETE_RECORD = "DeleteRecord",
 
   // HF-OTP-I: ClinicianInfo and all patients (PatientInfo)
   RETRIEVE_PATIENTS = "RetrievePatients",
@@ -269,6 +301,7 @@ export enum PatientAttributes {
   // HF-OTP-II: Single patient's details
   PATIENT_TO_VIEW_DETAILS = "ViewPatientDetailsWithPatientId",
   RETRIEVE_PATIENT_DETAILS = "RetrievePatientDetails",
+  RETRIEVE_PATIENT_DETAILS_LOCALLY = "RetrievePatientDetailsLocally",
   PATIENT_DETAILS_RETRIEVED = "PatientDetailsRetrieved",
   DISPLAY_PATIENT_DETAILS_REQUESTED = "DisplayPatientDetailsRequested",
   PATIENT_DETAILS = "PatientDetails",

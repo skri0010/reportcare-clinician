@@ -1,11 +1,11 @@
-import React, { FC, useEffect } from "react";
+import React, { FC } from "react";
 import { FlatList, View } from "react-native";
 import { TodoRow } from "components/RowComponents/TodoRow";
 import { RiskLevel } from "models/RiskLevel";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { RootState, select, store } from "util/useRedux";
 import i18n from "util/language/i18n";
-import { LocalTodo, TodoStatus, TodoInput } from "rc_agents/model";
+import { LocalTodo } from "rc_agents/model";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AgentTrigger } from "rc_agents/trigger";
 import { TodoListTabsProps } from "web/navigation/types";
@@ -25,7 +25,7 @@ export const onDonePress = (item: LocalTodo): void => {
   store.dispatch(setSubmittingTodo(true));
 
   // Creates Todo object for updating
-  const todoToUpdate: TodoInput = {
+  const todoToUpdate: LocalTodo = {
     ...item,
     completed: true,
     lastModified: new Date().toISOString()
@@ -46,11 +46,6 @@ export const TodoCurrentTab: FC<TodoCurrentTabProps> = ({
   function onCardPress(item: LocalTodo) {
     setTodoSelected(item);
   }
-
-  // Triggers retrieval of pending Todos
-  useEffect(() => {
-    AgentTrigger.triggerRetrieveTodos(TodoStatus.PENDING);
-  }, []);
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.primaryBackgroundColor }}>

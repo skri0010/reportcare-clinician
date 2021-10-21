@@ -24,6 +24,7 @@ import {
 } from "aws";
 import { ModelSortDirection, Todo } from "aws/API";
 import {
+  FetchTodosMode,
   LocalTodo,
   mapColorCodeToRiskLevel,
   TodoStatus
@@ -58,15 +59,22 @@ class RetrieveTodos extends Activity {
       // Gets locally stored clinicianId
       const clinicianId = await LocalStorage.getClinicianID();
 
-      // Gets TodoStatus from facts
-      const todoStatus: TodoStatus =
+      // Get retrieve todos mode
+      const fetchMode: FetchTodosMode =
         facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.TODO_STATUS];
 
-      if (todoStatus && clinicianId) {
+      if (fetchMode && clinicianId) {
         if (facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
           // Device is online
           let todos: Todo[] | undefined;
-          if (todoStatus === TodoStatus.PENDING) {
+          let pendingTodos: Todo[] | undefined;
+          let completedTodos: Todo[] | undefined;
+
+          // Fetch pending todos
+          if (
+            fetchMode === FetchTodosMode.ALL ||
+            fetchMode === FetchTodosMode.PENDING
+          ) {
             const query = await listPendingTodosByLastModifiedDate({
               pending: TodoStatus.PENDING,
               sortDirection: ModelSortDirection.DESC
@@ -75,10 +83,16 @@ class RetrieveTodos extends Activity {
               const result =
                 query.data.listPendingTodosByLastModifiedDate.items;
               if (result && result.length > 0) {
-                todos = result as Todo[];
+                pendingTodos = result as Todo[];
               }
             }
-          } else if (todoStatus === TodoStatus.COMPLETED) {
+          }
+
+          // Fetch completed todos
+          if (
+            fetchMode === FetchTodosMode.ALL ||
+            fetchMode === FetchTodosMode.COMPLETED
+          ) {
             const query = await listCompletedTodosByLastModifiedDate({
               completed: TodoStatus.COMPLETED,
               sortDirection: ModelSortDirection.DESC
@@ -87,66 +101,150 @@ class RetrieveTodos extends Activity {
               const result =
                 query.data.listCompletedTodosByLastModifiedDate.items;
               if (result && result.length > 0) {
-                todos = result as Todo[];
+                completedTodos = result as Todo[];
               }
             }
           }
+
+          pendingTodos = pendingTodos || [];
+          completedTodos = completedTodos || [];
+          // Join the pending and completed todos together
+          // eslint-disable-next-line prefer-const
+          todos = pendingTodos.concat(completedTodos);
+
           if (todos) {
-            // Maps retrieved Todos to LocalTodos for dispatching and local storage
+            // Find alert associated to each todo
             const todosToDispatch: LocalTodo[] = [];
-            todos.map(async (todo) => {
-              const currentTodo: LocalTodo = {
-                id: todo.id,
-                title: todo.title,
-                patientName: todo.patientName,
-                notes: todo.notes,
-                completed: todo.completed === TodoStatus.COMPLETED,
-                createdAt: todo.createdAt,
-                lastModified: todo.lastModified,
-                toSync: false,
-                _version: todo._version
-              };
-              if (todo.alertID) {
-                const query = await getDetailedAlert({
-                  id: todo.alertID
-                });
-                if (query.data?.getAlert) {
-                  const result = query.data.getAlert;
-                  currentTodo.alertId = result.id;
-                  currentTodo.patientId = result.patientID;
-                  currentTodo.riskLevel = mapColorCodeToRiskLevel(
-                    result.colorCode
+            const currentLocalTodos: LocalTodo[] | null =
+              await LocalStorage.getTodos();
+
+            /**
+             * If there are todos in the local storage,
+             * get the risk level colour, patient ID and alert ID from the local todo
+             */
+            if (currentLocalTodos && currentLocalTodos.length > 0) {
+              todos.forEach((todo) => {
+                if (todo.alertID) {
+                  const todoSameAlertID = currentLocalTodos.find(
+                    (t) => t.alertId === todo.alertID
                   );
+                  if (todoSameAlertID && todo) {
+                    const currentTodo: LocalTodo = {
+                      id: todo.id,
+                      title: todo.title,
+                      patientName: todo.patientName,
+                      notes: todo.notes,
+                      completed: todo.completed === TodoStatus.COMPLETED,
+                      createdAt: todo.createdAt,
+                      lastModified: todo.lastModified,
+                      toSync: false,
+                      _version: todo._version,
+                      alertId: todoSameAlertID.alertId,
+                      patientId: todoSameAlertID.patientId,
+                      riskLevel: todoSameAlertID.riskLevel
+                    };
+
+                    todosToDispatch.push(currentTodo);
+                  }
                 }
-              }
-              todosToDispatch.push(currentTodo);
-              return todo;
-            });
+              });
+            }
+            // If there are local todos, get risk level colour, patient ID and alertID from DB
+            else {
+              const alertForTodo = await Promise.all(
+                todos.map(async (todo) => {
+                  if (todo.alertID) {
+                    const query = getDetailedAlert({
+                      id: todo.alertID
+                    });
+                    return query;
+                  }
+                })
+              );
 
-            // Saves mapped Todos to local storage
-            await LocalStorage.setMultipleTodos(todosToDispatch);
+              alertForTodo.forEach((alert) => {
+                if (alert && alert.data.getAlert) {
+                  const result = alert.data.getAlert;
+                  if (todos) {
+                    // Find the todo with the same alert ID
+                    const todo = todos.find((t) => t.alertID === result.id);
+                    if (todo) {
+                      // Create local todo to be stored into local storage
+                      const currentTodo: LocalTodo = {
+                        id: todo.id,
+                        title: todo.title,
+                        patientName: todo.patientName,
+                        notes: todo.notes,
+                        completed: todo.completed === TodoStatus.COMPLETED,
+                        createdAt: todo.createdAt,
+                        lastModified: todo.lastModified,
+                        toSync: false,
+                        _version: todo._version,
+                        alertId: result.id,
+                        patientId: result.patientID,
+                        riskLevel: mapColorCodeToRiskLevel(result.colorCode)
+                      };
 
-            if (todoStatus === TodoStatus.PENDING) {
-              store.dispatch(setPendingTodos(todosToDispatch));
-            } else {
-              store.dispatch(setCompletedTodos(todosToDispatch));
+                      todosToDispatch.push(currentTodo);
+                    }
+                  }
+                }
+              });
+            }
+
+            // If the alert info for all todo is fetched
+            if (todosToDispatch.length === todos.length) {
+              // Save mapped Todos to local storage
+              await LocalStorage.setMultipleTodos(todosToDispatch);
+            }
+
+            // Get all the pending todos to be dispatched to frontend
+            const pendingTodosToDispatch: LocalTodo[] = todosToDispatch.filter(
+              (todo) => !todo.completed
+            );
+
+            // Get all the completed todos to be dispatched to frontend
+            const completedTodosToDispatch: LocalTodo[] =
+              todosToDispatch.filter((todo) => todo.completed);
+
+            // Dispatch todos to frontend for display
+            if (fetchMode === FetchTodosMode.PENDING) {
+              store.dispatch(setPendingTodos(pendingTodosToDispatch));
+            } else if (fetchMode === FetchTodosMode.COMPLETED) {
+              store.dispatch(setCompletedTodos(completedTodosToDispatch));
+            } else if (fetchMode === FetchTodosMode.ALL) {
+              store.dispatch(setPendingTodos(pendingTodosToDispatch));
+              store.dispatch(setCompletedTodos(completedTodosToDispatch));
             }
           }
-        } else if (todoStatus === TodoStatus.PENDING) {
-          // Device is offline: get local pending Todos
-          const todosToDispatch = await LocalStorage.getPendingTodos();
-          if (todosToDispatch) {
-            store.dispatch(
-              setPendingTodos(sortTodosByLastModifiedDate(todosToDispatch))
-            );
+        } else {
+          // Device is offline, get todos from local storage
+          if (
+            fetchMode === FetchTodosMode.ALL ||
+            fetchMode === FetchTodosMode.PENDING
+          ) {
+            const pendingTodosToDispatch = await LocalStorage.getPendingTodos();
+            if (pendingTodosToDispatch) {
+              store.dispatch(
+                setPendingTodos(
+                  sortTodosByLastModifiedDate(pendingTodosToDispatch)
+                )
+              );
+            }
           }
-        } else if (todoStatus === TodoStatus.COMPLETED) {
-          // Device is offline: get local completed Todos
-          const todosToDispatch = await LocalStorage.getCompletedTodos();
-          if (todosToDispatch) {
-            store.dispatch(
-              setCompletedTodos(sortTodosByLastModifiedDate(todosToDispatch))
-            );
+          if (
+            fetchMode === FetchTodosMode.ALL ||
+            fetchMode === FetchTodosMode.COMPLETED
+          ) {
+            const completedTodosToDispatch =
+              await LocalStorage.getCompletedTodos();
+            if (completedTodosToDispatch) {
+              store.dispatch(
+                setCompletedTodos(
+                  sortTodosByLastModifiedDate(completedTodosToDispatch)
+                )
+              );
+            }
           }
         }
 

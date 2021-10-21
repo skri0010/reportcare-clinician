@@ -24,6 +24,9 @@
     "Email": "Email",
     "EmailPlaceholder": "Enter email",
     "EmailError": "Invalid email address",
+    "Phone": "Phone Number",
+    "PhonePlaceholder": "Enter phone number",
+    "PhoneError": "Invalid phone number",
     "Role": "Role",
     "RolePlaceholder": "Select a role",
     "EP": "Electrophysiologist",
@@ -82,15 +85,16 @@
   "Parameter_Graphs": {
     "DiastolicBP": "Diastolic Blood Pressure ",
     "SystolicBP": "Systolic Blood Pressure ",
-    "BPUnit": "(mmHg)",
+    "BPUnit": "mmHg",
     "OxygenSaturation": "Oxygen Saturation ",
-    "OxygenSaturationUnit": "(%)",
+    "OxygenSaturationUnit": "%",
     "Weight": "Weight ",
-    "WeightUnit": "(kg)",
+    "WeightUnit": "kg",
     "FluidIntake": "Fluid Intake ",
-    "FluidUnit": "(ml)",
+    "FluidUnit": "ml",
     "Steps": "Steps Counter",
-    "StepsUnit": "(step)",
+    "NoSteps": "Number of Steps",
+    "StepsUnit": "steps",
     "NoData": "No data was found",
     "ViewBy": "View By: ",
     "ChartViewTypes": {
@@ -150,7 +154,9 @@
     "UndoFromCompleted": "UNDO FROM COMPLETED",
     "Done": "DONE",
     "Undo": "UNDO",
-    "NoPendingTodo": "All todos have been completed!"
+    "NoPendingTodo": "All todos have been completed!",
+    "TodoTitleError": "Please enter a valid title",
+    "TodoNotesError": "Please enter some valid notes"
   },
   "Patients": {
     "PatientsList": {
@@ -171,6 +177,9 @@
     "DarkModeDescription": "Click here to change the theme.",
     "Language": "Language",
     "LanguageDescription": "Click here to change language."
+  },
+  "Maria": {
+    "CompletedRequest": "Completed Request"
   },
   "Patient_Configuration": {
     "Title": "Configure details",
@@ -321,6 +330,7 @@
     "NoSelection": "Select a clinician to view more details",
     "Role": "Role",
     "HospitalName": "Hospital Name",
+    "ContactNumber": "Contact Number",
     "GeneralDetails": "General Information",
     "ClincianList": {
       "NoClinicianFound": "No Clincians found!"
@@ -331,9 +341,49 @@
     "Completed": "Completed",
     "SearchBarPlaceholder": "Search alerts",
     "NoSelection": "Select an alert to view more details",
-    "AlertSummary": "Alert Summary",
-    "Symptoms": "Symptoms",
-    "Signs": "Signs",
+    "RiskLevel": "Risk level",
+    "TriageValue": "Triage value",
+    "DateTime": "Raised at",
+    "PatientBaselines": {
+      "Baselines": "Patient Baselines",
+      "NYHAClass": "NYHA class",
+      "Diagnosis": "Diagnosis",
+      "FluidIntakeGoal": "Fluid intake goal",
+      "TargetActivity": "Target number of steps",
+      "TargetWeight": "Target weight"
+    },
+    "AlertSymptom": {
+      "Symptoms": "Symptoms",
+      "Symptom": "Symptom",
+      "Activity": "Activity",
+      "Severity": "Severity",
+      "DateTime": "Recorded at",
+      "NoSymptomReport": "No symptom reports found"
+    },
+    "AlertVitals": {
+      "Vitals": "Activity and Vitals",
+      "BPDi": "Diastolic blood pressure",
+      "BPSys": "Systolic blood pressure",
+      "FluidIntake": "Fluid intake",
+      "NoSteps": "Number of steps",
+      "OxygenSat": "Oxygen saturation",
+      "Weight": "Weight",
+      "DateTime": "Recorded at",
+      "HeartRate": "Heart rate",
+      "HeartRateUnit": "bpm",
+      "NoVitalsReport": "No activity and vitals reports found"
+    },
+    "Medications": {
+      "Medications": "Medications",
+      "NoMedicationRecord": "No medication records found"
+    },
+    "IcdCrt": {
+      "IcdCrtRecord": "Latest ICD/CRT Record",
+      "UploadDateTime": "Uploaded at",
+      "ViewContent": "View content",
+      "NoIcdCrtRecord": "No ICD/CRT records found"
+    },
+    "CreateToDo": "Create Todo",
     "HighRisk": "High Risk",
     "MediumRisk": "Medium Risk",
     "LowRisk": "Low Risk",
@@ -342,10 +392,16 @@
       "NoPendingAlerts": "You have no pending alerts",
       "NoCompletedAlerts": "You have no completed alerts"
     },
-    "AlertVitals": {
-      "HeartRate": "Heart Rate"
+    "RealTimeAlert": {
+      "NewAlert": "An alert has been raised!",
+      "Patient": "Patient",
+      "Summary": "Summary",
+      "TriageValue": "Triage value",
+      "DateTime": "Date time",
+      "ViewDetails": "View details"
     },
-    "CreateTodoButton": "Create Todo"
+    "ViewStableAlerts": "VIEW STABLE ALERTS",
+    "HideStableAlerts": "HIDE STABLE ALERTS"
   },
   "MobileMessage": {
     "ViewList": "View List",
@@ -360,11 +416,17 @@
   },
   "DetailsUpdate": {
     "Save": "Save",
-    "Cancel": "Cancel"
+    "Cancel": "Cancel",
+    "RecordDeletedSuccessfully": "Successfully deleted",
+    "FailedToDelete": "Failed to delete"
   },
   "UnexpectedError": "An unexpected error has occured",
   "Keywords": {
-    "remaining": "remaining"
+    "remaining": "remaining",
+    "Delete": "Delete"
+  },
+  "Warnings": {
+    "DeleteRecord": "Deleting records CANNOT BE REVERSED. Records can be deleted up to 2 days from the day they are uploaded. Are you sure you want to proceed?"
   },
   "Filter": {
     "High": "High",

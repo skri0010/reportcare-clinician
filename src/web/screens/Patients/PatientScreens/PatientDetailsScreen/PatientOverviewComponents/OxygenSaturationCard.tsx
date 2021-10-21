@@ -25,7 +25,7 @@ export const OxygenSaturationCard: FC<OxygenSaturationProps> = ({
     >
       <AbsoluteParameters
         centerText={oxySatValue}
-        bottomText={i18n.t("Parameter_Graphs.OxygenSaturationUnit")}
+        bottomText={`(${i18n.t("Parameter_Graphs.OxygenSaturationUnit")})`}
       />
     </CardWrapper>
   );

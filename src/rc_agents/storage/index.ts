@@ -4,6 +4,7 @@ import {
   LocalTodo,
   PatientAssignmentResolution,
   PatientDetails,
+  HighRiskAlertInfo,
   MedInput
 } from "rc_agents/model";
 import { ClinicianInfo, PatientAssignment, PatientInfo } from "aws/API";
@@ -48,6 +49,7 @@ export type AsyncStorageType = {
     name: string;
     hospitalName: string;
     role: string;
+    phone: string;
   };
   [AsyncStorageKeys.USERNAME]: string;
   [AsyncStorageKeys.CLINICIAN_ID]: string;
@@ -66,7 +68,7 @@ export type AsyncStorageType = {
   [AsyncStorageKeys.ALERT_INFOS]: ProcessedAlertInfos;
   [AsyncStorageKeys.TODOS]: LocalTodo[];
   [AsyncStorageKeys.TODO_DETAILS]: LocalTodo;
-  [AsyncStorageKeys.ALERTS_SYNC]: AlertInfo[];
+  [AsyncStorageKeys.ALERTS_SYNC]: (AlertInfo | HighRiskAlertInfo)[];
   [AsyncStorageKeys.ALERT_NOTIFICATIONS]: AlertNotification[];
   [AsyncStorageKeys.PATIENT_ASSIGNMENT_SUBSCRIPTIONS]: PatientAssignment[];
 };

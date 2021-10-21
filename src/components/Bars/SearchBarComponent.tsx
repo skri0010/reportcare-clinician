@@ -27,7 +27,6 @@ interface SearchBarComponentProps {
 export const SearchBarComponent: FC<SearchBarComponentProps> = ({
   onUserInput,
   onSearchClick,
-
   placeholder,
   containerStyle
 }) => {

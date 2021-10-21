@@ -36,7 +36,7 @@ export const MainDrawerNavigator: FC<DrawerNavigationProps> = ({ signOut }) => {
   const buildScreenOptions: () => DrawerNavigationOptions = useCallback(() => {
     // Sign out button
     const SignOutButton: FC = () => {
-      const headerButtonSize = ms(20);
+      const headerButtonSize = ms(15);
       return (
         <Icon
           name="logout"

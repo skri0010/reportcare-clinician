@@ -18,7 +18,6 @@ export const SymptomsCard: FC<SymptomProps> = ({
   maxHeight,
   minHeight
 }) => {
-  // JH-TODO-NEW: Message if no symptoms
   return (
     <CardWrapper
       maxHeight={maxHeight}

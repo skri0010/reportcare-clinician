@@ -6,39 +6,26 @@ import {
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
 import { ProcedureConst } from "agents-framework/Enums";
-import { agentALA, agentDTA, agentUXSA } from "rc_agents/agents";
+import { agentDTA } from "rc_agents/agents";
 import { Belief } from "agents-framework";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
   AlertInfo,
   FetchAlertsMode,
   PatientAssignmentResolution,
-  TodoInput,
-  TodoStatus,
-  MedInput,
-  ClinicianRecordInput
+  FetchTodosMode,
+  LocalTodo,
+  RetrieveTodoDetailsMethod,
+  ClinicianRecordInput,
+  MedInput
 } from "rc_agents/model";
-import { AlertNotification } from "aws/TypedAPI/subscriptions";
-
-// HF-OTP-I
-// Triggers RetrievePatientsByRole of DTA
-export const triggerRetrievePatientsByRole = (): void => {
-  agentUXSA.addBelief(
-    new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.RETRIEVE_ROLE, true)
-  );
-
-  agentAPI.addFact(
-    new Belief(
-      BeliefKeys.PROCEDURE,
-      ProcedureAttributes.HF_OTP_I,
-      ProcedureConst.ACTIVE
-    )
-  );
-};
 
 // HF-OTP-II
 // Triggers RetrievePatientDetails of DTA
-export const triggerRetrievePatientDetails = (patient: PatientInfo): void => {
+export const triggerRetrievePatientDetails = (
+  patient: PatientInfo,
+  retrieveLocally = false
+): void => {
   // Add patient as fact, no broadcast
   agentAPI.addFact(
     new Belief(
@@ -48,6 +35,17 @@ export const triggerRetrievePatientDetails = (patient: PatientInfo): void => {
     ),
     false
   );
+
+  // Add belief to retrieve locally
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PATIENT,
+      PatientAttributes.RETRIEVE_PATIENT_DETAILS_LOCALLY,
+      retrieveLocally
+    ),
+    false
+  );
+
   // Set preconditions
   agentDTA.addBelief(
     new Belief(
@@ -56,6 +54,7 @@ export const triggerRetrievePatientDetails = (patient: PatientInfo): void => {
       true
     )
   );
+
   // Broadcast active procedure
   agentAPI.addFact(
     new Belief(
@@ -182,9 +181,13 @@ export const triggerStorePatientBaseline = (
 };
 
 // SRD-II: Triggers RetrieveTodos of DTA
-export const triggerRetrieveTodos = (status: TodoStatus): void => {
+export const triggerRetrieveTodos = (fetchMode: FetchTodosMode): void => {
   agentAPI.addFact(
-    new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.TODO_STATUS, status),
+    new Belief(
+      BeliefKeys.CLINICIAN,
+      ClinicianAttributes.TODO_STATUS,
+      fetchMode
+    ),
     false
   );
   agentDTA.addBelief(
@@ -200,7 +203,7 @@ export const triggerRetrieveTodos = (status: TodoStatus): void => {
 };
 
 // SRD-II: Triggers CreateTodo of DTA
-export const triggerCreateTodo = (input: TodoInput): void => {
+export const triggerCreateTodo = (input: LocalTodo): void => {
   agentAPI.addFact(
     new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.TODO, input),
     false
@@ -218,7 +221,7 @@ export const triggerCreateTodo = (input: TodoInput): void => {
 };
 
 // SRD-II: Triggers UpdateTodo of DTA
-export const triggerUpdateTodo = (input: TodoInput): void => {
+export const triggerUpdateTodo = (input: LocalTodo): void => {
   agentAPI.addFact(
     new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.TODO, input),
     false
@@ -235,7 +238,7 @@ export const triggerUpdateTodo = (input: TodoInput): void => {
   );
 };
 
-// AT-CP-I: Trigger RetriveAlerts of DTA
+// P-USOR-I: Trigger RetriveAlerts of DTA
 export const triggerRetrieveAlerts = (
   fetchAlertsMode: FetchAlertsMode,
   retrieveAlertsLocally = false
@@ -258,7 +261,7 @@ export const triggerRetrieveAlerts = (
     false
   );
 
-  // Trigger DTA to retrieve alerts
+  // P-USOR: Trigger DTA to retrieve alerts
   agentDTA.addBelief(
     new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.RETRIEVE_ALERTS, true)
   );
@@ -266,13 +269,13 @@ export const triggerRetrieveAlerts = (
   agentAPI.addFact(
     new Belief(
       BeliefKeys.PROCEDURE,
-      ProcedureAttributes.AT_CP_I,
+      ProcedureAttributes.P_USOR_I,
       ProcedureConst.ACTIVE
     )
   );
 };
 
-// AT-CP-II Triggers RetrieveDetailedAlertInfo of DTA
+// P-USOR-II Triggers RetrieveDetailedAlertInfo of DTA
 export const triggerRetrieveDetailedAlertInfo = (
   alertInfo: AlertInfo
 ): void => {
@@ -293,38 +296,7 @@ export const triggerRetrieveDetailedAlertInfo = (
   agentAPI.addFact(
     new Belief(
       BeliefKeys.PROCEDURE,
-      ProcedureAttributes.AT_CP_II,
-      ProcedureConst.ACTIVE
-    )
-  );
-};
-
-// AT-CP-III: Triggers ProcessAlertNotification of ALA
-export const triggerProcessAlertNotification = (
-  alertNotification: AlertNotification
-): void => {
-  // Adds alert notification to facts
-  agentAPI.addFact(
-    new Belief(
-      BeliefKeys.CLINICIAN,
-      ClinicianAttributes.ALERT_NOTIFICATION,
-      alertNotification
-    ),
-    false
-  );
-
-  // Triggers ALA to process AlertNotification
-  agentALA.addBelief(
-    new Belief(
-      BeliefKeys.CLINICIAN,
-      ClinicianAttributes.PROCESS_ALERT_NOTIFICATION,
-      true
-    )
-  );
-  agentAPI.addFact(
-    new Belief(
-      BeliefKeys.PROCEDURE,
-      ProcedureAttributes.AT_CP_III,
+      ProcedureAttributes.P_USOR_II,
       ProcedureConst.ACTIVE
     )
   );
@@ -377,11 +349,24 @@ export const triggerRetrieveClinicianContacts = (): void => {
 };
 
 // SRD-III: Triggers RetrieveTodoDetails of DTA
-export const triggerRetrieveTodoDetails = (input: string): void => {
+export const triggerRetrieveTodoDetails = (
+  input: string, // todo or alert ID
+  retrieveMethod: RetrieveTodoDetailsMethod // retrieve method
+): void => {
   agentAPI.addFact(
     new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.TODO_ID, input),
     false
   );
+
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.CLINICIAN,
+      ClinicianAttributes.RETRIEVE_DETAILS_METHOD,
+      retrieveMethod
+    ),
+    false
+  );
+
   agentDTA.addBelief(
     new Belief(
       BeliefKeys.CLINICIAN,
@@ -454,7 +439,7 @@ export const triggerRetrieveMedicalRecordContent = (
   );
 };
 
-// HF-OTP-IV: Triggers CreateIcdCrtRecord of DTA
+// MRDC: Triggers CreateIcdCrtRecord of DTA
 export const triggerCreateIcdCrtRecord = (
   input: ClinicianRecordInput
 ): void => {
@@ -501,6 +486,50 @@ export const triggerRetrieveIcdCrtRecordContent = (
     new Belief(
       BeliefKeys.PROCEDURE,
       ProcedureAttributes.HF_OTP_IV,
+      ProcedureConst.ACTIVE
+    )
+  );
+};
+
+// HF-EUA: Triggers RetrieveMonitoringRecords of DTA
+export const triggerRetrieveMonitoringRecords = (input: AlertInfo): void => {
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.CLINICIAN,
+      ClinicianAttributes.REAL_TIME_ALERT,
+      input
+    ),
+    false
+  );
+  agentDTA.addBelief(
+    new Belief(
+      BeliefKeys.CLINICIAN,
+      ClinicianAttributes.RETRIEVE_MONITORING_RECORDS,
+      true
+    )
+  );
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PROCEDURE,
+      ProcedureAttributes.HF_EUA,
+      ProcedureConst.ACTIVE
+    )
+  );
+};
+
+// MRDC: Triggers DeleteRecord of DTA
+export const triggerDeleteRecord = (input: ClinicianRecord): void => {
+  agentAPI.addFact(
+    new Belief(BeliefKeys.PATIENT, PatientAttributes.RECORD_TO_DELETE, input),
+    false
+  );
+  agentDTA.addBelief(
+    new Belief(BeliefKeys.PATIENT, PatientAttributes.DELETE_RECORD, true)
+  );
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PROCEDURE,
+      ProcedureAttributes.MRDC,
       ProcedureConst.ACTIVE
     )
   );

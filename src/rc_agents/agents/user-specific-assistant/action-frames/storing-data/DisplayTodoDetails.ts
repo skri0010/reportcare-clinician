@@ -55,6 +55,14 @@ class DisplayTodoDetails extends Activity {
         false
       );
 
+      agent.addBelief(
+        new Belief(
+          BeliefKeys.CLINICIAN,
+          ClinicianAttributes.DISPLAY_TODO_DETAILS,
+          false
+        )
+      );
+
       // End the procedure
       agentAPI.addFact(
         new Belief(

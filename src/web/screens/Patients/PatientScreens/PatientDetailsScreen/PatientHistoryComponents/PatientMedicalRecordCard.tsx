@@ -85,7 +85,7 @@ export const PatientMedicalRecordCard: FC<PatientMedicalRecordProps> = ({
                 onViewMedicalRecord={
                   AgentTrigger.triggerRetrieveMedicalRecordContent
                 }
-                allowView={isOnline}
+                isOnline={isOnline}
               />
             )}
             keyExtractor={(medicalRecord) => medicalRecord.documentID}

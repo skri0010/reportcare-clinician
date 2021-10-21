@@ -19,8 +19,6 @@ import { updateAlertInfo } from "rc_agents/agents/data-assistant/action-frames/t
 import { AgentTrigger } from "rc_agents/trigger";
 import { FetchAlertsMode } from "rc_agents/model";
 
-// LS-TODO: To be tested once integrated with Alert.
-
 /**
  * Class to represent the activity for syncing local update of Alerts.
  */

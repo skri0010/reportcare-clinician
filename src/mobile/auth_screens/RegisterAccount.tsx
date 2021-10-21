@@ -11,7 +11,8 @@ import { MobileScreenWrapper } from "mobile/screens/MobileScreenWrapper";
 import {
   validateEmail,
   validatePassword,
-  validateUsername
+  validateUsername,
+  validatePhone
 } from "util/validation";
 import i18n from "util/language/i18n";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -37,6 +38,7 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
   const [role, setRole] = useState("");
   const [hospital, setHospital] = useState("");
   const [username, setUsername] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [registering, setRegistering] = useState(false);
@@ -59,7 +61,8 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
           username: username,
           name: name,
           hospitalName: hospital,
-          role: role
+          role: role,
+          phone: phone
         });
         navigation.navigate(AuthScreenName.CONFIRM_REGISTER, {
           username: username
@@ -126,9 +129,10 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
         role &&
         hospital &&
         validatePassword(password) &&
-        passwordMatch) as boolean
+        passwordMatch &&
+        validatePhone(phone)) as boolean
     );
-  }, [name, email, username, role, hospital, password, passwordMatch]);
+  }, [name, email, username, role, hospital, password, passwordMatch, phone]);
 
   // Compares confirmed password with initial password
   useEffect(() => {
@@ -186,6 +190,16 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
               {rolePickerItems}
             </Picker>
           </View>
+
+          {/* Phone */}
+          <TextField
+            label={i18n.t("Auth_Registration.Phone")}
+            value={phone}
+            onChange={(text) => setPhone(text)}
+            placeholder={i18n.t("Auth_Registration.PhonePlaceholder")}
+            error={phone !== "" && !validatePhone(phone)}
+            errorMessage={i18n.t("Auth_Registration.PhoneError")}
+          />
 
           {/* Hospital */}
           <Text style={inputLabelStyle}>

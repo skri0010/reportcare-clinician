@@ -8,7 +8,6 @@ import { StackNavigationOptions } from "@react-navigation/stack";
 import { ms } from "react-native-size-matters";
 import { isMobile } from "./device";
 
-// JH-TODO-NAV: Remove export
 // Style for main screen header
 export const getMainScreenHeaderStyle: (
   colors: ColorScheme,
@@ -95,7 +94,7 @@ export const getTopTabBarOptions: (input: {
 export const getBottomTabBarOptions: (input: {
   colors: ColorScheme;
   fonts: FontScheme;
-}) => BottomTabNavigationOptions = ({ colors, fonts }) => {
+}) => BottomTabNavigationOptions = () => {
   return {};
 };
 

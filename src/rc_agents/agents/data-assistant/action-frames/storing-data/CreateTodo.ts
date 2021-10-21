@@ -18,18 +18,16 @@ import {
 import { LocalStorage } from "rc_agents/storage";
 import { store } from "util/useRedux";
 import { agentNWA } from "rc_agents/agents";
-import { createTodo, listTodosByAlertID } from "aws";
+import { createTodo } from "aws";
 import {
   AlertInfo,
   AlertStatus,
   LocalTodo,
-  TodoInput,
-  TodoStatus
+  TodoStatus,
+  HighRiskAlertInfo
 } from "rc_agents/model";
 import { CreateTodoInput } from "aws/API";
 import { setProcedureSuccessful } from "ic-redux/actions/agents/procedureActionCreator";
-
-// LS-TODO: To be tested with creating Todo associated with an Alert.
 
 /**
  * Class to represent an activity for creating an entry to clinician's Todo table.
@@ -51,16 +49,14 @@ class CreateTodo extends Activity {
 
     try {
       // Gets Todo from facts
-      const todoInput: TodoInput =
+      const todoInput: LocalTodo =
         facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.TODO];
 
       // Gets locally stored clinicianId
       const clinicianId = await LocalStorage.getClinicianID();
-      let alertTodoUpdate: boolean = false;
 
       if (todoInput && clinicianId) {
         let toSync: boolean | undefined;
-        let alertTodoExists = false;
 
         // Constructs CreateTodoInput to be inserted
         const todoToInsert: CreateTodoInput = {
@@ -81,9 +77,9 @@ class CreateTodo extends Activity {
           todoToInsert.pending = TodoStatus.PENDING;
         }
 
-        // Triggers associated Alert to be updated if any
-        if (todoInput.alert || todoInput.alertId) {
-          let alertToUpdate: AlertInfo | undefined;
+        // Triggers associated Alert to be updated from pending to completed
+        if (todoInput.alertId) {
+          let alertToUpdate: AlertInfo | HighRiskAlertInfo | undefined | null;
 
           // Create Todo for the first time
           if (todoInput.alert) {
@@ -91,18 +87,12 @@ class CreateTodo extends Activity {
             // Removes alert to prevent it from being stored into local storage later on
             delete todoInput.alert;
           }
-          // When attempts to update an unsynced Todo
-          else if (todoInput.alertId && todoInput.patientId) {
-            // Query current AlertInfo from local storage
-            const alertInfo = await LocalStorage.getAlertInfoByPatientId(
-              todoInput.alertId,
-              todoInput.patientId
-            );
-            if (alertInfo) {
-              alertToUpdate = alertInfo;
-            }
-          }
 
+          /**
+           * Update alert status from pending to completed when:
+           * 1. (Offline/Online) Todo is created
+           * 2. (Offline) Todo created offline is updated
+           */
           if (alertToUpdate) {
             todoToInsert.alertID = alertToUpdate.id;
             alertToUpdate.completed = AlertStatus.COMPLETED;
@@ -127,7 +117,7 @@ class CreateTodo extends Activity {
             agentAPI.addFact(
               new Belief(
                 BeliefKeys.PROCEDURE,
-                ProcedureAttributes.AT_CP_II,
+                ProcedureAttributes.P_USOR_II,
                 ProcedureConst.ACTIVE
               )
             );
@@ -136,55 +126,11 @@ class CreateTodo extends Activity {
 
         /**
          * Device is online:
-         * 1. Query existing Todo with the same Alert
-         * 2. If Todo already exists, triggers UpdateTodo.
-         * 3. If Todo does not exist, insert Todo.
-         * 4. If Todo is successfully inserted, set toSync to false, otherwise set to true.
+         * 1. Create and insert a new todo
+         * 2. If Todo is successfully inserted, set toSync to false, otherwise set to true.
          */
         if (facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
           if (todoInput.alertId) {
-            // Queries existing Todo with the same Alert
-            const query = await listTodosByAlertID({
-              clinicianID: clinicianId,
-              alertID: { eq: todoInput.alertId }
-            });
-            if (query.data.listTodosByAlertID?.items) {
-              const results = query.data.listTodosByAlertID?.items;
-              if (results && results.length > 0) {
-                alertTodoExists = true;
-                const existingTodo = results[0]!;
-
-                // Updates input to be used for updating Todo
-                todoInput.id = existingTodo.id;
-                todoInput._version = existingTodo._version;
-                todoInput.lastModified = todoInput.lastModified
-                  ? todoInput.lastModified
-                  : todoInput.createdAt;
-                todoInput.createdAt = existingTodo.createdAt;
-
-                // Add the Todo associated with an alert into facts
-                alertTodoUpdate = true;
-                agentAPI.addFact(
-                  new Belief(
-                    BeliefKeys.CLINICIAN,
-                    ClinicianAttributes.ALERT_TODO,
-                    todoInput
-                  ),
-                  false
-                );
-
-                // Triggers UpdateTodo
-                agent.addBelief(
-                  new Belief(
-                    BeliefKeys.CLINICIAN,
-                    ClinicianAttributes.UPDATE_TODO,
-                    true
-                  )
-                );
-              }
-            }
-          }
-          if (!alertTodoExists) {
             // Inserts Todo
             const createResponse = await createTodo(todoToInsert);
             if (createResponse.data.createTodo) {
@@ -233,17 +179,14 @@ class CreateTodo extends Activity {
         // Dispatch to front end to indicate that procedure is successful
         store.dispatch(setProcedureSuccessful(true));
 
-        // Do not request for todo display yet when the todo is associated with an alert
-        // The display will only requested in update todo procedure for todos associated with an alert
-        if (!alertTodoUpdate) {
-          agent.addBelief(
-            new Belief(
-              BeliefKeys.CLINICIAN,
-              ClinicianAttributes.TODOS_UPDATED,
-              true
-            )
-          );
-        }
+        // Dispatch to UXSA to display todos
+        agent.addBelief(
+          new Belief(
+            BeliefKeys.CLINICIAN,
+            ClinicianAttributes.TODOS_UPDATED,
+            true
+          )
+        );
       }
     } catch (error) {
       // eslint-disable-next-line no-console

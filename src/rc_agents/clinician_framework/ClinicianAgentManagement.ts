@@ -231,14 +231,16 @@ export class ClinicianAgentManagement extends AgentManagement {
           NWA: protectedInfo.NWA,
           ALA: protectedInfo.ALA,
           MHA: protectedInfo.MHA,
+          CAM: protectedInfo.CAM,
           _version: protectedInfo._version
         };
 
         // Updates protectedInfo with latest storable beliefs of each agent
         this.getAgents().forEach((agent) => {
+          const beliefsToUpdate = JSON.stringify(agent.getBeliefs());
+
           switch (agent.getID()) {
             case AgentIDs.APS: {
-              const beliefsToUpdate = JSON.stringify(agent.getBeliefs());
               updatedProtectedInfo[AgentIDs.APS] = beliefsToUpdate;
               if (localClinician.protectedInfo) {
                 localClinician.protectedInfo[AgentIDs.APS] = beliefsToUpdate;
@@ -246,7 +248,6 @@ export class ClinicianAgentManagement extends AgentManagement {
               break;
             }
             case AgentIDs.DTA: {
-              const beliefsToUpdate = JSON.stringify(agent.getBeliefs());
               updatedProtectedInfo[AgentIDs.DTA] = beliefsToUpdate;
               if (localClinician.protectedInfo) {
                 localClinician.protectedInfo[AgentIDs.DTA] = beliefsToUpdate;
@@ -254,7 +255,6 @@ export class ClinicianAgentManagement extends AgentManagement {
               break;
             }
             case AgentIDs.UXSA: {
-              const beliefsToUpdate = JSON.stringify(agent.getBeliefs());
               updatedProtectedInfo[AgentIDs.UXSA] = beliefsToUpdate;
               if (localClinician.protectedInfo) {
                 localClinician.protectedInfo[AgentIDs.UXSA] = beliefsToUpdate;
@@ -262,7 +262,6 @@ export class ClinicianAgentManagement extends AgentManagement {
               break;
             }
             case AgentIDs.NWA: {
-              const beliefsToUpdate = JSON.stringify(agent.getBeliefs());
               updatedProtectedInfo[AgentIDs.NWA] = beliefsToUpdate;
               if (localClinician.protectedInfo) {
                 localClinician.protectedInfo[AgentIDs.NWA] = beliefsToUpdate;
@@ -270,7 +269,6 @@ export class ClinicianAgentManagement extends AgentManagement {
               break;
             }
             case AgentIDs.ALA: {
-              const beliefsToUpdate = JSON.stringify(agent.getBeliefs());
               updatedProtectedInfo[AgentIDs.ALA] = beliefsToUpdate;
               if (localClinician.protectedInfo) {
                 localClinician.protectedInfo[AgentIDs.ALA] = beliefsToUpdate;
@@ -278,10 +276,16 @@ export class ClinicianAgentManagement extends AgentManagement {
               break;
             }
             case AgentIDs.MHA: {
-              const beliefsToUpdate = JSON.stringify(agent.getBeliefs());
               updatedProtectedInfo[AgentIDs.MHA] = beliefsToUpdate;
               if (localClinician.protectedInfo) {
                 localClinician.protectedInfo[AgentIDs.MHA] = beliefsToUpdate;
+              }
+              break;
+            }
+            case AgentIDs.CAM: {
+              updatedProtectedInfo[AgentIDs.CAM] = beliefsToUpdate;
+              if (localClinician.protectedInfo) {
+                localClinician.protectedInfo[AgentIDs.CAM] = beliefsToUpdate;
               }
               break;
             }

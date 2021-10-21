@@ -1,5 +1,6 @@
-# Ditribution file
-dist
+# WARNING: ESLint will hang if this does not match your build folder and your build folder contains contents
+# Build folder
+build
 
 # Installed packages
 node_modules

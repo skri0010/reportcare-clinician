@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { View, Modal } from "react-native";
+import { View, Modal, StyleProp, ViewStyle } from "react-native";
 import { RootState, select } from "util/useRedux";
 import { ScaledSheet } from "react-native-size-matters";
 import { BaseWrapperProps } from "components/Wrappers/BaseWrapperProps";
@@ -7,12 +7,14 @@ import { BaseWrapperProps } from "components/Wrappers/BaseWrapperProps";
 export interface ModalWrapperProps extends BaseWrapperProps {
   visible: boolean;
   onRequestClose: () => void;
+  modalStyle?: StyleProp<ViewStyle>;
 }
 
 export const ModalWrapper: FC<ModalWrapperProps> = ({
   visible,
   onRequestClose,
-  children
+  children,
+  modalStyle
 }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
@@ -31,7 +33,8 @@ export const ModalWrapper: FC<ModalWrapperProps> = ({
             {
               backgroundColor: colors.primaryBackgroundColor,
               borderColor: colors.primaryBorderColor
-            }
+            },
+            modalStyle
           ]}
         >
           {children}

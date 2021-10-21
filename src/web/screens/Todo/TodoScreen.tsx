@@ -10,7 +10,11 @@ import { AddTodoScreen } from "./modals/AddTodoScreen";
 import { NoSelectionScreen } from "../Shared/NoSelectionScreen";
 import i18n from "util/language/i18n";
 import { TodoDetailsStackNavigator } from "../../navigation/navigators/TodoDetailsStackNavigator";
-import { LocalTodo } from "rc_agents/model";
+import {
+  FetchTodosMode,
+  LocalTodo,
+  RetrieveTodoDetailsMethod
+} from "rc_agents/model";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { useToast } from "react-native-toast-notifications";
 import { AgentTrigger } from "rc_agents/trigger";
@@ -61,7 +65,7 @@ export const TodoScreen: FC<MainScreenProps[ScreenName.TODO]> = ({
   const [modalVisible, setModalVisible] = useState(false);
 
   // For add button visibility in the header of left tab
-  const [addButton, setAddButton] = useState(true);
+  const [, setAddButton] = useState(true);
 
   // Selected todo details
   const [todoSelected, setTodoSelected] = useState<LocalTodo | undefined>(
@@ -88,8 +92,18 @@ export const TodoScreen: FC<MainScreenProps[ScreenName.TODO]> = ({
   // Function to save the selected todo details to be displayed in the right screen
   const onRowClick = (item: LocalTodo): void => {
     dispatch(setFetchingTodoDetails(true));
+    // If the todo has an ID
     if (item.id) {
-      AgentTrigger.triggerRetrieveTodoDetails(item.id);
+      AgentTrigger.triggerRetrieveTodoDetails(
+        item.id,
+        RetrieveTodoDetailsMethod.TODO_ID
+      );
+    } else if (item.alertId) {
+      // If todo does not have an ID (ie created offline), use alert ID instead
+      AgentTrigger.triggerRetrieveTodoDetails(
+        item.alertId,
+        RetrieveTodoDetailsMethod.ALERT_ID
+      );
     }
   };
 
@@ -124,6 +138,10 @@ export const TodoScreen: FC<MainScreenProps[ScreenName.TODO]> = ({
     }
   }, [dispatch, procedureOngoing, procedureSuccessful, toast, submittingTodo]);
 
+  // Triggers the retrieval of ALL todos
+  useEffect(() => {
+    AgentTrigger.triggerRetrieveTodos(FetchTodosMode.ALL);
+  }, []);
   return (
     <ScreenWrapper fixed>
       <View

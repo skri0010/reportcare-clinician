@@ -1,16 +1,27 @@
 import React, { FC } from "react";
-import { View, TouchableOpacity } from "react-native";
+import {
+  View,
+  TouchableOpacity,
+  ColorValue,
+  StyleProp,
+  ViewStyle
+} from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
-import i18n from "util/language/i18n";
 import { H5 } from "components/Text";
 import { RootState, select } from "util/useRedux";
 
-interface EditPatientDetailsButtonProps {
+interface InnerScreenButtonProps {
+  title: string;
   onPress: () => void;
+  buttonColor?: ColorValue;
+  style?: StyleProp<ViewStyle>;
 }
 
-export const EditPatientDetailsButton: FC<EditPatientDetailsButtonProps> = ({
-  onPress
+export const InnerScreenButton: FC<InnerScreenButtonProps> = ({
+  title,
+  onPress,
+  buttonColor,
+  style
 }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
@@ -21,13 +32,14 @@ export const EditPatientDetailsButton: FC<EditPatientDetailsButtonProps> = ({
         style={[
           styles.buttonContainer,
           {
-            backgroundColor: colors.acceptButtonColor
-          }
+            backgroundColor: buttonColor || colors.innerScreenButtonColor
+          },
+          style
         ]}
         onPress={onPress}
       >
         <H5
-          text={i18n.t("Patient_Configuration.EditDetails")}
+          text={title}
           style={{
             color: colors.primaryContrastTextColor
           }}
@@ -40,8 +52,10 @@ export const EditPatientDetailsButton: FC<EditPatientDetailsButtonProps> = ({
 const styles = ScaledSheet.create({
   buttonContainer: {
     height: "30@ms",
+    width: "100@ms",
     display: "flex",
     paddingHorizontal: "10@ms",
+    alignSelf: "center",
     alignItems: "center",
     justifyContent: "space-evenly",
     borderRadius: "5@ms"

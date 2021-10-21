@@ -82,7 +82,7 @@ export const IcdCrtCard: FC<IcdCrtProps> = ({
             <IcdCrtRecordRow
               icdCrtRecord={item}
               onViewIcdCrtRecord={onViewIcdCrtRecord}
-              allowView={isOnline}
+              isOnline={isOnline}
             />
           )}
           keyExtractor={(icdCrtRecord) => icdCrtRecord.documentID}

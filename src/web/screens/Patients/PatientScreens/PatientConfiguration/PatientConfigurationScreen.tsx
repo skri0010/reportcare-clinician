@@ -445,6 +445,7 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
           onRequestClose={() => {
             setMedConfigFormVisible(false);
           }}
+          modalStyle={{ width: "70%" }}
         >
           <MedConfigModal
             details={details}

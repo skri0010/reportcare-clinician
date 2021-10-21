@@ -52,7 +52,8 @@ const compileNodeModules = [
   "react-native-chart-kit",
   "@react-native-picker/picker",
   "react-native-web",
-  "agents-framework"
+  "agents-framework",
+  "react-native-sound"
 ].map((moduleName) => path.resolve(appDirectory, `node_modules/${moduleName}`));
 
 // Loader for react-native packages to be compiled
@@ -132,6 +133,11 @@ const cssLoaderConfiguration = {
   use: [MiniCssExtractPlugin.loader, "css-loader"]
 };
 
+const mp3LoaderConfiguration = {
+  test: /\.(mp3|wav)$/,
+  loader: "file-loader"
+};
+
 // Map key-value pairs of all alias paths
 const srcFolderAliasPaths = {};
 const srcFolderAliasKeys = [
@@ -157,7 +163,7 @@ module.exports = {
   },
   output: {
     filename: "[name].bundle.web.js",
-    path: path.resolve(appDirectory, "dist")
+    path: path.resolve(appDirectory, "build")
   },
   target: "web", // Enable live reload
   resolve: {
@@ -185,7 +191,8 @@ module.exports = {
       ".tsx",
       ".js",
       ".jsx",
-      ".json"
+      ".json",
+      ".mp3"
     ]
   },
   module: {
@@ -196,6 +203,7 @@ module.exports = {
       svgLoaderConfiguration,
       htmlLoaderConfiguration,
       cssLoaderConfiguration,
+      mp3LoaderConfiguration,
       // This is required to resolve graphql imports
       // See: https://github.com/graphql/graphql-js/issues/2721
       {
@@ -212,17 +220,10 @@ module.exports = {
       __DEV__: !production
     }),
     new HtmlWebpackPlugin({
-      template: "public/index.html",
+      template: path.join(appDirectory, "public/index.html"),
       filename: "index.html",
       favicon: "public/favicon.ico",
-      chunks: [] // Refers to above entry js files
-    }),
-    new HtmlWebpackPlugin({
-      template: path.join(appDirectory, "public/app.html"),
-      filename: "app.html",
-      manifest: "public/manifest.json",
-      favicon: "public/favicon.ico",
-      chunks: ["app"] // Refers to above entry js files: index.web.ts
+      chunks: ["app"] // Refers to above entry js files
     }),
     new MiniCssExtractPlugin(),
     // Use web obfuscator in production

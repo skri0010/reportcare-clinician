@@ -24,6 +24,9 @@
     "Email": "Emel",
     "EmailPlaceholder": "Masukkan emel",
     "EmailError": "Emel tidak sah",
+    "Phone": "Nombor telefon",
+    "PhonePlaceholder": "Masukkan nombor telefon",
+    "PhoneError": "Nombor telefon tidak sah",
     "Role": "Peranan",
     "RolePlaceholder": "-- Pilih peranan --",
     "EP": "Ahli Elektrofisiologi",
@@ -76,21 +79,22 @@
     "ApprovalSuccessful": "Kelulusan permintaan pesakit berjaya",
     "ApprovalFailed": "Gagal meluluskan permintaan pesakit",
     "OfflineApproval": "Tiada sambungan internet.\nKelulusan akan disimpan dan disegerakkan semasa sambungan internet dikesan.",
-    "NoPendingAssignments": "Setiap tugasan pesakit diselesai!",
+    "NoPendingAssignments": "Semua pesakit sudah diagihkan!",
     "PatientReassign": "Pilihkan Pakar untuk ditugaskan"
   },
   "Parameter_Graphs": {
     "DiastolicBP": "Tekanan Darah Diastolik ",
     "SystolicBP": "Tekanan Darah Sistolik ",
-    "BPUnit": "(mmHg)",
+    "BPUnit": "mmHg",
     "OxygenSaturation": "Ketepuan Oksigen ",
-    "OxygenSaturationUnit": "(%)",
+    "OxygenSaturationUnit": "%",
     "Weight": "Berat Badan ",
-    "WeightUnit": "(kg)",
+    "WeightUnit": "kg",
     "FluidIntake": "Pengambilan Air ",
-    "FluidUnit": "(ml)",
+    "FluidUnit": "ml",
     "Steps": "Jumlah Langkah",
-    "StepsUnit": "(langkah)",
+    "NoSteps": "Jumlah Langkah",
+    "StepsUnit": "langkah",
     "NoData": "Tiada data dijumpai",
     "ViewBy": "Melihat secara: ",
     "ChartViewTypes": {
@@ -120,7 +124,7 @@
     "Alerts": "Amaran",
     "Todos": "Todos",
     "PatientAssignments": "Pengagihan Pesakit",
-    "ItemsRemaining": "lagi",
+    "ItemsRemaining": "yang tinggal",
     "ShowMoreButton": "LIHAT LEBIH"
   },
   "Todo": {
@@ -150,7 +154,9 @@
     "UndoFromCompleted": "BUAT ASAL DARI SELESAI",
     "Done": "SELESAI",
     "Undo": "BUAT ASAL",
-    "NoPendingTodo": "Semua todo sudah diselesaikan!"
+    "NoPendingTodo": "Semua todo sudah diselesaikan!",
+    "TodoTitleError": "Sila berikan tajuk yang sah",
+    "TodoNotesError": "Sila berikan catatan yang sah"
   },
   "Patients": {
     "PatientsList": {
@@ -171,6 +177,9 @@
     "DarkModeDescription": "Tekan sini untuk menukar tema.",
     "Language": "Bahasa",
     "LanguageDescription": "Tekan sini untuk menukar bahasa."
+  },
+  "Maria": {
+    "CompletedRequest": "Permintaan Selesai"
   },
   "Patient_Configuration": {
     "Title": "Konfigurasikan butiran",
@@ -244,13 +253,13 @@
     "BloodPressure": "Tekanan Darah",
     "Systolic": "Sistolik",
     "Diastolic": "Diastolik",
-    "Medications": "Ubatan diprediksi",
+    "Medications": "Ubat-ubatan",
     "OxygenSaturation": "Ketepuan Oxsigen",
     "Weight": "Berat Badan",
     "TargetWeight": "Sasaran berat badan",
     "Symptoms": "Simptom",
     "NoRecord": "-",
-    "NoSymptoms": "No symptoms recorded"
+    "NoSymptoms": "Tiada simptom yang direkodkan"
   },
   "Patient_ICD/CRT": {
     "IcdCrtRecords": "Rekod ICD/CRT",
@@ -291,7 +300,7 @@
       "MedicalRecordSavedSuccessfully": "Rekod perubatan telah berjaya disimpan"
     },
     "NoAlertHistory": "Pesakit ini belum mempunyai sejarah amaran!",
-    "NoMedicalRecords": "TIada rekod perubatan dijumpai!"
+    "NoMedicalRecords": "Tiada rekod perubatan dijumpai!"
   },
   "Patient_Info": {
     "Male": "Lelaki",
@@ -317,6 +326,7 @@
     "NoSelection": "Pilih salah satu pakar untuk melihat butirannya",
     "Role": "Peranan",
     "HospitalName": "Nama Hospital",
+    "ContactNumber": "Nombor talian",
     "GeneralDetails": "Informasi Umum",
     "ClincianList": {
       "NoClinicianFound": "Tiada pakar yang dijumpai!"
@@ -327,9 +337,49 @@
     "Completed": "Selesai",
     "SearchBarPlaceholder": "Cari amaran",
     "NoSelection": "Pilih salah satu amaran untuk melihat butirannya",
-    "AlertSummary": "Ringkasan Amaran",
-    "Symptoms": "Simptom",
-    "Signs": "Tanda",
+    "RiskLevel": "Tahap risiko",
+    "TriageValue": "Nilai triase",
+    "DateTime": "Dikemukakan pada",
+    "PatientBaselines": {
+      "Baselines": "Garis panduan pesakit",
+      "NYHAClass": "Kelas NYHA",
+      "Diagnosis": "Diagnosis",
+      "FluidIntakeGoal": "Sasaran pengambilan air",
+      "TargetActivity": "Sasaran jumlah langkah",
+      "TargetWeight": "Sasaran berat badan"
+    },
+    "AlertSymptom": {
+      "Symptoms": "Simptom pesakit",
+      "Symptom": "Simptom",
+      "Activity": "Aktiviti",
+      "Severity": "Keterukan",
+      "DateTime": "Direkodkan pada",
+      "NoSymptomReport": "Tiada rekod simptom dijumpai"
+    },
+    "AlertVitals": {
+      "Vitals": "Aktiviti dan Vital",
+      "BPDi": "Tekanan darah diastolik",
+      "BPSys": "Tekanan darah sistolik",
+      "FluidIntake": "Pengambilan air",
+      "NoSteps": "Jumlah langkah",
+      "OxygenSat": "Ketepuan oksigen",
+      "Weight": "Berat badan",
+      "DateTime": "Direkodkan pada",
+      "HeartRate": "Kadar degupan jantung",
+      "HeartRateUnit": "bpm",
+      "NoVitalsReport": "Tiada rekod aktiviti dan vital dijumpai"
+    },
+    "Medications": {
+      "Medications": "Ubat-ubatan",
+      "NoMedicationRecord": "Tiada rekod ubat dijumpai"
+    },
+    "IcdCrt": {
+      "IcdCrtRecord": "Rekod ICD/CRT Terkini",
+      "UploadDateTime": "Dimuat naik pada",
+      "ViewContent": "Lihat kandungan",
+      "NoIcdCrtRecord": "Tiada rekod ICD/CRT dijumpai"
+    },
+    "CreateToDo": "Cipta Todo",
     "HighRisk": "Risiko Tinggi",
     "MediumRisk": "Risiko Sederhana",
     "LowRisk": "Risiko Rendah",
@@ -338,10 +388,16 @@
       "NoPendingAlerts": "Tiada amaran belum selesai dijumpai.",
       "NoCompletedAlerts": "Tiada amaran selesai dijumpai"
     },
-    "AlertVitals": {
-      "HeartRate": "Kadar Jantung"
+    "RealTimeAlert": {
+      "NewAlert": "Amaran baru telah dikemukakan!",
+      "Patient": "Pesakit",
+      "Summary": "Ringkasan",
+      "TriageValue": "Nilai triase",
+      "DateTime": "Masa tarikh",
+      "ViewDetails": "Lihat butiran"
     },
-    "CreateTodoButton": "Cipta Todo"
+    "ViewStableAlerts": "LIHAT AMARAN STABIL",
+    "HideStableAlerts": "SEMBUNYIKAN AMARAN STABIL"
   },
   "MobileMessage": {
     "ViewList": "Lihat Senarai",
@@ -356,11 +412,17 @@
   },
   "DetailsUpdate": {
     "Save": "Simpan",
-    "Cancel": "Batal"
+    "Cancel": "Batal",
+    "RecordDeletedSuccessfully": "Berjaya padamkan",
+    "FailedToDelete": "Gagal untuk memadam"
   },
   "UnexpectedError": "Ralat yang tidak disangkai telah berlaku",
   "Keywords": {
-    "remaining": "yang tinggal"
+    "remaining": "yang tinggal",
+    "Delete": "Hapus"
+  },
+  "Warnings": {
+    "DeleteRecord": "Penghapusan rekod adalah process yang TIDAK BOLEH DIBATALKAN. Rekod boleh dihapus sehingga 2 hari dari hari ia dimuat naik. Adakah anda mahu terus penghapusan?"
   },
   "Filter": {
     "High": "Tinggi",

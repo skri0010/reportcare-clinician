@@ -88,7 +88,7 @@ export const MedConfigModal: FC<MedConfigModalProps> = ({
         />
         <View
           style={{
-            flex: 1
+            flex: 2
           }}
         >
           {addingNewMed ? (
@@ -117,7 +117,7 @@ export const MedConfigModal: FC<MedConfigModalProps> = ({
 };
 
 const styles = ScaledSheet.create({
-  container: { flexDirection: "row", maxHeight: "90%" },
+  container: { flexDirection: "row", maxHeight: "90%", flex: 1 },
   closeButton: {
     textAlign: "center",
     justifyContent: "space-evenly",
