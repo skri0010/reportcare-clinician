@@ -1,5 +1,5 @@
 import React, { FC, useState } from "react";
-import { View } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { RootState, select } from "util/useRedux";
 import { MedInput, PatientDetails } from "rc_agents/model";
@@ -7,6 +7,7 @@ import { H4 } from "components/Text";
 import { MedicationList } from "./MedicationList";
 import { AddNewMedication } from "./AddNewMedication";
 import i18n from "util/language/i18n";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 interface MedConfigModalProps {
   details: PatientDetails;
@@ -23,8 +24,9 @@ export const MedConfigModal: FC<MedConfigModalProps> = ({
   saveMedInput,
   setMedConfigFormVisible
 }) => {
-  const { colors } = select((state: RootState) => ({
-    colors: state.settings.colors
+  const { colors, fonts } = select((state: RootState) => ({
+    colors: state.settings.colors,
+    fonts: state.settings.fonts
   }));
 
   const [medToUpdate, setMedToUpdate] = useState<MedInput | undefined>(
@@ -62,10 +64,22 @@ export const MedConfigModal: FC<MedConfigModalProps> = ({
         }
       ]}
     >
-      <H4
-        text={i18n.t("Patient_Configuration.Medications.MedicationForm")}
-        style={{ fontWeight: "bold" }}
-      />
+      <View style={styles.titleContainer}>
+        <H4
+          text={i18n.t("Patient_Configuration.Medications.MedicationForm")}
+          style={{ fontWeight: "bold" }}
+        />
+        <TouchableOpacity
+          onPress={() => setMedConfigFormVisible(false)}
+          style={styles.closeButton}
+        >
+          <Icon
+            name="close"
+            size={fonts.h3Size}
+            style={{ color: colors.primaryTextColor }}
+          />
+        </TouchableOpacity>
+      </View>
       <View style={styles.container}>
         <MedicationList
           setAddNewMed={addMed}
@@ -104,6 +118,11 @@ export const MedConfigModal: FC<MedConfigModalProps> = ({
 
 const styles = ScaledSheet.create({
   container: { flexDirection: "row", maxHeight: "90%" },
+  closeButton: {
+    textAlign: "center",
+    justifyContent: "space-evenly",
+    margin: "10@ms"
+  },
   buttonContainer: {
     flexDirection: "row",
     paddingVertical: "10@ms",
@@ -115,5 +134,12 @@ const styles = ScaledSheet.create({
   form: {
     paddingHorizontal: "1@ms",
     paddingTop: "3@ms"
+  },
+  titleContainer: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingLeft: "15@ms"
   }
 });
