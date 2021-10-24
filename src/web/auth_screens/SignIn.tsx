@@ -23,6 +23,7 @@ import { AuthState } from ".";
 import { setProcedureOngoing } from "ic-redux/actions/agents/procedureActionCreator";
 import { AgentTrigger } from "rc_agents/trigger";
 import { isMobile } from "util/device";
+import { LinkText } from "components/InputComponents/LinkText";
 
 export const SignIn: FC<AuthScreenProps[AuthenticationScreenName.SIGN_IN]> = ({
   navigation,
@@ -183,14 +184,15 @@ export const SignIn: FC<AuthScreenProps[AuthenticationScreenName.SIGN_IN]> = ({
 
       {/* Sign In Content */}
       <View style={styles.contentContainer}>
-        <View style={styles.titleContainer}>
-          <H1 text={i18n.t("Auth_SignIn.SignIn")} style={styles.title} />
-        </View>
+        {isMobile ? null : (
+          <View style={styles.titleContainer}>
+            <H1 text={i18n.t("Auth_SignIn.SignIn")} style={styles.title} />
+          </View>
+        )}
 
         {/* Username */}
         <TextField
           label={i18n.t("Auth_SignIn.Username")}
-          labelStyle={{ marginTop: ms(-5) }}
           value={username}
           onChange={(text) => setUsername(text)}
           placeholder={i18n.t("Auth_SignIn.UsernamePlaceholder")}
@@ -212,16 +214,13 @@ export const SignIn: FC<AuthScreenProps[AuthenticationScreenName.SIGN_IN]> = ({
         />
 
         {/* Forgot Password */}
-        <TouchableOpacity
+        <LinkText
+          text={i18n.t("Auth_SignIn.ForgotPassword")}
+          style={styles.forgotPasswordContainer}
           onPress={() =>
             navigation.navigate(AuthenticationScreenName.FORGET_PASSWORD)
           }
-        >
-          <H5
-            text={i18n.t("Auth_SignIn.ForgotPassword")}
-            style={footerButtonTextStyle}
-          />
-        </TouchableOpacity>
+        />
       </View>
 
       {/* Sign In Button */}
@@ -263,7 +262,8 @@ const styles = ScaledSheet.create({
   logoContainer: {
     flexDirection: "column",
     alignItems: "center",
-    marginTop: "35@ms"
+    marginTop: "30@ms",
+    marginBottom: isMobile ? "30@ms" : "10@ms"
   },
   logo: {
     height: "55@ms",
@@ -279,6 +279,9 @@ const styles = ScaledSheet.create({
   },
   title: {
     fontWeight: "bold"
+  },
+  forgotPasswordContainer: {
+    paddingBottom: "20@ms"
   },
   footerButtonText: {
     marginTop: "5@ms",
