@@ -10,11 +10,13 @@ import i18n from "util/language/i18n";
 interface MedicationInfo {
   configMedInfo: MedInput;
   isAdding: boolean;
+  currentDosage?: string;
 }
 
 export const MedicationInfo: FC<MedicationInfo> = ({
   configMedInfo,
-  isAdding
+  isAdding,
+  currentDosage = ""
 }) => {
   const [medPrescription, setMedPrescription] = useState<
     MedPrescription | undefined
@@ -60,7 +62,7 @@ export const MedicationInfo: FC<MedicationInfo> = ({
           <Label
             text={i18n.t("Patient_Configuration.Medications.CurrentDosage")}
           />
-          {isAdding ? <H6 text="None" /> : <H6 text={configMedInfo.dosage} />}
+          {isAdding ? <H6 text="None" /> : <H6 text={currentDosage} />}
         </View>
       ) : (
         <H6 text="Click on medicine name to view more information" />

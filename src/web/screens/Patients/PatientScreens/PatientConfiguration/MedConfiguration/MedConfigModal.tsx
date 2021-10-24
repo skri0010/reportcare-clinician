@@ -33,12 +33,17 @@ export const MedConfigModal: FC<MedConfigModalProps> = ({
     undefined
   );
 
+  const [currentDosage, setCurrentDosage] = useState<string | undefined>(
+    undefined
+  );
+
   const [addingNewMed, setAddingNewMed] = useState<boolean>(false);
 
   const updateMed = (medInfo: MedInput) => {
     setAddingNewMed(false);
     setConfigMedInfo(medInfo);
     setMedToUpdate(medInfo);
+    setCurrentDosage(medInfo.dosage);
   };
 
   const addMed = () => {
@@ -67,7 +72,7 @@ export const MedConfigModal: FC<MedConfigModalProps> = ({
       <View style={styles.titleContainer}>
         <H4
           text={i18n.t("Patient_Configuration.Medications.MedicationForm")}
-          style={{ fontWeight: "bold" }}
+          style={styles.title}
         />
         <TouchableOpacity
           onPress={() => setMedConfigFormVisible(false)}
@@ -108,6 +113,7 @@ export const MedConfigModal: FC<MedConfigModalProps> = ({
               saveMedInput={saveMedInput}
               setMedConfigFormVisible={setMedConfigFormVisible}
               isAdding={false}
+              currentDosage={currentDosage}
             />
           ) : undefined}
         </View>
@@ -119,7 +125,7 @@ export const MedConfigModal: FC<MedConfigModalProps> = ({
 const styles = ScaledSheet.create({
   container: { flexDirection: "row", maxHeight: "90%", flex: 1 },
   closeButton: {
-    textAlign: "center",
+    alignSelf: "flex-end",
     justifyContent: "space-evenly",
     margin: "10@ms"
   },
@@ -136,10 +142,14 @@ const styles = ScaledSheet.create({
     paddingTop: "3@ms"
   },
   titleContainer: {
-    display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
     paddingLeft: "15@ms"
+  },
+  title: {
+    fontWeight: "bold",
+    textAlign: "center",
+    alignSelf: "center",
+    flex: 1
   }
 });

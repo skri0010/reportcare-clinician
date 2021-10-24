@@ -24,6 +24,7 @@ interface AddNewMedicationProps {
   setMedConfigFormVisible: (state: boolean) => void;
   details: PatientDetails;
   isAdding: boolean;
+  currentDosage?: string;
 }
 
 export const AddNewMedication: FC<AddNewMedicationProps> = ({
@@ -32,7 +33,8 @@ export const AddNewMedication: FC<AddNewMedicationProps> = ({
   saveMedInput,
   setMedConfigFormVisible,
   details,
-  isAdding
+  isAdding,
+  currentDosage = ""
 }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
@@ -94,7 +96,11 @@ export const AddNewMedication: FC<AddNewMedicationProps> = ({
             text={i18n.t("Patient_Configuration.Medications.MedicationName")}
           />
           <H6 text={`${configMedInfo.name}`} />
-          <MedicationInfo configMedInfo={configMedInfo} isAdding={false} />
+          <MedicationInfo
+            configMedInfo={configMedInfo}
+            isAdding={false}
+            currentDosage={currentDosage}
+          />
         </View>
       ) : (
         <View>

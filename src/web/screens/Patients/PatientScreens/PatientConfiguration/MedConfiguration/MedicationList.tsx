@@ -84,13 +84,10 @@ const styles = ScaledSheet.create({
     alignItems: "center",
     margin: "5@ms",
     paddingBottom: "3@ms",
-    paddingVertical: "2@ms",
     paddingHorizontal: "5@ms"
   },
   buttonContainer: {
-    paddingTop: "5@ms",
-    paddingRight: "10@ms",
-    paddingLeft: "5@ms",
+    paddingHorizontal: "10@ms",
     alignItems: "center",
     justifyContent: "center"
   },
