@@ -150,6 +150,7 @@ const styles = ScaledSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     alignSelf: "center",
+    textAlignVertical: "center",
     flex: 1
   }
 });

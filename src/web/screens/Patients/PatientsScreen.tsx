@@ -155,17 +155,15 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
                   />
                   {patientDetails.patientInfo.configured && !editDetails ? (
                     // Patient is configured: Show details
-                    <ScrollView>
-                      <PatientDetailsTabNavigator
-                        details={patientDetails}
-                        selectedTab={selectedTab}
-                        setAddMedicalRecord={setAddMedicalRecord}
-                        setDisplayHistory={setDisplayHistory}
-                        setModalAlertVisible={setModalAlertVisible}
-                        setAddIcdCrtRecord={setAddIcdCrtRecord}
-                        setEditDetails={setEditDetails}
-                      />
-                    </ScrollView>
+                    <PatientDetailsTabNavigator
+                      details={patientDetails}
+                      selectedTab={selectedTab}
+                      setAddMedicalRecord={setAddMedicalRecord}
+                      setDisplayHistory={setDisplayHistory}
+                      setModalAlertVisible={setModalAlertVisible}
+                      setAddIcdCrtRecord={setAddIcdCrtRecord}
+                      setEditDetails={setEditDetails}
+                    />
                   ) : (
                     // Patient is not configured or details are to be updated: Show configuration screen
                     <PatientConfigurationScreen

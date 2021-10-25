@@ -6,7 +6,7 @@ import { MedicationTakenCard } from "./PatientOverviewComponents/MedicationCard"
 import { OxygenSaturationCard } from "./PatientOverviewComponents/OxygenSaturationCard";
 import { WeightCard } from "./PatientOverviewComponents/WeightCard";
 import { SymptomsCard } from "./PatientOverviewComponents/SymptomsCard";
-import { Dimensions, View } from "react-native";
+import { Dimensions, ScrollView, View } from "react-native";
 import { ReportSymptom, ReportVitals } from "aws/API";
 import i18n from "util/language/i18n";
 import { PatientDetailsTabProps } from "web/navigation/types";
@@ -79,61 +79,63 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
 
   return (
     <ScreenWrapper padding>
-      <>
-        <View style={[styles.container]}>
-          {/* Blood Pressure Card */}
-          <BloodPressureCard
-            systolicBP={vitals?.BPDi || noRecord}
-            diastolicBP={vitals?.BPSys || noRecord}
-            minHeight={cardHeight}
-            flex={2}
-          />
-          {/* Oxygen Saturation card and Weigth card to share fixed space */}
-          <OxygenSaturationCard
-            oxySatValue={vitals?.OxySat || noRecord}
-            minHeight={cardHeight}
-          />
-          <WeightCard
-            weight={vitals?.Weight || noRecord}
-            targetWeight={details.patientInfo.targetWeight}
-            minHeight={cardHeight}
-          />
-        </View>
+      <ScrollView>
+        <>
+          <View style={[styles.container]}>
+            {/* Blood Pressure Card */}
+            <BloodPressureCard
+              systolicBP={vitals?.BPDi || noRecord}
+              diastolicBP={vitals?.BPSys || noRecord}
+              minHeight={cardHeight}
+              flex={2}
+            />
+            {/* Oxygen Saturation card and Weigth card to share fixed space */}
+            <OxygenSaturationCard
+              oxySatValue={vitals?.OxySat || noRecord}
+              minHeight={cardHeight}
+            />
+            <WeightCard
+              weight={vitals?.Weight || noRecord}
+              targetWeight={details.patientInfo.targetWeight}
+              minHeight={cardHeight}
+            />
+          </View>
 
-        <View style={[styles.container]}>
-          {/* Fluid and activity card */}
-          <FluidIntakeCard
-            fluidRequired={details.patientInfo.fluidIntakeGoal}
-            fluidTaken={sumFluidIntake.toString()}
-            minHeight={cardHeight}
-          />
-          <ActivityCard
-            stepsTaken={sumStepsTaken.toString()}
-            stepsRequired={details.patientInfo.targetActivity}
-            minHeight={cardHeight}
-          />
-        </View>
+          <View style={[styles.container]}>
+            {/* Fluid and activity card */}
+            <FluidIntakeCard
+              fluidRequired={details.patientInfo.fluidIntakeGoal}
+              fluidTaken={sumFluidIntake.toString()}
+              minHeight={cardHeight}
+            />
+            <ActivityCard
+              stepsTaken={sumStepsTaken.toString()}
+              stepsRequired={details.patientInfo.targetActivity}
+              minHeight={cardHeight}
+            />
+          </View>
 
-        <View style={[styles.container, { paddingBottom: ms(10) }]}>
-          {/* Medication and symptoms card */}
-          {/* JH-TODO-NEW: Current data type does not support this */}
-          <MedicationTakenCard
-            medications={medications}
-            maxHeight={cardHeight}
-            minHeight={cardHeight}
-          />
-          <SymptomsCard
-            symptoms={symptoms}
-            maxHeight={cardHeight}
-            minHeight={cardHeight}
-          />
-        </View>
-      </>
-      <InnerScreenButton
-        title={i18n.t("Patient_Configuration.EditDetails")}
-        onPress={() => setEditDetails(true)}
-        style={styles.editButtonContainer}
-      />
+          <View style={[styles.container, { paddingBottom: ms(10) }]}>
+            {/* Medication and symptoms card */}
+            {/* JH-TODO-NEW: Current data type does not support this */}
+            <MedicationTakenCard
+              medications={medications}
+              maxHeight={cardHeight}
+              minHeight={cardHeight}
+            />
+            <SymptomsCard
+              symptoms={symptoms}
+              maxHeight={cardHeight}
+              minHeight={cardHeight}
+            />
+          </View>
+        </>
+        <InnerScreenButton
+          title={i18n.t("Patient_Configuration.EditDetails")}
+          onPress={() => setEditDetails(true)}
+          style={styles.editButtonContainer}
+        />
+      </ScrollView>
     </ScreenWrapper>
   );
 };
