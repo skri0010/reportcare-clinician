@@ -109,7 +109,7 @@ export const AlertPopUp: FC<AlertPopUpProps> = ({
       ]}
     >
       <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
-        {/* Title */}
+        {/* Close icon button */}
         <View style={styles.iconContainerStyle}>
           <IconButton
             name="times"
@@ -129,6 +129,7 @@ export const AlertPopUp: FC<AlertPopUpProps> = ({
         </View>
 
         <View style={styles.contentContainer}>
+          {/* Modal title */}
           <H3
             text={i18n.t("Alerts.RealTimeAlert.NewAlert")}
             style={[styles.title, { color: colors.primaryTextColor }]}

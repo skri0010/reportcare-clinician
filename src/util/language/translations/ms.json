@@ -45,7 +45,8 @@
     "TermOfServices": "Terma-Terma Perkhidmatan",
     "Accept": "Terima",
     "Decline": "Tolak",
-    "ToSText": "Saya bersetuju dengan "
+    "ToSText": "Saya bersetuju dengan ",
+    "PlaceholderError": "Placeholder Error"
   },
   "Auth_ConfirmRegistration": {
     "ConfirmRegistration": "Sahkan Pendaftaran",
@@ -80,7 +81,7 @@
     "ApprovalFailed": "Gagal meluluskan permintaan pesakit",
     "OfflineApproval": "Tiada sambungan internet.\nKelulusan akan disimpan dan disegerakkan semasa sambungan internet dikesan.",
     "NoPendingAssignments": "Semua pesakit sudah diagihkan!",
-    "PatientReassign": "Pilihkan Pakar untuk ditugaskan"
+    "PatientReassign": "Pilih pakar untuk ditugaskan"
   },
   "Parameter_Graphs": {
     "DiastolicBP": "Tekanan Darah Diastolik ",
@@ -384,6 +385,12 @@
     "ViewStableAlerts": "LIHAT AMARAN STABIL",
     "HideStableAlerts": "SEMBUNYIKAN AMARAN STABIL"
   },
+  "PatientSharing": {
+    "NoCliniciansFound": "Tiada pakar dijumpai",
+    "PatientSharedSuccessfully": "Pesakit telah berjaya dikongsikan",
+    "FailedToSharePatient": "Gagal untuk kongsikan pesakit",
+    "ModalTitle": "Pilih pakar untuk dikongsikan"
+  },
   "MobileMessage": {
     "ViewList": "Lihat Senarai",
     "BackToDetails": "Balik ke Butiran"
@@ -399,7 +406,8 @@
     "Save": "Simpan",
     "Cancel": "Batal",
     "RecordDeletedSuccessfully": "Berjaya padamkan",
-    "FailedToDelete": "Gagal untuk memadam"
+    "FailedToDelete": "Gagal untuk memadam",
+    "Share": "Kongsi"
   },
   "UnexpectedError": "Ralat yang tidak disangkai telah berlaku",
   "Keywords": {

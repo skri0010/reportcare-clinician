@@ -82,9 +82,15 @@ export const ActionFrameIDs = {
     // SRD-III: Todo Details
     RETRIEVE_TODO_DETAILS: "RetrieveTodoDetails",
     REQUEST_DISPLAY_TODO_DETAILS: "RequestDisplayTodoDetails",
+
     // SRD-IV: Clinician Contacts
     RETRIEVE_CLINICIAN_CONTACTS: "RetrieveClinicianContacts",
-    REQUEST_DISPLAY_CLINICIAN_CONTACTS: "RequestDisplayClinicianContacts"
+    REQUEST_DISPLAY_CLINICIAN_CONTACTS: "RequestDisplayClinicianContacts",
+
+    // CP-PS: Patient Sharing
+    RETRIEVE_SHARING_CLINICIANS: "RetrieveSharingClinicians",
+    REQUEST_DISPLAY_SHARING_CLINICIANS: "RequestDisplaySharingClinicians",
+    SHARE_PATIENT: "SharePatient"
   },
   UXSA: {
     // P-USOR-I: AlertInfo[]
@@ -119,7 +125,10 @@ export const ActionFrameIDs = {
     DISPLAY_TODO_DETAILS: "DisplayTodoDetails",
 
     // SRD-IV Clinician Contacts
-    DISPLAY_CLINICIAN_CONTACTS: "DisplayClinicianContacts"
+    DISPLAY_CLINICIAN_CONTACTS: "DisplayClinicianContacts",
+
+    // CP-PS: Patient Sharing
+    DISPLAY_SHARING_CLINICIANS: "DisplaySharingClinicians"
   },
   NWA: {
     // MRDC
@@ -196,7 +205,8 @@ export enum ProcedureAttributes {
   SRD_V = "SRD-V",
   HF_EUA = "HF-EUA",
   P_USOR_I = "P-USOR-I",
-  P_USOR_II = "P-USOR-II"
+  P_USOR_II = "P-USOR-II",
+  CP_PS = "CP-PS"
 }
 
 // Attributes for CLINICIAN key
@@ -270,7 +280,15 @@ export enum ClinicianAttributes {
   // SRD-IV - Clinician Contacts
   RETRIEVE_CLINICIAN_CONTACTS = "RetrieveClinicianContacts",
   CLINICIAN_CONTACTS_RETRIEVED = "ClinicianContactsRetrieved",
-  CLINICIAN_CONTACTS = "ClinicianContacts"
+  CLINICIAN_CONTACTS = "ClinicianContacts",
+
+  // CP-PS: Patient Sharing
+  RETRIEVE_SHARING_CLINICIANS = "RetrieveSharingClinicians",
+  PATIENT_TO_SHARE = "PatientToShare",
+  SHARING_CLINICIANS = "SharingClinicians",
+  DISPLAY_SHARING_CLINICIANS = "DisplaySharingClinicians",
+  SHARE_PATIENT = "SharePatient",
+  SHARE_PATIENT_ASSIGNMENT = "SharePatientAssignment"
 }
 
 // Attributes for PATIENT key

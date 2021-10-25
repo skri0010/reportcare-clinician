@@ -42,7 +42,7 @@ export const RegisterAccount: FC<
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [role, setRole] = useState("");
-  const [hospital, setHospital] = useState("");
+  const [hospital, setHospital] = useState(Hospital.UNKNOWN);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -141,7 +141,6 @@ export const RegisterAccount: FC<
           {/* Name */}
           <TextField
             label={i18n.t("Auth_Registration.Name")}
-            labelStyle={{ marginTop: ms(-5) }}
             value={name}
             onChange={(text: string) => setName(text.toUpperCase())}
             placeholder={i18n.t("Auth_Registration.NamePlaceholder")}
@@ -182,39 +181,35 @@ export const RegisterAccount: FC<
           </View>
 
           {/* Hospital */}
-          <Label text={i18n.t("Auth_Registration.Hospital")} />
-          <View style={pickerContainerStyle}>
-            <Picker
-              style={pickerStyle}
-              selectedValue={hospital}
-              onValueChange={(value: string) => {
-                setHospital(value);
-              }}
-            >
-              {Object.entries(Hospital).map(([key, value]) => {
-                return (
-                  <Picker.Item
-                    key={key}
-                    value={value}
-                    label={i18n.t(value.toString())}
-                  />
-                );
-              })}
-            </Picker>
+          <View style={isMobile ? styles.mobileColumnLastItem : {}}>
+            <Label text={i18n.t("Auth_Registration.Hospital")} />
+            <View style={pickerContainerStyle}>
+              <Picker
+                style={pickerStyle}
+                selectedValue={hospital}
+                onValueChange={(value: Hospital) => {
+                  setHospital(value);
+                }}
+              >
+                {Object.entries(Hospital).map(([key, value]) => {
+                  return (
+                    <Picker.Item
+                      key={key}
+                      value={value}
+                      label={i18n.t(value.toString())}
+                    />
+                  );
+                })}
+              </Picker>
+            </View>
           </View>
         </View>
 
         {/* Right Column */}
-        <View
-          style={[
-            styles.columnContainer,
-            { paddingTop: isMobile ? ms(35) : undefined }
-          ]}
-        >
+        <View style={styles.columnContainer}>
           {/* Username */}
           <TextField
             label={i18n.t("Auth_SignIn.Username")}
-            labelStyle={{ marginTop: ms(-5) }}
             value={username}
             onChange={(text) => setUsername(text)}
             placeholder={i18n.t("Auth_SignIn.UsernamePlaceholder")}
@@ -259,6 +254,7 @@ export const RegisterAccount: FC<
       {/* Register Button */}
       <AuthButton
         inputValid={inputValid && checkTerms}
+        style={{ marginBottom: ms(30) }}
         buttonTitle={i18n.t("Auth_Registration.Register")}
         onPress={inputValid && checkTerms ? register : () => null}
       />
@@ -280,14 +276,20 @@ const styles = ScaledSheet.create({
   contentContainer: {
     flexDirection: isMobile ? "column" : "row",
     flexWrap: "wrap",
-    alignItems: "flex-start",
-    flex: 2
+    justifyContent: "center"
   },
   columnContainer: {
     flex: 1,
     width: "100%",
-    paddingHorizontal: isMobile ? "10@ms" : "80@ms",
-    paddingVertical: "15@ms"
+    minWidth: "250@ms",
+    maxWidth: "400@ms",
+    paddingHorizontal: isMobile ? "10@ms" : "40@ms",
+    paddingVertical: "30@ms"
+  },
+  // Last item picker is not clickable without padding in mobile
+  mobileColumnLastItem: {
+    paddingTop: "20@ms",
+    paddingBottom: "50@ms"
   },
   inputLabel: {
     fontWeight: "600",

@@ -1,16 +1,10 @@
 import React from "react";
-import {
-  StyleProp,
-  View,
-  TextInput,
-  Platform,
-  TextStyle,
-  ViewStyle
-} from "react-native";
+import { StyleProp, View, TextInput, TextStyle, ViewStyle } from "react-native";
 import { RootState, select } from "util/useRedux";
 import { ScaledSheet } from "react-native-size-matters";
 import { H7 } from "components/Text";
 import { Label } from "components/Text/Label";
+import i18n from "util/language/i18n";
 
 interface TextFieldProps {
   editable?: boolean;
@@ -83,7 +77,7 @@ export const TextField: React.FC<TextFieldProps> = ({
         multiline={multiline}
       />
       <H7
-        text={errorMessage!}
+        text={errorMessage || i18n.t("Auth_Registration.PlaceholderError")}
         style={{
           fontWeight: "bold",
           color: colors.errorColor,
@@ -98,7 +92,8 @@ export const TextField: React.FC<TextFieldProps> = ({
 const styles = ScaledSheet.create({
   input: {
     borderWidth: "2@ms",
-    height: Platform.OS === "web" ? "30@ms" : "40@ms",
-    paddingLeft: "10@ms"
+    height: "30@ms",
+    paddingHorizontal: "5@ms",
+    paddingVertical: "2@ms"
   }
 });
