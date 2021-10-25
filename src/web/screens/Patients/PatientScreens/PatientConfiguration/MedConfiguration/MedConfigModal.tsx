@@ -143,14 +143,13 @@ const styles = ScaledSheet.create({
   },
   titleContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    paddingLeft: "15@ms"
+    justifyContent: "center"
   },
   title: {
     fontWeight: "bold",
     textAlign: "center",
-    alignSelf: "center",
-    textAlignVertical: "center",
+    margin: "10@ms",
+    alignItems: "center",
     flex: 1
   }
 });

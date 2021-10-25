@@ -207,6 +207,7 @@ const styles = ScaledSheet.create({
   form: {
     paddingHorizontal: "3@ms",
     borderRadius: "3@ms",
+    paddingLeft: "15@ms",
     alignSelf: "center",
     width: "100%",
     height: "100%",
