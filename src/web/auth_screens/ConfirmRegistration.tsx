@@ -1,5 +1,5 @@
 import React, { FC, useState, useEffect } from "react";
-import { View, Dimensions } from "react-native";
+import { View } from "react-native";
 import { Auth } from "@aws-amplify/auth";
 import { ScaledSheet } from "react-native-size-matters";
 import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
