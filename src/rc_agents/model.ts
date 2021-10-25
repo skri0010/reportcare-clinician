@@ -63,6 +63,7 @@ export enum AlertColorCode {
 }
 
 export enum MedicationNames {
+  DEFAULT = "Please select a medication...",
   ASPIRIN = "Aspirin",
   BISOPROLOL = "Bisoprolol",
   SACUBITRIL = "Sacubitril"
