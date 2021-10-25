@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-no-undef */
 import React, { FC, useEffect, useState } from "react";
-import { ScrollView, View } from "react-native";
+import { View } from "react-native";
 import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
 import { mockPatients } from "mock/mockPatients";
 import { RootState, select, useDispatch } from "util/useRedux";
