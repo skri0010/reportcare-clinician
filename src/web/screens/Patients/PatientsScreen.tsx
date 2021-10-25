@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-no-undef */
 import React, { FC, useEffect, useState } from "react";
-import { View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
 import { mockPatients } from "mock/mockPatients";
 import { RootState, select, useDispatch } from "util/useRedux";
@@ -155,7 +155,7 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
                   />
                   {patientDetails.patientInfo.configured && !editDetails ? (
                     // Patient is configured: Show details
-                    <View>
+                    <ScrollView>
                       <PatientDetailsTabNavigator
                         details={patientDetails}
                         selectedTab={selectedTab}
@@ -165,7 +165,7 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
                         setAddIcdCrtRecord={setAddIcdCrtRecord}
                         setEditDetails={setEditDetails}
                       />
-                    </View>
+                    </ScrollView>
                   ) : (
                     // Patient is not configured or details are to be updated: Show configuration screen
                     <PatientConfigurationScreen
