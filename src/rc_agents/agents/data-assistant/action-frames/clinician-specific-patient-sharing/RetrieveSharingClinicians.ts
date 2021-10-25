@@ -15,7 +15,6 @@ import {
   ClinicianAttributes,
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
-import { LocalStorage } from "rc_agents/storage";
 import { listClinicianInfos, listClinicianMappingsByPatientID } from "aws";
 import { store } from "util/useRedux";
 import { ClinicianInfo } from "aws/API";
