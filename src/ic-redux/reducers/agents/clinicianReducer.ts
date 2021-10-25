@@ -7,13 +7,21 @@ interface ClinicianState {
   // clinician
   clinicianContacts: ClinicianInfo[] | null;
   clinicianSelected: ClinicianInfo | null;
-  fetchingClinianContacts: boolean;
+  fetchingClinicianContacts: boolean;
+  fetchingSharingClinicians: boolean;
+  sharingClinicians: ClinicianInfo[] | null;
+  sharingPatient: boolean;
+  sharePatientSuccessful: boolean;
 }
 
 const initialState: ClinicianState = {
   clinicianContacts: null,
   clinicianSelected: null,
-  fetchingClinianContacts: false
+  fetchingClinicianContacts: false,
+  fetchingSharingClinicians: false,
+  sharingClinicians: null,
+  sharingPatient: false,
+  sharePatientSuccessful: false
 };
 
 export const clinicianReducer: Reducer<ClinicianState, RootAction> = (
@@ -36,7 +44,27 @@ export const clinicianReducer: Reducer<ClinicianState, RootAction> = (
     case actionNames.SET_FETCHING_CLINICIAN_CONTACTS:
       return {
         ...state,
-        fetchingClinianContacts: action.payload.fetchingClinianContacts
+        fetchingClinicianContacts: action.payload.fetchingClinicianContacts
+      };
+    case actionNames.SET_FETCHING_SHARING_CLINICIANS:
+      return {
+        ...state,
+        fetchingSharingClinicians: action.payload.fetchingSharingClinicians
+      };
+    case actionNames.SET_SHARING_CLINICIANS:
+      return {
+        ...state,
+        sharingClinicians: action.payload.sharingClinicians
+      };
+    case actionNames.SET_SHARING_PATIENT:
+      return {
+        ...state,
+        sharingPatient: action.payload.sharingPatient
+      };
+    case actionNames.SET_SHARE_PATIENT_SUCCESSFUL:
+      return {
+        ...state,
+        sharePatientSuccessful: action.payload.sharePatientSuccessful
       };
     default:
       return state;

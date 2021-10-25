@@ -17,6 +17,7 @@ import { af_DisplayClinicianContacts } from "./action-frames/storing-data/Displa
 import { af_DisplayRefreshedAlerts } from "./action-frames/exacerbation-user-specific-alert/DisplayRefreshedAlerts";
 import { af_DisplayMedicalRecordContent } from "./action-frames/hf-outcome-trends/DisplayMedicalRecordContent";
 import { af_DisplayIcdCrtRecordContent } from "./action-frames/hf-outcome-trends/DisplayIcdCrtRecordContent";
+import { af_DisplaySharingClinicians } from "./action-frames/clinician-specific-patient-sharing/DisplaySharingClinicians";
 
 // Initial Beliefs of Agent
 const belief1 = new Belief(AgentIDs.UXSA, CommonAttributes.LAST_ACTIVITY, null);
@@ -48,6 +49,8 @@ const agentUXSA = new ClinicianAgent(
     af_DisplayTodoDetails,
     // SRD-IV
     af_DisplayClinicianContacts,
+    // CP-PS
+    af_DisplaySharingClinicians,
 
     // P-USOR-I
     af_DisplayAlerts,

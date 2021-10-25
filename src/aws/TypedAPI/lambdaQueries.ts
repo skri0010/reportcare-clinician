@@ -48,7 +48,7 @@ interface HandlePatientAssignmentResolutionNarrowedVariables
   reassignToClinicianID?: string;
 }
 
-interface SharePatientAssignmentNarrowedVariables
+export interface SharePatientAssignmentNarrowedVariables
   extends SharePatientAssignmentQueryVariables {
   patientID: string;
   patientName: string;

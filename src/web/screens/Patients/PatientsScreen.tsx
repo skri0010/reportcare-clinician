@@ -26,6 +26,7 @@ import {
 } from "ic-redux/actions/agents/patientActionCreator";
 import { AddIcdCrtRecordModal } from "./PatientScreens/PatientDetailsScreen/PatientIcdCrtComponents/AddIcdCrtRecordModal";
 import { DeleteRecordConfirmationModal } from "./PatientScreens/PatientDetailsScreen/Modals/DeleteRecordConfirmationModal";
+import { SharePatientModal } from "./PatientScreens/PatientDetailsScreen/Modals/SharePatientModal";
 
 export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
   route
@@ -121,6 +122,9 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
   // For editing patient's details - navigate to patient configuration screen
   const [editDetails, setEditDetails] = useState(false);
 
+  // For sharing a patient
+  const [sharePatient, setSharePatient] = useState(false);
+
   return (
     <ScreenWrapper fixed>
       <View
@@ -152,6 +156,8 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
                   <ContactTitle
                     name={patientDetails.patientInfo.name}
                     isPatient
+                    patientId={patientDetails.patientInfo.patientID}
+                    setSharePatient={setSharePatient}
                   />
                   {patientDetails.patientInfo.configured && !editDetails ? (
                     // Patient is configured: Show details
@@ -215,6 +221,7 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
           setAddIcdCrtRecord={setAddIcdCrtRecord}
           patientID={patientDetails?.patientInfo.patientID}
         />
+
         {/* Modal to confirm deletion of record */}
         {recordToDelete ? (
           <DeleteRecordConfirmationModal
@@ -223,6 +230,13 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
             record={recordToDelete}
           />
         ) : null}
+
+        {/* Modal to share patient */}
+        <SharePatientModal
+          patient={patientDetails?.patientInfo}
+          visible={sharePatient}
+          onRequestClose={() => setSharePatient(false)}
+        />
       </View>
     </ScreenWrapper>
   );
