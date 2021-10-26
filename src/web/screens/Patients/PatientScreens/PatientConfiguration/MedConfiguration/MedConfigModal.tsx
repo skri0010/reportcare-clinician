@@ -93,6 +93,7 @@ export const MedConfigModal: FC<MedConfigModalProps> = ({
           setAddNewMed={addMed}
           details={details}
           setMedToUpdate={updateMed}
+          localMedInfos={localMedInfos}
         />
         <View
           style={{

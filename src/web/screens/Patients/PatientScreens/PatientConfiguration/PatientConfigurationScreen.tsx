@@ -157,7 +157,9 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
       const currentMedInfos: MedInput[] = medInfos;
       currentMedInfos.push(medInput);
       setMedInfos(currentMedInfos);
-      setNewMedInfoAdded(true);
+      if (medInput.active) {
+        setNewMedInfoAdded(true);
+      }
       // closes the medication info input form, enable the add new medication info button
       setMedConfigFormVisible(false);
       // Reset the values for the medication input
@@ -348,7 +350,7 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
                 ]}
               >
                 <H4
-                  text={i18n.t("Patient_Configuration.AddNewMedicationInfo")}
+                  text={i18n.t("Patient_Configuration.ConfigureMedicine")}
                   style={{ color: colors.primaryContrastTextColor }}
                 />
               </TouchableOpacity>

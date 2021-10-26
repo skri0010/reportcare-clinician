@@ -35,12 +35,14 @@ export const MedicationInfoList: FC<MedicationInfoListProps> = ({
           style={{ flex: 1 }}
           ItemSeparatorComponent={() => <ItemSeparator />}
           data={medInfos}
-          renderItem={({ item }) => (
-            <MedicationRow
-              medicationItem={item}
-              setMedInfoToDelete={setMedInfoToDelete}
-            />
-          )}
+          renderItem={({ item }) =>
+            item.active ? (
+              <MedicationRow
+                medicationItem={item}
+                setMedInfoToDelete={setMedInfoToDelete}
+              />
+            ) : null
+          }
           keyExtractor={(item) => item.name}
         />
       </View>

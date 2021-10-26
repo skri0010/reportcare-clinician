@@ -11,19 +11,24 @@ interface MedicationListProps {
   setAddNewMed: () => void;
   setMedToUpdate: (medToUpdate: MedInput) => void;
   details: PatientDetails;
+  localMedInfos: MedInput[];
 }
 
 export const MedicationList: FC<MedicationListProps> = ({
   setAddNewMed,
   setMedToUpdate,
-  details
+  details,
+  localMedInfos
 }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
   }));
 
   const activeMedications = details.medicationInfo.some((t) => {
-    if (t.active) {
+    if (
+      t.active &&
+      !(localMedInfos.filter((localMed) => localMed.name === t.name).length > 0)
+    ) {
       return true;
     }
     return false;
