@@ -36,9 +36,11 @@ export const MedicationInfo: FC<MedicationInfo> = ({
     <View>
       {medPrescription ? (
         <View>
-          <Label
-            text={i18n.t("Patient_Configuration.Medications.Recommendations")}
-          />
+          <View style={{ flexDirection: "row" }}>
+            <Label
+              text={i18n.t("Patient_Configuration.Medications.Recommendations")}
+            />
+          </View>
           <View style={{ flexDirection: "row" }}>
             <View style={styles.reccomendations}>
               <Label

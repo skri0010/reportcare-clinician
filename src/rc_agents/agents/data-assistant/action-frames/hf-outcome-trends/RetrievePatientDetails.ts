@@ -198,7 +198,8 @@ class RetrievePatientDetails extends Activity {
                   dosage: `${medication.dosage}`,
                   frequency: `${medication.frequency}`,
                   patientID: medication.patientID,
-                  records: medication.records
+                  records: medication.records,
+                  active: medication.active
                 };
                 patientDetails.medicationInfo.push(localMed);
               }

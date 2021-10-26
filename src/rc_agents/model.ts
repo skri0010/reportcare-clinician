@@ -252,6 +252,7 @@ export interface MedInput {
   frequency: string;
   patientID: string;
   records?: string;
+  active: boolean;
 }
 
 export interface MedicalRecordInput {

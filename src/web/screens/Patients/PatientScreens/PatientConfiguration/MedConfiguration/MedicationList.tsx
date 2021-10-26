@@ -65,9 +65,14 @@ export const MedicationList: FC<MedicationListProps> = ({
       {activeMedications ? (
         <FlatList
           data={details.medicationInfo}
-          renderItem={({ item }) => (
-            <MedInfoRow medicationInfo={item} updateMedInfo={setMedToUpdate} />
-          )}
+          renderItem={({ item }) =>
+            item.active ? (
+              <MedInfoRow
+                medicationInfo={item}
+                updateMedInfo={setMedToUpdate}
+              />
+            ) : null
+          }
         />
       ) : (
         <H5 text="There are no active medications currently" />

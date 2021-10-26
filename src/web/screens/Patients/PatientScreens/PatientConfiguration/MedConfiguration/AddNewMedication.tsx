@@ -25,6 +25,7 @@ interface AddNewMedicationProps {
   details: PatientDetails;
   isAdding: boolean;
   currentDosage?: string;
+  removeMedInfo: (medInfo: MedInput) => void;
 }
 
 export const AddNewMedication: FC<AddNewMedicationProps> = ({
@@ -34,7 +35,8 @@ export const AddNewMedication: FC<AddNewMedicationProps> = ({
   setMedConfigFormVisible,
   details,
   isAdding,
-  currentDosage = ""
+  currentDosage = "",
+  removeMedInfo
 }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
@@ -95,7 +97,22 @@ export const AddNewMedication: FC<AddNewMedicationProps> = ({
           <Label
             text={i18n.t("Patient_Configuration.Medications.MedicationName")}
           />
-          <H6 text={`${configMedInfo.name}`} />
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-evenly",
+              alignItems: "center"
+            }}
+          >
+            <H6 text={`${configMedInfo.name}`} />
+            <View style={{ alignItems: "flex-end", flex: 1 }}>
+              <RowButton
+                backgroundColor={colors.declineButtonColor}
+                title="Remove Medication"
+                onPress={() => removeMedInfo(configMedInfo)}
+              />
+            </View>
+          </View>
           <MedicationInfo
             configMedInfo={configMedInfo}
             isAdding={false}
@@ -121,11 +138,11 @@ export const AddNewMedication: FC<AddNewMedicationProps> = ({
             }}
           >
             {Object.entries(MedicationNames).map(([key, value]) => {
-              const medicationExists =
-                details.medicationInfo.filter((t) => t.name === value).length >
-                0;
+              const medicationFound = details.medicationInfo.filter(
+                (t) => t.name === value
+              );
 
-              if (medicationExists) {
+              if (medicationFound.length > 0 && medicationFound[0].active) {
                 return null;
               }
               return (

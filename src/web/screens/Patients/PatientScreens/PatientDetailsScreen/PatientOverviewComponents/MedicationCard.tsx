@@ -28,7 +28,9 @@ export const MedicationTakenCard: FC<MedicationTakenProps> = ({
         style={{ paddingLeft: ms(10), paddingTop: ms(5) }}
         showsVerticalScrollIndicator={false}
         data={medications}
-        renderItem={({ item }) => <MedicationRow medicationInfo={item} />}
+        renderItem={({ item }) =>
+          item.active ? <MedicationRow medicationInfo={item} /> : null
+        }
         keyExtractor={(item) => item.name}
       />
     </CardWrapper>

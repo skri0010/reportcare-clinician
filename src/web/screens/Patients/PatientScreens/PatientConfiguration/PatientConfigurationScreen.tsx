@@ -63,7 +63,8 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
       name: "",
       dosage: "",
       frequency: "",
-      patientID: info.patientID
+      patientID: info.patientID,
+      active: true
     });
 
     const [allInputValid, setAllInputValid] = useState<boolean>(false);
@@ -89,7 +90,8 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
       name: "",
       dosage: "",
       frequency: "",
-      patientID: info.patientID
+      patientID: info.patientID,
+      active: true
     });
 
     // Used locally to keep track of ongoing configuration procedure
@@ -164,7 +166,27 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
         name: "",
         dosage: "",
         frequency: "",
-        patientID: info.patientID
+        patientID: info.patientID,
+        active: true
+      });
+    };
+
+    // Make medication info inactive
+    const removeMedInfo = (medInput: MedInput) => {
+      medInput.active = false;
+      const currentMedInfos: MedInput[] = medInfos;
+      currentMedInfos.push(medInput);
+      setMedInfos(currentMedInfos);
+      setNewMedInfoAdded(true);
+      // closes the medication info input form, enable the add new medication info button
+      setMedConfigFormVisible(false);
+      // Reset the values for the medication input
+      setConfigMedInfo({
+        name: "",
+        dosage: "",
+        frequency: "",
+        patientID: info.patientID,
+        active: true
       });
     };
 
@@ -453,6 +475,7 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
             saveMedInput={saveMedInput}
             setConfigMedInfo={setConfigMedInfo}
             setMedConfigFormVisible={setMedConfigFormVisible}
+            removeMedInfo={removeMedInfo}
           />
         </ModalWrapper>
         {configuring && <LoadingIndicator />}

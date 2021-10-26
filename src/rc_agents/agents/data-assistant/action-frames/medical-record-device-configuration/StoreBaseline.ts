@@ -118,7 +118,8 @@ class StoreBaseline extends Activity {
                   dosage: `${medication.dosage}`,
                   frequency: `${medication.frequency}`,
                   patientID: medication.patientID,
-                  records: medication.records
+                  records: medication.records,
+                  active: medication.active
                 };
                 localMedInputs.push(localMed);
               }
@@ -361,7 +362,7 @@ export const createMedicationConfiguration = async (
         frequency: parseFloat(medicationInfo.frequency),
         name: medInfo.name,
         patientID: medInfo.patientID,
-        active: true,
+        active: medicationInfo.active,
         _version: medInfo._version
       };
 
