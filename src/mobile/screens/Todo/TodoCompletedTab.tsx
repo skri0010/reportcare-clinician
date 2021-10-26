@@ -8,7 +8,7 @@ export const TodoCompletedTab: FC = () => {
   return (
     <MobileScreenWrapper>
       <View>
-        <MainTitle title={i18n.t("Todo.CurrentTodo")} />
+        <MainTitle title={i18n.t("Todo.CompletedTodo")} />
       </View>
     </MobileScreenWrapper>
   );
