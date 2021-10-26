@@ -25,6 +25,7 @@ interface AddNewMedicationProps {
   details: PatientDetails;
   isAdding: boolean;
   currentDosage?: string;
+  localMedInfos: MedInput[];
 }
 
 export const AddNewMedication: FC<AddNewMedicationProps> = ({
@@ -34,7 +35,8 @@ export const AddNewMedication: FC<AddNewMedicationProps> = ({
   setMedConfigFormVisible,
   details,
   isAdding,
-  currentDosage = ""
+  currentDosage = "",
+  localMedInfos
 }) => {
   const { colors, fonts } = select((state: RootState) => ({
     colors: state.settings.colors,
@@ -149,7 +151,11 @@ export const AddNewMedication: FC<AddNewMedicationProps> = ({
                 (t) => t.name === value && t.active === true
               );
 
-              if (medicationFound) {
+              const medicationLocal = localMedInfos.some(
+                (t) => t.name === value
+              );
+
+              if (medicationFound || medicationLocal) {
                 return null;
               }
               return (

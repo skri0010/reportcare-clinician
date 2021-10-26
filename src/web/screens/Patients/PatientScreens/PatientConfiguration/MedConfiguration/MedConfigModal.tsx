@@ -15,6 +15,7 @@ interface MedConfigModalProps {
   setConfigMedInfo: (medInfo: MedInput) => void;
   saveMedInput: (medInput: MedInput) => void;
   setMedConfigFormVisible: (state: boolean) => void;
+  localMedInfos: MedInput[];
 }
 
 export const MedConfigModal: FC<MedConfigModalProps> = ({
@@ -22,7 +23,8 @@ export const MedConfigModal: FC<MedConfigModalProps> = ({
   configMedInfo,
   setConfigMedInfo,
   saveMedInput,
-  setMedConfigFormVisible
+  setMedConfigFormVisible,
+  localMedInfos
 }) => {
   const { colors, fonts } = select((state: RootState) => ({
     colors: state.settings.colors,
@@ -105,6 +107,7 @@ export const MedConfigModal: FC<MedConfigModalProps> = ({
               saveMedInput={saveMedInput}
               setMedConfigFormVisible={setMedConfigFormVisible}
               isAdding
+              localMedInfos={localMedInfos}
             />
           ) : medToUpdate ? (
             <AddNewMedication
@@ -115,6 +118,7 @@ export const MedConfigModal: FC<MedConfigModalProps> = ({
               setMedConfigFormVisible={setMedConfigFormVisible}
               isAdding={false}
               currentDosage={currentDosage}
+              localMedInfos={localMedInfos}
             />
           ) : undefined}
         </View>

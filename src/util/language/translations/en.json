@@ -213,7 +213,8 @@
       "MedName": "Medicine name",
       "Dosage": "Dosage (in mg)",
       "Frequency": "Frequency (in times per day)",
-      "MedicationForm": "Medication Form"
+      "MedicationForm": "Medication Form",
+      "ConfigureMedication": "Configure Medication"
     },
     "Prompt": {
       "DeviceNo": "Does this patient have a device?",

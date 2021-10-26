@@ -329,7 +329,9 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
             />
           ) : null}
 
-          <Label text="Cofigure Medication" />
+          <Label
+            text={i18n.t("Patient_Configuration.Label.ConfigureMedication")}
+          />
           <View>
             {/* Add medication info button */}
             <View style={styles.newMedInfoButtonContainer}>
@@ -439,6 +441,7 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
             saveMedInput={saveMedInput}
             setConfigMedInfo={setConfigMedInfo}
             setMedConfigFormVisible={setMedConfigFormVisible}
+            localMedInfos={medInfos}
           />
         </ModalWrapper>
         {configuring && <LoadingIndicator />}

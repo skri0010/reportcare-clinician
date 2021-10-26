@@ -13,14 +13,14 @@ interface MedicationRowProps {
 }
 
 interface MedicationInfoRowProps {
-  title: string;
+  title?: string;
   content: string;
 }
 
 const MedicationInfoRow: FC<MedicationInfoRowProps> = ({ title, content }) => {
   return (
     <View style={{ flexWrap: "wrap", flexDirection: "row" }}>
-      <H5 text={title} />
+      {title ? <H5 text={title} /> : null}
       <H5 text={content} />
     </View>
   );
@@ -45,18 +45,9 @@ export const MedicationRow: FC<MedicationRowProps> = ({
       {/* Medicatio info */}
       <View style={{ flex: 6 }}>
         <MedicationInfoRow
-          title={i18n.t("Patient_Configuration.MedicationRow.Name")}
-          content={`${medicationItem.name}`}
-        />
-        <MedicationInfoRow
-          title={i18n.t("Patient_Configuration.MedicationRow.Dosage")}
-          content={`${medicationItem.dosage} ${i18n.t(
+          content={`${medicationItem.name}, ${medicationItem.dosage}${i18n.t(
             "Patient_Configuration.Unit.Dosage"
-          )}`}
-        />
-        <MedicationInfoRow
-          title={i18n.t("Patient_Configuration.MedicationRow.Frequency")}
-          content={`${medicationItem.frequency} ${i18n.t(
+          )}, ${medicationItem.frequency} ${i18n.t(
             "Patient_Configuration.Unit.Frequency"
           )}`}
         />

@@ -209,7 +209,8 @@
       "FluidIntakeGoal": "Sasaran pengambilan air (dalam ml)",
       "MedName": "Name ubat",
       "Dosage": "Dos (dalam mg)",
-      "Frequency": "Kekerapan (dalam kali per hari)"
+      "Frequency": "Kekerapan (dalam kali per hari)",
+      "ConfigureMedication": "Konfigurasikan Ubat"
     },
     "Prompt": {
       "DeviceNo": "Adakah pesakit ini mempunyai peranti?",

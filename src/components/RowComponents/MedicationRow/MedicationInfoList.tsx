@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { View, FlatList } from "react-native";
-import { H4 } from "components/Text";
+import { H4, H5 } from "components/Text";
 import i18n from "util/language/i18n";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { RootState, select } from "util/useRedux";
@@ -23,10 +23,10 @@ export const MedicationInfoList: FC<MedicationInfoListProps> = ({
   return (
     <View style={styles.medInfoList}>
       {/* Medication info list title */}
-      <H4
+      <H5
         text={i18n.t("Patient_Configuration.MedicationsAddedCurrently")}
         style={{
-          color: colors.primaryContrastTextColor,
+          color: colors.primaryTextColor,
           paddingVertical: ms(5)
         }}
       />
