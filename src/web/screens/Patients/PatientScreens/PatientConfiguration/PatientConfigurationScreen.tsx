@@ -13,10 +13,9 @@ import {
   validateTargetActivity,
   validateTargetWeight
 } from "util/validation";
-import { ms, ScaledSheet } from "react-native-size-matters";
+import { ScaledSheet } from "react-native-size-matters";
 import { CheckboxText } from "components/InputComponents/CheckboxText";
 import { H3, H4 } from "components/Text";
-import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { Picker } from "@react-native-picker/picker";
 import { Hospital, NYHAClass, MedInput, PatientDetails } from "rc_agents/model";
@@ -76,7 +75,7 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
     const [medInfos, setMedInfos] = useState<MedInput[]>([]);
 
     // Checks for medication info input section visibility
-    const [hasMedInfo, setHasMedInfo] = useState<boolean>(medInfos.length > 0);
+    const [hasMedInfo] = useState<boolean>(medInfos.length > 0);
 
     // Medication info input form visibility, add new medication info button disabled or not
     const [medConfigFormVisible, setMedConfigFormVisible] =
