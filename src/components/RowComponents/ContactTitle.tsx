@@ -8,7 +8,7 @@ import { PeopleAvatar } from "components/RowComponents/PeopleAvatar";
 interface ContactTitleProps {
   name: string;
   // eslint-disable-next-line react/no-unused-prop-types
-  image?: string; // JH-TODO: Replace with image implementation
+  image?: string; // FUTURE-TODO: Replace with image implementation
   isPatient: boolean;
 }
 

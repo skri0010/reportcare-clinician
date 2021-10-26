@@ -6,14 +6,14 @@ import { H7 } from "components/Text";
 import { PatientInfo } from "aws/API";
 import { RiskLevel } from "models/RiskLevel";
 
-export interface PatientRequestRowProps {
+export interface PatientAlertRowProps {
   generalDetails: PatientInfo;
   request?: string;
   time?: string;
   onBottomButtonPress?: () => void;
 }
 
-export const PatientRequestRow: React.FC<PatientRequestRowProps> = ({
+export const PatientAlertRow: React.FC<PatientAlertRowProps> = ({
   generalDetails,
   request,
   time,
@@ -27,9 +27,9 @@ export const PatientRequestRow: React.FC<PatientRequestRowProps> = ({
           label: "",
           value: request || "Missing alert information"
         }}
-        // TODO: Clarify how this is decided and stored
         riskLevel={
-          generalDetails.id === "1" ? RiskLevel.HIGH : RiskLevel.MEDIUM
+          RiskLevel[generalDetails.riskLevel as keyof typeof RiskLevel] ||
+          RiskLevel.UNASSIGNED
         }
         bottomButtonLabel="View Details"
         onBottomButtonPress={onBottomButtonPress}

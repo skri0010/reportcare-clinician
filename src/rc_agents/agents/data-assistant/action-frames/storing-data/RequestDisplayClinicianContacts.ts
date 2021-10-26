@@ -23,15 +23,12 @@ import {
  * Class to represent the activity for requesting display of clinician contacts
  * This happens in Procedure Storing Data (SRD-IV) Clinician Procedure
  */
-class RequestClinicianContactsDisplay extends Communicate {
-  /**
-   * Constructor for the RequestAlertInfoDisplay class
-   */
+class RequestDisplayClinicianContacts extends Communicate {
   constructor() {
     super(
       ActionFrameIDs.DTA.REQUEST_DISPLAY_CLINICIAN_CONTACTS,
       Performative.REQUEST,
-      // Triggers Display Clinician contacts action frame of UXSA
+      // Triggers DisplayClinicianContacts action frame of UXSA
       new Belief(
         BeliefKeys.CLINICIAN,
         ClinicianAttributes.CLINICIAN_CONTACTS_RETRIEVED,
@@ -74,8 +71,8 @@ const rule3 = new ResettablePrecondition(
 );
 
 // Actionframe
-export const af_RequestClinicianContactDisplay = new Actionframe(
+export const af_RequestDisplayClinicianContacts = new Actionframe(
   `AF_${ActionFrameIDs.DTA.REQUEST_DISPLAY_CLINICIAN_CONTACTS}`,
   [rule1, rule2, rule3],
-  new RequestClinicianContactsDisplay()
+  new RequestDisplayClinicianContacts()
 );

@@ -87,9 +87,9 @@ export class ClinicianAgent extends Agent {
         this.agentAPI.registerAgent(this);
         this.setInitialized(true);
         clearInterval(timer);
-      } catch (e) {
+      } catch (error) {
         // eslint-disable-next-line no-console
-        console.log(`${this.id} ${e}`);
+        console.log(error);
       }
     }, 500);
 

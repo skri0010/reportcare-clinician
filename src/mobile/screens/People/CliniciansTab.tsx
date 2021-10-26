@@ -5,9 +5,9 @@ import { MobileScreenWrapper } from "mobile/screens/MobileScreenWrapper";
 import { mockClinician } from "mock/mockClinicians";
 import { ClinicianContactRow } from "components/RowComponents/ClinicianRow/ClinicianContactRow";
 import { ClinicianShareRow } from "components/RowComponents/ClinicianRow/ClinicianShareRow";
+import i18n from "util/language/i18n";
 
 export const CliniciansTab: FC = () => {
-  // JH-TODO: Replace placeholder with i18n
   return (
     <MobileScreenWrapper>
       <View>
@@ -18,7 +18,7 @@ export const CliniciansTab: FC = () => {
           onSearchClick={() => {
             null;
           }}
-          placeholder="Search clinicians"
+          placeholder={i18n.t("Clinicians.SearchBarPlaceholder")}
         />
         {/* <Text> Clinicians </Text> */}
         <ClinicianContactRow generalDetails={mockClinician[0]} />

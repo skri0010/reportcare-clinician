@@ -175,6 +175,19 @@ class ProcessAlertNotification extends Activity {
       ),
       false
     );
+
+    // Alert is not relevant to current clinician - end the procedure
+    if (!showAlertPopUp || !alertInfo) {
+      agentAPI.addFact(
+        new Belief(
+          BeliefKeys.PROCEDURE,
+          ProcedureAttributes.HF_EUA,
+          ProcedureConst.INACTIVE
+        ),
+        true,
+        true
+      );
+    }
   }
 }
 

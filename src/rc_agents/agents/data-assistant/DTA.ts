@@ -27,7 +27,7 @@ import af_UpdateAlert from "./action-frames/triage-alert-hf-clinic/UpdateAlert";
 import { af_RetrieveAlertHistory } from "./action-frames/hf-outcome-trends/RetrieveAlertHistory";
 import { af_RequestDisplayAlertHistory } from "./action-frames/hf-outcome-trends/RequestDisplayAlertHistory";
 import { af_RetrieveClinicianContacts } from "./action-frames/storing-data/RetrieveClinicianContacts";
-import { af_RequestClinicianContactDisplay } from "./action-frames/storing-data/RequestClinicianContactsDisplay";
+import { af_RequestDisplayClinicianContacts } from "./action-frames/storing-data/RequestDisplayClinicianContacts";
 import { af_ProcessPatientAssignmentSubscription } from "./action-frames/storing-data/ProcessPatientAssignmentSubscription";
 import { af_CreateMedicalRecord } from "./action-frames/medical-record-device-configuration/CreateMedicalRecord";
 import { af_RetrieveMedicalRecordContent } from "./action-frames/hf-outcome-trends/RetrieveMedicalRecordContent";
@@ -105,7 +105,7 @@ const agentDTA = new ClinicianAgent(
     af_RequestDisplayTodoDetails,
     // SRD-IV
     af_RetrieveClinicianContacts,
-    af_RequestClinicianContactDisplay,
+    af_RequestDisplayClinicianContacts,
 
     // SRD-V
     af_ProcessPatientAssignmentSubscription

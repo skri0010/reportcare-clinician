@@ -15,7 +15,7 @@ interface RequestsByMariaCardProps {
 export const RequestsByMariaCard: FC<RequestsByMariaCardProps> = ({
   maxHeight
 }) => {
-  // JH-TODO: Replace with actual models
+  // FUTURE-TODO: Replace with actual models
   const maxPatientsShown = Math.min(mockPatients.length, 10); // At 10 items, `Show More` button is displayed
   const lastPatientIndex = maxPatientsShown - 1;
 
@@ -36,7 +36,6 @@ export const RequestsByMariaCard: FC<RequestsByMariaCardProps> = ({
               <>
                 <PatientRequestRow
                   generalDetails={item}
-                  // TODO clrify how are requests by maria stored
                   request="Verify titration values"
                   disabled
                   reduceOpacity
@@ -47,7 +46,6 @@ export const RequestsByMariaCard: FC<RequestsByMariaCardProps> = ({
             ) : (
               <PatientRequestRow
                 generalDetails={item}
-                // TODO clrify how are requests by maria stored
                 request="Verify titration values"
               />
             );

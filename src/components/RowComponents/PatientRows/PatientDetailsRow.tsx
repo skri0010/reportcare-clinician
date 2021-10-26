@@ -5,6 +5,7 @@ import { PatientInfo } from "aws/API";
 import { RiskLevel } from "models/RiskLevel";
 import i18n from "util/language/i18n";
 import { getAge } from "util/utilityFunctions";
+import { RootState, select } from "util/useRedux";
 
 export interface PatientDetailsRowProps {
   patient: PatientInfo;
@@ -19,12 +20,21 @@ export const PatientDetailsRow: React.FC<PatientDetailsRowProps> = ({
 }) => {
   const { name, NHYAclass, riskLevel } = patient;
 
+  const { fetchingPatientDetails, fetchingPatientAlertHistory } = select(
+    (state: RootState) => ({
+      colors: state.settings.colors,
+      fetchingPatientDetails: state.patients.fetchingPatientDetails,
+      fetchingPatientAlertHistory: state.patients.fetchingPatientAlertHistory
+    })
+  );
+
   return (
     <TouchableOpacity
       style={
         { opacity: selected ? 0.5 : 1 } // indicate selected
       }
       onPress={onRowPress && !selected ? () => onRowPress(patient) : undefined}
+      disabled={fetchingPatientDetails || fetchingPatientAlertHistory} // disable clicking when fetch is ongoing
     >
       <PatientRowBase
         title={name}

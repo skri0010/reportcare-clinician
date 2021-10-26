@@ -5,6 +5,7 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import { getTopTabBarOptions } from "util/getStyles";
 import { RootState, select } from "util/useRedux";
 import { ScreenName, WithBottomTabsProps } from "mobile/screens";
+import i18n from "util/language/i18n";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -15,12 +16,17 @@ export const MariaScreen: FC<WithBottomTabsProps[ScreenName.MARIA]> = () => {
   }));
 
   return (
-    // JH-TODO: Replace names with i18n
     <Tab.Navigator
       screenOptions={getTopTabBarOptions({ colors: colors, fonts: fonts })}
     >
-      <Tab.Screen name="Current" component={CurrentRequestsTab} />
-      <Tab.Screen name="Completed" component={CompletedRequestsTab} />
+      <Tab.Screen
+        name={i18n.t("Maria.Current")}
+        component={CurrentRequestsTab}
+      />
+      <Tab.Screen
+        name={i18n.t("Maria.Completed")}
+        component={CompletedRequestsTab}
+      />
     </Tab.Navigator>
   );
 };

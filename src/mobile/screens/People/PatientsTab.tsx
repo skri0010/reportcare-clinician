@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from "react";
-import { View, FlatList, Button } from "react-native";
+import { View, FlatList } from "react-native";
 import { MobileScreenWrapper } from "mobile/screens/MobileScreenWrapper";
 import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { ScaledSheet } from "react-native-size-matters";
@@ -19,6 +19,7 @@ import { RootState, select, useDispatch } from "util/useRedux";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { useNetInfo } from "@react-native-community/netinfo";
 import { setProcedureOngoing } from "ic-redux/actions/agents/procedureActionCreator";
+import i18n from "util/language/i18n";
 
 export const PatientsTab: FC = () => {
   const { patients, procedureOngoing } = select((state: RootState) => ({
@@ -104,7 +105,6 @@ export const PatientsTab: FC = () => {
     }
   }, [retrieving, procedureOngoing, showGraph]);
 
-  // JH-TODO: Replace placeholder with i18n
   return (
     <MobileScreenWrapper>
       <View style={[styles.searchBarWrapper]}>
@@ -115,7 +115,7 @@ export const PatientsTab: FC = () => {
           onSearchClick={() => {
             null;
           }}
-          placeholder="Search patients"
+          placeholder={i18n.t("Patients.SearchBarPlaceholder")}
         />
       </View>
       <FlatList
@@ -131,19 +131,6 @@ export const PatientsTab: FC = () => {
         )}
         keyExtractor={(item) => item.patientID}
       />
-
-      {/* To be removed: for testing purposes only */}
-      {showGraph && (
-        <Button
-          title="Hide Graphs"
-          onPress={() => {
-            setShowGraph(false);
-          }}
-        />
-      )}
-
-      {/* TODO: Move graphs to PatientsDetails screen */}
-      {/* {showGraph && <ParameterGraphs data={patientDetails.vitalsReports} />} */}
 
       {(retrieving || procedureOngoing) && <LoadingIndicator />}
     </MobileScreenWrapper>

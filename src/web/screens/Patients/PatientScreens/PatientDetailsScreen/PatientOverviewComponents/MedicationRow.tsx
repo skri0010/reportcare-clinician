@@ -2,9 +2,9 @@ import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
 import { View } from "react-native";
 import { ms } from "react-native-size-matters";
-import { H4 } from "components/Text";
+import { H5 } from "components/Text";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { MedInput } from "rc_agents/model";
+import { MedInfoCompliants, MedInput } from "rc_agents/model";
 
 interface MedicationRowProps {
   medicationInfo: MedInput;
@@ -17,7 +17,9 @@ export const MedicationRow: FC<MedicationRowProps> = ({ medicationInfo }) => {
 
   function validateMeds() {
     if (medicationInfo.records) {
-      const recordObject = JSON.parse(medicationInfo.records);
+      const recordObject: MedInfoCompliants = JSON.parse(
+        medicationInfo.records
+      );
       const meds = recordObject[new Date().toDateString()] as string[] | null;
       if (meds) {
         if (meds.length === parseFloat(medicationInfo.frequency)) {
@@ -37,7 +39,10 @@ export const MedicationRow: FC<MedicationRowProps> = ({ medicationInfo }) => {
       ) : (
         <Icon name="close" color={colors.deleteIconColor} size={ms(15)} />
       )}
-      <H4 text={`  ${medicationInfo.name}`} style={null} />
+      <H5
+        text={medicationInfo.name}
+        style={{ marginLeft: ms(5), marginBottom: ms(3) }}
+      />
     </View>
   );
 };

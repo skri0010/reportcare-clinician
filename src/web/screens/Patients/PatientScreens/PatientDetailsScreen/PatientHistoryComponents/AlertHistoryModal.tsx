@@ -20,8 +20,8 @@ import {
 import { ModalButton } from "components/Buttons/ModalButton";
 
 interface AlertHistoryModalProps extends ModalWrapperProps {
-  patientName: string;
-  alertHistory: AlertInfo;
+  patientName?: string;
+  alertHistory?: AlertInfo;
   setModalAlertVisible: (state: boolean) => void;
 }
 
@@ -85,7 +85,7 @@ export const AlertHistoryModal: FC<AlertHistoryModalProps> = ({
             style={{ fontWeight: "bold" }}
           />
           {/* Alert summary description */}
-          <H5 text={`${alertHistory.summary}`} style={null} />
+          <H5 text={`${alertHistory?.summary}`} style={null} />
         </View>
         {/* Alert details */}
         <View style={{ paddingTop: ms(10) }}>
@@ -100,12 +100,21 @@ export const AlertHistoryModal: FC<AlertHistoryModalProps> = ({
               style={{ fontWeight: "bold" }}
             />
             <H5
-              text={`${getRiskName(alertHistory.riskLevel)}`}
+              text={
+                alertHistory?.riskLevel
+                  ? `${getRiskName(alertHistory.riskLevel)}`
+                  : getRiskName(RiskLevel.UNASSIGNED)
+              }
               style={{
-                color: getRiskLevelColor(
-                  colors.riskLevelSelectedBackgroundColors,
-                  alertHistory.riskLevel
-                )
+                color: alertHistory?.riskLevel
+                  ? getRiskLevelColor(
+                      colors.riskLevelSelectedBackgroundColors,
+                      alertHistory.riskLevel
+                    )
+                  : getRiskLevelColor(
+                      colors.riskLevelSelectedBackgroundColors,
+                      RiskLevel.UNASSIGNED
+                    )
               }}
             />
           </View>
@@ -117,12 +126,12 @@ export const AlertHistoryModal: FC<AlertHistoryModalProps> = ({
           {/* BP */}
           <AlertDetailsRow
             detailTitle={i18n.t("Patient_History.AlertSummaryCard.BP")}
-            detailContent={alertHistory.vitalsReport?.BPSys?.toString()}
+            detailContent={alertHistory?.vitalsReport?.BPSys?.toString()}
           />
           {/* Symptoms */}
           <AlertDetailsRow
             detailTitle={i18n.t("Patient_History.AlertSummaryCard.Symptom")}
-            detailContent={alertHistory.symptomReport?.Name}
+            detailContent={alertHistory?.symptomReport?.Name}
           />
           {/* Signs */}
           <AlertDetailsRow
@@ -137,7 +146,9 @@ export const AlertHistoryModal: FC<AlertHistoryModalProps> = ({
             style={{ fontWeight: "bold", color: colors.secondaryTextColor }}
           />
           <H5
-            text={`${getLocalDateTime(alertHistory.dateTime)}`}
+            text={
+              alertHistory ? `${getLocalDateTime(alertHistory.dateTime)}` : "-"
+            }
             style={{ color: colors.secondaryTextColor }}
           />
         </View>

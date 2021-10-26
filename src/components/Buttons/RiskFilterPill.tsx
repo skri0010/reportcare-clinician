@@ -18,8 +18,16 @@ export const RiskFilterPill: FC<RiskFilterPillProps> = ({
   leftPadding = false,
   onPress = null
 }) => {
-  const { colors } = select((state: RootState) => ({
-    colors: state.settings.colors
+  const {
+    colors,
+    fetchingPatients,
+    fetchingPendingAlerts,
+    fetchingCompletedAlerts
+  } = select((state: RootState) => ({
+    colors: state.settings.colors,
+    fetchingPatients: state.patients.fetchingPatients,
+    fetchingPendingAlerts: state.alerts.fetchingPendingAlerts,
+    fetchingCompletedAlerts: state.alerts.fetchingCompletedAlerts
   }));
 
   return (
@@ -52,6 +60,9 @@ export const RiskFilterPill: FC<RiskFilterPillProps> = ({
             }
           : undefined
       }
+      disabled={
+        fetchingPatients || fetchingPendingAlerts || fetchingCompletedAlerts
+      } // disable clicking when fetch is ongoing
     >
       <Text
         style={

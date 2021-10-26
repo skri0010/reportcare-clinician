@@ -37,47 +37,43 @@ export class ClinicianAgentManagement extends AgentManagement {
     let factsSet = false;
     let protectedInfo: ClinicianProtectedInfo | null | undefined;
 
-    // TODO: Get might fail on the first attempt, set to retry every 0.5s
-    const timer = setInterval(async () => {
-      try {
-        // Retrieves local clinician
-        const localClinician = await LocalStorage.getClinician();
-        if (localClinician) {
-          // Device is online
-          if (this.facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
-            const result = await getClinicianProtectedInfo({
-              clinicianID: localClinician.clinicianID
-            });
-            if (result.data.getClinicianProtectedInfo) {
-              protectedInfo = result.data.getClinicianProtectedInfo;
+    try {
+      // Retrieves local clinician
+      const localClinician = await LocalStorage.getClinician();
+      if (localClinician) {
+        // Device is online
+        if (this.facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
+          const result = await getClinicianProtectedInfo({
+            clinicianID: localClinician.clinicianID
+          });
+          if (result.data.getClinicianProtectedInfo) {
+            protectedInfo = result.data.getClinicianProtectedInfo;
 
-              // Updates local storage
-              localClinician.protectedInfo = protectedInfo;
-              await LocalStorage.setClinician(localClinician);
-            }
-          } else {
-            // Device is offline
-            protectedInfo = localClinician.protectedInfo;
+            // Updates local storage
+            localClinician.protectedInfo = protectedInfo;
+            await LocalStorage.setClinician(localClinician);
           }
-
-          if (protectedInfo) {
-            const dbFacts = protectedInfo.facts;
-            if (dbFacts && Object.entries(JSON.parse(dbFacts)).length > 0) {
-              this.facts = JSON.parse(dbFacts);
-              factsSet = true;
-            }
-          }
+        } else {
+          // Device is offline
+          protectedInfo = localClinician.protectedInfo;
         }
 
-        if (!factsSet) {
-          this.facts = {};
+        if (protectedInfo) {
+          const dbFacts = protectedInfo.facts;
+          if (dbFacts && Object.entries(JSON.parse(dbFacts)).length > 0) {
+            this.facts = JSON.parse(dbFacts);
+            factsSet = true;
+          }
         }
-        clearInterval(timer);
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.log(error);
       }
-    }, 500);
+
+      if (!factsSet) {
+        this.facts = {};
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.log(error);
+    }
   }
 
   /**

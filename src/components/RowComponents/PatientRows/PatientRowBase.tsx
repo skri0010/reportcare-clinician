@@ -14,7 +14,7 @@ interface SubtitleItemProps {
 export interface PatientRowBaseProps {
   title: string;
   riskLevel: RiskLevel | null;
-  image?: string; // JH-TODO: Replace with image implementation
+  image?: string; // FUTURE-TODO: Replace with image implementation
   subtitleOne?: SubtitleItemProps;
   subtitleTwo?: SubtitleItemProps;
   onImagePress?: () => void;

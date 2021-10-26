@@ -34,7 +34,7 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
   const [sumStepsTaken, setSumStepsTaken] = useState<number>(0);
 
   useEffect(() => {
-    // TODO: This code needs to be modified for changing days
+    // FUTURE-TODO: This code needs to be modified for changing days
     const date = new Date().toLocaleDateString();
 
     // Take the latest vitals report and update vitals on date
@@ -116,7 +116,6 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
 
         <View style={[styles.container, { paddingBottom: ms(10) }]}>
           {/* Medication and symptoms card */}
-          {/* JH-TODO-NEW: Current data type does not support this */}
           <MedicationTakenCard
             medications={medications}
             maxHeight={cardHeight}
