@@ -85,10 +85,6 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
     // Checks if there is a new medication info added
     const [newMedInfoAdded, setNewMedInfoAdded] = useState<boolean>(false);
 
-    // Checks if there is a medication info to be made inactive
-    const [newMedInfoInactive, setNewMedInfoInactive] =
-      useState<boolean>(false);
-
     // Medication info to be deleted from medInfos
     const [medInfoToDelete, setMedInfoToDelete] = useState<MedInput>({
       name: "",
@@ -175,25 +171,6 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
       });
     };
 
-    // Make medication info inactive
-    const removeMedInfo = (medInput: MedInput) => {
-      medInput.active = false;
-      const currentMedInfos: MedInput[] = medInfos;
-      currentMedInfos.push(medInput);
-      setMedInfos(currentMedInfos);
-      setNewMedInfoInactive(true);
-      // closes the medication info input form, enable the add new medication info button
-      setMedConfigFormVisible(false);
-      // Reset the values for the medication input
-      setConfigMedInfo({
-        name: "",
-        dosage: "",
-        frequency: "",
-        patientID: info.patientID,
-        active: true
-      });
-    };
-
     // Side effect for when a medication info input is deleted from the list
     useEffect(() => {
       const currentMedInfos: MedInput[] = medInfos;
@@ -233,18 +210,12 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
 
       // Validation for optional fields
       const optional = ((!hasDevice || configInfo.deviceNo) &&
-        (!hasMedInfo || newMedInfoAdded || newMedInfoInactive)) as boolean;
+        (!hasMedInfo || newMedInfoAdded)) as boolean;
 
       const valid = mandatory && optional;
 
       setAllInputValid(valid);
-    }, [
-      configInfo,
-      hasDevice,
-      hasMedInfo,
-      newMedInfoAdded,
-      newMedInfoInactive
-    ]);
+    }, [configInfo, hasDevice, hasMedInfo, newMedInfoAdded]);
 
     // Proceed button onPress
     const onProceedPress = () => {
@@ -485,7 +456,6 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
             saveMedInput={saveMedInput}
             setConfigMedInfo={setConfigMedInfo}
             setMedConfigFormVisible={setMedConfigFormVisible}
-            removeMedInfo={removeMedInfo}
           />
         </ModalWrapper>
         {configuring && <LoadingIndicator />}

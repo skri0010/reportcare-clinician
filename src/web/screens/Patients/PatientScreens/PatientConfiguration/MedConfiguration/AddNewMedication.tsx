@@ -25,7 +25,6 @@ interface AddNewMedicationProps {
   details: PatientDetails;
   isAdding: boolean;
   currentDosage?: string;
-  removeMedInfo: (medInfo: MedInput) => void;
 }
 
 export const AddNewMedication: FC<AddNewMedicationProps> = ({
@@ -35,8 +34,7 @@ export const AddNewMedication: FC<AddNewMedicationProps> = ({
   setMedConfigFormVisible,
   details,
   isAdding,
-  currentDosage = "",
-  removeMedInfo
+  currentDosage = ""
 }) => {
   const { colors, fonts } = select((state: RootState) => ({
     colors: state.settings.colors,
@@ -69,14 +67,21 @@ export const AddNewMedication: FC<AddNewMedicationProps> = ({
     setConfigMedInfo({ ...configMedInfo, frequency: frequency });
   };
 
+  const updateMedActive = () => {
+    setConfigMedInfo({ ...configMedInfo, active: false });
+  };
+
   // Input validations to see if the save button should be enabled or not
   useEffect(() => {
+    if (!configMedInfo.active) {
+      saveMedInput(configMedInfo);
+    }
     const medInput =
       validateMedName(configMedInfo.name) &&
       validateMedDosage(configMedInfo.name, configMedInfo.dosage) &&
       validateMedFreq(configMedInfo.frequency);
     setAllMedInputValid(medInput);
-  }, [configMedInfo]);
+  }, [configMedInfo, saveMedInput]);
 
   return (
     <ScrollView
@@ -111,7 +116,7 @@ export const AddNewMedication: FC<AddNewMedicationProps> = ({
                 fontSize={fonts.h6Size}
                 backgroundColor={colors.declineButtonColor}
                 title="Remove Medication"
-                onPress={() => removeMedInfo(configMedInfo)}
+                onPress={() => updateMedActive()}
               />
             </View>
           </View>
