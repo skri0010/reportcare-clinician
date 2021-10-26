@@ -38,8 +38,9 @@ export const AddNewMedication: FC<AddNewMedicationProps> = ({
   currentDosage = "",
   removeMedInfo
 }) => {
-  const { colors } = select((state: RootState) => ({
-    colors: state.settings.colors
+  const { colors, fonts } = select((state: RootState) => ({
+    colors: state.settings.colors,
+    fonts: state.settings.fonts
   }));
 
   const pickerStyle = [
@@ -107,6 +108,7 @@ export const AddNewMedication: FC<AddNewMedicationProps> = ({
             <H6 text={`${configMedInfo.name}`} />
             <View style={{ alignItems: "flex-end", flex: 1 }}>
               <RowButton
+                fontSize={fonts.h6Size}
                 backgroundColor={colors.declineButtonColor}
                 title="Remove Medication"
                 onPress={() => removeMedInfo(configMedInfo)}
