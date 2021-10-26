@@ -9,7 +9,7 @@ import { IconButton, IconType } from "components/Buttons/IconButton";
 
 interface MedicationRowProps {
   medicationItem: MedInput;
-  setMedInfoToDelete: (medInfo: MedInput) => void;
+  setMedInfoToDelete?: (medInfo: MedInput) => void;
 }
 
 interface MedicationInfoRowProps {
@@ -54,15 +54,17 @@ export const MedicationRow: FC<MedicationRowProps> = ({
       </View>
 
       {/* Delete button */}
-      <IconButton
-        name="minus-circle"
-        type={IconType.MATERIAL_COMMUNITY}
-        onPress={() => setMedInfoToDelete(medicationItem)}
-        size={fonts.h4Size}
-        containerStyle={styles.deleteIconContainer}
-        containerBackgroundColor={colors.deleteIconBackgroundColor}
-        iconStyle={{ color: colors.deleteIconColor }}
-      />
+      {setMedInfoToDelete ? (
+        <IconButton
+          name="minus-circle"
+          type={IconType.MATERIAL_COMMUNITY}
+          onPress={() => setMedInfoToDelete(medicationItem)}
+          size={fonts.h4Size}
+          containerStyle={styles.deleteIconContainer}
+          containerBackgroundColor={colors.deleteIconBackgroundColor}
+          iconStyle={{ color: colors.deleteIconColor }}
+        />
+      ) : null}
     </View>
   );
 };

@@ -96,6 +96,10 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
     // Used locally to keep track of ongoing configuration procedure
     const [configuring, setConfiguring] = useState<boolean>(false);
 
+    const [currentActiveMedication, setCurrentActiveMedication] = useState<
+      MedInput[]
+    >(details.medicationInfo);
+
     const toast = useToast();
     const dispatch = useDispatch();
 
@@ -157,7 +161,7 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
       const currentMedInfos: MedInput[] = medInfos;
       currentMedInfos.push(medInput);
       setMedInfos(currentMedInfos);
-      if (medInput.active) {
+      if (medInput.active && !medInput.id) {
         setNewMedInfoAdded(true);
       }
       // closes the medication info input form, enable the add new medication info button
@@ -335,6 +339,15 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
             text={i18n.t("Patient_Configuration.Label.ConfigureMedication")}
           />
           <View>
+            {currentActiveMedication.length > 0 ? (
+              <View>
+                <MedicationInfoList
+                  active
+                  medInfos={currentActiveMedication}
+                  label="Current Active Medications: "
+                />
+              </View>
+            ) : null}
             {/* Add medication info button */}
             <View style={styles.newMedInfoButtonContainer}>
               <TouchableOpacity
@@ -360,7 +373,11 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
             {newMedInfoAdded ? (
               <MedicationInfoList
                 medInfos={medInfos}
+                active={false}
                 setMedInfoToDelete={setMedInfoToDelete}
+                label={i18n.t(
+                  "Patient_Configuration.MedicationsAddedCurrently"
+                )}
               />
             ) : null}
           </View>

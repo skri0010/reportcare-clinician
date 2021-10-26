@@ -10,21 +10,25 @@ import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 
 interface MedicationInfoListProps {
   medInfos: MedInput[];
-  setMedInfoToDelete: (medInfo: MedInput) => void;
+  active: boolean;
+  setMedInfoToDelete?: (medInfo: MedInput) => void;
+  label: string;
 }
 
 export const MedicationInfoList: FC<MedicationInfoListProps> = ({
   medInfos,
-  setMedInfoToDelete
+  active,
+  setMedInfoToDelete,
+  label
 }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
   }));
   return (
     <View style={styles.medInfoList}>
-      {/* Medication info list title */}
+      {/*       {/* Medication info list title */}
       <H5
-        text={i18n.t("Patient_Configuration.MedicationsAddedCurrently")}
+        text={label}
         style={{
           color: colors.primaryTextColor,
           paddingVertical: ms(5)
@@ -36,7 +40,12 @@ export const MedicationInfoList: FC<MedicationInfoListProps> = ({
           ItemSeparatorComponent={() => <ItemSeparator />}
           data={medInfos}
           renderItem={({ item }) =>
-            item.active ? (
+            active ? (
+              <MedicationRow
+                medicationItem={item}
+                setMedInfoToDelete={setMedInfoToDelete}
+              />
+            ) : item.active && !item.id ? (
               <MedicationRow
                 medicationItem={item}
                 setMedInfoToDelete={setMedInfoToDelete}
