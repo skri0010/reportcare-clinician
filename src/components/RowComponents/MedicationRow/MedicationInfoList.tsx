@@ -23,20 +23,13 @@ export const MedicationInfoList: FC<MedicationInfoListProps> = ({
   return (
     <View style={styles.medInfoList}>
       {/* Medication info list title */}
-      <View
-        style={[
-          styles.medicationsAddedHeader,
-          { backgroundColor: colors.primaryBarColor }
-        ]}
-      >
-        <H4
-          text={i18n.t("Patient_Configuration.MedicationsAddedCurrently")}
-          style={{
-            color: colors.primaryContrastTextColor,
-            paddingVertical: ms(5)
-          }}
-        />
-      </View>
+      <H4
+        text={i18n.t("Patient_Configuration.MedicationsAddedCurrently")}
+        style={{
+          color: colors.primaryContrastTextColor,
+          paddingVertical: ms(5)
+        }}
+      />
       <View style={styles.medInfoRows}>
         <FlatList
           style={{ flex: 1 }}

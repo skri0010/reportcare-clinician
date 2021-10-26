@@ -330,53 +330,37 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
             />
           ) : null}
 
-          {/* Separator */}
-          <ItemSeparator topSpacing={ms(25)} bottomSpacing={ms(10)} />
-
-          {/* Optional fields */}
-          {/* Medication Configuration section */}
-          <CheckboxText
-            text={i18n.t("Patient_Configuration.Prompt.MedInfo")}
-            containerStyle={styles.promptTextContainer}
-            fontSize={fonts.h6Size}
-            checked={hasMedInfo}
-            onPress={() => setHasMedInfo(!hasMedInfo)}
-          />
-          {hasMedInfo ? (
-            <View>
-              {/* Add medication info button */}
-              <View style={styles.newMedInfoButtonContainer}>
-                <TouchableOpacity
-                  disabled={medConfigFormVisible}
-                  onPress={() => setMedConfigFormVisible(true)}
-                  style={[
-                    styles.addNewMedInfo,
-                    {
-                      backgroundColor: medConfigFormVisible
-                        ? colors.primaryDeactivatedButtonColor
-                        : colors.acceptButtonColor
-                    }
-                  ]}
-                >
-                  <H4
-                    text={i18n.t("Patient_Configuration.AddNewMedicationInfo")}
-                    style={{ color: colors.primaryContrastTextColor }}
-                  />
-                </TouchableOpacity>
-              </View>
-
-              {/* List of medication infos added */}
-              {newMedInfoAdded ? (
-                <MedicationInfoList
-                  medInfos={medInfos}
-                  setMedInfoToDelete={setMedInfoToDelete}
+          <Label text="Cofigure Medication" />
+          <View>
+            {/* Add medication info button */}
+            <View style={styles.newMedInfoButtonContainer}>
+              <TouchableOpacity
+                disabled={medConfigFormVisible}
+                onPress={() => setMedConfigFormVisible(true)}
+                style={[
+                  styles.addNewMedInfo,
+                  {
+                    backgroundColor: medConfigFormVisible
+                      ? colors.primaryDeactivatedButtonColor
+                      : colors.acceptButtonColor
+                  }
+                ]}
+              >
+                <H4
+                  text={i18n.t("Patient_Configuration.AddNewMedicationInfo")}
+                  style={{ color: colors.primaryContrastTextColor }}
                 />
-              ) : null}
+              </TouchableOpacity>
             </View>
-          ) : null}
 
-          {/* Separator */}
-          <ItemSeparator topSpacing={ms(25)} bottomSpacing={ms(10)} />
+            {/* List of medication infos added */}
+            {newMedInfoAdded ? (
+              <MedicationInfoList
+                medInfos={medInfos}
+                setMedInfoToDelete={setMedInfoToDelete}
+              />
+            ) : null}
+          </View>
 
           {/* Mandatory fields for values */}
           {/* Target activity (number of steps) */}

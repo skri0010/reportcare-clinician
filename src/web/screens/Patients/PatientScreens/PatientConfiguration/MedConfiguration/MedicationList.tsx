@@ -22,7 +22,12 @@ export const MedicationList: FC<MedicationListProps> = ({
     colors: state.settings.colors
   }));
 
-  const activeMedications = details.medicationInfo.length > 0;
+  const activeMedications = details.medicationInfo.some((t) => {
+    if (t.active) {
+      return true;
+    }
+    return false;
+  });
 
   return (
     <View
