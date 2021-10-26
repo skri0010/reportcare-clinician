@@ -191,7 +191,7 @@ class RetrievePatientDetails extends Activity {
             const medicationInfos =
               medicationInfoQuery.data.listMedicationInfosByPatientID?.items;
             medicationInfos.forEach((medication: MedicationInfo | null) => {
-              if (medication) {
+              if (medication && medication.active) {
                 const localMed: MedInput = {
                   id: medication.id,
                   name: medication.name,
