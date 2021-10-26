@@ -19,7 +19,6 @@ import { LocalStorage } from "rc_agents/storage";
 import { listClinicianInfos } from "aws";
 import { store } from "util/useRedux";
 import { ClinicianInfo } from "aws/API";
-import { getClinicianID } from "rc_agents/storage/getItem";
 import { setFetchingClinicianContacts } from "ic-redux/actions/agents/clinicianActionCreator";
 
 /**
@@ -48,8 +47,9 @@ class RetrieveClinicianContacts extends Activity {
     let clinicians: ClinicianInfo[] | null | undefined;
 
     try {
-      // Get locally stored clinicianId
-      const clinicianId = await LocalStorage.getClinicianID();
+      // Get clinicianId from global state
+      const clinicianId = store.getState().clinicians.clinician?.clinicianID;
+
       // Get online status from facts
       const isOnline =
         agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE];
@@ -61,8 +61,9 @@ class RetrieveClinicianContacts extends Activity {
           if (query.data.listClinicianInfos?.items) {
             clinicians = query.data.listClinicianInfos.items as ClinicianInfo[];
             // Filter out current user
-            const user = await getClinicianID();
-            clinicians = clinicians.filter((t) => t.clinicianID !== user);
+            clinicians = clinicians.filter(
+              (t) => t.clinicianID !== clinicianId
+            );
             // save data locally
             await LocalStorage.setClinicianContacts(clinicians);
           }

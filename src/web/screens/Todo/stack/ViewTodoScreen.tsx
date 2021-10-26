@@ -24,7 +24,7 @@ interface TodoSectionProps {
 
 interface EditHistorySectionProps {
   editType: string;
-  timeDate?: string;
+  timeDate?: string | null;
 }
 
 export const ViewTodoScreen: FC<ViewTodoScreenProps> = ({

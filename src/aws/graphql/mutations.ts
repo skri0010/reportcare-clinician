@@ -545,123 +545,6 @@ export const deleteReportVitals = /* GraphQL */ `
     }
   }
 `;
-export const createMedicalRecord = /* GraphQL */ `
-  mutation CreateMedicalRecord(
-    $input: CreateMedicalRecordInput!
-    $condition: ModelMedicalRecordConditionInput
-  ) {
-    createMedicalRecord(input: $input, condition: $condition) {
-      id
-      patientID
-      clinicianID
-      title
-      fileKey
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateMedicalRecord = /* GraphQL */ `
-  mutation UpdateMedicalRecord(
-    $input: UpdateMedicalRecordInput!
-    $condition: ModelMedicalRecordConditionInput
-  ) {
-    updateMedicalRecord(input: $input, condition: $condition) {
-      id
-      patientID
-      clinicianID
-      title
-      fileKey
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteMedicalRecord = /* GraphQL */ `
-  mutation DeleteMedicalRecord(
-    $input: DeleteMedicalRecordInput!
-    $condition: ModelMedicalRecordConditionInput
-  ) {
-    deleteMedicalRecord(input: $input, condition: $condition) {
-      id
-      patientID
-      clinicianID
-      title
-      fileKey
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createIcdCrtRecord = /* GraphQL */ `
-  mutation CreateIcdCrtRecord(
-    $input: CreateIcdCrtRecordInput!
-    $condition: ModelIcdCrtRecordConditionInput
-  ) {
-    createIcdCrtRecord(input: $input, condition: $condition) {
-      id
-      patientID
-      clinicianID
-      title
-      dateTime
-      fileKey
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateIcdCrtRecord = /* GraphQL */ `
-  mutation UpdateIcdCrtRecord(
-    $input: UpdateIcdCrtRecordInput!
-    $condition: ModelIcdCrtRecordConditionInput
-  ) {
-    updateIcdCrtRecord(input: $input, condition: $condition) {
-      id
-      patientID
-      clinicianID
-      title
-      dateTime
-      fileKey
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteIcdCrtRecord = /* GraphQL */ `
-  mutation DeleteIcdCrtRecord(
-    $input: DeleteIcdCrtRecordInput!
-    $condition: ModelIcdCrtRecordConditionInput
-  ) {
-    deleteIcdCrtRecord(input: $input, condition: $condition) {
-      id
-      patientID
-      clinicianID
-      title
-      dateTime
-      fileKey
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const createClinicianInfo = /* GraphQL */ `
   mutation CreateClinicianInfo(
     $input: CreateClinicianInfoInput!
@@ -1192,6 +1075,7 @@ export const createTodo = /* GraphQL */ `
       title
       patientName
       notes
+      createdAt
       lastModified
       alertID
       pending
@@ -1200,7 +1084,6 @@ export const createTodo = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      createdAt
       updatedAt
       alert {
         id
@@ -1235,6 +1118,7 @@ export const updateTodo = /* GraphQL */ `
       title
       patientName
       notes
+      createdAt
       lastModified
       alertID
       pending
@@ -1243,7 +1127,6 @@ export const updateTodo = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      createdAt
       updatedAt
       alert {
         id
@@ -1278,6 +1161,7 @@ export const deleteTodo = /* GraphQL */ `
       title
       patientName
       notes
+      createdAt
       lastModified
       alertID
       pending
@@ -1286,7 +1170,6 @@ export const deleteTodo = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      createdAt
       updatedAt
       alert {
         id

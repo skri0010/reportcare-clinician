@@ -53,22 +53,22 @@ class DisplayTodos extends Activity {
        * Since each todo has an associated alert ID, check if the updatedTodo's alert ID
        * is the same as the alert ID from any of current pending or completed todos
        */
-      if (updatedTodo.alertId) {
-        if (currentPendingTodos) {
-          let existIndex = currentPendingTodos.findIndex(
-            (t) => t.alertId === updatedTodo.alertId
+      if (currentPendingTodos) {
+        let existIndex: number;
+        existIndex = currentPendingTodos.findIndex(
+          (t) => t.createdAt === updatedTodo.createdAt
+        );
+
+        // If updatedTodo is in pending todos, remove it from pending todos
+        if (existIndex >= 0) {
+          currentPendingTodos.splice(existIndex, 1);
+        } else if (currentCompletedTodos) {
+          existIndex = currentCompletedTodos.findIndex(
+            (t) => t.createdAt === updatedTodo.createdAt
           );
-          // If updatedTodo is in pending todos, remove it from pending todos
+          // If updatedTodo is in completed todos, remove it from completed todos
           if (existIndex >= 0) {
-            currentPendingTodos.splice(existIndex, 1);
-          } else if (currentCompletedTodos) {
-            existIndex = currentCompletedTodos.findIndex(
-              (t) => t.alertId === updatedTodo.alertId
-            );
-            // If updatedTodo is in completed todos, remove it from completed todos
-            if (existIndex >= 0) {
-              currentCompletedTodos.splice(existIndex, 1);
-            }
+            currentCompletedTodos.splice(existIndex, 1);
           }
         }
       }

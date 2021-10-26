@@ -34,7 +34,7 @@ class ReceiveRealTimeAlertInfo extends Activity {
 
     try {
       /**
-       * TODO: In the future, MHA is supposed to interpret all the information received.
+       * FUTURE-TODO: In the future, MHA is supposed to interpret all the information received.
        * Currently they are added directly to MHA's beliefs after retrieving.
        * Information includes: alert with monitoring records, clinician's local time and location when the real-time alert was received.
        */

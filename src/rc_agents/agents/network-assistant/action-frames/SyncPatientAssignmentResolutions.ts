@@ -10,16 +10,16 @@ import {
   ActionFrameIDs,
   AppAttributes,
   BeliefKeys,
-  ClinicianAttributes,
   PatientAttributes,
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
 import { LocalStorage, AsyncStorageKeys } from "rc_agents/storage";
 // eslint-disable-next-line no-restricted-imports
 import { resolvePatientAssignment } from "rc_agents/agents/data-assistant/action-frames/storing-data/ResolvePatientAssignment";
-import { agentDTA, agentUXSA } from "rc_agents/agents";
+import { agentDTA } from "rc_agents/agents";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import { ProcedureConst } from "agents-framework/Enums";
+import { store } from "util/useRedux";
 
 /**
  * Class to represent the activity for syncing local resolutions of patient assignments.
@@ -45,8 +45,9 @@ class SyncPatientAssignmentResolutions extends Activity {
       const resolutionList =
         await LocalStorage.getPatientAssignmentResolutions();
 
-      // Get locally stored clinicianId
-      const clinicianId = await LocalStorage.getClinicianID();
+      // Get clinicianId from global state
+      const clinicianId = store.getState().clinicians.clinician?.clinicianID;
+
       // eslint-disable-next-line no-console
       console.log(resolutionList);
       if (resolutionList && clinicianId) {
@@ -102,8 +103,8 @@ class SyncPatientAssignmentResolutions extends Activity {
     );
 
     // Retrive Patients By Role
-    agentUXSA.addBelief(
-      new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.RETRIEVE_ROLE, true)
+    agentDTA.addBelief(
+      new Belief(BeliefKeys.PATIENT, PatientAttributes.RETRIEVE_PATIENTS, true)
     );
 
     agentAPI.addFact(

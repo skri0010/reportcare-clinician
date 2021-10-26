@@ -1,7 +1,5 @@
 import { Belief } from "agents-framework";
 import { af_DisplayPatientDetails } from "./action-frames/hf-outcome-trends/DisplayPatientDetails";
-import { af_RetrieveRole } from "./action-frames/hf-outcome-trends/RetrieveRole";
-import { af_RequestRetrievePatients } from "./action-frames/hf-outcome-trends/RequestRetrievePatients";
 import { af_DisplayAlerts } from "./action-frames/triage-alert-hf-clinic/DisplayAlerts";
 import { af_DisplayPendingPatientAssignments } from "./action-frames/storing-data/DisplayPendingPatientAssignments";
 import { af_DisplayTodoDetails } from "./action-frames/storing-data/DisplayTodoDetails";
@@ -17,6 +15,7 @@ import { af_DisplayClinicianContacts } from "./action-frames/storing-data/Displa
 import { af_DisplayRefreshedAlerts } from "./action-frames/exacerbation-user-specific-alert/DisplayRefreshedAlerts";
 import { af_DisplayMedicalRecordContent } from "./action-frames/hf-outcome-trends/DisplayMedicalRecordContent";
 import { af_DisplayIcdCrtRecordContent } from "./action-frames/hf-outcome-trends/DisplayIcdCrtRecordContent";
+import { af_DisplaySharingClinicians } from "./action-frames/clinician-specific-patient-sharing/DisplaySharingClinicians";
 
 // Initial Beliefs of Agent
 const belief1 = new Belief(AgentIDs.UXSA, CommonAttributes.LAST_ACTIVITY, null);
@@ -26,8 +25,6 @@ const agentUXSA = new ClinicianAgent(
   AgentIDs.UXSA,
   [
     // HF-OTP-I
-    af_RetrieveRole,
-    af_RequestRetrievePatients,
     af_DisplayPatientsByFilter,
 
     // HF-OTP-II
@@ -48,6 +45,8 @@ const agentUXSA = new ClinicianAgent(
     af_DisplayTodoDetails,
     // SRD-IV
     af_DisplayClinicianContacts,
+    // CP-PS
+    af_DisplaySharingClinicians,
 
     // P-USOR-I
     af_DisplayAlerts,

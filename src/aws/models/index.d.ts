@@ -96,27 +96,6 @@ export declare class ReportVitals {
   static copyOf(source: ReportVitals, mutator: (draft: MutableModel<ReportVitals>) => MutableModel<ReportVitals> | void): ReportVitals;
 }
 
-export declare class MedicalRecord {
-  readonly id: string;
-  readonly patientID: string;
-  readonly clinicianID: string;
-  readonly title: string;
-  readonly fileKey: string;
-  constructor(init: ModelInit<MedicalRecord>);
-  static copyOf(source: MedicalRecord, mutator: (draft: MutableModel<MedicalRecord>) => MutableModel<MedicalRecord> | void): MedicalRecord;
-}
-
-export declare class IcdCrtRecord {
-  readonly id: string;
-  readonly patientID: string;
-  readonly clinicianID: string;
-  readonly title: string;
-  readonly dateTime: string;
-  readonly fileKey: string;
-  constructor(init: ModelInit<IcdCrtRecord>);
-  static copyOf(source: IcdCrtRecord, mutator: (draft: MutableModel<IcdCrtRecord>) => MutableModel<IcdCrtRecord> | void): IcdCrtRecord;
-}
-
 export declare class ClinicianInfo {
   readonly id: string;
   readonly clinicianID: string;
@@ -190,7 +169,8 @@ export declare class Todo {
   readonly title: string;
   readonly patientName: string;
   readonly notes: string;
-  readonly lastModified: string;
+  readonly createdAt: string;
+  readonly lastModified?: string;
   readonly alertID?: string;
   readonly alert?: Alert;
   readonly pending?: string;

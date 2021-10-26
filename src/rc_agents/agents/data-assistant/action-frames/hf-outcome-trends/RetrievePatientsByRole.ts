@@ -9,10 +9,8 @@ import {
 import { ProcedureConst } from "agents-framework/Enums";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
-  setRetryLaterTimeout,
   BeliefKeys,
   PatientAttributes,
-  ClinicianAttributes,
   ProcedureAttributes,
   AppAttributes,
   ActionFrameIDs
@@ -42,59 +40,21 @@ class RetrievePatientsByRole extends Activity {
     // Dispatch to store to indicate fetching
     store.dispatch(setFetchingPatients(true));
 
-    // Get role from facts
-    const role =
-      agentAPI.getFacts()[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.ROLE];
-
     try {
-      if (role) {
-        const patients = await this.queryPatients(role);
-        // Update Facts
-        // Remove item
-        agentAPI.addFact(
-          new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.ROLE, null),
-          false
-        );
-        // Set item
-        agentAPI.addFact(
-          new Belief(BeliefKeys.PATIENT, PatientAttributes.PATIENTS, patients),
-          false
-        );
-        // Trigger Communicate to UXSA
-        agent.addBelief(
-          new Belief(
-            BeliefKeys.PATIENT,
-            PatientAttributes.PATIENTS_RETRIEVED,
-            true
-          )
-        );
-      } else {
-        // Update Beliefs
-        // Trigger Communicate to UXSA to get role
-        agent.addBelief(
-          new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.ROLE, true)
-        );
-      }
+      const patients = await this.queryPatients();
+      // Update Facts
+      // Set item
+      agentAPI.addFact(
+        new Belief(BeliefKeys.PATIENT, PatientAttributes.PATIENTS, patients),
+        false
+      );
+      // Trigger Communicate to UXSA
+      agent.addBelief(
+        new Belief(BeliefKeys.PATIENT, PatientAttributes.DISPLAY_PATIENTS, true)
+      );
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
-      // Set to retry later
-      setRetryLaterTimeout(() => {
-        agent.addBelief(
-          new Belief(
-            BeliefKeys.PATIENT,
-            PatientAttributes.RETRIEVE_PATIENTS,
-            true
-          )
-        );
-        agentAPI.addFact(
-          new Belief(
-            BeliefKeys.PROCEDURE,
-            ProcedureAttributes.HF_OTP_I,
-            ProcedureConst.ACTIVE
-          )
-        );
-      });
 
       // Update Facts
       // End the procedure
@@ -117,58 +77,54 @@ class RetrievePatientsByRole extends Activity {
    * @returns Array of patient info
    */
   // eslint-disable-next-line class-methods-use-this
-  async queryPatients(role: string): Promise<PatientInfo[]> {
+  async queryPatients(): Promise<PatientInfo[]> {
     let returnPatients: PatientInfo[] = [];
 
     // Get online status from facts
     const isOnline =
       agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE];
 
-    if (role) {
-      // Role exists indicated clinician info has been updated
-      const localClinician = await LocalStorage.getClinician();
-      if (localClinician) {
-        // Device is online: Retrieve and store locally
-        if (isOnline) {
-          let patients: (PatientInfo | null)[] | null = null;
-          switch (role) {
-            case Role.NURSE: {
-              // Nurse: Query patients from the same hospital
-              const patientInfosQuery = await listPatientInfos({
-                filter: { hospitalName: { eq: localClinician.hospitalName } }
-              });
-              if (patientInfosQuery.data.listPatientInfos?.items) {
-                patients = patientInfosQuery.data.listPatientInfos.items;
-              }
-              break;
-            }
-            case Role.EP:
-            case Role.HF_SPECIALIST:
-            case Role.MO:
-            case Role.PHARMACIST: {
-              // Other roles
-              const patientInfosQuery = await listPatientInfos({});
-              if (patientInfosQuery.data.listPatientInfos?.items) {
-                patients = patientInfosQuery.data.listPatientInfos.items;
-              }
-              break;
-            }
-            default:
-              // eslint-disable-next-line no-console
-              console.log("Unknown role");
-              break;
+    // Get clinician from global state
+    const localClinician = store.getState().clinicians.clinician;
+    if (localClinician && isOnline) {
+      // Device is online: Retrieve and store locally
+      let patients: (PatientInfo | null)[] | null = null;
+      switch (localClinician.role) {
+        case Role.NURSE: {
+          // Nurse: Query patients from the same hospital
+          const patientInfosQuery = await listPatientInfos({
+            filter: { hospitalName: { eq: localClinician.hospitalName } }
+          });
+          if (patientInfosQuery.data.listPatientInfos?.items) {
+            patients = patientInfosQuery.data.listPatientInfos.items;
           }
-          if (patients) {
-            // Save retrieved data locally
-            await LocalStorage.setPatients(patients);
-          }
+          break;
         }
+        case Role.EP:
+        case Role.HF_SPECIALIST:
+        case Role.MO:
+        case Role.PHARMACIST: {
+          // Other roles
+          const patientInfosQuery = await listPatientInfos({});
+          if (patientInfosQuery.data.listPatientInfos?.items) {
+            patients = patientInfosQuery.data.listPatientInfos.items;
+          }
+          break;
+        }
+        default:
+          // eslint-disable-next-line no-console
+          console.log("Unknown role");
+          break;
       }
-      // Regardless if device is online or offline, retrieve locally
-      const localData = await LocalStorage.getPatients();
-      if (localData) {
-        returnPatients = localData;
+      if (patients) {
+        // Save retrieved data locally
+        await LocalStorage.setPatients(patients);
       }
+    }
+    // Regardless if device is online or offline, retrieve locally
+    const localData = await LocalStorage.getPatients();
+    if (localData) {
+      returnPatients = localData;
     }
     return returnPatients;
   }

@@ -1644,11 +1644,18 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
+                "createdAt": {
+                    "name": "createdAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": true,
+                    "attributes": []
+                },
                 "lastModified": {
                     "name": "lastModified",
                     "isArray": false,
                     "type": "AWSDateTime",
-                    "isRequired": true,
+                    "isRequired": false,
                     "attributes": []
                 },
                 "alertID": {
@@ -2004,5 +2011,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "010e9b71657cf3c4647f76790c5770d9"
+    "version": "f8e6b9f2777adfdeb4e66163a5192ade"
 };
