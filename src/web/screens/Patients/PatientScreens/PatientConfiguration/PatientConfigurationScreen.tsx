@@ -85,6 +85,10 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
     // Checks if there is a new medication info added
     const [newMedInfoAdded, setNewMedInfoAdded] = useState<boolean>(false);
 
+    // Checks if there is a medication info to be made inactive
+    const [newMedInfoInactive, setNewMedInfoInactive] =
+      useState<boolean>(false);
+
     // Medication info to be deleted from medInfos
     const [medInfoToDelete, setMedInfoToDelete] = useState<MedInput>({
       name: "",
@@ -177,7 +181,7 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
       const currentMedInfos: MedInput[] = medInfos;
       currentMedInfos.push(medInput);
       setMedInfos(currentMedInfos);
-      setNewMedInfoAdded(true);
+      setNewMedInfoInactive(true);
       // closes the medication info input form, enable the add new medication info button
       setMedConfigFormVisible(false);
       // Reset the values for the medication input
@@ -229,12 +233,18 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
 
       // Validation for optional fields
       const optional = ((!hasDevice || configInfo.deviceNo) &&
-        (!hasMedInfo || newMedInfoAdded)) as boolean;
+        (!hasMedInfo || newMedInfoAdded || newMedInfoInactive)) as boolean;
 
       const valid = mandatory && optional;
 
       setAllInputValid(valid);
-    }, [configInfo, hasDevice, hasMedInfo, newMedInfoAdded]);
+    }, [
+      configInfo,
+      hasDevice,
+      hasMedInfo,
+      newMedInfoAdded,
+      newMedInfoInactive
+    ]);
 
     // Proceed button onPress
     const onProceedPress = () => {
