@@ -29,11 +29,7 @@ class RequestDisplayPatients extends Communicate {
     super(
       ActionFrameIDs.DTA.REQUEST_DISPLAY_PATIENTS,
       Performative.REQUEST,
-      new Belief(
-        BeliefKeys.PATIENT,
-        PatientAttributes.PATIENTS_RETRIEVED,
-        true
-      ),
+      new Belief(BeliefKeys.PATIENT, PatientAttributes.DISPLAY_PATIENTS, true),
       [AgentIDs.UXSA]
     );
   }
@@ -66,7 +62,7 @@ const rule2 = new Precondition(
 );
 const rule3 = new ResettablePrecondition(
   BeliefKeys.PATIENT,
-  PatientAttributes.PATIENTS_RETRIEVED,
+  PatientAttributes.DISPLAY_PATIENTS,
   true
 );
 

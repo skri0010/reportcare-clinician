@@ -1,7 +1,7 @@
 import React, { FC, useState, useEffect } from "react";
 import { View, TouchableOpacity, Image } from "react-native";
 import { Auth } from "@aws-amplify/auth";
-import { ms, ScaledSheet } from "react-native-size-matters";
+import { ScaledSheet } from "react-native-size-matters";
 import { RootState, select, useDispatch } from "util/useRedux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
@@ -164,6 +164,23 @@ export const SignIn: FC<AuthScreenProps[AuthenticationScreenName.SIGN_IN]> = ({
     styles.footerButtonText,
     { color: colors.primaryBarColor }
   ];
+
+  // Handling a key press event: sign in if enter is pressed and is valid to do so
+  const handleKeyPress = (event: KeyboardEvent) => {
+    if (event.code === "Enter" && inputValid) {
+      signIn();
+    }
+  };
+
+  // Listens to key press events
+  useEffect(() => {
+    window.addEventListener("keypress", handleKeyPress);
+
+    // Prevents handler from being triggered multiple times
+    return () => {
+      window.removeEventListener("keypress", handleKeyPress);
+    };
+  });
 
   return (
     <ScreenWrapper fixed pointerEvents={signingIn ? "none" : "auto"}>

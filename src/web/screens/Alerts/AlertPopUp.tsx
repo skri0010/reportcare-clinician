@@ -21,7 +21,6 @@ import {
   ModalWrapper,
   ModalWrapperProps
 } from "components/Wrappers/ModalWrapper";
-import { LocalStorage } from "rc_agents/storage";
 
 interface AlertPopUpDetailsProps {
   title: string;
@@ -71,30 +70,27 @@ export const AlertPopUp: FC<AlertPopUpProps> = ({
   realTimeAlert,
   setNotified
 }) => {
-  const { colors, fonts, fetchingAlertInfo } = select((state: RootState) => ({
-    colors: state.settings.colors,
-    fonts: state.settings.fonts,
-    fetchingAlertInfo: state.alerts.fetchingAlertInfo
-  }));
+  const { colors, fonts, fetchingAlertInfo, clinician } = select(
+    (state: RootState) => ({
+      colors: state.settings.colors,
+      fonts: state.settings.fonts,
+      fetchingAlertInfo: state.alerts.fetchingAlertInfo,
+      clinician: state.clinicians.clinician
+    })
+  );
 
   const dispatch = useDispatch();
   const [allowViewDetails, setAllowViewDetails] = useState(false);
 
   useEffect(() => {
     // Checks for clinician's role to determine whether clinician is authorized to view alert details
-    const checkClinicianRole = async () => {
-      const clinician = await LocalStorage.getClinician();
-      if (clinician) {
-        if (
-          clinician.role === Role.EP ||
-          clinician.role === Role.HF_SPECIALIST
-        ) {
-          setAllowViewDetails(true);
-        }
-      }
-    };
-    checkClinicianRole();
-  }, []);
+    if (
+      clinician &&
+      (clinician.role === Role.EP || clinician.role === Role.HF_SPECIALIST)
+    ) {
+      setAllowViewDetails(true);
+    }
+  }, [clinician]);
 
   return (
     <ModalWrapper
@@ -113,7 +109,7 @@ export const AlertPopUp: FC<AlertPopUpProps> = ({
       ]}
     >
       <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
-        {/* Title */}
+        {/* Close icon button */}
         <View style={styles.iconContainerStyle}>
           <IconButton
             name="times"
@@ -133,6 +129,7 @@ export const AlertPopUp: FC<AlertPopUpProps> = ({
         </View>
 
         <View style={styles.contentContainer}>
+          {/* Modal title */}
           <H3
             text={i18n.t("Alerts.RealTimeAlert.NewAlert")}
             style={[styles.title, { color: colors.primaryTextColor }]}

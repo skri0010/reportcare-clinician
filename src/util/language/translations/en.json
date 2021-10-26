@@ -157,7 +157,9 @@
     "Undo": "UNDO",
     "NoPendingTodo": "All todos have been completed!",
     "TodoTitleError": "Please enter a valid title",
-    "TodoNotesError": "Please enter some valid notes"
+    "TodoNotesError": "Please enter some valid notes",
+    "CurrentTodo": "Current Todo",
+    "CompletedTodo": "Completed Todo"
   },
   "Patients": {
     "PatientsList": {
@@ -180,7 +182,9 @@
     "LanguageDescription": "Click here to change language."
   },
   "Maria": {
-    "CompletedRequest": "Completed Request"
+    "CompletedRequests": "Completed Requests",
+    "Current": "Current",
+    "Completed": "Completed"
   },
   "Patient_Configuration": {
     "Title": "Configure details",
@@ -405,6 +409,12 @@
     "ViewStableAlerts": "VIEW STABLE ALERTS",
     "HideStableAlerts": "HIDE STABLE ALERTS"
   },
+  "PatientSharing": {
+    "NoCliniciansFound": "No clinicians found",
+    "PatientSharedSuccessfully": "Patient has been shared successfully",
+    "FailedToSharePatient": "Failed to share patient",
+    "ModalTitle": "Select a clinician to share with"
+  },
   "MobileMessage": {
     "ViewList": "View List",
     "BackToDetails": "Back to Details"
@@ -420,12 +430,14 @@
     "Save": "Save",
     "Cancel": "Cancel",
     "RecordDeletedSuccessfully": "Successfully deleted",
-    "FailedToDelete": "Failed to delete"
+    "FailedToDelete": "Failed to delete",
+    "Share": "Share"
   },
   "UnexpectedError": "An unexpected error has occured",
   "Keywords": {
     "remaining": "remaining",
-    "Delete": "Delete"
+    "Delete": "Delete",
+    "Search": "Search"
   },
   "Warnings": {
     "DeleteRecord": "Deleting records CANNOT BE REVERSED. Records can be deleted up to 2 days from the day they are uploaded. Are you sure you want to proceed?"

@@ -8,7 +8,6 @@ import { Amplify } from "@aws-amplify/core";
 import { Auth } from "@aws-amplify/auth";
 import { AuthState } from "web/auth_screens";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
-import { LocalStorage } from "rc_agents/storage";
 import { ToastProviderComponent } from "components/Indicators/ToastProvider";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AgentIDs } from "rc_agents/clinician_framework";
@@ -18,6 +17,8 @@ import {
 } from "aws/TypedAPI/subscriptions";
 import { PersistGate } from "redux-persist/lib/integration/react";
 import "web/styles.css";
+import { LocalStorage } from "rc_agents/storage";
+import { setClinician } from "ic-redux/actions/agents/clinicianActionCreator";
 
 Amplify.configure(awsconfig);
 Auth.configure(awsconfig);
@@ -62,9 +63,11 @@ const App: FC = () => {
   const checkAuthState = async () => {
     try {
       await Auth.currentAuthenticatedUser();
+      setAuthState(AuthState.SIGNED_IN);
       // In case local storage has been cleared
-      const clinicianId = await LocalStorage.getClinicianID();
-      if (clinicianId) {
+      const clinician = await LocalStorage.getClinician();
+      if (clinician) {
+        store.dispatch(setClinician(clinician));
         setAuthState(AuthState.SIGNED_IN);
       } else {
         setAuthState(AuthState.SIGNED_OUT);
@@ -83,6 +86,7 @@ const App: FC = () => {
 
     // Subscribes to PatientAssignment table
     subscribePatientAssignment();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

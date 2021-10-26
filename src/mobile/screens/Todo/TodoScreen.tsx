@@ -5,6 +5,7 @@ import { TodoCompletedTab } from "./TodoCompletedTab";
 import { getTopTabBarOptions } from "util/getStyles";
 import { RootState, select } from "util/useRedux";
 import { ScreenName, WithBottomTabsProps } from "mobile/screens";
+import i18n from "util/language/i18n";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -15,12 +16,14 @@ export const TodoScreen: FC<WithBottomTabsProps[ScreenName.TODO]> = () => {
   }));
 
   return (
-    // JH-TODO: Replace names with i18n
     <Tab.Navigator
       screenOptions={getTopTabBarOptions({ colors: colors, fonts: fonts })}
     >
-      <Tab.Screen name="Todo" component={TodoCurrentTab} />
-      <Tab.Screen name="Completed" component={TodoCompletedTab} />
+      <Tab.Screen name={i18n.t("Todo.Current")} component={TodoCurrentTab} />
+      <Tab.Screen
+        name={i18n.t("Todo.Completed")}
+        component={TodoCompletedTab}
+      />
     </Tab.Navigator>
   );
 };

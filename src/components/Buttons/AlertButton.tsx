@@ -20,10 +20,13 @@ export const AlertButton: React.FC<AlertButtonProps> = ({
   alertCount = 0,
   onPress
 }) => {
-  const { colors, fonts } = select((state: RootState) => ({
-    colors: state.settings.colors,
-    fonts: state.settings.fonts
-  }));
+  const { colors, fonts, fetchingPendingAlerts } = select(
+    (state: RootState) => ({
+      colors: state.settings.colors,
+      fonts: state.settings.fonts,
+      fetchingPendingAlerts: state.alerts.fetchingPendingAlerts
+    })
+  );
 
   const hasNotifications = alertCount > 0;
 
@@ -44,6 +47,7 @@ export const AlertButton: React.FC<AlertButtonProps> = ({
           }
         ]}
         onPress={onPress}
+        disabled={fetchingPendingAlerts} // disable clicking when fetch is ongoing
       >
         {/* Floating notification count */}
         {hasNotifications ? (

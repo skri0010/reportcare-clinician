@@ -8,17 +8,19 @@ import { PatientRequestRow } from "components/RowComponents/PatientRows/PatientR
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { mockPatients } from "mock/mockPatients";
 import { ScreenName, WithBottomTabsProps } from "mobile/screens";
+import i18n from "util/language/i18n";
 
 export const HomeScreen: FC<WithBottomTabsProps[ScreenName.HOME]> = () => {
-  // JH-TODO Replace titles with i18n
   return (
     <MobileScreenWrapper>
       {/* Alerts */}
-      <MainTitle title="Alerts" details="(2 remaining)" />
+      <MainTitle
+        title={i18n.t("Home.Alerts")}
+        details={`2 ${i18n.t("Home.ItemsRemaining")})`}
+      />
 
       {/* Alert Button Row */}
       <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
-        {/* JH-TODO: Remove hardcoding of alertCount */}
         <AlertButton riskLevel={RiskLevel.HIGH} alertCount={1} />
         <AlertButton riskLevel={RiskLevel.MEDIUM} alertCount={1} />
         <AlertButton riskLevel={RiskLevel.LOW} />
@@ -26,7 +28,10 @@ export const HomeScreen: FC<WithBottomTabsProps[ScreenName.HOME]> = () => {
       </View>
 
       {/* Requests by MARIA */}
-      <MainTitle title="Requests by MARIA" details="(2 remaining)" />
+      <MainTitle
+        title={i18n.t("Home.RequestsByMaria")}
+        details={`(2 ${i18n.t("Home.ItemsRemaining")})`}
+      />
 
       {/* Patient Requests List */}
       <FlatList

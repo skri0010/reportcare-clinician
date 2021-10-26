@@ -19,6 +19,7 @@ import {
   ClinicianRecordInput,
   MedInput
 } from "rc_agents/model";
+import { SharePatientAssignmentNarrowedVariables } from "aws";
 
 // HF-OTP-II
 // Triggers RetrievePatientDetails of DTA
@@ -302,6 +303,22 @@ export const triggerRetrieveDetailedAlertInfo = (
   );
 };
 
+// HF-OTP-I
+// Triggers RetrievePatientsByRole of DTA
+export const triggerRetrievePatientsByRole = (): void => {
+  agentDTA.addBelief(
+    new Belief(BeliefKeys.PATIENT, PatientAttributes.RETRIEVE_PATIENTS, true)
+  );
+
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PROCEDURE,
+      ProcedureAttributes.HF_OTP_I,
+      ProcedureConst.ACTIVE
+    )
+  );
+};
+
 // HF-OTP-II Triggers retrieval of historical alerts according to patient ID
 export const triggerGetHistoricalAlerts = (patientId: string): void => {
   // Add patient ID as fact
@@ -530,6 +547,58 @@ export const triggerDeleteRecord = (input: ClinicianRecord): void => {
     new Belief(
       BeliefKeys.PROCEDURE,
       ProcedureAttributes.MRDC,
+      ProcedureConst.ACTIVE
+    )
+  );
+};
+
+// CP-PS: Triggers RetrieveSharingClinicians of DTA
+export const triggerRetrieveSharingClinicians = (
+  patientToShare: string
+): void => {
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.CLINICIAN,
+      ClinicianAttributes.PATIENT_TO_SHARE,
+      patientToShare
+    ),
+    false
+  );
+  agentDTA.addBelief(
+    new Belief(
+      BeliefKeys.CLINICIAN,
+      ClinicianAttributes.RETRIEVE_SHARING_CLINICIANS,
+      true
+    )
+  );
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PROCEDURE,
+      ProcedureAttributes.CP_PS,
+      ProcedureConst.ACTIVE
+    )
+  );
+};
+
+// CP-PS: Triggers SharePatient of DTA
+export const triggerSharePatient = (
+  sharePatientInput: SharePatientAssignmentNarrowedVariables
+): void => {
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.CLINICIAN,
+      ClinicianAttributes.SHARE_PATIENT_ASSIGNMENT,
+      sharePatientInput
+    ),
+    false
+  );
+  agentDTA.addBelief(
+    new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.SHARE_PATIENT, true)
+  );
+  agentAPI.addFact(
+    new Belief(
+      BeliefKeys.PROCEDURE,
+      ProcedureAttributes.CP_PS,
       ProcedureConst.ACTIVE
     )
   );

@@ -65,6 +65,7 @@ export const AlertCurrentTab: FC<AlertCurrentTabProps> = ({
               selected={displayedAlertInfoId === item.id}
             />
           )}
+          keyExtractor={(item) => item.id}
         />
       ) : (
         <NoListItemMessage screenMessage={noPendingAlertsNotice} />

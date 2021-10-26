@@ -61,7 +61,6 @@ class DeleteRecord extends Activity {
           });
 
           if (response.success) {
-            // JH-TODO: Procedure for updating list of records
             const patientDetailsToUpdate = await LocalStorage.getPatientDetails(
               record.patientID
             );

@@ -46,8 +46,8 @@ class ProcessPatientAssignmentSubscription extends Activity {
           PatientAttributes.PATIENT_ASSIGNMENT_SUBSCRIPTION
         ];
 
-      // Get clinician Id
-      const clinicianId = await LocalStorage.getClinicianID();
+      // Get clinician Id from global state
+      const clinicianId = store.getState().clinicians.clinician?.clinicianID;
 
       if (
         patientAssignmentSubscription &&

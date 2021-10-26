@@ -9,22 +9,6 @@ import { Belief } from "agents-framework";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import { AlertInfo, AlertsCount } from "rc_agents/model";
 
-// HF-OTP-I
-// Triggers RetrieveRole of UXSA which then triggers RetrievePatientsByRole of DTA
-export const triggerRetrievePatientsByRole = (): void => {
-  agentUXSA.addBelief(
-    new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.RETRIEVE_ROLE, true)
-  );
-
-  agentAPI.addFact(
-    new Belief(
-      BeliefKeys.PROCEDURE,
-      ProcedureAttributes.HF_OTP_I,
-      ProcedureConst.ACTIVE
-    )
-  );
-};
-
 // P-USOR-I
 // Triggers DisplayAlerts of UXSA
 export const triggerDisplayAlerts: (input: {

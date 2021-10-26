@@ -6,12 +6,10 @@ import { TodoRow } from "components/RowComponents/TodoRow";
 import { RiskLevel } from "models/RiskLevel";
 import { RootState, select } from "util/useRedux";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
+import i18n from "util/language/i18n";
 
 export const TodoCurrentTab: FC = () => {
-  // JH-TODO Replace titles with i18n
-  // JH-TODO Flatlist
-  // JH-TODO Remove mock data
-
+  // FUTURE-TODO: Remove mock data
   const { pendingTodos } = select((state: RootState) => ({
     pendingTodos: state.todos.pendingTodos
   }));
@@ -19,7 +17,7 @@ export const TodoCurrentTab: FC = () => {
   return (
     <MobileScreenWrapper>
       <View>
-        <MainTitle title="Current Todo" />
+        <MainTitle title={i18n.t("Todo.CurrentTodo")} />
 
         <FlatList
           showsVerticalScrollIndicator={false}

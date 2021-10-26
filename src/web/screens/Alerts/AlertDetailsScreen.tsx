@@ -8,7 +8,6 @@ import { RiskLevel } from "models/RiskLevel";
 import { HighRiskAlertDetails } from "./HighRiskAlertDetails";
 import { InnerScreenButton } from "components/Buttons/InnerScreenButton";
 import i18n from "util/language/i18n";
-import { LocalStorage } from "rc_agents/storage";
 import { Role } from "rc_agents/model";
 
 interface AlertDetailsScreenProps {
@@ -18,27 +17,22 @@ interface AlertDetailsScreenProps {
 export const AlertDetailsScreen: FC<AlertDetailsScreenProps> = ({
   setModalVisible
 }) => {
-  const { alertInfo } = select((state: RootState) => ({
-    alertInfo: state.alerts.alertInfo
+  const { alertInfo, clinician } = select((state: RootState) => ({
+    alertInfo: state.alerts.alertInfo,
+    clinician: state.clinicians.clinician
   }));
 
   const [showHighRiskDetails, setShowHighRiskDetails] = useState(false);
 
   // Checks for clinician's role to determine which alert details component to be shown
   useEffect(() => {
-    const checkClinicianRole = async () => {
-      const clinician = await LocalStorage.getClinician();
-      if (clinician) {
-        if (
-          clinician.role === Role.EP ||
-          clinician.role === Role.HF_SPECIALIST
-        ) {
-          setShowHighRiskDetails(true);
-        }
-      }
-    };
-    checkClinicianRole();
-  }, []);
+    if (
+      clinician &&
+      (clinician.role === Role.EP || clinician.role === Role.HF_SPECIALIST)
+    ) {
+      setShowHighRiskDetails(true);
+    }
+  }, [clinician]);
 
   return (
     <ScreenWrapper

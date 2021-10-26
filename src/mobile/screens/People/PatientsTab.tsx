@@ -1,17 +1,16 @@
 import React, { FC, useEffect, useState } from "react";
-import { View, FlatList, Button } from "react-native";
+import { View, FlatList } from "react-native";
 import { MobileScreenWrapper } from "mobile/screens/MobileScreenWrapper";
 import { SearchBarComponent } from "components/Bars/SearchBarComponent";
 import { ScaledSheet } from "react-native-size-matters";
 import { PatientDetailsRow } from "components/RowComponents/PatientRows/PatientDetailsRow";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
-import { agentDTA, agentUXSA } from "rc_agents/agents";
+import { agentDTA } from "rc_agents/agents";
 import { Belief } from "agents-framework";
 import { ProcedureConst } from "agents-framework/Enums";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
   BeliefKeys,
-  ClinicianAttributes,
   PatientAttributes,
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
@@ -19,6 +18,8 @@ import { RootState, select, useDispatch } from "util/useRedux";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { useNetInfo } from "@react-native-community/netinfo";
 import { setProcedureOngoing } from "ic-redux/actions/agents/procedureActionCreator";
+import i18n from "util/language/i18n";
+import { AgentTrigger } from "rc_agents/trigger";
 
 export const PatientsTab: FC = () => {
   const { patients, procedureOngoing } = select((state: RootState) => ({
@@ -36,17 +37,7 @@ export const PatientsTab: FC = () => {
   const getPatients = () => {
     // Start of retrieval
     dispatch(setProcedureOngoing(true));
-
-    agentUXSA.addBelief(
-      new Belief(BeliefKeys.CLINICIAN, ClinicianAttributes.RETRIEVE_ROLE, true)
-    );
-    agentAPI.addFact(
-      new Belief(
-        BeliefKeys.PROCEDURE,
-        ProcedureAttributes.HF_OTP_I,
-        ProcedureConst.ACTIVE
-      )
-    );
+    AgentTrigger.triggerRetrievePatientsByRole();
   };
 
   // Triggers series of actions to retrieve details specific to a patient.
@@ -104,7 +95,6 @@ export const PatientsTab: FC = () => {
     }
   }, [retrieving, procedureOngoing, showGraph]);
 
-  // JH-TODO: Replace placeholder with i18n
   return (
     <MobileScreenWrapper>
       <View style={[styles.searchBarWrapper]}>
@@ -115,7 +105,7 @@ export const PatientsTab: FC = () => {
           onSearchClick={() => {
             null;
           }}
-          placeholder="Search patients"
+          placeholder={i18n.t("Patients.SearchBarPlaceholder")}
         />
       </View>
       <FlatList
@@ -131,19 +121,6 @@ export const PatientsTab: FC = () => {
         )}
         keyExtractor={(item) => item.patientID}
       />
-
-      {/* To be removed: for testing purposes only */}
-      {showGraph && (
-        <Button
-          title="Hide Graphs"
-          onPress={() => {
-            setShowGraph(false);
-          }}
-        />
-      )}
-
-      {/* TODO: Move graphs to PatientsDetails screen */}
-      {/* {showGraph && <ParameterGraphs data={patientDetails.vitalsReports} />} */}
 
       {(retrieving || procedureOngoing) && <LoadingIndicator />}
     </MobileScreenWrapper>

@@ -48,17 +48,15 @@ export const PatientChatRow: FC<PatientChatRowProps> = ({
 
   return (
     <TouchableOpacity onPress={onRowPress}>
-      {/* TODO-JH: i18n translation */}
-      {/* TODO-JH: Tick for sent */}
       <PatientRowBase
         title={generalDetails.name!}
         subtitleOne={{
           label: "Message",
           value: message
         }}
-        // TODO: Clarify how this is decided and stored
         riskLevel={
-          generalDetails.id === "1" ? RiskLevel.HIGH : RiskLevel.MEDIUM
+          RiskLevel[generalDetails.riskLevel as keyof typeof RiskLevel] ||
+          RiskLevel.UNASSIGNED
         }
       >
         {/* Side container */}

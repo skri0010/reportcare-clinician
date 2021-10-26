@@ -20,21 +20,18 @@ import {
 } from "rc_agents/clinician_framework";
 
 /**
- * Class to represent the activity for requesting display of clinician contacts
- * This happens in Procedure Storing Data (SRD-IV) Clinician Procedure
+ * Represents the activity for requesting display of clinicians for sharing a patient.
+ * This happens in Procedure Clinician Specific - Patient Sharing (CP-PS).
  */
-class RequestClinicianContactsDisplay extends Communicate {
-  /**
-   * Constructor for the RequestAlertInfoDisplay class
-   */
+class RequestDisplaySharingClinicians extends Communicate {
   constructor() {
     super(
-      ActionFrameIDs.DTA.REQUEST_DISPLAY_CLINICIAN_CONTACTS,
+      ActionFrameIDs.DTA.REQUEST_DISPLAY_SHARING_CLINICIANS,
       Performative.REQUEST,
-      // Triggers Display Clinician contacts action frame of UXSA
+      // Triggers DisplaySharingClinicians action frame of UXSA
       new Belief(
         BeliefKeys.CLINICIAN,
-        ClinicianAttributes.CLINICIAN_CONTACTS_RETRIEVED,
+        ClinicianAttributes.DISPLAY_SHARING_CLINICIANS,
         true
       ),
       [AgentIDs.UXSA]
@@ -58,24 +55,24 @@ class RequestClinicianContactsDisplay extends Communicate {
 // Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.SRD_IV,
+  ProcedureAttributes.CP_PS,
   ProcedureConst.ACTIVE
 );
 const rule2 = new Precondition(
   AgentIDs.DTA,
   CommonAttributes.LAST_ACTIVITY,
-  ActionFrameIDs.DTA.RETRIEVE_CLINICIAN_CONTACTS
+  ActionFrameIDs.DTA.RETRIEVE_SHARING_CLINICIANS
 );
 
 const rule3 = new ResettablePrecondition(
   BeliefKeys.CLINICIAN,
-  ClinicianAttributes.CLINICIAN_CONTACTS_RETRIEVED,
+  ClinicianAttributes.DISPLAY_SHARING_CLINICIANS,
   true
 );
 
 // Actionframe
-export const af_RequestClinicianContactDisplay = new Actionframe(
-  `AF_${ActionFrameIDs.DTA.REQUEST_DISPLAY_CLINICIAN_CONTACTS}`,
+export const af_RequestDisplaySharingClinicians = new Actionframe(
+  `AF_${ActionFrameIDs.DTA.REQUEST_DISPLAY_SHARING_CLINICIANS}`,
   [rule1, rule2, rule3],
-  new RequestClinicianContactsDisplay()
+  new RequestDisplaySharingClinicians()
 );

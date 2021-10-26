@@ -26,14 +26,15 @@ export const TodoRow: FC<TodoRowProps> = ({
   onButtonPress = () => null,
   onCardPress
 }) => {
-  const { colors } = select((state: RootState) => ({
-    colors: state.settings.colors
+  const { colors, fetchingTodoDetails } = select((state: RootState) => ({
+    colors: state.settings.colors,
+    fetchingTodoDetails: state.todos.fetchingTodoDetails
   }));
 
   return (
     <TouchableOpacity
       onPress={onCardPress}
-      disabled={disabled || !onCardPress}
+      disabled={disabled || !onCardPress || fetchingTodoDetails} // disable clicking when fetch is ongoing
       style={{ opacity: reduceOpacity ? 0.2 : 1 }}
     >
       <View style={styles.mainContainer}>

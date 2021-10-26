@@ -1,7 +1,7 @@
 import {
   Actionframe,
-  Agent,
   Communicate,
+  Agent,
   Belief,
   Precondition,
   ResettablePrecondition
@@ -16,22 +16,25 @@ import {
   AgentIDs,
   BeliefKeys,
   ClinicianAttributes,
-  PatientAttributes,
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
 
 /**
- * The class represents the activity for requesting retrieval of all patients specific to a role.
- * This happens in Procedure HF Outcome Trends (HF-OTP-I).
+ * Class to represent the activity for requesting display of clinician contacts
+ * This happens in Procedure Storing Data (SRD-IV) Clinician Procedure
  */
-class RequestRetrievePatients extends Communicate {
+class RequestDisplayClinicianContacts extends Communicate {
   constructor() {
     super(
-      ActionFrameIDs.UXSA.REQUEST_RETRIEVE_PATIENTS,
+      ActionFrameIDs.DTA.REQUEST_DISPLAY_CLINICIAN_CONTACTS,
       Performative.REQUEST,
-      // Trigger RetrivePatientsByRole of DTA agent
-      new Belief(BeliefKeys.PATIENT, PatientAttributes.RETRIEVE_PATIENTS, true),
-      [AgentIDs.DTA]
+      // Triggers DisplayClinicianContacts action frame of UXSA
+      new Belief(
+        BeliefKeys.CLINICIAN,
+        ClinicianAttributes.CLINICIAN_CONTACTS_RETRIEVED,
+        true
+      ),
+      [AgentIDs.UXSA]
     );
   }
 
@@ -41,7 +44,6 @@ class RequestRetrievePatients extends Communicate {
    */
   async doActivity(agent: Agent): Promise<void> {
     try {
-      // Reset preconditions
       await super.doActivity(agent, [rule3]);
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -53,23 +55,24 @@ class RequestRetrievePatients extends Communicate {
 // Preconditions
 const rule1 = new Precondition(
   BeliefKeys.PROCEDURE,
-  ProcedureAttributes.HF_OTP_I,
+  ProcedureAttributes.SRD_IV,
   ProcedureConst.ACTIVE
 );
 const rule2 = new Precondition(
-  AgentIDs.UXSA,
+  AgentIDs.DTA,
   CommonAttributes.LAST_ACTIVITY,
-  ActionFrameIDs.UXSA.RETRIEVE_ROLE
+  ActionFrameIDs.DTA.RETRIEVE_CLINICIAN_CONTACTS
 );
+
 const rule3 = new ResettablePrecondition(
   BeliefKeys.CLINICIAN,
-  ClinicianAttributes.ROLE_RETRIEVED,
+  ClinicianAttributes.CLINICIAN_CONTACTS_RETRIEVED,
   true
 );
 
 // Actionframe
-export const af_RequestRetrievePatients = new Actionframe(
-  `AF_${ActionFrameIDs.UXSA.REQUEST_RETRIEVE_PATIENTS}`,
-  [rule1, rule2],
-  new RequestRetrievePatients()
+export const af_RequestDisplayClinicianContacts = new Actionframe(
+  `AF_${ActionFrameIDs.DTA.REQUEST_DISPLAY_CLINICIAN_CONTACTS}`,
+  [rule1, rule2, rule3],
+  new RequestDisplayClinicianContacts()
 );

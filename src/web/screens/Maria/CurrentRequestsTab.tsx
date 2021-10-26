@@ -8,8 +8,7 @@ import { mockPatients } from "mock/mockPatients";
 import i18n from "util/language/i18n";
 
 export const CurrentRequestsTab: FC = () => {
-  // JH-TODO Remove mock data
-
+  // FUTURE-TODO: Remove mock data
   return (
     <ScreenWrapper>
       <View>

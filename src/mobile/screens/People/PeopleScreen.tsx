@@ -5,6 +5,7 @@ import { CliniciansTab } from "./CliniciansTab";
 import { getTopTabBarOptions } from "util/getStyles";
 import { RootState, select } from "util/useRedux";
 import { ScreenName, WithBottomTabsProps } from "mobile/screens";
+import i18n from "util/language/i18n";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -15,12 +16,17 @@ export const PeopleScreen: FC<WithBottomTabsProps[ScreenName.PEOPLE]> = () => {
   }));
 
   return (
-    // JH-TODO: Replace names with i18n
     <Tab.Navigator
       screenOptions={getTopTabBarOptions({ colors: colors, fonts: fonts })}
     >
-      <Tab.Screen name="Patients" component={PatientsTab} />
-      <Tab.Screen name="Clinicians" component={CliniciansTab} />
+      <Tab.Screen
+        name={i18n.t("ScreenName.Patients")}
+        component={PatientsTab}
+      />
+      <Tab.Screen
+        name={i18n.t("ScreenName.Clinicians")}
+        component={CliniciansTab}
+      />
     </Tab.Navigator>
   );
 };

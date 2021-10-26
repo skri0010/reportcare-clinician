@@ -2,11 +2,9 @@
 import React, { FC, useEffect, useState } from "react";
 import { View } from "react-native";
 import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
-import { mockPatients } from "mock/mockPatients";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { ContactTitle } from "components/RowComponents/ContactTitle";
 import { AlertHistoryModal } from "./PatientScreens/PatientDetailsScreen/PatientHistoryComponents/AlertHistoryModal";
-import { RiskLevel } from "models/RiskLevel";
 import { ScaledSheet } from "react-native-size-matters";
 import { AddMedicalRecordModal } from "./PatientScreens/PatientDetailsScreen/PatientHistoryComponents/AddMedicalRecordModal";
 import { PatientDetailsTabNavigator } from "web/navigation/navigators/PatientDetailsTabNavigator";
@@ -19,13 +17,14 @@ import i18n from "util/language/i18n";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AdaptiveTwoScreenWrapper } from "components/Wrappers/AdaptiveTwoScreenWrapper";
 import { PatientConfigurationScreen } from "web/screens/Patients/PatientScreens/PatientConfiguration/PatientConfigurationScreen";
-import { AlertColorCode, AlertInfo, AlertStatus } from "rc_agents/model";
+import { AlertInfo } from "rc_agents/model";
 import {
   setPatientDetails,
   setRecordToDelete
 } from "ic-redux/actions/agents/patientActionCreator";
 import { AddIcdCrtRecordModal } from "./PatientScreens/PatientDetailsScreen/PatientIcdCrtComponents/AddIcdCrtRecordModal";
 import { DeleteRecordConfirmationModal } from "./PatientScreens/PatientDetailsScreen/Modals/DeleteRecordConfirmationModal";
+import { SharePatientModal } from "./PatientScreens/PatientDetailsScreen/Modals/SharePatientModal";
 
 export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
   route
@@ -78,32 +77,6 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
     }
   }, [displayPatientId, patientDetails, patients, dispatch]);
 
-  // Initial alert history details for the modal
-  const initialAlertHistory: AlertInfo = {
-    __typename: "Alert",
-    id: "",
-    patientID: "",
-    patientName: "",
-    riskLevel: RiskLevel.UNASSIGNED,
-    vitalsReportID: "",
-    symptomReportID: "",
-    dateTime: "",
-    summary: "",
-    colorCode: AlertColorCode.UNASSIGNED,
-    pending: AlertStatus.PENDING,
-    completed: null,
-    _version: -1,
-    _lastChangedAt: new Date().getTime(),
-    createdAt: "",
-    updatedAt: "",
-    owner: "",
-    triageValue: ""
-  };
-
-  // JH-TODO-NEW: Remove
-  // Patient that has been selected by the user from the list of patients
-  const [selectedPatient] = useState(mockPatients[0]);
-
   // For pointer events
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [modalVisible, setModalVisible] = useState(false);
@@ -111,8 +84,9 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
   // For past alert details modal visibility
   const [modalAlertVisible, setModalAlertVisible] = useState<boolean>(false);
   // Feed in the alert details to be displayed in the modal
-  const [displayHistory, setDisplayHistory] =
-    useState<AlertInfo>(initialAlertHistory);
+  const [displayHistory, setDisplayHistory] = useState<AlertInfo | undefined>(
+    undefined
+  );
 
   // For add medical and ICD/CRT record modals visibility
   const [addMedicalRecord, setAddMedicalRecord] = useState<boolean>(false);
@@ -120,6 +94,9 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
 
   // For editing patient's details - navigate to patient configuration screen
   const [editDetails, setEditDetails] = useState(false);
+
+  // For sharing a patient
+  const [sharePatient, setSharePatient] = useState(false);
 
   return (
     <ScreenWrapper fixed>
@@ -152,6 +129,8 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
                   <ContactTitle
                     name={patientDetails.patientInfo.name}
                     isPatient
+                    patientId={patientDetails.patientInfo.patientID}
+                    setSharePatient={setSharePatient}
                   />
                   {patientDetails.patientInfo.configured && !editDetails ? (
                     // Patient is configured: Show details
@@ -193,7 +172,7 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
           onRequestClose={() => {
             setModalAlertVisible(false);
           }}
-          patientName={selectedPatient.name}
+          patientName={patientDetails?.patientInfo.name}
           setModalAlertVisible={setModalAlertVisible}
           alertHistory={displayHistory}
         />
@@ -215,6 +194,7 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
           setAddIcdCrtRecord={setAddIcdCrtRecord}
           patientID={patientDetails?.patientInfo.patientID}
         />
+
         {/* Modal to confirm deletion of record */}
         {recordToDelete ? (
           <DeleteRecordConfirmationModal
@@ -223,6 +203,13 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
             record={recordToDelete}
           />
         ) : null}
+
+        {/* Modal to share patient */}
+        <SharePatientModal
+          patient={patientDetails?.patientInfo}
+          visible={sharePatient}
+          onRequestClose={() => setSharePatient(false)}
+        />
       </View>
     </ScreenWrapper>
   );

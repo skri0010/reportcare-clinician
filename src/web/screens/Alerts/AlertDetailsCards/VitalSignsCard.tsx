@@ -85,7 +85,7 @@ export const VitalSignsCard: FC<VitalSignsCardProps> = ({ vitalsReport }) => {
               />
               <BaseDetailsContent
                 title={i18n.t("Alerts.AlertVitals.HeartRate")}
-                content={`89 ${i18n.t("Alerts.AlertVitals.HeartRateUnit")}`} // TODO: Remove hardcoded value
+                content={`89 ${i18n.t("Alerts.AlertVitals.HeartRateUnit")}`} // FUTURE-TODO: Remove hardcoded value
               />
               <BaseDetailsContent
                 title={i18n.t("Alerts.AlertVitals.DateTime")}

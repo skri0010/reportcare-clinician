@@ -89,7 +89,7 @@ export const getTopTabBarOptions: (input: {
   };
 };
 
-// JH-TODO-NAV: Update
+// FUTURE-TODO: To be updated
 // Props for material bottom tabs options
 export const getBottomTabBarOptions: (input: {
   colors: ColorScheme;

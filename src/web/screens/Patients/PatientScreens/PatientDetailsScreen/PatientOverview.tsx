@@ -34,7 +34,7 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
   const [sumStepsTaken, setSumStepsTaken] = useState<number>(0);
 
   useEffect(() => {
-    // TODO: This code needs to be modified for changing days
+    // FUTURE-TODO: This code needs to be modified for changing days
     const date = new Date().toLocaleDateString();
 
     // Take the latest vitals report and update vitals on date

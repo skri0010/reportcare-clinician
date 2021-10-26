@@ -11,7 +11,7 @@ interface SubtitleItemProps {
 
 export interface ClinicianRowBaseProps {
   title: string;
-  image?: string; // JH-TODO: Replace with image implementation
+  image?: string; // FUTURE-TODO: Replace with image implementation
   subtitleOne?: SubtitleItemProps;
   subtitleTwo?: SubtitleItemProps;
   onRowPress?: () => void;
@@ -51,7 +51,6 @@ export const ClinicianRowBase: React.FC<ClinicianRowBaseProps> = ({
         {/* Content (middle container) */}
         <TouchableOpacity style={styles.container} onPress={onRowPress}>
           {/* Title */}
-          {/* TODO-JH: Use custom text component */}
           <H5
             text={title}
             style={[styles.titleTextStyle, { color: colors.primaryTextColor }]}

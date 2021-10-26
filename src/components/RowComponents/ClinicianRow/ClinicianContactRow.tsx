@@ -21,7 +21,6 @@ export const ClinicianContactRow: FC<ClinicanContactRowProps> = ({
 }) => {
   return (
     <View style={{ flexWrap: "wrap" }}>
-      {/* TODO-JH: Tick for sent */}
       <ClinicianRowBase
         title={generalDetails.name}
         subtitleOne={{

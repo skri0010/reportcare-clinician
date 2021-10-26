@@ -41,8 +41,6 @@ import {
   ListClinicianPatientMapsQueryVariables,
   ListMedCompliantsByPatientIDQueryVariables,
   ListMedCompliantsByPatientIDQuery,
-  ListIcdCrtRecordsByDateTimeQuery,
-  ListIcdCrtRecordsByDateTimeQueryVariables,
   ListUploadedClinicianRecordsByPatientIDQuery,
   ListUploadedClinicianRecordsByPatientIDQueryVariables,
   ListReportVitalsByDateTimeQuery,
@@ -335,18 +333,6 @@ export const listClinicianPatientMaps = async (
     query: queries.listClinicianPatientMaps,
     variables: variables
   })) as ListClinicianPatientMapsResponse;
-};
-interface ListIcdCrtRecordsByDateTimeResponse extends BaseResponse {
-  data: ListIcdCrtRecordsByDateTimeQuery;
-}
-
-export const listIcdCrtRecordsByDateTime = async (
-  variables: ListIcdCrtRecordsByDateTimeQueryVariables
-): Promise<ListIcdCrtRecordsByDateTimeResponse> => {
-  return (await API.graphql({
-    query: queries.listIcdCrtRecordsByDateTime,
-    variables: variables
-  })) as ListIcdCrtRecordsByDateTimeResponse;
 };
 
 interface ListUploadedClinicianRecordsResponse extends BaseResponse {

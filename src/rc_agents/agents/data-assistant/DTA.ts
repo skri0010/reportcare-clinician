@@ -27,7 +27,7 @@ import af_UpdateAlert from "./action-frames/triage-alert-hf-clinic/UpdateAlert";
 import { af_RetrieveAlertHistory } from "./action-frames/hf-outcome-trends/RetrieveAlertHistory";
 import { af_RequestDisplayAlertHistory } from "./action-frames/hf-outcome-trends/RequestDisplayAlertHistory";
 import { af_RetrieveClinicianContacts } from "./action-frames/storing-data/RetrieveClinicianContacts";
-import { af_RequestClinicianContactDisplay } from "./action-frames/storing-data/RequestClinicianContactsDisplay";
+import { af_RequestDisplayClinicianContacts } from "./action-frames/storing-data/RequestDisplayClinicianContacts";
 import { af_ProcessPatientAssignmentSubscription } from "./action-frames/storing-data/ProcessPatientAssignmentSubscription";
 import { af_CreateMedicalRecord } from "./action-frames/medical-record-device-configuration/CreateMedicalRecord";
 import { af_RetrieveMedicalRecordContent } from "./action-frames/hf-outcome-trends/RetrieveMedicalRecordContent";
@@ -39,6 +39,9 @@ import { af_RequestDisplayIcdCrtRecordContent } from "./action-frames/hf-outcome
 import { af_RetrieveMonitoringRecords } from "./action-frames/exacerbation-user-specific-alert/RetrieveMonitoringRecords";
 import { af_InformMonitoringRecords } from "./action-frames/exacerbation-user-specific-alert/InformMonitoringRecords";
 import { af_DeleteRecord } from "./action-frames/medical-record-device-configuration/DeleteRecord";
+import { af_RetrieveSharingClinicians } from "./action-frames/clinician-specific-patient-sharing/RetrieveSharingClinicians";
+import { af_RequestDisplaySharingClinicians } from "./action-frames/clinician-specific-patient-sharing/RequestDisplaySharingClinicians";
+import { af_SharePatient } from "./action-frames/clinician-specific-patient-sharing/SharePatient";
 
 // Initial Beliefs of Agent
 
@@ -103,12 +106,18 @@ const agentDTA = new ClinicianAgent(
     // SRD-III
     af_RetrieveTodoDetails,
     af_RequestDisplayTodoDetails,
+
     // SRD-IV
     af_RetrieveClinicianContacts,
-    af_RequestClinicianContactDisplay,
+    af_RequestDisplayClinicianContacts,
 
     // SRD-V
-    af_ProcessPatientAssignmentSubscription
+    af_ProcessPatientAssignmentSubscription,
+
+    // CP-PS
+    af_RetrieveSharingClinicians,
+    af_RequestDisplaySharingClinicians,
+    af_SharePatient
   ], // action frame
   [belief1], // beliefs
   agentAPI

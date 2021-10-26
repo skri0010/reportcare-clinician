@@ -35,9 +35,9 @@ export const PatientRequestRow: React.FC<PatientRequestRowProps> = ({
           label: "",
           value: request || "Missing request information"
         }}
-        // TODO: Clarify how this is decided and stored
         riskLevel={
-          generalDetails.id === "1" ? RiskLevel.HIGH : RiskLevel.MEDIUM
+          RiskLevel[generalDetails.riskLevel as keyof typeof RiskLevel] ||
+          RiskLevel.UNASSIGNED
         }
       >
         {/* Time container */}

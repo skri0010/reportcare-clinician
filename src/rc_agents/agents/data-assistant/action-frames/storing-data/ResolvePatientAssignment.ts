@@ -26,6 +26,7 @@ import {
 } from "rc_agents/model";
 import { handlePatientAssignmentResolution } from "aws";
 import { agentNWA } from "rc_agents/agents";
+import { store } from "util/useRedux";
 import Auth from "@aws-amplify/auth";
 
 /**
@@ -53,8 +54,8 @@ class ResolvePatientAssignment extends Activity {
           PatientAttributes.PATIENT_ASSIGNMENT_RESOLUTION
         ];
 
-      // Get locally stored clinicianId
-      const clinicianId = await LocalStorage.getClinicianID();
+      // Get clinicianId from global state
+      const clinicianId = store.getState().clinicians.clinician?.clinicianID;
 
       if (resolution && clinicianId) {
         // Device is online
