@@ -8,18 +8,9 @@ export const createPatientInfo = /* GraphQL */ `
     $condition: ModelPatientInfoConditionInput
   ) {
     createPatientInfo(input: $input, condition: $condition) {
-      id
+      patientID
       name
       address
-      deviceNo
-      diagnosisInfo
-      NHYAclass
-      cardiologist
-      hospitalName
-      hospitalLocation
-      targetWeight
-      targetActivity
-      riskLevel
       gender
       birthDate
       language
@@ -27,9 +18,19 @@ export const createPatientInfo = /* GraphQL */ `
       email
       emergencyContactName
       emergencyContactNumber
-      fluidIntakeGoal
+      NYHAClass
+      cardiologist
+      diagnosisInfo
+      hospitalName
+      hospitalLocation
+      targetWeight
+      targetSteps
+      riskLevel
+      deviceNo
+      fluidIntakeGoalInMl
       configured
-      patientID
+      version
+      updatedByUser
       createdAt
       updatedAt
       owner
@@ -42,18 +43,9 @@ export const updatePatientInfo = /* GraphQL */ `
     $condition: ModelPatientInfoConditionInput
   ) {
     updatePatientInfo(input: $input, condition: $condition) {
-      id
+      patientID
       name
       address
-      deviceNo
-      diagnosisInfo
-      NHYAclass
-      cardiologist
-      hospitalName
-      hospitalLocation
-      targetWeight
-      targetActivity
-      riskLevel
       gender
       birthDate
       language
@@ -61,9 +53,19 @@ export const updatePatientInfo = /* GraphQL */ `
       email
       emergencyContactName
       emergencyContactNumber
-      fluidIntakeGoal
+      NYHAClass
+      cardiologist
+      diagnosisInfo
+      hospitalName
+      hospitalLocation
+      targetWeight
+      targetSteps
+      riskLevel
+      deviceNo
+      fluidIntakeGoalInMl
       configured
-      patientID
+      version
+      updatedByUser
       createdAt
       updatedAt
       owner
@@ -76,18 +78,9 @@ export const deletePatientInfo = /* GraphQL */ `
     $condition: ModelPatientInfoConditionInput
   ) {
     deletePatientInfo(input: $input, condition: $condition) {
-      id
+      patientID
       name
       address
-      deviceNo
-      diagnosisInfo
-      NHYAclass
-      cardiologist
-      hospitalName
-      hospitalLocation
-      targetWeight
-      targetActivity
-      riskLevel
       gender
       birthDate
       language
@@ -95,9 +88,19 @@ export const deletePatientInfo = /* GraphQL */ `
       email
       emergencyContactName
       emergencyContactNumber
-      fluidIntakeGoal
+      NYHAClass
+      cardiologist
+      diagnosisInfo
+      hospitalName
+      hospitalLocation
+      targetWeight
+      targetSteps
+      riskLevel
+      deviceNo
+      fluidIntakeGoalInMl
       configured
-      patientID
+      version
+      updatedByUser
       createdAt
       updatedAt
       owner
@@ -111,11 +114,11 @@ export const createMedicationInfo = /* GraphQL */ `
   ) {
     createMedicationInfo(input: $input, condition: $condition) {
       id
+      patientID
       name
       dosage
       frequency
       records
-      patientID
       active
       createdAt
       updatedAt
@@ -130,11 +133,11 @@ export const updateMedicationInfo = /* GraphQL */ `
   ) {
     updateMedicationInfo(input: $input, condition: $condition) {
       id
+      patientID
       name
       dosage
       frequency
       records
-      patientID
       active
       createdAt
       updatedAt
@@ -149,11 +152,11 @@ export const deleteMedicationInfo = /* GraphQL */ `
   ) {
     deleteMedicationInfo(input: $input, condition: $condition) {
       id
+      patientID
       name
       dosage
       frequency
       records
-      patientID
       active
       createdAt
       updatedAt
@@ -168,13 +171,13 @@ export const createActivityInfo = /* GraphQL */ `
   ) {
     createActivityInfo(input: $input, condition: $condition) {
       id
-      Actname
-      Location
-      expectedFrequency
-      expectedDays
-      expectedDurationMinutes
-      recordDateTime
       patientID
+      activityName
+      startTime
+      days
+      durationInMinutes
+      locations
+      symptoms
       createdAt
       updatedAt
       owner
@@ -188,13 +191,13 @@ export const updateActivityInfo = /* GraphQL */ `
   ) {
     updateActivityInfo(input: $input, condition: $condition) {
       id
-      Actname
-      Location
-      expectedFrequency
-      expectedDays
-      expectedDurationMinutes
-      recordDateTime
       patientID
+      activityName
+      startTime
+      days
+      durationInMinutes
+      locations
+      symptoms
       createdAt
       updatedAt
       owner
@@ -208,64 +211,13 @@ export const deleteActivityInfo = /* GraphQL */ `
   ) {
     deleteActivityInfo(input: $input, condition: $condition) {
       id
-      Actname
-      Location
-      expectedFrequency
-      expectedDays
-      expectedDurationMinutes
-      recordDateTime
       patientID
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const createMedCompliant = /* GraphQL */ `
-  mutation CreateMedCompliant(
-    $input: CreateMedCompliantInput!
-    $condition: ModelMedCompliantConditionInput
-  ) {
-    createMedCompliant(input: $input, condition: $condition) {
-      id
-      MedId
-      Verification
-      Date
-      patientID
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const updateMedCompliant = /* GraphQL */ `
-  mutation UpdateMedCompliant(
-    $input: UpdateMedCompliantInput!
-    $condition: ModelMedCompliantConditionInput
-  ) {
-    updateMedCompliant(input: $input, condition: $condition) {
-      id
-      MedId
-      Verification
-      Date
-      patientID
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const deleteMedCompliant = /* GraphQL */ `
-  mutation DeleteMedCompliant(
-    $input: DeleteMedCompliantInput!
-    $condition: ModelMedCompliantConditionInput
-  ) {
-    deleteMedCompliant(input: $input, condition: $condition) {
-      id
-      MedId
-      Verification
-      Date
-      patientID
+      activityName
+      startTime
+      days
+      durationInMinutes
+      locations
+      symptoms
       createdAt
       updatedAt
       owner
@@ -279,12 +231,15 @@ export const createReportSymptom = /* GraphQL */ `
   ) {
     createReportSymptom(input: $input, condition: $condition) {
       id
-      ActId
-      Name
-      Severity
-      DateTime
-      Summary
       patientID
+      activityInfoID
+      symptomName
+      severity
+      dateTime
+      summary
+      weather
+      temperature
+      humidity
       createdAt
       updatedAt
       owner
@@ -298,12 +253,15 @@ export const updateReportSymptom = /* GraphQL */ `
   ) {
     updateReportSymptom(input: $input, condition: $condition) {
       id
-      ActId
-      Name
-      Severity
-      DateTime
-      Summary
       patientID
+      activityInfoID
+      symptomName
+      severity
+      dateTime
+      summary
+      weather
+      temperature
+      humidity
       createdAt
       updatedAt
       owner
@@ -317,12 +275,15 @@ export const deleteReportSymptom = /* GraphQL */ `
   ) {
     deleteReportSymptom(input: $input, condition: $condition) {
       id
-      ActId
-      Name
-      Severity
-      DateTime
-      Summary
       patientID
+      activityInfoID
+      symptomName
+      severity
+      dateTime
+      summary
+      weather
+      temperature
+      humidity
       createdAt
       updatedAt
       owner
@@ -336,16 +297,16 @@ export const createReportVitals = /* GraphQL */ `
   ) {
     createReportVitals(input: $input, condition: $condition) {
       id
-      Temperature
-      Humidity
-      Weight
-      BPSys
-      BPDi
-      NoSteps
-      OxySat
-      FluidIntake
-      DateTime
       patientID
+      dateTime
+      weight
+      systolicBloodPressure
+      diastolicBloodPressure
+      oxygenSaturation
+      fluidIntakeInMl
+      weather
+      temperature
+      humidity
       createdAt
       updatedAt
       owner
@@ -359,16 +320,16 @@ export const updateReportVitals = /* GraphQL */ `
   ) {
     updateReportVitals(input: $input, condition: $condition) {
       id
-      Temperature
-      Humidity
-      Weight
-      BPSys
-      BPDi
-      NoSteps
-      OxySat
-      FluidIntake
-      DateTime
       patientID
+      dateTime
+      weight
+      systolicBloodPressure
+      diastolicBloodPressure
+      oxygenSaturation
+      fluidIntakeInMl
+      weather
+      temperature
+      humidity
       createdAt
       updatedAt
       owner
@@ -382,16 +343,73 @@ export const deleteReportVitals = /* GraphQL */ `
   ) {
     deleteReportVitals(input: $input, condition: $condition) {
       id
-      Temperature
-      Humidity
-      Weight
-      BPSys
-      BPDi
-      NoSteps
-      OxySat
-      FluidIntake
-      DateTime
       patientID
+      dateTime
+      weight
+      systolicBloodPressure
+      diastolicBloodPressure
+      oxygenSaturation
+      fluidIntakeInMl
+      weather
+      temperature
+      humidity
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const createPhysical = /* GraphQL */ `
+  mutation CreatePhysical(
+    $input: CreatePhysicalInput!
+    $condition: ModelPhysicalConditionInput
+  ) {
+    createPhysical(input: $input, condition: $condition) {
+      id
+      patientID
+      steps
+      stepsGoal
+      averageWalkingSpeedInMetresPerSeconds
+      distanceInMetres
+      dateTime
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const updatePhysical = /* GraphQL */ `
+  mutation UpdatePhysical(
+    $input: UpdatePhysicalInput!
+    $condition: ModelPhysicalConditionInput
+  ) {
+    updatePhysical(input: $input, condition: $condition) {
+      id
+      patientID
+      steps
+      stepsGoal
+      averageWalkingSpeedInMetresPerSeconds
+      distanceInMetres
+      dateTime
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deletePhysical = /* GraphQL */ `
+  mutation DeletePhysical(
+    $input: DeletePhysicalInput!
+    $condition: ModelPhysicalConditionInput
+  ) {
+    deletePhysical(input: $input, condition: $condition) {
+      id
+      patientID
+      steps
+      stepsGoal
+      averageWalkingSpeedInMetresPerSeconds
+      distanceInMetres
+      dateTime
       createdAt
       updatedAt
       owner
@@ -404,12 +422,12 @@ export const createClinicianInfo = /* GraphQL */ `
     $condition: ModelClinicianInfoConditionInput
   ) {
     createClinicianInfo(input: $input, condition: $condition) {
-      id
       clinicianID
       name
       hospitalName
       role
       contactNumber
+      version
       createdAt
       updatedAt
     }
@@ -421,12 +439,12 @@ export const updateClinicianInfo = /* GraphQL */ `
     $condition: ModelClinicianInfoConditionInput
   ) {
     updateClinicianInfo(input: $input, condition: $condition) {
-      id
       clinicianID
       name
       hospitalName
       role
       contactNumber
+      version
       createdAt
       updatedAt
     }
@@ -438,12 +456,12 @@ export const deleteClinicianInfo = /* GraphQL */ `
     $condition: ModelClinicianInfoConditionInput
   ) {
     deleteClinicianInfo(input: $input, condition: $condition) {
-      id
       clinicianID
       name
       hospitalName
       role
       contactNumber
+      version
       createdAt
       updatedAt
     }
@@ -455,7 +473,6 @@ export const createClinicianProtectedInfo = /* GraphQL */ `
     $condition: ModelClinicianProtectedInfoConditionInput
   ) {
     createClinicianProtectedInfo(input: $input, condition: $condition) {
-      id
       clinicianID
       facts
       APS
@@ -465,6 +482,7 @@ export const createClinicianProtectedInfo = /* GraphQL */ `
       ALA
       MHA
       CAM
+      version
       createdAt
       updatedAt
     }
@@ -476,7 +494,6 @@ export const updateClinicianProtectedInfo = /* GraphQL */ `
     $condition: ModelClinicianProtectedInfoConditionInput
   ) {
     updateClinicianProtectedInfo(input: $input, condition: $condition) {
-      id
       clinicianID
       facts
       APS
@@ -486,6 +503,7 @@ export const updateClinicianProtectedInfo = /* GraphQL */ `
       ALA
       MHA
       CAM
+      version
       createdAt
       updatedAt
     }
@@ -497,7 +515,6 @@ export const deleteClinicianProtectedInfo = /* GraphQL */ `
     $condition: ModelClinicianProtectedInfoConditionInput
   ) {
     deleteClinicianProtectedInfo(input: $input, condition: $condition) {
-      id
       clinicianID
       facts
       APS
@@ -507,6 +524,7 @@ export const deleteClinicianProtectedInfo = /* GraphQL */ `
       ALA
       MHA
       CAM
+      version
       createdAt
       updatedAt
     }
@@ -518,7 +536,6 @@ export const createClinicianPatientMap = /* GraphQL */ `
     $condition: ModelClinicianPatientMapConditionInput
   ) {
     createClinicianPatientMap(input: $input, condition: $condition) {
-      id
       clinicianID
       patientID
       createdAt
@@ -532,7 +549,6 @@ export const updateClinicianPatientMap = /* GraphQL */ `
     $condition: ModelClinicianPatientMapConditionInput
   ) {
     updateClinicianPatientMap(input: $input, condition: $condition) {
-      id
       clinicianID
       patientID
       createdAt
@@ -546,7 +562,6 @@ export const deleteClinicianPatientMap = /* GraphQL */ `
     $condition: ModelClinicianPatientMapConditionInput
   ) {
     deleteClinicianPatientMap(input: $input, condition: $condition) {
-      id
       clinicianID
       patientID
       createdAt
@@ -560,7 +575,6 @@ export const createPatientAssignment = /* GraphQL */ `
     $condition: ModelPatientAssignmentConditionInput
   ) {
     createPatientAssignment(input: $input, condition: $condition) {
-      id
       patientID
       clinicianID
       patientName
@@ -579,7 +593,6 @@ export const updatePatientAssignment = /* GraphQL */ `
     $condition: ModelPatientAssignmentConditionInput
   ) {
     updatePatientAssignment(input: $input, condition: $condition) {
-      id
       patientID
       clinicianID
       patientName
@@ -598,7 +611,6 @@ export const deletePatientAssignment = /* GraphQL */ `
     $condition: ModelPatientAssignmentConditionInput
   ) {
     deletePatientAssignment(input: $input, condition: $condition) {
-      id
       patientID
       clinicianID
       patientName
@@ -628,9 +640,11 @@ export const createAlert = /* GraphQL */ `
       symptomReportID
       pending
       completed
-      owner
+      version
+      updatedByUser
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -651,9 +665,11 @@ export const updateAlert = /* GraphQL */ `
       symptomReportID
       pending
       completed
-      owner
+      version
+      updatedByUser
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -674,9 +690,11 @@ export const deleteAlert = /* GraphQL */ `
       symptomReportID
       pending
       completed
-      owner
+      version
+      updatedByUser
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -695,9 +713,10 @@ export const createTodo = /* GraphQL */ `
       alertID
       pending
       completed
-      owner
+      version
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -716,9 +735,10 @@ export const updateTodo = /* GraphQL */ `
       alertID
       pending
       completed
-      owner
+      version
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -737,9 +757,10 @@ export const deleteTodo = /* GraphQL */ `
       alertID
       pending
       completed
-      owner
+      version
       createdAt
       updatedAt
+      owner
     }
   }
 `;

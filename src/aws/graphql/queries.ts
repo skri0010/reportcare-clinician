@@ -48,18 +48,9 @@ export const sharePatientAssignment = /* GraphQL */ `
 export const getPatientInfo = /* GraphQL */ `
   query GetPatientInfo($patientID: String!) {
     getPatientInfo(patientID: $patientID) {
-      id
+      patientID
       name
       address
-      deviceNo
-      diagnosisInfo
-      NHYAclass
-      cardiologist
-      hospitalName
-      hospitalLocation
-      targetWeight
-      targetActivity
-      riskLevel
       gender
       birthDate
       language
@@ -67,9 +58,19 @@ export const getPatientInfo = /* GraphQL */ `
       email
       emergencyContactName
       emergencyContactNumber
-      fluidIntakeGoal
+      NYHAClass
+      cardiologist
+      diagnosisInfo
+      hospitalName
+      hospitalLocation
+      targetWeight
+      targetSteps
+      riskLevel
+      deviceNo
+      fluidIntakeGoalInMl
       configured
-      patientID
+      version
+      updatedByUser
       createdAt
       updatedAt
       owner
@@ -92,18 +93,9 @@ export const listPatientInfos = /* GraphQL */ `
       sortDirection: $sortDirection
     ) {
       items {
-        id
+        patientID
         name
         address
-        deviceNo
-        diagnosisInfo
-        NHYAclass
-        cardiologist
-        hospitalName
-        hospitalLocation
-        targetWeight
-        targetActivity
-        riskLevel
         gender
         birthDate
         language
@@ -111,9 +103,19 @@ export const listPatientInfos = /* GraphQL */ `
         email
         emergencyContactName
         emergencyContactNumber
-        fluidIntakeGoal
+        NYHAClass
+        cardiologist
+        diagnosisInfo
+        hospitalName
+        hospitalLocation
+        targetWeight
+        targetSteps
+        riskLevel
+        deviceNo
+        fluidIntakeGoalInMl
         configured
-        patientID
+        version
+        updatedByUser
         createdAt
         updatedAt
         owner
@@ -126,11 +128,11 @@ export const getMedicationInfo = /* GraphQL */ `
   query GetMedicationInfo($id: ID!) {
     getMedicationInfo(id: $id) {
       id
+      patientID
       name
       dosage
       frequency
       records
-      patientID
       active
       createdAt
       updatedAt
@@ -147,11 +149,11 @@ export const listMedicationInfos = /* GraphQL */ `
     listMedicationInfos(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        patientID
         name
         dosage
         frequency
         records
-        patientID
         active
         createdAt
         updatedAt
@@ -178,11 +180,11 @@ export const listMedicationInfosByPatientID = /* GraphQL */ `
     ) {
       items {
         id
+        patientID
         name
         dosage
         frequency
         records
-        patientID
         active
         createdAt
         updatedAt
@@ -196,13 +198,13 @@ export const getActivityInfo = /* GraphQL */ `
   query GetActivityInfo($id: ID!) {
     getActivityInfo(id: $id) {
       id
-      Actname
-      Location
-      expectedFrequency
-      expectedDays
-      expectedDurationMinutes
-      recordDateTime
       patientID
+      activityName
+      startTime
+      days
+      durationInMinutes
+      locations
+      symptoms
       createdAt
       updatedAt
       owner
@@ -218,13 +220,13 @@ export const listActivityInfos = /* GraphQL */ `
     listActivityInfos(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        Actname
-        Location
-        expectedFrequency
-        expectedDays
-        expectedDurationMinutes
-        recordDateTime
         patientID
+        activityName
+        startTime
+        days
+        durationInMinutes
+        locations
+        symptoms
         createdAt
         updatedAt
         owner
@@ -250,120 +252,13 @@ export const listActivityInfosByPatientID = /* GraphQL */ `
     ) {
       items {
         id
-        Actname
-        Location
-        expectedFrequency
-        expectedDays
-        expectedDurationMinutes
-        recordDateTime
         patientID
-        createdAt
-        updatedAt
-        owner
-      }
-      nextToken
-    }
-  }
-`;
-export const getMedCompliant = /* GraphQL */ `
-  query GetMedCompliant($id: ID!) {
-    getMedCompliant(id: $id) {
-      id
-      MedId
-      Verification
-      Date
-      patientID
-      createdAt
-      updatedAt
-      MedicationInfo {
-        id
-        name
-        dosage
-        frequency
-        records
-        patientID
-        active
-        createdAt
-        updatedAt
-        owner
-      }
-      owner
-    }
-  }
-`;
-export const listMedCompliants = /* GraphQL */ `
-  query ListMedCompliants(
-    $filter: ModelMedCompliantFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listMedCompliants(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        MedId
-        Verification
-        Date
-        patientID
-        createdAt
-        updatedAt
-        owner
-      }
-      nextToken
-    }
-  }
-`;
-export const listMedCompliantsByPatientID = /* GraphQL */ `
-  query ListMedCompliantsByPatientID(
-    $patientID: String
-    $sortDirection: ModelSortDirection
-    $filter: ModelMedCompliantFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listMedCompliantsByPatientID(
-      patientID: $patientID
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        MedId
-        Verification
-        Date
-        patientID
-        createdAt
-        updatedAt
-        owner
-      }
-      nextToken
-    }
-  }
-`;
-export const listMedCompliantsByDate = /* GraphQL */ `
-  query ListMedCompliantsByDate(
-    $patientID: String
-    $Date: ModelStringKeyConditionInput
-    $sortDirection: ModelSortDirection
-    $filter: ModelMedCompliantFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listMedCompliantsByDate(
-      patientID: $patientID
-      Date: $Date
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        MedId
-        Verification
-        Date
-        patientID
+        activityName
+        startTime
+        days
+        durationInMinutes
+        locations
+        symptoms
         createdAt
         updatedAt
         owner
@@ -376,23 +271,26 @@ export const getReportSymptom = /* GraphQL */ `
   query GetReportSymptom($id: ID!) {
     getReportSymptom(id: $id) {
       id
-      ActId
-      Name
-      Severity
-      DateTime
-      Summary
       patientID
+      activityInfoID
+      symptomName
+      severity
+      dateTime
+      summary
+      weather
+      temperature
+      humidity
       createdAt
       updatedAt
-      ActivityInfo {
+      activityInfo {
         id
-        Actname
-        Location
-        expectedFrequency
-        expectedDays
-        expectedDurationMinutes
-        recordDateTime
         patientID
+        activityName
+        startTime
+        days
+        durationInMinutes
+        locations
+        symptoms
         createdAt
         updatedAt
         owner
@@ -410,12 +308,15 @@ export const listReportSymptoms = /* GraphQL */ `
     listReportSymptoms(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        ActId
-        Name
-        Severity
-        DateTime
-        Summary
         patientID
+        activityInfoID
+        symptomName
+        severity
+        dateTime
+        summary
+        weather
+        temperature
+        humidity
         createdAt
         updatedAt
         owner
@@ -441,12 +342,15 @@ export const listReportSymptomsByPatientID = /* GraphQL */ `
     ) {
       items {
         id
-        ActId
-        Name
-        Severity
-        DateTime
-        Summary
         patientID
+        activityInfoID
+        symptomName
+        severity
+        dateTime
+        summary
+        weather
+        temperature
+        humidity
         createdAt
         updatedAt
         owner
@@ -458,7 +362,7 @@ export const listReportSymptomsByPatientID = /* GraphQL */ `
 export const listReportSymptomsByDateTime = /* GraphQL */ `
   query ListReportSymptomsByDateTime(
     $patientID: String
-    $DateTime: ModelStringKeyConditionInput
+    $dateTime: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
     $filter: ModelReportSymptomFilterInput
     $limit: Int
@@ -466,7 +370,7 @@ export const listReportSymptomsByDateTime = /* GraphQL */ `
   ) {
     listReportSymptomsByDateTime(
       patientID: $patientID
-      DateTime: $DateTime
+      dateTime: $dateTime
       sortDirection: $sortDirection
       filter: $filter
       limit: $limit
@@ -474,12 +378,15 @@ export const listReportSymptomsByDateTime = /* GraphQL */ `
     ) {
       items {
         id
-        ActId
-        Name
-        Severity
-        DateTime
-        Summary
         patientID
+        activityInfoID
+        symptomName
+        severity
+        dateTime
+        summary
+        weather
+        temperature
+        humidity
         createdAt
         updatedAt
         owner
@@ -492,16 +399,16 @@ export const getReportVitals = /* GraphQL */ `
   query GetReportVitals($id: ID!) {
     getReportVitals(id: $id) {
       id
-      Temperature
-      Humidity
-      Weight
-      BPSys
-      BPDi
-      NoSteps
-      OxySat
-      FluidIntake
-      DateTime
       patientID
+      dateTime
+      weight
+      systolicBloodPressure
+      diastolicBloodPressure
+      oxygenSaturation
+      fluidIntakeInMl
+      weather
+      temperature
+      humidity
       createdAt
       updatedAt
       owner
@@ -517,16 +424,16 @@ export const listReportVitalss = /* GraphQL */ `
     listReportVitalss(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        Temperature
-        Humidity
-        Weight
-        BPSys
-        BPDi
-        NoSteps
-        OxySat
-        FluidIntake
-        DateTime
         patientID
+        dateTime
+        weight
+        systolicBloodPressure
+        diastolicBloodPressure
+        oxygenSaturation
+        fluidIntakeInMl
+        weather
+        temperature
+        humidity
         createdAt
         updatedAt
         owner
@@ -552,16 +459,16 @@ export const listReportVitalsByPatientID = /* GraphQL */ `
     ) {
       items {
         id
-        Temperature
-        Humidity
-        Weight
-        BPSys
-        BPDi
-        NoSteps
-        OxySat
-        FluidIntake
-        DateTime
         patientID
+        dateTime
+        weight
+        systolicBloodPressure
+        diastolicBloodPressure
+        oxygenSaturation
+        fluidIntakeInMl
+        weather
+        temperature
+        humidity
         createdAt
         updatedAt
         owner
@@ -573,7 +480,7 @@ export const listReportVitalsByPatientID = /* GraphQL */ `
 export const listReportVitalsByDateTime = /* GraphQL */ `
   query ListReportVitalsByDateTime(
     $patientID: String
-    $DateTime: ModelStringKeyConditionInput
+    $dateTime: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
     $filter: ModelReportVitalsFilterInput
     $limit: Int
@@ -581,7 +488,7 @@ export const listReportVitalsByDateTime = /* GraphQL */ `
   ) {
     listReportVitalsByDateTime(
       patientID: $patientID
-      DateTime: $DateTime
+      dateTime: $dateTime
       sortDirection: $sortDirection
       filter: $filter
       limit: $limit
@@ -589,16 +496,119 @@ export const listReportVitalsByDateTime = /* GraphQL */ `
     ) {
       items {
         id
-        Temperature
-        Humidity
-        Weight
-        BPSys
-        BPDi
-        NoSteps
-        OxySat
-        FluidIntake
-        DateTime
         patientID
+        dateTime
+        weight
+        systolicBloodPressure
+        diastolicBloodPressure
+        oxygenSaturation
+        fluidIntakeInMl
+        weather
+        temperature
+        humidity
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const getPhysical = /* GraphQL */ `
+  query GetPhysical($id: ID!) {
+    getPhysical(id: $id) {
+      id
+      patientID
+      steps
+      stepsGoal
+      averageWalkingSpeedInMetresPerSeconds
+      distanceInMetres
+      dateTime
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listPhysicals = /* GraphQL */ `
+  query ListPhysicals(
+    $filter: ModelPhysicalFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listPhysicals(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        patientID
+        steps
+        stepsGoal
+        averageWalkingSpeedInMetresPerSeconds
+        distanceInMetres
+        dateTime
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const listPhysicalsByPatientID = /* GraphQL */ `
+  query ListPhysicalsByPatientID(
+    $patientID: String
+    $sortDirection: ModelSortDirection
+    $filter: ModelPhysicalFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listPhysicalsByPatientID(
+      patientID: $patientID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        patientID
+        steps
+        stepsGoal
+        averageWalkingSpeedInMetresPerSeconds
+        distanceInMetres
+        dateTime
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const listPhysicalsByDateTime = /* GraphQL */ `
+  query ListPhysicalsByDateTime(
+    $patientID: String
+    $dateTime: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelPhysicalFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listPhysicalsByDateTime(
+      patientID: $patientID
+      dateTime: $dateTime
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        patientID
+        steps
+        stepsGoal
+        averageWalkingSpeedInMetresPerSeconds
+        distanceInMetres
+        dateTime
         createdAt
         updatedAt
         owner
@@ -610,16 +620,15 @@ export const listReportVitalsByDateTime = /* GraphQL */ `
 export const getClinicianInfo = /* GraphQL */ `
   query GetClinicianInfo($clinicianID: String!) {
     getClinicianInfo(clinicianID: $clinicianID) {
-      id
       clinicianID
       name
       hospitalName
       role
       contactNumber
+      version
       createdAt
       updatedAt
       protectedInfo {
-        id
         clinicianID
         facts
         APS
@@ -629,6 +638,7 @@ export const getClinicianInfo = /* GraphQL */ `
         ALA
         MHA
         CAM
+        version
         createdAt
         updatedAt
       }
@@ -651,12 +661,12 @@ export const listClinicianInfos = /* GraphQL */ `
       sortDirection: $sortDirection
     ) {
       items {
-        id
         clinicianID
         name
         hospitalName
         role
         contactNumber
+        version
         createdAt
         updatedAt
       }
@@ -667,7 +677,6 @@ export const listClinicianInfos = /* GraphQL */ `
 export const getClinicianProtectedInfo = /* GraphQL */ `
   query GetClinicianProtectedInfo($clinicianID: String!) {
     getClinicianProtectedInfo(clinicianID: $clinicianID) {
-      id
       clinicianID
       facts
       APS
@@ -677,6 +686,7 @@ export const getClinicianProtectedInfo = /* GraphQL */ `
       ALA
       MHA
       CAM
+      version
       createdAt
       updatedAt
     }
@@ -698,7 +708,6 @@ export const listClinicianProtectedInfos = /* GraphQL */ `
       sortDirection: $sortDirection
     ) {
       items {
-        id
         clinicianID
         facts
         APS
@@ -708,6 +717,7 @@ export const listClinicianProtectedInfos = /* GraphQL */ `
         ALA
         MHA
         CAM
+        version
         createdAt
         updatedAt
       }
@@ -718,18 +728,17 @@ export const listClinicianProtectedInfos = /* GraphQL */ `
 export const getClinicianPatientMap = /* GraphQL */ `
   query GetClinicianPatientMap($clinicianID: String!, $patientID: String!) {
     getClinicianPatientMap(clinicianID: $clinicianID, patientID: $patientID) {
-      id
       clinicianID
       patientID
       createdAt
       updatedAt
       clinicianInfo {
-        id
         clinicianID
         name
         hospitalName
         role
         contactNumber
+        version
         createdAt
         updatedAt
       }
@@ -754,7 +763,6 @@ export const listClinicianPatientMaps = /* GraphQL */ `
       sortDirection: $sortDirection
     ) {
       items {
-        id
         clinicianID
         patientID
         createdAt
@@ -782,7 +790,6 @@ export const listClinicianMappingsByPatientID = /* GraphQL */ `
       nextToken: $nextToken
     ) {
       items {
-        id
         clinicianID
         patientID
         createdAt
@@ -795,7 +802,6 @@ export const listClinicianMappingsByPatientID = /* GraphQL */ `
 export const getPatientAssignment = /* GraphQL */ `
   query GetPatientAssignment($patientID: String!, $clinicianID: String!) {
     getPatientAssignment(patientID: $patientID, clinicianID: $clinicianID) {
-      id
       patientID
       clinicianID
       patientName
@@ -826,7 +832,6 @@ export const listPatientAssignments = /* GraphQL */ `
       sortDirection: $sortDirection
     ) {
       items {
-        id
         patientID
         clinicianID
         patientName
@@ -859,7 +864,6 @@ export const listPendingPatientAssignments = /* GraphQL */ `
       nextToken: $nextToken
     ) {
       items {
-        id
         patientID
         clinicianID
         patientName
@@ -888,37 +892,42 @@ export const getAlert = /* GraphQL */ `
       symptomReportID
       pending
       completed
-      owner
+      version
+      updatedByUser
       createdAt
       updatedAt
       symptomReport {
         id
-        ActId
-        Name
-        Severity
-        DateTime
-        Summary
         patientID
+        activityInfoID
+        symptomName
+        severity
+        dateTime
+        summary
+        weather
+        temperature
+        humidity
         createdAt
         updatedAt
         owner
       }
       vitalsReport {
         id
-        Temperature
-        Humidity
-        Weight
-        BPSys
-        BPDi
-        NoSteps
-        OxySat
-        FluidIntake
-        DateTime
         patientID
+        dateTime
+        weight
+        systolicBloodPressure
+        diastolicBloodPressure
+        oxygenSaturation
+        fluidIntakeInMl
+        weather
+        temperature
+        humidity
         createdAt
         updatedAt
         owner
       }
+      owner
     }
   }
 `;
@@ -941,9 +950,11 @@ export const listAlerts = /* GraphQL */ `
         symptomReportID
         pending
         completed
-        owner
+        version
+        updatedByUser
         createdAt
         updatedAt
+        owner
       }
       nextToken
     }
@@ -978,9 +989,11 @@ export const listPatientAlertsByDateTime = /* GraphQL */ `
         symptomReportID
         pending
         completed
-        owner
+        version
+        updatedByUser
         createdAt
         updatedAt
+        owner
       }
       nextToken
     }
@@ -1015,9 +1028,11 @@ export const listPendingAlertsByDateTime = /* GraphQL */ `
         symptomReportID
         pending
         completed
-        owner
+        version
+        updatedByUser
         createdAt
         updatedAt
+        owner
       }
       nextToken
     }
@@ -1052,9 +1067,11 @@ export const listPendingRiskAlerts = /* GraphQL */ `
         symptomReportID
         pending
         completed
-        owner
+        version
+        updatedByUser
         createdAt
         updatedAt
+        owner
       }
       nextToken
     }
@@ -1089,9 +1106,11 @@ export const listCompletedRiskAlerts = /* GraphQL */ `
         symptomReportID
         pending
         completed
-        owner
+        version
+        updatedByUser
         createdAt
         updatedAt
+        owner
       }
       nextToken
     }
@@ -1109,7 +1128,7 @@ export const getTodo = /* GraphQL */ `
       alertID
       pending
       completed
-      owner
+      version
       createdAt
       updatedAt
       alert {
@@ -1124,10 +1143,13 @@ export const getTodo = /* GraphQL */ `
         symptomReportID
         pending
         completed
-        owner
+        version
+        updatedByUser
         createdAt
         updatedAt
+        owner
       }
+      owner
     }
   }
 `;
@@ -1148,9 +1170,10 @@ export const listTodos = /* GraphQL */ `
         alertID
         pending
         completed
-        owner
+        version
         createdAt
         updatedAt
+        owner
       }
       nextToken
     }
@@ -1183,9 +1206,10 @@ export const listPendingTodosByLastModifiedDate = /* GraphQL */ `
         alertID
         pending
         completed
-        owner
+        version
         createdAt
         updatedAt
+        owner
       }
       nextToken
     }
@@ -1218,9 +1242,10 @@ export const listCompletedTodosByLastModifiedDate = /* GraphQL */ `
         alertID
         pending
         completed
-        owner
+        version
         createdAt
         updatedAt
+        owner
       }
       nextToken
     }
@@ -1253,9 +1278,10 @@ export const listTodosByAlertID = /* GraphQL */ `
         alertID
         pending
         completed
-        owner
+        version
         createdAt
         updatedAt
+        owner
       }
       nextToken
     }

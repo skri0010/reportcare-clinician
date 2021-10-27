@@ -20,7 +20,7 @@ type IdentityType = {
   sourceIp: OptionalString;
   claims: ClaimsType;
   defaultAuthStrategy: OptionalString;
-  groups: string[],
+  groups: string[];
 };
 
 type ClaimsType = {

@@ -5,18 +5,9 @@
 export const onCreatePatientInfo = /* GraphQL */ `
   subscription OnCreatePatientInfo($owner: String) {
     onCreatePatientInfo(owner: $owner) {
-      id
+      patientID
       name
       address
-      deviceNo
-      diagnosisInfo
-      NHYAclass
-      cardiologist
-      hospitalName
-      hospitalLocation
-      targetWeight
-      targetActivity
-      riskLevel
       gender
       birthDate
       language
@@ -24,9 +15,19 @@ export const onCreatePatientInfo = /* GraphQL */ `
       email
       emergencyContactName
       emergencyContactNumber
-      fluidIntakeGoal
+      NYHAClass
+      cardiologist
+      diagnosisInfo
+      hospitalName
+      hospitalLocation
+      targetWeight
+      targetSteps
+      riskLevel
+      deviceNo
+      fluidIntakeGoalInMl
       configured
-      patientID
+      version
+      updatedByUser
       createdAt
       updatedAt
       owner
@@ -36,18 +37,9 @@ export const onCreatePatientInfo = /* GraphQL */ `
 export const onUpdatePatientInfo = /* GraphQL */ `
   subscription OnUpdatePatientInfo($owner: String) {
     onUpdatePatientInfo(owner: $owner) {
-      id
+      patientID
       name
       address
-      deviceNo
-      diagnosisInfo
-      NHYAclass
-      cardiologist
-      hospitalName
-      hospitalLocation
-      targetWeight
-      targetActivity
-      riskLevel
       gender
       birthDate
       language
@@ -55,9 +47,19 @@ export const onUpdatePatientInfo = /* GraphQL */ `
       email
       emergencyContactName
       emergencyContactNumber
-      fluidIntakeGoal
+      NYHAClass
+      cardiologist
+      diagnosisInfo
+      hospitalName
+      hospitalLocation
+      targetWeight
+      targetSteps
+      riskLevel
+      deviceNo
+      fluidIntakeGoalInMl
       configured
-      patientID
+      version
+      updatedByUser
       createdAt
       updatedAt
       owner
@@ -67,18 +69,9 @@ export const onUpdatePatientInfo = /* GraphQL */ `
 export const onDeletePatientInfo = /* GraphQL */ `
   subscription OnDeletePatientInfo($owner: String) {
     onDeletePatientInfo(owner: $owner) {
-      id
+      patientID
       name
       address
-      deviceNo
-      diagnosisInfo
-      NHYAclass
-      cardiologist
-      hospitalName
-      hospitalLocation
-      targetWeight
-      targetActivity
-      riskLevel
       gender
       birthDate
       language
@@ -86,9 +79,19 @@ export const onDeletePatientInfo = /* GraphQL */ `
       email
       emergencyContactName
       emergencyContactNumber
-      fluidIntakeGoal
+      NYHAClass
+      cardiologist
+      diagnosisInfo
+      hospitalName
+      hospitalLocation
+      targetWeight
+      targetSteps
+      riskLevel
+      deviceNo
+      fluidIntakeGoalInMl
       configured
-      patientID
+      version
+      updatedByUser
       createdAt
       updatedAt
       owner
@@ -99,11 +102,11 @@ export const onCreateMedicationInfo = /* GraphQL */ `
   subscription OnCreateMedicationInfo($owner: String, $patientID: String) {
     onCreateMedicationInfo(owner: $owner, patientID: $patientID) {
       id
+      patientID
       name
       dosage
       frequency
       records
-      patientID
       active
       createdAt
       updatedAt
@@ -115,11 +118,11 @@ export const onUpdateMedicationInfo = /* GraphQL */ `
   subscription OnUpdateMedicationInfo($owner: String, $patientID: String) {
     onUpdateMedicationInfo(owner: $owner, patientID: $patientID) {
       id
+      patientID
       name
       dosage
       frequency
       records
-      patientID
       active
       createdAt
       updatedAt
@@ -131,11 +134,11 @@ export const onDeleteMedicationInfo = /* GraphQL */ `
   subscription OnDeleteMedicationInfo($owner: String, $patientID: String) {
     onDeleteMedicationInfo(owner: $owner, patientID: $patientID) {
       id
+      patientID
       name
       dosage
       frequency
       records
-      patientID
       active
       createdAt
       updatedAt
@@ -147,13 +150,13 @@ export const onCreateActivityInfo = /* GraphQL */ `
   subscription OnCreateActivityInfo($owner: String) {
     onCreateActivityInfo(owner: $owner) {
       id
-      Actname
-      Location
-      expectedFrequency
-      expectedDays
-      expectedDurationMinutes
-      recordDateTime
       patientID
+      activityName
+      startTime
+      days
+      durationInMinutes
+      locations
+      symptoms
       createdAt
       updatedAt
       owner
@@ -164,13 +167,13 @@ export const onUpdateActivityInfo = /* GraphQL */ `
   subscription OnUpdateActivityInfo($owner: String) {
     onUpdateActivityInfo(owner: $owner) {
       id
-      Actname
-      Location
-      expectedFrequency
-      expectedDays
-      expectedDurationMinutes
-      recordDateTime
       patientID
+      activityName
+      startTime
+      days
+      durationInMinutes
+      locations
+      symptoms
       createdAt
       updatedAt
       owner
@@ -181,55 +184,13 @@ export const onDeleteActivityInfo = /* GraphQL */ `
   subscription OnDeleteActivityInfo($owner: String) {
     onDeleteActivityInfo(owner: $owner) {
       id
-      Actname
-      Location
-      expectedFrequency
-      expectedDays
-      expectedDurationMinutes
-      recordDateTime
       patientID
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const onCreateMedCompliant = /* GraphQL */ `
-  subscription OnCreateMedCompliant($owner: String) {
-    onCreateMedCompliant(owner: $owner) {
-      id
-      MedId
-      Verification
-      Date
-      patientID
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const onUpdateMedCompliant = /* GraphQL */ `
-  subscription OnUpdateMedCompliant($owner: String) {
-    onUpdateMedCompliant(owner: $owner) {
-      id
-      MedId
-      Verification
-      Date
-      patientID
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const onDeleteMedCompliant = /* GraphQL */ `
-  subscription OnDeleteMedCompliant($owner: String) {
-    onDeleteMedCompliant(owner: $owner) {
-      id
-      MedId
-      Verification
-      Date
-      patientID
+      activityName
+      startTime
+      days
+      durationInMinutes
+      locations
+      symptoms
       createdAt
       updatedAt
       owner
@@ -240,12 +201,15 @@ export const onCreateReportSymptom = /* GraphQL */ `
   subscription OnCreateReportSymptom($owner: String) {
     onCreateReportSymptom(owner: $owner) {
       id
-      ActId
-      Name
-      Severity
-      DateTime
-      Summary
       patientID
+      activityInfoID
+      symptomName
+      severity
+      dateTime
+      summary
+      weather
+      temperature
+      humidity
       createdAt
       updatedAt
       owner
@@ -256,12 +220,15 @@ export const onUpdateReportSymptom = /* GraphQL */ `
   subscription OnUpdateReportSymptom($owner: String) {
     onUpdateReportSymptom(owner: $owner) {
       id
-      ActId
-      Name
-      Severity
-      DateTime
-      Summary
       patientID
+      activityInfoID
+      symptomName
+      severity
+      dateTime
+      summary
+      weather
+      temperature
+      humidity
       createdAt
       updatedAt
       owner
@@ -272,12 +239,15 @@ export const onDeleteReportSymptom = /* GraphQL */ `
   subscription OnDeleteReportSymptom($owner: String) {
     onDeleteReportSymptom(owner: $owner) {
       id
-      ActId
-      Name
-      Severity
-      DateTime
-      Summary
       patientID
+      activityInfoID
+      symptomName
+      severity
+      dateTime
+      summary
+      weather
+      temperature
+      humidity
       createdAt
       updatedAt
       owner
@@ -288,16 +258,16 @@ export const onCreateReportVitals = /* GraphQL */ `
   subscription OnCreateReportVitals($owner: String) {
     onCreateReportVitals(owner: $owner) {
       id
-      Temperature
-      Humidity
-      Weight
-      BPSys
-      BPDi
-      NoSteps
-      OxySat
-      FluidIntake
-      DateTime
       patientID
+      dateTime
+      weight
+      systolicBloodPressure
+      diastolicBloodPressure
+      oxygenSaturation
+      fluidIntakeInMl
+      weather
+      temperature
+      humidity
       createdAt
       updatedAt
       owner
@@ -308,16 +278,16 @@ export const onUpdateReportVitals = /* GraphQL */ `
   subscription OnUpdateReportVitals($owner: String) {
     onUpdateReportVitals(owner: $owner) {
       id
-      Temperature
-      Humidity
-      Weight
-      BPSys
-      BPDi
-      NoSteps
-      OxySat
-      FluidIntake
-      DateTime
       patientID
+      dateTime
+      weight
+      systolicBloodPressure
+      diastolicBloodPressure
+      oxygenSaturation
+      fluidIntakeInMl
+      weather
+      temperature
+      humidity
       createdAt
       updatedAt
       owner
@@ -328,16 +298,64 @@ export const onDeleteReportVitals = /* GraphQL */ `
   subscription OnDeleteReportVitals($owner: String) {
     onDeleteReportVitals(owner: $owner) {
       id
-      Temperature
-      Humidity
-      Weight
-      BPSys
-      BPDi
-      NoSteps
-      OxySat
-      FluidIntake
-      DateTime
       patientID
+      dateTime
+      weight
+      systolicBloodPressure
+      diastolicBloodPressure
+      oxygenSaturation
+      fluidIntakeInMl
+      weather
+      temperature
+      humidity
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onCreatePhysical = /* GraphQL */ `
+  subscription OnCreatePhysical($owner: String) {
+    onCreatePhysical(owner: $owner) {
+      id
+      patientID
+      steps
+      stepsGoal
+      averageWalkingSpeedInMetresPerSeconds
+      distanceInMetres
+      dateTime
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onUpdatePhysical = /* GraphQL */ `
+  subscription OnUpdatePhysical($owner: String) {
+    onUpdatePhysical(owner: $owner) {
+      id
+      patientID
+      steps
+      stepsGoal
+      averageWalkingSpeedInMetresPerSeconds
+      distanceInMetres
+      dateTime
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onDeletePhysical = /* GraphQL */ `
+  subscription OnDeletePhysical($owner: String) {
+    onDeletePhysical(owner: $owner) {
+      id
+      patientID
+      steps
+      stepsGoal
+      averageWalkingSpeedInMetresPerSeconds
+      distanceInMetres
+      dateTime
       createdAt
       updatedAt
       owner
@@ -347,12 +365,12 @@ export const onDeleteReportVitals = /* GraphQL */ `
 export const onCreateClinicianInfo = /* GraphQL */ `
   subscription OnCreateClinicianInfo($clinicianID: String) {
     onCreateClinicianInfo(clinicianID: $clinicianID) {
-      id
       clinicianID
       name
       hospitalName
       role
       contactNumber
+      version
       createdAt
       updatedAt
     }
@@ -361,12 +379,12 @@ export const onCreateClinicianInfo = /* GraphQL */ `
 export const onUpdateClinicianInfo = /* GraphQL */ `
   subscription OnUpdateClinicianInfo($clinicianID: String) {
     onUpdateClinicianInfo(clinicianID: $clinicianID) {
-      id
       clinicianID
       name
       hospitalName
       role
       contactNumber
+      version
       createdAt
       updatedAt
     }
@@ -375,12 +393,12 @@ export const onUpdateClinicianInfo = /* GraphQL */ `
 export const onDeleteClinicianInfo = /* GraphQL */ `
   subscription OnDeleteClinicianInfo($clinicianID: String) {
     onDeleteClinicianInfo(clinicianID: $clinicianID) {
-      id
       clinicianID
       name
       hospitalName
       role
       contactNumber
+      version
       createdAt
       updatedAt
     }
@@ -389,7 +407,6 @@ export const onDeleteClinicianInfo = /* GraphQL */ `
 export const onCreateClinicianProtectedInfo = /* GraphQL */ `
   subscription OnCreateClinicianProtectedInfo($clinicianID: String) {
     onCreateClinicianProtectedInfo(clinicianID: $clinicianID) {
-      id
       clinicianID
       facts
       APS
@@ -399,6 +416,7 @@ export const onCreateClinicianProtectedInfo = /* GraphQL */ `
       ALA
       MHA
       CAM
+      version
       createdAt
       updatedAt
     }
@@ -407,7 +425,6 @@ export const onCreateClinicianProtectedInfo = /* GraphQL */ `
 export const onUpdateClinicianProtectedInfo = /* GraphQL */ `
   subscription OnUpdateClinicianProtectedInfo($clinicianID: String) {
     onUpdateClinicianProtectedInfo(clinicianID: $clinicianID) {
-      id
       clinicianID
       facts
       APS
@@ -417,6 +434,7 @@ export const onUpdateClinicianProtectedInfo = /* GraphQL */ `
       ALA
       MHA
       CAM
+      version
       createdAt
       updatedAt
     }
@@ -425,7 +443,6 @@ export const onUpdateClinicianProtectedInfo = /* GraphQL */ `
 export const onDeleteClinicianProtectedInfo = /* GraphQL */ `
   subscription OnDeleteClinicianProtectedInfo($clinicianID: String) {
     onDeleteClinicianProtectedInfo(clinicianID: $clinicianID) {
-      id
       clinicianID
       facts
       APS
@@ -435,6 +452,7 @@ export const onDeleteClinicianProtectedInfo = /* GraphQL */ `
       ALA
       MHA
       CAM
+      version
       createdAt
       updatedAt
     }
@@ -449,7 +467,6 @@ export const onCreateClinicianPatientMap = /* GraphQL */ `
       clinicianID: $clinicianID
       patientID: $patientID
     ) {
-      id
       clinicianID
       patientID
       createdAt
@@ -466,7 +483,6 @@ export const onUpdateClinicianPatientMap = /* GraphQL */ `
       clinicianID: $clinicianID
       patientID: $patientID
     ) {
-      id
       clinicianID
       patientID
       createdAt
@@ -483,7 +499,6 @@ export const onDeleteClinicianPatientMap = /* GraphQL */ `
       clinicianID: $clinicianID
       patientID: $patientID
     ) {
-      id
       clinicianID
       patientID
       createdAt
@@ -500,7 +515,6 @@ export const onCreatePatientAssignment = /* GraphQL */ `
       patientID: $patientID
       clinicianID: $clinicianID
     ) {
-      id
       patientID
       clinicianID
       patientName
@@ -522,7 +536,6 @@ export const onUpdatePatientAssignment = /* GraphQL */ `
       patientID: $patientID
       clinicianID: $clinicianID
     ) {
-      id
       patientID
       clinicianID
       patientName
@@ -544,7 +557,6 @@ export const onDeletePatientAssignment = /* GraphQL */ `
       patientID: $patientID
       clinicianID: $clinicianID
     ) {
-      id
       patientID
       clinicianID
       patientName
@@ -571,9 +583,11 @@ export const onCreateAlert = /* GraphQL */ `
       symptomReportID
       pending
       completed
-      owner
+      version
+      updatedByUser
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -591,9 +605,11 @@ export const onUpdateAlert = /* GraphQL */ `
       symptomReportID
       pending
       completed
-      owner
+      version
+      updatedByUser
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -611,9 +627,11 @@ export const onDeleteAlert = /* GraphQL */ `
       symptomReportID
       pending
       completed
-      owner
+      version
+      updatedByUser
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -629,9 +647,10 @@ export const onCreateTodo = /* GraphQL */ `
       alertID
       pending
       completed
-      owner
+      version
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -647,9 +666,10 @@ export const onUpdateTodo = /* GraphQL */ `
       alertID
       pending
       completed
-      owner
+      version
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -665,9 +685,10 @@ export const onDeleteTodo = /* GraphQL */ `
       alertID
       pending
       completed
-      owner
+      version
       createdAt
       updatedAt
+      owner
     }
   }
 `;
