@@ -27,9 +27,6 @@ export const onCreatePatientInfo = /* GraphQL */ `
       fluidIntakeGoal
       configured
       patientID
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       owner
@@ -61,9 +58,6 @@ export const onUpdatePatientInfo = /* GraphQL */ `
       fluidIntakeGoal
       configured
       patientID
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       owner
@@ -95,9 +89,6 @@ export const onDeletePatientInfo = /* GraphQL */ `
       fluidIntakeGoal
       configured
       patientID
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       owner
@@ -114,9 +105,6 @@ export const onCreateMedicationInfo = /* GraphQL */ `
       records
       patientID
       active
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       owner
@@ -133,9 +121,6 @@ export const onUpdateMedicationInfo = /* GraphQL */ `
       records
       patientID
       active
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       owner
@@ -152,9 +137,6 @@ export const onDeleteMedicationInfo = /* GraphQL */ `
       records
       patientID
       active
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       owner
@@ -172,9 +154,6 @@ export const onCreateActivityInfo = /* GraphQL */ `
       expectedDurationMinutes
       recordDateTime
       patientID
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       owner
@@ -192,9 +171,6 @@ export const onUpdateActivityInfo = /* GraphQL */ `
       expectedDurationMinutes
       recordDateTime
       patientID
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       owner
@@ -212,9 +188,6 @@ export const onDeleteActivityInfo = /* GraphQL */ `
       expectedDurationMinutes
       recordDateTime
       patientID
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       owner
@@ -229,9 +202,6 @@ export const onCreateMedCompliant = /* GraphQL */ `
       Verification
       Date
       patientID
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       owner
@@ -246,9 +216,6 @@ export const onUpdateMedCompliant = /* GraphQL */ `
       Verification
       Date
       patientID
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       owner
@@ -263,9 +230,6 @@ export const onDeleteMedCompliant = /* GraphQL */ `
       Verification
       Date
       patientID
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       owner
@@ -282,9 +246,6 @@ export const onCreateReportSymptom = /* GraphQL */ `
       DateTime
       Summary
       patientID
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       owner
@@ -301,9 +262,6 @@ export const onUpdateReportSymptom = /* GraphQL */ `
       DateTime
       Summary
       patientID
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       owner
@@ -320,9 +278,6 @@ export const onDeleteReportSymptom = /* GraphQL */ `
       DateTime
       Summary
       patientID
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       owner
@@ -343,9 +298,6 @@ export const onCreateReportVitals = /* GraphQL */ `
       FluidIntake
       DateTime
       patientID
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       owner
@@ -366,9 +318,6 @@ export const onUpdateReportVitals = /* GraphQL */ `
       FluidIntake
       DateTime
       patientID
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       owner
@@ -389,111 +338,9 @@ export const onDeleteReportVitals = /* GraphQL */ `
       FluidIntake
       DateTime
       patientID
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       owner
-    }
-  }
-`;
-export const onCreateMedicalRecord = /* GraphQL */ `
-  subscription OnCreateMedicalRecord($clinicianID: String) {
-    onCreateMedicalRecord(clinicianID: $clinicianID) {
-      id
-      patientID
-      clinicianID
-      title
-      fileKey
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateMedicalRecord = /* GraphQL */ `
-  subscription OnUpdateMedicalRecord($clinicianID: String) {
-    onUpdateMedicalRecord(clinicianID: $clinicianID) {
-      id
-      patientID
-      clinicianID
-      title
-      fileKey
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteMedicalRecord = /* GraphQL */ `
-  subscription OnDeleteMedicalRecord($clinicianID: String) {
-    onDeleteMedicalRecord(clinicianID: $clinicianID) {
-      id
-      patientID
-      clinicianID
-      title
-      fileKey
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateIcdCrtRecord = /* GraphQL */ `
-  subscription OnCreateIcdCrtRecord($clinicianID: String) {
-    onCreateIcdCrtRecord(clinicianID: $clinicianID) {
-      id
-      patientID
-      clinicianID
-      title
-      dateTime
-      fileKey
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateIcdCrtRecord = /* GraphQL */ `
-  subscription OnUpdateIcdCrtRecord($clinicianID: String) {
-    onUpdateIcdCrtRecord(clinicianID: $clinicianID) {
-      id
-      patientID
-      clinicianID
-      title
-      dateTime
-      fileKey
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteIcdCrtRecord = /* GraphQL */ `
-  subscription OnDeleteIcdCrtRecord($clinicianID: String) {
-    onDeleteIcdCrtRecord(clinicianID: $clinicianID) {
-      id
-      patientID
-      clinicianID
-      title
-      dateTime
-      fileKey
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -506,9 +353,6 @@ export const onCreateClinicianInfo = /* GraphQL */ `
       hospitalName
       role
       contactNumber
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
     }
@@ -523,9 +367,6 @@ export const onUpdateClinicianInfo = /* GraphQL */ `
       hospitalName
       role
       contactNumber
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
     }
@@ -540,9 +381,6 @@ export const onDeleteClinicianInfo = /* GraphQL */ `
       hospitalName
       role
       contactNumber
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
     }
@@ -561,9 +399,6 @@ export const onCreateClinicianProtectedInfo = /* GraphQL */ `
       ALA
       MHA
       CAM
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
     }
@@ -582,9 +417,6 @@ export const onUpdateClinicianProtectedInfo = /* GraphQL */ `
       ALA
       MHA
       CAM
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
     }
@@ -603,9 +435,6 @@ export const onDeleteClinicianProtectedInfo = /* GraphQL */ `
       ALA
       MHA
       CAM
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
     }
@@ -623,9 +452,6 @@ export const onCreateClinicianPatientMap = /* GraphQL */ `
       id
       clinicianID
       patientID
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
     }
@@ -643,9 +469,6 @@ export const onUpdateClinicianPatientMap = /* GraphQL */ `
       id
       clinicianID
       patientID
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
     }
@@ -663,9 +486,6 @@ export const onDeleteClinicianPatientMap = /* GraphQL */ `
       id
       clinicianID
       patientID
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
     }
@@ -688,9 +508,6 @@ export const onCreatePatientAssignment = /* GraphQL */ `
       resolution
       reassignToClinicianID
       sourceClinicianID
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
     }
@@ -713,9 +530,6 @@ export const onUpdatePatientAssignment = /* GraphQL */ `
       resolution
       reassignToClinicianID
       sourceClinicianID
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
     }
@@ -738,9 +552,6 @@ export const onDeletePatientAssignment = /* GraphQL */ `
       resolution
       reassignToClinicianID
       sourceClinicianID
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
     }
@@ -761,9 +572,6 @@ export const onCreateAlert = /* GraphQL */ `
       pending
       completed
       owner
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
     }
@@ -784,9 +592,6 @@ export const onUpdateAlert = /* GraphQL */ `
       pending
       completed
       owner
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
     }
@@ -807,9 +612,6 @@ export const onDeleteAlert = /* GraphQL */ `
       pending
       completed
       owner
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
     }
@@ -828,9 +630,6 @@ export const onCreateTodo = /* GraphQL */ `
       pending
       completed
       owner
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
     }
@@ -849,9 +648,6 @@ export const onUpdateTodo = /* GraphQL */ `
       pending
       completed
       owner
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
     }
@@ -870,9 +666,6 @@ export const onDeleteTodo = /* GraphQL */ `
       pending
       completed
       owner
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
     }
@@ -885,9 +678,6 @@ export const onCreateAlertNotification = /* GraphQL */ `
       patientID
       alertID
       owner
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
     }
@@ -900,9 +690,6 @@ export const onUpdateAlertNotification = /* GraphQL */ `
       patientID
       alertID
       owner
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
     }
@@ -915,9 +702,6 @@ export const onDeleteAlertNotification = /* GraphQL */ `
       patientID
       alertID
       owner
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
     }
@@ -933,9 +717,6 @@ export const onCreateClinicianRecord = /* GraphQL */ `
       path
       uploaderClinicianID
       uploadDateTime
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       owner
@@ -952,9 +733,6 @@ export const onUpdateClinicianRecord = /* GraphQL */ `
       path
       uploaderClinicianID
       uploadDateTime
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       owner
@@ -971,9 +749,6 @@ export const onDeleteClinicianRecord = /* GraphQL */ `
       path
       uploaderClinicianID
       uploadDateTime
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       owner

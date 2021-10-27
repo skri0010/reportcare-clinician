@@ -70,9 +70,6 @@ export const getPatientInfo = /* GraphQL */ `
       fluidIntakeGoal
       configured
       patientID
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       owner
@@ -117,63 +114,11 @@ export const listPatientInfos = /* GraphQL */ `
         fluidIntakeGoal
         configured
         patientID
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
         owner
       }
       nextToken
-      startedAt
-    }
-  }
-`;
-export const syncPatientInfos = /* GraphQL */ `
-  query SyncPatientInfos(
-    $filter: ModelPatientInfoFilterInput
-    $limit: Int
-    $nextToken: String
-    $lastSync: AWSTimestamp
-  ) {
-    syncPatientInfos(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      lastSync: $lastSync
-    ) {
-      items {
-        id
-        name
-        address
-        deviceNo
-        diagnosisInfo
-        NHYAclass
-        cardiologist
-        hospitalName
-        hospitalLocation
-        targetWeight
-        targetActivity
-        riskLevel
-        gender
-        birthDate
-        language
-        phoneNumber
-        email
-        emergencyContactName
-        emergencyContactNumber
-        fluidIntakeGoal
-        configured
-        patientID
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-        owner
-      }
-      nextToken
-      startedAt
     }
   }
 `;
@@ -187,9 +132,6 @@ export const getMedicationInfo = /* GraphQL */ `
       records
       patientID
       active
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       owner
@@ -211,15 +153,11 @@ export const listMedicationInfos = /* GraphQL */ `
         records
         patientID
         active
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
         owner
       }
       nextToken
-      startedAt
     }
   }
 `;
@@ -246,48 +184,11 @@ export const listMedicationInfosByPatientID = /* GraphQL */ `
         records
         patientID
         active
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
         owner
       }
       nextToken
-      startedAt
-    }
-  }
-`;
-export const syncMedicationInfos = /* GraphQL */ `
-  query SyncMedicationInfos(
-    $filter: ModelMedicationInfoFilterInput
-    $limit: Int
-    $nextToken: String
-    $lastSync: AWSTimestamp
-  ) {
-    syncMedicationInfos(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      lastSync: $lastSync
-    ) {
-      items {
-        id
-        name
-        dosage
-        frequency
-        records
-        patientID
-        active
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-        owner
-      }
-      nextToken
-      startedAt
     }
   }
 `;
@@ -302,9 +203,6 @@ export const getActivityInfo = /* GraphQL */ `
       expectedDurationMinutes
       recordDateTime
       patientID
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       owner
@@ -327,15 +225,11 @@ export const listActivityInfos = /* GraphQL */ `
         expectedDurationMinutes
         recordDateTime
         patientID
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
         owner
       }
       nextToken
-      startedAt
     }
   }
 `;
@@ -363,49 +257,11 @@ export const listActivityInfosByPatientID = /* GraphQL */ `
         expectedDurationMinutes
         recordDateTime
         patientID
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
         owner
       }
       nextToken
-      startedAt
-    }
-  }
-`;
-export const syncActivityInfos = /* GraphQL */ `
-  query SyncActivityInfos(
-    $filter: ModelActivityInfoFilterInput
-    $limit: Int
-    $nextToken: String
-    $lastSync: AWSTimestamp
-  ) {
-    syncActivityInfos(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      lastSync: $lastSync
-    ) {
-      items {
-        id
-        Actname
-        Location
-        expectedFrequency
-        expectedDays
-        expectedDurationMinutes
-        recordDateTime
-        patientID
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-        owner
-      }
-      nextToken
-      startedAt
     }
   }
 `;
@@ -417,9 +273,6 @@ export const getMedCompliant = /* GraphQL */ `
       Verification
       Date
       patientID
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       MedicationInfo {
@@ -430,9 +283,6 @@ export const getMedCompliant = /* GraphQL */ `
         records
         patientID
         active
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
         owner
@@ -454,15 +304,11 @@ export const listMedCompliants = /* GraphQL */ `
         Verification
         Date
         patientID
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
         owner
       }
       nextToken
-      startedAt
     }
   }
 `;
@@ -487,15 +333,11 @@ export const listMedCompliantsByPatientID = /* GraphQL */ `
         Verification
         Date
         patientID
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
         owner
       }
       nextToken
-      startedAt
     }
   }
 `;
@@ -522,46 +364,11 @@ export const listMedCompliantsByDate = /* GraphQL */ `
         Verification
         Date
         patientID
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
         owner
       }
       nextToken
-      startedAt
-    }
-  }
-`;
-export const syncMedCompliants = /* GraphQL */ `
-  query SyncMedCompliants(
-    $filter: ModelMedCompliantFilterInput
-    $limit: Int
-    $nextToken: String
-    $lastSync: AWSTimestamp
-  ) {
-    syncMedCompliants(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      lastSync: $lastSync
-    ) {
-      items {
-        id
-        MedId
-        Verification
-        Date
-        patientID
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-        owner
-      }
-      nextToken
-      startedAt
     }
   }
 `;
@@ -575,9 +382,6 @@ export const getReportSymptom = /* GraphQL */ `
       DateTime
       Summary
       patientID
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       ActivityInfo {
@@ -589,9 +393,6 @@ export const getReportSymptom = /* GraphQL */ `
         expectedDurationMinutes
         recordDateTime
         patientID
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
         owner
@@ -615,15 +416,11 @@ export const listReportSymptoms = /* GraphQL */ `
         DateTime
         Summary
         patientID
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
         owner
       }
       nextToken
-      startedAt
     }
   }
 `;
@@ -650,15 +447,11 @@ export const listReportSymptomsByPatientID = /* GraphQL */ `
         DateTime
         Summary
         patientID
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
         owner
       }
       nextToken
-      startedAt
     }
   }
 `;
@@ -687,48 +480,11 @@ export const listReportSymptomsByDateTime = /* GraphQL */ `
         DateTime
         Summary
         patientID
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
         owner
       }
       nextToken
-      startedAt
-    }
-  }
-`;
-export const syncReportSymptoms = /* GraphQL */ `
-  query SyncReportSymptoms(
-    $filter: ModelReportSymptomFilterInput
-    $limit: Int
-    $nextToken: String
-    $lastSync: AWSTimestamp
-  ) {
-    syncReportSymptoms(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      lastSync: $lastSync
-    ) {
-      items {
-        id
-        ActId
-        Name
-        Severity
-        DateTime
-        Summary
-        patientID
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-        owner
-      }
-      nextToken
-      startedAt
     }
   }
 `;
@@ -746,9 +502,6 @@ export const getReportVitals = /* GraphQL */ `
       FluidIntake
       DateTime
       patientID
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       owner
@@ -774,15 +527,11 @@ export const listReportVitalss = /* GraphQL */ `
         FluidIntake
         DateTime
         patientID
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
         owner
       }
       nextToken
-      startedAt
     }
   }
 `;
@@ -813,15 +562,11 @@ export const listReportVitalsByPatientID = /* GraphQL */ `
         FluidIntake
         DateTime
         patientID
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
         owner
       }
       nextToken
-      startedAt
     }
   }
 `;
@@ -854,262 +599,11 @@ export const listReportVitalsByDateTime = /* GraphQL */ `
         FluidIntake
         DateTime
         patientID
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
         owner
       }
       nextToken
-      startedAt
-    }
-  }
-`;
-export const syncReportVitals = /* GraphQL */ `
-  query SyncReportVitals(
-    $filter: ModelReportVitalsFilterInput
-    $limit: Int
-    $nextToken: String
-    $lastSync: AWSTimestamp
-  ) {
-    syncReportVitals(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      lastSync: $lastSync
-    ) {
-      items {
-        id
-        Temperature
-        Humidity
-        Weight
-        BPSys
-        BPDi
-        NoSteps
-        OxySat
-        FluidIntake
-        DateTime
-        patientID
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-        owner
-      }
-      nextToken
-      startedAt
-    }
-  }
-`;
-export const getMedicalRecord = /* GraphQL */ `
-  query GetMedicalRecord($id: ID!) {
-    getMedicalRecord(id: $id) {
-      id
-      patientID
-      clinicianID
-      title
-      fileKey
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listMedicalRecords = /* GraphQL */ `
-  query ListMedicalRecords(
-    $filter: ModelMedicalRecordFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listMedicalRecords(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        patientID
-        clinicianID
-        title
-        fileKey
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-      }
-      nextToken
-      startedAt
-    }
-  }
-`;
-export const listMedicalRecordsByPatientID = /* GraphQL */ `
-  query ListMedicalRecordsByPatientID(
-    $patientID: String
-    $sortDirection: ModelSortDirection
-    $filter: ModelMedicalRecordFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listMedicalRecordsByPatientID(
-      patientID: $patientID
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        patientID
-        clinicianID
-        title
-        fileKey
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-      }
-      nextToken
-      startedAt
-    }
-  }
-`;
-export const syncMedicalRecords = /* GraphQL */ `
-  query SyncMedicalRecords(
-    $filter: ModelMedicalRecordFilterInput
-    $limit: Int
-    $nextToken: String
-    $lastSync: AWSTimestamp
-  ) {
-    syncMedicalRecords(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      lastSync: $lastSync
-    ) {
-      items {
-        id
-        patientID
-        clinicianID
-        title
-        fileKey
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-      }
-      nextToken
-      startedAt
-    }
-  }
-`;
-export const getIcdCrtRecord = /* GraphQL */ `
-  query GetIcdCrtRecord($id: ID!) {
-    getIcdCrtRecord(id: $id) {
-      id
-      patientID
-      clinicianID
-      title
-      dateTime
-      fileKey
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listIcdCrtRecords = /* GraphQL */ `
-  query ListIcdCrtRecords(
-    $filter: ModelIcdCrtRecordFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listIcdCrtRecords(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        patientID
-        clinicianID
-        title
-        dateTime
-        fileKey
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-      }
-      nextToken
-      startedAt
-    }
-  }
-`;
-export const listIcdCrtRecordsByDateTime = /* GraphQL */ `
-  query ListIcdCrtRecordsByDateTime(
-    $patientID: String
-    $dateTime: ModelStringKeyConditionInput
-    $sortDirection: ModelSortDirection
-    $filter: ModelIcdCrtRecordFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listIcdCrtRecordsByDateTime(
-      patientID: $patientID
-      dateTime: $dateTime
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        patientID
-        clinicianID
-        title
-        dateTime
-        fileKey
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-      }
-      nextToken
-      startedAt
-    }
-  }
-`;
-export const syncIcdCrtRecords = /* GraphQL */ `
-  query SyncIcdCrtRecords(
-    $filter: ModelIcdCrtRecordFilterInput
-    $limit: Int
-    $nextToken: String
-    $lastSync: AWSTimestamp
-  ) {
-    syncIcdCrtRecords(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      lastSync: $lastSync
-    ) {
-      items {
-        id
-        patientID
-        clinicianID
-        title
-        dateTime
-        fileKey
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-      }
-      nextToken
-      startedAt
     }
   }
 `;
@@ -1122,9 +616,6 @@ export const getClinicianInfo = /* GraphQL */ `
       hospitalName
       role
       contactNumber
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       protectedInfo {
@@ -1138,9 +629,6 @@ export const getClinicianInfo = /* GraphQL */ `
         ALA
         MHA
         CAM
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
       }
@@ -1169,45 +657,10 @@ export const listClinicianInfos = /* GraphQL */ `
         hospitalName
         role
         contactNumber
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
       }
       nextToken
-      startedAt
-    }
-  }
-`;
-export const syncClinicianInfos = /* GraphQL */ `
-  query SyncClinicianInfos(
-    $filter: ModelClinicianInfoFilterInput
-    $limit: Int
-    $nextToken: String
-    $lastSync: AWSTimestamp
-  ) {
-    syncClinicianInfos(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      lastSync: $lastSync
-    ) {
-      items {
-        id
-        clinicianID
-        name
-        hospitalName
-        role
-        contactNumber
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-      }
-      nextToken
-      startedAt
     }
   }
 `;
@@ -1224,9 +677,6 @@ export const getClinicianProtectedInfo = /* GraphQL */ `
       ALA
       MHA
       CAM
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
     }
@@ -1258,49 +708,10 @@ export const listClinicianProtectedInfos = /* GraphQL */ `
         ALA
         MHA
         CAM
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
       }
       nextToken
-      startedAt
-    }
-  }
-`;
-export const syncClinicianProtectedInfos = /* GraphQL */ `
-  query SyncClinicianProtectedInfos(
-    $filter: ModelClinicianProtectedInfoFilterInput
-    $limit: Int
-    $nextToken: String
-    $lastSync: AWSTimestamp
-  ) {
-    syncClinicianProtectedInfos(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      lastSync: $lastSync
-    ) {
-      items {
-        id
-        clinicianID
-        facts
-        APS
-        DTA
-        UXSA
-        NWA
-        ALA
-        MHA
-        CAM
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-      }
-      nextToken
-      startedAt
     }
   }
 `;
@@ -1310,9 +721,6 @@ export const getClinicianPatientMap = /* GraphQL */ `
       id
       clinicianID
       patientID
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       clinicianInfo {
@@ -1322,9 +730,6 @@ export const getClinicianPatientMap = /* GraphQL */ `
         hospitalName
         role
         contactNumber
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
       }
@@ -1352,14 +757,10 @@ export const listClinicianPatientMaps = /* GraphQL */ `
         id
         clinicianID
         patientID
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
       }
       nextToken
-      startedAt
     }
   }
 `;
@@ -1384,42 +785,10 @@ export const listClinicianMappingsByPatientID = /* GraphQL */ `
         id
         clinicianID
         patientID
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
       }
       nextToken
-      startedAt
-    }
-  }
-`;
-export const syncClinicianPatientMaps = /* GraphQL */ `
-  query SyncClinicianPatientMaps(
-    $filter: ModelClinicianPatientMapFilterInput
-    $limit: Int
-    $nextToken: String
-    $lastSync: AWSTimestamp
-  ) {
-    syncClinicianPatientMaps(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      lastSync: $lastSync
-    ) {
-      items {
-        id
-        clinicianID
-        patientID
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-      }
-      nextToken
-      startedAt
     }
   }
 `;
@@ -1434,9 +803,6 @@ export const getPatientAssignment = /* GraphQL */ `
       resolution
       reassignToClinicianID
       sourceClinicianID
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
     }
@@ -1468,14 +834,10 @@ export const listPatientAssignments = /* GraphQL */ `
         resolution
         reassignToClinicianID
         sourceClinicianID
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
       }
       nextToken
-      startedAt
     }
   }
 `;
@@ -1505,47 +867,10 @@ export const listPendingPatientAssignments = /* GraphQL */ `
         resolution
         reassignToClinicianID
         sourceClinicianID
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
       }
       nextToken
-      startedAt
-    }
-  }
-`;
-export const syncPatientAssignments = /* GraphQL */ `
-  query SyncPatientAssignments(
-    $filter: ModelPatientAssignmentFilterInput
-    $limit: Int
-    $nextToken: String
-    $lastSync: AWSTimestamp
-  ) {
-    syncPatientAssignments(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      lastSync: $lastSync
-    ) {
-      items {
-        id
-        patientID
-        clinicianID
-        patientName
-        pending
-        resolution
-        reassignToClinicianID
-        sourceClinicianID
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-      }
-      nextToken
-      startedAt
     }
   }
 `;
@@ -1564,9 +889,6 @@ export const getAlert = /* GraphQL */ `
       pending
       completed
       owner
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       symptomReport {
@@ -1577,9 +899,6 @@ export const getAlert = /* GraphQL */ `
         DateTime
         Summary
         patientID
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
         owner
@@ -1596,9 +915,6 @@ export const getAlert = /* GraphQL */ `
         FluidIntake
         DateTime
         patientID
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
         owner
@@ -1626,14 +942,10 @@ export const listAlerts = /* GraphQL */ `
         pending
         completed
         owner
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
       }
       nextToken
-      startedAt
     }
   }
 `;
@@ -1667,14 +979,10 @@ export const listPatientAlertsByDateTime = /* GraphQL */ `
         pending
         completed
         owner
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
       }
       nextToken
-      startedAt
     }
   }
 `;
@@ -1708,14 +1016,10 @@ export const listPendingAlertsByDateTime = /* GraphQL */ `
         pending
         completed
         owner
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
       }
       nextToken
-      startedAt
     }
   }
 `;
@@ -1749,14 +1053,10 @@ export const listPendingRiskAlerts = /* GraphQL */ `
         pending
         completed
         owner
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
       }
       nextToken
-      startedAt
     }
   }
 `;
@@ -1790,51 +1090,10 @@ export const listCompletedRiskAlerts = /* GraphQL */ `
         pending
         completed
         owner
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
       }
       nextToken
-      startedAt
-    }
-  }
-`;
-export const syncAlerts = /* GraphQL */ `
-  query SyncAlerts(
-    $filter: ModelAlertFilterInput
-    $limit: Int
-    $nextToken: String
-    $lastSync: AWSTimestamp
-  ) {
-    syncAlerts(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      lastSync: $lastSync
-    ) {
-      items {
-        id
-        patientID
-        patientName
-        dateTime
-        summary
-        colorCode
-        triageValue
-        vitalsReportID
-        symptomReportID
-        pending
-        completed
-        owner
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-      }
-      nextToken
-      startedAt
     }
   }
 `;
@@ -1851,9 +1110,6 @@ export const getTodo = /* GraphQL */ `
       pending
       completed
       owner
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       alert {
@@ -1869,9 +1125,6 @@ export const getTodo = /* GraphQL */ `
         pending
         completed
         owner
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
       }
@@ -1896,14 +1149,10 @@ export const listTodos = /* GraphQL */ `
         pending
         completed
         owner
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
       }
       nextToken
-      startedAt
     }
   }
 `;
@@ -1935,14 +1184,10 @@ export const listPendingTodosByLastModifiedDate = /* GraphQL */ `
         pending
         completed
         owner
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
       }
       nextToken
-      startedAt
     }
   }
 `;
@@ -1974,14 +1219,10 @@ export const listCompletedTodosByLastModifiedDate = /* GraphQL */ `
         pending
         completed
         owner
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
       }
       nextToken
-      startedAt
     }
   }
 `;
@@ -2013,49 +1254,10 @@ export const listTodosByAlertID = /* GraphQL */ `
         pending
         completed
         owner
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
       }
       nextToken
-      startedAt
-    }
-  }
-`;
-export const syncTodos = /* GraphQL */ `
-  query SyncTodos(
-    $filter: ModelTodoFilterInput
-    $limit: Int
-    $nextToken: String
-    $lastSync: AWSTimestamp
-  ) {
-    syncTodos(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      lastSync: $lastSync
-    ) {
-      items {
-        id
-        clinicianID
-        title
-        patientName
-        notes
-        lastModified
-        alertID
-        pending
-        completed
-        owner
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-      }
-      nextToken
-      startedAt
     }
   }
 `;
@@ -2066,9 +1268,6 @@ export const getAlertNotification = /* GraphQL */ `
       patientID
       alertID
       owner
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
     }
@@ -2090,43 +1289,10 @@ export const listAlertNotifications = /* GraphQL */ `
         patientID
         alertID
         owner
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
       }
       nextToken
-      startedAt
-    }
-  }
-`;
-export const syncAlertNotifications = /* GraphQL */ `
-  query SyncAlertNotifications(
-    $filter: ModelAlertNotificationFilterInput
-    $limit: Int
-    $nextToken: String
-    $lastSync: AWSTimestamp
-  ) {
-    syncAlertNotifications(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      lastSync: $lastSync
-    ) {
-      items {
-        id
-        patientID
-        alertID
-        owner
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-      }
-      nextToken
-      startedAt
     }
   }
 `;
@@ -2140,9 +1306,6 @@ export const getClinicianRecord = /* GraphQL */ `
       path
       uploaderClinicianID
       uploadDateTime
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       owner
@@ -2174,15 +1337,11 @@ export const listClinicianRecords = /* GraphQL */ `
         path
         uploaderClinicianID
         uploadDateTime
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
         owner
       }
       nextToken
-      startedAt
     }
   }
 `;
@@ -2211,48 +1370,11 @@ export const listUploadedClinicianRecordsByPatientID = /* GraphQL */ `
         path
         uploaderClinicianID
         uploadDateTime
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
         owner
       }
       nextToken
-      startedAt
-    }
-  }
-`;
-export const syncClinicianRecords = /* GraphQL */ `
-  query SyncClinicianRecords(
-    $filter: ModelClinicianRecordFilterInput
-    $limit: Int
-    $nextToken: String
-    $lastSync: AWSTimestamp
-  ) {
-    syncClinicianRecords(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      lastSync: $lastSync
-    ) {
-      items {
-        patientID
-        documentID
-        type
-        title
-        path
-        uploaderClinicianID
-        uploadDateTime
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-        owner
-      }
-      nextToken
-      startedAt
     }
   }
 `;

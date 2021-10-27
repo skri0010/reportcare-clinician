@@ -110,7 +110,6 @@ export const handleReassignedResolution: (input: {
         const updateResult = await updatePatientAssignment({
           patientID: patientID,
           clinicianID: reassignToClinicianID,
-          _version: targetPatientAssignment._version,
           pending: Pending,
           resolution: null, // Update back to null
           sourceClinicianID: clinicianID // Indicate source clinicianID
@@ -208,7 +207,6 @@ export const sharePatientAssignment: (input: {
           pending: Pending,
           resolution: null,
           sourceClinicianID: clinicianID,
-          _version: record._version
         });
         if (updateResult.data) {
           successfullyShared = true;
@@ -286,7 +284,6 @@ const updateSourcePatientAssignment: (input: {
         clinicianID: sourceClinicianID,
         pending: null,
         resolution: resolution,
-        _version: sourcePatientAssignment._version
       });
       if (updateResult.data.updatePatientAssignment) {
         // Print success message and update event response

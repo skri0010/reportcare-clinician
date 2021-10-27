@@ -129,7 +129,6 @@ var handleReassignedResolution = function (_a) {
                     return [4 /*yield*/, (0, updateMutations_1.updatePatientAssignment)({
                             patientID: patientID,
                             clinicianID: reassignToClinicianID,
-                            _version: targetPatientAssignment._version,
                             pending: types_1.Pending,
                             resolution: null,
                             sourceClinicianID: clinicianID // Indicate source clinicianID
@@ -224,8 +223,7 @@ var sharePatientAssignment = function (_a) {
                             patientID: patientID,
                             pending: types_1.Pending,
                             resolution: null,
-                            sourceClinicianID: clinicianID,
-                            _version: record._version
+                            sourceClinicianID: clinicianID
                         })];
                 case 3:
                     updateResult = _b.sent();
@@ -303,8 +301,7 @@ var updateSourcePatientAssignment = function (_a) {
                             patientID: patientID,
                             clinicianID: sourceClinicianID,
                             pending: null,
-                            resolution: resolution,
-                            _version: sourcePatientAssignment._version
+                            resolution: resolution
                         })];
                 case 3:
                     updateResult = _b.sent();
