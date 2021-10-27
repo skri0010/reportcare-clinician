@@ -19,5 +19,5 @@ src/aws/*
 !src/aws/typedAPI
 **/*.js
 
-Others
+# Others
 .vscode

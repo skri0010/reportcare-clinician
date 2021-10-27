@@ -14,11 +14,7 @@ import {
   PatientAssignment,
   CreatePatientAssignmentInput,
   MedicationInfo,
-  CreateMedicationInfoInput,
-  MedicalRecord,
-  CreateMedicalRecordInput,
-  IcdCrtRecord,
-  CreateIcdCrtRecordInput
+  CreateMedicationInfoInput
 } from "aws/API";
 
 interface CreateClinicianInfoResponse extends BaseResponse {
@@ -96,30 +92,4 @@ export const createMedicationInfo = async (
     query: mutations.createMedicationInfo,
     variables: { input: input }
   })) as CreateMedicationInfoResponse;
-};
-
-interface CreateMedicalRecordResponse extends BaseResponse {
-  data: { createMedicalRecord?: MedicalRecord };
-}
-
-export const createMedicalRecord = async (
-  input: CreateMedicalRecordInput
-): Promise<CreateMedicalRecordResponse> => {
-  return (await API.graphql({
-    query: mutations.createMedicalRecord,
-    variables: { input: input }
-  })) as CreateMedicalRecordResponse;
-};
-
-interface CreateIcdCrtRecordResponse extends BaseResponse {
-  data: { createIcdCrtRecord?: IcdCrtRecord };
-}
-
-export const createIcdCrtRecord = async (
-  input: CreateIcdCrtRecordInput
-): Promise<CreateIcdCrtRecordResponse> => {
-  return (await API.graphql({
-    query: mutations.createIcdCrtRecord,
-    variables: { input: input }
-  })) as CreateIcdCrtRecordResponse;
 };

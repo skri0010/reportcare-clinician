@@ -27,9 +27,7 @@ export const mockPatients: PatientInfo[] = [
     emergencyContactNumber: "999",
     email: "testemail@legit.com",
     fluidIntakeGoal: "1000",
-    configured: false,
-    _lastChangedAt: 1627604201979,
-    _version: 1
+    configured: false
   },
   {
     __typename: "PatientInfo",
@@ -56,9 +54,7 @@ export const mockPatients: PatientInfo[] = [
     email: "testemail@legit.com",
     fluidIntakeGoal: "1000",
     configured: true,
-    riskLevel: RiskLevel.LOW,
-    _lastChangedAt: 1627604201979,
-    _version: 1
+    riskLevel: RiskLevel.LOW
   },
   {
     __typename: "PatientInfo",
@@ -85,9 +81,7 @@ export const mockPatients: PatientInfo[] = [
     emergencyContactNumber: "999",
     email: "testemail@legit.com",
     fluidIntakeGoal: "1000",
-    configured: true,
-    _lastChangedAt: 1627604201979,
-    _version: 1
+    configured: true
   },
   {
     __typename: "PatientInfo",
@@ -114,8 +108,6 @@ export const mockPatients: PatientInfo[] = [
     emergencyContactNumber: "999",
     email: "testemail@legit.com",
     fluidIntakeGoal: "1000",
-    configured: true,
-    _lastChangedAt: 1627604201979,
-    _version: 1
+    configured: true
   }
 ];

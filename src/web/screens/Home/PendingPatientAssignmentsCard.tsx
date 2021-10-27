@@ -45,8 +45,7 @@ export const PendingPatientAssignmentsCard: FC<PendingPatientAssignmentsCardProp
         patientID: assignment.patientID,
         clinicianID: assignment.clinicianID,
         resolution: PatientAssignmentStatus.APPROVED,
-        patientName: assignment.patientName,
-        _version: assignment._version
+        patientName: assignment.patientName
       };
       AgentTrigger.triggerResolvePendingAssignments(
         patientAssignmentResolution

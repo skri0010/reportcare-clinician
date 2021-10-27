@@ -10,9 +10,7 @@ export const mockSymptomRecords: ReportSymptom[] = [
     DateTime: "28-07-201",
     patientID: "1",
     createdAt: "",
-    updatedAt: "",
-    _lastChangedAt: 1627604201979,
-    _version: 1
+    updatedAt: ""
   },
   {
     __typename: "ReportSymptom",
@@ -23,9 +21,7 @@ export const mockSymptomRecords: ReportSymptom[] = [
     DateTime: "28-07-201",
     patientID: "1",
     createdAt: "",
-    updatedAt: "",
-    _lastChangedAt: 1627604201979,
-    _version: 1
+    updatedAt: ""
   },
   {
     __typename: "ReportSymptom",
@@ -36,9 +32,7 @@ export const mockSymptomRecords: ReportSymptom[] = [
     DateTime: "28-07-201",
     patientID: "1",
     createdAt: "",
-    updatedAt: "",
-    _lastChangedAt: 1627604201979,
-    _version: 1
+    updatedAt: ""
   },
   {
     __typename: "ReportSymptom",
@@ -49,9 +43,7 @@ export const mockSymptomRecords: ReportSymptom[] = [
     DateTime: "28-07-201",
     patientID: "Muhammad Zaini",
     createdAt: "",
-    updatedAt: "",
-    _lastChangedAt: 1627604201979,
-    _version: 1
+    updatedAt: ""
   },
   {
     __typename: "ReportSymptom",
@@ -62,9 +54,7 @@ export const mockSymptomRecords: ReportSymptom[] = [
     DateTime: "28-07-201",
     patientID: "Tyler Harris",
     createdAt: "",
-    updatedAt: "",
-    _lastChangedAt: 1627604201979,
-    _version: 1
+    updatedAt: ""
   },
   {
     __typename: "ReportSymptom",
@@ -75,9 +65,7 @@ export const mockSymptomRecords: ReportSymptom[] = [
     DateTime: "28-07-201",
     patientID: "Danial Williams",
     createdAt: "",
-    updatedAt: "",
-    _lastChangedAt: 1627604201979,
-    _version: 1
+    updatedAt: ""
   }
   // {
   //   __typename: "ReportSymptom",

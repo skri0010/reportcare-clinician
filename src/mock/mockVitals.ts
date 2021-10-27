@@ -17,9 +17,7 @@ const mockVitals: ReportVitals[] = [
     Weight: "20",
     id: "5b22208a-da5e-430d-a661-a6530bbb5ab8",
     createdAt: "",
-    updatedAt: "",
-    _lastChangedAt: 1627604201979,
-    _version: 1
+    updatedAt: ""
   },
   {
     __typename: "ReportVitals",
@@ -35,9 +33,7 @@ const mockVitals: ReportVitals[] = [
     Weight: "20",
     id: "5b22208a-da5e-430d-a661-a6530bbb5ab9",
     createdAt: "",
-    updatedAt: "",
-    _lastChangedAt: 1627604201979,
-    _version: 1
+    updatedAt: ""
   },
   {
     __typename: "ReportVitals",
@@ -53,9 +49,7 @@ const mockVitals: ReportVitals[] = [
     Weight: "20",
     id: "5b22208a-da5e-430d-a661-a6530bbb5ac1",
     createdAt: "",
-    updatedAt: "",
-    _lastChangedAt: 1627604201979,
-    _version: 1
+    updatedAt: ""
   },
   {
     __typename: "ReportVitals",
@@ -71,9 +65,7 @@ const mockVitals: ReportVitals[] = [
     Weight: "20",
     id: "5b22208a-da5e-430d-a661-a6530bbb5ac3",
     createdAt: "",
-    updatedAt: "",
-    _lastChangedAt: 1627604201979,
-    _version: 1
+    updatedAt: ""
   },
   {
     __typename: "ReportVitals",
@@ -89,9 +81,7 @@ const mockVitals: ReportVitals[] = [
     Weight: "99",
     id: "37e7e083-b61f-4d34-891a-89bc1c6f6cc4",
     createdAt: "",
-    updatedAt: "",
-    _lastChangedAt: 1627604201979,
-    _version: 1
+    updatedAt: ""
   },
   {
     __typename: "ReportVitals",
@@ -107,9 +97,7 @@ const mockVitals: ReportVitals[] = [
     Weight: "99",
     id: "37e7e083-b61f-4d34-891a-89bc1c6f6cc5",
     createdAt: "",
-    updatedAt: "",
-    _lastChangedAt: 1627604201979,
-    _version: 1
+    updatedAt: ""
   },
   {
     __typename: "ReportVitals",
@@ -125,9 +113,7 @@ const mockVitals: ReportVitals[] = [
     Weight: "99",
     id: "37e7e083-b61f-4d34-891a-89bc1c6f6cc6",
     createdAt: "",
-    updatedAt: "",
-    _lastChangedAt: 1627604201979,
-    _version: 1
+    updatedAt: ""
   },
   {
     __typename: "ReportVitals",
@@ -143,9 +129,7 @@ const mockVitals: ReportVitals[] = [
     Weight: "99",
     id: "37e7e083-b61f-4d34-891a-89bc1c6f6cc7",
     createdAt: "",
-    updatedAt: "",
-    _lastChangedAt: 1627604201979,
-    _version: 1
+    updatedAt: ""
   },
   {
     __typename: "ReportVitals",
@@ -161,9 +145,7 @@ const mockVitals: ReportVitals[] = [
     Weight: "80",
     id: "5b22208a-da5e-430d-a661-a6530bbb5ab8",
     createdAt: "",
-    updatedAt: "",
-    _lastChangedAt: 1627604201979,
-    _version: 1
+    updatedAt: ""
   },
   {
     __typename: "ReportVitals",
@@ -179,9 +161,7 @@ const mockVitals: ReportVitals[] = [
     Weight: "80",
     id: "36ee7c15-8772-4679-aade-6b3d7f4c7707",
     createdAt: "",
-    updatedAt: "",
-    _lastChangedAt: 1627604201979,
-    _version: 1
+    updatedAt: ""
   },
   {
     __typename: "ReportVitals",
@@ -197,9 +177,7 @@ const mockVitals: ReportVitals[] = [
     Weight: "80",
     id: "3",
     createdAt: "",
-    updatedAt: "",
-    _lastChangedAt: 1627604201979,
-    _version: 1
+    updatedAt: ""
   },
   {
     __typename: "ReportVitals",
@@ -215,9 +193,7 @@ const mockVitals: ReportVitals[] = [
     Weight: "80",
     id: "6",
     createdAt: "",
-    updatedAt: "",
-    _lastChangedAt: 1627604201979,
-    _version: 1
+    updatedAt: ""
   }
 ];
 

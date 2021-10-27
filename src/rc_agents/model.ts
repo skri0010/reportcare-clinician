@@ -156,7 +156,6 @@ export interface PatientAssignmentResolution {
   patientName: string;
   resolution: PatientAssignmentStatus;
   reassignToClinicianID?: string;
-  _version: number;
 }
 
 export interface AlertsCount {
