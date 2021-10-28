@@ -131,5 +131,5 @@ export const sortIcdCrtRecordsByDescendingDateTime = (
 
 // Filters out null items from a list
 export const getNonNullItemsFromList = (list: any[]): any[] => {
-  return list.flatMap((item) => (item !== null ? [item] : []));
+  return list.flatMap((item) => (item ? [item] : []));
 };

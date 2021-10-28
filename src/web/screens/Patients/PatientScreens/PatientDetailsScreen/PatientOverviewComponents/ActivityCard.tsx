@@ -6,8 +6,8 @@ import { View } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 
 interface ActivityCardProps {
-  stepsTaken: string;
-  stepsRequired: string;
+  stepsTaken: number | string;
+  stepsRequired: number | string;
   minHeight: number;
   flex?: number;
 }

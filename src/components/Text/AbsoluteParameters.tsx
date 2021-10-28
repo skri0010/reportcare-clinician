@@ -6,7 +6,7 @@ import { H1, H5 } from ".";
 
 interface AbsoluteParametersProps {
   topText?: string;
-  centerText?: string;
+  centerText?: number | string;
   bottomText?: string;
 }
 
@@ -22,7 +22,7 @@ export const AbsoluteParameters: FC<AbsoluteParametersProps> = ({
     <View style={styles.container}>
       <H5 text={topText} style={styles.label} />
       <H1
-        text={centerText}
+        text={`${centerText}`}
         style={{ fontWeight: "bold", color: colors.primaryTextColor }}
       />
       <H5 text={bottomText} style={styles.label} />

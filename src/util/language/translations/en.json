@@ -243,7 +243,6 @@
     "Weight": "Weight",
     "TargetWeight": "Target weight",
     "Symptoms": "Symptoms",
-    "NoRecord": "-",
     "NoSymptoms": "No symptoms recorded"
   },
   "Patient_ICD/CRT": {

@@ -5,8 +5,8 @@ import i18n from "util/language/i18n";
 import { AbsoluteParameters } from "components/Text/AbsoluteParameters";
 
 interface WeightProps {
-  weight: string;
-  targetWeight: string;
+  weight: number | string;
+  targetWeight: number | string;
   minHeight: number;
   flex?: number;
 }
@@ -29,7 +29,7 @@ export const WeightCard: FC<WeightProps> = ({
       noChildrenPaddingHorizontal
     >
       <AbsoluteParameters
-        centerText={weight}
+        centerText={`${weight}`}
         bottomText={`(${i18n.t("Parameter_Graphs.WeightUnit")})`}
       />
     </CardWrapper>
