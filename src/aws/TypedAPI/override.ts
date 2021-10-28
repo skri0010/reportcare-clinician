@@ -13,8 +13,6 @@ export const getFullAlert = /* GraphQL */ `
       symptomReportID
       pending
       completed
-      version
-      updatedByUser
       createdAt
       updatedAt
       symptomReport {
@@ -106,7 +104,6 @@ export const listReportSymptomsWithActivitiesByDateTime = /* GraphQL */ `
         updatedAt
       }
       nextToken
-      startedAt
     }
   }
 `;

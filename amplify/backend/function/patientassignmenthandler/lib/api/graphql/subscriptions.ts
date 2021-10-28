@@ -562,7 +562,6 @@ export const onCreateAlert = /* GraphQL */ `
       symptomReportID
       pending
       completed
-      version
       createdAt
       updatedAt
     }
@@ -582,7 +581,6 @@ export const onUpdateAlert = /* GraphQL */ `
       symptomReportID
       pending
       completed
-      version
       createdAt
       updatedAt
     }
@@ -602,7 +600,6 @@ export const onDeleteAlert = /* GraphQL */ `
       symptomReportID
       pending
       completed
-      version
       createdAt
       updatedAt
     }

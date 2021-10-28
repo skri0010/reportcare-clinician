@@ -152,26 +152,16 @@ export const updateAlertInfo = async (
     if (alertQuery.data.getAlert) {
       const onlineAlert = alertQuery.data.getAlert;
 
-      if (
-        alertInfoInput.version &&
-        onlineAlert.version > alertInfoInput.version
-      ) {
-        // If online alert has higher version than local alert, store online alert
-        // Result 1: Online AlertInfo is returned
-        returnAlertInfo = convertAlertToAlertInfo(onlineAlert);
-      } else {
-        // Construct Alert to be updated
+      if (!onlineAlert.completed) {
+        // Update alert if online alert is not completed
         const alertToUpdate: UpdateAlertInput = {
           id: alertInfoInput.id,
           completed: alertInfoInput.completed,
-          pending: alertInfoInput.pending,
-          version: alertInfoInput.version
+          pending: alertInfoInput.pending
         };
         const updateResponse = await updateAlert(alertToUpdate);
-
-        // Updates to indicate that alert is successfully updated
         if (updateResponse.data.updateAlert) {
-          // Result 2: Updated AlertInfo is returned
+          // Return updated alert
           const updatedAlert = updateResponse.data.updateAlert;
           returnAlertInfo = convertAlertToAlertInfo(updatedAlert);
         }

@@ -11,7 +11,7 @@ import { LocalReportVitals, PatientDetails } from "rc_agents/model";
 import { getWeekLocaleDateString } from "util/utilityFunctions";
 import {
   FullChartData,
-  getParameterStatFromOneVitalsReport,
+  getParametersRecordFromVitalsReport,
   obtainFullChartData,
   ParametersRecord
 } from "components/VisualizationComponents/ParameterGraphs";
@@ -56,7 +56,7 @@ export const PatientParameters: FC<PatientParametersProps> = () => {
       Object.keys(tempLocalVitals).forEach((date) => {
         const vitalsList = tempLocalVitals[date];
         if (vitalsList) {
-          const parameterStat = getParameterStatFromOneVitalsReport(
+          const parameterStat = getParametersRecordFromVitalsReport(
             vitalsList,
             date
           );

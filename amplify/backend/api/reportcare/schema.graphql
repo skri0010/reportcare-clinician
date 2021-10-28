@@ -380,7 +380,6 @@ type Alert
   symptomReport: ReportSymptom @connection(fields: ["symptomReportID"])
   pending: String
   completed: String
-  version: Int!
 }
 
 """

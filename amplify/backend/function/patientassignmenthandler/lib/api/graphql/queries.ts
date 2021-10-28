@@ -583,7 +583,6 @@ export const getAlert = /* GraphQL */ `
       symptomReportID
       pending
       completed
-      version
       createdAt
       updatedAt
     }

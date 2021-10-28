@@ -39,7 +39,7 @@ export interface ChartData {
 }
 
 // Calculates average, min and max diastolic BP, systolic BP, weight and oxygen saturation from one day.
-export const getParameterStatFromOneVitalsReport = (
+export const getParametersRecordFromVitalsReport = (
   vitalsData: ReportVitals[],
   localeDateString: string
 ): ParametersRecord | null => {

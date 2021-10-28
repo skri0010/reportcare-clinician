@@ -869,7 +869,6 @@ export const getAlert = /* GraphQL */ `
       symptomReportID
       pending
       completed
-      version
       createdAt
       updatedAt
       symptomReport {
@@ -923,7 +922,6 @@ export const listAlerts = /* GraphQL */ `
         symptomReportID
         pending
         completed
-        version
         createdAt
         updatedAt
       }
@@ -960,7 +958,6 @@ export const listPatientAlertsByDateTime = /* GraphQL */ `
         symptomReportID
         pending
         completed
-        version
         createdAt
         updatedAt
       }
@@ -997,7 +994,6 @@ export const listPendingAlertsByDateTime = /* GraphQL */ `
         symptomReportID
         pending
         completed
-        version
         createdAt
         updatedAt
       }
@@ -1034,7 +1030,6 @@ export const listPendingRiskAlerts = /* GraphQL */ `
         symptomReportID
         pending
         completed
-        version
         createdAt
         updatedAt
       }
@@ -1071,7 +1066,6 @@ export const listCompletedRiskAlerts = /* GraphQL */ `
         symptomReportID
         pending
         completed
-        version
         createdAt
         updatedAt
       }
@@ -1106,7 +1100,6 @@ export const getTodo = /* GraphQL */ `
         symptomReportID
         pending
         completed
-        version
         createdAt
         updatedAt
       }

@@ -5,7 +5,7 @@ import { BaseDetailsCard } from "../BaseDetailsCard";
 import { LocalReportVitals } from "rc_agents/model";
 import {
   FullChartData,
-  getParameterStatFromOneVitalsReport,
+  getParametersRecordFromVitalsReport,
   obtainFullChartData,
   ParametersRecord
 } from "components/VisualizationComponents/ParameterGraphs";
@@ -55,7 +55,7 @@ export const HighRiskVitalSignsCard: FC<HighRiskVitalSignsCardProps> = ({
       Object.keys(tempLocalVitals).forEach((date) => {
         const vitalsList = tempLocalVitals[date];
         if (vitalsList) {
-          const parameterStat = getParameterStatFromOneVitalsReport(
+          const parameterStat = getParametersRecordFromVitalsReport(
             vitalsList,
             date
           );

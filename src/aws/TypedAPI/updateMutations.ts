@@ -5,7 +5,6 @@ import { BaseResponse, incrementVersion, VERSION_KEY } from "aws";
 import {
   ClinicianInfo,
   PatientInfo,
-  UpdatePatientInfoInput,
   Alert,
   UpdateAlertInput,
   Todo,
@@ -15,6 +14,7 @@ import {
 import {
   UpdateVersionedClinicianInfoInput,
   UpdateVersionedClinicianProtectedInfoInput,
+  UpdateVersionedPatientInfoInput,
   UpdateVersionedTodoInput
 } from "./versionedTypes";
 
@@ -50,11 +50,11 @@ interface UpdatePatientInfoResponse extends BaseResponse {
 }
 
 export const updatePatientInfo = async (
-  input: UpdatePatientInfoInput
+  input: UpdateVersionedPatientInfoInput
 ): Promise<UpdatePatientInfoResponse> => {
   return (await API.graphql({
     query: mutations.updatePatientInfo,
-    variables: { input: input }
+    variables: { input: incrementVersion(input, input[VERSION_KEY]) }
   })) as UpdatePatientInfoResponse;
 };
 

@@ -18,7 +18,6 @@ import {
 import { getPatientInfo, updatePatientInfo, createMedicationInfo } from "aws";
 import {
   PatientInfo,
-  UpdatePatientInfoInput,
   CreateMedicationInfoInput,
   MedicationInfo
 } from "aws/API";
@@ -31,6 +30,7 @@ import { store } from "util/useRedux";
 import { agentNWA } from "rc_agents/agents";
 import { MedInput } from "rc_agents/model";
 import { setPatients } from "ic-redux/actions/agents/patientActionCreator";
+import { UpdateVersionedPatientInfoInput } from "aws/TypedAPI/versionedTypes";
 
 /**
  * Represents the activity for storing patient record baseline data.
@@ -296,7 +296,7 @@ export const updatePatientBaseline = async (
 
   if (updateBaseline) {
     // Creates update input
-    const updateInput: UpdatePatientInfoInput = {
+    const updateInput: UpdateVersionedPatientInfoInput = {
       patientID: baseline.patientID,
       version: baseline.version,
       ...patientInfoToUpdate

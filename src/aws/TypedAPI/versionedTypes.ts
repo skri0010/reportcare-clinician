@@ -5,6 +5,7 @@ import {
   CreateTodoInput,
   UpdateClinicianInfoInput,
   UpdateClinicianProtectedInfoInput,
+  UpdatePatientInfoInput,
   UpdateTodoInput
 } from "aws/API";
 
@@ -32,6 +33,12 @@ export type UpdateVersionedClinicianProtectedInfoInput = Omit<
 
 export type UpdateVersionedClinicianInfoInput = Omit<
   UpdateClinicianInfoInput,
+  VersionKey
+> &
+  VersionKeyObject;
+
+export type UpdateVersionedPatientInfoInput = Omit<
+  UpdatePatientInfoInput,
   VersionKey
 > &
   VersionKeyObject;
