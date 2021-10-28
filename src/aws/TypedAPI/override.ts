@@ -69,7 +69,7 @@ export const getAlert = /* GraphQL */ `
 export const listReportSymptomsWithActivitiesByDateTime = /* GraphQL */ `
   query ListReportSymptomsByDateTime(
     $patientID: String
-    $DateTime: ModelStringKeyConditionInput
+    $dateTime: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
     $filter: ModelReportSymptomFilterInput
     $limit: Int
@@ -77,7 +77,7 @@ export const listReportSymptomsWithActivitiesByDateTime = /* GraphQL */ `
   ) {
     listReportSymptomsByDateTime(
       patientID: $patientID
-      DateTime: $DateTime
+      dateTime: $dateTime
       sortDirection: $sortDirection
       filter: $filter
       limit: $limit

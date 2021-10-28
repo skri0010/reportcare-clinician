@@ -273,7 +273,7 @@ export const queryHighRiskAlertInfo = async (
   // Gets date from alert dateTime
   const alertDate = new Date(alert.dateTime);
 
-  // Gets symptoms reports by descending order of DateTime
+  // Gets symptoms reports by descending order of datetime
   const symptomReportsQuery = await listReportSymptomsByDateTime({
     patientID: alert.patientID,
     sortDirection: ModelSortDirection.DESC
@@ -286,9 +286,9 @@ export const queryHighRiskAlertInfo = async (
     const validSymptomReports: ReportSymptom[] = [];
     symptomReports.forEach((report) => {
       if (
-        report?.DateTime &&
-        alertDate >= new Date(report.DateTime) &&
-        moment(alertDate).diff(moment(new Date(report.DateTime)), "days") <= 5
+        report?.dateTime &&
+        alertDate >= new Date(report.dateTime) &&
+        moment(alertDate).diff(moment(new Date(report.dateTime)), "days") <= 5
       ) {
         validSymptomReports.push(report);
       }
@@ -298,7 +298,7 @@ export const queryHighRiskAlertInfo = async (
     }
   }
 
-  // Gets vitals reports by descending order of DateTime
+  // Gets vitals reports by descending order of datetime
   const vitalsReportsQuery = await listReportVitalsByDateTime({
     patientID: alert.patientID,
     sortDirection: ModelSortDirection.DESC
@@ -311,9 +311,9 @@ export const queryHighRiskAlertInfo = async (
     const validVitalsReports: ReportVitals[] = [];
     vitalsReports.forEach((report) => {
       if (
-        report?.DateTime &&
-        alertDate >= new Date(report.DateTime) &&
-        moment(alertDate).diff(moment(new Date(report.DateTime)), "days") <= 5
+        report?.dateTime &&
+        alertDate >= new Date(report.dateTime) &&
+        moment(alertDate).diff(moment(new Date(report.dateTime)), "days") <= 5
       ) {
         validVitalsReports.push(report);
       }

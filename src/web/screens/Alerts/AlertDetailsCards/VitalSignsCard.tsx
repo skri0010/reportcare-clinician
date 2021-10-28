@@ -90,8 +90,8 @@ export const VitalSignsCard: FC<VitalSignsCardProps> = ({ vitalsReport }) => {
               <BaseDetailsContent
                 title={i18n.t("Alerts.AlertVitals.DateTime")}
                 content={
-                  vitalsReport?.DateTime
-                    ? getLocalDateTime(vitalsReport.DateTime)
+                  vitalsReport?.dateTime
+                    ? getLocalDateTime(vitalsReport.dateTime)
                     : "-"
                 }
               />

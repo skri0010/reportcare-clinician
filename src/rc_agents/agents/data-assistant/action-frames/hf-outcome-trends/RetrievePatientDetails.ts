@@ -156,7 +156,7 @@ class RetrievePatientDetails extends Activity {
 
             symptomReports.forEach((symptom: ReportSymptom | null) => {
               if (symptom) {
-                const dateKey = new Date(symptom.DateTime).toLocaleDateString();
+                const dateKey = new Date(symptom.dateTime).toLocaleDateString();
                 const localSymptomsReports =
                   patientDetails.symptomReports[dateKey];
                 if (localSymptomsReports) {
@@ -176,7 +176,7 @@ class RetrievePatientDetails extends Activity {
 
             vitalsReports.forEach((vitals: ReportVitals | null) => {
               if (vitals) {
-                const dateKey = new Date(vitals.DateTime).toLocaleDateString();
+                const dateKey = new Date(vitals.dateTime).toLocaleDateString();
                 const localVitalsReports =
                   patientDetails.vitalsReports[dateKey];
                 if (localVitalsReports) {

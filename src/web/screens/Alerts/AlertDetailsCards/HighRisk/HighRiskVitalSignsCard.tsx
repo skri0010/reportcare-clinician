@@ -44,7 +44,7 @@ export const HighRiskVitalSignsCard: FC<HighRiskVitalSignsCardProps> = ({
 
       // Arrange ReportVitals[] according to date
       vitalsReports.forEach((report) => {
-        const tempKey = new Date(report.DateTime).toLocaleDateString();
+        const tempKey = new Date(report.dateTime).toLocaleDateString();
         if (tempLocalVitals[tempKey]) {
           tempLocalVitals[tempKey]!.push(report);
         } else {

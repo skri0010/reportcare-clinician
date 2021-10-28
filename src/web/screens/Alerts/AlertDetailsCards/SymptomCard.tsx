@@ -36,8 +36,8 @@ export const SymptomCard: FC<SymptomCardProps> = ({
           <BaseDetailsContent
             title={i18n.t("Alerts.AlertSymptom.DateTime")}
             content={
-              symptomReport?.DateTime
-                ? getLocalDateTime(symptomReport.DateTime)
+              symptomReport?.dateTime
+                ? getLocalDateTime(symptomReport.dateTime)
                 : "-"
             }
           />
