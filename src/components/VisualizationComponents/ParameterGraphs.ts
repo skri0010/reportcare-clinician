@@ -1,28 +1,23 @@
 import { ReportVitals } from "aws/API";
 import { ChartViewTypes } from "models/ChartViewTypes";
 import i18n from "util/language/i18n";
+import { getNonNullItemsFromList } from "util/utilityFunctions";
 
-export interface Stat {
+export interface Parameter {
   min: number;
   max: number;
   average: number;
-}
-
-export interface ParameterStats {
-  diastolic: Stat;
-  systolic: Stat;
-  weight: Stat;
-  oxygenSaturation: Stat;
-  fluid: Stat;
-  steps: Stat;
   date: Date;
 }
 
-// Processed from Stat in ParameterStats
-export type SubParameterStat = {
-  parameter: Stat;
+export interface ParametersRecord {
+  diastolic: Parameter;
+  systolic: Parameter;
+  weight: Parameter;
+  oxygenSaturation: Parameter;
+  fluid: Parameter;
   date: Date;
-};
+}
 
 export interface FullChartData {
   diastolic: ChartData;
@@ -30,7 +25,6 @@ export interface FullChartData {
   weight: ChartData;
   oxygenSaturation: ChartData;
   fluid: ChartData;
-  steps: ChartData;
 }
 
 export interface ParameterGraphsProps {
@@ -48,9 +42,11 @@ export interface ChartData {
 export const getParameterStatFromOneVitalsReport = (
   vitalsData: ReportVitals[],
   localeDateString: string
-): ParameterStats | null => {
-  let stats: ParameterStats | null = null;
+): ParametersRecord | null => {
+  let stats: ParametersRecord | null = null;
   if (vitalsData.length > 0) {
+    const date = new Date(localeDateString);
+
     // Utility functions
     const average = (array: number[]) => {
       // Handles case where no records were recorded for a day
@@ -61,53 +57,48 @@ export const getParameterStatFromOneVitalsReport = (
       }
     };
 
-    const getStat = (array: number[]) => ({
+    const getParameter = (array: number[]): Parameter => ({
       // Handles case where no records were recorded for a day
       min: array.length > 0 ? Math.min(...array) : 0,
       max: array.length > 0 ? Math.max(...array) : 0,
-      average: average(array)
+      average: average(array),
+      date: date
     });
 
     // Diastolic BP
-    const diastolicBPVitals: number[] = vitalsData.flatMap((data) =>
-      data.BPDi && parseFloat(data.BPDi) ? [parseFloat(data.BPDi)] : []
+    const diastolicBPVitals: number[] = getNonNullItemsFromList(
+      vitalsData.map((data) => data.diastolicBloodPressure)
     );
 
     // Systolic BP
-    const systolicBPVitals: number[] = vitalsData.flatMap((data) =>
-      data.BPSys && parseFloat(data.BPSys) ? [parseFloat(data.BPSys)] : []
+    const systolicBPVitals: number[] = getNonNullItemsFromList(
+      vitalsData.map((data) => data.systolicBloodPressure)
     );
 
     // Oxygen saturation
-    const oxygenSaturation: number[] = vitalsData.flatMap((data) =>
-      data.OxySat && parseFloat(data.OxySat) ? [parseFloat(data.OxySat)] : []
+    const oxygenSaturation: number[] = getNonNullItemsFromList(
+      vitalsData.map((data) => data.oxygenSaturation)
     );
 
     // Weight
-    const weightVitals: number[] = vitalsData.flatMap((data) =>
-      data.Weight && parseFloat(data.Weight) ? [parseFloat(data.Weight)] : []
+    const weightVitals: number[] = getNonNullItemsFromList(
+      vitalsData.map((data) => data.weight)
     );
 
     // Fluid
-    const fluidVitals: number[] = vitalsData.flatMap((data) =>
-      data.FluidIntake && parseFloat(data.FluidIntake)
-        ? [parseFloat(data.FluidIntake)]
-        : []
+    const fluidVitals: number[] = getNonNullItemsFromList(
+      vitalsData.map((data) => data.fluidIntakeInMl)
     );
 
-    // Steps
-    const steps: number[] = vitalsData.flatMap((data) =>
-      data.NoSteps && parseFloat(data.NoSteps) ? [parseFloat(data.NoSteps)] : []
-    );
+    // DS-TODO: Steps
 
     // Stats
     stats = {
-      diastolic: getStat(diastolicBPVitals),
-      systolic: getStat(systolicBPVitals),
-      weight: getStat(weightVitals),
-      oxygenSaturation: getStat(oxygenSaturation),
-      fluid: getStat(fluidVitals),
-      steps: getStat(steps),
+      diastolic: getParameter(diastolicBPVitals),
+      systolic: getParameter(systolicBPVitals),
+      weight: getParameter(weightVitals),
+      oxygenSaturation: getParameter(oxygenSaturation),
+      fluid: getParameter(fluidVitals),
       date: new Date(localeDateString)
     };
   }
@@ -116,45 +107,41 @@ export const getParameterStatFromOneVitalsReport = (
 
 // Divides parameter stat into a specific sub parameter stat (ie breakdown to diastolic, systolic, etc)
 export const obtainFullChartData = (
-  parameterStats: ParameterStats[]
+  parameterStats: ParametersRecord[]
 ): FullChartData => {
-  const rename = parameterStats;
+  const parametersRecords = parameterStats;
   return {
-    diastolic: subParameterStatsToChartData(
-      rename
-        .filter((data) => data.diastolic && data.date)
-        .map((data) => ({ parameter: data.diastolic, date: data.date }))
+    diastolic: parameterRecordsToChartData(
+      parametersRecords.flatMap((data) =>
+        data.diastolic && data.date ? [data.diastolic] : []
+      )
     ),
-    systolic: subParameterStatsToChartData(
-      rename
-        .filter((data) => data.systolic && data.date)
-        .map((data) => ({ parameter: data.systolic, date: data.date }))
+    systolic: parameterRecordsToChartData(
+      parametersRecords.flatMap((data) =>
+        data.systolic && data.date ? [data.systolic] : []
+      )
     ),
-    weight: subParameterStatsToChartData(
-      rename
-        .filter((data) => data.weight && data.date)
-        .map((data) => ({ parameter: data.weight, date: data.date }))
+    weight: parameterRecordsToChartData(
+      parametersRecords.flatMap((data) =>
+        data.weight && data.date ? [data.weight] : []
+      )
     ),
-    oxygenSaturation: subParameterStatsToChartData(
-      rename
-        .filter((data) => data.oxygenSaturation && data.date)
-        .map((data) => ({ parameter: data.oxygenSaturation, date: data.date }))
+    oxygenSaturation: parameterRecordsToChartData(
+      parametersRecords.flatMap((data) =>
+        data.oxygenSaturation && data.date ? [data.oxygenSaturation] : []
+      )
     ),
-    fluid: subParameterStatsToChartData(
-      rename
-        .filter((data) => data.fluid && data.date)
-        .map((data) => ({ parameter: data.fluid, date: data.date }))
-    ),
-    steps: subParameterStatsToChartData(
-      rename
-        .filter((data) => data.steps && data.date)
-        .map((data) => ({ parameter: data.steps, date: data.date }))
+    fluid: parameterRecordsToChartData(
+      parametersRecords.flatMap((data) =>
+        data.fluid && data.date ? [data.fluid] : []
+      )
     )
+    // DS-TODO: Steps
   };
 };
 
-export const subParameterStatsToChartData: (
-  subParameterStats: SubParameterStat[]
+export const parameterRecordsToChartData: (
+  subParameterStats: Parameter[]
 ) => ChartData = (subParameterStats) => {
   const chartData: ChartData = {
     min: [],
@@ -162,17 +149,17 @@ export const subParameterStatsToChartData: (
     average: [],
     xLabels: []
   };
-  subParameterStats.forEach(({ parameter, date }) => {
-    chartData.min.push(parameter.min);
-    chartData.max.push(parameter.max);
-    chartData.average.push(parameter.average);
+  subParameterStats.forEach(({ min, max, average, date }) => {
+    chartData.min.push(min);
+    chartData.max.push(max);
+    chartData.average.push(average);
     chartData.xLabels.push(date.toLocaleDateString());
   });
   return chartData;
 };
 
 export const getXLabels = (averageStats: {
-  [k: string]: ParameterStats;
+  [k: string]: ParametersRecord;
 }): string[] => {
   const xLabels = Object.keys(averageStats).map((key) =>
     i18n.t(`Parameter_Graphs.Days.${key}`)

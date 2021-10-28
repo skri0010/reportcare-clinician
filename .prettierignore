@@ -14,9 +14,9 @@ amplify/backend/api/reportcare/*
 amplify/backend/auth
 amplify/backend/function
 !**/schema.graphql
-src/aws/*
-!src/aws/index.ts
-!src/aws/typedAPI
+src/aws/graphql/**/*.ts
+src/aws/API.ts
+src/aws/aws-exports.js
 **/*.js
 
 # Others

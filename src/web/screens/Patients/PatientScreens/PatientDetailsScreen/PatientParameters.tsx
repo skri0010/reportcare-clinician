@@ -13,7 +13,7 @@ import {
   FullChartData,
   getParameterStatFromOneVitalsReport,
   obtainFullChartData,
-  ParameterStats
+  ParametersRecord
 } from "components/VisualizationComponents/ParameterGraphs";
 import { mockLocalReportVitals } from "mock/mockVitals";
 import { FluidIntakeChartCard } from "./PatientParameterComponents/FluidIntakeChart";
@@ -42,7 +42,7 @@ export const PatientParameters: FC<PatientParametersProps> = () => {
   useEffect(() => {
     if (vitalsReports) {
       const tempLocalVitals: LocalReportVitals = {};
-      const tempParameterStats: ParameterStats[] = [];
+      const tempParameterStats: ParametersRecord[] = [];
       // Get 7 days locale date string[]
       const targetLocaleDateStrings = getWeekLocaleDateString();
 

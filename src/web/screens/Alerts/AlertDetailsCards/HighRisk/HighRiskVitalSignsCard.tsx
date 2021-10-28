@@ -7,7 +7,7 @@ import {
   FullChartData,
   getParameterStatFromOneVitalsReport,
   obtainFullChartData,
-  ParameterStats
+  ParametersRecord
 } from "components/VisualizationComponents/ParameterGraphs";
 import { ChartFilterPillList } from "components/Buttons/ChartFilterPillList";
 import { Dimensions, View } from "react-native";
@@ -40,7 +40,7 @@ export const HighRiskVitalSignsCard: FC<HighRiskVitalSignsCardProps> = ({
   useEffect(() => {
     if (vitalsReports) {
       const tempLocalVitals: LocalReportVitals = {};
-      const tempParameterStats: ParameterStats[] = [];
+      const tempParameterStats: ParametersRecord[] = [];
 
       // Arrange ReportVitals[] according to date
       vitalsReports.forEach((report) => {
@@ -86,11 +86,11 @@ export const HighRiskVitalSignsCard: FC<HighRiskVitalSignsCardProps> = ({
         <>
           <ChartFilterPillList />
           <View style={styles.rowContainer}>
-            {/* Number of Steps Graph */}
-            <NumberOfStepsChartCard
+            {/* DS-TODO: Number of Steps Graph */}
+            {/* <NumberOfStepsChartCard
               data={fullChartData.steps}
               maxHeight={maxGraphHeight}
-            />
+            /> */}
             {/* Fluid Intake Graph */}
             <FluidIntakeChartCard
               data={fullChartData.fluid}
