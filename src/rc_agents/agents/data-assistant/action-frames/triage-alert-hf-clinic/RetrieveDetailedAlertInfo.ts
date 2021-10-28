@@ -225,7 +225,7 @@ export const queryAlertInfo = async (alert: Alert): Promise<Alert | null> => {
     });
 
     if (latestMedication.length > 0) {
-      alertInfo.medCompliants = latestMedication;
+      alertInfo.medicineInfoList = latestMedication;
     }
   }
 
@@ -356,7 +356,7 @@ export const queryHighRiskAlertInfo = async (
     });
 
     if (validMedInfos.length > 0) {
-      highRiskAlertInfo.medCompliants = validMedInfos;
+      highRiskAlertInfo.medicineInfoList = validMedInfos;
     }
   }
 

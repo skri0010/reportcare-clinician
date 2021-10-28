@@ -7,7 +7,6 @@ import { SymptomCard } from "./AlertDetailsCards/SymptomCard";
 import { SummaryCard } from "./AlertDetailsCards/SummaryCard";
 import { PatientBaselinesCard } from "./AlertDetailsCards/PatientBaselinesCard";
 import { MedicationCard } from "./AlertDetailsCards/MedicationCard";
-import { AlertInfo } from "rc_agents/model";
 
 export const AlertDetails: FC = () => {
   const { alertInfo } = select((state: RootState) => ({
@@ -25,12 +24,9 @@ export const AlertDetails: FC = () => {
 
       <View style={styles.rowContainer}>
         {/* Alert symptom */}
-        <SymptomCard
-          symptomReport={alertInfo?.symptomReport}
-          activity={(alertInfo as AlertInfo).activityDuringAlert}
-        />
+        <SymptomCard symptomReport={alertInfo?.symptomReport} />
         {/* Medication */}
-        <MedicationCard medication={alertInfo?.medCompliants} />
+        <MedicationCard medication={alertInfo?.medicineInfoList} />
       </View>
 
       {/* Alert vital signs */}

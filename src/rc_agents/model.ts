@@ -168,7 +168,7 @@ export interface AlertsCount {
 // Shared by AlertInfo and HighRiskAlertInfo
 type BaseAlertInfo = {
   riskLevel: RiskLevel;
-  medCompliants?: MedicationInfo[];
+  medicineInfoList?: MedicationInfo[];
 } & Alert;
 
 // For viewing usual Alert details

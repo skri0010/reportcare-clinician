@@ -36,7 +36,7 @@ export const validateHospitalName = (hospitalName: PossibleString): boolean => {
 export const validateNYHAClass = (NYHAClass: PossibleString): boolean => {
   return (
     NYHAClass !== Hospital.UNKNOWN &&
-    Object.values(NYHAClass).includes(NYHAClass as NYHAClassEnum)
+    Object.values(NYHAClassEnum).includes(NYHAClass as NYHAClassEnum)
   );
 };
 

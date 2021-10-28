@@ -51,7 +51,7 @@ export const HighRiskAlertDetails: FC = () => {
 
       <View style={styles.rowContainer}>
         {/* Medication */}
-        <MedicationCard medication={alertInfo?.medCompliants} />
+        <MedicationCard medication={alertInfo?.medicineInfoList} />
         {/* Latest ICD/CRT record */}
         {viewIcdCrt && (
           <IcdCrtCard
