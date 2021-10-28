@@ -18,6 +18,7 @@ export const createPatientInfo = /* GraphQL */ `
       email
       emergencyContactName
       emergencyContactNumber
+      riskLevel
       NYHAClass
       cardiologist
       diagnosisInfo
@@ -25,15 +26,12 @@ export const createPatientInfo = /* GraphQL */ `
       hospitalLocation
       targetWeight
       targetSteps
-      riskLevel
       deviceNo
       fluidIntakeGoalInMl
       configured
       version
-      updatedByUser
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -53,6 +51,7 @@ export const updatePatientInfo = /* GraphQL */ `
       email
       emergencyContactName
       emergencyContactNumber
+      riskLevel
       NYHAClass
       cardiologist
       diagnosisInfo
@@ -60,15 +59,12 @@ export const updatePatientInfo = /* GraphQL */ `
       hospitalLocation
       targetWeight
       targetSteps
-      riskLevel
       deviceNo
       fluidIntakeGoalInMl
       configured
       version
-      updatedByUser
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -88,6 +84,7 @@ export const deletePatientInfo = /* GraphQL */ `
       email
       emergencyContactName
       emergencyContactNumber
+      riskLevel
       NYHAClass
       cardiologist
       diagnosisInfo
@@ -95,15 +92,12 @@ export const deletePatientInfo = /* GraphQL */ `
       hospitalLocation
       targetWeight
       targetSteps
-      riskLevel
       deviceNo
       fluidIntakeGoalInMl
       configured
       version
-      updatedByUser
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -122,7 +116,6 @@ export const createMedicationInfo = /* GraphQL */ `
       active
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -141,7 +134,6 @@ export const updateMedicationInfo = /* GraphQL */ `
       active
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -160,7 +152,6 @@ export const deleteMedicationInfo = /* GraphQL */ `
       active
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -180,7 +171,6 @@ export const createActivityInfo = /* GraphQL */ `
       symptoms
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -200,7 +190,6 @@ export const updateActivityInfo = /* GraphQL */ `
       symptoms
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -220,7 +209,6 @@ export const deleteActivityInfo = /* GraphQL */ `
       symptoms
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -242,7 +230,6 @@ export const createReportSymptom = /* GraphQL */ `
       humidity
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -264,7 +251,6 @@ export const updateReportSymptom = /* GraphQL */ `
       humidity
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -286,7 +272,6 @@ export const deleteReportSymptom = /* GraphQL */ `
       humidity
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -309,7 +294,6 @@ export const createReportVitals = /* GraphQL */ `
       humidity
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -332,7 +316,6 @@ export const updateReportVitals = /* GraphQL */ `
       humidity
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -355,7 +338,6 @@ export const deleteReportVitals = /* GraphQL */ `
       humidity
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -374,7 +356,6 @@ export const createPhysical = /* GraphQL */ `
       dateTime
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -393,7 +374,6 @@ export const updatePhysical = /* GraphQL */ `
       dateTime
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -412,7 +392,6 @@ export const deletePhysical = /* GraphQL */ `
       dateTime
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -641,10 +620,8 @@ export const createAlert = /* GraphQL */ `
       pending
       completed
       version
-      updatedByUser
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -666,10 +643,8 @@ export const updateAlert = /* GraphQL */ `
       pending
       completed
       version
-      updatedByUser
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -691,10 +666,8 @@ export const deleteAlert = /* GraphQL */ `
       pending
       completed
       version
-      updatedByUser
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -716,7 +689,6 @@ export const createTodo = /* GraphQL */ `
       version
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -738,7 +710,6 @@ export const updateTodo = /* GraphQL */ `
       version
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -760,7 +731,6 @@ export const deleteTodo = /* GraphQL */ `
       version
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -773,7 +743,6 @@ export const createAlertNotification = /* GraphQL */ `
       id
       patientID
       alertID
-      owner
       createdAt
       updatedAt
     }
@@ -788,7 +757,6 @@ export const updateAlertNotification = /* GraphQL */ `
       id
       patientID
       alertID
-      owner
       createdAt
       updatedAt
     }
@@ -803,7 +771,6 @@ export const deleteAlertNotification = /* GraphQL */ `
       id
       patientID
       alertID
-      owner
       createdAt
       updatedAt
     }
@@ -824,7 +791,6 @@ export const createClinicianRecord = /* GraphQL */ `
       uploadDateTime
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -843,7 +809,6 @@ export const updateClinicianRecord = /* GraphQL */ `
       uploadDateTime
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -862,7 +827,6 @@ export const deleteClinicianRecord = /* GraphQL */ `
       uploadDateTime
       createdAt
       updatedAt
-      owner
     }
   }
 `;

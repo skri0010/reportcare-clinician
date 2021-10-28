@@ -58,6 +58,7 @@ export const getPatientInfo = /* GraphQL */ `
       email
       emergencyContactName
       emergencyContactNumber
+      riskLevel
       NYHAClass
       cardiologist
       diagnosisInfo
@@ -65,15 +66,12 @@ export const getPatientInfo = /* GraphQL */ `
       hospitalLocation
       targetWeight
       targetSteps
-      riskLevel
       deviceNo
       fluidIntakeGoalInMl
       configured
       version
-      updatedByUser
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -108,7 +106,6 @@ export const getMedicationInfo = /* GraphQL */ `
       active
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -155,7 +152,6 @@ export const getActivityInfo = /* GraphQL */ `
       symptoms
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -204,7 +200,6 @@ export const getReportSymptom = /* GraphQL */ `
       humidity
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -275,7 +270,6 @@ export const getReportVitals = /* GraphQL */ `
       humidity
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -342,7 +336,6 @@ export const getPhysical = /* GraphQL */ `
       dateTime
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -591,10 +584,8 @@ export const getAlert = /* GraphQL */ `
       pending
       completed
       version
-      updatedByUser
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -708,7 +699,6 @@ export const getTodo = /* GraphQL */ `
       version
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -792,7 +782,6 @@ export const getAlertNotification = /* GraphQL */ `
       id
       patientID
       alertID
-      owner
       createdAt
       updatedAt
     }
@@ -825,7 +814,6 @@ export const getClinicianRecord = /* GraphQL */ `
       uploadDateTime
       createdAt
       updatedAt
-      owner
     }
   }
 `;

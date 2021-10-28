@@ -151,7 +151,6 @@ export type PatientInfo = {
   version: number,
   createdAt: string,
   updatedAt: string,
-  owner?: string | null,
 };
 
 export type UpdatePatientInfoInput = {
@@ -215,7 +214,6 @@ export type MedicationInfo = {
   active: boolean,
   createdAt: string,
   updatedAt: string,
-  owner?: string | null,
 };
 
 export type UpdateMedicationInfoInput = {
@@ -267,7 +265,6 @@ export type ActivityInfo = {
   symptoms?: Array< string > | null,
   createdAt: string,
   updatedAt: string,
-  owner?: string | null,
 };
 
 export type UpdateActivityInfoInput = {
@@ -343,7 +340,6 @@ export type ReportSymptom = {
   createdAt: string,
   updatedAt: string,
   activityInfo?: ActivityInfo | null,
-  owner?: string | null,
 };
 
 export type UpdateReportSymptomInput = {
@@ -407,7 +403,6 @@ export type ReportVitals = {
   humidity?: number | null,
   createdAt: string,
   updatedAt: string,
-  owner?: string | null,
 };
 
 export type UpdateReportVitalsInput = {
@@ -460,7 +455,6 @@ export type Physical = {
   dateTime: string,
   createdAt: string,
   updatedAt: string,
-  owner?: string | null,
 };
 
 export type UpdatePhysicalInput = {
@@ -712,7 +706,6 @@ export type Alert = {
   updatedAt: string,
   symptomReport?: ReportSymptom | null,
   vitalsReport?: ReportVitals | null,
-  owner?: string | null,
 };
 
 export type UpdateAlertInput = {
@@ -748,7 +741,6 @@ export type CreateTodoInput = {
 };
 
 export type ModelTodoConditionInput = {
-  clinicianID?: ModelStringInput | null,
   title?: ModelStringInput | null,
   patientName?: ModelStringInput | null,
   notes?: ModelStringInput | null,
@@ -777,7 +769,6 @@ export type Todo = {
   createdAt: string,
   updatedAt: string,
   alert?: Alert | null,
-  owner?: string | null,
 };
 
 export type UpdateTodoInput = {
@@ -801,13 +792,10 @@ export type CreateAlertNotificationInput = {
   id?: string | null,
   patientID: string,
   alertID: string,
-  owner: string,
 };
 
 export type ModelAlertNotificationConditionInput = {
-  patientID?: ModelStringInput | null,
   alertID?: ModelIDInput | null,
-  owner?: ModelStringInput | null,
   and?: Array< ModelAlertNotificationConditionInput | null > | null,
   or?: Array< ModelAlertNotificationConditionInput | null > | null,
   not?: ModelAlertNotificationConditionInput | null,
@@ -818,7 +806,6 @@ export type AlertNotification = {
   id: string,
   patientID: string,
   alertID: string,
-  owner: string,
   createdAt: string,
   updatedAt: string,
 };
@@ -827,7 +814,6 @@ export type UpdateAlertNotificationInput = {
   id: string,
   patientID?: string | null,
   alertID?: string | null,
-  owner?: string | null,
 };
 
 export type DeleteAlertNotificationInput = {
@@ -848,7 +834,6 @@ export type ModelClinicianRecordConditionInput = {
   type?: ModelStringInput | null,
   title?: ModelStringInput | null,
   path?: ModelStringInput | null,
-  uploaderClinicianID?: ModelStringInput | null,
   uploadDateTime?: ModelStringInput | null,
   and?: Array< ModelClinicianRecordConditionInput | null > | null,
   or?: Array< ModelClinicianRecordConditionInput | null > | null,
@@ -866,7 +851,6 @@ export type ClinicianRecord = {
   uploadDateTime?: string | null,
   createdAt: string,
   updatedAt: string,
-  owner?: string | null,
 };
 
 export type UpdateClinicianRecordInput = {
@@ -1170,7 +1154,6 @@ export type ModelAlertNotificationFilterInput = {
   id?: ModelIDInput | null,
   patientID?: ModelStringInput | null,
   alertID?: ModelIDInput | null,
-  owner?: ModelStringInput | null,
   and?: Array< ModelAlertNotificationFilterInput | null > | null,
   or?: Array< ModelAlertNotificationFilterInput | null > | null,
   not?: ModelAlertNotificationFilterInput | null,
@@ -1233,7 +1216,6 @@ export type CreatePatientInfoMutation = {
     version: number,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -1269,7 +1251,6 @@ export type UpdatePatientInfoMutation = {
     version: number,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -1305,7 +1286,6 @@ export type DeletePatientInfoMutation = {
     version: number,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -1326,7 +1306,6 @@ export type CreateMedicationInfoMutation = {
     active: boolean,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -1347,7 +1326,6 @@ export type UpdateMedicationInfoMutation = {
     active: boolean,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -1368,7 +1346,6 @@ export type DeleteMedicationInfoMutation = {
     active: boolean,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -1390,7 +1367,6 @@ export type CreateActivityInfoMutation = {
     symptoms?: Array< string > | null,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -1412,7 +1388,6 @@ export type UpdateActivityInfoMutation = {
     symptoms?: Array< string > | null,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -1434,7 +1409,6 @@ export type DeleteActivityInfoMutation = {
     symptoms?: Array< string > | null,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -1470,9 +1444,7 @@ export type CreateReportSymptomMutation = {
       symptoms?: Array< string > | null,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null,
-    owner?: string | null,
   } | null,
 };
 
@@ -1508,9 +1480,7 @@ export type UpdateReportSymptomMutation = {
       symptoms?: Array< string > | null,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null,
-    owner?: string | null,
   } | null,
 };
 
@@ -1546,9 +1516,7 @@ export type DeleteReportSymptomMutation = {
       symptoms?: Array< string > | null,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null,
-    owner?: string | null,
   } | null,
 };
 
@@ -1573,7 +1541,6 @@ export type CreateReportVitalsMutation = {
     humidity?: number | null,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -1598,7 +1565,6 @@ export type UpdateReportVitalsMutation = {
     humidity?: number | null,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -1623,7 +1589,6 @@ export type DeleteReportVitalsMutation = {
     humidity?: number | null,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -1644,7 +1609,6 @@ export type CreatePhysicalMutation = {
     dateTime: string,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -1665,7 +1629,6 @@ export type UpdatePhysicalMutation = {
     dateTime: string,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -1686,7 +1649,6 @@ export type DeletePhysicalMutation = {
     dateTime: string,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -2035,7 +1997,6 @@ export type CreateAlertMutation = {
       humidity?: string | null,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null,
     vitalsReport?:  {
       __typename: "ReportVitals",
@@ -2052,9 +2013,7 @@ export type CreateAlertMutation = {
       humidity?: number | null,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null,
-    owner?: string | null,
   } | null,
 };
 
@@ -2094,7 +2053,6 @@ export type UpdateAlertMutation = {
       humidity?: string | null,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null,
     vitalsReport?:  {
       __typename: "ReportVitals",
@@ -2111,9 +2069,7 @@ export type UpdateAlertMutation = {
       humidity?: number | null,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null,
-    owner?: string | null,
   } | null,
 };
 
@@ -2153,7 +2109,6 @@ export type DeleteAlertMutation = {
       humidity?: string | null,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null,
     vitalsReport?:  {
       __typename: "ReportVitals",
@@ -2170,9 +2125,7 @@ export type DeleteAlertMutation = {
       humidity?: number | null,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null,
-    owner?: string | null,
   } | null,
 };
 
@@ -2212,9 +2165,7 @@ export type CreateTodoMutation = {
       version: number,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null,
-    owner?: string | null,
   } | null,
 };
 
@@ -2254,9 +2205,7 @@ export type UpdateTodoMutation = {
       version: number,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null,
-    owner?: string | null,
   } | null,
 };
 
@@ -2296,9 +2245,7 @@ export type DeleteTodoMutation = {
       version: number,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null,
-    owner?: string | null,
   } | null,
 };
 
@@ -2313,7 +2260,6 @@ export type CreateAlertNotificationMutation = {
     id: string,
     patientID: string,
     alertID: string,
-    owner: string,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2330,7 +2276,6 @@ export type UpdateAlertNotificationMutation = {
     id: string,
     patientID: string,
     alertID: string,
-    owner: string,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2347,7 +2292,6 @@ export type DeleteAlertNotificationMutation = {
     id: string,
     patientID: string,
     alertID: string,
-    owner: string,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2370,7 +2314,6 @@ export type CreateClinicianRecordMutation = {
     uploadDateTime?: string | null,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -2391,7 +2334,6 @@ export type UpdateClinicianRecordMutation = {
     uploadDateTime?: string | null,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -2412,7 +2354,6 @@ export type DeleteClinicianRecordMutation = {
     uploadDateTime?: string | null,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -2479,7 +2420,6 @@ export type GetPatientInfoQuery = {
     version: number,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -2520,7 +2460,6 @@ export type ListPatientInfosQuery = {
       version: number,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null > | null,
     nextToken?: string | null,
   } | null,
@@ -2542,7 +2481,6 @@ export type GetMedicationInfoQuery = {
     active: boolean,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -2566,7 +2504,6 @@ export type ListMedicationInfosQuery = {
       active: boolean,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null > | null,
     nextToken?: string | null,
   } | null,
@@ -2594,7 +2531,6 @@ export type ListMedicationInfosByPatientIDQuery = {
       active: boolean,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null > | null,
     nextToken?: string | null,
   } | null,
@@ -2617,7 +2553,6 @@ export type GetActivityInfoQuery = {
     symptoms?: Array< string > | null,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -2642,7 +2577,6 @@ export type ListActivityInfosQuery = {
       symptoms?: Array< string > | null,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null > | null,
     nextToken?: string | null,
   } | null,
@@ -2671,7 +2605,6 @@ export type ListActivityInfosByPatientIDQuery = {
       symptoms?: Array< string > | null,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null > | null,
     nextToken?: string | null,
   } | null,
@@ -2708,9 +2641,7 @@ export type GetReportSymptomQuery = {
       symptoms?: Array< string > | null,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null,
-    owner?: string | null,
   } | null,
 };
 
@@ -2737,7 +2668,6 @@ export type ListReportSymptomsQuery = {
       humidity?: string | null,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null > | null,
     nextToken?: string | null,
   } | null,
@@ -2768,7 +2698,6 @@ export type ListReportSymptomsByPatientIDQuery = {
       humidity?: string | null,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null > | null,
     nextToken?: string | null,
   } | null,
@@ -2800,7 +2729,6 @@ export type ListReportSymptomsByDateTimeQuery = {
       humidity?: string | null,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null > | null,
     nextToken?: string | null,
   } | null,
@@ -2826,7 +2754,6 @@ export type GetReportVitalsQuery = {
     humidity?: number | null,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -2854,7 +2781,6 @@ export type ListReportVitalssQuery = {
       humidity?: number | null,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null > | null,
     nextToken?: string | null,
   } | null,
@@ -2886,7 +2812,6 @@ export type ListReportVitalsByPatientIDQuery = {
       humidity?: number | null,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null > | null,
     nextToken?: string | null,
   } | null,
@@ -2919,7 +2844,6 @@ export type ListReportVitalsByDateTimeQuery = {
       humidity?: number | null,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null > | null,
     nextToken?: string | null,
   } | null,
@@ -2941,7 +2865,6 @@ export type GetPhysicalQuery = {
     dateTime: string,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -2965,7 +2888,6 @@ export type ListPhysicalsQuery = {
       dateTime: string,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null > | null,
     nextToken?: string | null,
   } | null,
@@ -2993,7 +2915,6 @@ export type ListPhysicalsByPatientIDQuery = {
       dateTime: string,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null > | null,
     nextToken?: string | null,
   } | null,
@@ -3022,7 +2943,6 @@ export type ListPhysicalsByDateTimeQuery = {
       dateTime: string,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null > | null,
     nextToken?: string | null,
   } | null,
@@ -3322,7 +3242,6 @@ export type GetAlertQuery = {
       humidity?: string | null,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null,
     vitalsReport?:  {
       __typename: "ReportVitals",
@@ -3339,9 +3258,7 @@ export type GetAlertQuery = {
       humidity?: number | null,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null,
-    owner?: string | null,
   } | null,
 };
 
@@ -3370,7 +3287,6 @@ export type ListAlertsQuery = {
       version: number,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null > | null,
     nextToken?: string | null,
   } | null,
@@ -3404,7 +3320,6 @@ export type ListPatientAlertsByDateTimeQuery = {
       version: number,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null > | null,
     nextToken?: string | null,
   } | null,
@@ -3438,7 +3353,6 @@ export type ListPendingAlertsByDateTimeQuery = {
       version: number,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null > | null,
     nextToken?: string | null,
   } | null,
@@ -3472,7 +3386,6 @@ export type ListPendingRiskAlertsQuery = {
       version: number,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null > | null,
     nextToken?: string | null,
   } | null,
@@ -3506,7 +3419,6 @@ export type ListCompletedRiskAlertsQuery = {
       version: number,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null > | null,
     nextToken?: string | null,
   } | null,
@@ -3547,9 +3459,7 @@ export type GetTodoQuery = {
       version: number,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null,
-    owner?: string | null,
   } | null,
 };
 
@@ -3576,7 +3486,6 @@ export type ListTodosQuery = {
       version: number,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null > | null,
     nextToken?: string | null,
   } | null,
@@ -3608,7 +3517,6 @@ export type ListPendingTodosByLastModifiedDateQuery = {
       version: number,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null > | null,
     nextToken?: string | null,
   } | null,
@@ -3640,7 +3548,6 @@ export type ListCompletedTodosByLastModifiedDateQuery = {
       version: number,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null > | null,
     nextToken?: string | null,
   } | null,
@@ -3672,7 +3579,6 @@ export type ListTodosByAlertIDQuery = {
       version: number,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null > | null,
     nextToken?: string | null,
   } | null,
@@ -3688,7 +3594,6 @@ export type GetAlertNotificationQuery = {
     id: string,
     patientID: string,
     alertID: string,
-    owner: string,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3708,7 +3613,6 @@ export type ListAlertNotificationsQuery = {
       id: string,
       patientID: string,
       alertID: string,
-      owner: string,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -3733,7 +3637,6 @@ export type GetClinicianRecordQuery = {
     uploadDateTime?: string | null,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -3760,7 +3663,6 @@ export type ListClinicianRecordsQuery = {
       uploadDateTime?: string | null,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null > | null,
     nextToken?: string | null,
   } | null,
@@ -3789,14 +3691,13 @@ export type ListUploadedClinicianRecordsByPatientIDQuery = {
       uploadDateTime?: string | null,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null > | null,
     nextToken?: string | null,
   } | null,
 };
 
 export type OnCreatePatientInfoSubscriptionVariables = {
-  owner?: string | null,
+  patientID?: string | null,
 };
 
 export type OnCreatePatientInfoSubscription = {
@@ -3826,12 +3727,11 @@ export type OnCreatePatientInfoSubscription = {
     version: number,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
 export type OnUpdatePatientInfoSubscriptionVariables = {
-  owner?: string | null,
+  patientID?: string | null,
 };
 
 export type OnUpdatePatientInfoSubscription = {
@@ -3861,12 +3761,11 @@ export type OnUpdatePatientInfoSubscription = {
     version: number,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
 export type OnDeletePatientInfoSubscriptionVariables = {
-  owner?: string | null,
+  patientID?: string | null,
 };
 
 export type OnDeletePatientInfoSubscription = {
@@ -3896,12 +3795,10 @@ export type OnDeletePatientInfoSubscription = {
     version: number,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
 export type OnCreateMedicationInfoSubscriptionVariables = {
-  owner?: string | null,
   patientID?: string | null,
 };
 
@@ -3917,12 +3814,10 @@ export type OnCreateMedicationInfoSubscription = {
     active: boolean,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
 export type OnUpdateMedicationInfoSubscriptionVariables = {
-  owner?: string | null,
   patientID?: string | null,
 };
 
@@ -3938,12 +3833,10 @@ export type OnUpdateMedicationInfoSubscription = {
     active: boolean,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
 export type OnDeleteMedicationInfoSubscriptionVariables = {
-  owner?: string | null,
   patientID?: string | null,
 };
 
@@ -3959,12 +3852,11 @@ export type OnDeleteMedicationInfoSubscription = {
     active: boolean,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
 export type OnCreateActivityInfoSubscriptionVariables = {
-  owner?: string | null,
+  patientID?: string | null,
 };
 
 export type OnCreateActivityInfoSubscription = {
@@ -3980,12 +3872,11 @@ export type OnCreateActivityInfoSubscription = {
     symptoms?: Array< string > | null,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
 export type OnUpdateActivityInfoSubscriptionVariables = {
-  owner?: string | null,
+  patientID?: string | null,
 };
 
 export type OnUpdateActivityInfoSubscription = {
@@ -4001,12 +3892,11 @@ export type OnUpdateActivityInfoSubscription = {
     symptoms?: Array< string > | null,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
 export type OnDeleteActivityInfoSubscriptionVariables = {
-  owner?: string | null,
+  patientID?: string | null,
 };
 
 export type OnDeleteActivityInfoSubscription = {
@@ -4022,12 +3912,11 @@ export type OnDeleteActivityInfoSubscription = {
     symptoms?: Array< string > | null,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
 export type OnCreateReportSymptomSubscriptionVariables = {
-  owner?: string | null,
+  patientID?: string | null,
 };
 
 export type OnCreateReportSymptomSubscription = {
@@ -4057,14 +3946,12 @@ export type OnCreateReportSymptomSubscription = {
       symptoms?: Array< string > | null,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null,
-    owner?: string | null,
   } | null,
 };
 
 export type OnUpdateReportSymptomSubscriptionVariables = {
-  owner?: string | null,
+  patientID?: string | null,
 };
 
 export type OnUpdateReportSymptomSubscription = {
@@ -4094,14 +3981,12 @@ export type OnUpdateReportSymptomSubscription = {
       symptoms?: Array< string > | null,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null,
-    owner?: string | null,
   } | null,
 };
 
 export type OnDeleteReportSymptomSubscriptionVariables = {
-  owner?: string | null,
+  patientID?: string | null,
 };
 
 export type OnDeleteReportSymptomSubscription = {
@@ -4131,14 +4016,12 @@ export type OnDeleteReportSymptomSubscription = {
       symptoms?: Array< string > | null,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null,
-    owner?: string | null,
   } | null,
 };
 
 export type OnCreateReportVitalsSubscriptionVariables = {
-  owner?: string | null,
+  patientID?: string | null,
 };
 
 export type OnCreateReportVitalsSubscription = {
@@ -4157,12 +4040,11 @@ export type OnCreateReportVitalsSubscription = {
     humidity?: number | null,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
 export type OnUpdateReportVitalsSubscriptionVariables = {
-  owner?: string | null,
+  patientID?: string | null,
 };
 
 export type OnUpdateReportVitalsSubscription = {
@@ -4181,12 +4063,11 @@ export type OnUpdateReportVitalsSubscription = {
     humidity?: number | null,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
 export type OnDeleteReportVitalsSubscriptionVariables = {
-  owner?: string | null,
+  patientID?: string | null,
 };
 
 export type OnDeleteReportVitalsSubscription = {
@@ -4205,12 +4086,11 @@ export type OnDeleteReportVitalsSubscription = {
     humidity?: number | null,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
 export type OnCreatePhysicalSubscriptionVariables = {
-  owner?: string | null,
+  patientID?: string | null,
 };
 
 export type OnCreatePhysicalSubscription = {
@@ -4225,12 +4105,11 @@ export type OnCreatePhysicalSubscription = {
     dateTime: string,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
 export type OnUpdatePhysicalSubscriptionVariables = {
-  owner?: string | null,
+  patientID?: string | null,
 };
 
 export type OnUpdatePhysicalSubscription = {
@@ -4245,12 +4124,11 @@ export type OnUpdatePhysicalSubscription = {
     dateTime: string,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
 export type OnDeletePhysicalSubscriptionVariables = {
-  owner?: string | null,
+  patientID?: string | null,
 };
 
 export type OnDeletePhysicalSubscription = {
@@ -4265,7 +4143,6 @@ export type OnDeletePhysicalSubscription = {
     dateTime: string,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -4573,7 +4450,7 @@ export type OnDeletePatientAssignmentSubscription = {
 };
 
 export type OnCreateAlertSubscriptionVariables = {
-  owner?: string | null,
+  patientID?: string | null,
 };
 
 export type OnCreateAlertSubscription = {
@@ -4607,7 +4484,6 @@ export type OnCreateAlertSubscription = {
       humidity?: string | null,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null,
     vitalsReport?:  {
       __typename: "ReportVitals",
@@ -4624,14 +4500,12 @@ export type OnCreateAlertSubscription = {
       humidity?: number | null,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null,
-    owner?: string | null,
   } | null,
 };
 
 export type OnUpdateAlertSubscriptionVariables = {
-  owner?: string | null,
+  patientID?: string | null,
 };
 
 export type OnUpdateAlertSubscription = {
@@ -4665,7 +4539,6 @@ export type OnUpdateAlertSubscription = {
       humidity?: string | null,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null,
     vitalsReport?:  {
       __typename: "ReportVitals",
@@ -4682,14 +4555,12 @@ export type OnUpdateAlertSubscription = {
       humidity?: number | null,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null,
-    owner?: string | null,
   } | null,
 };
 
 export type OnDeleteAlertSubscriptionVariables = {
-  owner?: string | null,
+  patientID?: string | null,
 };
 
 export type OnDeleteAlertSubscription = {
@@ -4723,7 +4594,6 @@ export type OnDeleteAlertSubscription = {
       humidity?: string | null,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null,
     vitalsReport?:  {
       __typename: "ReportVitals",
@@ -4740,14 +4610,12 @@ export type OnDeleteAlertSubscription = {
       humidity?: number | null,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null,
-    owner?: string | null,
   } | null,
 };
 
 export type OnCreateTodoSubscriptionVariables = {
-  owner?: string | null,
+  clinicianID?: string | null,
 };
 
 export type OnCreateTodoSubscription = {
@@ -4781,14 +4649,12 @@ export type OnCreateTodoSubscription = {
       version: number,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null,
-    owner?: string | null,
   } | null,
 };
 
 export type OnUpdateTodoSubscriptionVariables = {
-  owner?: string | null,
+  clinicianID?: string | null,
 };
 
 export type OnUpdateTodoSubscription = {
@@ -4822,14 +4688,12 @@ export type OnUpdateTodoSubscription = {
       version: number,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null,
-    owner?: string | null,
   } | null,
 };
 
 export type OnDeleteTodoSubscriptionVariables = {
-  owner?: string | null,
+  clinicianID?: string | null,
 };
 
 export type OnDeleteTodoSubscription = {
@@ -4863,10 +4727,12 @@ export type OnDeleteTodoSubscription = {
       version: number,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null,
-    owner?: string | null,
   } | null,
+};
+
+export type OnCreateAlertNotificationSubscriptionVariables = {
+  patientID?: string | null,
 };
 
 export type OnCreateAlertNotificationSubscription = {
@@ -4875,10 +4741,13 @@ export type OnCreateAlertNotificationSubscription = {
     id: string,
     patientID: string,
     alertID: string,
-    owner: string,
     createdAt: string,
     updatedAt: string,
   } | null,
+};
+
+export type OnUpdateAlertNotificationSubscriptionVariables = {
+  patientID?: string | null,
 };
 
 export type OnUpdateAlertNotificationSubscription = {
@@ -4887,10 +4756,13 @@ export type OnUpdateAlertNotificationSubscription = {
     id: string,
     patientID: string,
     alertID: string,
-    owner: string,
     createdAt: string,
     updatedAt: string,
   } | null,
+};
+
+export type OnDeleteAlertNotificationSubscriptionVariables = {
+  patientID?: string | null,
 };
 
 export type OnDeleteAlertNotificationSubscription = {
@@ -4899,14 +4771,13 @@ export type OnDeleteAlertNotificationSubscription = {
     id: string,
     patientID: string,
     alertID: string,
-    owner: string,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
 export type OnCreateClinicianRecordSubscriptionVariables = {
-  owner?: string | null,
+  uploaderClinicianID?: string | null,
 };
 
 export type OnCreateClinicianRecordSubscription = {
@@ -4921,12 +4792,11 @@ export type OnCreateClinicianRecordSubscription = {
     uploadDateTime?: string | null,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
 export type OnUpdateClinicianRecordSubscriptionVariables = {
-  owner?: string | null,
+  uploaderClinicianID?: string | null,
 };
 
 export type OnUpdateClinicianRecordSubscription = {
@@ -4941,12 +4811,11 @@ export type OnUpdateClinicianRecordSubscription = {
     uploadDateTime?: string | null,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
 export type OnDeleteClinicianRecordSubscriptionVariables = {
-  owner?: string | null,
+  uploaderClinicianID?: string | null,
 };
 
 export type OnDeleteClinicianRecordSubscription = {
@@ -4961,6 +4830,5 @@ export type OnDeleteClinicianRecordSubscription = {
     uploadDateTime?: string | null,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };

@@ -72,7 +72,6 @@ export const getPatientInfo = /* GraphQL */ `
       version
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -116,7 +115,6 @@ export const listPatientInfos = /* GraphQL */ `
         version
         createdAt
         updatedAt
-        owner
       }
       nextToken
     }
@@ -134,7 +132,6 @@ export const getMedicationInfo = /* GraphQL */ `
       active
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -155,7 +152,6 @@ export const listMedicationInfos = /* GraphQL */ `
         active
         createdAt
         updatedAt
-        owner
       }
       nextToken
     }
@@ -186,7 +182,6 @@ export const listMedicationInfosByPatientID = /* GraphQL */ `
         active
         createdAt
         updatedAt
-        owner
       }
       nextToken
     }
@@ -205,7 +200,6 @@ export const getActivityInfo = /* GraphQL */ `
       symptoms
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -227,7 +221,6 @@ export const listActivityInfos = /* GraphQL */ `
         symptoms
         createdAt
         updatedAt
-        owner
       }
       nextToken
     }
@@ -259,7 +252,6 @@ export const listActivityInfosByPatientID = /* GraphQL */ `
         symptoms
         createdAt
         updatedAt
-        owner
       }
       nextToken
     }
@@ -291,9 +283,7 @@ export const getReportSymptom = /* GraphQL */ `
         symptoms
         createdAt
         updatedAt
-        owner
       }
-      owner
     }
   }
 `;
@@ -317,7 +307,6 @@ export const listReportSymptoms = /* GraphQL */ `
         humidity
         createdAt
         updatedAt
-        owner
       }
       nextToken
     }
@@ -351,7 +340,6 @@ export const listReportSymptomsByPatientID = /* GraphQL */ `
         humidity
         createdAt
         updatedAt
-        owner
       }
       nextToken
     }
@@ -387,7 +375,6 @@ export const listReportSymptomsByDateTime = /* GraphQL */ `
         humidity
         createdAt
         updatedAt
-        owner
       }
       nextToken
     }
@@ -409,7 +396,6 @@ export const getReportVitals = /* GraphQL */ `
       humidity
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -434,7 +420,6 @@ export const listReportVitalss = /* GraphQL */ `
         humidity
         createdAt
         updatedAt
-        owner
       }
       nextToken
     }
@@ -469,7 +454,6 @@ export const listReportVitalsByPatientID = /* GraphQL */ `
         humidity
         createdAt
         updatedAt
-        owner
       }
       nextToken
     }
@@ -506,7 +490,6 @@ export const listReportVitalsByDateTime = /* GraphQL */ `
         humidity
         createdAt
         updatedAt
-        owner
       }
       nextToken
     }
@@ -524,7 +507,6 @@ export const getPhysical = /* GraphQL */ `
       dateTime
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -545,7 +527,6 @@ export const listPhysicals = /* GraphQL */ `
         dateTime
         createdAt
         updatedAt
-        owner
       }
       nextToken
     }
@@ -576,7 +557,6 @@ export const listPhysicalsByPatientID = /* GraphQL */ `
         dateTime
         createdAt
         updatedAt
-        owner
       }
       nextToken
     }
@@ -609,7 +589,6 @@ export const listPhysicalsByDateTime = /* GraphQL */ `
         dateTime
         createdAt
         updatedAt
-        owner
       }
       nextToken
     }
@@ -906,7 +885,6 @@ export const getAlert = /* GraphQL */ `
         humidity
         createdAt
         updatedAt
-        owner
       }
       vitalsReport {
         id
@@ -922,9 +900,7 @@ export const getAlert = /* GraphQL */ `
         humidity
         createdAt
         updatedAt
-        owner
       }
-      owner
     }
   }
 `;
@@ -950,7 +926,6 @@ export const listAlerts = /* GraphQL */ `
         version
         createdAt
         updatedAt
-        owner
       }
       nextToken
     }
@@ -988,7 +963,6 @@ export const listPatientAlertsByDateTime = /* GraphQL */ `
         version
         createdAt
         updatedAt
-        owner
       }
       nextToken
     }
@@ -1026,7 +1000,6 @@ export const listPendingAlertsByDateTime = /* GraphQL */ `
         version
         createdAt
         updatedAt
-        owner
       }
       nextToken
     }
@@ -1064,7 +1037,6 @@ export const listPendingRiskAlerts = /* GraphQL */ `
         version
         createdAt
         updatedAt
-        owner
       }
       nextToken
     }
@@ -1102,7 +1074,6 @@ export const listCompletedRiskAlerts = /* GraphQL */ `
         version
         createdAt
         updatedAt
-        owner
       }
       nextToken
     }
@@ -1138,9 +1109,7 @@ export const getTodo = /* GraphQL */ `
         version
         createdAt
         updatedAt
-        owner
       }
-      owner
     }
   }
 `;
@@ -1164,7 +1133,6 @@ export const listTodos = /* GraphQL */ `
         version
         createdAt
         updatedAt
-        owner
       }
       nextToken
     }
@@ -1200,7 +1168,6 @@ export const listPendingTodosByLastModifiedDate = /* GraphQL */ `
         version
         createdAt
         updatedAt
-        owner
       }
       nextToken
     }
@@ -1236,7 +1203,6 @@ export const listCompletedTodosByLastModifiedDate = /* GraphQL */ `
         version
         createdAt
         updatedAt
-        owner
       }
       nextToken
     }
@@ -1272,7 +1238,6 @@ export const listTodosByAlertID = /* GraphQL */ `
         version
         createdAt
         updatedAt
-        owner
       }
       nextToken
     }
@@ -1284,7 +1249,6 @@ export const getAlertNotification = /* GraphQL */ `
       id
       patientID
       alertID
-      owner
       createdAt
       updatedAt
     }
@@ -1305,7 +1269,6 @@ export const listAlertNotifications = /* GraphQL */ `
         id
         patientID
         alertID
-        owner
         createdAt
         updatedAt
       }
@@ -1325,7 +1288,6 @@ export const getClinicianRecord = /* GraphQL */ `
       uploadDateTime
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -1356,7 +1318,6 @@ export const listClinicianRecords = /* GraphQL */ `
         uploadDateTime
         createdAt
         updatedAt
-        owner
       }
       nextToken
     }
@@ -1389,7 +1350,6 @@ export const listUploadedClinicianRecordsByPatientID = /* GraphQL */ `
         uploadDateTime
         createdAt
         updatedAt
-        owner
       }
       nextToken
     }

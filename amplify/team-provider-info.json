@@ -22,11 +22,11 @@
         },
         "patientassignmenthandler": {
           "deploymentBucketName": "amplify-reportcare-dev-213733-deployment",
-          "s3Key": "amplify-builds/patientassignmenthandler-59316f516d3230525761-build.zip"
+          "s3Key": "amplify-builds/patientassignmenthandler-57706c5854306672352b-build.zip"
         },
         "s3clinicianrecordsbridge": {
           "deploymentBucketName": "amplify-reportcare-dev-213733-deployment",
-          "s3Key": "amplify-builds/s3clinicianrecordsbridge-4d454a6f777066496861-build.zip"
+          "s3Key": "amplify-builds/s3clinicianrecordsbridge-74616963654679733542-build.zip"
         }
       }
     }

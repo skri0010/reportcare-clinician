@@ -32,7 +32,6 @@ export const createPatientInfo = /* GraphQL */ `
       version
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -66,7 +65,6 @@ export const updatePatientInfo = /* GraphQL */ `
       version
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -100,7 +98,6 @@ export const deletePatientInfo = /* GraphQL */ `
       version
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -119,7 +116,6 @@ export const createMedicationInfo = /* GraphQL */ `
       active
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -138,7 +134,6 @@ export const updateMedicationInfo = /* GraphQL */ `
       active
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -157,7 +152,6 @@ export const deleteMedicationInfo = /* GraphQL */ `
       active
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -177,7 +171,6 @@ export const createActivityInfo = /* GraphQL */ `
       symptoms
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -197,7 +190,6 @@ export const updateActivityInfo = /* GraphQL */ `
       symptoms
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -217,7 +209,6 @@ export const deleteActivityInfo = /* GraphQL */ `
       symptoms
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -250,9 +241,7 @@ export const createReportSymptom = /* GraphQL */ `
         symptoms
         createdAt
         updatedAt
-        owner
       }
-      owner
     }
   }
 `;
@@ -285,9 +274,7 @@ export const updateReportSymptom = /* GraphQL */ `
         symptoms
         createdAt
         updatedAt
-        owner
       }
-      owner
     }
   }
 `;
@@ -320,9 +307,7 @@ export const deleteReportSymptom = /* GraphQL */ `
         symptoms
         createdAt
         updatedAt
-        owner
       }
-      owner
     }
   }
 `;
@@ -345,7 +330,6 @@ export const createReportVitals = /* GraphQL */ `
       humidity
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -368,7 +352,6 @@ export const updateReportVitals = /* GraphQL */ `
       humidity
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -391,7 +374,6 @@ export const deleteReportVitals = /* GraphQL */ `
       humidity
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -410,7 +392,6 @@ export const createPhysical = /* GraphQL */ `
       dateTime
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -429,7 +410,6 @@ export const updatePhysical = /* GraphQL */ `
       dateTime
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -448,7 +428,6 @@ export const deletePhysical = /* GraphQL */ `
       dateTime
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -764,7 +743,6 @@ export const createAlert = /* GraphQL */ `
         humidity
         createdAt
         updatedAt
-        owner
       }
       vitalsReport {
         id
@@ -780,9 +758,7 @@ export const createAlert = /* GraphQL */ `
         humidity
         createdAt
         updatedAt
-        owner
       }
-      owner
     }
   }
 `;
@@ -819,7 +795,6 @@ export const updateAlert = /* GraphQL */ `
         humidity
         createdAt
         updatedAt
-        owner
       }
       vitalsReport {
         id
@@ -835,9 +810,7 @@ export const updateAlert = /* GraphQL */ `
         humidity
         createdAt
         updatedAt
-        owner
       }
-      owner
     }
   }
 `;
@@ -874,7 +847,6 @@ export const deleteAlert = /* GraphQL */ `
         humidity
         createdAt
         updatedAt
-        owner
       }
       vitalsReport {
         id
@@ -890,9 +862,7 @@ export const deleteAlert = /* GraphQL */ `
         humidity
         createdAt
         updatedAt
-        owner
       }
-      owner
     }
   }
 `;
@@ -929,9 +899,7 @@ export const createTodo = /* GraphQL */ `
         version
         createdAt
         updatedAt
-        owner
       }
-      owner
     }
   }
 `;
@@ -968,9 +936,7 @@ export const updateTodo = /* GraphQL */ `
         version
         createdAt
         updatedAt
-        owner
       }
-      owner
     }
   }
 `;
@@ -1007,9 +973,7 @@ export const deleteTodo = /* GraphQL */ `
         version
         createdAt
         updatedAt
-        owner
       }
-      owner
     }
   }
 `;
@@ -1022,7 +986,6 @@ export const createAlertNotification = /* GraphQL */ `
       id
       patientID
       alertID
-      owner
       createdAt
       updatedAt
     }
@@ -1037,7 +1000,6 @@ export const updateAlertNotification = /* GraphQL */ `
       id
       patientID
       alertID
-      owner
       createdAt
       updatedAt
     }
@@ -1052,7 +1014,6 @@ export const deleteAlertNotification = /* GraphQL */ `
       id
       patientID
       alertID
-      owner
       createdAt
       updatedAt
     }
@@ -1073,7 +1034,6 @@ export const createClinicianRecord = /* GraphQL */ `
       uploadDateTime
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -1092,7 +1052,6 @@ export const updateClinicianRecord = /* GraphQL */ `
       uploadDateTime
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -1111,7 +1070,6 @@ export const deleteClinicianRecord = /* GraphQL */ `
       uploadDateTime
       createdAt
       updatedAt
-      owner
     }
   }
 `;

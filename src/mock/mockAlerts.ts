@@ -14,7 +14,6 @@ export const mockPendingAlerts: Alert[] = [
     colorCode: AlertColorCode.HIGH,
     triageValue: "72",
     pending: AlertStatus.PENDING,
-    owner: "patient_john",
     version: 1,
     createdAt: "",
     updatedAt: ""
@@ -31,7 +30,6 @@ export const mockPendingAlerts: Alert[] = [
     colorCode: AlertColorCode.MEDIUM,
     triageValue: "50",
     pending: AlertStatus.PENDING,
-    owner: "patient_john",
     version: 1,
     createdAt: "",
     updatedAt: ""
@@ -48,7 +46,6 @@ export const mockPendingAlerts: Alert[] = [
     colorCode: AlertColorCode.HIGH,
     triageValue: "75",
     pending: AlertStatus.PENDING,
-    owner: "siuloongtest",
     version: 1,
     createdAt: "",
     updatedAt: ""
@@ -65,7 +62,6 @@ export const mockPendingAlerts: Alert[] = [
     colorCode: AlertColorCode.MEDIUM,
     triageValue: "46",
     pending: AlertStatus.PENDING,
-    owner: "siuloongtest",
     version: 1,
     createdAt: "",
     updatedAt: ""
@@ -85,7 +81,6 @@ export const mockCompletedAlerts: Alert[] = [
     colorCode: AlertColorCode.HIGH,
     triageValue: "74",
     completed: AlertStatus.COMPLETED,
-    owner: "siuloongtest",
     version: 1,
     createdAt: "",
     updatedAt: ""
@@ -102,7 +97,6 @@ export const mockCompletedAlerts: Alert[] = [
     colorCode: AlertColorCode.MEDIUM,
     triageValue: "58",
     completed: AlertStatus.COMPLETED,
-    owner: "siuloongtest",
     version: 1,
     createdAt: "",
     updatedAt: ""
@@ -119,7 +113,6 @@ export const mockCompletedAlerts: Alert[] = [
     triageValue: "10",
     colorCode: AlertColorCode.LOW,
     completed: AlertStatus.COMPLETED,
-    owner: "siuloongtest",
     version: 1,
     createdAt: "",
     updatedAt: ""

@@ -1,4 +1,4 @@
-// Three-level getAlert
+// Depth level 3 - getAlert
 export const getFullAlert = /* GraphQL */ `
   query GetAlert($id: ID!) {
     getAlert(id: $id) {
@@ -32,7 +32,6 @@ export const getFullAlert = /* GraphQL */ `
           symptoms
           createdAt
           updatedAt
-          owner
         }
         symptomName
         severity
@@ -43,7 +42,6 @@ export const getFullAlert = /* GraphQL */ `
         humidity
         createdAt
         updatedAt
-        owner
       }
       vitalsReport {
         id
@@ -59,9 +57,7 @@ export const getFullAlert = /* GraphQL */ `
         humidity
         createdAt
         updatedAt
-        owner
       }
-      owner
     }
   }
 `;
@@ -98,7 +94,6 @@ export const listReportSymptomsWithActivitiesByDateTime = /* GraphQL */ `
           symptoms
           createdAt
           updatedAt
-          owner
         }
         symptomName
         severity
@@ -109,7 +104,6 @@ export const listReportSymptomsWithActivitiesByDateTime = /* GraphQL */ `
         humidity
         createdAt
         updatedAt
-        owner
       }
       nextToken
       startedAt

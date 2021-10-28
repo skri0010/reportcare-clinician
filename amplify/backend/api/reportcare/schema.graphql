@@ -9,7 +9,7 @@ type PatientInfo
   @model
   @auth(
     rules: [
-      { allow: owner }
+      { allow: owner, ownerField: "patientID" }
       { allow: groups, groups: ["Admin"] }
       { allow: groups, groupsField: "patientID", operations: [read, update] }
     ]
@@ -43,10 +43,13 @@ type MedicationInfo
   @model
   @auth(
     rules: [
-      { allow: owner }
       { allow: owner, ownerField: "patientID", operations: [read, update] }
       { allow: groups, groups: ["Admin"] }
-      { allow: groups, groupsField: "patientID", operations: [read, update] }
+      {
+        allow: groups
+        groupsField: "patientID"
+        operations: [create, read, update]
+      }
     ]
   )
   @key(
@@ -67,7 +70,7 @@ type ActivityInfo
   @model
   @auth(
     rules: [
-      { allow: owner }
+      { allow: owner, ownerField: "patientID" }
       { allow: groups, groups: ["Admin"] }
       { allow: groups, groupsField: "patientID", operations: [read] }
     ]
@@ -91,7 +94,7 @@ type ReportSymptom
   @model
   @auth(
     rules: [
-      { allow: owner }
+      { allow: owner, ownerField: "patientID" }
       { allow: groups, groups: ["Admin"] }
       { allow: groups, groupsField: "patientID", operations: [read] }
     ]
@@ -123,7 +126,7 @@ type ReportVitals
   @model
   @auth(
     rules: [
-      { allow: owner }
+      { allow: owner, ownerField: "patientID" }
       { allow: groups, groups: ["Admin"] }
       { allow: groups, groupsField: "patientID", operations: [read] }
     ]
@@ -155,7 +158,7 @@ type Physical
   @model
   @auth(
     rules: [
-      { allow: owner }
+      { allow: owner, ownerField: "patientID" }
       { allow: groups, groups: ["Admin"] }
       { allow: groups, groupsField: "patientID", operations: [read] }
     ]
@@ -338,7 +341,7 @@ type Alert
   @model
   @auth(
     rules: [
-      { allow: owner, operations: [read] }
+      { allow: owner, ownerField: "patientID", operations: [read] }
       { allow: groups, groups: ["Admin"] }
       { allow: groups, groupsField: "patientID", operations: [read, update] }
       { allow: groups, groups: ["Patients"], operations: [create] }
@@ -389,7 +392,7 @@ type Todo
   @model
   @auth(
     rules: [
-      { allow: owner, operations: [read, update] }
+      { allow: owner, ownerField: "clinicianID", operations: [read, update] }
       { allow: groups, groups: ["Admin"] }
       {
         allow: groups
@@ -424,8 +427,7 @@ type Todo
   title: String!
   patientName: String!
   notes: String!
-  createdAt: AWSDateTime!
-  lastModified: AWSDateTime
+  lastModified: AWSDateTime!
   alertID: ID
   alert: Alert @connection(fields: ["alertID"])
   pending: String
@@ -433,12 +435,18 @@ type Todo
   version: Int!
 }
 
+"""
+#P5
+== Authorization ==
+1. Patients can create and read their own records
+3. Clinicians can read records
+"""
 type AlertNotification
   @model
   @auth(
     rules: [
+      { allow: owner, ownerField: "patientID", operations: [create, read] }
       { allow: groups, groups: ["Admin"] }
-      { allow: groups, groups: ["Patients"], operations: [create, read] }
       {
         allow: groups
         groups: [
@@ -455,7 +463,6 @@ type AlertNotification
   id: ID!
   patientID: String!
   alertID: ID!
-  owner: String!
 }
 
 """
@@ -467,8 +474,12 @@ type ClinicianRecord
   @model
   @auth(
     rules: [
+      {
+        allow: owner
+        ownerField: "uploaderClinicianID"
+        operations: [create, read]
+      }
       { allow: groups, groups: ["Admin"] }
-      { allow: owner, operations: [create, read] }
       { allow: groups, groupsField: "patientID", operations: [read] }
     ]
   )
