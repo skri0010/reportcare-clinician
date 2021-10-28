@@ -2,9 +2,7 @@
   "permissions": [
     {
       "type": "AwsOrg",
-      "orgs": [
-        "o-qcrna86bph"
-      ]
+      "orgs": ["o-qcrna86bph"]
     },
     {
       "type": "Private"
