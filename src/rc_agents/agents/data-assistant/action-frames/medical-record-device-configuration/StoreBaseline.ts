@@ -260,7 +260,7 @@ export const updatePatientBaseline = async (
     deviceNo: baseline.deviceNo,
     diagnosisInfo: baseline.diagnosisInfo,
     hospitalName: baseline.hospitalName,
-    NHYAclass: baseline.NHYAclass,
+    NYHAclass: baseline.NYHAclass,
     targetActivity: baseline.targetActivity,
     targetWeight: baseline.targetWeight,
     fluidIntakeGoal: baseline.fluidIntakeGoal,

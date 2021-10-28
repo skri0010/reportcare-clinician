@@ -25,7 +25,7 @@ export const PatientInformation: FC<PatientInformationProps> = ({ info }) => {
     age: getAge(info.birthDate),
     birthDate: new Date(info.birthDate).toLocaleDateString(),
     location: info.hospitalLocation,
-    class: info.NHYAclass,
+    class: info.NYHAclass,
     language: info.language
   };
 

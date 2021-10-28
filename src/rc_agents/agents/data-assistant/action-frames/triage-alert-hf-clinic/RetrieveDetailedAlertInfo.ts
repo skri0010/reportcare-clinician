@@ -167,7 +167,7 @@ export const queryAlertInfo = async (alert: Alert): Promise<Alert | null> => {
   if (patientInfoQuery.data.getPatientInfo) {
     const patientInfo = patientInfoQuery.data.getPatientInfo;
     alertInfo.diagnosis = patientInfo.diagnosisInfo;
-    alertInfo.NYHAClass = patientInfo.NHYAclass;
+    alertInfo.NYHAClass = patientInfo.NYHAclass;
   }
 
   // Get MedCompliant

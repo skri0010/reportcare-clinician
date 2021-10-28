@@ -16,7 +16,7 @@ export const HighRiskPatientBaselinesCard: FC<HighRiskPatientBaselinesCardProps>
       >
         <BaseDetailsContent
           title={i18n.t("Alerts.PatientBaselines.NYHAClass")}
-          content={patientInfo?.NHYAclass || "-"}
+          content={patientInfo?.NYHAclass || "-"}
         />
         <BaseDetailsContent
           title={i18n.t("Alerts.PatientBaselines.Diagnosis")}

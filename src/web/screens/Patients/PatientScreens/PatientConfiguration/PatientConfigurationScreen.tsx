@@ -109,7 +109,7 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
     } = getPickerStyles({
       colors: colors,
       fonts: fonts,
-      error: !validateNYHAClass(configInfo.NHYAclass)
+      error: !validateNYHAClass(configInfo.NYHAclass)
     });
 
     // Update functions
@@ -117,8 +117,8 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
       setConfigInfo({ ...configInfo, hospitalName: hospitalName });
     };
 
-    const updateNYHAClass = (NHYAclass: string) => {
-      setConfigInfo({ ...configInfo, NHYAclass: NHYAclass });
+    const updateNYHAClass = (NYHAclass: string) => {
+      setConfigInfo({ ...configInfo, NYHAclass: NYHAclass });
     };
 
     const updateDiagnosisInfo = (diagnosisInfo: string) => {
@@ -195,7 +195,7 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
     useEffect(() => {
       // Validation for mandatory fields
       const mandatory = (validateHospitalName(configInfo.hospitalName) &&
-        validateNYHAClass(configInfo.NHYAclass) &&
+        validateNYHAClass(configInfo.NYHAclass) &&
         configInfo.diagnosisInfo &&
         validateTargetActivity(configInfo.targetActivity) &&
         validateTargetWeight(configInfo.targetWeight) &&
@@ -278,7 +278,7 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
           <View style={NYHAClassPickerContainerStyle}>
             <Picker
               style={NYHAClassPickerStyle}
-              selectedValue={configInfo.NHYAclass}
+              selectedValue={configInfo.NYHAclass}
               onValueChange={(value: string) => {
                 updateNYHAClass(value);
               }}
