@@ -260,10 +260,10 @@ export const updatePatientBaseline = async (
     deviceNo: baseline.deviceNo,
     diagnosisInfo: baseline.diagnosisInfo,
     hospitalName: baseline.hospitalName,
-    NYHAclass: baseline.NYHAclass,
-    targetActivity: baseline.targetActivity,
+    NYHAClass: baseline.NYHAClass,
+    targetSteps: baseline.targetSteps,
     targetWeight: baseline.targetWeight,
-    fluidIntakeGoal: baseline.fluidIntakeGoal,
+    fluidIntakeGoalInMl: baseline.fluidIntakeGoalInMl,
     configured: baseline.configured
   };
 

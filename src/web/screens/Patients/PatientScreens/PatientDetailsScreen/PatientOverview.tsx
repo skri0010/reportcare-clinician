@@ -18,7 +18,7 @@ import {
 import { FluidIntakeCard } from "./PatientOverviewComponents/FluidIntakeCard";
 import { ActivityCard } from "./PatientOverviewComponents/ActivityCard";
 import { InnerScreenButton } from "components/Buttons/InnerScreenButton";
-import { unknownNumber } from "util/const";
+import { displayPlaceholder } from "util/const";
 
 interface PatientOverviewProps extends PatientDetailsTabProps.OverviewTabProps {
   details: PatientDetails;
@@ -83,22 +83,24 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
           {/* Blood Pressure Card */}
           <BloodPressureCard
             systolicBloodPressure={
-              vitals?.diastolicBloodPressure || unknownNumber
+              vitals?.diastolicBloodPressure || displayPlaceholder
             }
             diastolicBloodPressure={
-              vitals?.systolicBloodPressure || unknownNumber
+              vitals?.systolicBloodPressure || displayPlaceholder
             }
             minHeight={cardHeight}
             flex={2}
           />
           {/* Oxygen Saturation card and Weigth card to share fixed space */}
           <OxygenSaturationCard
-            oxygenSaturation={vitals?.oxygenSaturation || unknownNumber}
+            oxygenSaturation={vitals?.oxygenSaturation || displayPlaceholder}
             minHeight={cardHeight}
           />
           <WeightCard
-            weight={vitals?.weight || unknownNumber}
-            targetWeight={details.patientInfo.targetWeight || unknownNumber}
+            weight={vitals?.weight || displayPlaceholder}
+            targetWeight={
+              details.patientInfo.targetWeight || displayPlaceholder
+            }
             minHeight={cardHeight}
           />
         </View>
@@ -107,14 +109,16 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
           {/* Fluid and activity card */}
           <FluidIntakeCard
             fluidIntakeInMl={
-              details.patientInfo.fluidIntakeGoalInMl || unknownNumber
+              details.patientInfo.fluidIntakeGoalInMl || displayPlaceholder
             }
             fluidGoalInMl={sumFluidIntake}
             minHeight={cardHeight}
           />
           <ActivityCard
-            stepsTaken={sumStepsTaken || unknownNumber}
-            stepsRequired={details.patientInfo.targetSteps || unknownNumber}
+            stepsTaken={sumStepsTaken || displayPlaceholder}
+            stepsRequired={
+              details.patientInfo.targetSteps || displayPlaceholder
+            }
             minHeight={cardHeight}
           />
         </View>

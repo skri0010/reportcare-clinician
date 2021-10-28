@@ -29,7 +29,7 @@ export enum Hospital {
   HB = "Hospital Bintulu"
 }
 
-export enum NYHAClass {
+export enum NYHAClassEnum {
   UNKNOWN = "",
   I = "I",
   II = "II",

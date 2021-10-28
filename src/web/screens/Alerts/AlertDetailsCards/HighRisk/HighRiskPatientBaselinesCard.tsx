@@ -16,7 +16,7 @@ export const HighRiskPatientBaselinesCard: FC<HighRiskPatientBaselinesCardProps>
       >
         <BaseDetailsContent
           title={i18n.t("Alerts.PatientBaselines.NYHAClass")}
-          content={patientInfo?.NYHAclass || "-"}
+          content={patientInfo?.NYHAClass || "-"}
         />
         <BaseDetailsContent
           title={i18n.t("Alerts.PatientBaselines.Diagnosis")}
@@ -25,18 +25,18 @@ export const HighRiskPatientBaselinesCard: FC<HighRiskPatientBaselinesCardProps>
         <BaseDetailsContent
           title={i18n.t("Alerts.PatientBaselines.FluidIntakeGoal")}
           content={
-            patientInfo?.fluidIntakeGoal
-              ? `${patientInfo.fluidIntakeGoal} ${i18n.t(
+            patientInfo?.fluidIntakeGoalInMl
+              ? `${patientInfo.fluidIntakeGoalInMl} ${i18n.t(
                   "Parameter_Graphs.FluidUnit"
                 )}`
               : "-"
           }
         />
         <BaseDetailsContent
-          title={i18n.t("Alerts.PatientBaselines.TargetActivity")}
+          title={i18n.t("Alerts.PatientBaselines.TargetSteps")}
           content={
-            patientInfo?.targetActivity
-              ? `${patientInfo.targetActivity} ${i18n.t(
+            patientInfo?.targetSteps
+              ? `${patientInfo.targetSteps} ${i18n.t(
                   "Parameter_Graphs.StepsUnit"
                 )}`
               : "-"

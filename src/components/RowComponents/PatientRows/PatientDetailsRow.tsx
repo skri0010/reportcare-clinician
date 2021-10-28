@@ -17,7 +17,7 @@ export const PatientDetailsRow: React.FC<PatientDetailsRowProps> = ({
   selected = false,
   onRowPress
 }) => {
-  const { name, NYHAclass, riskLevel } = patient;
+  const { name, NYHAClass, riskLevel } = patient;
 
   return (
     <TouchableOpacity
@@ -30,7 +30,7 @@ export const PatientDetailsRow: React.FC<PatientDetailsRowProps> = ({
         title={name}
         subtitleOne={{
           label: i18n.t("Patients.PatientsList.Class"),
-          value: `NYHA ${NYHAclass}`
+          value: `NYHA ${NYHAClass}`
         }}
         subtitleTwo={{
           label: i18n.t("Patients.PatientsList.Age"),

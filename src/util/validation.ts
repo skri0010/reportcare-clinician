@@ -1,7 +1,10 @@
 // Functions for validating authentication inputs
 
-import { Hospital, NYHAClass, MedicationNames } from "rc_agents/model";
+import { Hospital, NYHAClassEnum, MedicationNames } from "rc_agents/model";
 import { mockMedDosages } from "mock/mockMedDosages";
+import { PossibleNumber, PossibleString } from "./const";
+
+// == String validation ==
 
 // Checks that username has 3 to 16 characters
 export const validateUsername = (username: string): boolean => {
@@ -13,7 +16,7 @@ export const validateEmail = (email: string): boolean => {
 };
 
 export const validatePhone = (phone: string): boolean => {
-  return validateNumber(phone) && phone.length === 10;
+  return validateInteger(phone) && phone.length === 10;
 };
 
 // Checks that password has 8 characters with at least 1 uppercase letter and number
@@ -23,52 +26,52 @@ export const validatePassword = (password: string): boolean => {
   );
 };
 
-export const validateTargetWeight = (targetWeight: string): boolean => {
-  // Assumed min and max values for target weight (in kg)
-  const minWeight = 0;
-  const maxWeight = 500;
-  return (
-    validateNumber(targetWeight) &&
-    parseFloat(targetWeight) > minWeight &&
-    parseFloat(targetWeight) <= maxWeight
-  );
-};
-
-export const validateHospitalName = (hospitalName: string): boolean => {
+export const validateHospitalName = (hospitalName: PossibleString): boolean => {
   return (
     hospitalName !== Hospital.UNKNOWN &&
     Object.values(Hospital).includes(hospitalName as Hospital)
   );
 };
 
-export const validateNYHAClass = (NYHAclass: string): boolean => {
+export const validateNYHAClass = (NYHAClass: PossibleString): boolean => {
   return (
-    NYHAclass !== Hospital.UNKNOWN &&
-    Object.values(NYHAClass).includes(NYHAclass as NYHAClass)
+    NYHAClass !== Hospital.UNKNOWN &&
+    Object.values(NYHAClass).includes(NYHAClass as NYHAClassEnum)
   );
 };
 
-export const validateTargetActivity = (targetActivity: string): boolean => {
-  // Assumed min and max values for target activity (number of steps)
-  const minActivity = 0;
-  const maxActivity = 100000;
-  return (
-    validateNumber(targetActivity) &&
-    parseFloat(targetActivity) > minActivity &&
-    parseFloat(targetActivity) <= maxActivity
-  );
+// == Number validation ==
+
+export const validateTargetWeight = (targetWeight: PossibleNumber): boolean => {
+  // Min and max values for target weight (in kg)
+  const minWeight = 0;
+  const maxWeight = 500;
+  return (targetWeight &&
+    targetWeight > minWeight &&
+    targetWeight <= maxWeight) as boolean;
 };
 
-export const validateFluidIntakeGoal = (fluidIntakeGoal: string): boolean => {
-  // Assumed min and max values for fluid intake goal (in ml)
-  const minFluidIntakeGoal = 0;
-  const maxFluidIntakeGoal = 10000;
-  return (
-    validateNumber(fluidIntakeGoal) &&
-    parseFloat(fluidIntakeGoal) > minFluidIntakeGoal &&
-    parseFloat(fluidIntakeGoal) <= maxFluidIntakeGoal
-  );
+export const validateTargetSteps = (targetSteps: PossibleNumber): boolean => {
+  // Min and max values for steps
+  const minSteps = 0;
+  const maxSteps = 100000;
+  return (targetSteps &&
+    targetSteps > minSteps &&
+    targetSteps <= maxSteps) as boolean;
 };
+
+export const validateFluidIntakeGoal = (
+  fluidIntakeGoalInMl: PossibleNumber
+): boolean => {
+  // Min and max values for fluid intake goal (in ml)
+  const minFluidIntakeGoalInMl = 0;
+  const maxFluidIntakeGoalInMl = 10000;
+  return (fluidIntakeGoalInMl &&
+    fluidIntakeGoalInMl > minFluidIntakeGoalInMl &&
+    fluidIntakeGoalInMl <= maxFluidIntakeGoalInMl) as boolean;
+};
+
+// == Other validation ==
 
 export const validateMedName = (medName: string): boolean => {
   // Assumed medicine name's length
@@ -82,7 +85,7 @@ export const validateMedName = (medName: string): boolean => {
 };
 
 export const validateMedDosageInput = (dosage: string): boolean => {
-  return validateNumber(dosage);
+  return validateInteger(dosage);
 };
 
 export const validateMedDosage = (medName: string, dosage: string): boolean => {
@@ -92,7 +95,7 @@ export const validateMedDosage = (medName: string, dosage: string): boolean => {
     const minDosage = medicine[0].dosage.min;
     const maxDosage = medicine[0].dosage.max;
     return (
-      validateNumber(dosage) &&
+      validateInteger(dosage) &&
       parseFloat(dosage) >= minDosage &&
       parseFloat(dosage) <= maxDosage
     );
@@ -105,18 +108,25 @@ export const validateMedFreq = (frequency: string): boolean => {
   const minFrequency = 1;
   const maxFrequency = 10;
   return (
-    validateNumber(frequency) &&
+    validateInteger(frequency) &&
     parseFloat(frequency) >= minFrequency &&
     parseFloat(frequency) <= maxFrequency
   );
 };
 
-export const notEmptyString = (testString: string): boolean => {
-  return testString.length > 0;
+export const notEmptyString = (
+  testString: string | number | null | undefined
+): boolean => {
+  return (testString && testString.toString().length > 0) as boolean;
 };
 
-export const validateNumber = (testString: string): boolean => {
+export const validateInteger = (testString: string): boolean => {
   return /^\d+$/.test(testString);
+};
+
+export const getParsedFloat = (testString: string): number | null => {
+  const float = parseFloat(testString);
+  return !Number.isNaN(float) ? float : null;
 };
 
 // Checks that code has 6 digits
