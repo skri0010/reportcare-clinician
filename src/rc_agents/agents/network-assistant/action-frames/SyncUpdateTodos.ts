@@ -79,7 +79,6 @@ class SyncUpdateTodos extends Activity {
                     pending: todo.completed ? null : TodoStatus.PENDING,
                     completed: todo.completed ? TodoStatus.COMPLETED : null,
                     lastModified: todo.lastModified,
-                    owner: clinicianId,
                     version: latestTodo.version
                   });
 

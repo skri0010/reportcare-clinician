@@ -3,8 +3,8 @@ import { RiskLevel } from "models/RiskLevel";
 
 export const mockPatients: PatientInfo[] = [
   {
+    patientID: "mohammadzaini",
     __typename: "PatientInfo",
-    id: "1",
     name: "Mohammad Zaini",
     address: "Melbourne",
     deviceNo: "1",
@@ -13,9 +13,8 @@ export const mockPatients: PatientInfo[] = [
     cardiologist: "Doctor Wong",
     hospitalName: "Sabah Hospital",
     hospitalLocation: "Sabah",
-    targetWeight: "70",
-    targetSteps: "cardio",
-    patientID: "20",
+    targetWeight: 70,
+    targetSteps: 1000,
     createdAt: "",
     updatedAt: "",
     riskLevel: RiskLevel.UNASSIGNED,
@@ -26,12 +25,13 @@ export const mockPatients: PatientInfo[] = [
     emergencyContactName: "Emergency Test",
     emergencyContactNumber: "999",
     email: "testemail@legit.com",
-    fluidIntakeGoalInMl: "1000",
-    configured: false
+    fluidIntakeGoalInMl: 1000,
+    configured: false,
+    version: 1
   },
   {
     __typename: "PatientInfo",
-    id: "2",
+    patientID: "tylerharis",
     name: "Tyler Haris",
     address: "Barcelona",
     deviceNo: "1",
@@ -40,9 +40,8 @@ export const mockPatients: PatientInfo[] = [
     cardiologist: "Doctor Xavi",
     hospitalName: "Barcelona",
     hospitalLocation: "Bercelona",
-    targetWeight: "80",
-    targetSteps: "cardio",
-    patientID: "30",
+    targetWeight: 80,
+    targetSteps: 1000,
     createdAt: "",
     updatedAt: "",
     gender: "male",
@@ -52,13 +51,14 @@ export const mockPatients: PatientInfo[] = [
     emergencyContactName: "Emergency Test",
     emergencyContactNumber: "999",
     email: "testemail@legit.com",
-    fluidIntakeGoalInMl: "1000",
+    fluidIntakeGoalInMl: 1000,
     configured: true,
-    riskLevel: RiskLevel.LOW
+    riskLevel: RiskLevel.LOW,
+    version: 1
   },
   {
     __typename: "PatientInfo",
-    id: "3",
+    patientID: "danialwilliams",
     name: "Danial Williams",
     address: "Sydney",
     deviceNo: "1",
@@ -67,9 +67,8 @@ export const mockPatients: PatientInfo[] = [
     cardiologist: "Doctor Wong",
     hospitalName: "Sabah Hospital",
     hospitalLocation: "Sabah",
-    targetWeight: "70",
-    targetSteps: "cardio",
-    patientID: "50",
+    targetWeight: 70,
+    targetSteps: 1000,
     createdAt: "",
     updatedAt: "",
     riskLevel: RiskLevel.MEDIUM,
@@ -80,12 +79,13 @@ export const mockPatients: PatientInfo[] = [
     emergencyContactName: "Emergency Test",
     emergencyContactNumber: "999",
     email: "testemail@legit.com",
-    fluidIntakeGoalInMl: "1000",
-    configured: true
+    fluidIntakeGoalInMl: 1000,
+    configured: true,
+    version: 1
   },
   {
     __typename: "PatientInfo",
-    id: "4",
+    patientID: "mohammadabdul",
     name: "Mohammad Abdul",
     address: "Canberra",
     deviceNo: "1",
@@ -94,9 +94,8 @@ export const mockPatients: PatientInfo[] = [
     cardiologist: "Doctor Wong",
     hospitalName: "Canberra Hospital",
     hospitalLocation: "Canberra",
-    targetWeight: "55",
-    targetSteps: "cardio",
-    patientID: "60",
+    targetWeight: 55,
+    targetSteps: 1000,
     createdAt: "",
     updatedAt: "",
     riskLevel: RiskLevel.HIGH,
@@ -107,7 +106,8 @@ export const mockPatients: PatientInfo[] = [
     emergencyContactName: "Emergency Test",
     emergencyContactNumber: "999",
     email: "testemail@legit.com",
-    fluidIntakeGoalInMl: "1000",
-    configured: true
+    fluidIntakeGoalInMl: 1000,
+    configured: true,
+    version: 1
   }
 ];

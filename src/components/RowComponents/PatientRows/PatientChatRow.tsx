@@ -56,10 +56,7 @@ export const PatientChatRow: FC<PatientChatRowProps> = ({
           label: "Message",
           value: message
         }}
-        // TODO: Clarify how this is decided and stored
-        riskLevel={
-          generalDetails.id === "1" ? RiskLevel.HIGH : RiskLevel.MEDIUM
-        }
+        riskLevel={generalDetails.riskLevel as RiskLevel}
       >
         {/* Side container */}
         <View style={styles.sideContainer}>

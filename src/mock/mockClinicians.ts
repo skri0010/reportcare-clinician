@@ -9,6 +9,7 @@ export const mockClinician: ClinicianInfo[] = [
     clinicianID: "20",
     createdAt: "",
     updatedAt: "",
-    contactNumber: "0112222333"
+    contactNumber: "0112222333",
+    version: 1
   }
 ];

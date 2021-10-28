@@ -117,7 +117,6 @@ class UpdateTodo extends Activity {
           completed: todoInput.completed ? TodoStatus.COMPLETED : null,
           pending: todoInput.completed ? null : TodoStatus.PENDING,
           lastModified: todoInput.lastModified,
-          owner: clinicianId,
           version: todoInput.version
         };
 

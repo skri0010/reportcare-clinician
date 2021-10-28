@@ -1,5 +1,5 @@
 // Three-level getAlert
-export const getAlert = /* GraphQL */ `
+export const getFullAlert = /* GraphQL */ `
   query GetAlert($id: ID!) {
     getAlert(id: $id) {
       id

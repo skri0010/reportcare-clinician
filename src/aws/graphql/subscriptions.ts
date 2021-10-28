@@ -15,6 +15,7 @@ export const onCreatePatientInfo = /* GraphQL */ `
       email
       emergencyContactName
       emergencyContactNumber
+      riskLevel
       NYHAClass
       cardiologist
       diagnosisInfo
@@ -22,12 +23,10 @@ export const onCreatePatientInfo = /* GraphQL */ `
       hospitalLocation
       targetWeight
       targetSteps
-      riskLevel
       deviceNo
       fluidIntakeGoalInMl
       configured
       version
-      updatedByUser
       createdAt
       updatedAt
       owner
@@ -47,6 +46,7 @@ export const onUpdatePatientInfo = /* GraphQL */ `
       email
       emergencyContactName
       emergencyContactNumber
+      riskLevel
       NYHAClass
       cardiologist
       diagnosisInfo
@@ -54,12 +54,10 @@ export const onUpdatePatientInfo = /* GraphQL */ `
       hospitalLocation
       targetWeight
       targetSteps
-      riskLevel
       deviceNo
       fluidIntakeGoalInMl
       configured
       version
-      updatedByUser
       createdAt
       updatedAt
       owner
@@ -79,6 +77,7 @@ export const onDeletePatientInfo = /* GraphQL */ `
       email
       emergencyContactName
       emergencyContactNumber
+      riskLevel
       NYHAClass
       cardiologist
       diagnosisInfo
@@ -86,12 +85,10 @@ export const onDeletePatientInfo = /* GraphQL */ `
       hospitalLocation
       targetWeight
       targetSteps
-      riskLevel
       deviceNo
       fluidIntakeGoalInMl
       configured
       version
-      updatedByUser
       createdAt
       updatedAt
       owner
@@ -695,7 +692,6 @@ export const onCreateAlert = /* GraphQL */ `
       pending
       completed
       version
-      updatedByUser
       createdAt
       updatedAt
       symptomReport {
@@ -748,7 +744,6 @@ export const onUpdateAlert = /* GraphQL */ `
       pending
       completed
       version
-      updatedByUser
       createdAt
       updatedAt
       symptomReport {
@@ -801,7 +796,6 @@ export const onDeleteAlert = /* GraphQL */ `
       pending
       completed
       version
-      updatedByUser
       createdAt
       updatedAt
       symptomReport {
@@ -867,7 +861,6 @@ export const onCreateTodo = /* GraphQL */ `
         pending
         completed
         version
-        updatedByUser
         createdAt
         updatedAt
         owner
@@ -904,7 +897,6 @@ export const onUpdateTodo = /* GraphQL */ `
         pending
         completed
         version
-        updatedByUser
         createdAt
         updatedAt
         owner
@@ -941,7 +933,6 @@ export const onDeleteTodo = /* GraphQL */ `
         pending
         completed
         version
-        updatedByUser
         createdAt
         updatedAt
         owner

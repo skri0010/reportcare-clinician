@@ -42,6 +42,7 @@ import { convertAlertToAlertInfo } from "util/utilityFunctions";
 import { setFetchingAlertInfo } from "ic-redux/actions/agents/alertActionCreator";
 import moment from "moment";
 import { RiskLevel } from "models/RiskLevel";
+import { emptyValuePlaceholder } from "util/const";
 
 /**
  * Represents the activity for retrieving patient's information associated with an alert.
@@ -166,8 +167,8 @@ export const queryAlertInfo = async (alert: Alert): Promise<Alert | null> => {
 
   if (patientInfoQuery.data.getPatientInfo) {
     const patientInfo = patientInfoQuery.data.getPatientInfo;
-    alertInfo.diagnosis = patientInfo.diagnosisInfo;
-    alertInfo.NYHAClass = patientInfo.NYHAClass;
+    alertInfo.diagnosis = patientInfo.diagnosisInfo || emptyValuePlaceholder;
+    alertInfo.NYHAClass = patientInfo.NYHAClass || emptyValuePlaceholder;
   }
 
   // Get MedCompliant
@@ -230,11 +231,11 @@ export const queryAlertInfo = async (alert: Alert): Promise<Alert | null> => {
   }
 
   // Queries activity associated with symptom report
-  if (alertInfo.symptomReport?.ActivityInfo?.Actname) {
+  if (alertInfo.symptomReport?.activityInfo?.activityName) {
     alertInfo.activityDuringAlert =
-      alertInfo.symptomReport.ActivityInfo.Actname;
+      alertInfo.symptomReport.activityInfo.activityName;
     // Prevent storing full activity info
-    delete alertInfo.symptomReport.ActivityInfo;
+    delete alertInfo.symptomReport.activityInfo;
   }
 
   return alertInfo;

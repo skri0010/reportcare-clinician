@@ -16,7 +16,6 @@ export const mockPendingAlerts: Alert[] = [
     pending: AlertStatus.PENDING,
     owner: "patient_john",
     version: 1,
-    updatedByUser: "patient_john",
     createdAt: "",
     updatedAt: ""
   },
@@ -34,7 +33,6 @@ export const mockPendingAlerts: Alert[] = [
     pending: AlertStatus.PENDING,
     owner: "patient_john",
     version: 1,
-    updatedByUser: "patient_john",
     createdAt: "",
     updatedAt: ""
   },
@@ -52,7 +50,6 @@ export const mockPendingAlerts: Alert[] = [
     pending: AlertStatus.PENDING,
     owner: "siuloongtest",
     version: 1,
-    updatedByUser: "patient_john",
     createdAt: "",
     updatedAt: ""
   },
@@ -70,7 +67,6 @@ export const mockPendingAlerts: Alert[] = [
     pending: AlertStatus.PENDING,
     owner: "siuloongtest",
     version: 1,
-    updatedByUser: "patient_john",
     createdAt: "",
     updatedAt: ""
   }
@@ -91,7 +87,6 @@ export const mockCompletedAlerts: Alert[] = [
     completed: AlertStatus.COMPLETED,
     owner: "siuloongtest",
     version: 1,
-    updatedByUser: "patient_john",
     createdAt: "",
     updatedAt: ""
   },
@@ -109,7 +104,6 @@ export const mockCompletedAlerts: Alert[] = [
     completed: AlertStatus.COMPLETED,
     owner: "siuloongtest",
     version: 1,
-    updatedByUser: "patient_john",
     createdAt: "",
     updatedAt: ""
   },
@@ -127,7 +121,6 @@ export const mockCompletedAlerts: Alert[] = [
     completed: AlertStatus.COMPLETED,
     owner: "siuloongtest",
     version: 1,
-    updatedByUser: "patient_john",
     createdAt: "",
     updatedAt: ""
   }

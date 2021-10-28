@@ -25,6 +25,7 @@ type PatientInfo
   email: String!
   emergencyContactName: String!
   emergencyContactNumber: String!
+  riskLevel: String!
   NYHAClass: String
   cardiologist: String
   diagnosisInfo: String
@@ -32,12 +33,10 @@ type PatientInfo
   hospitalLocation: String
   targetWeight: Float
   targetSteps: Int
-  riskLevel: String
   deviceNo: String
   fluidIntakeGoalInMl: Int
   configured: Boolean!
   version: Int!
-  updatedByUser: String!
 }
 
 type MedicationInfo
@@ -379,7 +378,6 @@ type Alert
   pending: String
   completed: String
   version: Int!
-  updatedByUser: String!
 }
 
 """

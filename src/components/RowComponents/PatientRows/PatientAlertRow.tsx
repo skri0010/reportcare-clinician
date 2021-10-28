@@ -28,9 +28,7 @@ export const PatientRequestRow: React.FC<PatientRequestRowProps> = ({
           value: request || "Missing alert information"
         }}
         // TODO: Clarify how this is decided and stored
-        riskLevel={
-          generalDetails.id === "1" ? RiskLevel.HIGH : RiskLevel.MEDIUM
-        }
+        riskLevel={generalDetails.riskLevel as RiskLevel}
         bottomButtonLabel="View Details"
         onBottomButtonPress={onBottomButtonPress}
       >

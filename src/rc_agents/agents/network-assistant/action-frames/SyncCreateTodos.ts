@@ -58,8 +58,7 @@ class SyncCreateTodos extends Activity {
                 title: todo.title,
                 patientName: todo.patientName,
                 notes: todo.notes,
-                lastModified: todo.createdAt,
-                owner: clinicianId
+                lastModified: todo.createdAt
               };
 
               if (todo.completed) {

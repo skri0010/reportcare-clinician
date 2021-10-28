@@ -297,7 +297,6 @@ export const updatePatientBaseline = async (
   if (updateBaseline) {
     // Creates update input
     const updateInput: UpdatePatientInfoInput = {
-      id: baseline.id,
       patientID: baseline.patientID,
       version: baseline.version,
       ...patientInfoToUpdate

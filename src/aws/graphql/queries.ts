@@ -58,6 +58,7 @@ export const getPatientInfo = /* GraphQL */ `
       email
       emergencyContactName
       emergencyContactNumber
+      riskLevel
       NYHAClass
       cardiologist
       diagnosisInfo
@@ -65,12 +66,10 @@ export const getPatientInfo = /* GraphQL */ `
       hospitalLocation
       targetWeight
       targetSteps
-      riskLevel
       deviceNo
       fluidIntakeGoalInMl
       configured
       version
-      updatedByUser
       createdAt
       updatedAt
       owner
@@ -103,6 +102,7 @@ export const listPatientInfos = /* GraphQL */ `
         email
         emergencyContactName
         emergencyContactNumber
+        riskLevel
         NYHAClass
         cardiologist
         diagnosisInfo
@@ -110,12 +110,10 @@ export const listPatientInfos = /* GraphQL */ `
         hospitalLocation
         targetWeight
         targetSteps
-        riskLevel
         deviceNo
         fluidIntakeGoalInMl
         configured
         version
-        updatedByUser
         createdAt
         updatedAt
         owner
@@ -893,7 +891,6 @@ export const getAlert = /* GraphQL */ `
       pending
       completed
       version
-      updatedByUser
       createdAt
       updatedAt
       symptomReport {
@@ -951,7 +948,6 @@ export const listAlerts = /* GraphQL */ `
         pending
         completed
         version
-        updatedByUser
         createdAt
         updatedAt
         owner
@@ -990,7 +986,6 @@ export const listPatientAlertsByDateTime = /* GraphQL */ `
         pending
         completed
         version
-        updatedByUser
         createdAt
         updatedAt
         owner
@@ -1029,7 +1024,6 @@ export const listPendingAlertsByDateTime = /* GraphQL */ `
         pending
         completed
         version
-        updatedByUser
         createdAt
         updatedAt
         owner
@@ -1068,7 +1062,6 @@ export const listPendingRiskAlerts = /* GraphQL */ `
         pending
         completed
         version
-        updatedByUser
         createdAt
         updatedAt
         owner
@@ -1107,7 +1100,6 @@ export const listCompletedRiskAlerts = /* GraphQL */ `
         pending
         completed
         version
-        updatedByUser
         createdAt
         updatedAt
         owner
@@ -1144,7 +1136,6 @@ export const getTodo = /* GraphQL */ `
         pending
         completed
         version
-        updatedByUser
         createdAt
         updatedAt
         owner

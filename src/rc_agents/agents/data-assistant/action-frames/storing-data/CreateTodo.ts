@@ -66,8 +66,7 @@ class CreateTodo extends Activity {
           notes: todoInput.notes,
           lastModified: todoInput.lastModified
             ? todoInput.lastModified
-            : todoInput.createdAt,
-          owner: clinicianId
+            : todoInput.createdAt
         };
 
         // Updates Todo's status
