@@ -83,7 +83,7 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
       completed: false,
       createdAt: new Date().toISOString(),
       lastModified: new Date().toISOString(),
-      _version: 1,
+      version: 1,
       // Alert related information: patient info, alert info, alert id and risk level
       patientId: alertInfo ? alertInfo.patientID : undefined,
       alert: alertInfo || undefined,

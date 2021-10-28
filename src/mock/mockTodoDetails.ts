@@ -117,7 +117,7 @@ export const mockCurrentTodo: LocalTodo[] = [
     completed: false,
     toSync: false,
     patientId: "1",
-    _version: 8,
+    version: 8,
     createdAt: "2021-08-10T15:08:15.116Z"
   },
   {
@@ -128,7 +128,7 @@ export const mockCurrentTodo: LocalTodo[] = [
     lastModified: "2021-08-10T15:40:20.008Z",
     completed: false,
     toSync: false,
-    _version: 8,
+    version: 8,
     createdAt: "2021-08-01T15:08:15.116Z"
   }
 ];
@@ -142,7 +142,7 @@ export const mockCompletedTodo: LocalTodo[] = [
     lastModified: "2021-08-10T15:40:20.008Z",
     completed: true,
     toSync: false,
-    _version: 8,
+    version: 8,
     createdAt: "2021-08-10T15:08:15.116Z"
   }
 ];

@@ -138,7 +138,7 @@ class RetrieveTodos extends Activity {
                       createdAt: todo.createdAt,
                       lastModified: todo.lastModified,
                       toSync: false,
-                      _version: todo._version,
+                      version: todo.version,
                       alertId: todoSameAlertID.alertId,
                       patientId: todoSameAlertID.patientId,
                       riskLevel: todoSameAlertID.riskLevel
@@ -179,7 +179,7 @@ class RetrieveTodos extends Activity {
                         createdAt: todo.createdAt,
                         lastModified: todo.lastModified,
                         toSync: false,
-                        _version: todo._version,
+                        version: todo.version,
                         alertId: result.id,
                         patientId: result.patientID,
                         riskLevel: mapColorCodeToRiskLevel(result.colorCode)

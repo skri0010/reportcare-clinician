@@ -56,7 +56,7 @@ class SyncUpdateTodos extends Activity {
               if (query.data.getTodo) {
                 const latestTodo = query.data.getTodo;
 
-                if (todo._version && latestTodo._version > todo._version) {
+                if (todo.version && latestTodo.version > todo.version) {
                   /**
                    * Latest Todo has higher version that the current Todo:
                    * Replaces local Todo with the latest one
@@ -67,7 +67,7 @@ class SyncUpdateTodos extends Activity {
                   todo.completed =
                     latestTodo.completed === TodoStatus.COMPLETED;
                   todo.lastModified = latestTodo.lastModified;
-                  todo._version = latestTodo._version;
+                  todo.version = latestTodo.version;
                   todo.toSync = false;
                 } else {
                   // Updates Todo
@@ -80,13 +80,13 @@ class SyncUpdateTodos extends Activity {
                     completed: todo.completed ? TodoStatus.COMPLETED : null,
                     lastModified: todo.lastModified,
                     owner: clinicianId,
-                    _version: latestTodo._version
+                    version: latestTodo.version
                   });
 
                   if (updateResponse.data.updateTodo) {
                     // Updates current local Todo
                     todo.toSync = false;
-                    todo._version = updateResponse.data.updateTodo._version;
+                    todo.version = updateResponse.data.updateTodo.version;
                   } else {
                     updateSuccessful = false;
                   }

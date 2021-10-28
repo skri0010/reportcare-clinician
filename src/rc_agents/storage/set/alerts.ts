@@ -22,7 +22,7 @@ const setProcessedAlertInfos = async (
   );
 };
 
-// Insert AlertInfo[], merge based on latest _version
+// Insert AlertInfo[], merge based on latest version
 export const setAlertInfos = async (
   alertInfos: (AlertInfo | HighRiskAlertInfo)[]
 ): Promise<void> => {
@@ -55,8 +55,8 @@ export const setAlertInfos = async (
           const localAlertInfo: AlertInfo | HighRiskAlertInfo =
             localAlertInfosForPatient[index];
 
-          // Merge based on alert's _version
-          if (alertInfo._version >= localAlertInfo._version) {
+          // Merge based on alert's version
+          if (alertInfo.version >= localAlertInfo.version) {
             // Set COMPLETED if new or local alert is completed
             const completed =
               alertInfo.completed || localAlertInfo.completed
@@ -86,7 +86,7 @@ export const setAlertInfos = async (
   }
 };
 
-// Insert AlertInfo, merge based on latest _version
+// Insert AlertInfo, merge based on latest version
 export const setAlertInfo = async (
   alertInfo: AlertInfo | HighRiskAlertInfo
 ): Promise<void> => {

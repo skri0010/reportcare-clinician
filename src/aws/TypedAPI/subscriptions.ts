@@ -61,7 +61,7 @@ const onCreatePatientAssignment = /* GraphQL */ `
       resolution
       reassignToClinicianID
       sourceClinicianID
-      _version
+      version
       _deleted
       _lastChangedAt
       createdAt
@@ -81,7 +81,7 @@ const onUpdatePatientAssignment = /* GraphQL */ `
       resolution
       reassignToClinicianID
       sourceClinicianID
-      _version
+      version
       _deleted
       _lastChangedAt
       createdAt

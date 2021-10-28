@@ -232,7 +232,7 @@ export class ClinicianAgentManagement extends AgentManagement {
           ALA: protectedInfo.ALA,
           MHA: protectedInfo.MHA,
           CAM: protectedInfo.CAM,
-          _version: protectedInfo._version
+          version: protectedInfo.version
         };
 
         // Updates protectedInfo with latest storable beliefs of each agent

@@ -65,7 +65,7 @@ class UpdateTodo extends Activity {
           if (localTodos) {
             const localTodo = localTodos[0];
             todoInput.id = localTodo.id;
-            todoInput._version = localTodo._version;
+            todoInput.version = localTodo.version;
             todoInput.lastModified = todoInput.lastModified
               ? todoInput.lastModified
               : todoInput.createdAt;
@@ -118,7 +118,7 @@ class UpdateTodo extends Activity {
           pending: todoInput.completed ? null : TodoStatus.PENDING,
           lastModified: todoInput.lastModified,
           owner: clinicianId,
-          _version: todoInput._version
+          version: todoInput.version
         };
 
         // Device is online
@@ -131,10 +131,7 @@ class UpdateTodo extends Activity {
              * Conflict resolution when latest Todo in database has higher version:
              * Local Todo will not be updated to the cloud and will be replaced by the latest one
              */
-            if (
-              latestTodo?._version &&
-              latestTodo._version > todoInput._version
-            ) {
+            if (latestTodo?.version && latestTodo.version > todoInput.version) {
               await LocalStorage.setTodo(latestTodo);
             } else {
               // Updates Todo
@@ -144,7 +141,7 @@ class UpdateTodo extends Activity {
               if (updateQuery.data.updateTodo) {
                 // Updates to indicate that Todo is successfully updated
                 toSync = false;
-                todoInput._version = updateQuery.data.updateTodo._version;
+                todoInput.version = updateQuery.data.updateTodo.version;
               }
             }
           }

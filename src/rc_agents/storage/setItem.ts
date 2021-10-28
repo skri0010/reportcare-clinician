@@ -317,7 +317,7 @@ export const setTodo = async (todo: LocalTodo | Todo): Promise<void> => {
       completed: currentTodo.completed === TodoStatus.COMPLETED,
       createdAt: currentTodo.createdAt,
       lastModified: currentTodo.lastModified,
-      _version: currentTodo._version,
+      version: currentTodo.version,
       toSync: false
     };
 
@@ -357,7 +357,7 @@ export const setTodo = async (todo: LocalTodo | Todo): Promise<void> => {
         const currentTodo = localData[existIndex];
         if (currentTodo.id) {
           todoToStore.id = currentTodo.id;
-          todoToStore._version = currentTodo._version;
+          todoToStore.version = currentTodo.version;
         }
       }
     }

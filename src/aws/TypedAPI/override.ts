@@ -1,5 +1,5 @@
 // Three-level getAlert
-export const getFullAlert = /* GraphQL */ `
+export const getAlert = /* GraphQL */ `
   query GetAlert($id: ID!) {
     getAlert(id: $id) {
       id
@@ -10,64 +10,58 @@ export const getFullAlert = /* GraphQL */ `
       colorCode
       triageValue
       vitalsReportID
-      vitalsReport {
-        id
-        Temperature
-        Humidity
-        Weight
-        BPSys
-        BPDi
-        NoSteps
-        OxySat
-        FluidIntake
-        DateTime
-        patientID
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-        owner
-      }
       symptomReportID
+      pending
+      completed
+      version
+      updatedByUser
+      createdAt
+      updatedAt
       symptomReport {
         id
-        ActId
-        ActivityInfo {
+        patientID
+        activityInfoID
+        activityInfo {
           id
-          Actname
-          Location
-          expectedFrequency
-          expectedDays
-          expectedDurationMinutes
-          recordDateTime
           patientID
-          _version
-          _deleted
-          _lastChangedAt
+          activityName
+          startTime
+          days
+          durationInMinutes
+          locations
+          symptoms
           createdAt
           updatedAt
           owner
         }
-        Name
-        Severity
-        DateTime
-        patientID
-        _version
-        _deleted
-        _lastChangedAt
+        symptomName
+        severity
+        dateTime
+        summary
+        weather
+        temperature
+        humidity
         createdAt
         updatedAt
         owner
       }
-      pending
-      completed
+      vitalsReport {
+        id
+        patientID
+        dateTime
+        weight
+        systolicBloodPressure
+        diastolicBloodPressure
+        oxygenSaturation
+        fluidIntakeInMl
+        weather
+        temperature
+        humidity
+        createdAt
+        updatedAt
+        owner
+      }
       owner
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -91,31 +85,28 @@ export const listReportSymptomsWithActivitiesByDateTime = /* GraphQL */ `
     ) {
       items {
         id
-        ActId
-        ActivityInfo {
+        patientID
+        activityInfoID
+        activityInfo {
           id
-          Actname
-          Location
-          expectedFrequency
-          expectedDays
-          expectedDurationMinutes
-          recordDateTime
           patientID
-          _version
-          _deleted
-          _lastChangedAt
+          activityName
+          startTime
+          days
+          durationInMinutes
+          locations
+          symptoms
           createdAt
           updatedAt
           owner
         }
-        Name
-        Severity
-        DateTime
-        Summary
-        patientID
-        _version
-        _deleted
-        _lastChangedAt
+        symptomName
+        severity
+        dateTime
+        summary
+        weather
+        temperature
+        humidity
         createdAt
         updatedAt
         owner

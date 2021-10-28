@@ -209,7 +209,7 @@ export interface TodoInput {
   // End of attributes for associated Alert
   createdAt: string;
   lastModified?: string;
-  _version: number;
+  version: number;
 }
 
 export interface LocalTodo {
@@ -225,7 +225,7 @@ export interface LocalTodo {
   createdAt: string;
   lastModified?: string;
   toSync?: boolean;
-  _version: number;
+  version: number;
 }
 
 export interface TodoDetails {

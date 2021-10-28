@@ -153,8 +153,8 @@ export const updateAlertInfo = async (
       const onlineAlert = alertQuery.data.getAlert;
 
       if (
-        alertInfoInput._version &&
-        onlineAlert._version > alertInfoInput._version
+        alertInfoInput.version &&
+        onlineAlert.version > alertInfoInput.version
       ) {
         // If online alert has higher version than local alert, store online alert
         // Result 1: Online AlertInfo is returned
@@ -165,7 +165,7 @@ export const updateAlertInfo = async (
           id: alertInfoInput.id,
           completed: alertInfoInput.completed,
           pending: alertInfoInput.pending,
-          _version: alertInfoInput._version
+          version: alertInfoInput.version
         };
         const updateResponse = await updateAlert(alertToUpdate);
 

@@ -279,7 +279,7 @@ export const updatePatientBaseline = async (
     // Compares version of patient infos
     const latestPatientInfo = patientInfoQuery.data.getPatientInfo;
     // Latest patient info has higher version
-    if (latestPatientInfo._version > baseline._version) {
+    if (latestPatientInfo.version > baseline.version) {
       // Patient has been configured: replace baseline with retrieved patient
       if (latestPatientInfo.configured) {
         baseline = latestPatientInfo;
@@ -299,14 +299,14 @@ export const updatePatientBaseline = async (
     const updateInput: UpdatePatientInfoInput = {
       id: baseline.id,
       patientID: baseline.patientID,
-      _version: baseline._version,
+      version: baseline.version,
       ...patientInfoToUpdate
     };
     const updateResponse = await updatePatientInfo(updateInput);
 
     if (updateResponse.data.updatePatientInfo) {
       // Updates version of patient info
-      baseline._version = updateResponse.data.updatePatientInfo._version;
+      baseline.version = updateResponse.data.updatePatientInfo.version;
       updateSuccessful = true;
     }
   }
