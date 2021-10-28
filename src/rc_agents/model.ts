@@ -223,7 +223,7 @@ export interface LocalTodo {
   patientId?: string;
   riskLevel?: RiskLevel;
   createdAt: string;
-  lastModified?: string;
+  lastModified?: string | null;
   toSync?: boolean;
   version: number;
 }

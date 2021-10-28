@@ -51,8 +51,8 @@ class ProcessAlertNotification extends Activity {
       const alertNotification: AlertNotification =
         facts[BeliefKeys.CLINICIAN]?.[ClinicianAttributes.ALERT_NOTIFICATION];
 
-      // Retrieves locally stored ClinicianID
-      const clinicianID = await LocalStorage.getClinicianID();
+      // Retrieves clinician from global state
+      const clinicianID = store.getState().clinicians.clinician?.clinicianID;
 
       if (alertNotification && clinicianID) {
         // Trigger request to MHA to associate retrieved medical records
@@ -175,6 +175,19 @@ class ProcessAlertNotification extends Activity {
       ),
       false
     );
+
+    // Alert is not relevant to current clinician - end the procedure
+    if (!showAlertPopUp || !alertInfo) {
+      agentAPI.addFact(
+        new Belief(
+          BeliefKeys.PROCEDURE,
+          ProcedureAttributes.HF_EUA,
+          ProcedureConst.INACTIVE
+        ),
+        true,
+        true
+      );
+    }
   }
 }
 

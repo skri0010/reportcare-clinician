@@ -21,7 +21,7 @@ export const CliniciansList: FC<CliniciansListScreen> = ({ flex = 1 }) => {
     (state: RootState) => ({
       colors: state.settings.colors,
       clinicians: state.clinicians.clinicianContacts,
-      fetchingClinicians: state.clinicians.fetchingClinianContacts
+      fetchingClinicians: state.clinicians.fetchingClinicianContacts
     })
   );
 
@@ -87,6 +87,7 @@ export const CliniciansList: FC<CliniciansListScreen> = ({ flex = 1 }) => {
                 }}
               />
             )}
+            keyExtractor={(item) => item.clinicianID}
           />
         </ScrollView>
       ) : (

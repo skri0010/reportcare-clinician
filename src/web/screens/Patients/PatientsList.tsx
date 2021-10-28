@@ -32,8 +32,6 @@ export const PatientsList: FC<PatientsListScreen> = ({
   const dispatch = useDispatch();
 
   const onPatientRowPress = (patient: PatientInfo) => {
-    // eslint-disable-next-line no-console
-    console.log(patient);
     if (patient) {
       dispatch(
         setPatientDetails({

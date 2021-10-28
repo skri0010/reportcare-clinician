@@ -17,6 +17,7 @@ import { updateTodo } from "aws/TypedAPI/updateMutations";
 import { getTodo } from "aws/TypedAPI/getQueries";
 import { agentNWA } from "rc_agents/agents";
 import { TodoStatus } from "rc_agents/model";
+import { store } from "util/useRedux";
 
 /**
  * Class to represent the activity for syncing local update of Todos.
@@ -37,8 +38,8 @@ class SyncUpdateTodos extends Activity {
     super.doActivity(agent, [rule2]);
 
     try {
-      // Gets locally stored clinicianId
-      const clinicianId = await LocalStorage.getClinicianID();
+      // Gets clinicianId from global state
+      const clinicianId = store.getState().clinicians.clinician?.clinicianID;
 
       // Gets locally stored Todos
       const localTodos = await LocalStorage.getTodos();
@@ -66,6 +67,7 @@ class SyncUpdateTodos extends Activity {
                   todo.notes = latestTodo.notes;
                   todo.completed =
                     latestTodo.completed === TodoStatus.COMPLETED;
+                  todo.createdAt = latestTodo.createdAt;
                   todo.lastModified = latestTodo.lastModified;
                   todo.version = latestTodo.version;
                   todo.toSync = false;

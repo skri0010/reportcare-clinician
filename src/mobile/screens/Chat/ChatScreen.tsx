@@ -7,10 +7,7 @@ import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import { ScreenName, WithBottomTabsProps } from "mobile/screens";
 
 export const ChatScreen: FC<WithBottomTabsProps[ScreenName.CHAT]> = () => {
-  // JH-TODO Add search button later
-  // JH-TODO Flatlist
-  // JH-TODO Remove mock data
-
+  // FUTURE-TODO: Add search button later and remove mock data
   return (
     <MobileScreenWrapper>
       <View>
@@ -20,7 +17,6 @@ export const ChatScreen: FC<WithBottomTabsProps[ScreenName.CHAT]> = () => {
           ListFooterComponent={() => <ItemSeparator />}
           data={mockPatients}
           renderItem={({ item }) => (
-            // TODO : Clarify how chat data is stored
             <PatientChatRow
               generalDetails={item}
               message="Temporary chat"

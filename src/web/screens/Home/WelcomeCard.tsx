@@ -5,7 +5,6 @@ import { ScaledSheet } from "react-native-size-matters";
 import { H3, H5 } from "components/Text";
 import { CardWrapper } from "components/Wrappers/CardWrapper";
 import i18n from "util/language/i18n";
-import { LocalStorage } from "rc_agents/storage";
 import { isMobile } from "util/device";
 
 interface WelcomeCardProps {
@@ -14,8 +13,9 @@ interface WelcomeCardProps {
 }
 
 export const WelcomeCard: FC<WelcomeCardProps> = ({ flex = 1, maxHeight }) => {
-  const { colors } = select((state: RootState) => ({
-    colors: state.settings.colors
+  const { colors, clinician } = select((state: RootState) => ({
+    colors: state.settings.colors,
+    clinician: state.clinicians.clinician
   }));
 
   const [clinicianName, setClinicianName] = useState<string>("");
@@ -25,15 +25,10 @@ export const WelcomeCard: FC<WelcomeCardProps> = ({ flex = 1, maxHeight }) => {
   } as TextStyle;
 
   useEffect(() => {
-    fetchClinician();
-  }, []);
-
-  const fetchClinician = async () => {
-    const clinician = await LocalStorage.getClinician();
     if (clinician) {
       setClinicianName(clinician.name);
     }
-  };
+  }, [clinician]);
 
   return (
     <CardWrapper

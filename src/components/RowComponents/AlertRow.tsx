@@ -17,8 +17,9 @@ export const AlertRow: FC<AlertRowProps> = ({
   selected,
   onCardPress
 }) => {
-  const { colors } = select((state: RootState) => ({
-    colors: state.settings.colors
+  const { colors, fetchingAlertInfo } = select((state: RootState) => ({
+    colors: state.settings.colors,
+    fetchingAlertInfo: state.alerts.fetchingAlertInfo
   }));
 
   return (
@@ -30,7 +31,7 @@ export const AlertRow: FC<AlertRowProps> = ({
           alertDetails.riskLevel
         )
       }}
-      disabled={selected || !onCardPress}
+      disabled={selected || !onCardPress || fetchingAlertInfo} // disable clicking when fetch is ongoing
       onPress={
         onCardPress && !selected ? () => onCardPress(alertDetails) : undefined
       }

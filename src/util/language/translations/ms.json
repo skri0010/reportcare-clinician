@@ -45,7 +45,8 @@
     "TermOfServices": "Terma-Terma Perkhidmatan",
     "Accept": "Terima",
     "Decline": "Tolak",
-    "ToSText": "Saya bersetuju dengan "
+    "ToSText": "Saya bersetuju dengan ",
+    "PlaceholderError": "Placeholder Error"
   },
   "Auth_ConfirmRegistration": {
     "ConfirmRegistration": "Sahkan Pendaftaran",
@@ -80,7 +81,7 @@
     "ApprovalFailed": "Gagal meluluskan permintaan pesakit",
     "OfflineApproval": "Tiada sambungan internet.\nKelulusan akan disimpan dan disegerakkan semasa sambungan internet dikesan.",
     "NoPendingAssignments": "Semua pesakit sudah diagihkan!",
-    "PatientReassign": "Pilihkan Pakar untuk ditugaskan"
+    "PatientReassign": "Pilih pakar untuk ditugaskan"
   },
   "Parameter_Graphs": {
     "DiastolicBP": "Tekanan Darah Diastolik ",
@@ -156,7 +157,9 @@
     "Undo": "BUAT ASAL",
     "NoPendingTodo": "Semua todo sudah diselesaikan!",
     "TodoTitleError": "Sila berikan tajuk yang sah",
-    "TodoNotesError": "Sila berikan catatan yang sah"
+    "TodoNotesError": "Sila berikan catatan yang sah",
+    "CurrentTodo": "Todo Semasa",
+    "CompletedTodo": "Todo Selesai"
   },
   "Patients": {
     "PatientsList": {
@@ -179,7 +182,9 @@
     "LanguageDescription": "Tekan sini untuk menukar bahasa."
   },
   "Maria": {
-    "CompletedRequest": "Permintaan Selesai"
+    "CompletedRequest": "Permintaan Selesai",
+    "Current": "Semasa",
+    "Completed": "Selesai"
   },
   "Patient_Configuration": {
     "Title": "Konfigurasikan butiran",
@@ -383,6 +388,12 @@
     "ViewStableAlerts": "LIHAT AMARAN STABIL",
     "HideStableAlerts": "SEMBUNYIKAN AMARAN STABIL"
   },
+  "PatientSharing": {
+    "NoCliniciansFound": "Tiada pakar dijumpai",
+    "PatientSharedSuccessfully": "Pesakit telah berjaya dikongsikan",
+    "FailedToSharePatient": "Gagal untuk kongsikan pesakit",
+    "ModalTitle": "Pilih pakar untuk dikongsikan"
+  },
   "MobileMessage": {
     "ViewList": "Lihat Senarai",
     "BackToDetails": "Balik ke Butiran"
@@ -398,12 +409,14 @@
     "Save": "Simpan",
     "Cancel": "Batal",
     "RecordDeletedSuccessfully": "Berjaya padamkan",
-    "FailedToDelete": "Gagal untuk memadam"
+    "FailedToDelete": "Gagal untuk memadam",
+    "Share": "Kongsi"
   },
   "UnexpectedError": "Ralat yang tidak disangkai telah berlaku",
   "Keywords": {
     "remaining": "yang tinggal",
-    "Delete": "Hapus"
+    "Delete": "Hapus",
+    "Search": "Cari"
   },
   "Warnings": {
     "DeleteRecord": "Penghapusan rekod adalah process yang TIDAK BOLEH DIBATALKAN. Rekod boleh dihapus sehingga 2 hari dari hari ia dimuat naik. Adakah anda mahu terus penghapusan?"

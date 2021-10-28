@@ -48,56 +48,65 @@ class UpdateTodo extends Activity {
 
       const isOnline: boolean = facts[BeliefKeys.APP]?.[AppAttributes.ONLINE];
 
-      // Gets locally stored clinicianId
-      const clinicianId = await LocalStorage.getClinicianID();
+      // Gets clinicianId from global state
+      const clinicianId = store.getState().clinicians.clinician?.clinicianID;
 
       /**
        * Updates todo when:
        * 1. Todo is created offline then updated again while the device is still offline
        */
       if (todoInput && !todoInput.id) {
+        let localTodo: LocalTodo | undefined | null;
         if (todoInput.alertId) {
-          // Get the local todo based on the alert ID of the alert associated with the todo
-          const localTodos = await LocalStorage.getTodoFromAlertID(
-            todoInput.alertId
+          // Get local todo addressing the same alert
+          localTodo = await LocalStorage.getTodoFromAlertID(todoInput.alertId);
+        }
+        if (!localTodo) {
+          // Get local todo with the same createdAt date time
+          localTodo = await LocalStorage.getTodoFromCreatedAt(
+            todoInput.createdAt
           );
+        }
 
-          if (localTodos) {
-            const localTodo = localTodos[0];
-            todoInput.id = localTodo.id;
-            todoInput.version = localTodo.version;
-            todoInput.lastModified = todoInput.lastModified
-              ? todoInput.lastModified
-              : todoInput.createdAt;
-            todoInput.createdAt = localTodo.createdAt;
-            todoInput.toSync = true;
-            // Calls CreateTodo again to replace the outdated and unsynced local todo
-            if (!localTodo.id) {
-              agentAPI.addFact(
-                new Belief(
-                  BeliefKeys.CLINICIAN,
-                  ClinicianAttributes.TODO,
-                  todoInput
-                ),
+        if (localTodo) {
+          todoInput.id = localTodo.id;
+          todoInput.version = localTodo.version;
+          todoInput.createdAt = localTodo.createdAt;
+          todoInput.toSync = true;
+
+          // Updates alert associated information
+          if (todoInput.alert || todoInput.alertId) {
+            todoInput.alertId = localTodo.alertId;
+            todoInput.patientId = localTodo.patientId;
+            todoInput.riskLevel = localTodo.riskLevel;
+          }
+
+          // Calls CreateTodo again to replace the outdated and unsynced local todo
+          if (!localTodo.id) {
+            agentAPI.addFact(
+              new Belief(
+                BeliefKeys.CLINICIAN,
+                ClinicianAttributes.TODO,
+                todoInput
+              ),
+              false
+            );
+            // Trigger CreateTodo
+            agent.addBelief(
+              new Belief(
+                BeliefKeys.CLINICIAN,
+                ClinicianAttributes.CREATE_TODO,
+                true
+              )
+            );
+            // Stop UpdateTodo
+            agent.addBelief(
+              new Belief(
+                BeliefKeys.CLINICIAN,
+                ClinicianAttributes.UPDATE_TODO,
                 false
-              );
-              // Trigger CreateTodo
-              agent.addBelief(
-                new Belief(
-                  BeliefKeys.CLINICIAN,
-                  ClinicianAttributes.CREATE_TODO,
-                  true
-                )
-              );
-              // Stop UpdateTodo
-              agent.addBelief(
-                new Belief(
-                  BeliefKeys.CLINICIAN,
-                  ClinicianAttributes.UPDATE_TODO,
-                  false
-                )
-              );
-            }
+              )
+            );
           }
           // Removes alert to avoid it from being stored into local storage
           delete todoInput.alert;

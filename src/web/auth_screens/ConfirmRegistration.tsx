@@ -1,5 +1,5 @@
 import React, { FC, useState, useEffect } from "react";
-import { View, Dimensions } from "react-native";
+import { View } from "react-native";
 import { Auth } from "@aws-amplify/auth";
 import { ScaledSheet } from "react-native-size-matters";
 import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
@@ -100,8 +100,10 @@ export const ConfirmRegistration: FC<
 
 const styles = ScaledSheet.create({
   container: {
+    flex: 1,
     margin: "30@ms",
     alignSelf: "center",
-    width: Dimensions.get("window").width / 2
+    minWidth: "250@ms",
+    maxWidth: "400@ms"
   }
 });

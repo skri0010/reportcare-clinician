@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { ScaledSheet, ms } from "react-native-size-matters";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import i18n from "util/language/i18n";
 
 // Interface for Search bar component props
 interface SearchBarComponentProps {
@@ -54,7 +55,6 @@ export const SearchBarComponent: FC<SearchBarComponentProps> = ({
     onUserInput(newValue);
   };
 
-  // JH-TODO: Replace placeholder with i18n
   return (
     <View style={{ backgroundColor: colors.primaryBackgroundColor }}>
       <View
@@ -67,7 +67,7 @@ export const SearchBarComponent: FC<SearchBarComponentProps> = ({
         <TextInput
           autoCorrect={false}
           onChangeText={onChangeText}
-          placeholder={placeholder || "Search"}
+          placeholder={placeholder || i18n.t("Keywords.Search")}
           value={input}
           style={[
             styles.textField,

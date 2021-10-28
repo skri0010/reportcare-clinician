@@ -9,7 +9,6 @@ import {
 import { ProcedureConst } from "agents-framework/Enums";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import {
-  setRetryLaterTimeout,
   ActionFrameIDs,
   AppAttributes,
   BeliefKeys,
@@ -45,8 +44,9 @@ class RetrievePendingPatientAssignments extends Activity {
 
     let pendingPatientAssignments: PatientAssignment[] | null | undefined;
     try {
-      // Get locally stored clinicianId
-      const clinicianId = await LocalStorage.getClinicianID();
+      // Get clinicianId from global state
+      const clinicianId = store.getState().clinicians.clinician?.clinicianID;
+
       // Get online status from facts
       const isOnline =
         agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE];
@@ -99,23 +99,6 @@ class RetrievePendingPatientAssignments extends Activity {
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
-      // Set to retry later
-      setRetryLaterTimeout(() => {
-        agent.addBelief(
-          new Belief(
-            BeliefKeys.PATIENT,
-            PatientAttributes.RETRIEVE_PENDING_PATIENT_ASSIGNMENTS,
-            true
-          )
-        );
-        agentAPI.addFact(
-          new Belief(
-            BeliefKeys.PROCEDURE,
-            ProcedureAttributes.SRD_I,
-            ProcedureConst.ACTIVE
-          )
-        );
-      });
 
       // Update Facts
       // End the procedure

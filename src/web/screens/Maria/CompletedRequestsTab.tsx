@@ -8,7 +8,7 @@ export const CompletedRequestsTab: FC = () => {
   return (
     <ScreenWrapper>
       <View>
-        <MainTitle title={i18n.t("Maria.CompletedRequest")} />
+        <MainTitle title={i18n.t("Maria.CompletedRequests")} />
       </View>
     </ScreenWrapper>
   );

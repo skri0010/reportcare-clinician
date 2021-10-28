@@ -1,7 +1,7 @@
 import React, { FC, useState, useEffect } from "react";
 import { View, TouchableOpacity, Image } from "react-native";
 import { Auth } from "@aws-amplify/auth";
-import { ms, ScaledSheet } from "react-native-size-matters";
+import { ScaledSheet } from "react-native-size-matters";
 import { RootState, select, useDispatch } from "util/useRedux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
@@ -23,6 +23,7 @@ import { AuthState } from ".";
 import { setProcedureOngoing } from "ic-redux/actions/agents/procedureActionCreator";
 import { AgentTrigger } from "rc_agents/trigger";
 import { isMobile } from "util/device";
+import { LinkText } from "components/InputComponents/LinkText";
 
 export const SignIn: FC<AuthScreenProps[AuthenticationScreenName.SIGN_IN]> = ({
   navigation,
@@ -164,6 +165,23 @@ export const SignIn: FC<AuthScreenProps[AuthenticationScreenName.SIGN_IN]> = ({
     { color: colors.primaryBarColor }
   ];
 
+  // Handling a key press event: sign in if enter is pressed and is valid to do so
+  const handleKeyPress = (event: KeyboardEvent) => {
+    if (event.code === "Enter" && inputValid) {
+      signIn();
+    }
+  };
+
+  // Listens to key press events
+  useEffect(() => {
+    window.addEventListener("keypress", handleKeyPress);
+
+    // Prevents handler from being triggered multiple times
+    return () => {
+      window.removeEventListener("keypress", handleKeyPress);
+    };
+  });
+
   return (
     <ScreenWrapper fixed pointerEvents={signingIn ? "none" : "auto"}>
       {/* App Logo and Name */}
@@ -183,14 +201,15 @@ export const SignIn: FC<AuthScreenProps[AuthenticationScreenName.SIGN_IN]> = ({
 
       {/* Sign In Content */}
       <View style={styles.contentContainer}>
-        <View style={styles.titleContainer}>
-          <H1 text={i18n.t("Auth_SignIn.SignIn")} style={styles.title} />
-        </View>
+        {isMobile ? null : (
+          <View style={styles.titleContainer}>
+            <H1 text={i18n.t("Auth_SignIn.SignIn")} style={styles.title} />
+          </View>
+        )}
 
         {/* Username */}
         <TextField
           label={i18n.t("Auth_SignIn.Username")}
-          labelStyle={{ marginTop: ms(-5) }}
           value={username}
           onChange={(text) => setUsername(text)}
           placeholder={i18n.t("Auth_SignIn.UsernamePlaceholder")}
@@ -212,16 +231,13 @@ export const SignIn: FC<AuthScreenProps[AuthenticationScreenName.SIGN_IN]> = ({
         />
 
         {/* Forgot Password */}
-        <TouchableOpacity
+        <LinkText
+          text={i18n.t("Auth_SignIn.ForgotPassword")}
+          style={styles.forgotPasswordContainer}
           onPress={() =>
             navigation.navigate(AuthenticationScreenName.FORGET_PASSWORD)
           }
-        >
-          <H5
-            text={i18n.t("Auth_SignIn.ForgotPassword")}
-            style={footerButtonTextStyle}
-          />
-        </TouchableOpacity>
+        />
       </View>
 
       {/* Sign In Button */}
@@ -263,7 +279,8 @@ const styles = ScaledSheet.create({
   logoContainer: {
     flexDirection: "column",
     alignItems: "center",
-    marginTop: "35@ms"
+    marginTop: "30@ms",
+    marginBottom: isMobile ? "30@ms" : "10@ms"
   },
   logo: {
     height: "55@ms",
@@ -279,6 +296,9 @@ const styles = ScaledSheet.create({
   },
   title: {
     fontWeight: "bold"
+  },
+  forgotPasswordContainer: {
+    paddingBottom: "20@ms"
   },
   footerButtonText: {
     marginTop: "5@ms",

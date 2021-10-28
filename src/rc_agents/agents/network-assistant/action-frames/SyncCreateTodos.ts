@@ -16,6 +16,7 @@ import { LocalStorage } from "rc_agents/storage";
 import { createTodo } from "aws/TypedAPI/createMutations";
 import { agentNWA } from "rc_agents/agents";
 import { getCreateVersionedTodoInput } from "rc_agents/agents/data-assistant/action-frames/storing-data/CreateTodo";
+import { store } from "util/useRedux";
 
 /**
  * Class to represent the activity for syncing local creation of new Todos.
@@ -36,8 +37,8 @@ class SyncCreateTodos extends Activity {
     super.doActivity(agent, [rule2]);
 
     try {
-      // Gets locally stored clinicianId
-      const clinicianId = await LocalStorage.getClinicianID();
+      // Gets clinicianId from global state
+      const clinicianId = store.getState().clinicians.clinician?.clinicianID;
 
       // Gets locally stored Todos
       const localTodos = await LocalStorage.getTodos();

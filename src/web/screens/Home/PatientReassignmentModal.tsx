@@ -1,12 +1,11 @@
 import React, { FC, useEffect, useState } from "react";
-import { View, TouchableOpacity, ScrollView } from "react-native";
+import { View, ScrollView } from "react-native";
 import { RootState, select } from "util/useRedux";
-import { H2 } from "components/Text";
+import { H3 } from "components/Text";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import i18n from "util/language/i18n";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AgentTrigger } from "rc_agents/trigger";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { ClinicianInfo, PatientAssignment } from "aws/API";
 import { ClinicianShareRow } from "components/RowComponents/ClinicianRow/ClinicianShareRow";
 import { RowButton } from "components/Buttons/RowButton";
@@ -14,6 +13,7 @@ import {
   PatientAssignmentResolution,
   PatientAssignmentStatus
 } from "rc_agents/model";
+import { IconButton, IconType } from "components/Buttons/IconButton";
 
 interface PatientReassignmentModalProps {
   setModalVisible: (state: boolean) => void;
@@ -65,27 +65,28 @@ export const PatientReassignmentModal: FC<PatientReassignmentModalProps> = ({
         }
       ]}
     >
-      {/* Title and close button */}
-      <View style={styles.titleContainer}>
-        <H2
-          text={i18n.t("Patient_Assignments.PatientReassign")}
-          style={{
-            fontWeight: "bold",
-            paddingLeft: ms(5),
+      {/* Close icon button */}
+      <IconButton
+        name="close"
+        type={IconType.MATERIAL_COMMUNITY}
+        iconStyle={{
+          color: colors.primaryTextColor,
+          fontSize: fonts.h3Size
+        }}
+        containerStyle={styles.closeButton}
+        containerBackgroundColor="transparent"
+        onPress={() => setModalVisible(false)}
+      />
+      {/* Title */}
+      <H3
+        text={i18n.t("Patient_Assignments.PatientReassign")}
+        style={[
+          styles.title,
+          {
             color: colors.primaryTextColor
-          }}
-        />
-        <TouchableOpacity
-          onPress={() => setModalVisible(false)}
-          style={styles.closeButton}
-        >
-          <Icon
-            name="close"
-            size={fonts.h3Size}
-            style={{ color: colors.primaryTextColor }}
-          />
-        </TouchableOpacity>
-      </View>
+          }
+        ]}
+      />
       {/* List of Clinicians */}
       {clinicians ? (
         <>
@@ -101,7 +102,11 @@ export const PatientReassignmentModal: FC<PatientReassignmentModalProps> = ({
                     selectedClinician ? selectedClinician === data : false
                   }
                   onRowPress={() => {
-                    setSelectedClinician(data);
+                    if (selectedClinician === data) {
+                      setSelectedClinician(null);
+                    } else {
+                      setSelectedClinician(data);
+                    }
                   }}
                 />
               </View>
@@ -109,16 +114,19 @@ export const PatientReassignmentModal: FC<PatientReassignmentModalProps> = ({
           </ScrollView>
           {/* Reassign button */}
           <View style={styles.buttonContainer}>
-            <View style={{ width: "30%" }}>
-              <RowButton
-                title={i18n.t("Auth_ConfirmRegistration.Confirm")}
-                onPress={() => {
-                  reassignPatientAssignment();
-                  setModalVisible(false);
-                }}
-                backgroundColor={colors.acceptButtonColor}
-              />
-            </View>
+            <RowButton
+              title={i18n.t("Auth_ConfirmRegistration.Confirm")}
+              onPress={() => {
+                reassignPatientAssignment();
+                setModalVisible(false);
+              }}
+              backgroundColor={
+                selectedClinician
+                  ? colors.acceptButtonColor
+                  : colors.primaryDeactivatedButtonColor
+              }
+              disabled={!selectedClinician}
+            />
           </View>
         </>
       ) : (
@@ -130,29 +138,25 @@ export const PatientReassignmentModal: FC<PatientReassignmentModalProps> = ({
 
 const styles = ScaledSheet.create({
   closeButton: {
-    textAlign: "center",
-    justifyContent: "space-evenly",
-    margin: "10@ms"
+    flexDirection: "row",
+    alignSelf: "flex-end",
+    marginRight: "10@ms",
+    marginTop: "10@ms"
   },
   container: {
     width: "45%",
     minWidth: "250@ms",
-    height: "75%",
+    height: "80%",
     borderRadius: "10@ms"
   },
-  titleContainer: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginVertical: "10@ms",
-    paddingLeft: "15@ms"
+  title: {
+    fontWeight: "bold",
+    alignSelf: "center",
+    marginBottom: "10@ms"
   },
   buttonContainer: {
-    display: "flex",
-    justifyContent: "center",
-    marginTop: "5@ms",
-    flexDirection: "row",
-    marginBottom: "10@ms"
+    alignSelf: "center",
+    width: "30%",
+    marginVertical: "10@ms"
   }
 });

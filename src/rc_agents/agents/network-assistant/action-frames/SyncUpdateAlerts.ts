@@ -18,6 +18,7 @@ import { replaceAlertsSync } from "rc_agents/storage/setItem";
 import { updateAlertInfo } from "rc_agents/agents/data-assistant/action-frames/triage-alert-hf-clinic/UpdateAlert";
 import { AgentTrigger } from "rc_agents/trigger";
 import { FetchAlertsMode } from "rc_agents/model";
+import { store } from "util/useRedux";
 
 /**
  * Class to represent the activity for syncing local update of Alerts.
@@ -38,8 +39,8 @@ class SyncUpdateAlerts extends Activity {
     super.doActivity(agent, [rule2]);
 
     try {
-      // Gets locally stored clinicianId
-      const clinicianId = await LocalStorage.getClinicianID();
+      // Gets clinicianId from global state
+      const clinicianId = store.getState().clinicians.clinician?.clinicianID;
 
       // Gets alerts to be synced
       const alerts = await LocalStorage.getAlertInfosSync();

@@ -39,7 +39,6 @@ export const ActionFrameIDs = {
     UPDATE_ALERT: "UpdateAlert",
 
     // HF-OTP-I: ClinicianInfo and all patients (PatientInfo)
-    REQUEST_RETRIEVE_ROLE: "RequestRetrieveRole",
     RETRIEVE_PATIENTS_BY_ROLE: "RetrievePatientsByRole",
     REQUEST_DISPLAY_PATIENTS: "RequestDisplayPatients",
 
@@ -83,9 +82,15 @@ export const ActionFrameIDs = {
     // SRD-III: Todo Details
     RETRIEVE_TODO_DETAILS: "RetrieveTodoDetails",
     REQUEST_DISPLAY_TODO_DETAILS: "RequestDisplayTodoDetails",
+
     // SRD-IV: Clinician Contacts
     RETRIEVE_CLINICIAN_CONTACTS: "RetrieveClinicianContacts",
-    REQUEST_DISPLAY_CLINICIAN_CONTACTS: "RequestDisplayClinicianContacts"
+    REQUEST_DISPLAY_CLINICIAN_CONTACTS: "RequestDisplayClinicianContacts",
+
+    // CP-PS: Patient Sharing
+    RETRIEVE_SHARING_CLINICIANS: "RetrieveSharingClinicians",
+    REQUEST_DISPLAY_SHARING_CLINICIANS: "RequestDisplaySharingClinicians",
+    SHARE_PATIENT: "SharePatient"
   },
   UXSA: {
     // P-USOR-I: AlertInfo[]
@@ -98,8 +103,6 @@ export const ActionFrameIDs = {
     DISPLAY_REFRESHED_ALERTS: "DisplayRefreshedAlerts",
 
     // HF-OTP-I: ClinicianInfo and all patients (PatientInfo)
-    RETRIEVE_ROLE: "RetrieveRole",
-    REQUEST_RETRIEVE_PATIENTS: "RequestRetrievePatients",
     DISPLAY_PATIENTS_BY_FILTER: "DisplayPatientsByFilter",
 
     // HF-OTP-II: Single patient's details
@@ -122,7 +125,10 @@ export const ActionFrameIDs = {
     DISPLAY_TODO_DETAILS: "DisplayTodoDetails",
 
     // SRD-IV Clinician Contacts
-    DISPLAY_CLINICIAN_CONTACTS: "DisplayClinicianContacts"
+    DISPLAY_CLINICIAN_CONTACTS: "DisplayClinicianContacts",
+
+    // CP-PS: Patient Sharing
+    DISPLAY_SHARING_CLINICIANS: "DisplaySharingClinicians"
   },
   NWA: {
     // MRDC
@@ -199,7 +205,8 @@ export enum ProcedureAttributes {
   SRD_V = "SRD-V",
   HF_EUA = "HF-EUA",
   P_USOR_I = "P-USOR-I",
-  P_USOR_II = "P-USOR-II"
+  P_USOR_II = "P-USOR-II",
+  CP_PS = "CP-PS"
 }
 
 // Attributes for CLINICIAN key
@@ -211,11 +218,6 @@ export enum ClinicianAttributes {
   ENTRY_DATA = "EntryData",
   CONFIGURED = "Configured",
   RETRIEVE_ENTRY = "RetrieveEntry",
-
-  // HF-OTP-I: ClinicianInfo and all patients (PatientInfo)
-  ROLE = "Role",
-  RETRIEVE_ROLE = "RetrieveRole",
-  ROLE_RETRIEVED = "RoleRetrieved",
 
   // SRD-III - Todo Details
   RETRIEVE_TODO_DETAILS = "RetrieveTodoDetails",
@@ -278,7 +280,15 @@ export enum ClinicianAttributes {
   // SRD-IV - Clinician Contacts
   RETRIEVE_CLINICIAN_CONTACTS = "RetrieveClinicianContacts",
   CLINICIAN_CONTACTS_RETRIEVED = "ClinicianContactsRetrieved",
-  CLINICIAN_CONTACTS = "ClinicianContacts"
+  CLINICIAN_CONTACTS = "ClinicianContacts",
+
+  // CP-PS: Patient Sharing
+  RETRIEVE_SHARING_CLINICIANS = "RetrieveSharingClinicians",
+  PATIENT_TO_SHARE = "PatientToShare",
+  SHARING_CLINICIANS = "SharingClinicians",
+  DISPLAY_SHARING_CLINICIANS = "DisplaySharingClinicians",
+  SHARE_PATIENT = "SharePatient",
+  SHARE_PATIENT_ASSIGNMENT = "SharePatientAssignment"
 }
 
 // Attributes for PATIENT key
@@ -296,7 +306,7 @@ export enum PatientAttributes {
   // HF-OTP-I: ClinicianInfo and all patients (PatientInfo)
   RETRIEVE_PATIENTS = "RetrievePatients",
   PATIENTS = "Patients",
-  PATIENTS_RETRIEVED = "PatientsRetrieved",
+  DISPLAY_PATIENTS = "DisplayPatients",
 
   // HF-OTP-II: Single patient's details
   PATIENT_TO_VIEW_DETAILS = "ViewPatientDetailsWithPatientId",

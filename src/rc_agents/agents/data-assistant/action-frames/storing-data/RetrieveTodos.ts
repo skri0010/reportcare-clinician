@@ -56,8 +56,8 @@ class RetrieveTodos extends Activity {
     const facts = agentAPI.getFacts();
 
     try {
-      // Gets locally stored clinicianId
-      const clinicianId = await LocalStorage.getClinicianID();
+      // Gets clinicianId from global state
+      const clinicianId = store.getState().clinicians.clinician?.clinicianID;
 
       // Get retrieve todos mode
       const fetchMode: FetchTodosMode =
@@ -119,38 +119,44 @@ class RetrieveTodos extends Activity {
               await LocalStorage.getTodos();
 
             /**
-             * If there are todos in the local storage,
-             * get the risk level colour, patient ID and alert ID from the local todo
+             * If there are todos in the local storage:
+             * Get the risk level colour, patient ID and alert ID from the local todo
              */
             if (currentLocalTodos && currentLocalTodos.length > 0) {
               todos.forEach((todo) => {
+                // Construct LocalTodo
+                const currentTodo: LocalTodo = {
+                  id: todo.id,
+                  title: todo.title,
+                  patientName: todo.patientName,
+                  notes: todo.notes,
+                  completed: todo.completed === TodoStatus.COMPLETED,
+                  createdAt: todo.createdAt,
+                  lastModified: todo.lastModified,
+                  toSync: false,
+                  version: todo.version
+                };
+
+                // If an alert is associated with the Todo, get alert's information from local Todo for the same alert
                 if (todo.alertID) {
                   const todoSameAlertID = currentLocalTodos.find(
                     (t) => t.alertId === todo.alertID
                   );
                   if (todoSameAlertID && todo) {
-                    const currentTodo: LocalTodo = {
-                      id: todo.id,
-                      title: todo.title,
-                      patientName: todo.patientName,
-                      notes: todo.notes,
-                      completed: todo.completed === TodoStatus.COMPLETED,
-                      createdAt: todo.createdAt,
-                      lastModified: todo.lastModified,
-                      toSync: false,
-                      version: todo.version,
-                      alertId: todoSameAlertID.alertId,
-                      patientId: todoSameAlertID.patientId,
-                      riskLevel: todoSameAlertID.riskLevel
-                    };
-
-                    todosToDispatch.push(currentTodo);
+                    currentTodo.alertId = todoSameAlertID.alertId;
+                    currentTodo.patientId = todoSameAlertID.patientId;
+                    currentTodo.riskLevel = todoSameAlertID.riskLevel;
                   }
                 }
+
+                // Add Todo to the list for dispatching
+                todosToDispatch.push(currentTodo);
               });
-            }
-            // If there are local todos, get risk level colour, patient ID and alertID from DB
-            else {
+            } else {
+              /**
+               * If there are no local todos:
+               * Get risk level colour, patient ID and alertID from DB
+               * */
               const alertForTodo = await Promise.all(
                 todos.map(async (todo) => {
                   if (todo.alertID) {
@@ -159,36 +165,41 @@ class RetrieveTodos extends Activity {
                     });
                     return query;
                   }
+                  return null;
                 })
               );
 
-              alertForTodo.forEach((alert) => {
-                if (alert && alert.data.getAlert) {
-                  const result = alert.data.getAlert;
-                  if (todos) {
-                    // Find the todo with the same alert ID
-                    const todo = todos.find((t) => t.alertID === result.id);
-                    if (todo) {
-                      // Create local todo to be stored into local storage
-                      const currentTodo: LocalTodo = {
-                        id: todo.id,
-                        title: todo.title,
-                        patientName: todo.patientName,
-                        notes: todo.notes,
-                        completed: todo.completed === TodoStatus.COMPLETED,
-                        createdAt: todo.createdAt,
-                        lastModified: todo.lastModified,
-                        toSync: false,
-                        version: todo.version,
-                        alertId: result.id,
-                        patientId: result.patientID,
-                        riskLevel: mapColorCodeToRiskLevel(result.colorCode)
-                      };
+              todos.forEach((todo) => {
+                // Create Local Todo to be dispatched
+                const currentTodo: LocalTodo = {
+                  id: todo.id,
+                  title: todo.title,
+                  patientName: todo.patientName,
+                  notes: todo.notes,
+                  completed: todo.completed === TodoStatus.COMPLETED,
+                  createdAt: todo.createdAt,
+                  lastModified: todo.lastModified,
+                  toSync: false,
+                  version: todo.version
+                };
 
-                      todosToDispatch.push(currentTodo);
-                    }
+                if (todo.alertID) {
+                  const alert = alertForTodo.find(
+                    (a) =>
+                      a &&
+                      a.data.getAlert &&
+                      a.data.getAlert.id === todo.alertID
+                  );
+                  if (alert && alert.data.getAlert) {
+                    const result = alert.data.getAlert;
+                    currentTodo.alertId = result.id;
+                    currentTodo.patientId = result.patientID;
+                    currentTodo.riskLevel = mapColorCodeToRiskLevel(
+                      result.colorCode
+                    );
                   }
                 }
+                todosToDispatch.push(currentTodo);
               });
             }
 

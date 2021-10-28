@@ -48,8 +48,6 @@ export const PatientChatRow: FC<PatientChatRowProps> = ({
 
   return (
     <TouchableOpacity onPress={onRowPress}>
-      {/* TODO-JH: i18n translation */}
-      {/* TODO-JH: Tick for sent */}
       <PatientRowBase
         title={generalDetails.name!}
         subtitleOne={{

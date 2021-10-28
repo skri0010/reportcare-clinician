@@ -85,9 +85,9 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
       lastModified: new Date().toISOString(),
       version: 1,
       // Alert related information: patient info, alert info, alert id and risk level
-      patientId: alertInfo ? alertInfo.patientID : undefined,
-      alert: alertInfo || undefined,
       alertId: alertInfo ? alertInfo.id : undefined,
+      alert: alertInfo || undefined,
+      patientId: alertInfo ? alertInfo.patientID : undefined,
       riskLevel: alertInfo ? alertInfo.riskLevel : undefined
     };
 
@@ -223,14 +223,6 @@ export const AddTodoScreen: FC<AddTodoScreenProps> = ({ setModalVisible }) => {
           setModalVisible(false);
         }}
         validToSave={allInputValid}
-      />
-      {/* Save and Cancel buttons */}
-      <SaveAndCancelButtons
-        onPressSave={createTodo}
-        onPressCancel={() => {
-          setModalVisible(false);
-        }}
-        validToSave
       />
       {/* Loading Indicator while Todo is being created */}
       {(updatingAlert || updatingTodo) && <LoadingIndicator />}

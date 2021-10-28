@@ -31,7 +31,8 @@ export const PatientParameters: FC<PatientParametersProps> = () => {
     ms(200),
     Dimensions.get("window").height * 0.8
   );
-  // JH-TODO: Uncomment following line and remove line with mock local report vitals
+  // FUTURE-TODO: Allow week selection to view parameters
+  // TODO: Uncomment following line and remove line with mock local report vitals
   // const { vitalsReports } = details;
   const vitalsReports = mockLocalReportVitals;
 

@@ -6,6 +6,7 @@ import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
 import { IcdCrtCard } from "./PatientIcdCrtComponents/IcdCrtCard";
 import { ScaledSheet } from "react-native-size-matters";
 import { AgentTrigger } from "rc_agents/trigger";
+import { isMobile } from "react-device-detect";
 
 interface PatientICDCRTProps extends PatientDetailsTabProps.ICDCRTTabProps {
   details: PatientDetails;
@@ -26,7 +27,8 @@ export const PatientICDCRT: FC<PatientICDCRTProps> = ({
             onViewIcdCrtRecord={AgentTrigger.triggerRetrieveIcdCrtRecordContent}
           />
         </View>
-        <View style={styles.containerItem} />
+        {/* Filler container item */}
+        {isMobile ? null : <View style={styles.containerItem} />}
       </View>
     </ScreenWrapper>
   );

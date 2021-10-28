@@ -89,7 +89,7 @@ export const getTopTabBarOptions: (input: {
   };
 };
 
-// JH-TODO-NAV: Update
+// FUTURE-TODO: To be updated
 // Props for material bottom tabs options
 export const getBottomTabBarOptions: (input: {
   colors: ColorScheme;
@@ -128,8 +128,7 @@ export const getPickerStyles: (input: {
 } = ({ colors, fonts, error = false }) => {
   const pickerContainerStyle: StyleProp<ViewStyle> = {
     borderWidth: ms(2),
-    height: ms(30),
-    marginBottom: ms(5),
+    height: ms(35),
     justifyContent: "center",
     borderColor: error ? colors.errorColor : colors.primaryBorderColor
   };

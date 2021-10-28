@@ -2,7 +2,6 @@
 import React, { FC, useEffect, useState } from "react";
 import { View } from "react-native";
 import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
-import { mockPatients } from "mock/mockPatients";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { ContactTitle } from "components/RowComponents/ContactTitle";
 import { AlertHistoryModal } from "./PatientScreens/PatientDetailsScreen/PatientHistoryComponents/AlertHistoryModal";
@@ -25,6 +24,7 @@ import {
 } from "ic-redux/actions/agents/patientActionCreator";
 import { AddIcdCrtRecordModal } from "./PatientScreens/PatientDetailsScreen/PatientIcdCrtComponents/AddIcdCrtRecordModal";
 import { DeleteRecordConfirmationModal } from "./PatientScreens/PatientDetailsScreen/Modals/DeleteRecordConfirmationModal";
+import { SharePatientModal } from "./PatientScreens/PatientDetailsScreen/Modals/SharePatientModal";
 
 export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
   route
@@ -77,10 +77,6 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
     }
   }, [displayPatientId, patientDetails, patients, dispatch]);
 
-  // JH-TODO-NEW: Remove
-  // Patient that has been selected by the user from the list of patients
-  const [selectedPatient] = useState(mockPatients[0]);
-
   // For pointer events
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [modalVisible, setModalVisible] = useState(false);
@@ -98,6 +94,9 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
 
   // For editing patient's details - navigate to patient configuration screen
   const [editDetails, setEditDetails] = useState(false);
+
+  // For sharing a patient
+  const [sharePatient, setSharePatient] = useState(false);
 
   return (
     <ScreenWrapper fixed>
@@ -130,6 +129,8 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
                   <ContactTitle
                     name={patientDetails.patientInfo.name}
                     isPatient
+                    patientId={patientDetails.patientInfo.patientID}
+                    setSharePatient={setSharePatient}
                   />
                   {patientDetails.patientInfo.configured && !editDetails ? (
                     // Patient is configured: Show details
@@ -166,17 +167,15 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
       {/* Container for modals */}
       <View style={styles.modalView}>
         {/* Modal to view past alert details of patient */}
-        {displayHistory ? (
-          <AlertHistoryModal
-            visible={modalAlertVisible}
-            onRequestClose={() => {
-              setModalAlertVisible(false);
-            }}
-            patientName={selectedPatient.name}
-            setModalAlertVisible={setModalAlertVisible}
-            alertHistory={displayHistory}
-          />
-        ) : null}
+        <AlertHistoryModal
+          visible={modalAlertVisible}
+          onRequestClose={() => {
+            setModalAlertVisible(false);
+          }}
+          patientName={patientDetails?.patientInfo.name}
+          setModalAlertVisible={setModalAlertVisible}
+          alertHistory={displayHistory}
+        />
 
         {/* Modal to add new medical records */}
         <AddMedicalRecordModal
@@ -195,6 +194,7 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
           setAddIcdCrtRecord={setAddIcdCrtRecord}
           patientID={patientDetails?.patientInfo.patientID}
         />
+
         {/* Modal to confirm deletion of record */}
         {recordToDelete ? (
           <DeleteRecordConfirmationModal
@@ -203,6 +203,13 @@ export const PatientsScreen: FC<MainScreenProps[ScreenName.PATIENTS]> = ({
             record={recordToDelete}
           />
         ) : null}
+
+        {/* Modal to share patient */}
+        <SharePatientModal
+          patient={patientDetails?.patientInfo}
+          visible={sharePatient}
+          onRequestClose={() => setSharePatient(false)}
+        />
       </View>
     </ScreenWrapper>
   );

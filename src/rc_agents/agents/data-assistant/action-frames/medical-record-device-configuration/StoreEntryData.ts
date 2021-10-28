@@ -25,6 +25,7 @@ import {
   setProcedureOngoing,
   setProcedureSuccessful
 } from "ic-redux/actions/agents/procedureActionCreator";
+import { setClinician } from "ic-redux/actions/agents/clinicianActionCreator";
 
 /**
  * Represents the activity for storing clinician's entry data.
@@ -83,9 +84,11 @@ class StoreEntryData extends Activity {
             newClinicianInfo.protectedInfo = newProtectedInfo;
           }
 
-          // Stores clinicianID and clinician locally
-          await LocalStorage.setClinicianID(newClinicianInfo.clinicianID);
+          // Stores clinician locally
           await LocalStorage.setClinician(newClinicianInfo);
+
+          // Dispatch clinician to global state
+          store.dispatch(setClinician(newClinicianInfo));
 
           // Removes sign up details and username from local storage
           await LocalStorage.removeItem(AsyncStorageKeys.SIGN_UP_DETAILS);

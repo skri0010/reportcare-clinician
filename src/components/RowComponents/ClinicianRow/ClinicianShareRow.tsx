@@ -43,7 +43,6 @@ export const ClinicianShareRow: FC<ClinicanShareRowProps> = ({
   };
   return (
     <View>
-      {/* TODO-JH: Tick for sent */}
       <ClinicianRowBase
         title={generalDetails.name}
         subtitleOne={{
