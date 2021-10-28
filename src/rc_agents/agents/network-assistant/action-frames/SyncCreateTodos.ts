@@ -14,9 +14,8 @@ import {
 } from "rc_agents/clinician_framework";
 import { LocalStorage } from "rc_agents/storage";
 import { createTodo } from "aws/TypedAPI/createMutations";
-import { CreateTodoInput } from "aws/API";
 import { agentNWA } from "rc_agents/agents";
-import { TodoStatus } from "rc_agents/model";
+import { getCreateVersionedTodoInput } from "rc_agents/agents/data-assistant/action-frames/storing-data/CreateTodo";
 
 /**
  * Class to represent the activity for syncing local creation of new Todos.
@@ -52,27 +51,10 @@ class SyncCreateTodos extends Activity {
           localTodos.map(async (todo) => {
             // Syncing for completely new todos that have not been added to the DB yet
             if (!todo.id && todo.toSync) {
-              // Inserts Todo
-              const todoToInsert: CreateTodoInput = {
-                clinicianID: clinicianId,
-                title: todo.title,
-                patientName: todo.patientName,
-                notes: todo.notes,
-                lastModified: todo.createdAt
-              };
-
-              if (todo.completed) {
-                todoToInsert.completed = TodoStatus.COMPLETED;
-              } else {
-                todoToInsert.pending = TodoStatus.PENDING;
-              }
-
-              if (todo.alertId) {
-                todoToInsert.alertID = todo.alertId;
-              }
-
-              // Inserts Todo
-              const createResponse = await createTodo(todoToInsert);
+              // Insert todo
+              const createResponse = await createTodo(
+                getCreateVersionedTodoInput(todo, clinicianId)
+              );
 
               if (createResponse.data.createTodo) {
                 // Updates current local Todo

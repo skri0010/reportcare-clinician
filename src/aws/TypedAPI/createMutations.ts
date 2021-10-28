@@ -1,7 +1,7 @@
 import API from "@aws-amplify/api-graphql";
 // eslint-disable-next-line no-restricted-imports
 import * as mutations from "aws/graphql/mutations";
-import { BaseResponse } from "aws";
+import { BaseResponse, NEW_VERSION } from "aws";
 import {
   ClinicianInfo,
   CreateClinicianInfoInput,
@@ -16,14 +16,26 @@ import {
   MedicationInfo,
   CreateMedicationInfoInput
 } from "aws/API";
+import {
+  CreateVersionedClinicianInfoInput,
+  CreateVersionedClinicianProtectedInfoInput,
+  CreateVersionedTodoInput
+} from "./versionedTypes";
+
+// == Create mutations ==
 
 interface CreateClinicianInfoResponse extends BaseResponse {
   data: { createClinicianInfo?: ClinicianInfo };
 }
 
 export const createClinicianInfo = async (
-  input: CreateClinicianInfoInput
+  inputWithoutVersion: CreateVersionedClinicianInfoInput
 ): Promise<CreateClinicianInfoResponse> => {
+  // Insert new version
+  const input: CreateClinicianInfoInput = {
+    ...inputWithoutVersion,
+    version: NEW_VERSION
+  };
   return (await API.graphql({
     query: mutations.createClinicianInfo,
     variables: { input: input }
@@ -35,8 +47,13 @@ interface CreateClinicianProtectedInfoResponse extends BaseResponse {
 }
 
 export const createClinicianProtectedInfo = async (
-  input: CreateClinicianProtectedInfoInput
+  inputWithoutVersion: CreateVersionedClinicianProtectedInfoInput
 ): Promise<CreateClinicianProtectedInfoResponse> => {
+  // Insert new version
+  const input: CreateClinicianProtectedInfoInput = {
+    ...inputWithoutVersion,
+    version: NEW_VERSION
+  };
   return (await API.graphql({
     query: mutations.createClinicianProtectedInfo,
     variables: { input: input }
@@ -61,8 +78,13 @@ interface CreateTodoResponse extends BaseResponse {
 }
 
 export const createTodo = async (
-  input: CreateTodoInput
+  inputWithoutVersion: CreateVersionedTodoInput
 ): Promise<CreateTodoResponse> => {
+  // Insert new version
+  const input: CreateTodoInput = {
+    ...inputWithoutVersion,
+    version: NEW_VERSION
+  };
   return (await API.graphql({
     query: mutations.createTodo,
     variables: { input: input }

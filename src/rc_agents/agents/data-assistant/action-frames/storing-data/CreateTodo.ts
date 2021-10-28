@@ -26,8 +26,8 @@ import {
   TodoStatus,
   HighRiskAlertInfo
 } from "rc_agents/model";
-import { CreateTodoInput } from "aws/API";
 import { setProcedureSuccessful } from "ic-redux/actions/agents/procedureActionCreator";
+import { CreateVersionedTodoInput } from "aws/TypedAPI/versionedTypes";
 
 /**
  * Class to represent an activity for creating an entry to clinician's Todo table.
@@ -58,24 +58,6 @@ class CreateTodo extends Activity {
       if (todoInput && clinicianId) {
         let toSync: boolean | undefined;
 
-        // Constructs CreateTodoInput to be inserted
-        const todoToInsert: CreateTodoInput = {
-          clinicianID: clinicianId,
-          title: todoInput.title,
-          patientName: todoInput.patientName,
-          notes: todoInput.notes,
-          lastModified: todoInput.lastModified
-            ? todoInput.lastModified
-            : todoInput.createdAt
-        };
-
-        // Updates Todo's status
-        if (todoInput.completed) {
-          todoToInsert.completed = TodoStatus.COMPLETED;
-        } else {
-          todoToInsert.pending = TodoStatus.PENDING;
-        }
-
         // Triggers associated Alert to be updated from pending to completed
         if (todoInput.alertId) {
           let alertToUpdate: AlertInfo | HighRiskAlertInfo | undefined | null;
@@ -93,7 +75,6 @@ class CreateTodo extends Activity {
            * 2. (Offline) Todo created offline is updated
            */
           if (alertToUpdate) {
-            todoToInsert.alertID = alertToUpdate.id;
             alertToUpdate.completed = AlertStatus.COMPLETED;
 
             // Adds AlertInfo to facts to be updated
@@ -130,8 +111,11 @@ class CreateTodo extends Activity {
          */
         if (facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
           if (todoInput.alertId) {
-            // Inserts Todo
-            const createResponse = await createTodo(todoToInsert);
+            // Insert Todo
+            const createResponse = await createTodo(
+              getCreateVersionedTodoInput(todoInput, clinicianId)
+            );
+
             if (createResponse.data.createTodo) {
               // Gets newly inserted Todo to update local Todo id
               const insertedTodo = createResponse.data.createTodo;
@@ -194,6 +178,22 @@ class CreateTodo extends Activity {
     }
   }
 }
+
+export const getCreateVersionedTodoInput = (
+  todo: LocalTodo,
+  clinicianId: string
+): CreateVersionedTodoInput => {
+  return {
+    clinicianID: clinicianId,
+    title: todo.title,
+    patientName: todo.patientName,
+    notes: todo.notes,
+    lastModified: todo.lastModified ? todo.lastModified : todo.createdAt,
+    ...(!todo.completed ? { pending: TodoStatus.PENDING } : {}),
+    ...(todo.completed ? { completed: TodoStatus.COMPLETED } : {}),
+    ...(!todo.alertId ? { alertID: todo.alertId } : {})
+  };
+};
 
 // Preconditions
 const rule1 = new Precondition(

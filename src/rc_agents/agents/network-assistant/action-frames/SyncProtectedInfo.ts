@@ -12,8 +12,8 @@ import {
 } from "rc_agents/clinician_framework";
 import { LocalStorage } from "rc_agents/storage";
 import { updateClinicianProtectedInfo } from "aws/TypedAPI/updateMutations";
-import { UpdateClinicianProtectedInfoInput } from "aws/API";
 import { getClinicianProtectedInfo } from "aws/TypedAPI/getQueries";
+import { UpdateVersionedClinicianProtectedInfoInput } from "aws/TypedAPI/versionedTypes";
 
 /**
  * Class to represent the activity for syncing local updates in ClinicianProtectedInfo.
@@ -42,22 +42,23 @@ class SyncProtectedInfo extends Activity {
           const result = await getClinicianProtectedInfo({
             clinicianID: localClinician.clinicianID
           });
-          if (result.data) {
+          if (result.data.getClinicianProtectedInfo) {
             const latestProtectedInfo = result.data.getClinicianProtectedInfo;
 
             // Updated protected info should have the latest version
-            const updatedProtectedInfo: UpdateClinicianProtectedInfoInput = {
-              clinicianID: localClinician.clinicianID,
-              facts: localClinician.protectedInfo.facts,
-              APS: localClinician.protectedInfo.APS,
-              DTA: localClinician.protectedInfo.DTA,
-              UXSA: localClinician.protectedInfo.UXSA,
-              NWA: localClinician.protectedInfo.NWA,
-              ALA: localClinician.protectedInfo.ALA,
-              MHA: localClinician.protectedInfo.MHA,
-              CAM: localClinician.protectedInfo.CAM,
-              version: latestProtectedInfo?.version
-            };
+            const updatedProtectedInfo: UpdateVersionedClinicianProtectedInfoInput =
+              {
+                clinicianID: localClinician.clinicianID,
+                facts: localClinician.protectedInfo.facts,
+                APS: localClinician.protectedInfo.APS,
+                DTA: localClinician.protectedInfo.DTA,
+                UXSA: localClinician.protectedInfo.UXSA,
+                NWA: localClinician.protectedInfo.NWA,
+                ALA: localClinician.protectedInfo.ALA,
+                MHA: localClinician.protectedInfo.MHA,
+                CAM: localClinician.protectedInfo.CAM,
+                version: latestProtectedInfo.version
+              };
             await updateClinicianProtectedInfo(updatedProtectedInfo);
           }
         }

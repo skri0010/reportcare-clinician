@@ -1,14 +1,12 @@
 import { Belief, Fact } from "agents-framework";
 import { getClinicianProtectedInfo, updateClinicianProtectedInfo } from "aws";
-import {
-  UpdateClinicianProtectedInfoInput,
-  ClinicianProtectedInfo
-} from "aws/API";
+import { ClinicianProtectedInfo } from "aws/API";
 import { AgentIDs, AppAttributes, BeliefKeys } from "./index";
 import { LocalStorage } from "rc_agents/storage";
 import AgentManagement from "agents-framework/management/AgentManagement";
 import { ClinicianAgent } from "./ClinicianAgent";
 import cloneDeep from "lodash/cloneDeep";
+import { UpdateVersionedClinicianProtectedInfoInput } from "aws/TypedAPI/versionedTypes";
 
 /**
  * Base class for management of active clinician agents.
@@ -222,18 +220,19 @@ export class ClinicianAgentManagement extends AgentManagement {
 
       if (protectedInfo) {
         // Construct protectedInfo to be updated
-        const updatedProtectedInfo: UpdateClinicianProtectedInfoInput = {
-          clinicianID: localClinician.clinicianID,
-          facts: JSON.stringify(this.getStorableFacts()), // Only stores certain facts
-          APS: protectedInfo.APS,
-          DTA: protectedInfo.DTA,
-          UXSA: protectedInfo.UXSA,
-          NWA: protectedInfo.NWA,
-          ALA: protectedInfo.ALA,
-          MHA: protectedInfo.MHA,
-          CAM: protectedInfo.CAM,
-          version: protectedInfo.version
-        };
+        const updatedProtectedInfo: UpdateVersionedClinicianProtectedInfoInput =
+          {
+            clinicianID: localClinician.clinicianID,
+            facts: JSON.stringify(this.getStorableFacts()), // Only stores certain facts
+            APS: protectedInfo.APS,
+            DTA: protectedInfo.DTA,
+            UXSA: protectedInfo.UXSA,
+            NWA: protectedInfo.NWA,
+            ALA: protectedInfo.ALA,
+            MHA: protectedInfo.MHA,
+            CAM: protectedInfo.CAM,
+            version: protectedInfo.version
+          };
 
         // Updates protectedInfo with latest storable beliefs of each agent
         this.getAgents().forEach((agent) => {

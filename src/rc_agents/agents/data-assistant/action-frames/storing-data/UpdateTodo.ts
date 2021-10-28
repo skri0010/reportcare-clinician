@@ -20,8 +20,8 @@ import { store } from "util/useRedux";
 import { agentNWA } from "rc_agents/agents";
 import { getTodo, updateTodo } from "aws";
 import { LocalTodo, TodoStatus } from "rc_agents/model";
-import { UpdateTodoInput } from "aws/API";
 import { setProcedureSuccessful } from "ic-redux/actions/agents/procedureActionCreator";
+import { UpdateVersionedTodoInput } from "aws/TypedAPI/versionedTypes";
 
 /**
  * Class to represent an activity for updating a clinician's Todo.
@@ -109,7 +109,7 @@ class UpdateTodo extends Activity {
         let toSync: boolean | undefined;
 
         // Constructs UpdateTodoInput to be updated
-        const todoToUpdate: UpdateTodoInput = {
+        const todoToUpdate: UpdateVersionedTodoInput = {
           id: todoInput.id,
           title: todoInput.title,
           patientName: todoInput.patientName,

@@ -13,7 +13,6 @@ import { ChartFilterPillList } from "components/Buttons/ChartFilterPillList";
 import { Dimensions, View } from "react-native";
 import { DiastolicBPChartCard } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientParameterComponents/DiastolicBPChartCard";
 import { FluidIntakeChartCard } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientParameterComponents/FluidIntakeChart";
-import { NumberOfStepsChartCard } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientParameterComponents/NumberOfStepsChartCard";
 import { OxygenSaturationChartCard } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientParameterComponents/OxygenSaturationChartCard";
 import { SystolicBPChartCard } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientParameterComponents/SystolicBPChartCard";
 import { WeightChartCard } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientParameterComponents/WeightChartCard";
