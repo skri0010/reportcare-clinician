@@ -11,28 +11,18 @@ interface MedicationListProps {
   setAddNewMed: () => void;
   setMedToUpdate: (medToUpdate: MedInput) => void;
   details: PatientDetails;
-  localMedInfos: MedInput[];
+  activeMedications: MedInput[];
 }
 
 export const MedicationList: FC<MedicationListProps> = ({
   setAddNewMed,
   setMedToUpdate,
   details,
-  localMedInfos
+  activeMedications
 }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
   }));
-
-  const activeMedications = details.medicationInfo.some((t) => {
-    if (
-      t.active &&
-      !(localMedInfos.filter((localMed) => localMed.name === t.name).length > 0)
-    ) {
-      return true;
-    }
-    return false;
-  });
 
   return (
     <View
@@ -72,7 +62,7 @@ export const MedicationList: FC<MedicationListProps> = ({
           paddingTop: 20
         }}
       />
-      {activeMedications ? (
+      {activeMedications.length > 0 ? (
         <FlatList
           data={details.medicationInfo}
           renderItem={({ item }) =>

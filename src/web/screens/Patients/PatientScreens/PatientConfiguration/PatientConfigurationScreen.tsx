@@ -104,7 +104,7 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
 
     const [currentActiveMedication, setCurrentActiveMedication] = useState<
       MedInput[]
-    >(details.medicationInfo);
+    >(cloneDeep(details.medicationInfo));
 
     const toast = useToast();
     const dispatch = useDispatch();
@@ -168,10 +168,26 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
     // Save medication info inputs
     const saveMedInput = (medInput: MedInput) => {
       const currentMedInfos: MedInput[] = medInfos;
-      currentMedInfos.push(medInput);
-      setMedInfos(currentMedInfos);
       if (medInput.active && !medInput.id) {
         setNewMedInfoAdded(true);
+        currentMedInfos.push(medInput);
+        setMedInfos(currentMedInfos);
+      } else if (!medInput.active) {
+        currentMedInfos.push(medInput);
+        setMedInfos(currentMedInfos);
+        setCurrentActiveMedication(
+          currentActiveMedication.filter((t) => {
+            return t.name !== medInput.name;
+          })
+        );
+      } else if (medInput.active && medInput.id) {
+        currentMedInfos.push(medInput);
+        setMedInfos(currentMedInfos);
+        currentActiveMedication.splice(
+          currentActiveMedication.indexOf(medInput),
+          1
+        );
+        currentActiveMedication.push(medInput);
       }
       // closes the medication info input form, enable the add new medication info button
       setMedConfigFormVisible(false);
@@ -470,6 +486,7 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
             setConfigMedInfo={setConfigMedInfo}
             setMedConfigFormVisible={setMedConfigFormVisible}
             localMedInfos={medInfos}
+            currentActiveMedications={currentActiveMedication}
           />
         </ModalWrapper>
         {configuring && <LoadingIndicator />}

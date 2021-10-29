@@ -15,6 +15,7 @@ interface MedConfigModalProps {
   setConfigMedInfo: (medInfo: MedInput) => void;
   saveMedInput: (medInput: MedInput) => void;
   setMedConfigFormVisible: (state: boolean) => void;
+  currentActiveMedications: MedInput[];
   localMedInfos: MedInput[];
 }
 
@@ -24,6 +25,7 @@ export const MedConfigModal: FC<MedConfigModalProps> = ({
   setConfigMedInfo,
   saveMedInput,
   setMedConfigFormVisible,
+  currentActiveMedications,
   localMedInfos
 }) => {
   const { colors, fonts } = select((state: RootState) => ({
@@ -93,7 +95,7 @@ export const MedConfigModal: FC<MedConfigModalProps> = ({
           setAddNewMed={addMed}
           details={details}
           setMedToUpdate={updateMed}
-          localMedInfos={localMedInfos}
+          activeMedications={currentActiveMedications}
         />
         <View
           style={{

@@ -1,7 +1,6 @@
 import React, { FC } from "react";
 import { View, FlatList } from "react-native";
 import { H5 } from "components/Text";
-import i18n from "util/language/i18n";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { RootState, select } from "util/useRedux";
 import { MedInput } from "rc_agents/model";
