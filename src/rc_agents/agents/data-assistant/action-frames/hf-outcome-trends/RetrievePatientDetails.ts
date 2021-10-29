@@ -25,7 +25,6 @@ import {
 } from "aws";
 import {
   ActivityInfo,
-  ClinicianRecord,
   MedicationInfo,
   ModelSortDirection,
   PatientInfo,
@@ -35,7 +34,10 @@ import {
 import { LocalStorage } from "rc_agents/storage";
 import { store } from "util/useRedux";
 import { setFetchingPatientDetails } from "ic-redux/actions/agents/patientActionCreator";
-import { sortIcdCrtRecordsByDescendingDateTime } from "util/utilityFunctions";
+import {
+  getNonNullItemsFromList,
+  sortIcdCrtRecordsByDescendingDateTime
+} from "util/utilityFunctions";
 
 /**
  * Represents the activity for retrieving details of a specific patient.
@@ -154,7 +156,7 @@ class RetrievePatientDetails extends Activity {
 
             symptomReports.forEach((symptom: ReportSymptom | null) => {
               if (symptom) {
-                const dateKey = new Date(symptom.DateTime).toLocaleDateString();
+                const dateKey = new Date(symptom.dateTime).toLocaleDateString();
                 const localSymptomsReports =
                   patientDetails.symptomReports[dateKey];
                 if (localSymptomsReports) {
@@ -174,7 +176,7 @@ class RetrievePatientDetails extends Activity {
 
             vitalsReports.forEach((vitals: ReportVitals | null) => {
               if (vitals) {
-                const dateKey = new Date(vitals.DateTime).toLocaleDateString();
+                const dateKey = new Date(vitals.dateTime).toLocaleDateString();
                 const localVitalsReports =
                   patientDetails.vitalsReports[dateKey];
                 if (localVitalsReports) {
@@ -206,29 +208,21 @@ class RetrievePatientDetails extends Activity {
             });
           }
           // Store medical records in patient details
-          if (
+          const medicalRecordItems =
             medicalRecordsQuery.data.listUploadedClinicianRecordsByPatientID
-              ?.items &&
-            medicalRecordsQuery.data.listUploadedClinicianRecordsByPatientID
-              ?.items.length > 0
-          ) {
+              ?.items;
+          if (medicalRecordItems) {
             patientDetails.medicalRecords =
-              medicalRecordsQuery.data.listUploadedClinicianRecordsByPatientID.items.filter(
-                (item) => !item?._deleted // Return undeleted items. This is a problem with DataStore
-              ) as ClinicianRecord[];
+              getNonNullItemsFromList(medicalRecordItems);
           }
 
           // Store ICD/CRT records in patient details
-          if (
+          const icdCrtRecordItems =
             icdCrtRecordsQuery.data.listUploadedClinicianRecordsByPatientID
-              ?.items &&
-            icdCrtRecordsQuery.data.listUploadedClinicianRecordsByPatientID
-              ?.items.length > 0
-          ) {
+              ?.items;
+          if (icdCrtRecordItems) {
             patientDetails.icdCrtRecords =
-              icdCrtRecordsQuery.data.listUploadedClinicianRecordsByPatientID.items.filter(
-                (item) => !item?._deleted // Return undeleted items. This is a problem with DataStore
-              ) as ClinicianRecord[];
+              getNonNullItemsFromList(icdCrtRecordItems);
           }
 
           // Save retrieved patient

@@ -5,15 +5,14 @@ import { BaseDetailsCard } from "../BaseDetailsCard";
 import { LocalReportVitals } from "rc_agents/model";
 import {
   FullChartData,
-  getParameterStatFromOneVitalsReport,
+  getParametersRecordFromVitalsReport,
   obtainFullChartData,
-  ParameterStats
+  ParametersRecord
 } from "components/VisualizationComponents/ParameterGraphs";
 import { ChartFilterPillList } from "components/Buttons/ChartFilterPillList";
 import { Dimensions, View } from "react-native";
 import { DiastolicBPChartCard } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientParameterComponents/DiastolicBPChartCard";
 import { FluidIntakeChartCard } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientParameterComponents/FluidIntakeChart";
-import { NumberOfStepsChartCard } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientParameterComponents/NumberOfStepsChartCard";
 import { OxygenSaturationChartCard } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientParameterComponents/OxygenSaturationChartCard";
 import { SystolicBPChartCard } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientParameterComponents/SystolicBPChartCard";
 import { WeightChartCard } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientParameterComponents/WeightChartCard";
@@ -40,11 +39,11 @@ export const HighRiskVitalSignsCard: FC<HighRiskVitalSignsCardProps> = ({
   useEffect(() => {
     if (vitalsReports) {
       const tempLocalVitals: LocalReportVitals = {};
-      const tempParameterStats: ParameterStats[] = [];
+      const tempParameterStats: ParametersRecord[] = [];
 
       // Arrange ReportVitals[] according to date
       vitalsReports.forEach((report) => {
-        const tempKey = new Date(report.DateTime).toLocaleDateString();
+        const tempKey = new Date(report.dateTime).toLocaleDateString();
         if (tempLocalVitals[tempKey]) {
           tempLocalVitals[tempKey]!.push(report);
         } else {
@@ -56,7 +55,7 @@ export const HighRiskVitalSignsCard: FC<HighRiskVitalSignsCardProps> = ({
       Object.keys(tempLocalVitals).forEach((date) => {
         const vitalsList = tempLocalVitals[date];
         if (vitalsList) {
-          const parameterStat = getParameterStatFromOneVitalsReport(
+          const parameterStat = getParametersRecordFromVitalsReport(
             vitalsList,
             date
           );
@@ -86,11 +85,11 @@ export const HighRiskVitalSignsCard: FC<HighRiskVitalSignsCardProps> = ({
         <>
           <ChartFilterPillList />
           <View style={styles.rowContainer}>
-            {/* Number of Steps Graph */}
-            <NumberOfStepsChartCard
+            {/* DS-TODO: Number of Steps Graph */}
+            {/* <NumberOfStepsChartCard
               data={fullChartData.steps}
               maxHeight={maxGraphHeight}
-            />
+            /> */}
             {/* Fluid Intake Graph */}
             <FluidIntakeChartCard
               data={fullChartData.fluid}

@@ -249,7 +249,9 @@ export const setPatientBaselines = async (
   baselines.forEach((baseline) => {
     if (localData) {
       // Removes existing patient configuration if any
-      const existIndex = localData.findIndex((p) => p.id === baseline.id);
+      const existIndex = localData.findIndex(
+        (p) => p.patientID === baseline.patientID
+      );
       if (existIndex >= 0) {
         localData.splice(existIndex, 1);
       }
@@ -311,7 +313,7 @@ export const setTodo = async (todo: LocalTodo | Todo): Promise<void> => {
       completed: currentTodo.completed === TodoStatus.COMPLETED,
       createdAt: currentTodo.createdAt,
       lastModified: currentTodo.lastModified,
-      _version: currentTodo._version,
+      version: currentTodo.version,
       toSync: false
     };
 
@@ -351,7 +353,7 @@ export const setTodo = async (todo: LocalTodo | Todo): Promise<void> => {
         const currentTodo = localData[existIndex];
         if (currentTodo.id) {
           todoToStore.id = currentTodo.id;
-          todoToStore._version = currentTodo._version;
+          todoToStore.version = currentTodo.version;
         }
       }
     }

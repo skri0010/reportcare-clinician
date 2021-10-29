@@ -9,6 +9,7 @@ import { DataTable } from "react-native-paper";
 import { NoListItemMessage } from "web/screens/Shared/NoListItemMessage";
 import { H5 } from "components/Text";
 import { select, RootState } from "util/useRedux";
+import { displayPlaceholder } from "util/const";
 
 interface SymptomTableHeaderProps {
   header: string;
@@ -57,10 +58,12 @@ interface SymptomTableRowProps {
 const SymptomTableRow: FC<SymptomTableRowProps> = ({ report }) => {
   return (
     <DataTable.Row>
-      <SymptomTableCell cellContent={report.Name} />
-      <SymptomTableCell cellContent={report.ActivityInfo?.Actname || "-"} />
-      <SymptomTableCell cellContent={report.Severity} />
-      <SymptomTableCell cellContent={getLocalDateTime(report.DateTime)} />
+      <SymptomTableCell cellContent={report.symptomName} />
+      <SymptomTableCell
+        cellContent={report.activityInfo?.activityName || displayPlaceholder}
+      />
+      <SymptomTableCell cellContent={`${report.severity}`} />
+      <SymptomTableCell cellContent={getLocalDateTime(report.dateTime)} />
     </DataTable.Row>
   );
 };

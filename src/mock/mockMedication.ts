@@ -11,9 +11,7 @@ export const mockMedicationRecord: MedicationInfo[] = [
     records: "",
     active: true,
     createdAt: "",
-    updatedAt: "",
-    _lastChangedAt: 1627604201979,
-    _version: 1
+    updatedAt: ""
   },
   {
     __typename: "MedicationInfo",
@@ -25,9 +23,7 @@ export const mockMedicationRecord: MedicationInfo[] = [
     records: "",
     active: true,
     createdAt: "",
-    updatedAt: "",
-    _lastChangedAt: 1627604201979,
-    _version: 1
+    updatedAt: ""
   },
   {
     __typename: "MedicationInfo",
@@ -39,8 +35,6 @@ export const mockMedicationRecord: MedicationInfo[] = [
     records: "",
     active: true,
     createdAt: "",
-    updatedAt: "",
-    _lastChangedAt: 1627604201979,
-    _version: 1
+    updatedAt: ""
   }
 ];

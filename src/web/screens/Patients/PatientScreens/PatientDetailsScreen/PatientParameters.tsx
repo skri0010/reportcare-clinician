@@ -11,9 +11,9 @@ import { LocalReportVitals, PatientDetails } from "rc_agents/model";
 import { getWeekLocaleDateString } from "util/utilityFunctions";
 import {
   FullChartData,
-  getParameterStatFromOneVitalsReport,
+  getParametersRecordFromVitalsReport,
   obtainFullChartData,
-  ParameterStats
+  ParametersRecord
 } from "components/VisualizationComponents/ParameterGraphs";
 import { mockLocalReportVitals } from "mock/mockVitals";
 import { FluidIntakeChartCard } from "./PatientParameterComponents/FluidIntakeChart";
@@ -43,7 +43,7 @@ export const PatientParameters: FC<PatientParametersProps> = () => {
   useEffect(() => {
     if (vitalsReports) {
       const tempLocalVitals: LocalReportVitals = {};
-      const tempParameterStats: ParameterStats[] = [];
+      const tempParameterStats: ParametersRecord[] = [];
       // Get 7 days locale date string[]
       const targetLocaleDateStrings = getWeekLocaleDateString();
 
@@ -56,7 +56,7 @@ export const PatientParameters: FC<PatientParametersProps> = () => {
       Object.keys(tempLocalVitals).forEach((date) => {
         const vitalsList = tempLocalVitals[date];
         if (vitalsList) {
-          const parameterStat = getParameterStatFromOneVitalsReport(
+          const parameterStat = getParametersRecordFromVitalsReport(
             vitalsList,
             date
           );

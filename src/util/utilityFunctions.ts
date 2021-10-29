@@ -53,10 +53,10 @@ export const getLocalDateTime = (datetime: string): string => {
 export const getLatestVitalsReport = (
   reports: ReportVitals[]
 ): ReportVitals | undefined => {
-  const datetimeList = reports.map((report) => Date.parse(report.DateTime));
+  const datetimeList = reports.map((report) => Date.parse(report.dateTime));
   const latestDatetime = Math.max(...datetimeList);
   const latestReport: ReportVitals | undefined = reports.find(
-    (item) => item.DateTime === new Date(latestDatetime).toISOString()
+    (item) => item.dateTime === new Date(latestDatetime).toISOString()
   );
   return latestReport;
 };
@@ -127,4 +127,9 @@ export const sortIcdCrtRecordsByDescendingDateTime = (
     }
     return 0;
   });
+};
+
+// Filters out null items from a list
+export const getNonNullItemsFromList = (list: any[]): any[] => {
+  return list.flatMap((item) => (item ? [item] : []));
 };

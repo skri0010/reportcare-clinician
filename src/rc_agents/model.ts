@@ -29,7 +29,7 @@ export enum Hospital {
   HB = "Hospital Bintulu"
 }
 
-export enum NYHAClass {
+export enum NYHAClassEnum {
   UNKNOWN = "",
   I = "I",
   II = "II",
@@ -168,7 +168,6 @@ export interface PatientAssignmentResolution {
   patientName: string;
   resolution: PatientAssignmentStatus;
   reassignToClinicianID?: string;
-  _version: number;
 }
 
 export interface AlertsCount {
@@ -181,7 +180,7 @@ export interface AlertsCount {
 // Shared by AlertInfo and HighRiskAlertInfo
 type BaseAlertInfo = {
   riskLevel: RiskLevel;
-  medCompliants?: MedicationInfo[];
+  medicineInfoList?: MedicationInfo[];
 } & Alert;
 
 // For viewing usual Alert details
@@ -222,7 +221,7 @@ export interface TodoInput {
   // End of attributes for associated Alert
   createdAt: string;
   lastModified?: string;
-  _version: number;
+  version: number;
 }
 
 export interface LocalTodo {
@@ -238,7 +237,7 @@ export interface LocalTodo {
   createdAt: string;
   lastModified?: string | null;
   toSync?: boolean;
-  _version: number;
+  version: number;
 }
 
 export interface TodoDetails {

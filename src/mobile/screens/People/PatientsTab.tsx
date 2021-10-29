@@ -116,7 +116,7 @@ export const PatientsTab: FC = () => {
         renderItem={({ item }) => (
           <PatientDetailsRow
             patient={item}
-            onRowPress={() => getData(item.id)}
+            onRowPress={() => getData(item.patientID)}
           />
         )}
         keyExtractor={(item) => item.patientID}

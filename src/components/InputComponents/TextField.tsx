@@ -4,6 +4,7 @@ import { RootState, select } from "util/useRedux";
 import { ScaledSheet } from "react-native-size-matters";
 import { H7 } from "components/Text";
 import { Label } from "components/Text/Label";
+import { emptyValuePlaceholder } from "util/const";
 import i18n from "util/language/i18n";
 
 interface TextFieldProps {
@@ -11,7 +12,7 @@ interface TextFieldProps {
   label: string;
   labelStyle?: StyleProp<TextStyle>;
   inputStyle?: StyleProp<ViewStyle>;
-  value: string;
+  value: string | number | null | undefined;
   onChange?: (text: string) => void;
   placeholder?: string;
   secureText?: boolean;
@@ -65,7 +66,7 @@ export const TextField: React.FC<TextFieldProps> = ({
           },
           inputStyle || { fontSize: fonts.h6Size }
         ]}
-        value={value}
+        value={value?.toString() || emptyValuePlaceholder}
         onChangeText={onChange}
         placeholder={placeholder}
         secureTextEntry={secureText}

@@ -178,7 +178,7 @@ const handleDelete: (parameters: {
     });
     // Clinician record exists
     if (getResult.data.getClinicianRecord) {
-      const { uploadDateTime, _version } = getResult.data.getClinicianRecord;
+      const { uploadDateTime } = getResult.data.getClinicianRecord;
       if (uploadDateTime) {
         // Delete is only allowed when under DELETE_GRACE_PERIOD
         const updateTimeInMs = new Date(uploadDateTime).valueOf();
@@ -193,7 +193,6 @@ const handleDelete: (parameters: {
             const deleteMutation = await deleteClinicianRecord({
               documentID: documentID,
               patientID: patientID,
-              _version: _version // Necessary for deletion with ConflictResolution on
             });
             if (deleteMutation.data?.deleteClinicianRecord) {
               // Successful event response

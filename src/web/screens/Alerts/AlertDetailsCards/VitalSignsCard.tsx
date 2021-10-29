@@ -22,20 +22,10 @@ export const VitalSignsCard: FC<VitalSignsCardProps> = ({ vitalsReport }) => {
           <View style={styles.rowContainer}>
             <View style={styles.columnContainer}>
               <BaseDetailsContent
-                title={i18n.t("Alerts.AlertVitals.NoSteps")}
-                content={
-                  vitalsReport?.NoSteps
-                    ? `${vitalsReport.NoSteps} ${i18n.t(
-                        "Parameter_Graphs.StepsUnit"
-                      )}`
-                    : "-"
-                }
-              />
-              <BaseDetailsContent
                 title={i18n.t("Alerts.AlertVitals.FluidIntake")}
                 content={
-                  vitalsReport?.FluidIntake
-                    ? `${vitalsReport.FluidIntake} ${i18n.t(
+                  vitalsReport.fluidIntakeInMl
+                    ? `${vitalsReport.fluidIntakeInMl} ${i18n.t(
                         "Parameter_Graphs.FluidUnit"
                       )}`
                     : "-"
@@ -44,8 +34,8 @@ export const VitalSignsCard: FC<VitalSignsCardProps> = ({ vitalsReport }) => {
               <BaseDetailsContent
                 title={i18n.t("Alerts.AlertVitals.BPDi")}
                 content={
-                  vitalsReport?.BPDi
-                    ? `${vitalsReport.BPDi} ${i18n.t(
+                  vitalsReport.diastolicBloodPressure
+                    ? `${vitalsReport.diastolicBloodPressure} ${i18n.t(
                         "Parameter_Graphs.BPUnit"
                       )}`
                     : "-"
@@ -54,8 +44,8 @@ export const VitalSignsCard: FC<VitalSignsCardProps> = ({ vitalsReport }) => {
               <BaseDetailsContent
                 title={i18n.t("Alerts.AlertVitals.BPSys")}
                 content={
-                  vitalsReport?.BPSys
-                    ? `${vitalsReport.BPSys} ${i18n.t(
+                  vitalsReport.systolicBloodPressure
+                    ? `${vitalsReport.systolicBloodPressure} ${i18n.t(
                         "Parameter_Graphs.BPUnit"
                       )}`
                     : "-"
@@ -66,8 +56,8 @@ export const VitalSignsCard: FC<VitalSignsCardProps> = ({ vitalsReport }) => {
               <BaseDetailsContent
                 title={i18n.t("Alerts.AlertVitals.OxygenSat")}
                 content={
-                  vitalsReport?.OxySat
-                    ? `${vitalsReport.OxySat} ${i18n.t(
+                  vitalsReport.oxygenSaturation
+                    ? `${vitalsReport.oxygenSaturation} ${i18n.t(
                         "Parameter_Graphs.OxygenSaturationUnit"
                       )}`
                     : "-"
@@ -76,8 +66,8 @@ export const VitalSignsCard: FC<VitalSignsCardProps> = ({ vitalsReport }) => {
               <BaseDetailsContent
                 title={i18n.t("Alerts.AlertVitals.Weight")}
                 content={
-                  vitalsReport?.Weight
-                    ? `${vitalsReport.Weight} ${i18n.t(
+                  vitalsReport.weight
+                    ? `${vitalsReport.weight} ${i18n.t(
                         "Parameter_Graphs.WeightUnit"
                       )}`
                     : "-"
@@ -90,8 +80,8 @@ export const VitalSignsCard: FC<VitalSignsCardProps> = ({ vitalsReport }) => {
               <BaseDetailsContent
                 title={i18n.t("Alerts.AlertVitals.DateTime")}
                 content={
-                  vitalsReport?.DateTime
-                    ? getLocalDateTime(vitalsReport.DateTime)
+                  vitalsReport.dateTime
+                    ? getLocalDateTime(vitalsReport.dateTime)
                     : "-"
                 }
               />

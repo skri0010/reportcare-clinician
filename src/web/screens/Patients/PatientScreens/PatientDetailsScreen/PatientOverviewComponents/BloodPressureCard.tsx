@@ -6,15 +6,15 @@ import i18n from "util/language/i18n";
 import { AbsoluteParameters } from "components/Text/AbsoluteParameters";
 
 interface BloodPressureProps {
-  systolicBP: string;
-  diastolicBP: string;
+  systolicBloodPressure: number | string;
+  diastolicBloodPressure: number | string;
   minHeight: number;
   flex?: number;
 }
 
 export const BloodPressureCard: FC<BloodPressureProps> = ({
-  systolicBP,
-  diastolicBP,
+  systolicBloodPressure,
+  diastolicBloodPressure,
   minHeight,
   flex
 }) => {
@@ -29,14 +29,14 @@ export const BloodPressureCard: FC<BloodPressureProps> = ({
         {/* Systolic blood pressure */}
         <View style={{ flex: 1 }}>
           <AbsoluteParameters
-            centerText={systolicBP}
+            centerText={systolicBloodPressure}
             bottomText={i18n.t("Parameter_Graphs.BPUnit")}
           />
         </View>
         <View style={{ flex: 1 }}>
           {/* Diastolic blood pressure */}
           <AbsoluteParameters
-            centerText={diastolicBP}
+            centerText={diastolicBloodPressure}
             bottomText={i18n.t("Parameter_Graphs.BPUnit")}
           />
         </View>

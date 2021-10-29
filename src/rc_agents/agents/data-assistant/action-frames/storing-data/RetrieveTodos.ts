@@ -134,7 +134,7 @@ class RetrieveTodos extends Activity {
                   createdAt: todo.createdAt,
                   lastModified: todo.lastModified,
                   toSync: false,
-                  _version: todo._version
+                  version: todo.version
                 };
 
                 // If an alert is associated with the Todo, get alert's information from local Todo for the same alert
@@ -180,7 +180,7 @@ class RetrieveTodos extends Activity {
                   createdAt: todo.createdAt,
                   lastModified: todo.lastModified,
                   toSync: false,
-                  _version: todo._version
+                  version: todo.version
                 };
 
                 if (todo.alertID) {

@@ -31,7 +31,9 @@ export const SymptomsCard: FC<SymptomProps> = ({
         ListEmptyComponent={() => (
           <EmptyListIndicator text={i18n.t("Patient_Overview.NoSymptoms")} />
         )}
-        renderItem={({ item }) => <H4 text={`  ${item.Name}`} style={null} />}
+        renderItem={({ item }) => (
+          <H4 text={`  ${item.symptomName}`} style={null} />
+        )}
         keyExtractor={(item) => item.id}
       />
     </CardWrapper>

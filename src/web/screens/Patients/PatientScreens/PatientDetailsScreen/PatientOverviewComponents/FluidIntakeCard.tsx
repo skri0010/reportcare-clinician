@@ -6,15 +6,15 @@ import { View } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 
 interface FluidIntakeCardProps {
-  fluidTaken: string;
-  fluidRequired: string;
+  fluidIntakeInMl: number | string;
+  fluidGoalInMl: number | string;
   minHeight: number;
   flex?: number;
 }
 
 export const FluidIntakeCard: FC<FluidIntakeCardProps> = ({
-  fluidTaken,
-  fluidRequired,
+  fluidIntakeInMl,
+  fluidGoalInMl,
   minHeight,
   flex
 }) => {
@@ -27,7 +27,7 @@ export const FluidIntakeCard: FC<FluidIntakeCardProps> = ({
     >
       <View style={styles.container}>
         <AbsoluteParameters
-          centerText={`${fluidTaken} / ${fluidRequired}`}
+          centerText={`${fluidIntakeInMl} / ${fluidGoalInMl}`}
           bottomText={`(${i18n.t("Parameter_Graphs.FluidUnit")})`}
         />
       </View>

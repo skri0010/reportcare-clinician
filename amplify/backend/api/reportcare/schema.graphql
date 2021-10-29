@@ -9,24 +9,15 @@ type PatientInfo
   @model
   @auth(
     rules: [
-      { allow: owner }
+      { allow: owner, ownerField: "patientID" }
       { allow: groups, groups: ["Admin"] }
       { allow: groups, groupsField: "patientID", operations: [read, update] }
     ]
   )
   @key(fields: ["patientID"]) {
-  id: ID!
+  patientID: String!
   name: String!
   address: String!
-  deviceNo: String!
-  diagnosisInfo: String!
-  NHYAclass: String!
-  cardiologist: String!
-  hospitalName: String!
-  hospitalLocation: String!
-  targetWeight: String!
-  targetActivity: String!
-  riskLevel: String!
   gender: String!
   birthDate: AWSDate!
   language: String!
@@ -34,19 +25,31 @@ type PatientInfo
   email: String!
   emergencyContactName: String!
   emergencyContactNumber: String!
-  fluidIntakeGoal: String!
+  riskLevel: String!
+  NYHAClass: String
+  cardiologist: String
+  diagnosisInfo: String
+  hospitalName: String
+  hospitalLocation: String
+  targetWeight: Float
+  targetSteps: Int
+  deviceNo: String
+  fluidIntakeGoalInMl: Int
   configured: Boolean!
-  patientID: String!
+  version: Int!
 }
 
 type MedicationInfo
   @model
   @auth(
     rules: [
-      { allow: owner }
       { allow: owner, ownerField: "patientID", operations: [read, update] }
       { allow: groups, groups: ["Admin"] }
-      { allow: groups, groupsField: "patientID", operations: [read, update] }
+      {
+        allow: groups
+        groupsField: "patientID"
+        operations: [create, read, update]
+      }
     ]
   )
   @key(
@@ -55,11 +58,11 @@ type MedicationInfo
     queryField: "listMedicationInfosByPatientID"
   ) {
   id: ID!
+  patientID: String!
   name: String!
   dosage: Float!
   frequency: Int!
   records: AWSJSON!
-  patientID: String!
   active: Boolean!
 }
 
@@ -67,7 +70,7 @@ type ActivityInfo
   @model
   @auth(
     rules: [
-      { allow: owner }
+      { allow: owner, ownerField: "patientID" }
       { allow: groups, groups: ["Admin"] }
       { allow: groups, groupsField: "patientID", operations: [read] }
     ]
@@ -78,47 +81,20 @@ type ActivityInfo
     queryField: "listActivityInfosByPatientID"
   ) {
   id: ID!
-  Actname: String!
-  Location: String!
-  expectedFrequency: Int
-  expectedDays: [String!]
-  expectedDurationMinutes: Int
-  recordDateTime: AWSJSON
   patientID: String!
-}
-
-type MedCompliant
-  @model
-  @auth(
-    rules: [
-      { allow: owner }
-      { allow: groups, groups: ["Admin"] }
-      { allow: groups, groupsField: "patientID", operations: [read] }
-    ]
-  )
-  @key(
-    name: "medCompliantsByPatientID"
-    fields: ["patientID"]
-    queryField: "listMedCompliantsByPatientID"
-  )
-  @key(
-    name: "medCompliantsByDate"
-    fields: ["patientID", "Date"]
-    queryField: "listMedCompliantsByDate"
-  ) {
-  id: ID!
-  MedId: ID!
-  MedicationInfo: MedicationInfo @connection(fields: ["MedId"])
-  Verification: Boolean!
-  Date: AWSDateTime!
-  patientID: String!
+  activityName: String!
+  startTime: AWSDateTime!
+  days: [String!]
+  durationInMinutes: Int
+  locations: [String!]
+  symptoms: [String!]
 }
 
 type ReportSymptom
   @model
   @auth(
     rules: [
-      { allow: owner }
+      { allow: owner, ownerField: "patientID" }
       { allow: groups, groups: ["Admin"] }
       { allow: groups, groupsField: "patientID", operations: [read] }
     ]
@@ -130,24 +106,27 @@ type ReportSymptom
   )
   @key(
     name: "reportSymptomsByDateTime"
-    fields: ["patientID", "DateTime"]
+    fields: ["patientID", "dateTime"]
     queryField: "listReportSymptomsByDateTime"
   ) {
   id: ID!
-  ActId: ID!
-  ActivityInfo: ActivityInfo @connection(fields: ["ActId"])
-  Name: String!
-  Severity: String!
-  DateTime: AWSDateTime!
-  Summary: String
   patientID: String!
+  activityInfoID: ID!
+  activityInfo: ActivityInfo @connection(fields: ["activityInfoID"])
+  symptomName: String!
+  severity: Int!
+  dateTime: AWSDateTime!
+  summary: String!
+  weather: String
+  temperature: String
+  humidity: String
 }
 
 type ReportVitals
   @model
   @auth(
     rules: [
-      { allow: owner }
+      { allow: owner, ownerField: "patientID" }
       { allow: groups, groups: ["Admin"] }
       { allow: groups, groupsField: "patientID", operations: [read] }
     ]
@@ -159,20 +138,48 @@ type ReportVitals
   )
   @key(
     name: "reportVitalsByDateTime"
-    fields: ["patientID", "DateTime"]
+    fields: ["patientID", "dateTime"]
     queryField: "listReportVitalsByDateTime"
   ) {
   id: ID!
-  Temperature: String
-  Humidity: String
-  Weight: String
-  BPSys: String
-  BPDi: String
-  NoSteps: String
-  OxySat: String
-  FluidIntake: String
-  DateTime: AWSDateTime!
   patientID: String!
+  dateTime: AWSDateTime!
+  weight: Float
+  systolicBloodPressure: Float
+  diastolicBloodPressure: Float
+  oxygenSaturation: Float
+  fluidIntakeInMl: Int
+  weather: String
+  temperature: Float
+  humidity: Float
+}
+
+type Physical
+  @model
+  @auth(
+    rules: [
+      { allow: owner, ownerField: "patientID" }
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groupsField: "patientID", operations: [read] }
+    ]
+  )
+  @key(
+    name: "physicalsByPatientID"
+    fields: ["patientID"]
+    queryField: "listPhysicalsByPatientID"
+  )
+  @key(
+    name: "physicalsByDateTime"
+    fields: ["patientID", "dateTime"]
+    queryField: "listPhysicalsByDateTime"
+  ) {
+  id: ID!
+  patientID: String!
+  steps: Int!
+  stepsGoal: Int!
+  averageWalkingSpeedInMetresPerSeconds: Float!
+  distanceInMetres: Float!
+  dateTime: AWSDateTime!
 }
 
 """
@@ -213,13 +220,13 @@ type ClinicianInfo
     ]
   )
   @key(fields: ["clinicianID"]) {
-  id: ID
   clinicianID: String!
   name: String!
   hospitalName: String!
   role: String!
   contactNumber: String!
   protectedInfo: ClinicianProtectedInfo @connection(fields: ["clinicianID"])
+  version: Int!
 }
 
 """
@@ -245,7 +252,6 @@ type ClinicianProtectedInfo
     ]
   )
   @key(fields: ["clinicianID"]) {
-  id: ID
   clinicianID: String!
   facts: String!
   APS: String!
@@ -255,6 +261,7 @@ type ClinicianProtectedInfo
   ALA: String!
   MHA: String!
   CAM: String!
+  version: Int!
 }
 
 """
@@ -283,7 +290,6 @@ type ClinicianPatientMap
     fields: ["patientID", "clinicianID"]
     queryField: "listClinicianMappingsByPatientID"
   ) {
-  id: ID
   clinicianID: String!
   patientID: String!
   clinicianInfo: ClinicianInfo! @connection(fields: ["clinicianID"])
@@ -316,7 +322,6 @@ type PatientAssignment
     fields: ["clinicianID", "pending"]
     queryField: "listPendingPatientAssignments"
   ) {
-  id: ID
   patientID: String!
   clinicianID: String!
   patientName: String!
@@ -336,7 +341,7 @@ type Alert
   @model
   @auth(
     rules: [
-      { allow: owner, operations: [read] }
+      { allow: owner, ownerField: "patientID", operations: [read] }
       { allow: groups, groups: ["Admin"] }
       { allow: groups, groupsField: "patientID", operations: [read, update] }
       { allow: groups, groups: ["Patients"], operations: [create] }
@@ -375,7 +380,6 @@ type Alert
   symptomReport: ReportSymptom @connection(fields: ["symptomReportID"])
   pending: String
   completed: String
-  owner: String!
 }
 
 """
@@ -387,7 +391,7 @@ type Todo
   @model
   @auth(
     rules: [
-      { allow: owner, operations: [read, update] }
+      { allow: owner, ownerField: "clinicianID", operations: [read, update] }
       { allow: groups, groups: ["Admin"] }
       {
         allow: groups
@@ -422,21 +426,26 @@ type Todo
   title: String!
   patientName: String!
   notes: String!
-  createdAt: AWSDateTime!
-  lastModified: AWSDateTime
+  lastModified: AWSDateTime!
   alertID: ID
   alert: Alert @connection(fields: ["alertID"])
   pending: String
   completed: String
-  owner: String!
+  version: Int!
 }
 
+"""
+#P5
+== Authorization ==
+1. Patients can create and read their own records
+3. Clinicians can read records
+"""
 type AlertNotification
   @model
   @auth(
     rules: [
+      { allow: owner, ownerField: "patientID", operations: [create, read] }
       { allow: groups, groups: ["Admin"] }
-      { allow: groups, groups: ["Patients"], operations: [create, read] }
       {
         allow: groups
         groups: [
@@ -453,7 +462,6 @@ type AlertNotification
   id: ID!
   patientID: String!
   alertID: ID!
-  owner: String!
 }
 
 """
@@ -465,8 +473,12 @@ type ClinicianRecord
   @model
   @auth(
     rules: [
+      {
+        allow: owner
+        ownerField: "uploaderClinicianID"
+        operations: [create, read]
+      }
       { allow: groups, groups: ["Admin"] }
-      { allow: owner, operations: [create, read] }
       { allow: groups, groupsField: "patientID", operations: [read] }
     ]
   )

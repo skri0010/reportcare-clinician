@@ -5,13 +5,13 @@ import i18n from "util/language/i18n";
 import { AbsoluteParameters } from "components/Text/AbsoluteParameters";
 
 interface OxygenSaturationProps {
-  oxySatValue: string;
+  oxygenSaturation: number | string;
   minHeight: number;
   flex?: number;
 }
 
 export const OxygenSaturationCard: FC<OxygenSaturationProps> = ({
-  oxySatValue,
+  oxygenSaturation,
   minHeight,
   flex
 }) => {
@@ -24,7 +24,7 @@ export const OxygenSaturationCard: FC<OxygenSaturationProps> = ({
       noChildrenPaddingHorizontal
     >
       <AbsoluteParameters
-        centerText={oxySatValue}
+        centerText={oxygenSaturation}
         bottomText={`(${i18n.t("Parameter_Graphs.OxygenSaturationUnit")})`}
       />
     </CardWrapper>

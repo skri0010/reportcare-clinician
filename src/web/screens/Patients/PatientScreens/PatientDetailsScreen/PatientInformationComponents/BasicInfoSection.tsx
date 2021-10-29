@@ -39,7 +39,7 @@ export const BasicInfoSection: FC<BasicInfoSectionProps> = ({ info }) => {
       />
       <PatientInfoRow
         title={i18n.t("Patient_Info.Class")}
-        content={`NHYA ${info.class}`}
+        content={`NYHA ${info.class}`}
         iconType={InfoIcon.CLASS}
       />
       <PatientInfoRow

@@ -212,7 +212,7 @@
       "NYHAClass": "NYHA class",
       "DiagnosisInfo": "Diagnosis information",
       "DeviceNo": "Device number",
-      "TargetActivity": "Target number of steps",
+      "TargetSteps": "Target number of steps",
       "TargetWeight": "Target weight (in kg)",
       "FluidIntakeGoal": "Fluid intake goal (in ml)",
       "MedName": "Medicine name",
@@ -226,7 +226,7 @@
       "MedInfo": "Does this patient take any medicines?"
     },
     "Error": {
-      "TargetActivity": "Please input a valid target number of steps",
+      "TargetSteps": "Please input a valid target number of steps",
       "TargetWeight": "Please input a valid target weight (in kg)",
       "FluidIntakeGoal": "Please input a valid fluid intake goal (in ml)",
       "MedName": "Please input a valid medicine name",
@@ -236,7 +236,7 @@
     "Placeholder": {
       "DiagnosisInfo": "Enter diagnosis information",
       "DeviceNo": "Enter device number",
-      "TargetActivity": "Enter target number of steps",
+      "TargetSteps": "Enter target number of steps",
       "TargetWeight": "Enter target weight (in kg)",
       "FluidIntakeGoal": "Enter fluid intake goal (in ml)",
       "MedName": "Enter medicine name",
@@ -269,7 +269,6 @@
     "Weight": "Weight",
     "TargetWeight": "Target weight",
     "Symptoms": "Symptoms",
-    "NoRecord": "-",
     "NoSymptoms": "No symptoms recorded"
   },
   "Patient_ICD/CRT": {
@@ -356,7 +355,7 @@
       "NYHAClass": "NYHA class",
       "Diagnosis": "Diagnosis",
       "FluidIntakeGoal": "Fluid intake goal",
-      "TargetActivity": "Target number of steps",
+      "TargetSteps": "Target number of steps",
       "TargetWeight": "Target weight"
     },
     "AlertSymptom": {

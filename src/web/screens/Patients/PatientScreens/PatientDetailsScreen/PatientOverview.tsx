@@ -11,10 +11,14 @@ import { ReportSymptom, ReportVitals } from "aws/API";
 import i18n from "util/language/i18n";
 import { PatientDetailsTabProps } from "web/navigation/types";
 import { MedInput, PatientDetails } from "rc_agents/model";
-import { getLatestVitalsReport } from "util/utilityFunctions";
+import {
+  getLatestVitalsReport,
+  getNonNullItemsFromList
+} from "util/utilityFunctions";
 import { FluidIntakeCard } from "./PatientOverviewComponents/FluidIntakeCard";
 import { ActivityCard } from "./PatientOverviewComponents/ActivityCard";
 import { InnerScreenButton } from "components/Buttons/InnerScreenButton";
+import { displayPlaceholder } from "util/const";
 
 interface PatientOverviewProps extends PatientDetailsTabProps.OverviewTabProps {
   details: PatientDetails;
@@ -46,21 +50,18 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
       }
 
       // Get sum of fluid taken
-      const fluidIntakeList: number[] = vitalsReportsOnDate.flatMap((data) =>
-        data.FluidIntake && parseFloat(data.FluidIntake)
-          ? [parseFloat(data.FluidIntake)]
-          : []
+      const fluidIntakeList: number[] = getNonNullItemsFromList(
+        vitalsReportsOnDate.map((data) => data.fluidIntakeInMl)
       );
-      // set total fluid taken
+
+      // Set total fluid taken
       setSumFluidIntake(fluidIntakeList.reduce((a, b) => a + b, 0));
 
+      // DS-TODO: Replace with Physical
       // Get sum of steps taken
-      const stepsTakenList: number[] = vitalsReportsOnDate.flatMap((data) =>
-        data.NoSteps && parseFloat(data.NoSteps)
-          ? [parseFloat(data.NoSteps)]
-          : []
-      );
-      // set total fluid taken
+      const stepsTakenList: number[] = getNonNullItemsFromList([]);
+
+      // Set sum of steps taken
       setSumStepsTaken(stepsTakenList.reduce((a, b) => a + b, 0));
     }
 
@@ -75,8 +76,6 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
     }
   }, [details]);
 
-  const noRecord = i18n.t("Patient_Overview.NoRecord");
-
   return (
     <ScreenWrapper padding>
       <ScrollView>
@@ -84,19 +83,25 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
           <View style={[styles.container]}>
             {/* Blood Pressure Card */}
             <BloodPressureCard
-              systolicBP={vitals?.BPDi || noRecord}
-              diastolicBP={vitals?.BPSys || noRecord}
+              systolicBloodPressure={
+                vitals?.diastolicBloodPressure || displayPlaceholder
+              }
+              diastolicBloodPressure={
+                vitals?.systolicBloodPressure || displayPlaceholder
+              }
               minHeight={cardHeight}
               flex={2}
             />
             {/* Oxygen Saturation card and Weigth card to share fixed space */}
             <OxygenSaturationCard
-              oxySatValue={vitals?.OxySat || noRecord}
+              oxygenSaturation={vitals?.oxygenSaturation || displayPlaceholder}
               minHeight={cardHeight}
             />
             <WeightCard
-              weight={vitals?.Weight || noRecord}
-              targetWeight={details.patientInfo.targetWeight}
+              weight={vitals?.weight || displayPlaceholder}
+              targetWeight={
+                details.patientInfo.targetWeight || displayPlaceholder
+              }
               minHeight={cardHeight}
             />
           </View>
@@ -104,13 +109,17 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
           <View style={[styles.container]}>
             {/* Fluid and activity card */}
             <FluidIntakeCard
-              fluidRequired={details.patientInfo.fluidIntakeGoal}
-              fluidTaken={sumFluidIntake.toString()}
+              fluidIntakeInMl={
+                details.patientInfo.fluidIntakeGoalInMl || displayPlaceholder
+              }
+              fluidGoalInMl={sumFluidIntake}
               minHeight={cardHeight}
             />
             <ActivityCard
-              stepsTaken={sumStepsTaken.toString()}
-              stepsRequired={details.patientInfo.targetActivity}
+              stepsTaken={sumStepsTaken || displayPlaceholder}
+              stepsRequired={
+                details.patientInfo.targetSteps || displayPlaceholder
+              }
               minHeight={cardHeight}
             />
           </View>

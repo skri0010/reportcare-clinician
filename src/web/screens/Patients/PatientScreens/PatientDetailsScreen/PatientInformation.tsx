@@ -10,10 +10,11 @@ import {
   ContactInfo,
   ContactInfoSection
 } from "./PatientInformationComponents/ContactInfoSection";
-import { InfoTitleBar } from "../../../../../components/Bars/InfoTitleBar";
+import { InfoTitleBar } from "components/Bars/InfoTitleBar";
 import { PatientDetailsTabProps } from "web/navigation/types";
 import { getAge } from "util/utilityFunctions";
 import { PatientInfo } from "aws/API";
+import { displayPlaceholder } from "util/const";
 
 interface PatientInformationProps extends PatientDetailsTabProps.InfoTabProps {
   info: PatientInfo;
@@ -24,8 +25,8 @@ export const PatientInformation: FC<PatientInformationProps> = ({ info }) => {
     gender: info.gender,
     age: getAge(info.birthDate),
     birthDate: new Date(info.birthDate).toLocaleDateString(),
-    location: info.hospitalLocation,
-    class: info.NHYAclass,
+    location: info.hospitalLocation || displayPlaceholder,
+    class: info.NYHAClass || displayPlaceholder,
     language: info.language
   };
 

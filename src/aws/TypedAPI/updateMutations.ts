@@ -1,33 +1,36 @@
 import API from "@aws-amplify/api-graphql";
 // eslint-disable-next-line no-restricted-imports
 import * as mutations from "aws/graphql/mutations";
-import { BaseResponse } from "aws";
+import { BaseResponse, incrementVersion, VERSION_KEY } from "aws";
 import {
   ClinicianInfo,
-  UpdateClinicianInfoInput,
-  UpdateClinicianProtectedInfoInput,
   PatientInfo,
-  UpdatePatientInfoInput,
   Alert,
   UpdateAlertInput,
   Todo,
-  UpdateTodoInput,
   PatientAssignment,
   UpdatePatientAssignmentInput,
   MedicationInfo,
   UpdateMedicationInfoInput
 } from "aws/API";
+import {
+  UpdateVersionedClinicianInfoInput,
+  UpdateVersionedClinicianProtectedInfoInput,
+  UpdateVersionedPatientInfoInput,
+  UpdateVersionedTodoInput
+} from "./versionedTypes";
 
+// == Update mutations ==
 interface UpdateClinicianInfoResponse extends BaseResponse {
   data: { updateClinicianInfo?: ClinicianInfo };
 }
 
 export const updateClinicianInfo = async (
-  input: UpdateClinicianInfoInput
+  input: UpdateVersionedClinicianInfoInput
 ): Promise<UpdateClinicianInfoResponse> => {
   return (await API.graphql({
     query: mutations.updateClinicianInfo,
-    variables: { input: input }
+    variables: { input: incrementVersion(input, input[VERSION_KEY]) }
   })) as UpdateClinicianInfoResponse;
 };
 
@@ -49,11 +52,11 @@ interface UpdateClinicianProtectedInfoResponse extends BaseResponse {
 }
 
 export const updateClinicianProtectedInfo = async (
-  input: UpdateClinicianProtectedInfoInput
+  input: UpdateVersionedClinicianProtectedInfoInput
 ): Promise<UpdateClinicianProtectedInfoResponse> => {
   return (await API.graphql({
     query: mutations.updateClinicianProtectedInfo,
-    variables: { input: input }
+    variables: { input: incrementVersion(input, input[VERSION_KEY]) }
   })) as UpdateClinicianProtectedInfoResponse;
 };
 
@@ -62,11 +65,11 @@ interface UpdatePatientInfoResponse extends BaseResponse {
 }
 
 export const updatePatientInfo = async (
-  input: UpdatePatientInfoInput
+  input: UpdateVersionedPatientInfoInput
 ): Promise<UpdatePatientInfoResponse> => {
   return (await API.graphql({
     query: mutations.updatePatientInfo,
-    variables: { input: input }
+    variables: { input: incrementVersion(input, input[VERSION_KEY]) }
   })) as UpdatePatientInfoResponse;
 };
 
@@ -88,11 +91,11 @@ interface UpdateTodoResponse extends BaseResponse {
 }
 
 export const updateTodo = async (
-  input: UpdateTodoInput
+  input: UpdateVersionedTodoInput
 ): Promise<UpdateTodoResponse> => {
   return (await API.graphql({
     query: mutations.updateTodo,
-    variables: { input: input }
+    variables: { input: incrementVersion(input, input[VERSION_KEY]) }
   })) as UpdateTodoResponse;
 };
 interface UpdatePatientAssignmentResponse extends BaseResponse {

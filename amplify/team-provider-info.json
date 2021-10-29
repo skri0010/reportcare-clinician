@@ -18,15 +18,15 @@
       "function": {
         "reportcarelambdalayer": {
           "deploymentBucketName": "amplify-reportcare-dev-213733-deployment",
-          "s3Key": "amplify-builds/reportcarelambdalayer-LambdaLayerVersion2965a8ce-build.zip"
+          "s3Key": "amplify-builds/reportcarelambdalayer-LambdaLayerVersion03d68a70-build.zip"
         },
         "patientassignmenthandler": {
           "deploymentBucketName": "amplify-reportcare-dev-213733-deployment",
-          "s3Key": "amplify-builds/patientassignmenthandler-6a713248426266583765-build.zip"
+          "s3Key": "amplify-builds/patientassignmenthandler-5935686f67396c4b4d44-build.zip"
         },
         "s3clinicianrecordsbridge": {
           "deploymentBucketName": "amplify-reportcare-dev-213733-deployment",
-          "s3Key": "amplify-builds/s3clinicianrecordsbridge-62507751424f41344e53-build.zip"
+          "s3Key": "amplify-builds/s3clinicianrecordsbridge-7462626372514c306b31-build.zip"
         }
       }
     }

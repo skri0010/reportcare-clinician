@@ -29,6 +29,7 @@ const awsmobile = {
     "aws_appsync_region": "ap-southeast-1",
     "aws_appsync_authenticationType": "AMAZON_COGNITO_USER_POOLS",
     "aws_appsync_apiKey": "da2-fakeApiId123456",
+    "aws_appsync_dangerously_connect_to_http_endpoint_for_testing": true,
     "aws_user_files_s3_bucket": "clinicianrecords213733-dev",
     "aws_user_files_s3_bucket_region": "ap-southeast-1"
 };

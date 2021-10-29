@@ -54,10 +54,7 @@ export const PatientChatRow: FC<PatientChatRowProps> = ({
           label: "Message",
           value: message
         }}
-        riskLevel={
-          RiskLevel[generalDetails.riskLevel as keyof typeof RiskLevel] ||
-          RiskLevel.UNASSIGNED
-        }
+        riskLevel={generalDetails.riskLevel as RiskLevel}
       >
         {/* Side container */}
         <View style={styles.sideContainer}>

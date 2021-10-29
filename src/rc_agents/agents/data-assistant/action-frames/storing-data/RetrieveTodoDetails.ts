@@ -85,7 +85,7 @@ class RetrieveTodoDetails extends Activity {
               createdAt: todoDetail.createdAt,
               lastModified: todoDetail.lastModified,
               toSync: false,
-              _version: todoDetail._version
+              version: todoDetail.version
             };
             // Get optional alert data
             if (todoDetail.alert) {

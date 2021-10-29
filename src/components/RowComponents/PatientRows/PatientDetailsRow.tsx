@@ -18,7 +18,7 @@ export const PatientDetailsRow: React.FC<PatientDetailsRowProps> = ({
   selected = false,
   onRowPress
 }) => {
-  const { name, NHYAclass, riskLevel } = patient;
+  const { name, NYHAClass, riskLevel } = patient;
 
   const { fetchingPatientDetails, fetchingPatientAlertHistory } = select(
     (state: RootState) => ({
@@ -40,7 +40,7 @@ export const PatientDetailsRow: React.FC<PatientDetailsRowProps> = ({
         title={name}
         subtitleOne={{
           label: i18n.t("Patients.PatientsList.Class"),
-          value: `NHYA ${NHYAclass}`
+          value: `NYHA ${NYHAClass}`
         }}
         subtitleTwo={{
           label: i18n.t("Patients.PatientsList.Age"),

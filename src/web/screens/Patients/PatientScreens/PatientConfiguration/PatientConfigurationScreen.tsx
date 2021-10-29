@@ -6,11 +6,12 @@ import i18n from "util/language/i18n";
 import { PatientInfo } from "aws/API";
 import cloneDeep from "lodash/cloneDeep";
 import {
+  getParsedFloat,
   notEmptyString,
   validateFluidIntakeGoal,
   validateHospitalName,
   validateNYHAClass,
-  validateTargetActivity,
+  validateTargetSteps,
   validateTargetWeight
 } from "util/validation";
 import { ScaledSheet } from "react-native-size-matters";
@@ -18,7 +19,12 @@ import { CheckboxText } from "components/InputComponents/CheckboxText";
 import { H3, H4 } from "components/Text";
 import { RootState, select, useDispatch } from "util/useRedux";
 import { Picker } from "@react-native-picker/picker";
-import { Hospital, NYHAClass, MedInput, PatientDetails } from "rc_agents/model";
+import {
+  Hospital,
+  NYHAClassEnum,
+  MedInput,
+  PatientDetails
+} from "rc_agents/model";
 import { getPickerStyles } from "util/getStyles";
 import { Label } from "components/Text/Label";
 import { AuthButton } from "components/Buttons/AuthButton";
@@ -118,7 +124,7 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
     } = getPickerStyles({
       colors: colors,
       fonts: fonts,
-      error: !validateNYHAClass(configInfo.NHYAclass)
+      error: !validateNYHAClass(configInfo.NYHAClass)
     });
 
     // Update functions
@@ -126,8 +132,8 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
       setConfigInfo({ ...configInfo, hospitalName: hospitalName });
     };
 
-    const updateNYHAClass = (NHYAclass: string) => {
-      setConfigInfo({ ...configInfo, NHYAclass: NHYAclass });
+    const updateNYHAClass = (NYHAClass: string) => {
+      setConfigInfo({ ...configInfo, NYHAClass: NYHAClass });
     };
 
     const updateDiagnosisInfo = (diagnosisInfo: string) => {
@@ -141,18 +147,21 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
       [configInfo]
     );
 
-    const updateTargetActivity = (targetActivity: string) => {
-      setConfigInfo({ ...configInfo, targetActivity: targetActivity });
+    const updateTargetSteps = (targetSteps: string) => {
+      const targetStepsFloat = getParsedFloat(targetSteps);
+      setConfigInfo({ ...configInfo, targetSteps: targetStepsFloat });
     };
 
     const updateTargetWeight = (targetWeight: string) => {
-      setConfigInfo({ ...configInfo, targetWeight: targetWeight });
+      const targetWeightFloat = getParsedFloat(targetWeight);
+      setConfigInfo({ ...configInfo, targetWeight: targetWeightFloat });
     };
 
-    const updateFluidIntakeGoal = (fluidIntakeGoal: string) => {
+    const updateFluidIntakeGoal = (fluidIntakeGoalInMl: string) => {
+      const targetFluidIntakeGoalFloat = getParsedFloat(fluidIntakeGoalInMl);
       setConfigInfo({
         ...configInfo,
-        fluidIntakeGoal: fluidIntakeGoal
+        fluidIntakeGoalInMl: targetFluidIntakeGoalFloat
       });
     };
 
@@ -207,11 +216,11 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
     useEffect(() => {
       // Validation for mandatory fields
       const mandatory = (validateHospitalName(configInfo.hospitalName) &&
-        validateNYHAClass(configInfo.NHYAclass) &&
+        validateNYHAClass(configInfo.NYHAClass) &&
         configInfo.diagnosisInfo &&
-        validateTargetActivity(configInfo.targetActivity) &&
+        validateTargetSteps(configInfo.targetSteps) &&
         validateTargetWeight(configInfo.targetWeight) &&
-        validateFluidIntakeGoal(configInfo.fluidIntakeGoal)) as boolean;
+        validateFluidIntakeGoal(configInfo.fluidIntakeGoalInMl)) as boolean;
 
       // Validation for optional fields
       const optional = ((!hasDevice || configInfo.deviceNo) &&
@@ -269,7 +278,7 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
           <View style={hospitalNamePickerContainerStyle}>
             <Picker
               style={hospitalNamePickerStyle}
-              selectedValue={configInfo.hospitalName}
+              selectedValue={configInfo.hospitalName || Hospital.UNKNOWN}
               onValueChange={(value: string) => {
                 updateHospitalName(value);
               }}
@@ -290,12 +299,12 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
           <View style={NYHAClassPickerContainerStyle}>
             <Picker
               style={NYHAClassPickerStyle}
-              selectedValue={configInfo.NHYAclass}
+              selectedValue={configInfo.NYHAClass || NYHAClassEnum.UNKNOWN}
               onValueChange={(value: string) => {
                 updateNYHAClass(value);
               }}
             >
-              {Object.entries(NYHAClass).map(([key, value]) => {
+              {Object.entries(NYHAClassEnum).map(([key, value]) => {
                 return (
                   <Picker.Item
                     key={key}
@@ -385,17 +394,17 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
           {/* Mandatory fields for values */}
           {/* Target activity (number of steps) */}
           <TextField
-            label={i18n.t("Patient_Configuration.Label.TargetActivity")}
-            value={configInfo.targetActivity}
-            onChange={(targetActivity) => updateTargetActivity(targetActivity)}
+            label={i18n.t("Patient_Configuration.Label.TargetSteps")}
+            value={configInfo.targetSteps}
+            onChange={(targetSteps) => updateTargetSteps(targetSteps)}
             placeholder={i18n.t(
-              "Patient_Configuration.Placeholder.TargetActivity"
+              "Patient_Configuration.Placeholder.TargetSteps"
             )}
             error={
-              notEmptyString(configInfo.targetActivity) &&
-              !validateTargetActivity(configInfo.targetActivity)
+              notEmptyString(configInfo.targetSteps) &&
+              !validateTargetSteps(configInfo.targetSteps)
             }
-            errorMessage={i18n.t("Patient_Configuration.Error.TargetActivity")}
+            errorMessage={i18n.t("Patient_Configuration.Error.TargetSteps")}
           />
           {/* Target weight */}
           <TextField
@@ -414,16 +423,16 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
           {/* Fluid intake goal */}
           <TextField
             label={i18n.t("Patient_Configuration.Label.FluidIntakeGoal")}
-            value={configInfo.fluidIntakeGoal}
-            onChange={(fluidIntakeGoal) =>
-              updateFluidIntakeGoal(fluidIntakeGoal)
+            value={configInfo.fluidIntakeGoalInMl}
+            onChange={(fluidIntakeGoalInMl) =>
+              updateFluidIntakeGoal(fluidIntakeGoalInMl)
             }
             placeholder={i18n.t(
               "Patient_Configuration.Placeholder.FluidIntakeGoal"
             )}
             error={
-              notEmptyString(configInfo.fluidIntakeGoal) &&
-              !validateFluidIntakeGoal(configInfo.fluidIntakeGoal)
+              notEmptyString(configInfo.fluidIntakeGoalInMl) &&
+              !validateFluidIntakeGoal(configInfo.fluidIntakeGoalInMl)
             }
             errorMessage={i18n.t("Patient_Configuration.Error.FluidIntakeGoal")}
           />

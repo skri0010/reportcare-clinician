@@ -22,7 +22,7 @@ const setProcessedAlertInfos = async (
   );
 };
 
-// Insert AlertInfo[], merge based on latest _version
+// Insert AlertInfo[], merge completed status
 export const setAlertInfos = async (
   alertInfos: (AlertInfo | HighRiskAlertInfo)[]
 ): Promise<void> => {
@@ -39,54 +39,47 @@ export const setAlertInfos = async (
         const { patientID } = alertInfo;
 
         // Use a temporary list
-        let localAlertInfosForPatient = localProcessedAlertInfos[patientID];
+        let patientAlerts = localProcessedAlertInfos[patientID];
 
         // Create new list if patient does not exist
-        if (!localAlertInfosForPatient) {
-          localAlertInfosForPatient = [];
+        if (!patientAlerts) {
+          patientAlerts = [];
         }
 
-        // Merge if patient exists
-        const index: number | undefined = localAlertInfosForPatient.findIndex(
+        // Merge if alert for patient exists
+        const index: number | undefined = patientAlerts.findIndex(
           (info) => info.id === alertInfo.id
         );
 
+        // Alert does not exist locally
         if (index >= 0) {
           const localAlertInfo: AlertInfo | HighRiskAlertInfo =
-            localAlertInfosForPatient[index];
+            patientAlerts[index];
 
-          // Merge based on alert's _version
-          if (alertInfo._version >= localAlertInfo._version) {
-            // Set COMPLETED if new or local alert is completed
-            const completed =
-              alertInfo.completed || localAlertInfo.completed
-                ? AlertStatus.COMPLETED
-                : null;
-            // Set PENDING if not completed
-            const pending = completed ? null : AlertStatus.PENDING;
-
-            localAlertInfosForPatient[index] = {
-              ...localAlertInfo, // Local AlertInfo
-              ...alertInfo, // Overwritten by new AlertInfo
-              // Modify alert in new AlertInfo
-              pending: pending,
-              completed: completed
-            };
-          }
-        } else {
+          // Merge AlertStatus if COMPLETED
+          const completed = alertInfo.completed || localAlertInfo.completed;
+          patientAlerts[index] = {
+            ...localAlertInfo,
+            ...alertInfo,
+            ...(completed ? {} : { pending: AlertStatus.PENDING }),
+            ...(completed ? { completed: AlertStatus.COMPLETED } : {})
+          };
+        }
+        // Alert exists locally
+        else {
           // Push into list
-          localAlertInfosForPatient.push(alertInfo);
+          patientAlerts.push(alertInfo);
         }
 
         // Replace the original list
-        localProcessedAlertInfos[patientID] = localAlertInfosForPatient;
+        localProcessedAlertInfos[patientID] = patientAlerts;
       }
     });
     await setProcessedAlertInfos(localProcessedAlertInfos);
   }
 };
 
-// Insert AlertInfo, merge based on latest _version
+// Insert AlertInfo, merge based on latest version
 export const setAlertInfo = async (
   alertInfo: AlertInfo | HighRiskAlertInfo
 ): Promise<void> => {

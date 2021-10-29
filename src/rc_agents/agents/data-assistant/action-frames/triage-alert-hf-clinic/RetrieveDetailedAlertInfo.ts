@@ -42,6 +42,7 @@ import { convertAlertToAlertInfo } from "util/utilityFunctions";
 import { setFetchingAlertInfo } from "ic-redux/actions/agents/alertActionCreator";
 import moment from "moment";
 import { RiskLevel } from "models/RiskLevel";
+import { emptyValuePlaceholder } from "util/const";
 
 /**
  * Represents the activity for retrieving patient's information associated with an alert.
@@ -166,8 +167,8 @@ export const queryAlertInfo = async (alert: Alert): Promise<Alert | null> => {
 
   if (patientInfoQuery.data.getPatientInfo) {
     const patientInfo = patientInfoQuery.data.getPatientInfo;
-    alertInfo.diagnosis = patientInfo.diagnosisInfo;
-    alertInfo.NYHAClass = patientInfo.NHYAclass;
+    alertInfo.diagnosis = patientInfo.diagnosisInfo || emptyValuePlaceholder;
+    alertInfo.NYHAClass = patientInfo.NYHAClass || emptyValuePlaceholder;
   }
 
   // Get MedCompliant
@@ -225,16 +226,16 @@ export const queryAlertInfo = async (alert: Alert): Promise<Alert | null> => {
     });
 
     if (latestMedication.length > 0) {
-      alertInfo.medCompliants = latestMedication;
+      alertInfo.medicineInfoList = latestMedication;
     }
   }
 
   // Queries activity associated with symptom report
-  if (alertInfo.symptomReport?.ActivityInfo?.Actname) {
+  if (alertInfo.symptomReport?.activityInfo?.activityName) {
     alertInfo.activityDuringAlert =
-      alertInfo.symptomReport.ActivityInfo.Actname;
+      alertInfo.symptomReport.activityInfo.activityName;
     // Prevent storing full activity info
-    delete alertInfo.symptomReport.ActivityInfo;
+    delete alertInfo.symptomReport.activityInfo;
   }
 
   return alertInfo;
@@ -273,7 +274,7 @@ export const queryHighRiskAlertInfo = async (
   // Gets date from alert dateTime
   const alertDate = new Date(alert.dateTime);
 
-  // Gets symptoms reports by descending order of DateTime
+  // Gets symptoms reports by descending order of datetime
   const symptomReportsQuery = await listReportSymptomsByDateTime({
     patientID: alert.patientID,
     sortDirection: ModelSortDirection.DESC
@@ -286,9 +287,9 @@ export const queryHighRiskAlertInfo = async (
     const validSymptomReports: ReportSymptom[] = [];
     symptomReports.forEach((report) => {
       if (
-        report?.DateTime &&
-        alertDate >= new Date(report.DateTime) &&
-        moment(alertDate).diff(moment(new Date(report.DateTime)), "days") <= 5
+        report?.dateTime &&
+        alertDate >= new Date(report.dateTime) &&
+        moment(alertDate).diff(moment(new Date(report.dateTime)), "days") <= 5
       ) {
         validSymptomReports.push(report);
       }
@@ -298,7 +299,7 @@ export const queryHighRiskAlertInfo = async (
     }
   }
 
-  // Gets vitals reports by descending order of DateTime
+  // Gets vitals reports by descending order of datetime
   const vitalsReportsQuery = await listReportVitalsByDateTime({
     patientID: alert.patientID,
     sortDirection: ModelSortDirection.DESC
@@ -311,9 +312,9 @@ export const queryHighRiskAlertInfo = async (
     const validVitalsReports: ReportVitals[] = [];
     vitalsReports.forEach((report) => {
       if (
-        report?.DateTime &&
-        alertDate >= new Date(report.DateTime) &&
-        moment(alertDate).diff(moment(new Date(report.DateTime)), "days") <= 5
+        report?.dateTime &&
+        alertDate >= new Date(report.dateTime) &&
+        moment(alertDate).diff(moment(new Date(report.dateTime)), "days") <= 5
       ) {
         validVitalsReports.push(report);
       }
@@ -356,7 +357,7 @@ export const queryHighRiskAlertInfo = async (
     });
 
     if (validMedInfos.length > 0) {
-      highRiskAlertInfo.medCompliants = validMedInfos;
+      highRiskAlertInfo.medicineInfoList = validMedInfos;
     }
   }
 

@@ -24,7 +24,6 @@ import {
 } from "aws";
 import {
   PatientInfo,
-  UpdatePatientInfoInput,
   CreateMedicationInfoInput,
   MedicationInfo,
   UpdateMedicationInfoInput
@@ -38,6 +37,7 @@ import { store } from "util/useRedux";
 import { agentNWA } from "rc_agents/agents";
 import { MedInput } from "rc_agents/model";
 import { setPatients } from "ic-redux/actions/agents/patientActionCreator";
+import { UpdateVersionedPatientInfoInput } from "aws/TypedAPI/versionedTypes";
 
 /**
  * Represents the activity for storing patient record baseline data.
@@ -268,10 +268,10 @@ export const updatePatientBaseline = async (
     deviceNo: baseline.deviceNo,
     diagnosisInfo: baseline.diagnosisInfo,
     hospitalName: baseline.hospitalName,
-    NHYAclass: baseline.NHYAclass,
-    targetActivity: baseline.targetActivity,
+    NYHAClass: baseline.NYHAClass,
+    targetSteps: baseline.targetSteps,
     targetWeight: baseline.targetWeight,
-    fluidIntakeGoal: baseline.fluidIntakeGoal,
+    fluidIntakeGoalInMl: baseline.fluidIntakeGoalInMl,
     configured: baseline.configured
   };
 
@@ -287,7 +287,7 @@ export const updatePatientBaseline = async (
     // Compares version of patient infos
     const latestPatientInfo = patientInfoQuery.data.getPatientInfo;
     // Latest patient info has higher version
-    if (latestPatientInfo._version > baseline._version) {
+    if (latestPatientInfo.version > baseline.version) {
       // Patient has been configured: replace baseline with retrieved patient
       if (latestPatientInfo.configured) {
         baseline = latestPatientInfo;
@@ -304,17 +304,16 @@ export const updatePatientBaseline = async (
 
   if (updateBaseline) {
     // Creates update input
-    const updateInput: UpdatePatientInfoInput = {
-      id: baseline.id,
+    const updateInput: UpdateVersionedPatientInfoInput = {
       patientID: baseline.patientID,
-      _version: baseline._version,
+      version: baseline.version,
       ...patientInfoToUpdate
     };
     const updateResponse = await updatePatientInfo(updateInput);
 
     if (updateResponse.data.updatePatientInfo) {
       // Updates version of patient info
-      baseline._version = updateResponse.data.updatePatientInfo._version;
+      baseline.version = updateResponse.data.updatePatientInfo.version;
       updateSuccessful = true;
     }
   }
@@ -362,8 +361,7 @@ export const createMedicationConfiguration = async (
         frequency: parseFloat(medicationInfo.frequency),
         name: medInfo.name,
         patientID: medInfo.patientID,
-        active: medicationInfo.active,
-        _version: medInfo._version
+        active: medicationInfo.active
       };
 
       const updateMedInfoResponse = await updateMedicationInfo(medInfoToUpdate);

@@ -20,23 +20,19 @@
     }
   },
   "Resources": {
-    "LambdaLayerVersion2965a8ce": {
+    "LambdaLayerVersion03d68a70": {
       "Type": "AWS::Lambda::LayerVersion",
       "Properties": {
-        "CompatibleRuntimes": {
-          "Ref": "runtimes"
-        },
+        "CompatibleRuntimes": [
+          "nodejs14.x"
+        ],
         "Content": {
           "S3Bucket": {
             "Ref": "deploymentBucketName"
           },
-          "S3Key": {
-            "Ref": "s3Key"
-          }
+          "S3Key": "amplify-builds/reportcarelambdalayer-LambdaLayerVersion03d68a70-build.zip"
         },
-        "Description": {
-          "Ref": "description"
-        },
+        "Description": "Updated layer version 2021-10-28T03:42:05.291Z",
         "LayerName": {
           "Fn::Sub": [
             "reportcarelambdalayer-${env}",
@@ -51,68 +47,20 @@
       "DeletionPolicy": "Delete",
       "UpdateReplacePolicy": "Retain"
     },
-    "LambdaLayerPermissionAwsOrgoqcrna86bph2965a8ce": {
+    "LambdaLayerPermissionAwsOrgoqcrna86bph03d68a70": {
       "Type": "AWS::Lambda::LayerVersionPermission",
       "Properties": {
         "Action": "lambda:GetLayerVersion",
-        "LayerVersionArn": {
-          "Ref": "LambdaLayerVersion2965a8ce"
-        },
+        "LayerVersionArn": "arn:aws:lambda:ap-southeast-1:666794373206:layer:reportcarelambdalayer-dev:3",
         "OrganizationId": "o-qcrna86bph",
         "Principal": "*"
       }
     },
-    "LambdaLayerPermissionPrivate2965a8ce": {
+    "LambdaLayerPermissionPrivate03d68a70": {
       "Type": "AWS::Lambda::LayerVersionPermission",
       "Properties": {
         "Action": "lambda:GetLayerVersion",
-        "LayerVersionArn": {
-          "Ref": "LambdaLayerVersion2965a8ce"
-        },
-        "Principal": {
-          "Ref": "AWS::AccountId"
-        }
-      }
-    },
-    "LambdaLayerVersion3b81377d": {
-      "Type": "AWS::Lambda::LayerVersion",
-      "Properties": {
-        "CompatibleRuntimes": ["nodejs14.x"],
-        "Content": {
-          "S3Bucket": {
-            "Ref": "deploymentBucketName"
-          },
-          "S3Key": "amplify-builds/reportcarelambdalayer-LambdaLayerVersion3b81377d-build.zip"
-        },
-        "Description": "Updated layer version 2021-09-28T00:32:05.626Z",
-        "LayerName": {
-          "Fn::Sub": [
-            "reportcarelambdalayer-${env}",
-            {
-              "env": {
-                "Ref": "env"
-              }
-            }
-          ]
-        }
-      },
-      "DeletionPolicy": "Delete",
-      "UpdateReplacePolicy": "Retain"
-    },
-    "LambdaLayerPermissionAwsOrgoqcrna86bph3b81377d": {
-      "Type": "AWS::Lambda::LayerVersionPermission",
-      "Properties": {
-        "Action": "lambda:GetLayerVersion",
-        "LayerVersionArn": "arn:aws:lambda:ap-southeast-1:666794373206:layer:reportcarelambdalayer-dev:1",
-        "OrganizationId": "o-qcrna86bph",
-        "Principal": "*"
-      }
-    },
-    "LambdaLayerPermissionPrivate3b81377d": {
-      "Type": "AWS::Lambda::LayerVersionPermission",
-      "Properties": {
-        "Action": "lambda:GetLayerVersion",
-        "LayerVersionArn": "arn:aws:lambda:ap-southeast-1:666794373206:layer:reportcarelambdalayer-dev:1",
+        "LayerVersionArn": "arn:aws:lambda:ap-southeast-1:666794373206:layer:reportcarelambdalayer-dev:3",
         "Principal": {
           "Ref": "AWS::AccountId"
         }
@@ -122,7 +70,7 @@
   "Outputs": {
     "Arn": {
       "Value": {
-        "Ref": "LambdaLayerVersion2965a8ce"
+        "Ref": "LambdaLayerVersion03d68a70"
       }
     }
   }

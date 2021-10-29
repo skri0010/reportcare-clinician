@@ -194,24 +194,24 @@ var handleUpload = function (_a) {
 var handleDelete = function (_a) {
     var args = _a.args, path = _a.path;
     return __awaiter(void 0, void 0, void 0, function () {
-        var eventResponse, patientID, documentID, recordType, documentTitle, getResult, _b, uploadDateTime, _version, updateTimeInMs, currentTimeInMs, withinDeleteGracePeriod, deleteSuccess, deleteMutation, error_3;
-        var _c;
-        return __generator(this, function (_d) {
-            switch (_d.label) {
+        var eventResponse, patientID, documentID, recordType, documentTitle, getResult, uploadDateTime, updateTimeInMs, currentTimeInMs, withinDeleteGracePeriod, deleteSuccess, deleteMutation, error_3;
+        var _b;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
                 case 0:
                     eventResponse = (0, shared_1.createNewEventResponse)();
                     patientID = args.patientID, documentID = args.documentID, recordType = args.recordType, documentTitle = args.documentTitle;
-                    _d.label = 1;
+                    _c.label = 1;
                 case 1:
-                    _d.trys.push([1, 12, , 13]);
+                    _c.trys.push([1, 12, , 13]);
                     return [4 /*yield*/, (0, queries_1.getClinicianRecord)({
                             documentID: documentID,
                             patientID: patientID
                         })];
                 case 2:
-                    getResult = _d.sent();
+                    getResult = _c.sent();
                     if (!getResult.data.getClinicianRecord) return [3 /*break*/, 10];
-                    _b = getResult.data.getClinicianRecord, uploadDateTime = _b.uploadDateTime, _version = _b._version;
+                    uploadDateTime = getResult.data.getClinicianRecord.uploadDateTime;
                     if (!uploadDateTime) return [3 /*break*/, 8];
                     updateTimeInMs = new Date(uploadDateTime).valueOf();
                     currentTimeInMs = new Date().valueOf();
@@ -219,16 +219,15 @@ var handleDelete = function (_a) {
                     if (!withinDeleteGracePeriod) return [3 /*break*/, 6];
                     return [4 /*yield*/, (0, s3Commands_1.deleteObject)(path)];
                 case 3:
-                    deleteSuccess = _d.sent();
+                    deleteSuccess = _c.sent();
                     if (!deleteSuccess) return [3 /*break*/, 5];
                     return [4 /*yield*/, (0, mutations_1.deleteClinicianRecord)({
                             documentID: documentID,
-                            patientID: patientID,
-                            _version: _version // Necessary for deletion with ConflictResolution on
+                            patientID: patientID
                         })];
                 case 4:
-                    deleteMutation = _d.sent();
-                    if ((_c = deleteMutation.data) === null || _c === void 0 ? void 0 : _c.deleteClinicianRecord) {
+                    deleteMutation = _c.sent();
+                    if ((_b = deleteMutation.data) === null || _b === void 0 ? void 0 : _b.deleteClinicianRecord) {
                         // Successful event response
                         eventResponse = {
                             success: true
@@ -237,7 +236,7 @@ var handleDelete = function (_a) {
                     else {
                         throw Error("Failed to delete ClinicianRecord for { documentID: " + documentID + ", patientID: " + patientID + "}. " + (0, shared_1.prettify)(deleteMutation.errors));
                     }
-                    _d.label = 5;
+                    _c.label = 5;
                 case 5: return [3 /*break*/, 7];
                 case 6: throw Error("Delete period has passed for document " + documentID + " for patient " + patientID);
                 case 7: return [3 /*break*/, 9];
@@ -254,10 +253,10 @@ var handleDelete = function (_a) {
                     else {
                         throw Error("Failed to get clinician record to check for deletion grace period. Error: " + (0, shared_1.prettify)(getResult.errors));
                     }
-                    _d.label = 11;
+                    _c.label = 11;
                 case 11: return [3 /*break*/, 13];
                 case 12:
-                    error_3 = _d.sent();
+                    error_3 = _c.sent();
                     console.log(error_3);
                     return [3 /*break*/, 13];
                 case 13: return [2 /*return*/, eventResponse];

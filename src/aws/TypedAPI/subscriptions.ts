@@ -2,21 +2,13 @@ import API from "@aws-amplify/api-graphql";
 import { BaseResponse } from "aws";
 import { Observable } from "zen-observable-ts";
 import { AgentTrigger } from "rc_agents/trigger";
-import { PatientAssignment } from "aws/API";
+import {
+  OnCreateAlertNotificationSubscription,
+  PatientAssignment
+} from "aws/API";
 import { store } from "util/useRedux";
 import { prettify } from "util/utilityFunctions";
-
-// Override default subscription otherwise null data will be received
-// Requested fields should be a subset of CreateAlertNotification response fields
-const onCreateAlertNotification = /* GraphQL */ `
-  subscription OnCreateAlertNotification {
-    onCreateAlertNotification {
-      id
-      patientID
-      alertID
-    }
-  }
-`;
+import { onCreateAlertNotification } from "aws/graphql/subscriptions";
 
 export type AlertNotification = {
   id: string;
@@ -25,7 +17,7 @@ export type AlertNotification = {
 };
 
 interface onCreateAlertNotificationResponse extends BaseResponse {
-  value: { data: { onCreateAlertNotification?: AlertNotification | null } };
+  value: { data: OnCreateAlertNotificationSubscription };
 }
 
 export const subscribeAlertNotification = (): void => {
@@ -53,7 +45,6 @@ export const subscribeAlertNotification = (): void => {
 const onCreatePatientAssignment = /* GraphQL */ `
   subscription onCreatePatientAssignment($clinicianID: String) {
     onCreatePatientAssignment(clinicianID: $clinicianID) {
-      id
       patientID
       clinicianID
       patientName
@@ -61,9 +52,6 @@ const onCreatePatientAssignment = /* GraphQL */ `
       resolution
       reassignToClinicianID
       sourceClinicianID
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
     }
@@ -73,7 +61,6 @@ const onCreatePatientAssignment = /* GraphQL */ `
 const onUpdatePatientAssignment = /* GraphQL */ `
   subscription onUpdatePatientAssignment($clinicianID: String) {
     onUpdatePatientAssignment(clinicianID: $clinicianID) {
-      id
       patientID
       clinicianID
       patientName
@@ -81,9 +68,6 @@ const onUpdatePatientAssignment = /* GraphQL */ `
       resolution
       reassignToClinicianID
       sourceClinicianID
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
     }

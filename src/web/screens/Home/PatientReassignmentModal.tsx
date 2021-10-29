@@ -47,8 +47,7 @@ export const PatientReassignmentModal: FC<PatientReassignmentModalProps> = ({
         clinicianID: selectedAssignment.clinicianID,
         patientName: selectedAssignment.patientName,
         resolution: PatientAssignmentStatus.REASSIGNED,
-        reassignToClinicianID: selectedClinician.clinicianID,
-        _version: selectedAssignment._version
+        reassignToClinicianID: selectedClinician.clinicianID
       };
       AgentTrigger.triggerResolvePendingAssignments(
         patientAssignmentResolution

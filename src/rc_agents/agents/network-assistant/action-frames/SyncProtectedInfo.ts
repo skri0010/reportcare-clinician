@@ -11,8 +11,8 @@ import {
   BeliefKeys
 } from "rc_agents/clinician_framework";
 import { updateClinicianProtectedInfo } from "aws/TypedAPI/updateMutations";
-import { UpdateClinicianProtectedInfoInput } from "aws/API";
 import { getClinicianProtectedInfo } from "aws/TypedAPI/getQueries";
+import { UpdateVersionedClinicianProtectedInfoInput } from "aws/TypedAPI/versionedTypes";
 import { store } from "util/useRedux";
 
 /**
@@ -42,22 +42,23 @@ class SyncProtectedInfo extends Activity {
           const result = await getClinicianProtectedInfo({
             clinicianID: localClinician.clinicianID
           });
-          if (result.data) {
+          if (result.data.getClinicianProtectedInfo) {
             const latestProtectedInfo = result.data.getClinicianProtectedInfo;
 
             // Updated protected info should have the latest version
-            const updatedProtectedInfo: UpdateClinicianProtectedInfoInput = {
-              clinicianID: localClinician.clinicianID,
-              facts: localClinician.protectedInfo.facts,
-              APS: localClinician.protectedInfo.APS,
-              DTA: localClinician.protectedInfo.DTA,
-              UXSA: localClinician.protectedInfo.UXSA,
-              NWA: localClinician.protectedInfo.NWA,
-              ALA: localClinician.protectedInfo.ALA,
-              MHA: localClinician.protectedInfo.MHA,
-              CAM: localClinician.protectedInfo.CAM,
-              _version: latestProtectedInfo?._version
-            };
+            const updatedProtectedInfo: UpdateVersionedClinicianProtectedInfoInput =
+              {
+                clinicianID: localClinician.clinicianID,
+                facts: localClinician.protectedInfo.facts,
+                APS: localClinician.protectedInfo.APS,
+                DTA: localClinician.protectedInfo.DTA,
+                UXSA: localClinician.protectedInfo.UXSA,
+                NWA: localClinician.protectedInfo.NWA,
+                ALA: localClinician.protectedInfo.ALA,
+                MHA: localClinician.protectedInfo.MHA,
+                CAM: localClinician.protectedInfo.CAM,
+                version: latestProtectedInfo.version
+              };
             await updateClinicianProtectedInfo(updatedProtectedInfo);
           }
         }
