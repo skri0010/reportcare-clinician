@@ -37,6 +37,7 @@ export const MedConfigModal: FC<MedConfigModalProps> = ({
     undefined
   );
 
+  // state used to keep track of current dosage of a medication for display purposes
   const [currentDosage, setCurrentDosage] = useState<string | undefined>(
     undefined
   );

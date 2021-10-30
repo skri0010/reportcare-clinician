@@ -69,12 +69,14 @@ export const AddNewMedication: FC<AddNewMedicationProps> = ({
     setConfigMedInfo({ ...configMedInfo, frequency: frequency });
   };
 
+  // Updte active status of medication
   const updateMedActive = () => {
     setConfigMedInfo({ ...configMedInfo, active: false });
   };
 
   // Input validations to see if the save button should be enabled or not
   useEffect(() => {
+    // automatically saves and closes modal if medicatio has been made inactive (remove button has been pressed)
     if (!configMedInfo.active) {
       saveMedInput(configMedInfo);
     }

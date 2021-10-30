@@ -102,6 +102,7 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
     // Used locally to keep track of ongoing configuration procedure
     const [configuring, setConfiguring] = useState<boolean>(false);
 
+    // used locally to keep track of active medications for display purposes
     const [currentActiveMedication, setCurrentActiveMedication] = useState<
       MedInput[]
     >(cloneDeep(details.medicationInfo));
@@ -168,27 +169,34 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
     // Save medication info inputs
     const saveMedInput = (medInput: MedInput) => {
       const currentMedInfos: MedInput[] = medInfos;
+      // check if medinpnut is a new medication
       if (medInput.active && !medInput.id) {
+        // toggle list under configure medication button
         setNewMedInfoAdded(true);
         currentMedInfos.push(medInput);
         setMedInfos(currentMedInfos);
       } else if (!medInput.active) {
-        currentMedInfos.push(medInput);
+        // check if medicationnn already exists and has become inactive
+        currentMedInfos.push(medInput); // store change in medinnfos
         setMedInfos(currentMedInfos);
+        // change active medication array to account only for active meds
         setCurrentActiveMedication(
           currentActiveMedication.filter((t) => {
             return t.name !== medInput.name;
           })
         );
       } else if (medInput.active && medInput.id) {
+        // check if medication already exists and is being modified (not removed)
         currentMedInfos.push(medInput);
         setMedInfos(currentMedInfos);
+        // remove from currentActiveMedication array and places it anew
         currentActiveMedication.splice(
           currentActiveMedication.indexOf(medInput),
           1
         );
         currentActiveMedication.push(medInput);
       }
+
       // closes the medication info input form, enable the add new medication info button
       setMedConfigFormVisible(false);
       // Reset the values for the medication input
