@@ -1,19 +1,12 @@
 import React, { FC } from "react";
-import { CardWrapper } from "components/Wrappers/CardWrapper";
 import { StepsChart } from "components/VisualizationComponents/PhysicalsCharts/StepsChart";
 import { BaseLineChartDataProps } from "components/VisualizationComponents/GeneralLineChartComponent";
+import { ChartCardWrapper } from "components/VisualizationComponents/ChartCardWrapper";
 
-interface StepsChartCardProps extends BaseLineChartDataProps {
-  maxHeight: number;
-}
-
-export const StepsChartCard: FC<StepsChartCardProps> = ({
-  data,
-  maxHeight
-}) => {
+export const StepsChartCard: FC<BaseLineChartDataProps> = ({ data }) => {
   return (
-    <CardWrapper maxHeight={maxHeight}>
+    <ChartCardWrapper>
       <StepsChart data={data} />
-    </CardWrapper>
+    </ChartCardWrapper>
   );
 };

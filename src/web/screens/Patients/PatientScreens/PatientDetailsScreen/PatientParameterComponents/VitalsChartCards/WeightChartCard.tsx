@@ -1,19 +1,13 @@
 import React, { FC } from "react";
-import { CardWrapper } from "components/Wrappers/CardWrapper";
+
 import { WeightChart } from "components/VisualizationComponents/VitalsCharts/WeightChart";
 import { VitalsChartProps } from "components/VisualizationComponents/VitalsCharts/VitalsChartUtilities";
+import { ChartCardWrapper } from "components/VisualizationComponents/ChartCardWrapper";
 
-interface WeightChartCardProps extends VitalsChartProps {
-  maxHeight: number;
-}
-
-export const WeightChartCard: FC<WeightChartCardProps> = ({
-  data,
-  maxHeight
-}) => {
+export const WeightChartCard: FC<VitalsChartProps> = ({ data }) => {
   return (
-    <CardWrapper maxHeight={maxHeight}>
+    <ChartCardWrapper>
       <WeightChart data={data} />
-    </CardWrapper>
+    </ChartCardWrapper>
   );
 };

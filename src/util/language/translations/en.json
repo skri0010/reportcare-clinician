@@ -84,6 +84,8 @@
     "PatientReassign": "Select Clinician to Reassign to"
   },
   "Parameter_Graphs": {
+    "VitalsHeader": "Vitals",
+    "PhysicalsHeader": "Physicals",
     "Systolic": "Systolic",
     "Diastolic": "Diastolic",
     "SystolicBP": "Systolic Blood Pressure ",

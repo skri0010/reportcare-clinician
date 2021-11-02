@@ -77,7 +77,7 @@ export const GeneralLineChartComponent: FC<GeneralLineChartProps> = ({
   const axisLabelStyle = { fontSize: "bold", fill: colors.primaryTextColor };
 
   return (
-    <View style={{ maxHeight: ms(275) }}>
+    <View style={{ maxHeight: ms(250) }}>
       {/* Title */}
       <View style={styles.titleContainer}>
         <H4 text={graphTitle} style={styles.title} />

@@ -1,19 +1,12 @@
 import React, { FC } from "react";
-import { CardWrapper } from "components/Wrappers/CardWrapper";
 import { SystolicBPChart } from "components/VisualizationComponents/VitalsCharts/SystolicBPChart";
 import { VitalsChartProps } from "components/VisualizationComponents/VitalsCharts/VitalsChartUtilities";
+import { ChartCardWrapper } from "components/VisualizationComponents/ChartCardWrapper";
 
-interface SystolicBPChartCardProps extends VitalsChartProps {
-  maxHeight: number;
-}
-
-export const SystolicBPChartCard: FC<SystolicBPChartCardProps> = ({
-  data,
-  maxHeight
-}) => {
+export const SystolicBPChartCard: FC<VitalsChartProps> = ({ data }) => {
   return (
-    <CardWrapper maxHeight={maxHeight}>
+    <ChartCardWrapper>
       <SystolicBPChart data={data} />
-    </CardWrapper>
+    </ChartCardWrapper>
   );
 };

@@ -1,19 +1,12 @@
 import React, { FC } from "react";
-import { CardWrapper } from "components/Wrappers/CardWrapper";
 import { MeanSpeedChart } from "components/VisualizationComponents/PhysicalsCharts/MeanSpeedChart";
 import { BaseLineChartDataProps } from "components/VisualizationComponents/GeneralLineChartComponent";
+import { ChartCardWrapper } from "components/VisualizationComponents/ChartCardWrapper";
 
-interface MeanSpeedChartCardProps extends BaseLineChartDataProps {
-  maxHeight: number;
-}
-
-export const MeanSpeedChartCard: FC<MeanSpeedChartCardProps> = ({
-  data,
-  maxHeight
-}) => {
+export const MeanSpeedChartCard: FC<BaseLineChartDataProps> = ({ data }) => {
   return (
-    <CardWrapper maxHeight={maxHeight}>
+    <ChartCardWrapper>
       <MeanSpeedChart data={data} />
-    </CardWrapper>
+    </ChartCardWrapper>
   );
 };

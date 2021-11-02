@@ -1,19 +1,12 @@
 import React, { FC } from "react";
-import { CardWrapper } from "components/Wrappers/CardWrapper";
 import { OxygenSaturationChart } from "components/VisualizationComponents/VitalsCharts/OxygenSaturationChart";
 import { VitalsChartProps } from "components/VisualizationComponents/VitalsCharts/VitalsChartUtilities";
+import { ChartCardWrapper } from "components/VisualizationComponents/ChartCardWrapper";
 
-interface OxygenSaturationCardProps extends VitalsChartProps {
-  maxHeight: number;
-}
-
-export const OxygenSaturationChartCard: FC<OxygenSaturationCardProps> = ({
-  data,
-  maxHeight
-}) => {
+export const OxygenSaturationChartCard: FC<VitalsChartProps> = ({ data }) => {
   return (
-    <CardWrapper maxHeight={maxHeight}>
+    <ChartCardWrapper>
       <OxygenSaturationChart data={data} />
-    </CardWrapper>
+    </ChartCardWrapper>
   );
 };

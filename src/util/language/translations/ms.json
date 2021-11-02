@@ -84,6 +84,8 @@
     "PatientReassign": "Pilih pakar untuk ditugaskan"
   },
   "Parameter_Graphs": {
+    "VitalsHeader": "Vitals",
+    "PhysicalsHeader": "Fizikal",
     "Systolic": "Sistolik ",
     "Diastolic": "Diastolik ",
     "SystolicBP": "Tekanan Darah Sistolik ",

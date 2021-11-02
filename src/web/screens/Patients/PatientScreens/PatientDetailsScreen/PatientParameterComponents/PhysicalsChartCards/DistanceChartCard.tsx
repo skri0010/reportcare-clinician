@@ -1,19 +1,12 @@
 import React, { FC } from "react";
-import { CardWrapper } from "components/Wrappers/CardWrapper";
 import { DistanceChart } from "components/VisualizationComponents/PhysicalsCharts/DistanceChart";
+import { ChartCardWrapper } from "components/VisualizationComponents/ChartCardWrapper";
 import { BaseLineChartDataProps } from "components/VisualizationComponents/GeneralLineChartComponent";
 
-interface DistanceChartCardProps extends BaseLineChartDataProps {
-  maxHeight: number;
-}
-
-export const DistanceChartCard: FC<DistanceChartCardProps> = ({
-  data,
-  maxHeight
-}) => {
+export const DistanceChartCard: FC<BaseLineChartDataProps> = ({ data }) => {
   return (
-    <CardWrapper maxHeight={maxHeight}>
+    <ChartCardWrapper>
       <DistanceChart data={data} />
-    </CardWrapper>
+    </ChartCardWrapper>
   );
 };

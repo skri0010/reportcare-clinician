@@ -10,13 +10,13 @@ import {
   VitalsDataRecord
 } from "components/VisualizationComponents/VitalsCharts/VitalsChartUtilities";
 import { ChartFilterPillList } from "components/Buttons/ChartFilterPillList";
-import { Dimensions, View } from "react-native";
+import { View } from "react-native";
 import { DiastolicBPChartCard } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientParameterComponents/VitalsChartCards/DiastolicBPChartCard";
 import { FluidIntakeChartCard } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientParameterComponents/VitalsChartCards/FluidIntakeChart";
 import { OxygenSaturationChartCard } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientParameterComponents/VitalsChartCards/OxygenSaturationChartCard";
 import { SystolicBPChartCard } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientParameterComponents/VitalsChartCards/SystolicBPChartCard";
 import { WeightChartCard } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientParameterComponents/VitalsChartCards/WeightChartCard";
-import { ms, ScaledSheet } from "react-native-size-matters";
+import { ScaledSheet } from "react-native-size-matters";
 import { NoListItemMessage } from "web/screens/Shared/NoListItemMessage";
 
 interface HighRiskVitalSignsCardProps {
@@ -26,11 +26,6 @@ interface HighRiskVitalSignsCardProps {
 export const HighRiskVitalSignsCard: FC<HighRiskVitalSignsCardProps> = ({
   vitalsReports
 }) => {
-  const maxGraphHeight = Math.max(
-    ms(200),
-    Dimensions.get("window").height * 0.8
-  );
-
   const [fullChartData, setFullChartData] = useState<
     FullVitalsChartData | undefined
   >(undefined);
@@ -85,40 +80,25 @@ export const HighRiskVitalSignsCard: FC<HighRiskVitalSignsCardProps> = ({
         <>
           <ChartFilterPillList />
           <View style={styles.rowContainer}>
-            {/* DS-TODO: Number of Steps Graph */}
+            {/* DS-TODO: Physical Graph */}
             {/* <NumberOfStepsChartCard
               data={fullChartData.steps}
               maxHeight={maxGraphHeight}
             /> */}
             {/* Fluid Intake Graph */}
-            <FluidIntakeChartCard
-              data={fullChartData.fluid}
-              maxHeight={maxGraphHeight}
-            />
+            <FluidIntakeChartCard data={fullChartData.fluid} />
           </View>
           <View style={styles.rowContainer}>
             {/* Diastolic Blood Graph */}
-            <DiastolicBPChartCard
-              data={fullChartData.diastolic}
-              maxHeight={maxGraphHeight}
-            />
+            <DiastolicBPChartCard data={fullChartData.diastolic} />
             {/* Systolic Blood Graph */}
-            <SystolicBPChartCard
-              data={fullChartData.systolic}
-              maxHeight={maxGraphHeight}
-            />
+            <SystolicBPChartCard data={fullChartData.systolic} />
           </View>
           <View style={styles.rowContainer}>
             {/* Oxygen Saturation Graph */}
-            <OxygenSaturationChartCard
-              data={fullChartData.oxygenSaturation}
-              maxHeight={maxGraphHeight}
-            />
+            <OxygenSaturationChartCard data={fullChartData.oxygenSaturation} />
             {/* Weight Graph */}
-            <WeightChartCard
-              data={fullChartData.weight}
-              maxHeight={maxGraphHeight}
-            />
+            <WeightChartCard data={fullChartData.weight} />
           </View>
         </>
       ) : (

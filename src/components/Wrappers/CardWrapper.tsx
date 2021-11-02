@@ -5,13 +5,14 @@ import { RootState, select } from "util/useRedux";
 import { H4, H6 } from "components/Text";
 import { BaseWrapperProps } from "components/Wrappers/BaseWrapperProps";
 
-interface CardWrapperProps extends BaseWrapperProps {
+export interface CardWrapperProps extends BaseWrapperProps {
   flex?: number;
   minHeight?: number;
   maxHeight?: number;
-  firstItem?: boolean;
   minWidth?: number;
   minWidthRequired?: boolean;
+  maxWidth?: number | string;
+  reduceMarginTop?: boolean;
   noChildrenPaddingHorizontal?: boolean;
   title?: string;
   subtitle?: string;
@@ -26,7 +27,8 @@ export const CardWrapper: FC<CardWrapperProps> = ({
   minHeight,
   minWidth = ms(200),
   minWidthRequired = true,
-  firstItem = false,
+  maxWidth,
+  reduceMarginTop = false,
   noChildrenPaddingHorizontal = false,
   title,
   subtitle,
@@ -43,15 +45,17 @@ export const CardWrapper: FC<CardWrapperProps> = ({
         {
           flex: flex,
           backgroundColor: colors.primaryBackgroundColor,
-          marginTop: firstItem ? ms(0) : ms(20),
+          marginTop: reduceMarginTop ? ms(10) : ms(20),
+          marginBottom: reduceMarginTop ? ms(10) : ms(0), // Compensate for reduced top margin
           marginHorizontal: ms(10, 0.2),
           borderRadius: ms(5),
           paddingTop: ms(title ? 0 : 10), // Title will use its own padding top
           paddingBottom: ms(10),
           paddingHorizontal: ms(noChildrenPaddingHorizontal ? 0 : 5),
           ...(minHeight ? { minHeight: minHeight } : { minHeight: ms(100) }),
-          ...(minWidthRequired ? { minWidth: minWidth } : {}),
           ...(maxHeight ? { maxHeight: maxHeight } : {}),
+          ...(minWidthRequired ? { minWidth: minWidth } : {}),
+          ...(maxWidth ? { maxWidth: maxWidth } : {}),
           shadowRadius: ms(1),
           shadowOpacity: 0.1
         }
