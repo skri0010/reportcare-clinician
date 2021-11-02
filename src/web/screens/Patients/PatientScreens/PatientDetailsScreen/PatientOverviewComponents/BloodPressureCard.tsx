@@ -29,15 +29,17 @@ export const BloodPressureCard: FC<BloodPressureProps> = ({
         {/* Systolic blood pressure */}
         <View style={{ flex: 1 }}>
           <AbsoluteParameters
+            topText={i18n.t("Parameter_Graphs.Systolic")}
             centerText={systolicBloodPressure}
-            bottomText={i18n.t("Parameter_Graphs.BPUnit")}
+            bottomText={`(${i18n.t("Parameter_Graphs.BPUnit")})`}
           />
         </View>
         <View style={{ flex: 1 }}>
           {/* Diastolic blood pressure */}
           <AbsoluteParameters
+            topText={i18n.t("Parameter_Graphs.Diastolic")}
             centerText={diastolicBloodPressure}
-            bottomText={i18n.t("Parameter_Graphs.BPUnit")}
+            bottomText={`(${i18n.t("Parameter_Graphs.BPUnit")})`}
           />
         </View>
       </View>

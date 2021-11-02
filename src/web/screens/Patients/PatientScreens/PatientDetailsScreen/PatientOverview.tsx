@@ -7,7 +7,7 @@ import { OxygenSaturationCard } from "./PatientOverviewComponents/OxygenSaturati
 import { WeightCard } from "./PatientOverviewComponents/WeightCard";
 import { SymptomsCard } from "./PatientOverviewComponents/SymptomsCard";
 import { Dimensions, View } from "react-native";
-import { ReportSymptom, ReportVitals } from "aws/API";
+import { Physical, ReportSymptom, ReportVitals } from "aws/API";
 import i18n from "util/language/i18n";
 import { PatientDetailsTabProps } from "web/navigation/types";
 import { MedInput, PatientDetails } from "rc_agents/model";
@@ -35,7 +35,7 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
   const [symptoms, setSymptoms] = useState<ReportSymptom[]>([]);
   const [medications, setMedications] = useState<MedInput[]>([]);
   const [sumFluidIntake, setSumFluidIntake] = useState<number>(0);
-  const [sumStepsTaken, setSumStepsTaken] = useState<number>(0);
+  const [physical, setPhysical] = useState<Physical | null>(null);
 
   useEffect(() => {
     // FUTURE-TODO: This code needs to be modified for changing days
@@ -56,12 +56,12 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
 
       // Set total fluid taken
       setSumFluidIntake(fluidIntakeList.reduce((a, b) => a + b, 0));
+    }
 
-      // Get sum of steps taken
-      const stepsTakenList: number[] = getNonNullItemsFromList([]);
-
-      // Set sum of steps taken
-      setSumStepsTaken(stepsTakenList.reduce((a, b) => a + b, 0));
+    // Get physical for the date
+    const physicalOnDate = details.physicals[date];
+    if (physicalOnDate) {
+      setPhysical(physicalOnDate);
     }
 
     // Update symptoms on date
@@ -112,13 +112,15 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
             }
             fluidGoalInMl={sumFluidIntake}
             minHeight={cardHeight}
+            flex={1}
           />
           <PhysicalCard
-            stepsTaken={sumStepsTaken || displayPlaceholder}
-            stepsRequired={
-              details.patientInfo.targetSteps || displayPlaceholder
-            }
+            steps={physical?.steps || displayPlaceholder}
+            stepsGoal={physical?.stepsGoal || displayPlaceholder}
+            averageWalkingSpeedInMetresPerSeconds={displayPlaceholder}
+            distanceInMetres={displayPlaceholder}
             minHeight={cardHeight}
+            flex={3}
           />
         </View>
 

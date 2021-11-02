@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { View } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { RootState, select } from "util/useRedux";
-import { H1, H5 } from ".";
+import { H4, H5, H6 } from ".";
 
 interface AbsoluteParametersProps {
   topText?: string;
@@ -20,12 +20,9 @@ export const AbsoluteParameters: FC<AbsoluteParametersProps> = ({
   }));
   return (
     <View style={styles.container}>
-      <H5 text={topText} style={styles.label} />
-      <H1
-        text={`${centerText}`}
-        style={{ fontWeight: "bold", color: colors.primaryTextColor }}
-      />
-      <H5 text={bottomText} style={styles.label} />
+      <H5 text={topText} style={[styles.label, styles.topText]} />
+      <H4 text={`${centerText}`} style={{ color: colors.primaryTextColor }} />
+      <H6 text={bottomText} style={styles.label} />
     </View>
   );
 };
@@ -38,7 +35,11 @@ const styles = ScaledSheet.create({
     justifyContent: "center",
     alignItems: "center"
   },
+  topText: {
+    paddingBottom: "10@ms"
+  },
   label: {
-    opacity: 0.8
+    opacity: 0.8,
+    textAlign: "center"
   }
 });

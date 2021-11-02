@@ -84,8 +84,10 @@
     "PatientReassign": "Pilih pakar untuk ditugaskan"
   },
   "Parameter_Graphs": {
-    "DiastolicBP": "Tekanan Darah Diastolik ",
+    "Systolic": "Sistolik ",
+    "Diastolic": "Diastolik ",
     "SystolicBP": "Tekanan Darah Sistolik ",
+    "DiastolicBP": "Tekanan Darah Diastolik ",
     "BPUnit": "mmHg",
     "OxygenSaturation": "Ketepuan Oksigen ",
     "OxygenSaturationUnit": "%",
@@ -93,9 +95,13 @@
     "WeightUnit": "kg",
     "FluidIntake": "Pengambilan Air ",
     "FluidUnit": "ml",
-    "Steps": "Jumlah Langkah",
-    "NoSteps": "Jumlah Langkah",
+    "Physical": "Fizikal",
+    "Steps": "Langkah",
+    "Distance": "Jarak",
+    "MeanSpeed": "Min kelajuan",
     "StepsUnit": "langkah",
+    "DistanceUnit": "m",
+    "MeanSpeedUnit": "m/s",
     "NoData": "Tiada data dijumpai",
     "ViewBy": "Melihat secara: ",
     "ChartViewTypes": {
