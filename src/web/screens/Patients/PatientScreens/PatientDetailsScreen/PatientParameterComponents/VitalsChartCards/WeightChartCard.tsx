@@ -1,9 +1,9 @@
 import React, { FC } from "react";
 import { CardWrapper } from "components/Wrappers/CardWrapper";
-import { WeightChart } from "components/VisualizationComponents/WeightChart";
-import { ParameterGraphsProps } from "components/VisualizationComponents/ParameterGraphs";
+import { WeightChart } from "components/VisualizationComponents/VitalsCharts/WeightChart";
+import { VitalsChartProps } from "components/VisualizationComponents/VitalsCharts/VitalsChartUtilities";
 
-interface WeightChartCardProps extends ParameterGraphsProps {
+interface WeightChartCardProps extends VitalsChartProps {
   maxHeight: number;
 }
 

@@ -1,9 +1,9 @@
 import React, { FC } from "react";
 import { CardWrapper } from "components/Wrappers/CardWrapper";
-import { ParameterGraphsProps } from "components/VisualizationComponents/ParameterGraphs";
-import { FluidIntakeChart } from "components/VisualizationComponents/FluidIntakeChart";
+import { VitalsChartProps } from "components/VisualizationComponents/VitalsCharts/VitalsChartUtilities";
+import { FluidIntakeChart } from "components/VisualizationComponents/VitalsCharts/FluidIntakeChart";
 
-interface FluidIntakeChartCardProps extends ParameterGraphsProps {
+interface FluidIntakeChartCardProps extends VitalsChartProps {
   maxHeight: number;
 }
 

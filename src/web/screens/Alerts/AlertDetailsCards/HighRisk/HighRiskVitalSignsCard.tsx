@@ -4,18 +4,18 @@ import { ReportVitals } from "aws/API";
 import { BaseDetailsCard } from "../BaseDetailsCard";
 import { LocalReportVitals } from "rc_agents/model";
 import {
-  FullChartData,
-  getParametersRecordFromVitalsReport,
-  obtainFullChartData,
-  ParametersRecord
-} from "components/VisualizationComponents/ParameterGraphs";
+  FullVitalsChartData,
+  getVitalsDataRecord,
+  obtainFullVitalsChartData,
+  VitalsDataRecord
+} from "components/VisualizationComponents/VitalsCharts/VitalsChartUtilities";
 import { ChartFilterPillList } from "components/Buttons/ChartFilterPillList";
 import { Dimensions, View } from "react-native";
-import { DiastolicBPChartCard } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientParameterComponents/DiastolicBPChartCard";
-import { FluidIntakeChartCard } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientParameterComponents/FluidIntakeChart";
-import { OxygenSaturationChartCard } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientParameterComponents/OxygenSaturationChartCard";
-import { SystolicBPChartCard } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientParameterComponents/SystolicBPChartCard";
-import { WeightChartCard } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientParameterComponents/WeightChartCard";
+import { DiastolicBPChartCard } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientParameterComponents/VitalsChartCards/DiastolicBPChartCard";
+import { FluidIntakeChartCard } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientParameterComponents/VitalsChartCards/FluidIntakeChart";
+import { OxygenSaturationChartCard } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientParameterComponents/VitalsChartCards/OxygenSaturationChartCard";
+import { SystolicBPChartCard } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientParameterComponents/VitalsChartCards/SystolicBPChartCard";
+import { WeightChartCard } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientParameterComponents/VitalsChartCards/WeightChartCard";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { NoListItemMessage } from "web/screens/Shared/NoListItemMessage";
 
@@ -31,15 +31,15 @@ export const HighRiskVitalSignsCard: FC<HighRiskVitalSignsCardProps> = ({
     Dimensions.get("window").height * 0.8
   );
 
-  const [fullChartData, setFullChartData] = useState<FullChartData | undefined>(
-    undefined
-  );
+  const [fullChartData, setFullChartData] = useState<
+    FullVitalsChartData | undefined
+  >(undefined);
 
   // Gets stats from vitals to be displayed in graphs
   useEffect(() => {
     if (vitalsReports) {
       const tempLocalVitals: LocalReportVitals = {};
-      const tempParameterStats: ParametersRecord[] = [];
+      const tempParameterStats: VitalsDataRecord[] = [];
 
       // Arrange ReportVitals[] according to date
       vitalsReports.forEach((report) => {
@@ -55,10 +55,10 @@ export const HighRiskVitalSignsCard: FC<HighRiskVitalSignsCardProps> = ({
       Object.keys(tempLocalVitals).forEach((date) => {
         const vitalsList = tempLocalVitals[date];
         if (vitalsList) {
-          const parameterStat = getParametersRecordFromVitalsReport(
-            vitalsList,
-            date
-          );
+          const parameterStat = getVitalsDataRecord({
+            vitalsList: vitalsList,
+            localeDateString: date
+          });
           if (parameterStat) {
             tempParameterStats.push(parameterStat);
           }
@@ -70,7 +70,7 @@ export const HighRiskVitalSignsCard: FC<HighRiskVitalSignsCardProps> = ({
 
       // Finally obtain full chart data
       // ie for each parameter, like systolic => min[], max[], average[], dates[]
-      const tempFullChartData = obtainFullChartData(tempParameterStats);
+      const tempFullChartData = obtainFullVitalsChartData(tempParameterStats);
 
       setFullChartData(tempFullChartData);
     }

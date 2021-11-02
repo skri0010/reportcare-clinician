@@ -4,7 +4,6 @@ import i18n from "util/language/i18n";
 import { AbsoluteParameters } from "components/Text/AbsoluteParameters";
 import { View } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
-import { Physical } from "aws/API";
 
 interface PhysicalCardProps {
   steps: number | string;

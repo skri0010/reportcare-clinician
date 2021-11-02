@@ -59,6 +59,7 @@ export interface ColorScheme {
   infoIconColor: string;
 
   // Charts
+  basicLineColor: string;
   maxLineColor: string;
   minLineColor: string;
   avgLineColor: string;

@@ -64,6 +64,7 @@ export const lightColorScheme: ColorScheme = {
   infoIconColor: "#2b79c2",
 
   // Charts
+  basicLineColor: "#cccccc",
   maxLineColor: "#5fff42",
   minLineColor: "#c43a31",
   avgLineColor: "#edf24b",

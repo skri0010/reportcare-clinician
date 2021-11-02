@@ -1,9 +1,9 @@
 import React, { FC } from "react";
 import { CardWrapper } from "components/Wrappers/CardWrapper";
-import { OxygenSaturationChart } from "components/VisualizationComponents/OxygenSaturationChart";
-import { ParameterGraphsProps } from "components/VisualizationComponents/ParameterGraphs";
+import { OxygenSaturationChart } from "components/VisualizationComponents/VitalsCharts/OxygenSaturationChart";
+import { VitalsChartProps } from "components/VisualizationComponents/VitalsCharts/VitalsChartUtilities";
 
-interface OxygenSaturationCardProps extends ParameterGraphsProps {
+interface OxygenSaturationCardProps extends VitalsChartProps {
   maxHeight: number;
 }
 
