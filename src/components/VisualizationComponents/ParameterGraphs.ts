@@ -66,22 +66,22 @@ export const getParametersRecordFromVitalsReport = (
     });
 
     // Diastolic BP
-    const diastolicBPVitals: number[] = getNonNullItemsFromList(
+    const diastolicBPVitals = getNonNullItemsFromList(
       vitalsData.map((data) => data.diastolicBloodPressure)
     );
 
     // Systolic BP
-    const systolicBPVitals: number[] = getNonNullItemsFromList(
+    const systolicBPVitals = getNonNullItemsFromList(
       vitalsData.map((data) => data.systolicBloodPressure)
     );
 
     // Oxygen saturation
-    const oxygenSaturation: number[] = getNonNullItemsFromList(
+    const oxygenSaturation = getNonNullItemsFromList(
       vitalsData.map((data) => data.oxygenSaturation)
     );
 
     // Weight
-    const weightVitals: number[] = getNonNullItemsFromList(
+    const weightVitals = getNonNullItemsFromList(
       vitalsData.map((data) => data.weight)
     );
 

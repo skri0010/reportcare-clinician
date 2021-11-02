@@ -16,7 +16,7 @@ import {
   getNonNullItemsFromList
 } from "util/utilityFunctions";
 import { FluidIntakeCard } from "./PatientOverviewComponents/FluidIntakeCard";
-import { ActivityCard } from "./PatientOverviewComponents/ActivityCard";
+import { PhysicalCard } from "./PatientOverviewComponents/PhysicalCard";
 import { InnerScreenButton } from "components/Buttons/InnerScreenButton";
 import { displayPlaceholder } from "util/const";
 
@@ -57,7 +57,6 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
       // Set total fluid taken
       setSumFluidIntake(fluidIntakeList.reduce((a, b) => a + b, 0));
 
-      // DS-TODO: Replace with Physical
       // Get sum of steps taken
       const stepsTakenList: number[] = getNonNullItemsFromList([]);
 
@@ -70,7 +69,7 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
     if (symptomsOnDate) {
       setSymptoms(symptomsOnDate);
     }
-    const medInfo = details.medicationInfo;
+    const medInfo = details.medicationInfos;
     if (medInfo) {
       setMedications(medInfo);
     }
@@ -106,7 +105,7 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
         </View>
 
         <View style={[styles.container]}>
-          {/* Fluid and activity card */}
+          {/* Fluid and physicals card */}
           <FluidIntakeCard
             fluidIntakeInMl={
               details.patientInfo.fluidIntakeGoalInMl || displayPlaceholder
@@ -114,7 +113,7 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
             fluidGoalInMl={sumFluidIntake}
             minHeight={cardHeight}
           />
-          <ActivityCard
+          <PhysicalCard
             stepsTaken={sumStepsTaken || displayPlaceholder}
             stepsRequired={
               details.patientInfo.targetSteps || displayPlaceholder

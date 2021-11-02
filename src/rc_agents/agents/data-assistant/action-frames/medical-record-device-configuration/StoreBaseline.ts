@@ -71,7 +71,7 @@ class StoreBaseline extends Activity {
       if (baseline && medConfiguration) {
         let configurationSuccessful = false; // Indicator of patient configuration is successful
         let medConfigurationSuccessful = false; // Indicator of medication configuration is successful
-        const medInfosCreated: MedicationInfo[] = []; // Stores all med infos using API call
+        const medicineInfoCreated: MedicationInfo[] = []; // Stores all med infos using API call
         // Device is online
         if (isOnline) {
           // Updates patient info using configuration
@@ -93,19 +93,19 @@ class StoreBaseline extends Activity {
           if (allMedInfoCreation) {
             allMedInfoCreation.forEach((medInfo) => {
               if (medInfo) {
-                medInfosCreated.push(medInfo);
+                medicineInfoCreated.push(medInfo);
               }
             });
           }
 
           // All the med configs have been added into the DB successfully
-          if (medInfosCreated.length === medConfiguration.length) {
+          if (medicineInfoCreated.length === medConfiguration.length) {
             medConfigurationSuccessful = true;
             // Stores the med info into patient details
             const localMedInputs: MedInput[] = [];
-            medInfosCreated.forEach((medication: MedicationInfo) => {
+            medicineInfoCreated.forEach((medication: MedicationInfo) => {
               if (medication) {
-                const localMed: MedInput = {
+                const localMedicationInfo: MedInput = {
                   id: medication.id,
                   name: medication.name,
                   dosage: `${medication.dosage}`,
@@ -113,7 +113,7 @@ class StoreBaseline extends Activity {
                   patientID: medication.patientID,
                   records: medication.records
                 };
-                localMedInputs.push(localMed);
+                localMedInputs.push(localMedicationInfo);
               }
             });
             await LocalStorage.setPatientMedInfo(

@@ -43,7 +43,9 @@ import {
   ListReportSymptomsByDateTimeQuery,
   ListReportSymptomsByDateTimeQueryVariables,
   ListMedicationInfosByPatientIDQueryVariables,
-  ListMedicationInfosByPatientIDQuery
+  ListMedicationInfosByPatientIDQuery,
+  ListPhysicalsByDateTimeQuery,
+  ListPhysicalsByDateTimeQueryVariables
 } from "aws/API";
 
 interface ListClinicianInfosResponse extends BaseResponse {
@@ -299,13 +301,26 @@ interface ListUploadedClinicianRecordsResponse extends BaseResponse {
 
 export const listUploadedClinicianRecordsByPatientID = async (
   variables: ListUploadedClinicianRecordsByPatientIDQueryVariables,
-  recordType: ClinicianRecordType
+  recordType?: ClinicianRecordType
 ): Promise<ListUploadedClinicianRecordsResponse> => {
   return (await API.graphql({
     query: queries.listUploadedClinicianRecordsByPatientID,
     variables: {
       ...variables,
-      ...{ filter: { type: { eq: recordType } } }
+      ...(recordType ? { filter: { type: { eq: recordType } } } : {})
     }
   })) as ListUploadedClinicianRecordsResponse;
+};
+
+interface ListPhysicalsResponse extends BaseResponse {
+  data: ListPhysicalsByDateTimeQuery;
+}
+
+export const listPhysicalByDateTime = async (
+  variables: ListPhysicalsByDateTimeQueryVariables
+): Promise<ListPhysicalsResponse> => {
+  return (await API.graphql({
+    query: queries.listPhysicalsByDateTime,
+    variables: variables
+  })) as ListPhysicalsResponse;
 };

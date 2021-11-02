@@ -5,14 +5,14 @@ import { AbsoluteParameters } from "components/Text/AbsoluteParameters";
 import { View } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 
-interface ActivityCardProps {
+interface PhysicalCardProps {
   stepsTaken: number | string;
   stepsRequired: number | string;
   minHeight: number;
   flex?: number;
 }
 
-export const ActivityCard: FC<ActivityCardProps> = ({
+export const PhysicalCard: FC<PhysicalCardProps> = ({
   stepsTaken,
   stepsRequired,
   minHeight,

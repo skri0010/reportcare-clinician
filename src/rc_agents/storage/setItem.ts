@@ -117,15 +117,17 @@ export const setPatients = async (
 
   patients.forEach((patient: PatientInfo | null) => {
     if (patient && patient.patientID && localPatients) {
-      // Patient exists locally: Merge
+      // Merge local patients
+      const localPatient = localPatients[patient.patientID];
       localPatients[patient.patientID] = {
         patientInfo: patient,
-        activityInfos: localPatients[patient.patientID]?.activityInfos || {},
-        symptomReports: localPatients[patient.patientID]?.symptomReports || {},
-        vitalsReports: localPatients[patient.patientID]?.vitalsReports || {},
-        medicationInfo: localPatients[patient.patientID]?.medicationInfo || [],
-        medicalRecords: localPatients[patient.patientID]?.medicalRecords || [],
-        icdCrtRecords: localPatients[patient.patientID]?.icdCrtRecords || []
+        activityInfos: localPatient?.activityInfos || [],
+        symptomReports: localPatient?.symptomReports || {},
+        vitalsReports: localPatient?.vitalsReports || {},
+        physicals: localPatient?.physicals || {},
+        medicationInfos: localPatient?.medicationInfos || [],
+        medicalRecords: localPatient?.medicalRecords || [],
+        icdCrtRecords: localPatient?.icdCrtRecords || []
       };
     }
   });
@@ -141,10 +143,11 @@ export const setPatient = async (patient: PatientInfo): Promise<void> => {
 
   await setPatientDetails({
     patientInfo: patient,
-    activityInfos: localPatient?.activityInfos || {},
+    activityInfos: localPatient?.activityInfos || [],
     symptomReports: localPatient?.symptomReports || {},
     vitalsReports: localPatient?.vitalsReports || {},
-    medicationInfo: localPatient?.medicationInfo || [],
+    physicals: localPatient?.physicals || {},
+    medicationInfos: localPatient?.medicationInfos || [],
     medicalRecords: localPatient?.medicalRecords || [],
     icdCrtRecords: localPatient?.icdCrtRecords || []
   });
@@ -164,10 +167,11 @@ export const setPatientMedInfo = async (
   if (localPatient?.patientInfo) {
     await setPatientDetails({
       patientInfo: localPatient?.patientInfo,
-      activityInfos: localPatient?.activityInfos || {},
+      activityInfos: localPatient?.activityInfos || [],
       symptomReports: localPatient?.symptomReports || {},
       vitalsReports: localPatient?.vitalsReports || {},
-      medicationInfo: medicationInfo,
+      medicationInfos: medicationInfo,
+      physicals: localPatient?.physicals || [],
       medicalRecords: localPatient?.medicalRecords || {},
       icdCrtRecords: localPatient?.icdCrtRecords || {}
     });
@@ -195,9 +199,10 @@ export const setPatientDetails = async (
       activityInfos: patientDetails.activityInfos,
       symptomReports: patientDetails.symptomReports,
       vitalsReports: patientDetails.vitalsReports,
+      physicals: patientDetails.physicals,
       medicalRecords: patientDetails.medicalRecords,
       icdCrtRecords: patientDetails.icdCrtRecords,
-      medicationInfo: patientDetails.medicationInfo
+      medicationInfos: patientDetails.medicationInfos
     };
   }
   await AsyncStorage.setItem(
