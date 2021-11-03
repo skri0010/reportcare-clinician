@@ -36,7 +36,6 @@ export const PatientsList: FC<PatientsListScreen> = ({
       dispatch(
         setPatientDetails({
           patientInfo: patient,
-          activityInfos: {},
           symptomReports: {},
           vitalsReports: {},
           medicationInfo: [],

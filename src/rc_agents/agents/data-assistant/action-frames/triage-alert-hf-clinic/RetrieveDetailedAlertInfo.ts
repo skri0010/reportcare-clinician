@@ -231,11 +231,8 @@ export const queryAlertInfo = async (alert: Alert): Promise<Alert | null> => {
   }
 
   // Queries activity associated with symptom report
-  if (alertInfo.symptomReport?.activityInfo?.activityName) {
-    alertInfo.activityDuringAlert =
-      alertInfo.symptomReport.activityInfo.activityName;
-    // Prevent storing full activity info
-    delete alertInfo.symptomReport.activityInfo;
+  if (alertInfo.symptomReport?.activityName) {
+    alertInfo.activityDuringAlert = alertInfo.symptomReport.activityName;
   }
 
   return alertInfo;

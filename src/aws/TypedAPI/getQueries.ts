@@ -13,8 +13,6 @@ import {
   GetReportSymptomQuery,
   GetReportVitalsQuery,
   GetReportVitalsQueryVariables,
-  GetActivityInfoQuery,
-  GetActivityInfoQueryVariables,
   GetTodoQuery,
   GetTodoQueryVariables,
   GetAlertQuery,
@@ -93,19 +91,6 @@ export const getReportSymptom = async (
     query: queries.getReportSymptom,
     variables: variables
   })) as GetReportSymptomResponse;
-};
-
-interface GetActivityInfoResponse extends BaseResponse {
-  data: GetActivityInfoQuery;
-}
-
-export const getActivityInfo = async (
-  variables: GetActivityInfoQueryVariables
-): Promise<GetActivityInfoResponse> => {
-  return (await API.graphql({
-    query: queries.getActivityInfo,
-    variables: variables
-  })) as GetActivityInfoResponse;
 };
 
 interface GetReportVitalsResponse extends BaseResponse {
