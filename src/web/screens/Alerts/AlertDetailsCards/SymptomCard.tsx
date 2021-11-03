@@ -24,7 +24,7 @@ export const SymptomCard: FC<SymptomCardProps> = ({ symptomReport }) => {
           />
           <BaseDetailsContent
             title={i18n.t("Alerts.AlertSymptom.Activity")}
-            content={`${symptomReport.activityInfo}` || displayPlaceholder}
+            content={`${symptomReport.activityName}` || displayPlaceholder}
           />
           <BaseDetailsContent
             title={i18n.t("Alerts.AlertSymptom.Severity")}

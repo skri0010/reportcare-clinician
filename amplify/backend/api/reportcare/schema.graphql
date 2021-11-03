@@ -72,7 +72,6 @@ type ActivityInfo
     rules: [
       { allow: owner, ownerField: "patientID" }
       { allow: groups, groups: ["Admin"] }
-      { allow: groups, groupsField: "patientID", operations: [read] }
     ]
   )
   @key(
@@ -111,9 +110,12 @@ type ReportSymptom
   ) {
   id: ID!
   patientID: String!
+  symptomName: String!
+  activityName: String!
   activityInfoID: ID!
   activityInfo: ActivityInfo @connection(fields: ["activityInfoID"])
-  symptomName: String!
+  durationInMinutes: Int
+  location: String
   severity: Int!
   dateTime: AWSDateTime!
   summary: String!

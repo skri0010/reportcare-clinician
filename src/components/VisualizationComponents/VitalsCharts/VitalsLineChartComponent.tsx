@@ -135,7 +135,7 @@ export const VitalsLineChartComponent: FC<VitalsLineChartProps> = ({
                 <VictoryLabel style={{ fill: colors.labelColor }} />
               ) : undefined
             }
-            key={minLines[0].x}
+            key={minLines[0] ? minLines[0].x : ChartViewTypes.MIN}
           />
         ))}
 
@@ -150,7 +150,7 @@ export const VitalsLineChartComponent: FC<VitalsLineChartProps> = ({
                 <VictoryLabel style={{ fill: colors.labelColor }} />
               ) : undefined
             }
-            key={maxLines[0].x}
+            key={maxLines[0] ? maxLines[0].x : ChartViewTypes.MAX}
           />
         ))}
 
@@ -165,21 +165,33 @@ export const VitalsLineChartComponent: FC<VitalsLineChartProps> = ({
                 <VictoryLabel style={{ fill: colors.labelColor }} />
               ) : undefined
             }
-            key={avgLines[0].x}
+            key={avgLines[0] ? avgLines[0].x : ChartViewTypes.AVERAGE}
           />
         ))}
 
         {/* Victory plot for each discontinued line */}
         {minDataLine.map((minLines) => (
-          <VictoryLine data={minLines} style={minStyle} key={minLines[0].x} />
+          <VictoryLine
+            data={minLines}
+            style={minStyle}
+            key={minLines[0] ? minLines[0].x : ChartViewTypes.MIN}
+          />
         ))}
 
         {maxDataLine.map((maxLines) => (
-          <VictoryLine data={maxLines} style={maxStyle} key={maxLines[0].x} />
+          <VictoryLine
+            data={maxLines}
+            style={maxStyle}
+            key={maxLines[0] ? maxLines[0].x : ChartViewTypes.MAX}
+          />
         ))}
 
         {avgDataLine.map((avgLines) => (
-          <VictoryLine data={avgLines} style={avgStyle} key={avgLines[0].x} />
+          <VictoryLine
+            data={avgLines}
+            style={avgStyle}
+            key={avgLines[0] ? avgLines[0].x : ChartViewTypes.AVERAGE}
+          />
         ))}
       </VictoryChart>
     </View>

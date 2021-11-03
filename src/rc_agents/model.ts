@@ -1,5 +1,4 @@
 import {
-  ActivityInfo,
   ReportSymptom,
   ReportVitals,
   PatientInfo,
@@ -131,7 +130,6 @@ export type RecordFile = {
 
 export interface PatientDetails {
   patientInfo: PatientInfo;
-  activityInfos: ActivityInfo[];
   symptomReports: LocalReportSymptoms;
   vitalsReports: LocalReportVitals;
   physicals: LocalPhysicals;
@@ -140,6 +138,7 @@ export interface PatientDetails {
   icdCrtRecords: ClinicianRecord[];
 }
 
+// Indexed by date then id
 export type LocalReportSymptoms = {
   [date: string]: ReportSymptom[] | undefined;
 };

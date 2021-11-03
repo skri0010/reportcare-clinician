@@ -121,7 +121,6 @@ export const setPatients = async (
       const localPatient = localPatients[patient.patientID];
       localPatients[patient.patientID] = {
         patientInfo: patient,
-        activityInfos: localPatient?.activityInfos || [],
         symptomReports: localPatient?.symptomReports || {},
         vitalsReports: localPatient?.vitalsReports || {},
         physicals: localPatient?.physicals || {},
@@ -143,7 +142,6 @@ export const setPatient = async (patient: PatientInfo): Promise<void> => {
 
   await setPatientDetails({
     patientInfo: patient,
-    activityInfos: localPatient?.activityInfos || [],
     symptomReports: localPatient?.symptomReports || {},
     vitalsReports: localPatient?.vitalsReports || {},
     physicals: localPatient?.physicals || {},
@@ -167,7 +165,6 @@ export const setPatientMedInfo = async (
   if (localPatient?.patientInfo) {
     await setPatientDetails({
       patientInfo: localPatient?.patientInfo,
-      activityInfos: localPatient?.activityInfos || [],
       symptomReports: localPatient?.symptomReports || {},
       vitalsReports: localPatient?.vitalsReports || {},
       medicationInfos: medicationInfo,
@@ -196,7 +193,6 @@ export const setPatientDetails = async (
     // Patient exists locally: Merge
     localPatients[patient.patientID] = {
       patientInfo: patient,
-      activityInfos: patientDetails.activityInfos,
       symptomReports: patientDetails.symptomReports,
       vitalsReports: patientDetails.vitalsReports,
       physicals: patientDetails.physicals,

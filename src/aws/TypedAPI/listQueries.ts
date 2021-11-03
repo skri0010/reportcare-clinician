@@ -1,7 +1,6 @@
 import API from "@aws-amplify/api-graphql";
 // eslint-disable-next-line no-restricted-imports
 import * as queries from "aws/graphql/queries";
-import * as Override from "./overrideAPI";
 import { BaseResponse, ClinicianRecordType } from "aws";
 import {
   ListPatientInfosQueryVariables,
@@ -20,8 +19,6 @@ import {
   ListPendingRiskAlertsQueryVariables,
   ListCompletedRiskAlertsQuery,
   ListCompletedRiskAlertsQueryVariables,
-  ListActivityInfosByPatientIDQueryVariables,
-  ListActivityInfosByPatientIDQuery,
   ListReportSymptomsByPatientIDQuery,
   ListReportSymptomsByPatientIDQueryVariables,
   ListReportVitalsByPatientIDQuery,
@@ -43,12 +40,10 @@ import {
   ListMedicationInfosByPatientIDQueryVariables,
   ListMedicationInfosByPatientIDQuery,
   ListPhysicalsByDateTimeQuery,
-  ListPhysicalsByDateTimeQueryVariables
+  ListPhysicalsByDateTimeQueryVariables,
+  ListReportSymptomsByDateTimeQueryVariables,
+  ListReportSymptomsByDateTimeQuery
 } from "aws/API";
-import {
-  ListReportSymptomsWithActivityByDateTimeQuery,
-  ListReportSymptomsWithActivityByDateTimeQueryVariables
-} from "./overrideAPI";
 
 interface ListClinicianInfosResponse extends BaseResponse {
   data: ListClinicianInfosQuery;
@@ -76,19 +71,6 @@ export const listPatientInfos = async (
   })) as ListPatientInfosResponse;
 };
 
-export interface ListActivityInfosByPatientIDResponse extends BaseResponse {
-  data: ListActivityInfosByPatientIDQuery;
-}
-
-export const listActivityInfosByPatientID = async (
-  variables: ListActivityInfosByPatientIDQueryVariables
-): Promise<ListActivityInfosByPatientIDResponse> => {
-  return (await API.graphql({
-    query: queries.listActivityInfosByPatientID,
-    variables: variables
-  })) as ListActivityInfosByPatientIDResponse;
-};
-
 interface ListReportSymptomsByPatientIDResponse extends BaseResponse {
   data: ListReportSymptomsByPatientIDQuery;
 }
@@ -102,18 +84,17 @@ export const listReportSymptomsByPatientID = async (
   })) as ListReportSymptomsByPatientIDResponse;
 };
 
-interface ListReportSymptomsWithActivityByDateTimeQueryResponse
-  extends BaseResponse {
-  data: ListReportSymptomsWithActivityByDateTimeQuery;
+interface ListReportSymptomsByDateTimeQueryResponse extends BaseResponse {
+  data: ListReportSymptomsByDateTimeQuery;
 }
 
-export const listReportSymptomsWithActivityByDateTime = async (
-  variables: ListReportSymptomsWithActivityByDateTimeQueryVariables
-): Promise<ListReportSymptomsWithActivityByDateTimeQueryResponse> => {
+export const listReportSymptomsByDateTime = async (
+  variables: ListReportSymptomsByDateTimeQueryVariables
+): Promise<ListReportSymptomsByDateTimeQueryResponse> => {
   return (await API.graphql({
-    query: Override.listReportSymptomsWithActivityByDateTime,
+    query: queries.listReportSymptomsByDateTime,
     variables: variables
-  })) as ListReportSymptomsWithActivityByDateTimeQueryResponse;
+  })) as ListReportSymptomsByDateTimeQueryResponse;
 };
 
 interface ListReportVitalsByPatientIDQueryResponse extends BaseResponse {

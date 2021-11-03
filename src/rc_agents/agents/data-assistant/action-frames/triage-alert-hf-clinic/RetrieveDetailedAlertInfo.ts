@@ -26,7 +26,7 @@ import {
   getDetailedAlert,
   getPatientInfo,
   listMedicationInfosByPatientID,
-  listReportSymptomsWithActivityByDateTime,
+  listReportSymptomsByDateTime,
   listReportVitalsByDateTime,
   listUploadedClinicianRecordsByPatientID
 } from "aws";
@@ -231,11 +231,8 @@ export const queryAlertInfo = async (alert: Alert): Promise<Alert | null> => {
   }
 
   // Queries activity associated with symptom report
-  if (alertInfo.symptomReport?.activityInfo?.activityName) {
-    alertInfo.activityDuringAlert =
-      alertInfo.symptomReport.activityInfo.activityName;
-    // Prevent storing full activity info
-    delete alertInfo.symptomReport.activityInfo;
+  if (alertInfo.symptomReport?.activityName) {
+    alertInfo.activityDuringAlert = alertInfo.symptomReport.activityName;
   }
 
   return alertInfo;
@@ -275,7 +272,7 @@ export const queryHighRiskAlertInfo = async (
   const alertDate = new Date(alert.dateTime);
 
   // Gets symptoms reports by descending order of datetime
-  const symptomReportsQuery = await listReportSymptomsWithActivityByDateTime({
+  const symptomReportsQuery = await listReportSymptomsByDateTime({
     patientID: alert.patientID,
     sortDirection: ModelSortDirection.DESC
   });
