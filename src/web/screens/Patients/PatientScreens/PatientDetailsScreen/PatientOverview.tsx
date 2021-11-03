@@ -107,10 +107,10 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
         <View style={[styles.container]}>
           {/* Fluid and physicals card */}
           <FluidIntakeCard
-            fluidIntakeInMl={
+            fluidGoalInMl={
               details.patientInfo.fluidIntakeGoalInMl || displayPlaceholder
             }
-            fluidGoalInMl={sumFluidIntake}
+            fluidIntakeInMl={sumFluidIntake}
             minHeight={cardHeight}
             flex={1}
           />
