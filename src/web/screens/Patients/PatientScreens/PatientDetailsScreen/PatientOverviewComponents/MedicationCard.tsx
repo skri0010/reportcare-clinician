@@ -8,6 +8,7 @@ import { MedInput } from "rc_agents/model";
 
 interface MedicationTakenProps {
   medications: MedInput[];
+  flex?: number;
   maxHeight: number;
   minHeight: number;
 }
@@ -15,13 +16,15 @@ interface MedicationTakenProps {
 export const MedicationTakenCard: FC<MedicationTakenProps> = ({
   medications,
   maxHeight,
-  minHeight
+  minHeight,
+  flex
 }) => {
   return (
     <CardWrapper
       maxHeight={maxHeight}
       minHeight={minHeight}
       title={i18n.t("Patient_Overview.Medications")}
+      flex={flex}
     >
       {/* Medication List */}
       <FlatList

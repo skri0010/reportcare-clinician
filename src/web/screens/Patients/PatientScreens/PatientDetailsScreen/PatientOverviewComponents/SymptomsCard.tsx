@@ -11,18 +11,21 @@ interface SymptomProps {
   symptoms: ReportSymptom[];
   maxHeight: number;
   minHeight: number;
+  flex?: number;
 }
 
 export const SymptomsCard: FC<SymptomProps> = ({
   symptoms,
   maxHeight,
-  minHeight
+  minHeight,
+  flex
 }) => {
   return (
     <CardWrapper
       maxHeight={maxHeight}
       minHeight={minHeight}
       title={i18n.t("Patient_Overview.Symptoms")}
+      flex={flex}
     >
       <FlatList
         style={{ paddingLeft: ms(10), paddingTop: ms(5) }}

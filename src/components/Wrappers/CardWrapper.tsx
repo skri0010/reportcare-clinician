@@ -10,12 +10,13 @@ export interface FixedHeightCardWrapperProps {
   flex?: number;
 }
 
+export const DEFAULT_CARD_WRAPPER_MIN_WIDTH = ms(200);
+
 export interface CardWrapperProps extends BaseWrapperProps {
   flex?: number;
   minHeight?: number;
   maxHeight?: number;
   minWidth?: number;
-  minWidthRequired?: boolean;
   maxWidth?: number | string;
   reduceMarginTop?: boolean;
   noChildrenPaddingHorizontal?: boolean;
@@ -30,8 +31,7 @@ export const CardWrapper: FC<CardWrapperProps> = ({
   flex = 1,
   maxHeight,
   minHeight,
-  minWidth = ms(200),
-  minWidthRequired = true,
+  minWidth = DEFAULT_CARD_WRAPPER_MIN_WIDTH,
   maxWidth,
   reduceMarginTop = false,
   noChildrenPaddingHorizontal = false,
@@ -59,7 +59,7 @@ export const CardWrapper: FC<CardWrapperProps> = ({
           paddingHorizontal: ms(noChildrenPaddingHorizontal ? 0 : 5),
           ...(minHeight ? { minHeight: minHeight } : { minHeight: ms(100) }),
           ...(maxHeight ? { maxHeight: maxHeight } : {}),
-          ...(minWidthRequired ? { minWidth: minWidth } : {}),
+          minWidth: minWidth,
           ...(maxWidth ? { maxWidth: maxWidth } : {}),
           shadowRadius: ms(1),
           shadowOpacity: 0.1

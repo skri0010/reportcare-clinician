@@ -19,11 +19,15 @@ import { FluidIntakeCard } from "./PatientOverviewComponents/FluidIntakeCard";
 import { PhysicalCard } from "./PatientOverviewComponents/PhysicalCard";
 import { InnerScreenButton } from "components/Buttons/InnerScreenButton";
 import { displayPlaceholder } from "util/const";
+import { DEFAULT_CARD_WRAPPER_MIN_WIDTH } from "components/Wrappers/CardWrapper";
 
 interface PatientOverviewProps extends PatientDetailsTabProps.OverviewTabProps {
   details: PatientDetails;
   setEditDetails: (state: boolean) => void; // To edit patient's details
 }
+
+// IMPORTANT - Otherwise the cards will not wrap propertly due to lack of min width
+const COLUMN_MIN_WIDTH = DEFAULT_CARD_WRAPPER_MIN_WIDTH + ms(20);
 
 export const PatientOverview: FC<PatientOverviewProps> = ({
   details,
@@ -77,28 +81,30 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
 
   return (
     <ScreenWrapper padding>
-      <View style={styles.container}>
-        {/* Left side (medication and symptoms cards)*/}
-        <View style={{ flex: 2 }}>
+      <View style={styles.mainContainer}>
+        {/* Left column (medication and symptoms cards)*/}
+        <View style={[{ flex: 2 }, styles.columnContainer]}>
           {/* Medication card */}
           <MedicationTakenCard
+            flex={1}
             medications={medications}
             maxHeight={cardHeight}
             minHeight={cardHeight}
           />
-
           {/* Symptoms card */}
           <SymptomsCard
+            flex={1}
             symptoms={symptoms}
-            maxHeight={cardHeight}
-            minHeight={cardHeight * 2.15}
+            minHeight={cardHeight}
+            maxHeight={cardHeight * 2.15}
           />
         </View>
 
-        {/* Right side (other cards)*/}
-        <View style={[{ flex: 3 }, styles.container]}>
+        {/* Right column (other cards)*/}
+        <View style={[{ flex: 3 }, styles.columnContainer]}>
           {/* Blood pressure card */}
           <BloodPressureCard
+            flex={2}
             systolicBloodPressure={
               vitals?.diastolicBloodPressure || displayPlaceholder
             }
@@ -106,7 +112,6 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
               vitals?.systolicBloodPressure || displayPlaceholder
             }
             fixedHeight={cardHeight}
-            flex={3}
           />
 
           {/* Oxygen saturation card */}
@@ -138,7 +143,7 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
 
           {/* Physical card */}
           <PhysicalCard
-            flex={3}
+            flex={2}
             steps={physical?.steps || displayPlaceholder}
             stepsGoal={physical?.stepsGoal || displayPlaceholder}
             averageWalkingSpeedInMetresPerSeconds={
@@ -150,6 +155,7 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
           />
         </View>
       </View>
+
       <InnerScreenButton
         title={i18n.t("Patient_Configuration.EditDetails")}
         onPress={() => setEditDetails(true)}
@@ -160,10 +166,15 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
 };
 
 const styles = ScaledSheet.create({
-  container: {
+  mainContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap"
+  },
+  columnContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
-    alignContent: "flex-start"
+    alignContent: "flex-start",
+    minWidth: COLUMN_MIN_WIDTH
   },
   editButtonContainer: {
     width: ms(100),

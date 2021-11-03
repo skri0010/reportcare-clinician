@@ -36,7 +36,12 @@ export const CollapsibleWrapper: FC<CollapsibleWrapperProps> = ({
 
   return (
     // Toggleable Header
-    <View style={[styles.container, containerStyle]}>
+    <View
+      style={[
+        { paddingTop: ms(2), paddingBottom: collapsed ? ms(0) : ms(8) },
+        containerStyle
+      ]}
+    >
       <TouchableOpacity onPress={toggleCollapse} style={styles.touchableHeader}>
         <View style={styles.headerRow}>
           <IconButton
@@ -63,9 +68,6 @@ export const CollapsibleWrapper: FC<CollapsibleWrapperProps> = ({
 };
 
 const styles = ScaledSheet.create({
-  container: {
-    paddingTop: "3@ms"
-  },
   touchableHeader: {
     paddingBottom: "5@ms"
   },
