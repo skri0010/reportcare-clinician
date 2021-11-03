@@ -77,9 +77,27 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
 
   return (
     <ScreenWrapper padding>
-      <>
-        <View style={[styles.container]}>
-          {/* Blood Pressure Card */}
+      <View style={styles.container}>
+        {/* Left side (medication and symptoms cards)*/}
+        <View style={{ flex: 2 }}>
+          {/* Medication card */}
+          <MedicationTakenCard
+            medications={medications}
+            maxHeight={cardHeight}
+            minHeight={cardHeight}
+          />
+
+          {/* Symptoms card */}
+          <SymptomsCard
+            symptoms={symptoms}
+            maxHeight={cardHeight}
+            minHeight={cardHeight * 2.15}
+          />
+        </View>
+
+        {/* Right side (other cards)*/}
+        <View style={[{ flex: 3 }, styles.container]}>
+          {/* Blood pressure card */}
           <BloodPressureCard
             systolicBloodPressure={
               vitals?.diastolicBloodPressure || displayPlaceholder
@@ -87,34 +105,40 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
             diastolicBloodPressure={
               vitals?.systolicBloodPressure || displayPlaceholder
             }
-            minHeight={cardHeight}
-            flex={2}
+            fixedHeight={cardHeight}
+            flex={3}
           />
-          {/* Oxygen Saturation card and Weigth card to share fixed space */}
+
+          {/* Oxygen saturation card */}
           <OxygenSaturationCard
+            flex={1}
             oxygenSaturation={vitals?.oxygenSaturation || displayPlaceholder}
-            minHeight={cardHeight}
+            fixedHeight={cardHeight}
           />
+
+          {/* Weight card */}
           <WeightCard
+            flex={1}
             weight={vitals?.weight || displayPlaceholder}
             targetWeight={
               details.patientInfo.targetWeight || displayPlaceholder
             }
-            minHeight={cardHeight}
+            fixedHeight={cardHeight}
           />
-        </View>
 
-        <View style={[styles.container]}>
-          {/* Fluid and physicals card */}
+          {/* Fluid intake card */}
           <FluidIntakeCard
+            flex={1}
             fluidGoalInMl={
               details.patientInfo.fluidIntakeGoalInMl || displayPlaceholder
             }
             fluidIntakeInMl={sumFluidIntake}
-            minHeight={cardHeight}
-            flex={1}
+            fixedHeight={cardHeight}
           />
+
+          {/* Physical card */}
           <PhysicalCard
+            flex={3}
             steps={physical?.steps || displayPlaceholder}
             stepsGoal={physical?.stepsGoal || displayPlaceholder}
             averageWalkingSpeedInMetresPerSeconds={
@@ -122,25 +146,10 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
               displayPlaceholder
             }
             distanceInMetres={physical?.distanceInMetres || displayPlaceholder}
-            minHeight={cardHeight}
-            flex={3}
+            fixedHeight={cardHeight}
           />
         </View>
-
-        <View style={[styles.container, { paddingBottom: ms(10) }]}>
-          {/* Medication and symptoms card */}
-          <MedicationTakenCard
-            medications={medications}
-            maxHeight={cardHeight}
-            minHeight={cardHeight}
-          />
-          <SymptomsCard
-            symptoms={symptoms}
-            maxHeight={cardHeight}
-            minHeight={cardHeight}
-          />
-        </View>
-      </>
+      </View>
       <InnerScreenButton
         title={i18n.t("Patient_Configuration.EditDetails")}
         onPress={() => setEditDetails(true)}
@@ -152,9 +161,9 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
 
 const styles = ScaledSheet.create({
   container: {
-    flexWrap: "wrap",
     flexDirection: "row",
-    justifyContent: "space-between"
+    flexWrap: "wrap",
+    alignContent: "flex-start"
   },
   editButtonContainer: {
     width: ms(100),

@@ -5,6 +5,11 @@ import { RootState, select } from "util/useRedux";
 import { H4, H6 } from "components/Text";
 import { BaseWrapperProps } from "components/Wrappers/BaseWrapperProps";
 
+export interface FixedHeightCardWrapperProps {
+  fixedHeight: number;
+  flex?: number;
+}
+
 export interface CardWrapperProps extends BaseWrapperProps {
   flex?: number;
   minHeight?: number;

@@ -1,17 +1,18 @@
 import React, { FC } from "react";
-import { CardWrapper } from "components/Wrappers/CardWrapper";
+import {
+  CardWrapper,
+  FixedHeightCardWrapperProps
+} from "components/Wrappers/CardWrapper";
 import i18n from "util/language/i18n";
 import { AbsoluteParameters } from "components/Text/AbsoluteParameters";
 import { View } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 
-interface PhysicalCardProps {
+interface PhysicalCardProps extends FixedHeightCardWrapperProps {
   steps: number | string;
   stepsGoal: number | string;
   averageWalkingSpeedInMetresPerSeconds: number | string;
   distanceInMetres: number | string;
-  minHeight: number;
-  flex?: number;
 }
 
 export const PhysicalCard: FC<PhysicalCardProps> = ({
@@ -19,12 +20,13 @@ export const PhysicalCard: FC<PhysicalCardProps> = ({
   stepsGoal,
   averageWalkingSpeedInMetresPerSeconds,
   distanceInMetres,
-  minHeight,
+  fixedHeight,
   flex
 }) => {
   return (
     <CardWrapper
-      minHeight={minHeight}
+      minHeight={fixedHeight}
+      maxHeight={fixedHeight}
       flex={flex}
       title={i18n.t("Parameter_Graphs.Physical")}
       noChildrenPaddingHorizontal

@@ -23,10 +23,6 @@ export const HomeScreen: FC<MainScreenProps[ScreenName.HOME]> = ({
     navigation.navigate(ScreenName.ALERTS);
   };
 
-  navigation.navigate(ScreenName.PATIENTS, {
-    displayPatientId: "testsiuloong"
-  });
-
   const dispatch = useDispatch();
   const [notified, setNotified] = useState(false); // Keeps track of whether user has been notified
 
