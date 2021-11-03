@@ -6,6 +6,7 @@ import { MedInfoRow } from "./MedInfoRow";
 import { H5 } from "components/Text";
 import i18n from "util/language/i18n";
 import { ScaledSheet } from "react-native-size-matters";
+import MaterialCommunityIcon from "react-native-vector-icons/MaterialCommunityIcons";
 
 interface MedicationListProps {
   setAddNewMed: () => void;
@@ -20,39 +21,46 @@ export const MedicationList: FC<MedicationListProps> = ({
   details,
   activeMedications
 }) => {
-  const { colors } = select((state: RootState) => ({
-    colors: state.settings.colors
+  const { colors, fonts } = select((state: RootState) => ({
+    colors: state.settings.colors,
+    fonts: state.settings.fonts
   }));
 
   return (
     <View
       style={{
         flex: 1,
-        backgroundColor: colors.primaryContrastTextColor
+        backgroundColor: colors.primaryBackgroundColor
       }}
     >
-      <View style={styles.buttonContainer}>
-        <View>
-          <TouchableOpacity
-            style={[
-              styles.button,
-              {
-                backgroundColor: colors.primaryButtonColor
-              }
-            ]}
-            onPress={setAddNewMed}
-          >
-            <H5
-              text={i18n.t("Patient_Configuration.Medications.AddNewMed")}
-              style={[
-                styles.buttonText,
-                {
-                  color: colors.primaryContrastTextColor
-                }
-              ]}
-            />
-          </TouchableOpacity>
-        </View>
+      <View style={{ flexDirection: "row" }}>
+        <TouchableOpacity style={[styles.button]} onPress={setAddNewMed}>
+          <View style={{ flexDirection: "row" }}>
+            <View style={styles.addButtonContainer}>
+              <MaterialCommunityIcon
+                name="plus"
+                style={[
+                  styles.addButton,
+                  {
+                    borderColor: colors.acceptButtonColor,
+                    backgroundColor: colors.acceptButtonColor,
+                    color: colors.primaryContrastTextColor
+                  }
+                ]}
+                size={fonts.h2Size}
+              />
+              <H5
+                text={i18n.t("Patient_Configuration.Medications.AddNewMed")}
+                style={[
+                  styles.buttonText,
+                  {
+                    color: colors.primaryTextColor
+                  }
+                ]}
+              />
+            </View>
+          </View>
+        </TouchableOpacity>
       </View>
       <H5
         text={i18n.t("Patient_Configuration.Medications.ListActiveMed")}
@@ -94,15 +102,26 @@ const styles = ScaledSheet.create({
   buttonContainer: {
     paddingHorizontal: "10@ms",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    alignContent: "center"
   },
   buttonText: {
-    padding: "3@ms",
-    paddingBottom: "3@ms",
-    flex: 1,
     justifyContent: "center",
     textAlign: "center",
-    textAlignVertical: "center",
-    opacity: 0.9
+    alignContent: "center",
+    paddingBottom: "3@ms",
+    fontWeight: "600",
+    paddingLeft: "5@ms"
+  },
+  addButton: {
+    borderRadius: "10@ms",
+    textAlign: "center",
+    borderWidth: "1@ms"
+  },
+  addButtonContainer: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    alignItems: "flex-end"
   }
 });

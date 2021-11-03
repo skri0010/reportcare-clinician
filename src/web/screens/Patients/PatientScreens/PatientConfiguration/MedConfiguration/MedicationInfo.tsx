@@ -4,8 +4,9 @@ import { MedInput, MedPrescription } from "rc_agents/model";
 import { Label } from "components/Text/Label";
 import { mockMedPrescriptions } from "mock/mockMedDosages";
 import { H6 } from "components/Text";
-import { ScaledSheet } from "react-native-size-matters";
+import { ms, ScaledSheet } from "react-native-size-matters";
 import i18n from "util/language/i18n";
+import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 
 interface MedicationInfo {
   configMedInfo: MedInput;
@@ -61,10 +62,20 @@ export const MedicationInfo: FC<MedicationInfo> = ({
               <H6 text={medPrescription.dosages.increment} />
             </View>
           </View>
-          <Label
-            text={i18n.t("Patient_Configuration.Medications.CurrentDosage")}
-          />
-          {isAdding ? <H6 text="None" /> : <H6 text={currentDosage} />}
+          <ItemSeparator bottomWidth={ms(2)} />
+          <View style={styles.currentDosage}>
+            <Label
+              text={i18n.t("Patient_Configuration.Medications.CurrentDosage")}
+            />
+            <H6
+              text={isAdding ? "None" : `${currentDosage} mg`}
+              style={{
+                marginTop: ms(11),
+                marginBottom: ms(5),
+                paddingLeft: ms(3)
+              }}
+            />
+          </View>
         </View>
       ) : (
         <H6 text="Click on medicine name to view more information" />
@@ -78,5 +89,8 @@ const styles = ScaledSheet.create({
     flexDirection: "column",
     flex: 1,
     padding: "3@ms"
+  },
+  currentDosage: {
+    flexDirection: "row"
   }
 });

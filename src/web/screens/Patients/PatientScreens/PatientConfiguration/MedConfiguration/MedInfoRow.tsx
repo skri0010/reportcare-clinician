@@ -46,13 +46,11 @@ export const MedInfoRow: FC<MedInfoRowProps> = ({
             <H7 text={medicationInfo.dosage} />
           </View>
         </View>
-        <View style={styles.buttonContainer}>
-          <View style={styles.button}>
-            <RowButton
-              title={i18n.t("Patient_Configuration.Medications.Modify")}
-              onPress={() => updateMedInfo(medicationInfo)}
-            />
-          </View>
+        <View style={styles.button}>
+          <RowButton
+            title={i18n.t("Patient_Configuration.Medications.Modify")}
+            onPress={() => updateMedInfo(medicationInfo)}
+          />
         </View>
       </View>
     </View>
@@ -85,6 +83,7 @@ const styles = ScaledSheet.create({
   button: {
     borderRadius: "5@ms",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    textAlignVertical: "center"
   }
 });

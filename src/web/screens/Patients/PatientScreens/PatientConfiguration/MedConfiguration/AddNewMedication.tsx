@@ -103,9 +103,7 @@ export const AddNewMedication: FC<AddNewMedicationProps> = ({
             text={i18n.t(
               "Patient_Configuration.Medications.ModifyingMedication"
             )}
-          />
-          <Label
-            text={i18n.t("Patient_Configuration.Medications.MedicationName")}
+            style={styles.titleText}
           />
           <View
             style={{
@@ -114,8 +112,25 @@ export const AddNewMedication: FC<AddNewMedicationProps> = ({
               alignItems: "center"
             }}
           >
-            <H6 text={`${configMedInfo.name}`} />
-            <View style={{ alignItems: "flex-end", flex: 1 }}>
+            <Label
+              text={i18n.t("Patient_Configuration.Medications.MedicationName")}
+            />
+            <H6
+              text={`${configMedInfo.name}`}
+              style={{
+                paddingLeft: ms(5),
+                marginTop: ms(10),
+                marginBottom: ms(5)
+              }}
+            />
+            <View
+              style={{
+                alignItems: "flex-end",
+                flex: 1,
+                marginTop: ms(10),
+                marginBottom: ms(5)
+              }}
+            >
               <RowButton
                 fontSize={fonts.h6Size}
                 backgroundColor={colors.declineButtonColor}
@@ -136,6 +151,7 @@ export const AddNewMedication: FC<AddNewMedicationProps> = ({
             text={i18n.t(
               "Patient_Configuration.Medications.PrescribingNewMeds"
             )}
+            style={styles.titleText}
           />
           <Label
             text={i18n.t(
@@ -253,5 +269,9 @@ const styles = ScaledSheet.create({
   },
   pickerItem: {
     fontWeight: "300"
+  },
+  titleText: {
+    textAlign: "center",
+    textDecorationLine: "underline"
   }
 });
