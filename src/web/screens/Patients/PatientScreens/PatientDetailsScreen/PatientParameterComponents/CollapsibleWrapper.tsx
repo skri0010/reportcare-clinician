@@ -33,9 +33,9 @@ export const CollapsibleWrapper: FC<CollapsibleWrapperProps> = ({
       <TouchableOpacity onPress={toggleCollapse} style={styles.touchableHeader}>
         <View style={styles.headerRow}>
           <IconButton
-            name={collapsed ? "arrow-down" : "arrow-up"}
+            name={collapsed ? "expand-more" : "expand-less"}
             onPress={toggleCollapse}
-            type={IconType.FONTAWESOME}
+            type={IconType.MATERIAL}
             size={fonts.h5Size}
             containerStyle={styles.iconContainerStyle}
             containerBackgroundColor={colors.primaryWebBackgroundColor}
