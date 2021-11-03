@@ -4,6 +4,7 @@ export const mockSymptomRecords: ReportSymptom[] = [
   {
     __typename: "ReportSymptom",
     id: "1",
+    activityName: "Act Name 1",
     activityInfoID: "2",
     symptomName: "Breathlessness",
     severity: 4,
@@ -16,6 +17,7 @@ export const mockSymptomRecords: ReportSymptom[] = [
   {
     __typename: "ReportSymptom",
     id: "2",
+    activityName: "Act Name 2",
     activityInfoID: "4",
     symptomName: "Sleeplessness",
     severity: 4,
@@ -28,6 +30,7 @@ export const mockSymptomRecords: ReportSymptom[] = [
   {
     __typename: "ReportSymptom",
     id: "3",
+    activityName: "Act Name 3",
     activityInfoID: "2",
     symptomName: "Tiredness",
     severity: 4,
@@ -40,6 +43,7 @@ export const mockSymptomRecords: ReportSymptom[] = [
   {
     __typename: "ReportSymptom",
     id: "9f1a0821-2a0c-4608-9ee6-997a43822448",
+    activityName: "Act Name 4",
     activityInfoID: "2",
     symptomName: "Breathlessness",
     severity: 4,
@@ -52,6 +56,7 @@ export const mockSymptomRecords: ReportSymptom[] = [
   {
     __typename: "ReportSymptom",
     id: "9",
+    activityName: "Act Name 5",
     activityInfoID: "2",
     symptomName: "Sleeplessness",
     severity: 4,
@@ -64,6 +69,7 @@ export const mockSymptomRecords: ReportSymptom[] = [
   {
     __typename: "ReportSymptom",
     id: "10",
+    activityName: "Act Name 6",
     activityInfoID: "2",
     symptomName: "Tiredness",
     severity: 4,

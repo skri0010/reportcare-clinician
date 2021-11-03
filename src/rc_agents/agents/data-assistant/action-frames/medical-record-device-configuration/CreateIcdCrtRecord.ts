@@ -74,9 +74,6 @@ class CreateIcdCrtRecord extends Activity {
               store.dispatch(setPatientDetails(existingPatientDetails));
             }
 
-            // Stores record locally
-            await LocalStorage.setIcdCrtRecord(newIcdCrtRecord);
-
             // Remove ICD/CRT record input from facts
             agentAPI.addFact(
               new Belief(
@@ -97,6 +94,9 @@ class CreateIcdCrtRecord extends Activity {
               true,
               true
             );
+
+            // Stores record locally
+            await LocalStorage.setIcdCrtRecord(newIcdCrtRecord);
 
             // Dispatch to front end that create is successful
             store.dispatch(setCreateIcdCrtRecordSuccessful(true));

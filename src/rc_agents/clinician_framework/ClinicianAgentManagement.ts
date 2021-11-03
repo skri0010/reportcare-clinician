@@ -1,6 +1,6 @@
 import { Belief, Fact } from "agents-framework";
 import { getClinicianProtectedInfo, updateClinicianProtectedInfo } from "aws";
-import { ClinicianProtectedInfo } from "aws/API";
+import { ClinicianInfo, ClinicianProtectedInfo } from "aws/API";
 import { AgentIDs, AppAttributes, BeliefKeys } from "./index";
 import AgentManagement from "agents-framework/management/AgentManagement";
 import { ClinicianAgent } from "./ClinicianAgent";
@@ -39,10 +39,14 @@ export class ClinicianAgentManagement extends AgentManagement {
 
     try {
       // Retrieves clinician from global state
-      const localClinician = store.getState().clinicians.clinician;
+      let localClinician: ClinicianInfo | null | undefined =
+        store.getState().clinicians.clinician;
+      if (!localClinician) {
+        localClinician = await LocalStorage.getClinician();
+      }
+
       if (localClinician) {
-        // Device is online
-        if (this.facts[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
+        try {
           const result = await getClinicianProtectedInfo({
             clinicianID: localClinician.clinicianID
           });
@@ -53,8 +57,7 @@ export class ClinicianAgentManagement extends AgentManagement {
             localClinician.protectedInfo = protectedInfo;
             await LocalStorage.setClinician(localClinician);
           }
-        } else {
-          // Device is offline
+        } catch (error) {
           protectedInfo = localClinician.protectedInfo;
         }
 

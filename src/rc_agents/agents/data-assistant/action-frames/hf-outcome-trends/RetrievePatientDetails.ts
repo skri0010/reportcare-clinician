@@ -17,7 +17,6 @@ import {
 } from "rc_agents/clinician_framework";
 import { PatientDetails } from "rc_agents/model";
 import {
-  listActivityInfosByPatientID,
   listReportSymptomsByPatientID,
   listReportVitalsByPatientID,
   listMedicationInfosByPatientID,
@@ -26,7 +25,6 @@ import {
   ClinicianRecordTypeConst
 } from "aws";
 import {
-  ActivityInfo,
   ClinicianRecord,
   MedicationInfo,
   ModelSortDirection,
@@ -84,10 +82,6 @@ class RetrievePatientDetails extends Activity {
 
         // Device is online
         if (isOnline && !retrieveLocally) {
-          // Perform queries and obtain promises
-          const activityInfoPromise = listActivityInfosByPatientID({
-            patientID: patientId
-          });
           const symptomReportsPromise = listReportSymptomsByPatientID({
             patientID: patientId
           });
@@ -108,14 +102,12 @@ class RetrievePatientDetails extends Activity {
             });
           // Await promises
           const [
-            activityInfoQuery,
             symptomReportsQuery,
             vitalsReportsQuery,
             physicalsQuery,
             medicationInfoQuery,
             clinicianRecordsQuery
           ] = await Promise.all([
-            activityInfoPromise,
             symptomReportsPromise,
             vitalsReportsPromise,
             physicalsPromise,
@@ -126,9 +118,6 @@ class RetrievePatientDetails extends Activity {
           // Process patient details
           patientDetails = this.processPatientDetails({
             patientInfo: patientInfo,
-            activityInfoList: getNonNullItemsFromList<ActivityInfo | null>(
-              activityInfoQuery.data.listActivityInfosByPatientID?.items
-            ),
             symptomReportList: getNonNullItemsFromList<ReportSymptom | null>(
               symptomReportsQuery.data.listReportSymptomsByPatientID?.items
             ),
@@ -213,7 +202,6 @@ class RetrievePatientDetails extends Activity {
 
   processPatientDetails: (parameters: {
     patientInfo: PatientInfo;
-    activityInfoList: ActivityInfo[];
     symptomReportList: ReportSymptom[];
     vitalsReportList: ReportVitals[];
     physicalList: Physical[];
@@ -221,7 +209,6 @@ class RetrievePatientDetails extends Activity {
     clinicianRecordList: ClinicianRecord[];
   }) => PatientDetails = ({
     patientInfo,
-    activityInfoList,
     symptomReportList,
     vitalsReportList,
     physicalList,
@@ -230,7 +217,6 @@ class RetrievePatientDetails extends Activity {
   }) => {
     const patientDetails: PatientDetails = {
       patientInfo: patientInfo,
-      activityInfos: [],
       symptomReports: {},
       vitalsReports: {},
       physicals: {},
@@ -238,9 +224,6 @@ class RetrievePatientDetails extends Activity {
       medicalRecords: [],
       icdCrtRecords: []
     };
-
-    // Store activity info
-    patientDetails.activityInfos = activityInfoList;
 
     // Store symptom reports
     symptomReportList.forEach((symptom) => {
