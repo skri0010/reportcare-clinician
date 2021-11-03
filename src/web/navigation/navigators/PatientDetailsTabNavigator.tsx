@@ -56,7 +56,10 @@ export const PatientDetailsTabNavigator: FC<PatientDetailsTabNavigatorProps> =
 
     return (
       <Tab.Navigator
-        screenOptions={getTopTabBarOptions({ colors: colors, fonts: fonts })}
+        screenOptions={{
+          ...getTopTabBarOptions({ colors: colors, fonts: fonts }),
+          lazy: true
+        }}
         initialRouteName={selectedTab || PatientDetailsTabName.OVERVIEW}
       >
         <Tab.Screen

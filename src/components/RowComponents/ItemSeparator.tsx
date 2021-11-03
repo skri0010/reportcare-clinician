@@ -6,11 +6,13 @@ import { ms } from "react-native-size-matters";
 interface ItemSeparatorProps {
   topSpacing?: number;
   bottomSpacing?: number;
+  lowerSeparatorOpacity?: boolean;
 }
 
 export const ItemSeparator: FC<ItemSeparatorProps> = ({
   topSpacing,
-  bottomSpacing
+  bottomSpacing,
+  lowerSeparatorOpacity
 }) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
@@ -22,7 +24,8 @@ export const ItemSeparator: FC<ItemSeparatorProps> = ({
           borderWidth: ms(0.1),
           borderColor: colors.separatorColor,
           marginTop: topSpacing || ms(0),
-          marginBottom: bottomSpacing || ms(0)
+          marginBottom: bottomSpacing || ms(0),
+          opacity: lowerSeparatorOpacity ? 0.5 : 1
         }
       ]}
     />

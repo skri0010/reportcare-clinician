@@ -1,26 +1,33 @@
 import { IconButton, IconType } from "components/Buttons/IconButton";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
-import { H4 } from "components/Text";
+import { HBase } from "components/Text";
 import React, { FC, useCallback, useState } from "react";
-import { TouchableOpacity, View } from "react-native";
+import { StyleProp, TouchableOpacity, View, ViewStyle } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
-import { useSelector } from "react-redux";
-import { RootState } from "util/useRedux";
+import { RootState, select } from "util/useRedux";
 
 interface CollapsibleWrapperProps {
   headerTitle: string;
+  containerStyle?: StyleProp<ViewStyle>;
+  size?: number;
+  collapseInitially?: boolean;
+  lowerSeparatorOpacity?: boolean;
 }
 
 export const CollapsibleWrapper: FC<CollapsibleWrapperProps> = ({
   headerTitle,
+  containerStyle,
+  size,
+  collapseInitially = false,
+  lowerSeparatorOpacity = false,
   children
 }) => {
-  const { colors, fonts } = useSelector((state: RootState) => ({
+  const { colors, fonts } = select((state: RootState) => ({
     colors: state.settings.colors,
     fonts: state.settings.fonts
   }));
 
-  const [collapsed, setCollapsed] = useState<boolean>(false);
+  const [collapsed, setCollapsed] = useState<boolean>(collapseInitially);
 
   const toggleCollapse = useCallback(
     () => setCollapsed(!collapsed),
@@ -29,21 +36,25 @@ export const CollapsibleWrapper: FC<CollapsibleWrapperProps> = ({
 
   return (
     // Toggleable Header
-    <View style={styles.container}>
+    <View style={[styles.container, containerStyle]}>
       <TouchableOpacity onPress={toggleCollapse} style={styles.touchableHeader}>
         <View style={styles.headerRow}>
           <IconButton
-            name={collapsed ? "arrow-down" : "arrow-up"}
+            name={collapsed ? "expand-more" : "expand-less"}
             onPress={toggleCollapse}
-            type={IconType.FONTAWESOME}
-            size={fonts.h5Size}
+            type={IconType.MATERIAL}
+            size={size || fonts.h5Size}
             containerStyle={styles.iconContainerStyle}
-            containerBackgroundColor={colors.primaryWebBackgroundColor}
+            containerBackgroundColor="transparent"
             iconStyle={{ color: colors.primaryIconColor }}
           />
-          <H4 text={headerTitle} />
+          <HBase text={headerTitle} size={size || fonts.h4Size} />
         </View>
-        <ItemSeparator topSpacing={ms(4)} bottomSpacing={ms(2)} />
+        <ItemSeparator
+          topSpacing={ms(4)}
+          bottomSpacing={ms(2)}
+          lowerSeparatorOpacity={lowerSeparatorOpacity}
+        />
       </TouchableOpacity>
 
       {!collapsed ? children : null}
@@ -53,7 +64,7 @@ export const CollapsibleWrapper: FC<CollapsibleWrapperProps> = ({
 
 const styles = ScaledSheet.create({
   container: {
-    paddingTop: "8@ms"
+    paddingTop: "3@ms"
   },
   touchableHeader: {
     paddingBottom: "5@ms"
@@ -63,7 +74,6 @@ const styles = ScaledSheet.create({
   },
   iconContainerStyle: {
     justifyContent: "center",
-    paddingTop: "2@ms",
     paddingRight: "5@ms"
   }
 });

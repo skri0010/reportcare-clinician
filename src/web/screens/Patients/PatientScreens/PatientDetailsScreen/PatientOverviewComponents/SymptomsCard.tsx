@@ -1,11 +1,11 @@
 import React, { FC } from "react";
 import { ms } from "react-native-size-matters";
-import { H4 } from "components/Text";
 import { CardWrapper } from "components/Wrappers/CardWrapper";
 import { ReportSymptom } from "aws/API";
 import { FlatList } from "react-native";
 import i18n from "util/language/i18n";
 import { EmptyListIndicator } from "components/Indicators/EmptyListIndicator";
+import { SymptomRow } from "components/RowComponents/SymptomRow";
 
 interface SymptomProps {
   symptoms: ReportSymptom[];
@@ -31,9 +31,7 @@ export const SymptomsCard: FC<SymptomProps> = ({
         ListEmptyComponent={() => (
           <EmptyListIndicator text={i18n.t("Patient_Overview.NoSymptoms")} />
         )}
-        renderItem={({ item }) => (
-          <H4 text={`  ${item.symptomName}`} style={null} />
-        )}
+        renderItem={({ item }) => <SymptomRow symptom={item} />}
         keyExtractor={(item) => item.id}
       />
     </CardWrapper>

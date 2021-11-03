@@ -256,6 +256,19 @@
     "Weight": "Berat Badan",
     "TargetWeight": "Sasaran berat badan",
     "Symptoms": "Simptom",
+    "SymptomsAttributes": {
+      "Summary": "Ringkasan",
+      "Severity": "Keterukan",
+      "Activity": "Aktiviti",
+      "ActivityDuration": "Durasi",
+      "ActivityLocation": "Lokasi",
+      "ActivityWeather": "Cuaca",
+      "ActivityTemperature": "Suhu",
+      "ActivityHumidity": "Kelembapan",
+      "DurationUnit": "min",
+      "TemperatureUnit": "\u00B0C",
+      "HumidityUnit": "g/kg"
+    },
     "NoSymptoms": "Tiada simptom yang direkodkan"
   },
   "Patient_ICD/CRT": {

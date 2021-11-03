@@ -256,6 +256,19 @@
     "Weight": "Weight",
     "TargetWeight": "Target weight",
     "Symptoms": "Symptoms",
+    "SymptomAttributes": {
+      "Summary": "Summary",
+      "Severity": "Severity",
+      "Activity": "Activity",
+      "ActivityDuration": "Duration",
+      "ActivityLocation": "Location",
+      "ActivityWeather": "Weather",
+      "ActivityTemperature": "Temperature",
+      "ActivityHumidity": "Humidity",
+      "DurationUnit": "min",
+      "TemperatureUnit": "\u00B0C",
+      "HumidityUnit": "g/kg"
+    },
     "NoSymptoms": "No symptoms recorded"
   },
   "Patient_ICD/CRT": {
