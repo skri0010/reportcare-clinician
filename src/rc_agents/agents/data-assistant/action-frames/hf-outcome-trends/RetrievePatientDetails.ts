@@ -18,12 +18,12 @@ import {
 import { PatientDetails } from "rc_agents/model";
 import {
   listActivityInfosByPatientID,
-  listReportSymptomsByPatientID,
   listReportVitalsByPatientID,
   listMedicationInfosByPatientID,
   listUploadedClinicianRecordsByPatientID,
   listPhysicalByDateTime,
-  ClinicianRecordTypeConst
+  ClinicianRecordTypeConst,
+  listReportSymptomsWithActivityByDateTime
 } from "aws";
 import {
   ActivityInfo,
@@ -88,9 +88,10 @@ class RetrievePatientDetails extends Activity {
           const activityInfoPromise = listActivityInfosByPatientID({
             patientID: patientId
           });
-          const symptomReportsPromise = listReportSymptomsByPatientID({
-            patientID: patientId
-          });
+          const symptomReportsPromise =
+            listReportSymptomsWithActivityByDateTime({
+              patientID: patientId
+            });
           const vitalsReportsPromise = listReportVitalsByPatientID({
             patientID: patientId
           });
@@ -130,7 +131,7 @@ class RetrievePatientDetails extends Activity {
               activityInfoQuery.data.listActivityInfosByPatientID?.items
             ),
             symptomReportList: getNonNullItemsFromList<ReportSymptom | null>(
-              symptomReportsQuery.data.listReportSymptomsByPatientID?.items
+              symptomReportsQuery.data.listReportSymptomsByDateTime?.items
             ),
             vitalsReportList: getNonNullItemsFromList<ReportVitals | null>(
               vitalsReportsQuery.data.listReportVitalsByPatientID?.items

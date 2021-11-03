@@ -1,7 +1,7 @@
 import API from "@aws-amplify/api-graphql";
 // eslint-disable-next-line no-restricted-imports
 import * as queries from "aws/graphql/queries";
-import * as Override from "./override";
+import * as Override from "./overrideAPI";
 import { BaseResponse, ClinicianRecordType } from "aws";
 import {
   ListPatientInfosQueryVariables,
@@ -40,13 +40,15 @@ import {
   ListUploadedClinicianRecordsByPatientIDQueryVariables,
   ListReportVitalsByDateTimeQuery,
   ListReportVitalsByDateTimeQueryVariables,
-  ListReportSymptomsByDateTimeQuery,
-  ListReportSymptomsByDateTimeQueryVariables,
   ListMedicationInfosByPatientIDQueryVariables,
   ListMedicationInfosByPatientIDQuery,
   ListPhysicalsByDateTimeQuery,
   ListPhysicalsByDateTimeQueryVariables
 } from "aws/API";
+import {
+  ListReportSymptomsWithActivityByDateTimeQuery,
+  ListReportSymptomsWithActivityByDateTimeQueryVariables
+} from "./overrideAPI";
 
 interface ListClinicianInfosResponse extends BaseResponse {
   data: ListClinicianInfosQuery;
@@ -100,17 +102,18 @@ export const listReportSymptomsByPatientID = async (
   })) as ListReportSymptomsByPatientIDResponse;
 };
 
-interface ListReportSymptomsByDateTimeQueryResponse extends BaseResponse {
-  data: ListReportSymptomsByDateTimeQuery;
+interface ListReportSymptomsWithActivityByDateTimeQueryResponse
+  extends BaseResponse {
+  data: ListReportSymptomsWithActivityByDateTimeQuery;
 }
 
-export const listReportSymptomsByDateTime = async (
-  variables: ListReportSymptomsByDateTimeQueryVariables
-): Promise<ListReportSymptomsByDateTimeQueryResponse> => {
+export const listReportSymptomsWithActivityByDateTime = async (
+  variables: ListReportSymptomsWithActivityByDateTimeQueryVariables
+): Promise<ListReportSymptomsWithActivityByDateTimeQueryResponse> => {
   return (await API.graphql({
-    query: Override.listReportSymptomsWithActivitiesByDateTime,
+    query: Override.listReportSymptomsWithActivityByDateTime,
     variables: variables
-  })) as ListReportSymptomsByDateTimeQueryResponse;
+  })) as ListReportSymptomsWithActivityByDateTimeQueryResponse;
 };
 
 interface ListReportVitalsByPatientIDQueryResponse extends BaseResponse {

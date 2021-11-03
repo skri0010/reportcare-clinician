@@ -26,7 +26,7 @@ import {
   getDetailedAlert,
   getPatientInfo,
   listMedicationInfosByPatientID,
-  listReportSymptomsByDateTime,
+  listReportSymptomsWithActivityByDateTime,
   listReportVitalsByDateTime,
   listUploadedClinicianRecordsByPatientID
 } from "aws";
@@ -275,7 +275,7 @@ export const queryHighRiskAlertInfo = async (
   const alertDate = new Date(alert.dateTime);
 
   // Gets symptoms reports by descending order of datetime
-  const symptomReportsQuery = await listReportSymptomsByDateTime({
+  const symptomReportsQuery = await listReportSymptomsWithActivityByDateTime({
     patientID: alert.patientID,
     sortDirection: ModelSortDirection.DESC
   });

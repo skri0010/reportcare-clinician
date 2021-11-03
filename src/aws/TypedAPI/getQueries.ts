@@ -28,7 +28,7 @@ import {
   GetClinicianRecordQuery,
   GetClinicianRecordQueryVariables
 } from "aws/API";
-import * as Override from "./override";
+import * as Override from "./overrideAPI";
 
 interface GetClinicianInfoResponse extends BaseResponse {
   data: GetClinicianInfoQuery;
