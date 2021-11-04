@@ -74,7 +74,7 @@ export const GeneralLineChartComponent: FC<GeneralLineChartProps> = ({
     }
   };
 
-  const axisLabelStyle = { fontSize: "bold", fill: colors.primaryTextColor };
+  const axisLabelStyle = { fill: colors.primaryTextColor };
 
   return (
     <View style={{ maxHeight: ms(250) }}>
