@@ -7,6 +7,7 @@ import {
 } from "components/Wrappers/CardWrapper";
 import i18n from "util/language/i18n";
 import { AbsoluteParameters } from "components/Text/AbsoluteParameters";
+import { Unit } from "util/const";
 
 interface BloodPressureProps extends FixedHeightCardWrapperProps {
   systolicBloodPressure: number | string;
@@ -33,7 +34,7 @@ export const BloodPressureCard: FC<BloodPressureProps> = ({
           <AbsoluteParameters
             topText={i18n.t("Parameter_Graphs.Systolic")}
             centerText={systolicBloodPressure}
-            bottomText={`(${i18n.t("Parameter_Graphs.BPUnit")})`}
+            bottomText={`(${Unit.BLOOD_PRESSURE})`}
           />
         </View>
         <View style={{ flex: 1 }}>
@@ -41,7 +42,7 @@ export const BloodPressureCard: FC<BloodPressureProps> = ({
           <AbsoluteParameters
             topText={i18n.t("Parameter_Graphs.Diastolic")}
             centerText={diastolicBloodPressure}
-            bottomText={`(${i18n.t("Parameter_Graphs.BPUnit")})`}
+            bottomText={`(${Unit.BLOOD_PRESSURE})`}
           />
         </View>
       </View>

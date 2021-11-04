@@ -90,20 +90,14 @@
     "Diastolic": "Diastolik ",
     "SystolicBP": "Tekanan Darah Sistolik ",
     "DiastolicBP": "Tekanan Darah Diastolik ",
-    "BPUnit": "mmHg",
     "OxygenSaturation": "Ketepuan Oksigen ",
-    "OxygenSaturationUnit": "%",
     "Weight": "Berat Badan ",
-    "WeightUnit": "kg",
     "FluidIntake": "Pengambilan Air ",
-    "FluidUnit": "ml",
     "Physical": "Fizikal",
     "Steps": "Langkah",
     "Distance": "Jarak",
     "MeanSpeed": "Min kelajuan",
     "StepsUnit": "langkah",
-    "DistanceUnit": "m",
-    "MeanSpeedUnit": "m/s",
     "NoData": "Tiada data dijumpai",
     "ViewBy": "Melihat secara: ",
     "ChartViewTypes": {
@@ -202,10 +196,7 @@
     "Cancel": "Batal",
     "AddNewMedicationInfo": "Tambah informasi ubat baharu",
     "MedicationsAddedCurrently": "Ubatan yang telah ditambah:",
-    "Unit": {
-      "Dosage": "mg",
-      "Frequency": "kali per hari"
-    },
+    "Frequency": "kali sehari",
     "MedicationRow": {
       "Name": "Nama: ",
       "Dosage": "Dos: ",
@@ -264,10 +255,7 @@
       "ActivityLocation": "Lokasi",
       "ActivityWeather": "Cuaca",
       "ActivityTemperature": "Suhu",
-      "ActivityHumidity": "Kelembapan",
-      "DurationUnit": "min",
-      "TemperatureUnit": "\u00B0C",
-      "HumidityUnit": "g/kg"
+      "ActivityHumidity": "Kelembapan"
     },
     "NoSymptoms": "Tiada simptom yang direkodkan"
   },
@@ -376,7 +364,6 @@
       "Weight": "Berat badan",
       "DateTime": "Direkodkan pada",
       "HeartRate": "Kadar degupan jantung",
-      "HeartRateUnit": "bpm",
       "NoVitalsReport": "Tiada rekod aktiviti dan vital dijumpai"
     },
     "Medications": {

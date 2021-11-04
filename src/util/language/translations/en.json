@@ -90,20 +90,14 @@
     "Diastolic": "Diastolic",
     "SystolicBP": "Systolic Blood Pressure ",
     "DiastolicBP": "Diastolic Blood Pressure ",
-    "BPUnit": "mmHg",
     "OxygenSaturation": "Oxygen Saturation ",
-    "OxygenSaturationUnit": "%",
     "Weight": "Weight ",
-    "WeightUnit": "kg",
     "FluidIntake": "Fluid Intake ",
-    "FluidUnit": "ml",
     "Physical": "Physical",
     "Steps": "Steps",
     "Distance": "Distance",
     "MeanSpeed": "Mean speed",
     "StepsUnit": "steps",
-    "DistanceUnit": "m",
-    "MeanSpeedUnit": "m/s",
     "NoData": "No data was found",
     "ViewBy": "View By: ",
     "ChartViewTypes": {
@@ -202,10 +196,7 @@
     "Cancel": "Cancel",
     "AddNewMedicationInfo": "Add new medication info",
     "MedicationsAddedCurrently": "Medications added currently:",
-    "Unit": {
-      "Dosage": "mg",
-      "Frequency": "time(s) per day"
-    },
+    "FrequencyUnit": "time(s) per day",
     "MedicationRow": {
       "Name": "Name: ",
       "Dosage": "Dosage: ",
@@ -264,10 +255,7 @@
       "ActivityLocation": "Location",
       "ActivityWeather": "Weather",
       "ActivityTemperature": "Temperature",
-      "ActivityHumidity": "Humidity",
-      "DurationUnit": "min",
-      "TemperatureUnit": "\u00B0C",
-      "HumidityUnit": "g/kg"
+      "ActivityHumidity": "Humidity"
     },
     "NoSymptoms": "No symptoms recorded"
   },
@@ -376,7 +364,6 @@
       "Weight": "Weight",
       "DateTime": "Recorded at",
       "HeartRate": "Heart rate",
-      "HeartRateUnit": "bpm",
       "NoVitalsReport": "No activity and vitals reports found"
     },
     "Medications": {

@@ -5,13 +5,14 @@ import {
   BaseLineChartDataProps,
   GeneralLineChartComponent
 } from "components/VisualizationComponents/GeneralLineChartComponent";
+import { Unit } from "util/const";
 
 export const MeanSpeedChart: FC<BaseLineChartDataProps> = ({ data }) => {
   return data ? (
     <GeneralLineChartComponent
-      graphTitle={`${i18n.t("Parameter_Graphs.MeanSpeed")} (${i18n.t(
-        "Parameter_Graphs.MeanSpeedUnit"
-      )})`}
+      graphTitle={`${i18n.t("Parameter_Graphs.MeanSpeed")} (${
+        Unit.SPEED_METRES_PER_SECOND
+      })`}
       data={data}
     />
   ) : (

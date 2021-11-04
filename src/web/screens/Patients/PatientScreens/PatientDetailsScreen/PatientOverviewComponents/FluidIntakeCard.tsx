@@ -7,6 +7,7 @@ import i18n from "util/language/i18n";
 import { AbsoluteParameters } from "components/Text/AbsoluteParameters";
 import { View } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
+import { Unit } from "util/const";
 
 interface FluidIntakeCardProps extends FixedHeightCardWrapperProps {
   fluidIntakeInMl: number | string;
@@ -30,7 +31,7 @@ export const FluidIntakeCard: FC<FluidIntakeCardProps> = ({
       <View style={styles.container}>
         <AbsoluteParameters
           centerText={`${fluidIntakeInMl} / ${fluidGoalInMl}`}
-          bottomText={`(${i18n.t("Parameter_Graphs.FluidUnit")})`}
+          bottomText={`(${Unit.FLUID})`}
         />
       </View>
     </CardWrapper>

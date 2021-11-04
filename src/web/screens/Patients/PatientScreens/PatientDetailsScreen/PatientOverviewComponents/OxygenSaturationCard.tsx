@@ -6,6 +6,7 @@ import {
 } from "components/Wrappers/CardWrapper";
 import i18n from "util/language/i18n";
 import { AbsoluteParameters } from "components/Text/AbsoluteParameters";
+import { Unit } from "util/const";
 
 interface OxygenSaturationProps extends FixedHeightCardWrapperProps {
   oxygenSaturation: number | string;
@@ -27,7 +28,7 @@ export const OxygenSaturationCard: FC<OxygenSaturationProps> = ({
     >
       <AbsoluteParameters
         centerText={oxygenSaturation}
-        bottomText={`(${i18n.t("Parameter_Graphs.OxygenSaturationUnit")})`}
+        bottomText={`(${Unit.OXYGEN_SATURATION})`}
       />
     </CardWrapper>
   );

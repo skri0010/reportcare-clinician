@@ -5,13 +5,14 @@ import {
   BaseLineChartDataProps,
   GeneralLineChartComponent
 } from "components/VisualizationComponents/GeneralLineChartComponent";
+import { Unit } from "util/const";
 
 export const DistanceChart: FC<BaseLineChartDataProps> = ({ data }) => {
   return data ? (
     <GeneralLineChartComponent
-      graphTitle={`${i18n.t("Parameter_Graphs.Distance")} (${i18n.t(
-        "Parameter_Graphs.DistanceUnit"
-      )})`}
+      graphTitle={`${i18n.t("Parameter_Graphs.Distance")} (${
+        Unit.DISTANCE_METRES
+      })`}
       data={data}
     />
   ) : (

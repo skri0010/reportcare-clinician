@@ -6,6 +6,7 @@ import {
 } from "components/Wrappers/CardWrapper";
 import i18n from "util/language/i18n";
 import { AbsoluteParameters } from "components/Text/AbsoluteParameters";
+import { Unit } from "util/const";
 
 interface WeightProps extends FixedHeightCardWrapperProps {
   weight: number | string;
@@ -25,14 +26,14 @@ export const WeightCard: FC<WeightProps> = ({
       flex={flex}
       minWidth={ms(100)}
       title={i18n.t("Patient_Overview.Weight")}
-      bottomText={`${i18n.t(
-        "Patient_Overview.TargetWeight"
-      )}: ${targetWeight}kg`}
+      bottomText={`${i18n.t("Patient_Overview.TargetWeight")}: ${targetWeight}${
+        Unit.WEIGHT
+      }`}
       noChildrenPaddingHorizontal
     >
       <AbsoluteParameters
         centerText={`${weight}`}
-        bottomText={`(${i18n.t("Parameter_Graphs.WeightUnit")})`}
+        bottomText={`(${Unit.WEIGHT})`}
       />
     </CardWrapper>
   );

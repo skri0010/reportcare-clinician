@@ -3,7 +3,7 @@ import { View } from "react-native";
 import i18n from "util/language/i18n";
 import { ReportSymptom } from "aws/API";
 import { ScaledSheet } from "react-native-size-matters";
-import { displayPlaceholder } from "util/const";
+import { displayPlaceholder, Unit } from "util/const";
 import { InformationText } from "components/Text/InformationText";
 import { CollapsibleWrapper } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientParameterComponents/CollapsibleWrapper";
 import { RootState, select } from "util/useRedux";
@@ -45,9 +45,9 @@ export const SymptomRow: FC<SymptomRowProps> = ({ symptom }) => {
           boldText={i18n.t(
             "Patient_Overview.SymptomAttributes.ActivityDuration"
           )}
-          normalText={`${
-            symptom.durationInMinutes || displayPlaceholder
-          } ${i18n.t("Patient_Overview.SymptomAttributes.DurationUnit")}`}
+          normalText={`${symptom.durationInMinutes || displayPlaceholder} ${
+            Unit.DURATION_MINUTES
+          }`}
           nestedLevel={1}
         />
         {/* Activity location */}
@@ -75,9 +75,9 @@ export const SymptomRow: FC<SymptomRowProps> = ({ symptom }) => {
               boldText={i18n.t(
                 "Patient_Overview.SymptomAttributes.ActivityTemperature"
               )}
-              normalText={`${symptom.temperature || displayPlaceholder}${i18n.t(
-                "Patient_Overview.SymptomAttributes.TemperatureUnit"
-              )}`}
+              normalText={`${symptom.temperature || displayPlaceholder}${
+                Unit.TEMPERATURE
+              }`}
               nestedLevel={1}
             />
             {/* Activity humidity */}
@@ -85,9 +85,9 @@ export const SymptomRow: FC<SymptomRowProps> = ({ symptom }) => {
               boldText={i18n.t(
                 "Patient_Overview.SymptomAttributes.ActivityHumidity"
               )}
-              normalText={`${symptom.humidity || displayPlaceholder} ${i18n.t(
-                "Patient_Overview.SymptomAttributes.HumidityUnit"
-              )}`}
+              normalText={`${symptom.humidity || displayPlaceholder} ${
+                Unit.HUMIDITY
+              }`}
               nestedLevel={1}
             />{" "}
           </>

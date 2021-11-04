@@ -7,6 +7,7 @@ import i18n from "util/language/i18n";
 import { AbsoluteParameters } from "components/Text/AbsoluteParameters";
 import { View } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
+import { Unit } from "util/const";
 
 interface PhysicalCardProps extends FixedHeightCardWrapperProps {
   steps: number | string;
@@ -45,7 +46,7 @@ export const PhysicalCard: FC<PhysicalCardProps> = ({
           <AbsoluteParameters
             topText={i18n.t("Parameter_Graphs.Distance")}
             centerText={`${distanceInMetres}`}
-            bottomText={`(${i18n.t("Parameter_Graphs.DistanceUnit")})`}
+            bottomText={`(${Unit.DISTANCE_METRES})`}
           />
         </View>
         <View style={{ flex: 1 }}>
@@ -53,7 +54,7 @@ export const PhysicalCard: FC<PhysicalCardProps> = ({
           <AbsoluteParameters
             topText={i18n.t("Parameter_Graphs.MeanSpeed")}
             centerText={`${averageWalkingSpeedInMetresPerSeconds}`}
-            bottomText={`(${i18n.t("Parameter_Graphs.MeanSpeedUnit")})`}
+            bottomText={`(${Unit.SPEED_METRES_PER_SECOND})`}
           />
         </View>
       </View>
