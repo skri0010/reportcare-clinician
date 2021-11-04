@@ -59,6 +59,8 @@ export const IcdCrtCard: FC<IcdCrtProps> = ({
           type={IconType.MATERIAL_COMMUNITY}
           onPress={onAddPress}
           containerStyle={[styles.button, { opacity: isOnline ? 1.0 : 0.2 }]}
+          containerBackgroundColor={colors.acceptButtonColor}
+          containerBorderColor={colors.acceptButtonColor}
           iconStyle={{ color: colors.primaryContrastTextColor }}
           disabled={!isOnline}
         />

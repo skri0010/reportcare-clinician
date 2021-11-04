@@ -116,7 +116,6 @@ export const SharePatientModal: FC<SharePatientModalProps> = ({
           fontSize: fonts.h3Size
         }}
         containerStyle={styles.closeButtonContainer}
-        containerBackgroundColor="transparent"
         onPress={onRequestClose}
       />
 
