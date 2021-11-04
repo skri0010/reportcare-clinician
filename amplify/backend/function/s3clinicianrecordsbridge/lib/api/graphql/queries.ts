@@ -190,8 +190,11 @@ export const getReportSymptom = /* GraphQL */ `
     getReportSymptom(id: $id) {
       id
       patientID
-      activityInfoID
       symptomName
+      activityName
+      activityInfoID
+      durationInMinutes
+      location
       severity
       dateTime
       summary

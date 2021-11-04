@@ -6,18 +6,21 @@ node_modules
 
 # AWS folders
 amplify/.config/*
+amplify/#current-cloud-backend
 amplify/cli.json
 amplify/team-provider-info.json
 amplify/backend/backend-config.json
 amplify/backend/tags
 amplify/backend/api/reportcare/*
 amplify/backend/auth
-amplify/backend/function
+amplify/backend/storage
+amplify/backend/function/**/*.json
 !**/schema.graphql
-src/aws/graphql/**/*.ts
-src/aws/API.ts
-src/aws/aws-exports.js
+src/aws/*
+!src/aws/index.ts
+!src/aws/typedAPI
 **/*.js
+
 
 # Others
 .vscode

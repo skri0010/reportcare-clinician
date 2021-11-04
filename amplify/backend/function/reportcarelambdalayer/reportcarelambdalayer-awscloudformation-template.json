@@ -20,19 +20,23 @@
     }
   },
   "Resources": {
-    "LambdaLayerVersion03d68a70": {
+    "LambdaLayerVersionf20e9d3c": {
       "Type": "AWS::Lambda::LayerVersion",
       "Properties": {
-        "CompatibleRuntimes": [
-          "nodejs14.x"
-        ],
+        "CompatibleRuntimes": {
+          "Ref": "runtimes"
+        },
         "Content": {
           "S3Bucket": {
             "Ref": "deploymentBucketName"
           },
-          "S3Key": "amplify-builds/reportcarelambdalayer-LambdaLayerVersion03d68a70-build.zip"
+          "S3Key": {
+            "Ref": "s3Key"
+          }
         },
-        "Description": "Updated layer version 2021-10-28T03:42:05.291Z",
+        "Description": {
+          "Ref": "description"
+        },
         "LayerName": {
           "Fn::Sub": [
             "reportcarelambdalayer-${env}",
@@ -47,20 +51,24 @@
       "DeletionPolicy": "Delete",
       "UpdateReplacePolicy": "Retain"
     },
-    "LambdaLayerPermissionAwsOrgoqcrna86bph03d68a70": {
+    "LambdaLayerPermissionAwsOrgoqcrna86bphf20e9d3c": {
       "Type": "AWS::Lambda::LayerVersionPermission",
       "Properties": {
         "Action": "lambda:GetLayerVersion",
-        "LayerVersionArn": "arn:aws:lambda:ap-southeast-1:666794373206:layer:reportcarelambdalayer-dev:3",
+        "LayerVersionArn": {
+          "Ref": "LambdaLayerVersionf20e9d3c"
+        },
         "OrganizationId": "o-qcrna86bph",
         "Principal": "*"
       }
     },
-    "LambdaLayerPermissionPrivate03d68a70": {
+    "LambdaLayerPermissionPrivatef20e9d3c": {
       "Type": "AWS::Lambda::LayerVersionPermission",
       "Properties": {
         "Action": "lambda:GetLayerVersion",
-        "LayerVersionArn": "arn:aws:lambda:ap-southeast-1:666794373206:layer:reportcarelambdalayer-dev:3",
+        "LayerVersionArn": {
+          "Ref": "LambdaLayerVersionf20e9d3c"
+        },
         "Principal": {
           "Ref": "AWS::AccountId"
         }
@@ -70,7 +78,7 @@
   "Outputs": {
     "Arn": {
       "Value": {
-        "Ref": "LambdaLayerVersion03d68a70"
+        "Ref": "LambdaLayerVersionf20e9d3c"
       }
     }
   }

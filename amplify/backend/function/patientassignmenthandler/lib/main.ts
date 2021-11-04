@@ -206,7 +206,7 @@ export const sharePatientAssignment: (input: {
           patientID: patientID,
           pending: Pending,
           resolution: null,
-          sourceClinicianID: clinicianID,
+          sourceClinicianID: clinicianID
         });
         if (updateResult.data) {
           successfullyShared = true;
@@ -283,7 +283,7 @@ const updateSourcePatientAssignment: (input: {
         patientID: patientID,
         clinicianID: sourceClinicianID,
         pending: null,
-        resolution: resolution,
+        resolution: resolution
       });
       if (updateResult.data.updatePatientAssignment) {
         // Print success message and update event response
