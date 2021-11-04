@@ -1,16 +1,29 @@
 import { ColorScheme } from "models/ColorScheme/model";
-import {
-  riskLevelBackgroundColors,
-  riskLevelBorderColors,
-  riskLevelSelectedBackgroundColors
-} from "models/ColorScheme/common/riskLevelColors";
+import { IRiskLevelMap } from "models/RiskLevel";
+
+const riskLevelBackgroundColors: IRiskLevelMap = {
+  HIGH: "#ff8888",
+  MEDIUM: "#ffc342",
+  LOW: "#4bd183",
+  UNASSIGNED: "#ffffff"
+};
+
+const riskLevelSelectedBackgroundColors: IRiskLevelMap = {
+  HIGH: "#ed6464",
+  MEDIUM: "#ebd860",
+  LOW: "#81d488",
+  UNASSIGNED: "#d4d4d4"
+};
+
+// In this color scheme, we do not need border colors
+const riskLevelBorderColors: IRiskLevelMap = riskLevelBackgroundColors;
 
 export const darkColorScheme: ColorScheme = {
   // Text
   primaryTextColor: "#ffffff",
-  secondaryTextColor: "#B3B3B3",
+  secondaryTextColor: "#b3b3b3",
   primaryContrastTextColor: "#ffffff",
-  secondaryContrastTextColor: "#B3B3B3",
+  secondaryContrastTextColor: "#b3b3b3",
   selectedTextColor: "#00ffff",
   consistentTextColor: "#000000",
 
@@ -41,20 +54,20 @@ export const darkColorScheme: ColorScheme = {
   // Buttons
   primaryButtonColor: "#9e3ce6",
   acceptButtonColor: "#57c081",
-  declineButtonColor: "#DC143C",
+  declineButtonColor: "#dc143c",
   primaryDeactivatedButtonColor: "#a6a6a6",
-  primaryWarningButtonColor: "#D11C1C",
-  innerScreenButtonColor: "#A484FF",
+  primaryWarningButtonColor: "#d11c1c",
+  innerScreenButtonColor: "#a484ff",
 
   // Avatar background
   primaryAvatarBackgroundColor: "#e0e0e0",
 
   // Icons
   primaryIconColor: "#ffffff",
-  secondaryIconColor: "#ABA9A9",
-  primaryContrastIconColor: "#FFFFFF",
+  secondaryIconColor: "#aba9a9",
+  primaryContrastIconColor: "#ffffff",
   selectedIconColor: "#00ffff",
-  acceptIconColor: "#6AC574",
+  acceptIconColor: "#6ac574",
   deleteIconColor: "#ff1e00",
 
   // Icon background
@@ -68,7 +81,7 @@ export const darkColorScheme: ColorScheme = {
   maxLineColor: "#5fff42",
   minLineColor: "#c43a31",
   avgLineColor: "#edf24b",
-  chartPillSelectedColor: "#57c081",
+  chartPillSelectedColor: "#4bd183",
   chartPillUnselectedColor: "#333333",
   chartPillUnselectedBorderColor: "#d1d1d1",
   gridLineColor: "#999999",
@@ -85,8 +98,8 @@ export const darkColorScheme: ColorScheme = {
 
   // Others
   riskLevelBackgroundColors: riskLevelBackgroundColors,
-  riskLevelBorderColors: riskLevelBorderColors,
   riskLevelSelectedBackgroundColors: riskLevelSelectedBackgroundColors,
+  riskLevelBorderColors: riskLevelBorderColors,
 
   // Errors
   errorColor: "#ff1e00",
