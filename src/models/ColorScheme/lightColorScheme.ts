@@ -51,7 +51,7 @@ export const lightColorScheme: ColorScheme = {
 
   // Icons
   primaryIconColor: "#000000",
-  secondaryIconColor: "#6ac574",
+  secondaryIconColor: "#aba9a9",
   primaryContrastIconColor: "#ffffff",
   selectedIconColor: "#00ffff",
   acceptIconColor: "#6ac574",

@@ -53,7 +53,7 @@ export const darkColorScheme: ColorScheme = {
 
   // Buttons
   primaryButtonColor: "#9e3ce6",
-  acceptButtonColor: "#57c081",
+  acceptButtonColor: "#4bd183",
   declineButtonColor: "#dc143c",
   primaryDeactivatedButtonColor: "#a6a6a6",
   primaryWarningButtonColor: "#d11c1c",
