@@ -23,7 +23,7 @@ import {
 } from "rc_agents/model";
 import {
   ClinicianRecordType,
-  getDetailedAlert,
+  getAlert,
   getPatientInfo,
   listMedicationInfosByPatientID,
   listReportSymptomsByDateTime,
@@ -152,7 +152,7 @@ class RetrieveDetailedAlertInfo extends Activity {
 
 export const queryAlertInfo = async (alert: Alert): Promise<Alert | null> => {
   let alertInfo: AlertInfo = convertAlertToAlertInfo(alert);
-  const alertQuery = await getDetailedAlert({ id: alert.id });
+  const alertQuery = await getAlert({ id: alert.id });
 
   // Get alert with full details
   if (alertQuery.data.getAlert) {

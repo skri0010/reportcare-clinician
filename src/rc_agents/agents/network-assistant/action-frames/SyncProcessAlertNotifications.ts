@@ -14,7 +14,7 @@ import {
 } from "rc_agents/clinician_framework";
 import { LocalStorage, AsyncStorageKeys } from "rc_agents/storage";
 import { agentNWA } from "rc_agents/agents";
-import { getDetailedAlert, listClinicianPatientMaps } from "aws";
+import { getAlert, listClinicianPatientMaps } from "aws";
 import { AlertInfo, FetchAlertsMode } from "rc_agents/model";
 import { convertAlertToAlertInfo } from "util/utilityFunctions";
 import { replaceAlertNotifications } from "rc_agents/storage/setItem";
@@ -78,7 +78,7 @@ class SyncProcessAlertNotifications extends Activity {
             alertNotifications.map(async (notification) => {
               try {
                 // Retrieve alert
-                return getDetailedAlert({
+                return getAlert({
                   id: notification.alertID
                 });
               } catch (error) {

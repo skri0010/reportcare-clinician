@@ -18,7 +18,7 @@ import {
 import { LocalStorage } from "rc_agents/storage";
 import { store } from "util/useRedux";
 import { agentNWA } from "rc_agents/agents";
-import { getDetailedAlert, updateAlert } from "aws";
+import { getAlert, updateAlert } from "aws";
 import {
   AlertInfo,
   AlertStatus,
@@ -148,7 +148,7 @@ export const updateAlertInfo = async (
   let successful = false;
   try {
     // Device is online: queries the latest alert
-    const alertQuery = await getDetailedAlert({ id: alertInfoInput.id });
+    const alertQuery = await getAlert({ id: alertInfoInput.id });
     if (alertQuery.data.getAlert) {
       const onlineAlert = alertQuery.data.getAlert;
 
