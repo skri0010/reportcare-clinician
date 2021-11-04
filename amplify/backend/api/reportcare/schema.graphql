@@ -3,7 +3,7 @@ Official docs for authentication: https://docs.amplify.aws/cli/graphql-transform
 Official docs for keys: https://docs.amplify.aws/cli/graphql-transformer/key#key
 
 For groupFields details: Design History: Implementation of dynamic group authorization
-#P5 - Models can be improved after implementation of Proposal 5 in https://github.com/aws-amplify/amplify-cli/issues/317
+#P5 - Models can be improved if Proposal 5 (https://github.com/aws-amplify/amplify-cli/issues/317) is implemented
 """
 type PatientInfo
   @model
@@ -72,6 +72,7 @@ type ActivityInfo
     rules: [
       { allow: owner, ownerField: "patientID" }
       { allow: groups, groups: ["Admin"] }
+      { allow: groups, groupsField: "patientID", operations: [read] }
     ]
   )
   @key(
