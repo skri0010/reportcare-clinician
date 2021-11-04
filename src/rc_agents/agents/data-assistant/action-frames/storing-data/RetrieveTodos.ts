@@ -20,7 +20,7 @@ import { store } from "util/useRedux";
 import {
   listCompletedTodosByLastModifiedDate,
   listPendingTodosByLastModifiedDate,
-  getDetailedAlert
+  getAlert
 } from "aws";
 import { ModelSortDirection, Todo } from "aws/API";
 import {
@@ -160,7 +160,7 @@ class RetrieveTodos extends Activity {
               const alertForTodo = await Promise.all(
                 todos.map(async (todo) => {
                   if (todo.alertID) {
-                    const query = getDetailedAlert({
+                    const query = getAlert({
                       id: todo.alertID
                     });
                     return query;

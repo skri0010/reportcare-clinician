@@ -72,6 +72,7 @@ type ActivityInfo
     rules: [
       { allow: owner, ownerField: "patientID" }
       { allow: groups, groups: ["Admin"] }
+      { allow: groups, groupsField: "patientID", operations: [read] }
     ]
   )
   @key(
