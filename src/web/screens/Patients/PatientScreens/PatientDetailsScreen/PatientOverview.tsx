@@ -177,10 +177,13 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
 };
 
 const styles = ScaledSheet.create({
-  header: { flexDirection: "row" },
-  editButtonContainer: {
+  header: {
     flex: 1,
-    alignItems: "flex-end",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between"
+  },
+  editButtonContainer: {
     paddingRight: "10@ms"
   },
   editButton: {

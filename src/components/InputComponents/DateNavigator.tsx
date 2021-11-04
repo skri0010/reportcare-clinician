@@ -54,7 +54,8 @@ export const DateNavigator: FC<DateNavigatorProps> = ({
 const styles = ScaledSheet.create({
   container: {
     flexDirection: "row",
-    alignSelf: "center"
+    alignSelf: "center",
+    paddingVertical: "4@ms"
   },
   iconContainerStyle: {
     paddingHorizontal: "6@ms"
