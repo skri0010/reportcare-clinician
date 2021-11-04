@@ -192,7 +192,7 @@ const handleDelete: (parameters: {
             // Delete the DynamoDB ClinicianRecord
             const deleteMutation = await deleteClinicianRecord({
               documentID: documentID,
-              patientID: patientID,
+              patientID: patientID
             });
             if (deleteMutation.data?.deleteClinicianRecord) {
               // Successful event response
