@@ -80,11 +80,22 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
 
   return (
     <ScreenWrapper padding>
-      {/* Date navigator */}
-      <DateNavigator
-        currentDate={currentDate}
-        setCurrentDate={setCurrentDate}
-      />
+      {/* Date navigator and edit patient details button*/}
+      <View style={styles.header}>
+        <DateNavigator
+          currentDate={currentDate}
+          setCurrentDate={setCurrentDate}
+        />
+
+        {/* Edit patient details button */}
+        <View style={styles.editButtonContainer}>
+          <InnerScreenButton
+            title={i18n.t("Patient_Configuration.EditDetails")}
+            onPress={() => setEditDetails(true)}
+            style={styles.editButton}
+          />
+        </View>
+      </View>
 
       {/* Cards with data */}
       <View style={styles.mainContainer}>
@@ -161,16 +172,20 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
           />
         </View>
       </View>
-      <InnerScreenButton
-        title={i18n.t("Patient_Configuration.EditDetails")}
-        onPress={() => setEditDetails(true)}
-        style={styles.editButtonContainer}
-      />
     </ScreenWrapper>
   );
 };
 
 const styles = ScaledSheet.create({
+  header: { flexDirection: "row" },
+  editButtonContainer: {
+    flex: 1,
+    alignItems: "flex-end",
+    paddingRight: "10@ms"
+  },
+  editButton: {
+    width: "100@ms"
+  },
   mainContainer: {
     flexDirection: "row",
     flexWrap: "wrap"
@@ -180,10 +195,5 @@ const styles = ScaledSheet.create({
     flexWrap: "wrap",
     alignContent: "flex-start",
     minWidth: COLUMN_MIN_WIDTH
-  },
-  editButtonContainer: {
-    width: ms(100),
-    flexDirection: "row",
-    alignSelf: "center"
   }
 });
