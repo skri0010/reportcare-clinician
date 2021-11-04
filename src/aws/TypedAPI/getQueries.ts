@@ -13,8 +13,6 @@ import {
   GetReportSymptomQuery,
   GetReportVitalsQuery,
   GetReportVitalsQueryVariables,
-  GetActivityInfoQuery,
-  GetActivityInfoQueryVariables,
   GetTodoQuery,
   GetTodoQueryVariables,
   GetAlertQuery,
@@ -28,7 +26,6 @@ import {
   GetClinicianRecordQuery,
   GetClinicianRecordQueryVariables
 } from "aws/API";
-import * as Override from "./override";
 
 interface GetClinicianInfoResponse extends BaseResponse {
   data: GetClinicianInfoQuery;
@@ -95,19 +92,6 @@ export const getReportSymptom = async (
   })) as GetReportSymptomResponse;
 };
 
-interface GetActivityInfoResponse extends BaseResponse {
-  data: GetActivityInfoQuery;
-}
-
-export const getActivityInfo = async (
-  variables: GetActivityInfoQueryVariables
-): Promise<GetActivityInfoResponse> => {
-  return (await API.graphql({
-    query: queries.getActivityInfo,
-    variables: variables
-  })) as GetActivityInfoResponse;
-};
-
 interface GetReportVitalsResponse extends BaseResponse {
   data: GetReportVitalsQuery;
 }
@@ -125,11 +109,11 @@ interface GetAlertResponse extends BaseResponse {
   data: GetAlertQuery;
 }
 
-export const getDetailedAlert = async (
+export const getAlert = async (
   variables: GetAlertQueryVariables
 ): Promise<GetAlertResponse> => {
   return (await API.graphql({
-    query: Override.getFullAlert,
+    query: queries.getAlert,
     variables: variables
   })) as GetAlertResponse;
 };

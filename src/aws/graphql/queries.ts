@@ -262,8 +262,11 @@ export const getReportSymptom = /* GraphQL */ `
     getReportSymptom(id: $id) {
       id
       patientID
-      activityInfoID
       symptomName
+      activityName
+      activityInfoID
+      durationInMinutes
+      location
       severity
       dateTime
       summary
@@ -297,8 +300,11 @@ export const listReportSymptoms = /* GraphQL */ `
       items {
         id
         patientID
-        activityInfoID
         symptomName
+        activityName
+        activityInfoID
+        durationInMinutes
+        location
         severity
         dateTime
         summary
@@ -330,8 +336,11 @@ export const listReportSymptomsByPatientID = /* GraphQL */ `
       items {
         id
         patientID
-        activityInfoID
         symptomName
+        activityName
+        activityInfoID
+        durationInMinutes
+        location
         severity
         dateTime
         summary
@@ -365,8 +374,11 @@ export const listReportSymptomsByDateTime = /* GraphQL */ `
       items {
         id
         patientID
-        activityInfoID
         symptomName
+        activityName
+        activityInfoID
+        durationInMinutes
+        location
         severity
         dateTime
         summary
@@ -874,8 +886,11 @@ export const getAlert = /* GraphQL */ `
       symptomReport {
         id
         patientID
-        activityInfoID
         symptomName
+        activityName
+        activityInfoID
+        durationInMinutes
+        location
         severity
         dateTime
         summary

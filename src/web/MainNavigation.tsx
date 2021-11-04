@@ -28,6 +28,7 @@ export const MainNavigation: FC<MainNavigationProps> = ({ setAuthState }) => {
   // States related to internet connection
   const [successToastShown, setSuccessToast] = useState(false);
   const [warningToastShown, setWarningToast] = useState(false);
+  const [networkStateReady, setNetworkStateReady] = useState(false);
 
   // Sign out function
   const signOut = async (): Promise<void> => {
@@ -50,6 +51,7 @@ export const MainNavigation: FC<MainNavigationProps> = ({ setAuthState }) => {
     if (netInfo.isConnected && netInfo.isInternetReachable) {
       // Broadcast the fact to trigger data syncing
       agentAPI.addFact(new Belief(BeliefKeys.APP, AppAttributes.ONLINE, true));
+      setNetworkStateReady(true);
 
       // Was previously offline
       if (warningToastShown && !successToastShown) {
@@ -67,6 +69,7 @@ export const MainNavigation: FC<MainNavigationProps> = ({ setAuthState }) => {
     ) {
       // Removes online broadcast from facts
       agentAPI.addFact(new Belief(BeliefKeys.APP, AppAttributes.ONLINE, false));
+      setNetworkStateReady(true);
       if (!warningToastShown) {
         toast.show(i18n.t("Internet_Connection.OfflineNotice"), {
           type: "warning"
@@ -83,9 +86,10 @@ export const MainNavigation: FC<MainNavigationProps> = ({ setAuthState }) => {
     warningToastShown
   ]);
 
-  return (
+  // Ensures that navigation stack is only rendered after network state is added to facts
+  return networkStateReady ? (
     <NavigationContainer>
       <MainDrawerNavigator signOut={signOut} />
     </NavigationContainer>
-  );
+  ) : null;
 };

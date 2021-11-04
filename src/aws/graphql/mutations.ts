@@ -220,8 +220,11 @@ export const createReportSymptom = /* GraphQL */ `
     createReportSymptom(input: $input, condition: $condition) {
       id
       patientID
-      activityInfoID
       symptomName
+      activityName
+      activityInfoID
+      durationInMinutes
+      location
       severity
       dateTime
       summary
@@ -253,8 +256,11 @@ export const updateReportSymptom = /* GraphQL */ `
     updateReportSymptom(input: $input, condition: $condition) {
       id
       patientID
-      activityInfoID
       symptomName
+      activityName
+      activityInfoID
+      durationInMinutes
+      location
       severity
       dateTime
       summary
@@ -286,8 +292,11 @@ export const deleteReportSymptom = /* GraphQL */ `
     deleteReportSymptom(input: $input, condition: $condition) {
       id
       patientID
-      activityInfoID
       symptomName
+      activityName
+      activityInfoID
+      durationInMinutes
+      location
       severity
       dateTime
       summary
@@ -732,8 +741,11 @@ export const createAlert = /* GraphQL */ `
       symptomReport {
         id
         patientID
-        activityInfoID
         symptomName
+        activityName
+        activityInfoID
+        durationInMinutes
+        location
         severity
         dateTime
         summary
@@ -783,8 +795,11 @@ export const updateAlert = /* GraphQL */ `
       symptomReport {
         id
         patientID
-        activityInfoID
         symptomName
+        activityName
+        activityInfoID
+        durationInMinutes
+        location
         severity
         dateTime
         summary
@@ -834,8 +849,11 @@ export const deleteAlert = /* GraphQL */ `
       symptomReport {
         id
         patientID
-        activityInfoID
         symptomName
+        activityName
+        activityInfoID
+        durationInMinutes
+        location
         severity
         dateTime
         summary

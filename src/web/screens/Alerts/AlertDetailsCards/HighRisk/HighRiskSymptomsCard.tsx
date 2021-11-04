@@ -60,7 +60,7 @@ const SymptomTableRow: FC<SymptomTableRowProps> = ({ report }) => {
     <DataTable.Row>
       <SymptomTableCell cellContent={report.symptomName} />
       <SymptomTableCell
-        cellContent={report.activityInfo?.activityName || displayPlaceholder}
+        cellContent={report.activityName || displayPlaceholder}
       />
       <SymptomTableCell cellContent={`${report.severity}`} />
       <SymptomTableCell cellContent={getLocalDateTime(report.dateTime)} />

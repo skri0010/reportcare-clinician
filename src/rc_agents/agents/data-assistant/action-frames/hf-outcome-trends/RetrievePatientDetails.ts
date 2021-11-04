@@ -17,14 +17,12 @@ import {
 } from "rc_agents/clinician_framework";
 import { MedInput, PatientDetails } from "rc_agents/model";
 import {
-  listActivityInfosByPatientID,
   listReportSymptomsByPatientID,
   listReportVitalsByPatientID,
   listMedicationInfosByPatientID,
   listUploadedClinicianRecordsByPatientID
 } from "aws";
 import {
-  ActivityInfo,
   MedicationInfo,
   ModelSortDirection,
   PatientInfo,
@@ -80,7 +78,6 @@ class RetrievePatientDetails extends Activity {
         const patientId = patientInfo.patientID;
         let patientDetails: PatientDetails = {
           patientInfo: patientInfo,
-          activityInfos: {},
           symptomReports: {},
           vitalsReports: {},
           medicationInfo: [],
@@ -92,9 +89,6 @@ class RetrievePatientDetails extends Activity {
         // Device is online
         if (isOnline && !retrieveLocally) {
           // Query for activity infos, symptom reports and vitals reports
-          const activityInfoPromise = listActivityInfosByPatientID({
-            patientID: patientId
-          });
           const symptomReportsPromise = listReportSymptomsByPatientID({
             patientID: patientId
           });
@@ -122,32 +116,18 @@ class RetrievePatientDetails extends Activity {
 
           // Save network delay by waiting all for all the promises at the same time
           const [
-            activityInfoQuery,
             symptomReportsQuery,
             vitalsReportsQuery,
             medicationInfoQuery,
             medicalRecordsQuery,
             icdCrtRecordsQuery
           ] = await Promise.all([
-            activityInfoPromise,
             symptomReportsPromise,
             vitalsReportsPromise,
             medicationInfoPromise,
             medicalRecordsPromise,
             icdCrtRecordsPromise
           ]);
-
-          // Store activity infos in patient details
-          if (activityInfoQuery.data.listActivityInfosByPatientID?.items) {
-            const infos =
-              activityInfoQuery.data.listActivityInfosByPatientID.items;
-
-            infos.forEach((info: ActivityInfo | null) => {
-              if (info) {
-                patientDetails.activityInfos[info.id] = info;
-              }
-            });
-          }
 
           // Store symptom reports in patient details
           if (symptomReportsQuery.data.listReportSymptomsByPatientID?.items) {
@@ -236,9 +216,6 @@ class RetrievePatientDetails extends Activity {
             patientInfo.patientID
           );
           patientDetailsRetrieved = true;
-          if (localPatientDetails?.activityInfos) {
-            patientDetails.activityInfos = localPatientDetails.activityInfos;
-          }
 
           if (localPatientDetails?.symptomReports) {
             patientDetails.symptomReports = localPatientDetails.symptomReports;

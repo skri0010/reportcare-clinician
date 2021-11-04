@@ -191,7 +191,7 @@ export const getCreateVersionedTodoInput = (
     lastModified: todo.lastModified ? todo.lastModified : todo.createdAt,
     ...(!todo.completed ? { pending: TodoStatus.PENDING } : {}),
     ...(todo.completed ? { completed: TodoStatus.COMPLETED } : {}),
-    ...(!todo.alertId ? { alertID: todo.alertId } : {})
+    ...(todo.alertId ? { alertID: todo.alertId } : {})
   };
 };
 

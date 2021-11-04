@@ -1,5 +1,4 @@
 import {
-  ActivityInfo,
   ReportSymptom,
   ReportVitals,
   PatientInfo,
@@ -141,17 +140,12 @@ export type RecordFile = {
 // Interfaces shared with front end
 export interface PatientDetails {
   patientInfo: PatientInfo;
-  activityInfos: LocalActivityInfos;
   symptomReports: LocalReportSymptoms;
   vitalsReports: LocalReportVitals;
   medicationInfo: MedInput[];
   medicalRecords: ClinicianRecord[];
   icdCrtRecords: ClinicianRecord[];
 }
-
-export type LocalActivityInfos = {
-  [id: string]: ActivityInfo;
-};
 
 // Indexed by date then id
 export type LocalReportSymptoms = {

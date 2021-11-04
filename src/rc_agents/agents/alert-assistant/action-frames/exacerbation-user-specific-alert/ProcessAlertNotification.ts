@@ -16,7 +16,7 @@ import {
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
 import { AlertNotification } from "aws/TypedAPI/subscriptions";
-import { listClinicianPatientMaps, getDetailedAlert } from "aws";
+import { listClinicianPatientMaps, getAlert } from "aws";
 import { LocalStorage } from "rc_agents/storage";
 import { agentNWA } from "rc_agents/agents";
 import { convertAlertToAlertInfo } from "util/utilityFunctions";
@@ -70,7 +70,7 @@ class ProcessAlertNotification extends Activity {
             // Clinician is responsible for this patient - should retrieve monitoring records
             if (patientIds.includes(alertNotification.patientID)) {
               // Get detailed alert
-              const alertQuery = await getDetailedAlert({
+              const alertQuery = await getAlert({
                 id: alertNotification.alertID
               });
               if (alertQuery.data.getAlert) {
