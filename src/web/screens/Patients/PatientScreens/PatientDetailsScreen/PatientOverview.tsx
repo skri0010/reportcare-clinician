@@ -20,6 +20,7 @@ import { PhysicalCard } from "./PatientOverviewComponents/PhysicalCard";
 import { InnerScreenButton } from "components/Buttons/InnerScreenButton";
 import { displayPlaceholder } from "util/const";
 import { DEFAULT_CARD_WRAPPER_MIN_WIDTH } from "components/Wrappers/CardWrapper";
+import { DateNavigator } from "components/InputComponents/DateNavigator";
 
 interface PatientOverviewProps extends PatientDetailsTabProps.OverviewTabProps {
   details: PatientDetails;
@@ -33,17 +34,17 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
   details,
   setEditDetails
 }) => {
-  const cardHeight = Math.max(ms(100), Dimensions.get("window").height * 0.3);
+  // State for current date displayed
+  const [currentDate, setCurrentDate] = useState<Date>(new Date());
 
+  const cardHeight = Math.max(ms(100), Dimensions.get("window").height * 0.3);
   const [vitals, setVitals] = useState<ReportVitals | null>(null);
   const [symptoms, setSymptoms] = useState<ReportSymptom[]>([]);
   const [medications, setMedications] = useState<MedInput[]>([]);
-  const [sumFluidIntake, setSumFluidIntake] = useState<number>(0);
+  const [sumFluidIntake, setSumFluidIntake] = useState<string>("0");
   const [physical, setPhysical] = useState<Physical | null>(null);
-
   useEffect(() => {
-    // FUTURE-TODO: This code needs to be modified for changing days
-    const date = new Date().toLocaleDateString();
+    const date = currentDate.toLocaleDateString();
 
     // Take the latest vitals report and update vitals on date
     const vitalsReportsOnDate = details.vitalsReports[date];
@@ -59,28 +60,33 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
       );
 
       // Set total fluid taken
-      setSumFluidIntake(fluidIntakeList.reduce((a, b) => a + b, 0));
+      setSumFluidIntake(fluidIntakeList.reduce((a, b) => a + b, 0).toString());
+    } else {
+      setVitals(null);
+      setSumFluidIntake("0");
     }
 
     // Get physical for the date
     const physicalOnDate = details.physicals[date];
-    if (physicalOnDate) {
-      setPhysical(physicalOnDate);
-    }
+    setPhysical(physicalOnDate || null);
 
     // Update symptoms on date
     const symptomsOnDate = details.symptomReports[date];
-    if (symptomsOnDate) {
-      setSymptoms(symptomsOnDate);
-    }
+    setSymptoms(symptomsOnDate || []);
+
     const medInfo = details.medicationInfos;
-    if (medInfo) {
-      setMedications(medInfo);
-    }
-  }, [details]);
+    setMedications(medInfo || null);
+  }, [details, currentDate]);
 
   return (
     <ScreenWrapper padding>
+      {/* Date navigator */}
+      <DateNavigator
+        currentDate={currentDate}
+        setCurrentDate={setCurrentDate}
+      />
+
+      {/* Cards with data */}
       <View style={styles.mainContainer}>
         {/* Left column (medication and symptoms cards)*/}
         <View style={[{ flex: 2 }, styles.columnContainer]}>
@@ -155,7 +161,6 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
           />
         </View>
       </View>
-
       <InnerScreenButton
         title={i18n.t("Patient_Configuration.EditDetails")}
         onPress={() => setEditDetails(true)}
