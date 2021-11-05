@@ -99,6 +99,9 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
       active: true
     });
 
+    // used to show blank screen in medconfig modal on the right side
+    const [showDefaultScreen, setShowDefaultScreen] = useState<boolean>(true);
+
     // Used locally to keep track of ongoing configuration procedure
     const [configuring, setConfiguring] = useState<boolean>(false);
 
@@ -169,6 +172,18 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
     // Save medication info inputs
     const saveMedInput = (medInput: MedInput) => {
       const currentMedInfos: MedInput[] = medInfos;
+      if (
+        currentMedInfos.indexOf(
+          currentMedInfos.filter((t) => t.name === medInput.name)[0]
+        ) !== -1
+      ) {
+        currentMedInfos.splice(
+          currentMedInfos.indexOf(
+            currentMedInfos.filter((t) => t.name === medInput.name)[0]
+          ),
+          1
+        );
+      }
       // check if medinpnut is a new medication
       if (medInput.active && !medInput.id) {
         // toggle list under configure medication button
@@ -176,7 +191,7 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
         currentMedInfos.push(medInput);
         setMedInfos(currentMedInfos);
       } else if (!medInput.active) {
-        // check if medicationnn already exists and has become inactive
+        // check if medication already exists and has become inactive
         currentMedInfos.push(medInput); // store change in medinnfos
         setMedInfos(currentMedInfos);
         // change active medication array to account only for active meds
@@ -191,14 +206,17 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
         setMedInfos(currentMedInfos);
         // remove from currentActiveMedication array and places it anew
         currentActiveMedication.splice(
-          currentActiveMedication.indexOf(medInput),
+          currentActiveMedication.indexOf(
+            currentActiveMedication.filter((t) => t.id === medInput.id)[0]
+          ),
           1
         );
         currentActiveMedication.push(medInput);
+        setCurrentActiveMedication(currentActiveMedication);
       }
 
       // closes the medication info input form, enable the add new medication info button
-      setMedConfigFormVisible(false);
+      //setMedConfigFormVisible(false);
       // Reset the values for the medication input
       setConfigMedInfo({
         name: "",
@@ -207,6 +225,8 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
         patientID: info.patientID,
         active: true
       });
+
+      setShowDefaultScreen(true);
     };
 
     // Side effect for when a medication info input is deleted from the list
@@ -495,6 +515,8 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
             setMedConfigFormVisible={setMedConfigFormVisible}
             localMedInfos={medInfos}
             currentActiveMedications={currentActiveMedication}
+            showDefaultScreen={showDefaultScreen}
+            setShowDefaultScreen={setShowDefaultScreen}
           />
         </ModalWrapper>
         {configuring && <LoadingIndicator />}

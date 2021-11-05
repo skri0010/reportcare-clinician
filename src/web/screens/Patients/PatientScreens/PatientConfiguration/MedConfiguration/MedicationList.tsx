@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { FlatList, TouchableOpacity, View } from "react-native";
 import { RootState, select } from "util/useRedux";
-import { MedInput, PatientDetails } from "rc_agents/model";
+import { MedInput } from "rc_agents/model";
 import { MedInfoRow } from "./MedInfoRow";
 import { H5 } from "components/Text";
 import i18n from "util/language/i18n";
@@ -11,14 +11,12 @@ import MaterialCommunityIcon from "react-native-vector-icons/MaterialCommunityIc
 interface MedicationListProps {
   setAddNewMed: () => void;
   setMedToUpdate: (medToUpdate: MedInput) => void;
-  details: PatientDetails;
   activeMedications: MedInput[];
 }
 
 export const MedicationList: FC<MedicationListProps> = ({
   setAddNewMed,
   setMedToUpdate,
-  details,
   activeMedications
 }) => {
   const { colors, fonts } = select((state: RootState) => ({
@@ -72,7 +70,7 @@ export const MedicationList: FC<MedicationListProps> = ({
       />
       {activeMedications.length > 0 ? (
         <FlatList
-          data={details.medicationInfo}
+          data={activeMedications}
           renderItem={({ item }) =>
             item.active ? (
               <MedInfoRow

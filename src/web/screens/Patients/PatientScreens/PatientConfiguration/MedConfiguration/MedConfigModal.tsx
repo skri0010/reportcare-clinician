@@ -17,6 +17,8 @@ interface MedConfigModalProps {
   setMedConfigFormVisible: (state: boolean) => void;
   currentActiveMedications: MedInput[];
   localMedInfos: MedInput[];
+  showDefaultScreen: boolean;
+  setShowDefaultScreen: (show: boolean) => void;
 }
 
 export const MedConfigModal: FC<MedConfigModalProps> = ({
@@ -26,16 +28,14 @@ export const MedConfigModal: FC<MedConfigModalProps> = ({
   saveMedInput,
   setMedConfigFormVisible,
   currentActiveMedications,
-  localMedInfos
+  localMedInfos,
+  showDefaultScreen,
+  setShowDefaultScreen
 }) => {
   const { colors, fonts } = select((state: RootState) => ({
     colors: state.settings.colors,
     fonts: state.settings.fonts
   }));
-
-  const [medToUpdate, setMedToUpdate] = useState<MedInput | undefined>(
-    undefined
-  );
 
   // state used to keep track of current dosage of a medication for display purposes
   const [currentDosage, setCurrentDosage] = useState<string | undefined>(
@@ -45,14 +45,14 @@ export const MedConfigModal: FC<MedConfigModalProps> = ({
   const [addingNewMed, setAddingNewMed] = useState<boolean>(false);
 
   const updateMed = (medInfo: MedInput) => {
+    setShowDefaultScreen(false);
     setAddingNewMed(false);
     setConfigMedInfo(medInfo);
-    setMedToUpdate(medInfo);
     setCurrentDosage(medInfo.dosage);
   };
 
   const addMed = () => {
-    setMedToUpdate(undefined);
+    setShowDefaultScreen(false);
     setAddingNewMed(true);
     setConfigMedInfo({
       name: "",
@@ -94,7 +94,6 @@ export const MedConfigModal: FC<MedConfigModalProps> = ({
       <View style={styles.container}>
         <MedicationList
           setAddNewMed={addMed}
-          details={details}
           setMedToUpdate={updateMed}
           activeMedications={currentActiveMedications}
         />
@@ -103,7 +102,7 @@ export const MedConfigModal: FC<MedConfigModalProps> = ({
             flex: 2
           }}
         >
-          {addingNewMed ? (
+          {showDefaultScreen ? undefined : addingNewMed ? (
             <AddNewMedication
               details={details}
               configMedInfo={configMedInfo}
@@ -113,7 +112,7 @@ export const MedConfigModal: FC<MedConfigModalProps> = ({
               isAdding
               localMedInfos={localMedInfos}
             />
-          ) : medToUpdate ? (
+          ) : (
             <AddNewMedication
               details={details}
               configMedInfo={configMedInfo}
@@ -124,7 +123,7 @@ export const MedConfigModal: FC<MedConfigModalProps> = ({
               currentDosage={currentDosage}
               localMedInfos={localMedInfos}
             />
-          ) : undefined}
+          )}
         </View>
       </View>
     </View>
