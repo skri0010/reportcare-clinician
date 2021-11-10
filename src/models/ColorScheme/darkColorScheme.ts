@@ -2,9 +2,9 @@ import { ColorScheme } from "models/ColorScheme/model";
 import { IRiskLevelMap } from "models/RiskLevel";
 
 const riskLevelBackgroundColors: IRiskLevelMap = {
-  HIGH: "#ff8888",
-  MEDIUM: "#ffc342",
-  LOW: "#4bd183",
+  HIGH: "#fc9f9f",
+  MEDIUM: "#ffda8a",
+  LOW: "#a2fcc5",
   UNASSIGNED: "#ffffff"
 };
 

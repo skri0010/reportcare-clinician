@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { RootState, select } from "util/useRedux";
 import { ScaledSheet } from "react-native-size-matters";
-import { H5, H6 } from "components/Text";
+import { H5 } from "components/Text";
 import { getRiskLevelColor, RiskLevel } from "models/RiskLevel";
 import { View } from "react-native";
 import { RowButton } from "components/Buttons/RowButton";
@@ -50,14 +50,14 @@ export const AlertHistoryRow: FC<AlertHistoryRowProps> = ({
       <View style={[styles.textContainer]}>
         {/* Risk level and date */}
         <View style={[styles.contentTitle]}>
-          <H6
+          <H5
             text={`${getRiskName(risk)} `}
             style={{
               fontWeight: "bold",
               color: getRiskLevelColor(colors.riskLevelBorderColors, risk)
             }}
           />
-          <H6
+          <H5
             text={`${getLocalDateTime(date)}:`}
             style={{ fontWeight: "bold", color: colors.primaryTextColor }}
           />
