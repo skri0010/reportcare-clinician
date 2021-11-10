@@ -273,7 +273,7 @@ class RetrievePatientDetails extends Activity {
     );
 
     // // Store IcdCrt records
-    patientDetails.medicalRecords = clinicianRecordList.filter(
+    patientDetails.icdCrtRecords = clinicianRecordList.filter(
       (item) => item.type === ClinicianRecordTypeConst.IcdCrt
     );
 

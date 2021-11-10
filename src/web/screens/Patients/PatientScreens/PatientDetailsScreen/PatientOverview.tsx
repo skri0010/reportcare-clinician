@@ -142,7 +142,7 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
 
           {/* Physical card */}
           <PhysicalCard
-            flex={3}
+            flex={2}
             steps={physical?.steps || displayPlaceholder}
             stepsGoal={physical?.stepsGoal || displayPlaceholder}
             averageWalkingSpeedInMetresPerSeconds={

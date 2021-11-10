@@ -167,10 +167,10 @@ export const setPatientMedInfo = async (
       patientInfo: localPatient?.patientInfo,
       symptomReports: localPatient?.symptomReports || {},
       vitalsReports: localPatient?.vitalsReports || {},
+      physicals: localPatient?.physicals || {},
       medicationInfos: medicationInfo,
-      physicals: localPatient?.physicals || [],
-      medicalRecords: localPatient?.medicalRecords || {},
-      icdCrtRecords: localPatient?.icdCrtRecords || {}
+      medicalRecords: localPatient?.medicalRecords || [],
+      icdCrtRecords: localPatient?.icdCrtRecords || []
     });
   }
 };
