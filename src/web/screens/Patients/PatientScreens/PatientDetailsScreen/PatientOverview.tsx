@@ -99,25 +99,7 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
 
       {/* Cards with data */}
       <View style={styles.mainContainer}>
-        {/* Left column (medication and symptoms cards)*/}
-        <View style={[{ flex: 2 }, styles.columnContainer]}>
-          {/* Medication card */}
-          <MedicationTakenCard
-            flex={1}
-            medications={medications}
-            maxHeight={cardHeight}
-            minHeight={cardHeight}
-          />
-          {/* Symptoms card */}
-          <SymptomsCard
-            flex={1}
-            symptoms={symptoms}
-            minHeight={cardHeight}
-            maxHeight={cardHeight * 2.15}
-          />
-        </View>
-
-        {/* Right column (other cards)*/}
+        {/* Left column (cards other than medication and symptoms)*/}
         <View style={[{ flex: 3 }, styles.columnContainer]}>
           {/* Blood pressure card */}
           <BloodPressureCard
@@ -160,7 +142,7 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
 
           {/* Physical card */}
           <PhysicalCard
-            flex={2}
+            flex={3}
             steps={physical?.steps || displayPlaceholder}
             stepsGoal={physical?.stepsGoal || displayPlaceholder}
             averageWalkingSpeedInMetresPerSeconds={
@@ -169,6 +151,24 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
             }
             distanceInMetres={physical?.distanceInMetres || displayPlaceholder}
             fixedHeight={cardHeight}
+          />
+        </View>
+
+        {/* Right column (medication and symptoms cards)*/}
+        <View style={[{ flex: 2 }, styles.columnContainer]}>
+          {/* Medication card */}
+          <MedicationTakenCard
+            flex={1}
+            medications={medications}
+            maxHeight={cardHeight}
+            minHeight={cardHeight}
+          />
+          {/* Symptoms card */}
+          <SymptomsCard
+            flex={1}
+            symptoms={symptoms}
+            minHeight={cardHeight}
+            maxHeight={cardHeight * 2.15}
           />
         </View>
       </View>
