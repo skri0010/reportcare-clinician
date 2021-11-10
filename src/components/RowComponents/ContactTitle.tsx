@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from "react";
 import { View } from "react-native";
-import { ms, ScaledSheet } from "react-native-size-matters";
+import { ScaledSheet } from "react-native-size-matters";
 import { RootState, select } from "util/useRedux";
 import { H2 } from "components/Text";
 import { PeopleAvatar } from "components/RowComponents/PeopleAvatar";
@@ -75,8 +75,7 @@ export const ContactTitle: FC<ContactTitleProps> = ({
               ? colors.acceptButtonColor
               : colors.primaryDeactivatedButtonColor
           }}
-          containerBackgroundColor="transparent"
-          containerStyle={{ paddingLeft: ms(10), alignSelf: "center" }}
+          containerStyle={styles.iconContainerStyle}
         />
       )}
     </View>
@@ -94,5 +93,9 @@ const styles = ScaledSheet.create({
     paddingVertical: "7@ms",
     paddingRight: "10@ms",
     paddingLeft: "10@ms"
+  },
+  iconContainerStyle: {
+    paddingLeft: "10@ms",
+    alignSelf: "center"
   }
 });

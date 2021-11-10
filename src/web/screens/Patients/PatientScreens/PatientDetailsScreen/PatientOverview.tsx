@@ -20,6 +20,7 @@ import { PhysicalCard } from "./PatientOverviewComponents/PhysicalCard";
 import { InnerScreenButton } from "components/Buttons/InnerScreenButton";
 import { displayPlaceholder } from "util/const";
 import { DEFAULT_CARD_WRAPPER_MIN_WIDTH } from "components/Wrappers/CardWrapper";
+import { DateNavigator } from "components/InputComponents/DateNavigator";
 
 interface PatientOverviewProps extends PatientDetailsTabProps.OverviewTabProps {
   details: PatientDetails;
@@ -33,17 +34,17 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
   details,
   setEditDetails
 }) => {
-  const cardHeight = Math.max(ms(100), Dimensions.get("window").height * 0.3);
+  // State for current date displayed
+  const [currentDate, setCurrentDate] = useState<Date>(new Date());
 
+  const cardHeight = Math.max(ms(100), Dimensions.get("window").height * 0.3);
   const [vitals, setVitals] = useState<ReportVitals | null>(null);
   const [symptoms, setSymptoms] = useState<ReportSymptom[]>([]);
   const [medications, setMedications] = useState<MedInput[]>([]);
-  const [sumFluidIntake, setSumFluidIntake] = useState<number>(0);
+  const [sumFluidIntake, setSumFluidIntake] = useState<string>("0");
   const [physical, setPhysical] = useState<Physical | null>(null);
-
   useEffect(() => {
-    // FUTURE-TODO: This code needs to be modified for changing days
-    const date = new Date().toLocaleDateString();
+    const date = currentDate.toLocaleDateString();
 
     // Take the latest vitals report and update vitals on date
     const vitalsReportsOnDate = details.vitalsReports[date];
@@ -59,48 +60,46 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
       );
 
       // Set total fluid taken
-      setSumFluidIntake(fluidIntakeList.reduce((a, b) => a + b, 0));
+      setSumFluidIntake(fluidIntakeList.reduce((a, b) => a + b, 0).toString());
+    } else {
+      setVitals(null);
+      setSumFluidIntake("0");
     }
 
     // Get physical for the date
     const physicalOnDate = details.physicals[date];
-    if (physicalOnDate) {
-      setPhysical(physicalOnDate);
-    }
+    setPhysical(physicalOnDate || null);
 
     // Update symptoms on date
     const symptomsOnDate = details.symptomReports[date];
-    if (symptomsOnDate) {
-      setSymptoms(symptomsOnDate);
-    }
+    setSymptoms(symptomsOnDate || []);
+
     const medInfo = details.medicationInfos;
-    if (medInfo) {
-      setMedications(medInfo);
-    }
-  }, [details]);
+    setMedications(medInfo || null);
+  }, [details, currentDate]);
 
   return (
     <ScreenWrapper padding>
-      <View style={styles.mainContainer}>
-        {/* Left column (medication and symptoms cards)*/}
-        <View style={[{ flex: 2 }, styles.columnContainer]}>
-          {/* Medication card */}
-          <MedicationTakenCard
-            flex={1}
-            medications={medications}
-            maxHeight={cardHeight}
-            minHeight={cardHeight}
-          />
-          {/* Symptoms card */}
-          <SymptomsCard
-            flex={1}
-            symptoms={symptoms}
-            minHeight={cardHeight}
-            maxHeight={cardHeight * 2.15}
+      {/* Date navigator and edit patient details button*/}
+      <View style={styles.header}>
+        <DateNavigator
+          currentDate={currentDate}
+          setCurrentDate={setCurrentDate}
+        />
+
+        {/* Edit patient details button */}
+        <View style={styles.editButtonContainer}>
+          <InnerScreenButton
+            title={i18n.t("Patient_Configuration.EditDetails")}
+            onPress={() => setEditDetails(true)}
+            style={styles.editButton}
           />
         </View>
+      </View>
 
-        {/* Right column (other cards)*/}
+      {/* Cards with data */}
+      <View style={styles.mainContainer}>
+        {/* Left column (cards other than medication and symptoms)*/}
         <View style={[{ flex: 3 }, styles.columnContainer]}>
           {/* Blood pressure card */}
           <BloodPressureCard
@@ -143,7 +142,7 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
 
           {/* Physical card */}
           <PhysicalCard
-            flex={2}
+            flex={3}
             steps={physical?.steps || displayPlaceholder}
             stepsGoal={physical?.stepsGoal || displayPlaceholder}
             averageWalkingSpeedInMetresPerSeconds={
@@ -154,18 +153,42 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
             fixedHeight={cardHeight}
           />
         </View>
-      </View>
 
-      <InnerScreenButton
-        title={i18n.t("Patient_Configuration.EditDetails")}
-        onPress={() => setEditDetails(true)}
-        style={styles.editButtonContainer}
-      />
+        {/* Right column (medication and symptoms cards)*/}
+        <View style={[{ flex: 2 }, styles.columnContainer]}>
+          {/* Medication card */}
+          <MedicationTakenCard
+            flex={1}
+            medications={medications}
+            maxHeight={cardHeight}
+            minHeight={cardHeight}
+          />
+          {/* Symptoms card */}
+          <SymptomsCard
+            flex={1}
+            symptoms={symptoms}
+            minHeight={cardHeight}
+            maxHeight={cardHeight * 2.15}
+          />
+        </View>
+      </View>
     </ScreenWrapper>
   );
 };
 
 const styles = ScaledSheet.create({
+  header: {
+    flex: 1,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between"
+  },
+  editButtonContainer: {
+    paddingRight: "10@ms"
+  },
+  editButton: {
+    width: "100@ms"
+  },
   mainContainer: {
     flexDirection: "row",
     flexWrap: "wrap"
@@ -175,10 +198,5 @@ const styles = ScaledSheet.create({
     flexWrap: "wrap",
     alignContent: "flex-start",
     minWidth: COLUMN_MIN_WIDTH
-  },
-  editButtonContainer: {
-    width: ms(100),
-    flexDirection: "row",
-    alignSelf: "center"
   }
 });

@@ -142,3 +142,18 @@ export const getNonNullItemsFromList = <Type>(
   }
   return nonNullList;
 };
+
+// Function that returns the previous or next date
+export const modifyDate: (parameter: {
+  date: Date;
+  action: "PREVIOUS" | "NEXT";
+}) => Date = ({ date, action }) => {
+  let returnDate: Date = date;
+  const ONE = 1;
+  if (action === "PREVIOUS") {
+    returnDate = moment(date).subtract(ONE, "days").toDate();
+  } else if (action === "NEXT") {
+    returnDate = moment(date).add(ONE, "days").toDate();
+  }
+  return returnDate;
+};

@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { ms } from "react-native-size-matters";
+import { ScaledSheet } from "react-native-size-matters";
 import { RootState, select } from "util/useRedux";
 import { IconButton, IconType } from "./IconButton";
 
@@ -22,13 +22,16 @@ export const DeleteIconButton: FC<DeleteIconProps> = ({
       onPress={onPress}
       disabled={!allowDelete}
       type={IconType.FONTAWESOME}
-      containerStyle={{
-        backgroundColor: colors.primaryBackgroundColor,
-        paddingRight: ms(5)
-      }}
+      containerStyle={styles.iconContainerStyle}
       iconStyle={{
         color: allowDelete ? colors.deleteIconColor : colors.overlayColor
       }}
     />
   );
 };
+
+const styles = ScaledSheet.create({
+  iconContainerStyle: {
+    paddingRight: "5@ms"
+  }
+});
