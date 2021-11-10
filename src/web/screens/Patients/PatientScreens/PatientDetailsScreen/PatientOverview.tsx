@@ -99,8 +99,8 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
 
       {/* Cards with data */}
       <View style={styles.mainContainer}>
-        {/* Left column (cards other than medication and symptoms)*/}
-        <View style={[{ flex: 3 }, styles.columnContainer]}>
+        {/* Left column (blood pressure, medication and symptoms cards) */}
+        <View style={[{ flex: 2 }, styles.columnContainer]}>
           {/* Blood pressure card */}
           <BloodPressureCard
             flex={2}
@@ -113,6 +113,25 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
             fixedHeight={cardHeight}
           />
 
+          {/* Medication card */}
+          <MedicationTakenCard
+            flex={1}
+            medications={medications}
+            maxHeight={cardHeight}
+            minHeight={cardHeight}
+          />
+
+          {/* Symptoms card */}
+          <SymptomsCard
+            flex={1}
+            symptoms={symptoms}
+            minHeight={cardHeight}
+            maxHeight={cardHeight * 2.15}
+          />
+        </View>
+
+        {/* Right column (other cards) */}
+        <View style={[{ flex: 3 }, styles.columnContainer]}>
           {/* Oxygen saturation card */}
           <OxygenSaturationCard
             flex={1}
@@ -151,24 +170,6 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
             }
             distanceInMetres={physical?.distanceInMetres || displayPlaceholder}
             fixedHeight={cardHeight}
-          />
-        </View>
-
-        {/* Right column (medication and symptoms cards)*/}
-        <View style={[{ flex: 2 }, styles.columnContainer]}>
-          {/* Medication card */}
-          <MedicationTakenCard
-            flex={1}
-            medications={medications}
-            maxHeight={cardHeight}
-            minHeight={cardHeight}
-          />
-          {/* Symptoms card */}
-          <SymptomsCard
-            flex={1}
-            symptoms={symptoms}
-            minHeight={cardHeight}
-            maxHeight={cardHeight * 2.15}
           />
         </View>
       </View>
