@@ -1,6 +1,6 @@
 import { IconButton, IconType } from "components/Buttons/IconButton";
 import { H4 } from "components/Text";
-import React, { FC } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { View } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { RootState, select } from "util/useRedux";
@@ -19,6 +19,14 @@ export const DateNavigator: FC<DateNavigatorProps> = ({
     colors: state.settings.colors
   }));
 
+  const [disableNextDate, setDisableNextDate] = useState(false);
+
+  useEffect(() => {
+    setDisableNextDate(
+      new Date().toLocaleDateString() === currentDate.toLocaleDateString()
+    );
+  }, [currentDate]);
+
   return (
     <View style={styles.container}>
       <IconButton
@@ -31,21 +39,27 @@ export const DateNavigator: FC<DateNavigatorProps> = ({
         type={IconType.FONTAWESOME}
       />
       <H4
-        text={`${
-          new Date().toLocaleDateString() === currentDate.toLocaleDateString()
+        text={
+          disableNextDate
             ? `Today (${currentDate.toLocaleDateString()})`
-            : `${currentDate.toLocaleDateString()}`
-        }`}
+            : currentDate.toLocaleDateString()
+        }
         style={styles.textStyle}
       />
       <IconButton
         name="caret-right"
-        iconStyle={{ color: colors.primaryIconColor }}
+        iconStyle={{
+          color: disableNextDate
+            ? colors.primaryDeactivatedButtonColor
+            : colors.primaryIconColor,
+          opacity: disableNextDate ? 0.2 : 1
+        }}
         containerStyle={styles.iconContainerStyle}
         onPress={() =>
           setCurrentDate(modifyDate({ date: currentDate, action: "NEXT" }))
         }
         type={IconType.FONTAWESOME}
+        disabled={disableNextDate}
       />
     </View>
   );
