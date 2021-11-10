@@ -19,6 +19,7 @@ import { PersistGate } from "redux-persist/lib/integration/react";
 import "web/styles.css";
 import { LocalStorage } from "rc_agents/storage";
 import { setClinician } from "ic-redux/actions/agents/clinicianActionCreator";
+import { ProvidedStoreWrapper } from "./ProvidedStoreWrapper";
 
 Amplify.configure(awsconfig);
 Auth.configure(awsconfig);
@@ -97,13 +98,15 @@ const App: FC = () => {
           loading={<LoadingIndicator overlayBackgroundColor />}
           persistor={persistor}
         >
-          <ToastProviderComponent>
-            {authState === AuthState.SIGNED_IN ? (
-              <MainNavigation setAuthState={setAuthState} />
-            ) : authState === AuthState.SIGNED_OUT ? (
-              <AuthStackNavigator setAuthState={setAuthState} />
-            ) : null}
-          </ToastProviderComponent>
+          <ProvidedStoreWrapper>
+            <ToastProviderComponent>
+              {authState === AuthState.SIGNED_IN ? (
+                <MainNavigation setAuthState={setAuthState} />
+              ) : authState === AuthState.SIGNED_OUT ? (
+                <AuthStackNavigator setAuthState={setAuthState} />
+              ) : null}
+            </ToastProviderComponent>
+          </ProvidedStoreWrapper>
         </PersistGate>
       ) : (
         <LoadingIndicator overlayBackgroundColor />

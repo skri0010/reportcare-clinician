@@ -89,7 +89,7 @@ export const VitalsLineChartComponent: FC<VitalsLineChartProps> = ({
     }
   };
 
-  const axisLabelStyle = { fontSize: "bold", fill: colors.primaryTextColor };
+  const axisLabelStyle = { fill: colors.primaryTextColor };
 
   return (
     <View style={{ maxHeight: ms(275) }}>

@@ -2,7 +2,7 @@
 import React, { FC } from "react";
 import { View } from "react-native";
 import { ms, ScaledSheet } from "react-native-size-matters";
-import { H7, TextProps } from ".";
+import { H6, TextProps } from ".";
 
 interface InformationTextProps {
   TextComponent?: FC<TextProps>;
@@ -13,7 +13,7 @@ interface InformationTextProps {
 }
 
 export const InformationText: FC<InformationTextProps> = ({
-  TextComponent = H7,
+  TextComponent = H6,
   textProps = {},
   boldText,
   normalText,

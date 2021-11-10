@@ -8,23 +8,23 @@ import {
   setColorScheme,
   setLanguage
 } from "ic-redux/actions/settings/actionCreator";
-import { darkColorScheme, lightColorScheme } from "models/ColorScheme";
 import { View } from "react-native";
 import { RootState, select } from "util/useRedux";
 import { alternateLanguage, defaultLanguage } from "util/language";
 import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
+import { ColorSchemeName } from "models/ColorScheme";
 
 export const SettingsScreen: FC<MainScreenProps[ScreenName.SETTINGS]> = () => {
-  const { colorScheme, language } = select((state: RootState) => ({
-    colorScheme: state.settings.colors,
+  const { colorSchemeName, language } = select((state: RootState) => ({
+    colorSchemeName: state.settings.colorSchemeName,
     language: state.settings.language
   }));
 
   const dispatch = useDispatch();
 
+  // FUTURE-TODO: If you wish to incorporate additional color schemes, this boolean should be modified as well
   // Boolean for dark mode and language selected
-  const darkMode =
-    JSON.stringify(colorScheme) === JSON.stringify(darkColorScheme);
+  const darkMode = colorSchemeName === ColorSchemeName.DARK;
   const bmSelected = language === alternateLanguage;
 
   // Selected Language
@@ -32,7 +32,10 @@ export const SettingsScreen: FC<MainScreenProps[ScreenName.SETTINGS]> = () => {
     bmSelected === true ? defaultLanguage : alternateLanguage;
 
   const toggleDarkMode = () => {
-    dispatch(setColorScheme(darkMode ? lightColorScheme : darkColorScheme));
+    // FUTURE-TODO: If you wish to incorporate additional color schemes, this should be replaced to directly use ColorSchemeName
+    dispatch(
+      setColorScheme(darkMode ? ColorSchemeName.LIGHT : ColorSchemeName.DARK)
+    );
   };
 
   const toggleLanguageSwitch = () => {

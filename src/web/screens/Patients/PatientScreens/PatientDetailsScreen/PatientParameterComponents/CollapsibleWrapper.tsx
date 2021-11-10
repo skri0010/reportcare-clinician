@@ -50,7 +50,6 @@ export const CollapsibleWrapper: FC<CollapsibleWrapperProps> = ({
             type={IconType.MATERIAL}
             size={size || fonts.h5Size}
             containerStyle={styles.iconContainerStyle}
-            containerBackgroundColor="transparent"
             iconStyle={{ color: colors.primaryIconColor }}
           />
           <HBase text={headerTitle} size={size || fonts.h4Size} />

@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 import { PatientRowBase } from "./PatientRowBase";
-import { ms, ScaledSheet } from "react-native-size-matters";
+import { ScaledSheet } from "react-native-size-matters";
 import { select, RootState } from "util/useRedux";
 import { IconButton, IconType } from "components/Buttons/IconButton";
 
@@ -21,18 +21,13 @@ export const PatientAssignmentRow: React.FC<PatientAssignmentRowProps> = ({
     fonts: state.settings.fonts
   }));
 
-  const iconContainerStyle = {
-    marginRight: ms(10),
-    backgroundColor: colors.primaryBackgroundColor
-  };
-
   return (
     <PatientRowBase title={patientName} riskLevel={null}>
       <View style={styles.rightIconsContainer}>
         <IconButton
           name="person-add"
           type={IconType.MATERIAL}
-          containerStyle={iconContainerStyle}
+          containerStyle={styles.iconContainerStyle}
           iconStyle={{ color: colors.acceptIconColor }}
           size={fonts.h3Size}
           onPress={onApprove}
@@ -40,7 +35,7 @@ export const PatientAssignmentRow: React.FC<PatientAssignmentRowProps> = ({
         <IconButton
           name="account-arrow-right"
           type={IconType.MATERIAL_COMMUNITY}
-          containerStyle={iconContainerStyle}
+          containerStyle={styles.iconContainerStyle}
           iconStyle={{ color: colors.primaryIconColor }}
           size={fonts.h3Size}
           onPress={onReassign}
@@ -58,5 +53,8 @@ const styles = ScaledSheet.create({
   rightIconsContainer: {
     flexDirection: "row",
     paddingTop: "5@ms"
+  },
+  iconContainerStyle: {
+    marginRight: "10@ms"
   }
 });

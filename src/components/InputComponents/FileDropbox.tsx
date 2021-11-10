@@ -207,7 +207,6 @@ const styles = ScaledSheet.create({
     padding: "10@ms"
   },
   iconContainerStyle: {
-    paddingLeft: "10@ms",
-    backgroundColor: "transparent"
+    paddingLeft: "10@ms"
   }
 });

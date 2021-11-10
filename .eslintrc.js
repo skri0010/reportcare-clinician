@@ -127,6 +127,11 @@ module.exports = {
           {
             name: "rc_agents/storage/accessFunctions",
             message: "Please import from rc_agents/storage instead"
+          },
+          {
+            name: "react-native",
+            importNames: ["ColorSchemeName"],
+            message: "Use exported type from model/ColorScheme instead."
           }
         ],
         patterns: [
