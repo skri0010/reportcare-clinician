@@ -108,7 +108,7 @@ export const MedConfigModal: FC<MedConfigModalProps> = ({
               configMedInfo={configMedInfo}
               setConfigMedInfo={setConfigMedInfo}
               saveMedInput={saveMedInput}
-              setMedConfigFormVisible={setMedConfigFormVisible}
+              setShowDefaultScreen={setShowDefaultScreen}
               isAdding
               localMedInfos={localMedInfos}
             />
@@ -118,7 +118,7 @@ export const MedConfigModal: FC<MedConfigModalProps> = ({
               configMedInfo={configMedInfo}
               setConfigMedInfo={setConfigMedInfo}
               saveMedInput={saveMedInput}
-              setMedConfigFormVisible={setMedConfigFormVisible}
+              setShowDefaultScreen={setShowDefaultScreen}
               isAdding={false}
               currentDosage={currentDosage}
               localMedInfos={localMedInfos}

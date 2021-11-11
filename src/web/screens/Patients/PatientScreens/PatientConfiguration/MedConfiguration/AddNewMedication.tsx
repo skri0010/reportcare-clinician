@@ -21,22 +21,22 @@ interface AddNewMedicationProps {
   configMedInfo: MedInput;
   setConfigMedInfo: (medInfo: MedInput) => void;
   saveMedInput: (medInput: MedInput) => void;
-  setMedConfigFormVisible: (state: boolean) => void;
   details: PatientDetails;
   isAdding: boolean;
   currentDosage?: string;
   localMedInfos: MedInput[];
+  setShowDefaultScreen: (state: boolean) => void;
 }
 
 export const AddNewMedication: FC<AddNewMedicationProps> = ({
   configMedInfo,
   setConfigMedInfo,
   saveMedInput,
-  setMedConfigFormVisible,
   details,
   isAdding,
   currentDosage = "",
-  localMedInfos
+  localMedInfos,
+  setShowDefaultScreen
 }) => {
   const { colors, fonts } = select((state: RootState) => ({
     colors: state.settings.colors,
@@ -230,7 +230,7 @@ export const AddNewMedication: FC<AddNewMedicationProps> = ({
         {/* Cancel button */}
         <RowButton
           title="Patient_Configuration.Cancel"
-          onPress={() => setMedConfigFormVisible(false)}
+          onPress={() => setShowDefaultScreen(true)}
           backgroundColor={colors.primaryBackgroundColor}
           textColor={colors.primaryTextColor}
           borderColor={colors.secondaryBorderColor}
