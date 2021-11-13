@@ -255,9 +255,12 @@ class RetrievePatientDetails extends Activity {
       const dateKey = new Date(physical.dateTime).toLocaleDateString();
       patientDetails.physicals[dateKey] = physical;
     });
-
+    // Get active medinfos only
+    const activeMedInfoList = medicationInfoList.filter(
+      (t) => t.active === true
+    );
     // Store medication info
-    patientDetails.medicationInfos = medicationInfoList.map((medication) => {
+    patientDetails.medicationInfos = activeMedInfoList.map((medication) => {
       return {
         id: medication.id,
         dosage: medication.dosage.toString(),
