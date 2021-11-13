@@ -83,7 +83,7 @@ class StoreBaseline extends Activity {
         if (isOnline) {
           // Updates patient info using configuration
           configurationSuccessful = await updatePatientBaseline(baseline);
-
+          medConfiguration.forEach((t) => (t.id = baseline.patientID + t.name));
           // Creates med info for each of the med config
           const allMedInfoCreation = await Promise.all(
             medConfiguration.map(async (medInfo) => {
@@ -325,48 +325,47 @@ export const updatePatientBaseline = async (
 };
 
 /**
- * Creates medication infos for the patient
+ * Creates medication  or updates infos for the patient
  * @param medicationInfo single medication input entered by clinician
  * @returns medication info created after API call
  */
 export const createMedicationConfiguration = async (
   medicationInfo: MedInput
 ): Promise<MedicationInfo | null> => {
-  // Creates medication info to be inserted into DB\
-  if (!medicationInfo.id) {
-    const medInfoToInsert: CreateMedicationInfoInput = {
-      name: medicationInfo.name,
-      dosage: parseFloat(medicationInfo.dosage),
-      frequency: parseFloat(medicationInfo.frequency),
-      records: JSON.stringify({}),
-      patientID: medicationInfo.patientID,
-      active: true
-    };
+  if (medicationInfo.id) {
+    const medInfoResponse = await getMedicationInfo({
+      id: medicationInfo.id
+    });
 
-    // Make API call to create med info and insert into DB
-    const createMedInfoResponse = await createMedicationInfo(medInfoToInsert);
-
-    if (createMedInfoResponse.data.createMedicationInfo) {
-      return createMedInfoResponse.data.createMedicationInfo;
-    }
-  } else {
-    const medInfoResponse = await getMedicationInfo({ id: medicationInfo.id });
-
+    // check if record exi
     const medInfo = medInfoResponse.data.getMedicationInfo;
 
     if (medInfo) {
       const medInfoToUpdate: UpdateMedicationInfoInput = {
-        id: medicationInfo.id,
+        id: medInfo.id,
         dosage: parseFloat(medicationInfo.dosage),
         frequency: parseFloat(medicationInfo.frequency),
         name: medInfo.name,
         patientID: medInfo.patientID,
         active: medicationInfo.active
       };
-
       const updateMedInfoResponse = await updateMedicationInfo(medInfoToUpdate);
       if (updateMedInfoResponse.data.updateMedicationInfo) {
         return updateMedInfoResponse.data.updateMedicationInfo;
+      }
+    } else {
+      const medInfoToCreate: CreateMedicationInfoInput = {
+        id: medicationInfo.id,
+        dosage: parseFloat(medicationInfo.dosage),
+        frequency: parseFloat(medicationInfo.frequency),
+        name: medicationInfo.name,
+        patientID: medicationInfo.patientID,
+        active: medicationInfo.active,
+        records: JSON.stringify({})
+      };
+      const createMedInfoResponse = await createMedicationInfo(medInfoToCreate);
+      if (createMedInfoResponse.data.createMedicationInfo) {
+        return createMedInfoResponse.data.createMedicationInfo;
       }
     }
   }

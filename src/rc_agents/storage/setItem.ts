@@ -160,6 +160,7 @@ export const setPatientMedInfo = async (
   const localPatient = await getPatientDetails(patientID);
 
   if (localPatient?.patientInfo) {
+    medicationInfo.forEach((t) => (t.id = patientID + t.name));
     await setPatientDetails({
       patientInfo: localPatient?.patientInfo,
       symptomReports: localPatient?.symptomReports || {},
