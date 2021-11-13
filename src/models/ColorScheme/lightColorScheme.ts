@@ -1,9 +1,9 @@
-import { ColorScheme } from "models/ColorScheme/model";
 import {
-  riskLevelBackgroundColors,
-  riskLevelBorderColors,
-  riskLevelSelectedBackgroundColors
-} from "models/ColorScheme/common/riskLevelColors";
+  ColorScheme,
+  defaultRiskLevelBackgroundColors,
+  defaultRiskLevelBorderColors,
+  defaultRiskLevelSelectedBackgroundColors
+} from "models/ColorScheme/model";
 
 export const lightColorScheme: ColorScheme = {
   // Text
@@ -17,11 +17,11 @@ export const lightColorScheme: ColorScheme = {
   // Background
   primaryBackgroundColor: "#ffffff",
   secondaryBackgroundColor: "#727272",
-  primaryWebBackgroundColor: "#F5F5F5",
+  primaryWebBackgroundColor: "#f5f5f5",
   secondaryWebBackgroundColor: "#ffffff",
 
   // Borders
-  primaryBorderColor: "#D2D2D2",
+  primaryBorderColor: "#d2d2d2",
   secondaryBorderColor: "#000000",
   selectedBorderColor: "#000000",
 
@@ -41,20 +41,20 @@ export const lightColorScheme: ColorScheme = {
   // Buttons
   primaryButtonColor: "#9e3ce6",
   acceptButtonColor: "#57c081",
-  declineButtonColor: "#DC143C",
+  declineButtonColor: "#dc143c",
   primaryDeactivatedButtonColor: "#d1d1d1",
-  primaryWarningButtonColor: "#D11C1C",
-  innerScreenButtonColor: "#A484FF",
+  primaryWarningButtonColor: "#d11c1c",
+  innerScreenButtonColor: "#a484ff",
 
   // Avatar background
   primaryAvatarBackgroundColor: "#e0e0e0",
 
   // Icons
   primaryIconColor: "#000000",
-  secondaryIconColor: "#ABA9A9",
-  primaryContrastIconColor: "#FFFFFF",
+  secondaryIconColor: "#aba9a9",
+  primaryContrastIconColor: "#ffffff",
   selectedIconColor: "#00ffff",
-  acceptIconColor: "#6AC574",
+  acceptIconColor: "#6ac574",
   deleteIconColor: "#ff1e00",
 
   // Icon background
@@ -64,10 +64,11 @@ export const lightColorScheme: ColorScheme = {
   infoIconColor: "#2b79c2",
 
   // Charts
+  basicLineColor: "#cccccc",
   maxLineColor: "#5fff42",
   minLineColor: "#c43a31",
   avgLineColor: "#edf24b",
-  chartPillSelectedColor: "#57c081",
+  chartPillSelectedColor: "#4bd183",
   chartPillUnselectedColor: "#F2F2F2",
   chartPillUnselectedBorderColor: "#d1d1d1",
   gridLineColor: "#dedede",
@@ -83,9 +84,9 @@ export const lightColorScheme: ColorScheme = {
   ios_backgroundColor: "#3e3e3e",
 
   // Others
-  riskLevelBackgroundColors: riskLevelBackgroundColors,
-  riskLevelBorderColors: riskLevelBorderColors,
-  riskLevelSelectedBackgroundColors: riskLevelSelectedBackgroundColors,
+  riskLevelBackgroundColors: defaultRiskLevelBackgroundColors,
+  riskLevelSelectedBackgroundColors: defaultRiskLevelSelectedBackgroundColors,
+  riskLevelBorderColors: defaultRiskLevelBorderColors,
 
   // Errors
   errorColor: "#ff1e00",

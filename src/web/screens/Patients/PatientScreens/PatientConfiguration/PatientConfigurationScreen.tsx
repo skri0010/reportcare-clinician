@@ -108,7 +108,7 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
     // used locally to keep track of active medications for display purposes
     const [currentActiveMedication, setCurrentActiveMedication] = useState<
       MedInput[]
-    >(cloneDeep(details.medicationInfo));
+    >(cloneDeep(details.medicationInfos));
 
     const toast = useToast();
     const dispatch = useDispatch();

@@ -1,8 +1,8 @@
 import React, { FC } from "react";
 import {
-  ChartData,
-  getVictoryChartData
-} from "components/VisualizationComponents/ParameterGraphs";
+  VitalsChartData,
+  getVictoryVitalsChartData
+} from "components/VisualizationComponents/VitalsCharts/VitalsChartUtilities";
 import {
   VictoryAxis,
   VictoryChart,
@@ -16,15 +16,13 @@ import { View } from "react-native";
 import { H4, H5 } from "components/Text";
 import { RootState, select } from "util/useRedux";
 import { ChartViewTypes } from "models/ChartViewTypes";
+import { BaseLineChartProps } from "components/VisualizationComponents/GeneralLineChartComponent";
 
-interface LineChartProps {
-  graphTitle: string;
-  graphSubtitle?: string;
-  minDomainY?: number;
-  data: ChartData;
+interface VitalsLineChartProps extends BaseLineChartProps {
+  data: VitalsChartData;
 }
 
-export const LineChartComponent: FC<LineChartProps> = ({
+export const VitalsLineChartComponent: FC<VitalsLineChartProps> = ({
   graphTitle,
   graphSubtitle,
   minDomainY,
@@ -41,9 +39,9 @@ export const LineChartComponent: FC<LineChartProps> = ({
   let avgDataLine: { x: string; y: number }[][] = [];
 
   // Obtain multiple sets of data for each measure to plot discontinuous lines
-  minDataLine = getVictoryChartData(data, ChartViewTypes.MIN);
-  maxDataLine = getVictoryChartData(data, ChartViewTypes.MAX);
-  avgDataLine = getVictoryChartData(data, ChartViewTypes.AVERAGE);
+  minDataLine = getVictoryVitalsChartData(data, ChartViewTypes.MIN);
+  maxDataLine = getVictoryVitalsChartData(data, ChartViewTypes.MAX);
+  avgDataLine = getVictoryVitalsChartData(data, ChartViewTypes.AVERAGE);
 
   // Styles needed for charts
   const avgStyle = {
@@ -91,7 +89,7 @@ export const LineChartComponent: FC<LineChartProps> = ({
     }
   };
 
-  const axisLabelStyle = { fontSize: "bold", fill: colors.primaryTextColor };
+  const axisLabelStyle = { fill: colors.primaryTextColor };
 
   return (
     <View style={{ maxHeight: ms(275) }}>
@@ -125,7 +123,7 @@ export const LineChartComponent: FC<LineChartProps> = ({
             min max and average are their own respective line components.
             Lines have been configure to show label and have higher opacity compared to the rest when chosen specifically
             */}
-        {/* Victory plot for each discontinued line */}
+        {/* Plot Scatter plot */}
         {minDataLine.map((minLines) => (
           <VictoryScatter
             data={minLines}
@@ -171,7 +169,7 @@ export const LineChartComponent: FC<LineChartProps> = ({
           />
         ))}
 
-        {/* Plot Scatter plot */}
+        {/* Victory plot for each discontinued line */}
         {minDataLine.map((minLines) => (
           <VictoryLine
             data={minLines}

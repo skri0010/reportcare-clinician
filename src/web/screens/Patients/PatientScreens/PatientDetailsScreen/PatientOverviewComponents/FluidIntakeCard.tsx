@@ -1,26 +1,29 @@
 import React, { FC } from "react";
-import { CardWrapper } from "components/Wrappers/CardWrapper";
+import {
+  CardWrapper,
+  FixedHeightCardWrapperProps
+} from "components/Wrappers/CardWrapper";
 import i18n from "util/language/i18n";
 import { AbsoluteParameters } from "components/Text/AbsoluteParameters";
 import { View } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
+import { Unit } from "util/const";
 
-interface FluidIntakeCardProps {
+interface FluidIntakeCardProps extends FixedHeightCardWrapperProps {
   fluidIntakeInMl: number | string;
   fluidGoalInMl: number | string;
-  minHeight: number;
-  flex?: number;
 }
 
 export const FluidIntakeCard: FC<FluidIntakeCardProps> = ({
   fluidIntakeInMl,
   fluidGoalInMl,
-  minHeight,
+  fixedHeight,
   flex
 }) => {
   return (
     <CardWrapper
-      minHeight={minHeight}
+      minHeight={fixedHeight}
+      maxHeight={fixedHeight}
       flex={flex}
       title={i18n.t("Parameter_Graphs.FluidIntake")}
       noChildrenPaddingHorizontal
@@ -28,7 +31,7 @@ export const FluidIntakeCard: FC<FluidIntakeCardProps> = ({
       <View style={styles.container}>
         <AbsoluteParameters
           centerText={`${fluidIntakeInMl} / ${fluidGoalInMl}`}
-          bottomText={`(${i18n.t("Parameter_Graphs.FluidUnit")})`}
+          bottomText={`(${Unit.FLUID})`}
         />
       </View>
     </CardWrapper>

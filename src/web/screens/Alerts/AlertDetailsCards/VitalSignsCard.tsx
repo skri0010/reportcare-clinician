@@ -6,6 +6,7 @@ import { getLocalDateTime } from "util/utilityFunctions";
 import { View } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { NoListItemMessage } from "web/screens/Shared/NoListItemMessage";
+import { displayPlaceholder, Unit } from "util/const";
 
 interface VitalSignsCardProps {
   vitalsReport?: ReportVitals | null;
@@ -23,66 +24,44 @@ export const VitalSignsCard: FC<VitalSignsCardProps> = ({ vitalsReport }) => {
             <View style={styles.columnContainer}>
               <BaseDetailsContent
                 title={i18n.t("Alerts.AlertVitals.FluidIntake")}
-                content={
-                  vitalsReport.fluidIntakeInMl
-                    ? `${vitalsReport.fluidIntakeInMl} ${i18n.t(
-                        "Parameter_Graphs.FluidUnit"
-                      )}`
-                    : "-"
-                }
+                content={`${
+                  vitalsReport.fluidIntakeInMl || displayPlaceholder
+                } ${Unit.FLUID}`}
               />
               <BaseDetailsContent
                 title={i18n.t("Alerts.AlertVitals.BPDi")}
-                content={
-                  vitalsReport.diastolicBloodPressure
-                    ? `${vitalsReport.diastolicBloodPressure} ${i18n.t(
-                        "Parameter_Graphs.BPUnit"
-                      )}`
-                    : "-"
-                }
+                content={`${
+                  vitalsReport.diastolicBloodPressure || displayPlaceholder
+                } ${Unit.BLOOD_PRESSURE}`}
               />
               <BaseDetailsContent
                 title={i18n.t("Alerts.AlertVitals.BPSys")}
-                content={
-                  vitalsReport.systolicBloodPressure
-                    ? `${vitalsReport.systolicBloodPressure} ${i18n.t(
-                        "Parameter_Graphs.BPUnit"
-                      )}`
-                    : "-"
-                }
+                content={`${
+                  vitalsReport.systolicBloodPressure || displayPlaceholder
+                } ${Unit.BLOOD_PRESSURE}`}
               />
             </View>
             <View style={styles.columnContainer}>
               <BaseDetailsContent
                 title={i18n.t("Alerts.AlertVitals.OxygenSat")}
-                content={
-                  vitalsReport.oxygenSaturation
-                    ? `${vitalsReport.oxygenSaturation} ${i18n.t(
-                        "Parameter_Graphs.OxygenSaturationUnit"
-                      )}`
-                    : "-"
-                }
+                content={`${
+                  vitalsReport.oxygenSaturation || displayPlaceholder
+                } ${Unit.OXYGEN_SATURATION}`}
               />
               <BaseDetailsContent
                 title={i18n.t("Alerts.AlertVitals.Weight")}
-                content={
-                  vitalsReport.weight
-                    ? `${vitalsReport.weight} ${i18n.t(
-                        "Parameter_Graphs.WeightUnit"
-                      )}`
-                    : "-"
-                }
+                content={`${vitalsReport.weight || displayPlaceholder} ${
+                  Unit.WEIGHT
+                }`}
               />
               <BaseDetailsContent
                 title={i18n.t("Alerts.AlertVitals.HeartRate")}
-                content={`89 ${i18n.t("Alerts.AlertVitals.HeartRateUnit")}`} // FUTURE-TODO: Remove hardcoded value
+                content={`89 ${Unit.HEART_RATE}`} // FUTURE-TODO: Remove hardcoded value
               />
               <BaseDetailsContent
                 title={i18n.t("Alerts.AlertVitals.DateTime")}
                 content={
-                  vitalsReport.dateTime
-                    ? getLocalDateTime(vitalsReport.dateTime)
-                    : "-"
+                  getLocalDateTime(vitalsReport.dateTime) || displayPlaceholder
                 }
               />
             </View>

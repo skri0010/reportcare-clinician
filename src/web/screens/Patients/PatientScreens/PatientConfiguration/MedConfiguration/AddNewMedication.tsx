@@ -165,7 +165,7 @@ export const AddNewMedication: FC<AddNewMedicationProps> = ({
             }}
           >
             {Object.entries(MedicationNames).map(([key, value]) => {
-              const medicationFound = details.medicationInfo.some(
+              const medicationFound = details.medicationInfos.some(
                 (t) => t.name === value && t.active === true
               );
 

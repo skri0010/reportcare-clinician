@@ -74,7 +74,6 @@ export const PatientReassignmentModal: FC<PatientReassignmentModalProps> = ({
           fontSize: fonts.h3Size
         }}
         containerStyle={styles.closeButton}
-        containerBackgroundColor="transparent"
         onPress={() => setModalVisible(false)}
       />
       {/* Title */}

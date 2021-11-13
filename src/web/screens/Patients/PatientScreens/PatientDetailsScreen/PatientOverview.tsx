@@ -6,8 +6,8 @@ import { MedicationTakenCard } from "./PatientOverviewComponents/MedicationCard"
 import { OxygenSaturationCard } from "./PatientOverviewComponents/OxygenSaturationCard";
 import { WeightCard } from "./PatientOverviewComponents/WeightCard";
 import { SymptomsCard } from "./PatientOverviewComponents/SymptomsCard";
-import { Dimensions, ScrollView, View } from "react-native";
-import { ReportSymptom, ReportVitals } from "aws/API";
+import { Dimensions, View } from "react-native";
+import { Physical, ReportSymptom, ReportVitals } from "aws/API";
 import i18n from "util/language/i18n";
 import { PatientDetailsTabProps } from "web/navigation/types";
 import { MedInput, PatientDetails } from "rc_agents/model";
@@ -16,30 +16,35 @@ import {
   getNonNullItemsFromList
 } from "util/utilityFunctions";
 import { FluidIntakeCard } from "./PatientOverviewComponents/FluidIntakeCard";
-import { ActivityCard } from "./PatientOverviewComponents/ActivityCard";
+import { PhysicalCard } from "./PatientOverviewComponents/PhysicalCard";
 import { InnerScreenButton } from "components/Buttons/InnerScreenButton";
 import { displayPlaceholder } from "util/const";
+import { DEFAULT_CARD_WRAPPER_MIN_WIDTH } from "components/Wrappers/CardWrapper";
+import { DateNavigator } from "components/InputComponents/DateNavigator";
 
 interface PatientOverviewProps extends PatientDetailsTabProps.OverviewTabProps {
   details: PatientDetails;
   setEditDetails: (state: boolean) => void; // To edit patient's details
 }
 
+// IMPORTANT - Otherwise the cards will not wrap propertly due to lack of min width
+const COLUMN_MIN_WIDTH = DEFAULT_CARD_WRAPPER_MIN_WIDTH + ms(20);
+
 export const PatientOverview: FC<PatientOverviewProps> = ({
   details,
   setEditDetails
 }) => {
-  const cardHeight = Math.max(ms(100), Dimensions.get("window").height * 0.3);
+  // State for current date displayed
+  const [currentDate, setCurrentDate] = useState<Date>(new Date());
 
+  const cardHeight = Math.max(ms(100), Dimensions.get("window").height * 0.3);
   const [vitals, setVitals] = useState<ReportVitals | null>(null);
   const [symptoms, setSymptoms] = useState<ReportSymptom[]>([]);
   const [medications, setMedications] = useState<MedInput[]>([]);
-  const [sumFluidIntake, setSumFluidIntake] = useState<number>(0);
-  const [sumStepsTaken, setSumStepsTaken] = useState<number>(0);
-
+  const [sumFluidIntake, setSumFluidIntake] = useState<string>("0");
+  const [physical, setPhysical] = useState<Physical | null>(null);
   useEffect(() => {
-    // FUTURE-TODO: This code needs to be modified for changing days
-    const date = new Date().toLocaleDateString();
+    const date = currentDate.toLocaleDateString();
 
     // Take the latest vitals report and update vitals on date
     const vitalsReportsOnDate = details.vitalsReports[date];
@@ -55,109 +60,144 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
       );
 
       // Set total fluid taken
-      setSumFluidIntake(fluidIntakeList.reduce((a, b) => a + b, 0));
-
-      // DS-TODO: Replace with Physical
-      // Get sum of steps taken
-      const stepsTakenList: number[] = getNonNullItemsFromList([]);
-
-      // Set sum of steps taken
-      setSumStepsTaken(stepsTakenList.reduce((a, b) => a + b, 0));
+      setSumFluidIntake(fluidIntakeList.reduce((a, b) => a + b, 0).toString());
+    } else {
+      setVitals(null);
+      setSumFluidIntake("0");
     }
+
+    // Get physical for the date
+    const physicalOnDate = details.physicals[date];
+    setPhysical(physicalOnDate || null);
 
     // Update symptoms on date
     const symptomsOnDate = details.symptomReports[date];
-    if (symptomsOnDate) {
-      setSymptoms(symptomsOnDate);
-    }
-    const medInfo = details.medicationInfo;
-    if (medInfo) {
-      setMedications(medInfo);
-    }
-  }, [details]);
+    setSymptoms(symptomsOnDate || []);
+
+    const medInfo = details.medicationInfos;
+    setMedications(medInfo || null);
+  }, [details, currentDate]);
 
   return (
     <ScreenWrapper padding>
-      <ScrollView>
-        <>
-          <View style={[styles.container]}>
-            {/* Blood Pressure Card */}
-            <BloodPressureCard
-              systolicBloodPressure={
-                vitals?.diastolicBloodPressure || displayPlaceholder
-              }
-              diastolicBloodPressure={
-                vitals?.systolicBloodPressure || displayPlaceholder
-              }
-              minHeight={cardHeight}
-              flex={2}
-            />
-            {/* Oxygen Saturation card and Weigth card to share fixed space */}
-            <OxygenSaturationCard
-              oxygenSaturation={vitals?.oxygenSaturation || displayPlaceholder}
-              minHeight={cardHeight}
-            />
-            <WeightCard
-              weight={vitals?.weight || displayPlaceholder}
-              targetWeight={
-                details.patientInfo.targetWeight || displayPlaceholder
-              }
-              minHeight={cardHeight}
-            />
-          </View>
-
-          <View style={[styles.container]}>
-            {/* Fluid and activity card */}
-            <FluidIntakeCard
-              fluidGoalInMl={
-                details.patientInfo.fluidIntakeGoalInMl || displayPlaceholder
-              }
-              fluidIntakeInMl={sumFluidIntake}
-              minHeight={cardHeight}
-            />
-            <ActivityCard
-              stepsTaken={sumStepsTaken || displayPlaceholder}
-              stepsRequired={
-                details.patientInfo.targetSteps || displayPlaceholder
-              }
-              minHeight={cardHeight}
-            />
-          </View>
-
-          <View style={[styles.container, { paddingBottom: ms(10) }]}>
-            {/* Medication and symptoms card */}
-            {/* JH-TODO-NEW: Current data type does not support this */}
-            <MedicationTakenCard
-              medications={medications}
-              maxHeight={cardHeight}
-              minHeight={cardHeight}
-            />
-            <SymptomsCard
-              symptoms={symptoms}
-              maxHeight={cardHeight}
-              minHeight={cardHeight}
-            />
-          </View>
-        </>
-        <InnerScreenButton
-          title={i18n.t("Patient_Configuration.EditDetails")}
-          onPress={() => setEditDetails(true)}
-          style={styles.editButtonContainer}
+      {/* Date navigator and edit patient details button*/}
+      <View style={styles.header}>
+        <DateNavigator
+          currentDate={currentDate}
+          setCurrentDate={setCurrentDate}
         />
-      </ScrollView>
+
+        {/* Edit patient details button */}
+        <View style={styles.editButtonContainer}>
+          <InnerScreenButton
+            title={i18n.t("Patient_Configuration.EditDetails")}
+            onPress={() => setEditDetails(true)}
+            style={styles.editButton}
+          />
+        </View>
+      </View>
+
+      {/* Cards with data */}
+      <View style={styles.mainContainer}>
+        {/* Left column (blood pressure, medication and symptoms cards) */}
+        <View style={[{ flex: 2 }, styles.columnContainer]}>
+          {/* Blood pressure card */}
+          <BloodPressureCard
+            flex={2}
+            systolicBloodPressure={
+              vitals?.diastolicBloodPressure || displayPlaceholder
+            }
+            diastolicBloodPressure={
+              vitals?.systolicBloodPressure || displayPlaceholder
+            }
+            fixedHeight={cardHeight}
+          />
+
+          {/* Medication card */}
+          <MedicationTakenCard
+            flex={1}
+            medications={medications}
+            maxHeight={cardHeight}
+            minHeight={cardHeight}
+          />
+
+          {/* Symptoms card */}
+          <SymptomsCard
+            flex={1}
+            symptoms={symptoms}
+            minHeight={cardHeight}
+            maxHeight={cardHeight * 2.15}
+          />
+        </View>
+
+        {/* Right column (other cards) */}
+        <View style={[{ flex: 3 }, styles.columnContainer]}>
+          {/* Oxygen saturation card */}
+          <OxygenSaturationCard
+            flex={1}
+            oxygenSaturation={vitals?.oxygenSaturation || displayPlaceholder}
+            fixedHeight={cardHeight}
+          />
+
+          {/* Weight card */}
+          <WeightCard
+            flex={1}
+            weight={vitals?.weight || displayPlaceholder}
+            targetWeight={
+              details.patientInfo.targetWeight || displayPlaceholder
+            }
+            fixedHeight={cardHeight}
+          />
+
+          {/* Fluid intake card */}
+          <FluidIntakeCard
+            flex={1}
+            fluidGoalInMl={
+              details.patientInfo.fluidIntakeGoalInMl || displayPlaceholder
+            }
+            fluidIntakeInMl={sumFluidIntake}
+            fixedHeight={cardHeight}
+          />
+
+          {/* Physical card */}
+          <PhysicalCard
+            flex={2}
+            steps={physical?.steps || displayPlaceholder}
+            stepsGoal={physical?.stepsGoal || displayPlaceholder}
+            averageWalkingSpeedInMetresPerSeconds={
+              physical?.averageWalkingSpeedInMetresPerSeconds ||
+              displayPlaceholder
+            }
+            distanceInMetres={physical?.distanceInMetres || displayPlaceholder}
+            fixedHeight={cardHeight}
+          />
+        </View>
+      </View>
     </ScreenWrapper>
   );
 };
 
 const styles = ScaledSheet.create({
-  container: {
-    flexWrap: "wrap",
+  header: {
+    flex: 1,
     flexDirection: "row",
+    flexWrap: "wrap",
     justifyContent: "space-between"
   },
   editButtonContainer: {
-    width: ms(100),
+    paddingRight: "10@ms"
+  },
+  editButton: {
+    width: "100@ms"
+  },
+  mainContainer: {
     flexDirection: "row",
-    alignSelf: "center"
+    flexWrap: "wrap"
+  },
+  columnContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignContent: "flex-start",
+    minWidth: COLUMN_MIN_WIDTH
   }
 });

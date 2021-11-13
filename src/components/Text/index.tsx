@@ -229,3 +229,27 @@ export const H7: FC<TextProps> = ({
     />
   );
 };
+
+// HBase Text
+export const HBase: FC<TextProps & { size: number }> = ({
+  text,
+  style,
+  translate,
+  numberOfLines,
+  size
+}) => {
+  const defaultStyle = {
+    fontSize: size
+  } as RNTextStyle;
+
+  const combinedStyle = [defaultStyle, style];
+
+  return (
+    <BaseText
+      style={combinedStyle}
+      text={text}
+      translate={translate}
+      numberOfLines={numberOfLines}
+    />
+  );
+};

@@ -1,13 +1,18 @@
 import { actionNames } from "ic-redux/actions/actionNames";
 import { createAction } from "typesafe-actions";
-import { ColorScheme } from "models/ColorScheme";
 import { LanguageID } from "util/language";
 import { FontScheme } from "models/FontScheme";
+import { ColorSchemeName } from "models/ColorScheme";
+
+export const refreshSettings = createAction(
+  actionNames.REFRESH_SETTINGS,
+  () => ({})
+)();
 
 export const setColorScheme = createAction(
-  actionNames.SET_COLOUR_SCHEME,
-  (colors: ColorScheme) => ({
-    colors: colors
+  actionNames.SET_COLOR_SCHEME,
+  (colorSchemeName: ColorSchemeName) => ({
+    colorSchemeName: colorSchemeName
   })
 )();
 

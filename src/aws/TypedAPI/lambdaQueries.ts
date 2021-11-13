@@ -27,6 +27,12 @@ interface SharePatientAssignmentResponse extends BaseResponse {
 // Type created with reference to schema.graphql
 
 export type ClinicianRecordType = "IcdCrt" | "Medical";
+export const ClinicianRecordTypeConst: {
+  [key in ClinicianRecordType]: ClinicianRecordType;
+} = {
+  IcdCrt: "IcdCrt",
+  Medical: "Medical"
+};
 export type ClinicianRecordOperation =
   | "Upload"
   | "Download"

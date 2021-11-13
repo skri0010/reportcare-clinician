@@ -6,6 +6,7 @@ import { H5 } from "components/Text";
 import { RootState, select } from "util/useRedux";
 import { MedInput } from "rc_agents/model";
 import { IconButton, IconType } from "components/Buttons/IconButton";
+import { Unit } from "util/const";
 
 interface MedicationRowProps {
   medicationItem: MedInput;
@@ -45,10 +46,10 @@ export const MedicationRow: FC<MedicationRowProps> = ({
       {/* Medicatio info */}
       <View style={{ flex: 6 }}>
         <MedicationInfoRow
-          content={`${medicationItem.name}, ${medicationItem.dosage}${i18n.t(
-            "Patient_Configuration.Unit.Dosage"
-          )}, ${medicationItem.frequency} ${i18n.t(
-            "Patient_Configuration.Unit.Frequency"
+          content={`${medicationItem.name}, ${medicationItem.dosage}${
+            Unit.DOSAGE
+          }, ${medicationItem.frequency} ${i18n.t(
+            "Patient_Configuration.FrequencyUnit"
           )}`}
         />
       </View>

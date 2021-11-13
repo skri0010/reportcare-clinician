@@ -119,7 +119,6 @@ export const AlertPopUp: FC<AlertPopUpProps> = ({
               color: colors.errorColor,
               opacity: 0.8
             }}
-            containerStyle={styles.iconStyle}
             onPress={() => {
               dispatch(setRealTimeAlert(undefined)); // Reset realTimeAlert state
               dispatch(setShowAlertPopUp(false));
@@ -209,9 +208,6 @@ const styles = ScaledSheet.create({
   iconContainerStyle: {
     flexDirection: "row",
     alignSelf: "flex-end"
-  },
-  iconStyle: {
-    backgroundColor: "transparent"
   },
   buttonContainer: {
     alignItems: "center",

@@ -59,6 +59,7 @@ export interface ColorScheme {
   infoIconColor: string;
 
   // Charts
+  basicLineColor: string;
   maxLineColor: string;
   minLineColor: string;
   avgLineColor: string;
@@ -79,8 +80,8 @@ export interface ColorScheme {
 
   // Others
   riskLevelBackgroundColors: IRiskLevelMap;
-  riskLevelBorderColors: IRiskLevelMap;
   riskLevelSelectedBackgroundColors: IRiskLevelMap;
+  riskLevelBorderColors: IRiskLevelMap;
 
   // Errors
   errorColor: string;
@@ -88,3 +89,24 @@ export interface ColorScheme {
   // Overlay
   overlayColor: string;
 }
+
+export const defaultRiskLevelBackgroundColors: IRiskLevelMap = {
+  HIGH: "#ffb9b9",
+  MEDIUM: "#ffefcf",
+  LOW: "#e3ffee",
+  UNASSIGNED: "#ffffff"
+};
+
+export const defaultRiskLevelSelectedBackgroundColors: IRiskLevelMap = {
+  HIGH: "#ed6464",
+  MEDIUM: "#ebd860",
+  LOW: "#81d488",
+  UNASSIGNED: "#d4d4d4"
+};
+
+export const defaultRiskLevelBorderColors: IRiskLevelMap = {
+  HIGH: "#ff0000",
+  MEDIUM: "#ffbb36",
+  LOW: "#00c64f",
+  UNASSIGNED: "#000000"
+};

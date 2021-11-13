@@ -4,7 +4,8 @@ import {
   PatientInfo,
   Alert,
   ClinicianRecord,
-  MedicationInfo
+  MedicationInfo,
+  Physical
 } from "aws/API";
 import { RiskLevel } from "models/RiskLevel";
 
@@ -137,12 +138,14 @@ export type RecordFile = {
   lastModified: string; // Part of File
 } & File;
 
-// Interfaces shared with front end
+// Localised types and interfaces
+
 export interface PatientDetails {
   patientInfo: PatientInfo;
   symptomReports: LocalReportSymptoms;
   vitalsReports: LocalReportVitals;
-  medicationInfo: MedInput[];
+  physicals: LocalPhysicals;
+  medicationInfos: MedInput[];
   medicalRecords: ClinicianRecord[];
   icdCrtRecords: ClinicianRecord[];
 }
@@ -156,6 +159,37 @@ export type LocalReportVitals = {
   [date: string]: ReportVitals[] | undefined;
 };
 
+export type LocalPhysicals = {
+  [date: string]: Physical | undefined;
+};
+
+export type LocalTodo = {
+  id?: string;
+  title: string;
+  patientName: string;
+  notes: string;
+  completed: boolean;
+  alert?: AlertInfo;
+  alertId?: string;
+  patientId?: string;
+  riskLevel?: RiskLevel;
+  createdAt: string;
+  lastModified?: string | null;
+  toSync?: boolean;
+  version: number;
+};
+
+export interface MedInput {
+  id?: string;
+  name: string;
+  dosage: string;
+  frequency: string;
+  patientID: string;
+  records?: string;
+  active: boolean;
+}
+
+// Other types and interfaces
 export interface PatientAssignmentResolution {
   patientID: string;
   clinicianID: string;
@@ -216,36 +250,6 @@ export interface TodoInput {
   createdAt: string;
   lastModified?: string;
   version: number;
-}
-
-export interface LocalTodo {
-  id?: string;
-  title: string;
-  patientName: string;
-  notes: string;
-  completed: boolean;
-  alert?: AlertInfo;
-  alertId?: string;
-  patientId?: string;
-  riskLevel?: RiskLevel;
-  createdAt: string;
-  lastModified?: string | null;
-  toSync?: boolean;
-  version: number;
-}
-
-export interface TodoDetails {
-  id: string;
-}
-
-export interface MedInput {
-  id?: string;
-  name: string;
-  dosage: string;
-  frequency: string;
-  patientID: string;
-  records?: string;
-  active: boolean;
 }
 
 export interface MedicalRecordInput {

@@ -1,40 +1,30 @@
-import { MedicationInfo } from "aws/API";
+import { MedInput } from "rc_agents/model";
 
-export const mockMedicationRecord: MedicationInfo[] = [
+export const mockMedicationRecord: MedInput[] = [
   {
-    __typename: "MedicationInfo",
-    id: "13",
     name: "Furosemide",
-    dosage: 40,
+    dosage: "40",
     patientID: "1",
-    frequency: 2,
+    frequency: "2",
     records: "",
-    active: true,
-    createdAt: "",
-    updatedAt: ""
+    active: true
   },
   {
-    __typename: "MedicationInfo",
     id: "14",
     name: "Aldactone",
-    dosage: 40,
+    dosage: "40",
     patientID: "1",
-    frequency: 2,
+    frequency: "2",
     records: "",
-    active: true,
-    createdAt: "",
-    updatedAt: ""
+    active: true
   },
   {
-    __typename: "MedicationInfo",
     id: "15",
     name: "Panadol",
-    dosage: 40,
+    dosage: "40",
     patientID: "1",
-    frequency: 2,
+    frequency: "2",
     records: "",
-    active: true,
-    createdAt: "",
-    updatedAt: ""
+    active: true
   }
 ];

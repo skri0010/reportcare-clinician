@@ -15,27 +15,28 @@ import {
   PatientAttributes,
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
-import { MedInput, PatientDetails } from "rc_agents/model";
+import { PatientDetails } from "rc_agents/model";
 import {
-  listReportSymptomsByPatientID,
   listReportVitalsByPatientID,
   listMedicationInfosByPatientID,
-  listUploadedClinicianRecordsByPatientID
+  listUploadedClinicianRecordsByPatientID,
+  listPhysicalByDateTime,
+  ClinicianRecordTypeConst,
+  listReportSymptomsByDateTime
 } from "aws";
 import {
+  ClinicianRecord,
   MedicationInfo,
   ModelSortDirection,
   PatientInfo,
+  Physical,
   ReportSymptom,
   ReportVitals
 } from "aws/API";
 import { LocalStorage } from "rc_agents/storage";
 import { store } from "util/useRedux";
 import { setFetchingPatientDetails } from "ic-redux/actions/agents/patientActionCreator";
-import {
-  getNonNullItemsFromList,
-  sortIcdCrtRecordsByDescendingDateTime
-} from "util/utilityFunctions";
+import { getNonNullItemsFromList } from "util/utilityFunctions";
 
 /**
  * Represents the activity for retrieving details of a specific patient.
@@ -57,6 +58,8 @@ class RetrievePatientDetails extends Activity {
     // Dispatch to store to indicate fetching
     store.dispatch(setFetchingPatientDetails(true));
 
+    let patientDetails: PatientDetails | null | undefined;
+
     try {
       // Get patient info from facts
       const patientInfo: PatientInfo =
@@ -76,172 +79,78 @@ class RetrievePatientDetails extends Activity {
 
       if (patientInfo) {
         const patientId = patientInfo.patientID;
-        let patientDetails: PatientDetails = {
-          patientInfo: patientInfo,
-          symptomReports: {},
-          vitalsReports: {},
-          medicationInfo: [],
-          medicalRecords: [],
-          icdCrtRecords: []
-        };
-        let patientDetailsRetrieved = false;
 
         // Device is online
         if (isOnline && !retrieveLocally) {
-          // Query for activity infos, symptom reports and vitals reports
-          const symptomReportsPromise = listReportSymptomsByPatientID({
+          // Perform queries and obtain promises
+          const symptomReportsPromise = listReportSymptomsByDateTime({
             patientID: patientId
           });
           const vitalsReportsPromise = listReportVitalsByPatientID({
             patientID: patientId
           });
+          const physicalsPromise = listPhysicalByDateTime({
+            patientID: patientId,
+            sortDirection: ModelSortDirection.DESC
+          });
           const medicationInfoPromise = listMedicationInfosByPatientID({
             patientID: patientId
           });
-          const medicalRecordsPromise = listUploadedClinicianRecordsByPatientID(
-            {
+          const clinicianRecordsPromise =
+            listUploadedClinicianRecordsByPatientID({
               patientID: patientId,
               sortDirection: ModelSortDirection.DESC
-            },
-            "Medical"
-          );
-
-          const icdCrtRecordsPromise = listUploadedClinicianRecordsByPatientID(
-            {
-              patientID: patientId,
-              sortDirection: ModelSortDirection.DESC
-            },
-            "IcdCrt"
-          );
-
-          // Save network delay by waiting all for all the promises at the same time
+            });
+          // Await promises
           const [
             symptomReportsQuery,
             vitalsReportsQuery,
+            physicalsQuery,
             medicationInfoQuery,
-            medicalRecordsQuery,
-            icdCrtRecordsQuery
+            clinicianRecordsQuery
           ] = await Promise.all([
             symptomReportsPromise,
             vitalsReportsPromise,
+            physicalsPromise,
             medicationInfoPromise,
-            medicalRecordsPromise,
-            icdCrtRecordsPromise
+            clinicianRecordsPromise
           ]);
 
-          // Store symptom reports in patient details
-          if (symptomReportsQuery.data.listReportSymptomsByPatientID?.items) {
-            const symptomReports =
-              symptomReportsQuery.data.listReportSymptomsByPatientID?.items;
+          // Process patient details
+          patientDetails = this.processPatientDetails({
+            patientInfo: patientInfo,
+            symptomReportList: getNonNullItemsFromList<ReportSymptom | null>(
+              symptomReportsQuery.data.listReportSymptomsByDateTime?.items
+            ),
+            vitalsReportList: getNonNullItemsFromList<ReportVitals | null>(
+              vitalsReportsQuery.data.listReportVitalsByPatientID?.items
+            ),
+            physicalList: getNonNullItemsFromList<Physical | null>(
+              physicalsQuery.data.listPhysicalsByDateTime?.items
+            ),
+            medicationInfoList: getNonNullItemsFromList<MedicationInfo | null>(
+              medicationInfoQuery.data.listMedicationInfosByPatientID?.items
+            ),
+            clinicianRecordList:
+              getNonNullItemsFromList<ClinicianRecord | null>(
+                clinicianRecordsQuery.data
+                  .listUploadedClinicianRecordsByPatientID?.items
+              )
+          });
 
-            symptomReports.forEach((symptom: ReportSymptom | null) => {
-              if (symptom) {
-                const dateKey = new Date(symptom.dateTime).toLocaleDateString();
-                const localSymptomsReports =
-                  patientDetails.symptomReports[dateKey];
-                if (localSymptomsReports) {
-                  localSymptomsReports.push(symptom);
-                  patientDetails.symptomReports[dateKey] = localSymptomsReports;
-                } else {
-                  patientDetails.symptomReports[dateKey] = [symptom];
-                }
-              }
-            });
-          }
-
-          // Store vitals reports in patient details
-          if (vitalsReportsQuery.data.listReportVitalsByPatientID?.items) {
-            const vitalsReports =
-              vitalsReportsQuery.data.listReportVitalsByPatientID?.items;
-
-            vitalsReports.forEach((vitals: ReportVitals | null) => {
-              if (vitals) {
-                const dateKey = new Date(vitals.dateTime).toLocaleDateString();
-                const localVitalsReports =
-                  patientDetails.vitalsReports[dateKey];
-                if (localVitalsReports) {
-                  localVitalsReports.push(vitals);
-                  patientDetails.vitalsReports[dateKey] = localVitalsReports;
-                } else {
-                  patientDetails.vitalsReports[dateKey] = [vitals];
-                }
-              }
-            });
-          }
-
-          if (medicationInfoQuery.data.listMedicationInfosByPatientID?.items) {
-            const medicationInfos =
-              medicationInfoQuery.data.listMedicationInfosByPatientID?.items;
-            medicationInfos.forEach((medication: MedicationInfo | null) => {
-              if (medication && medication.active) {
-                const localMed: MedInput = {
-                  id: medication.id,
-                  name: medication.name,
-                  dosage: `${medication.dosage}`,
-                  frequency: `${medication.frequency}`,
-                  patientID: medication.patientID,
-                  records: medication.records,
-                  active: medication.active
-                };
-                patientDetails.medicationInfo.push(localMed);
-              }
-            });
-          }
-          // Store medical records in patient details
-          const medicalRecordItems =
-            medicalRecordsQuery.data.listUploadedClinicianRecordsByPatientID
-              ?.items;
-          if (medicalRecordItems) {
-            patientDetails.medicalRecords =
-              getNonNullItemsFromList(medicalRecordItems);
-          }
-
-          // Store ICD/CRT records in patient details
-          const icdCrtRecordItems =
-            icdCrtRecordsQuery.data.listUploadedClinicianRecordsByPatientID
-              ?.items;
-          if (icdCrtRecordItems) {
-            patientDetails.icdCrtRecords =
-              getNonNullItemsFromList(icdCrtRecordItems);
-          }
-
-          // Save retrieved patient
+          // Save retrieved patient details
           await LocalStorage.setPatientDetails(patientDetails);
-          patientDetailsRetrieved = true;
         }
         // Device is offline: Retrieve locally stored data (if any)
         else {
           // Get local patients' details
-          const localPatientDetails = await LocalStorage.getPatientDetails(
+          patientDetails = await LocalStorage.getPatientDetails(
             patientInfo.patientID
           );
-          patientDetailsRetrieved = true;
-
-          if (localPatientDetails?.symptomReports) {
-            patientDetails.symptomReports = localPatientDetails.symptomReports;
-          }
-
-          if (localPatientDetails?.medicationInfo) {
-            patientDetails.medicationInfo = localPatientDetails.medicationInfo;
-          }
-
-          if (localPatientDetails?.vitalsReports) {
-            patientDetails.vitalsReports = localPatientDetails.vitalsReports;
-          }
-          if (localPatientDetails) {
-            // Sorts ICD/CRT records in descending order of dateTime
-            localPatientDetails.icdCrtRecords =
-              sortIcdCrtRecordsByDescendingDateTime(
-                localPatientDetails.icdCrtRecords
-              );
-
-            patientDetails = localPatientDetails;
-            patientDetailsRetrieved = true;
-          }
         }
 
         // Trigger request to Communicate to USXA
-        if (patientDetailsRetrieved) {
+        if (patientDetails) {
           // Update Facts
           // Store items
           agentAPI.addFact(
@@ -291,6 +200,86 @@ class RetrievePatientDetails extends Activity {
       store.dispatch(setFetchingPatientDetails(false));
     }
   }
+
+  processPatientDetails: (parameters: {
+    patientInfo: PatientInfo;
+    symptomReportList: ReportSymptom[];
+    vitalsReportList: ReportVitals[];
+    physicalList: Physical[];
+    medicationInfoList: MedicationInfo[];
+    clinicianRecordList: ClinicianRecord[];
+  }) => PatientDetails = ({
+    patientInfo,
+    symptomReportList,
+    vitalsReportList,
+    physicalList,
+    medicationInfoList,
+    clinicianRecordList
+  }) => {
+    const patientDetails: PatientDetails = {
+      patientInfo: patientInfo,
+      symptomReports: {},
+      vitalsReports: {},
+      physicals: {},
+      medicationInfos: [],
+      medicalRecords: [],
+      icdCrtRecords: []
+    };
+
+    // Store symptom reports
+    symptomReportList.forEach((symptom) => {
+      const dateKey = new Date(symptom.dateTime).toLocaleDateString();
+      const existingList = patientDetails.symptomReports[dateKey];
+      if (existingList) {
+        existingList.push(symptom);
+        patientDetails.symptomReports[dateKey] = existingList;
+      } else {
+        patientDetails.symptomReports[dateKey] = [symptom];
+      }
+    });
+
+    // Store vitals reports
+    vitalsReportList.forEach((vitals) => {
+      const dateKey = new Date(vitals.dateTime).toLocaleDateString();
+      const existingList = patientDetails.vitalsReports[dateKey];
+      if (existingList) {
+        existingList.push(vitals);
+        patientDetails.vitalsReports[dateKey] = existingList;
+      } else {
+        patientDetails.vitalsReports[dateKey] = [vitals];
+      }
+    });
+
+    // Store physicals
+    physicalList.forEach((physical) => {
+      const dateKey = new Date(physical.dateTime).toLocaleDateString();
+      patientDetails.physicals[dateKey] = physical;
+    });
+
+    // Store medication info
+    patientDetails.medicationInfos = medicationInfoList.map((medication) => {
+      return {
+        id: medication.id,
+        dosage: medication.dosage.toString(),
+        frequency: medication.frequency.toString(),
+        name: medication.name,
+        patientID: medication.patientID,
+        active: medication.active
+      };
+    });
+
+    // Store Medical records
+    patientDetails.medicalRecords = clinicianRecordList.filter(
+      (item) => item.type === ClinicianRecordTypeConst.Medical
+    );
+
+    // // Store IcdCrt records
+    patientDetails.icdCrtRecords = clinicianRecordList.filter(
+      (item) => item.type === ClinicianRecordTypeConst.IcdCrt
+    );
+
+    return patientDetails;
+  };
 }
 
 // Preconditions

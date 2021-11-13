@@ -84,17 +84,19 @@
     "PatientReassign": "Pilih pakar untuk ditugaskan"
   },
   "Parameter_Graphs": {
-    "DiastolicBP": "Tekanan Darah Diastolik ",
+    "VitalsHeader": "Vitals",
+    "PhysicalsHeader": "Fizikal",
+    "Systolic": "Sistolik ",
+    "Diastolic": "Diastolik ",
     "SystolicBP": "Tekanan Darah Sistolik ",
-    "BPUnit": "mmHg",
+    "DiastolicBP": "Tekanan Darah Diastolik ",
     "OxygenSaturation": "Ketepuan Oksigen ",
-    "OxygenSaturationUnit": "%",
     "Weight": "Berat Badan ",
-    "WeightUnit": "kg",
     "FluidIntake": "Pengambilan Air ",
-    "FluidUnit": "ml",
-    "Steps": "Jumlah Langkah",
-    "NoSteps": "Jumlah Langkah",
+    "Physical": "Fizikal",
+    "Steps": "Langkah",
+    "Distance": "Jarak",
+    "MeanSpeed": "Min kelajuan",
     "StepsUnit": "langkah",
     "NoData": "Tiada data dijumpai",
     "ViewBy": "Melihat secara: ",
@@ -195,10 +197,7 @@
     "Cancel": "Batal",
     "AddNewMedicationInfo": "Tambah informasi ubat baharu",
     "MedicationsAddedCurrently": "Ubatan yang telah ditambah:",
-    "Unit": {
-      "Dosage": "mg",
-      "Frequency": "kali per hari"
-    },
+    "Frequency": "kali sehari",
     "MedicationRow": {
       "Name": "Nama: ",
       "Dosage": "Dos: ",
@@ -265,6 +264,16 @@
     "Weight": "Berat Badan",
     "TargetWeight": "Sasaran berat badan",
     "Symptoms": "Simptom",
+    "SymptomsAttributes": {
+      "Summary": "Ringkasan",
+      "Severity": "Keterukan",
+      "Activity": "Aktiviti",
+      "ActivityDuration": "Durasi",
+      "ActivityLocation": "Lokasi",
+      "ActivityWeather": "Cuaca",
+      "ActivityTemperature": "Suhu",
+      "ActivityHumidity": "Kelembapan"
+    },
     "NoSymptoms": "Tiada simptom yang direkodkan"
   },
   "Patient_ICD/CRT": {
@@ -372,7 +381,6 @@
       "Weight": "Berat badan",
       "DateTime": "Direkodkan pada",
       "HeartRate": "Kadar degupan jantung",
-      "HeartRateUnit": "bpm",
       "NoVitalsReport": "Tiada rekod aktiviti dan vital dijumpai"
     },
     "Medications": {
