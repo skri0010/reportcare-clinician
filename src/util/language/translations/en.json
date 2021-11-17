@@ -191,23 +191,22 @@
     "Title": "Configure details",
     "EditDetails": "Edit details",
     "Proceed": "Proceed",
-    "ConfigureMedicine": "Configure Medicine",
-    "Save": "Save",
-    "Cancel": "Cancel",
-    "AddNewMedicationInfo": "Add new medication info",
-    "MedicationsAddedCurrently": "Medications added currently:",
-    "Unit": {
-      "Dosage": "mg",
-      "Frequency": "time(s) per day"
-    },
-    "MedInfo": {
-      "CurrentDosage": "Current Dosage: "
-    },
-    "FrequencyUnit": "time(s) per day",
-    "MedicationRow": {
-      "Name": "Name: ",
-      "Dosage": "Dosage: ",
-      "Frequency": "Frequency: "
+    "Medications": {
+      "ConfigureMedication": "Configure Medication",
+      "AddNewMedication": "Add new medication",
+      "CurrentMedications": "Current active medications",
+      "NewMedications": "Newly added medications",
+      "ModifyingMedication": "Modifying Medication",
+      "PrescribingNewMedication": "Prescribing New Medication",
+      "FrequencyUnit": "time(s) per day",
+      "Dosage": "Dosage",
+      "Recommendations": "Recommendations",
+      "StartDose": "Start Dosage",
+      "TargetDose": "Target Dosage",
+      "Increments": "Increments",
+      "CurrentDosage": "Current Dosage",
+      "MedicationName": "Medication Name",
+      "SelectMedication": "Select Medication To Prescribe"
     },
     "Label": {
       "HospitalName": "Hospital name",
@@ -217,15 +216,12 @@
       "TargetSteps": "Target number of steps",
       "TargetWeight": "Target weight (in kg)",
       "FluidIntakeGoal": "Fluid intake goal (in ml)",
-      "MedName": "Medicine name",
+      "Medications": "Medications",
       "Dosage": "Dosage (in mg)",
-      "Frequency": "Frequency (in times per day)",
-      "MedicationForm": "Medication Form",
-      "ConfigureMedication": "Configure Medication"
+      "Frequency": "Frequency (in times per day)"
     },
     "Prompt": {
-      "DeviceNo": "Does this patient have a device?",
-      "MedInfo": "Does this patient take any medicines?"
+      "DeviceNo": "Does this patient have a device?"
     },
     "Error": {
       "TargetSteps": "Please input a valid target number of steps",
@@ -244,21 +240,6 @@
       "MedName": "Enter medicine name",
       "Dosage": "Enter medication dosage (in mg)",
       "Frequency": "Enter medication frequency (in times per day)"
-    },
-    "Medications": {
-      "Modify": "Modify",
-      "CurrentDosage": "Current Dosage: ",
-      "Recommendations": "Recommendations: ",
-      "StartDose": "Start Dose: ",
-      "TargetDose": "Target Dosage: ",
-      "Increments": "Increments: ",
-      "ModifyingMedication": "Modifying Active Medication ",
-      "MedicationName": "Medication Name: ",
-      "PrescribingNewMeds": "Prescribing New Medication ",
-      "PrescribeMedications": "Select Medication To Prescribe: ",
-      "MedicationForm": "Medication Configuration",
-      "AddNewMed": "Add New Medication",
-      "ListActiveMed": "List of active medications: "
     },
     "ConfigurationSuccessful": "Patient has been successfully configured"
   },
@@ -442,13 +423,16 @@
     "Cancel": "Cancel",
     "RecordDeletedSuccessfully": "Successfully deleted",
     "FailedToDelete": "Failed to delete",
-    "Share": "Share"
+    "Share": "Share",
+    "Modify": "Modify",
+    "Remove": "Remove"
   },
   "UnexpectedError": "An unexpected error has occured",
   "Keywords": {
     "remaining": "remaining",
     "Delete": "Delete",
-    "Search": "Search"
+    "Search": "Search",
+    "None": "None"
   },
   "Warnings": {
     "DeleteRecord": "Deleting records CANNOT BE REVERSED. Records can be deleted up to 2 days from the day they are uploaded. Are you sure you want to proceed?"

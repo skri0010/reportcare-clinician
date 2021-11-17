@@ -8,34 +8,35 @@ import {
   validateMedDosage,
   validateMedFreq
 } from "util/validation";
-import { ms, ScaledSheet } from "react-native-size-matters";
+import { ScaledSheet } from "react-native-size-matters";
 import { RootState, select } from "util/useRedux";
-import { MedicationNames, MedInput, PatientDetails } from "rc_agents/model";
+import { MedicationNames, MedInput } from "rc_agents/model";
 import { RowButton } from "components/Buttons/RowButton";
 import { Picker } from "@react-native-picker/picker";
 import { Label } from "components/Text/Label";
-import { MedicationInfo } from "./MedicationInfo";
+import { MedicationDetails } from "./MedicationDetails";
 import { H6 } from "components/Text";
+import { SaveAndCancelButtons } from "components/Buttons/SaveAndCancelButtons";
 
-interface AddNewMedicationProps {
+interface ModifyMedicationScreenProps {
   configMedInfo: MedInput;
-  setConfigMedInfo: (medInfo: MedInput) => void;
-  saveMedInput: (medInput: MedInput) => void;
-  details: PatientDetails;
+  setConfigMedInfo: (configMedInfo: MedInput) => void;
+  saveMedication: (medication: MedInput) => void;
+  removeMedication: (medication: MedInput) => void;
   isAdding: boolean;
   currentDosage?: string;
-  localMedInfos: MedInput[];
+  allMedications: MedInput[];
   setShowDefaultScreen: (state: boolean) => void;
 }
 
-export const AddNewMedication: FC<AddNewMedicationProps> = ({
+export const ModifyMedicationScreen: FC<ModifyMedicationScreenProps> = ({
   configMedInfo,
   setConfigMedInfo,
-  saveMedInput,
-  details,
+  saveMedication,
+  removeMedication,
   isAdding,
-  currentDosage = "",
-  localMedInfos,
+  currentDosage,
+  allMedications,
   setShowDefaultScreen
 }) => {
   const { colors, fonts } = select((state: RootState) => ({
@@ -69,23 +70,14 @@ export const AddNewMedication: FC<AddNewMedicationProps> = ({
     setConfigMedInfo({ ...configMedInfo, frequency: frequency });
   };
 
-  // Updte active status of medication
-  const updateMedActive = () => {
-    setConfigMedInfo({ ...configMedInfo, active: false });
-  };
-
-  // Input validations to see if the save button should be enabled or not
+  // Side effect when medication details are updated
   useEffect(() => {
-    // automatically saves and closes modal if medicatio has been made inactive (remove button has been pressed)
-    if (!configMedInfo.active) {
-      saveMedInput(configMedInfo);
-    }
     const medInput =
       validateMedName(configMedInfo.name) &&
       validateMedDosage(configMedInfo.name, configMedInfo.dosage) &&
       validateMedFreq(configMedInfo.frequency);
     setAllMedInputValid(medInput);
-  }, [configMedInfo, saveMedInput]);
+  }, [configMedInfo]);
 
   return (
     <ScrollView
@@ -97,7 +89,7 @@ export const AddNewMedication: FC<AddNewMedicationProps> = ({
         }
       ]}
     >
-      {!isAdding ? (
+      {!isAdding && currentDosage ? (
         <View>
           <Label
             text={i18n.t(
@@ -105,43 +97,26 @@ export const AddNewMedication: FC<AddNewMedicationProps> = ({
             )}
             style={styles.titleText}
           />
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-evenly",
-              alignItems: "center"
-            }}
-          >
-            <Label
-              text={i18n.t("Patient_Configuration.Medications.MedicationName")}
-            />
-            <H6
-              text={`${configMedInfo.name}`}
-              style={{
-                paddingLeft: ms(5),
-                marginTop: ms(10),
-                marginBottom: ms(5)
-              }}
-            />
-            <View
-              style={{
-                alignItems: "flex-end",
-                flex: 1,
-                marginTop: ms(10),
-                marginBottom: ms(5)
-              }}
-            >
+          <View style={styles.medicationRow}>
+            <View style={styles.medicationText}>
+              <Label
+                text={`${i18n.t(
+                  "Patient_Configuration.Medications.MedicationName"
+                )}:`}
+              />
+              <H6 text={configMedInfo.name} style={styles.medicationName} />
+            </View>
+            <View style={styles.removeButtonContainer}>
               <RowButton
                 fontSize={fonts.h6Size}
                 backgroundColor={colors.declineButtonColor}
-                title="Remove Medication"
-                onPress={() => updateMedActive()}
+                title={i18n.t("DetailsUpdate.Remove")}
+                onPress={() => removeMedication(configMedInfo)}
               />
             </View>
           </View>
-          <MedicationInfo
-            configMedInfo={configMedInfo}
-            isAdding={false}
+          <MedicationDetails
+            medication={configMedInfo}
             currentDosage={currentDosage}
           />
         </View>
@@ -149,14 +124,12 @@ export const AddNewMedication: FC<AddNewMedicationProps> = ({
         <View>
           <Label
             text={i18n.t(
-              "Patient_Configuration.Medications.PrescribingNewMeds"
+              "Patient_Configuration.Medications.PrescribingNewMedication"
             )}
             style={styles.titleText}
           />
           <Label
-            text={i18n.t(
-              "Patient_Configuration.Medications.PrescribeMedications"
-            )}
+            text={i18n.t("Patient_Configuration.Medications.SelectMedication")}
           />
           <Picker
             style={pickerStyle}
@@ -165,15 +138,11 @@ export const AddNewMedication: FC<AddNewMedicationProps> = ({
             }}
           >
             {Object.entries(MedicationNames).map(([key, value]) => {
-              const medicationFound = details.medicationInfos.some(
-                (t) => t.name === value && t.active === true
-              );
-
-              const medicationLocal = localMedInfos.some(
+              const existingMedication = allMedications.some(
                 (t) => t.name === value
               );
 
-              if (medicationFound || medicationLocal) {
+              if (existingMedication) {
                 return null;
               }
               return (
@@ -185,13 +154,13 @@ export const AddNewMedication: FC<AddNewMedicationProps> = ({
               );
             })}
           </Picker>
-          <MedicationInfo configMedInfo={configMedInfo} isAdding />
+          <MedicationDetails medication={configMedInfo} />
         </View>
       )}
       {/* Medicine Dosage */}
       <TextField
         label={i18n.t("Patient_Configuration.Label.Dosage")}
-        value={`${configMedInfo.dosage}`}
+        value={configMedInfo.dosage}
         onChange={(dosage) => updateMedDosage(dosage)}
         placeholder={i18n.t("Patient_Configuration.Placeholder.Dosage")}
         error={
@@ -203,7 +172,7 @@ export const AddNewMedication: FC<AddNewMedicationProps> = ({
       {/* Medicine Frequency */}
       <TextField
         label={i18n.t("Patient_Configuration.Label.Frequency")}
-        value={`${configMedInfo.frequency}`}
+        value={configMedInfo.frequency}
         onChange={(frequency) => updateMedFreq(frequency)}
         placeholder={i18n.t("Patient_Configuration.Placeholder.Frequency")}
         error={
@@ -212,46 +181,16 @@ export const AddNewMedication: FC<AddNewMedicationProps> = ({
         }
         errorMessage={i18n.t("Patient_Configuration.Error.Frequency")}
       />
-      <View style={styles.buttonContainer}>
-        {/* Save button */}
-        <RowButton
-          title="Patient_Configuration.Save"
-          onPress={() => saveMedInput(configMedInfo)}
-          backgroundColor={
-            allMedInputValid
-              ? colors.acceptButtonColor
-              : colors.primaryDeactivatedButtonColor
-          }
-          disabled={!allMedInputValid}
-          width={ms(50)}
-          height={ms(20)}
-        />
-
-        {/* Cancel button */}
-        <RowButton
-          title="Patient_Configuration.Cancel"
-          onPress={() => setShowDefaultScreen(true)}
-          backgroundColor={colors.primaryBackgroundColor}
-          textColor={colors.primaryTextColor}
-          borderColor={colors.secondaryBorderColor}
-          borderWidth={ms(1)}
-          width={ms(50)}
-          height={ms(20)}
-        />
-      </View>
+      <SaveAndCancelButtons
+        onPressSave={() => saveMedication(configMedInfo)}
+        onPressCancel={() => setShowDefaultScreen(true)}
+        validToSave={allMedInputValid}
+      />
     </ScrollView>
   );
 };
 
 const styles = ScaledSheet.create({
-  buttonContainer: {
-    flexDirection: "row",
-    paddingVertical: "10@ms",
-    flexWrap: "wrap",
-    justifyContent: "space-evenly",
-    alignItems: "center",
-    paddingHorizontal: "25@ms"
-  },
   form: {
     paddingHorizontal: "3@ms",
     borderRadius: "3@ms",
@@ -273,5 +212,23 @@ const styles = ScaledSheet.create({
   titleText: {
     textAlign: "center",
     textDecorationLine: "underline"
+  },
+  medicationRow: {
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    alignItems: "center"
+  },
+  medicationText: {
+    flex: 3,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignItems: "baseline"
+  },
+  medicationName: {
+    marginLeft: "5@ms"
+  },
+  removeButtonContainer: {
+    alignItems: "flex-end",
+    flex: 1
   }
 });

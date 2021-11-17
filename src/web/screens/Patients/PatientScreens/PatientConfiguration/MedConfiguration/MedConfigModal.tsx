@@ -1,11 +1,11 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { View, TouchableOpacity } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { RootState, select } from "util/useRedux";
 import { MedInput, PatientDetails } from "rc_agents/model";
 import { H4 } from "components/Text";
-import { MedicationList } from "./MedicationList";
-import { AddNewMedication } from "./AddNewMedication";
+import { CurrentMedicationScreen } from "./CurrentMedicationScreen";
+import { ModifyMedicationScreen } from "./ModifyMedicationScreen";
 import i18n from "util/language/i18n";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
@@ -13,10 +13,11 @@ interface MedConfigModalProps {
   details: PatientDetails;
   configMedInfo: MedInput;
   setConfigMedInfo: (medInfo: MedInput) => void;
-  saveMedInput: (medInput: MedInput) => void;
-  setMedConfigFormVisible: (state: boolean) => void;
-  currentActiveMedications: MedInput[];
-  localMedInfos: MedInput[];
+  saveMedication: (medication: MedInput) => void;
+  removeMedication: (medication: MedInput) => void;
+  setMedConfigModalVisible: (state: boolean) => void;
+  activeMedications: MedInput[];
+  newMedications: MedInput[];
   showDefaultScreen: boolean;
   setShowDefaultScreen: (show: boolean) => void;
 }
@@ -25,10 +26,11 @@ export const MedConfigModal: FC<MedConfigModalProps> = ({
   details,
   configMedInfo,
   setConfigMedInfo,
-  saveMedInput,
-  setMedConfigFormVisible,
-  currentActiveMedications,
-  localMedInfos,
+  saveMedication,
+  removeMedication,
+  setMedConfigModalVisible,
+  activeMedications,
+  newMedications,
   showDefaultScreen,
   setShowDefaultScreen
 }) => {
@@ -37,23 +39,39 @@ export const MedConfigModal: FC<MedConfigModalProps> = ({
     fonts: state.settings.fonts
   }));
 
-  // state used to keep track of current dosage of a medication for display purposes
+  // To keep track of current dosage of a medication for display purposes
   const [currentDosage, setCurrentDosage] = useState<string | undefined>(
     undefined
   );
 
-  const [addingNewMed, setAddingNewMed] = useState<boolean>(false);
+  // To keep track for whether new medication is being added
+  const [addNewMedication, setAddNewMedication] = useState<boolean>(false);
 
-  const updateMed = (medInfo: MedInput) => {
+  // Side effect when medication to configure is updated
+  useEffect(() => {
+    // Check whether medication is currently active
+    const medIndex = details.medicationInfos.findIndex(
+      (m) => m.name === configMedInfo.name
+    );
+    if (medIndex >= 0) {
+      // Medication is active
+      modifyMedication(details.medicationInfos[medIndex]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [configMedInfo.name, details.medicationInfos]);
+
+  // Shows the screen for modifying existing medication
+  const modifyMedication = (medication: MedInput) => {
     setShowDefaultScreen(false);
-    setAddingNewMed(false);
-    setConfigMedInfo(medInfo);
-    setCurrentDosage(medInfo.dosage);
+    setAddNewMedication(false);
+    setConfigMedInfo(medication);
+    setCurrentDosage(medication.dosage);
   };
 
-  const addMed = () => {
+  // Shows the screen for prescribing new medication
+  const addMedication = () => {
     setShowDefaultScreen(false);
-    setAddingNewMed(true);
+    setAddNewMedication(true);
     setConfigMedInfo({
       name: "",
       dosage: "",
@@ -61,6 +79,7 @@ export const MedConfigModal: FC<MedConfigModalProps> = ({
       patientID: details.patientInfo.patientID,
       active: true
     });
+    setCurrentDosage(undefined);
   };
 
   return (
@@ -77,11 +96,14 @@ export const MedConfigModal: FC<MedConfigModalProps> = ({
     >
       <View style={styles.titleContainer}>
         <H4
-          text={i18n.t("Patient_Configuration.Medications.MedicationForm")}
+          text={i18n.t("Patient_Configuration.Medications.ConfigureMedication")}
           style={styles.title}
         />
         <TouchableOpacity
-          onPress={() => setMedConfigFormVisible(false)}
+          onPress={() => {
+            setShowDefaultScreen(true);
+            setMedConfigModalVisible(false);
+          }}
           style={styles.closeButton}
         >
           <Icon
@@ -92,36 +114,27 @@ export const MedConfigModal: FC<MedConfigModalProps> = ({
         </TouchableOpacity>
       </View>
       <View style={styles.container}>
-        <MedicationList
-          setAddNewMed={addMed}
-          setMedToUpdate={updateMed}
-          activeMedications={currentActiveMedications}
+        <CurrentMedicationScreen
+          addMedication={addMedication}
+          modifyMedication={modifyMedication}
+          activeMedications={activeMedications}
+          newMedications={newMedications}
         />
         <View
           style={{
             flex: 2
           }}
         >
-          {showDefaultScreen ? undefined : addingNewMed ? (
-            <AddNewMedication
-              details={details}
+          {!showDefaultScreen && (
+            <ModifyMedicationScreen
               configMedInfo={configMedInfo}
               setConfigMedInfo={setConfigMedInfo}
-              saveMedInput={saveMedInput}
+              saveMedication={saveMedication}
+              removeMedication={removeMedication}
               setShowDefaultScreen={setShowDefaultScreen}
-              isAdding
-              localMedInfos={localMedInfos}
-            />
-          ) : (
-            <AddNewMedication
-              details={details}
-              configMedInfo={configMedInfo}
-              setConfigMedInfo={setConfigMedInfo}
-              saveMedInput={saveMedInput}
-              setShowDefaultScreen={setShowDefaultScreen}
-              isAdding={false}
+              isAdding={addNewMedication}
               currentDosage={currentDosage}
-              localMedInfos={localMedInfos}
+              allMedications={activeMedications.concat(newMedications)}
             />
           )}
         </View>
@@ -136,14 +149,6 @@ const styles = ScaledSheet.create({
     alignSelf: "flex-end",
     justifyContent: "space-evenly",
     margin: "10@ms"
-  },
-  buttonContainer: {
-    flexDirection: "row",
-    paddingVertical: "10@ms",
-    flexWrap: "wrap",
-    justifyContent: "space-evenly",
-    alignItems: "center",
-    paddingHorizontal: "25@ms"
   },
   form: {
     paddingHorizontal: "1@ms",

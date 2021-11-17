@@ -39,9 +39,11 @@ export const CheckboxText: FC<CheckboxTextProps> = ({
         checkboxStyle={styles.iconStyle}
         onPress={onPress}
       />
-      <TouchableOpacity onPress={onPress}>
-        <H4 text={text} style={[textStyle, { fontSize: fontSize }]} />
-      </TouchableOpacity>
+      <View style={styles.textStyle}>
+        <TouchableOpacity onPress={onPress}>
+          <H4 text={text} style={[textStyle, { fontSize: fontSize }]} />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -53,5 +55,6 @@ const styles = ScaledSheet.create({
   },
   iconStyle: {
     paddingTop: "2@ms"
-  }
+  },
+  textStyle: { flex: 1 }
 });

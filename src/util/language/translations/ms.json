@@ -192,16 +192,23 @@
     "Title": "Konfigurasikan butiran",
     "EditDetails": "Edit butiran",
     "Proceed": "Selesai",
-    "ConnfigureMedicine": "Konfigurasikan Medicin",
-    "Save": "Simpan",
-    "Cancel": "Batal",
-    "AddNewMedicationInfo": "Tambah informasi ubat baharu",
-    "MedicationsAddedCurrently": "Ubatan yang telah ditambah:",
-    "Frequency": "kali sehari",
-    "MedicationRow": {
-      "Name": "Nama: ",
-      "Dosage": "Dos: ",
-      "Frequency": "Kekerapan: "
+    "Medications": {
+      "ConfigureMedication": "Konfigurasikan ubat-ubatan",
+      "AddNewMedication": "Tambah ubat baharu",
+      "CurrentMedications": "Ubat-ubatan aktif semasa",
+      "NewMedications": "Ubat-ubatan baharu",
+      "ModifyingMedication": "Mengubah Suai Ubat",
+      "PrescribingNewMedication": "Menetapkan Ubat Baharu",
+      "FrequencyUnit": "kali sehari",
+      "Frequency": "kali sehari",
+      "Dosage": "Dos",
+      "Recommendations": "Cadangan",
+      "StartDose": "Dos Permulaan",
+      "TargetDose": "Sasaran Dos",
+      "Increments": "Kenaikan",
+      "CurrentDosage": "Dos Semasa",
+      "MedicationName": "Nama Ubat",
+      "SelectMedication": "Pilih Ubat Untuk Ditetapkan"
     },
     "Label": {
       "HospitalName": "Nama hospital",
@@ -211,14 +218,12 @@
       "TargetSteps": "Sasaran nombor langkah",
       "TargetWeight": "Sasaran berat badan (dalam kg)",
       "FluidIntakeGoal": "Sasaran pengambilan air (dalam ml)",
-      "MedName": "Name ubat",
+      "Medications": "Ubat-ubatan",
       "Dosage": "Dos (dalam mg)",
-      "Frequency": "Kekerapan (dalam kali per hari)",
-      "ConfigureMedication": "Konfigurasikan Ubat"
+      "Frequency": "Kekerapan (dalam kali sehari)"
     },
     "Prompt": {
-      "DeviceNo": "Adakah pesakit ini mempunyai peranti?",
-      "MedInfo": "Adakah pesakit ini mengambil sebarang ubatan?"
+      "DeviceNo": "Adakah pesakit ini mempunyai peranti?"
     },
     "Error": {
       "TargetSteps": "Sila masukkan sasaran nombor langkah yang sah",
@@ -237,21 +242,6 @@
       "MedName": "Masukkan name ubat",
       "Dosage": "Masukkan dos ubatan (dalam mg)",
       "Frequency": "Masukkan kekerapan pengambilan ubatan (dalam kali per hari)"
-    },
-    "Medications": {
-      "Modify": "Ubah Suai",
-      "CurrentDosage": "Semasa Dos: ",
-      "Recommendations": "Cadangan: ",
-      "StartDose": "Mulakan Dose: ",
-      "TargetDose": "Sasaran Dos: ",
-      "Increments": "Kenaikan: ",
-      "ModifyingMedication": "Mengubah Ubat Aktif: ",
-      "MedicationName": "Nama Ubat: ",
-      "PrescribingNewMeds": "Menetapkan Ubat Baru: ",
-      "PrescribeMedications": "Pilih Ubat Untuk Preskripsi: ",
-      "MedicationForm": "Bentuk Ubat",
-      "AddNewMed": "Tambah Ubat Baru",
-      "ListActiveMed": "Senarai ubat aktif: "
     },
     "ConfigurationSuccessful": "Pesakit telah berjaya dikonfigurasi"
   },
@@ -435,13 +425,16 @@
     "Cancel": "Batal",
     "RecordDeletedSuccessfully": "Berjaya padamkan",
     "FailedToDelete": "Gagal untuk memadam",
-    "Share": "Kongsi"
+    "Share": "Kongsi",
+    "Modify": "Ubah Suai",
+    "Remove": "Keluarkan"
   },
   "UnexpectedError": "Ralat yang tidak disangkai telah berlaku",
   "Keywords": {
     "remaining": "yang tinggal",
     "Delete": "Hapus",
-    "Search": "Cari"
+    "Search": "Cari",
+    "None": "Tiada"
   },
   "Warnings": {
     "DeleteRecord": "Penghapusan rekod adalah process yang TIDAK BOLEH DIBATALKAN. Rekod boleh dihapus sehingga 2 hari dari hari ia dimuat naik. Adakah anda mahu terus penghapusan?"
