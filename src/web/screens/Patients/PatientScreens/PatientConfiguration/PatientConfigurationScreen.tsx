@@ -187,7 +187,7 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
         setNewMedications(newMedications);
       }
 
-      // Reset the values for the medication input
+      // Reset medication
       setConfigMedInfo({
         name: "",
         dosage: "",
@@ -222,6 +222,15 @@ export const PatientConfigurationScreen: FC<PatientConfigurationScreenProps> =
           setNewMedications(newMedications);
         }
       }
+
+      // Reset medication
+      setConfigMedInfo({
+        name: "",
+        dosage: "",
+        frequency: "",
+        patientID: details.patientInfo.patientID,
+        active: true
+      });
       setShowDefaultScreen(true);
     };
 

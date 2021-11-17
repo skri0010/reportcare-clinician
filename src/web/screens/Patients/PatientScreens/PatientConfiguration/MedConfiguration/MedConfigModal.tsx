@@ -101,6 +101,14 @@ export const MedConfigModal: FC<MedConfigModalProps> = ({
         />
         <TouchableOpacity
           onPress={() => {
+            // Reset medication
+            setConfigMedInfo({
+              name: "",
+              dosage: "",
+              frequency: "",
+              patientID: details.patientInfo.patientID,
+              active: true
+            });
             setShowDefaultScreen(true);
             setMedConfigModalVisible(false);
           }}
