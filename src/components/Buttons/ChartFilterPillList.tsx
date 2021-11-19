@@ -16,10 +16,6 @@ export const ChartFilterPillList: FC<ChartFilterPillListProps> = ({
   chartFilter,
   setChartFilters
 }) => {
-  // const { chartFilter } = select((state: RootState) => ({
-  //   chartFilter: state.filters.chartFilters
-  // }));
-
   const dispatch = useDispatch();
 
   // Function to toggle selected View type for charts
