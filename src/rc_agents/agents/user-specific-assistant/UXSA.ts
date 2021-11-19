@@ -1,11 +1,11 @@
 import { Belief } from "agents-framework";
 import { af_DisplayPatientDetails } from "./action-frames/hf-outcome-trends/DisplayPatientDetails";
-import { af_DisplayAlerts } from "./action-frames/triage-alert-hf-clinic/DisplayAlerts";
+import { af_DisplayAlerts } from "./action-frames/patient-user-specific-outcome-representation/DisplayAlerts";
 import { af_DisplayPendingPatientAssignments } from "./action-frames/storing-data/DisplayPendingPatientAssignments";
 import { af_DisplayTodoDetails } from "./action-frames/storing-data/DisplayTodoDetails";
 import { AgentIDs } from "rc_agents/clinician_framework";
 import { CommonAttributes } from "agents-framework/Enums";
-import { af_DisplayDetailedAlertInfo } from "./action-frames/triage-alert-hf-clinic/DisplayDetailedAlertInfo";
+import { af_DisplayDetailedAlertInfo } from "./action-frames/patient-user-specific-outcome-representation/DisplayDetailedAlertInfo";
 import { af_DisplayPatientsByFilter } from "./action-frames/hf-outcome-trends/DisplayPatientsByFilter";
 import { af_DisplayTodos } from "./action-frames/storing-data/DisplayTodos";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";

@@ -16,7 +16,7 @@ import {
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
 import { AlertInfo } from "rc_agents/model";
-import { queryHighRiskAlertInfo } from "../triage-alert-hf-clinic/RetrieveDetailedAlertInfo";
+import { queryHighRiskAlertInfo } from "../patient-user-specific-outcome-representation/RetrieveDetailedAlertInfo";
 import { agentMHA } from "rc_agents/agents";
 
 /**

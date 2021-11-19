@@ -15,8 +15,8 @@ import {
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
 import { AlertInfo, AlertsCount } from "rc_agents/model";
-import { displayAlerts } from "rc_agents/agents/user-specific-assistant/action-frames/triage-alert-hf-clinic/DisplayAlerts";
-import { getAlertsCount } from "rc_agents/agents/data-assistant/action-frames/triage-alert-hf-clinic/RetrieveAlerts";
+import { displayAlerts } from "rc_agents/agents/user-specific-assistant/action-frames/patient-user-specific-outcome-representation/DisplayAlerts";
+import { getAlertsCount } from "rc_agents/agents/data-assistant/action-frames/patient-user-specific-outcome-representation/RetrieveAlerts";
 import { store } from "util/useRedux";
 import { setShowAlertPopUp } from "ic-redux/actions/agents/alertActionCreator";
 

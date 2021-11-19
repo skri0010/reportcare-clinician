@@ -23,7 +23,7 @@ import {
   setPendingAlertCount,
   setPendingAlerts
 } from "ic-redux/actions/agents/alertActionCreator";
-import { getAlertsCount } from "rc_agents/agents/data-assistant/action-frames/triage-alert-hf-clinic/RetrieveAlerts";
+import { getAlertsCount } from "rc_agents/agents/data-assistant/action-frames/patient-user-specific-outcome-representation/RetrieveAlerts";
 import { RiskLevel } from "models/RiskLevel";
 import moment from "moment";
 

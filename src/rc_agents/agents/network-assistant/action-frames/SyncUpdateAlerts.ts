@@ -15,7 +15,7 @@ import {
 import { AsyncStorageKeys, LocalStorage } from "rc_agents/storage";
 import { agentNWA } from "rc_agents/agents";
 import { replaceAlertsSync } from "rc_agents/storage/setItem";
-import { updateAlertInfo } from "rc_agents/agents/data-assistant/action-frames/triage-alert-hf-clinic/UpdateAlert";
+import { updateAlertInfo } from "rc_agents/agents/data-assistant/action-frames/patient-user-specific-outcome-representation/UpdateAlert";
 import { AgentTrigger } from "rc_agents/trigger";
 import { FetchAlertsMode } from "rc_agents/model";
 import { store } from "util/useRedux";
