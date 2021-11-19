@@ -15,7 +15,7 @@ import {
   ProcedureAttributes
 } from "rc_agents/clinician_framework";
 import { RootState, select, useDispatch } from "util/useRedux";
-import { LoadingIndicator } from "components/Indicators2/LoadingIndicator";
+import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { useNetInfo } from "@react-native-community/netinfo";
 import { setProcedureOngoing } from "ic-redux/actions/agents/procedureActionCreator";
 import i18n from "util/language/i18n";

@@ -8,8 +8,8 @@ import { Amplify } from "@aws-amplify/core";
 import { Auth } from "@aws-amplify/auth";
 import { AuthState } from "web/auth_screens";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
-import { ToastProviderComponent } from "components/Indicators2/ToastProvider";
-import { LoadingIndicator } from "components/Indicators2/LoadingIndicator";
+import { ToastProviderComponent } from "components/Indicators/ToastProvider";
+import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AgentIDs } from "rc_agents/clinician_framework";
 import {
   subscribeAlertNotification,

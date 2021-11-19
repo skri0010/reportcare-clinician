@@ -9,7 +9,7 @@ import { HighRiskPatientBaselinesCard } from "./AlertDetailsCards/HighRisk/HighR
 import { IcdCrtCard } from "./AlertDetailsCards/IcdCrtCard";
 import { HighRiskVitalSignsCard } from "./AlertDetailsCards/HighRisk/HighRiskVitalSignsCard";
 import { HighRiskSymptomsCard } from "./AlertDetailsCards/HighRisk/HighRiskSymptomsCard";
-import { LoadingIndicator } from "components/Indicators2/LoadingIndicator";
+import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 
 export const HighRiskAlertDetails: FC = () => {
   const { alertInfo, fetchingIcdCrtRecordContent, clinician } = select(

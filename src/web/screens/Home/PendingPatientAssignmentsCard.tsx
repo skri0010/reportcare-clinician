@@ -11,9 +11,9 @@ import {
 } from "rc_agents/model";
 import { PatientAssignment } from "aws/API";
 import { PatientAssignmentRow } from "components/RowComponents/PatientRows/PatientPendingAssignmentRow";
-import { LoadingIndicator } from "components/Indicators2/LoadingIndicator";
+import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AgentTrigger } from "rc_agents/trigger";
-import { EmptyListIndicator } from "components/Indicators2/EmptyListIndicator";
+import { EmptyListIndicator } from "components/Indicators/EmptyListIndicator";
 import { HomeScreenModal } from "./HomeScreenModals";
 import { PatientReassignmentModal } from "./PatientReassignmentModal";
 

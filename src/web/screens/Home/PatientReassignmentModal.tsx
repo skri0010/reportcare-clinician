@@ -4,7 +4,7 @@ import { RootState, select } from "util/useRedux";
 import { H3 } from "components/Text";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import i18n from "util/language/i18n";
-import { LoadingIndicator } from "components/Indicators2/LoadingIndicator";
+import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AgentTrigger } from "rc_agents/trigger";
 import { ClinicianInfo, PatientAssignment } from "aws/API";
 import { ClinicianShareRow } from "components/RowComponents/ClinicianRow/ClinicianShareRow";
