@@ -18,6 +18,8 @@ import { SystolicBPChartCard } from "web/screens/Patients/PatientScreens/Patient
 import { WeightChartCard } from "web/screens/Patients/PatientScreens/PatientDetailsScreen/PatientParameterComponents/VitalsChartCards/WeightChartCard";
 import { ScaledSheet } from "react-native-size-matters";
 import { NoListItemMessage } from "web/screens/Shared/NoListItemMessage";
+import { setAlertDetailsChartFilters } from "ic-redux/actions/agents/filterActionCreator";
+import { RootState, select } from "util/useRedux";
 
 interface HighRiskVitalSignsCardProps {
   vitalsReports?: ReportVitals[] | null;
@@ -26,6 +28,10 @@ interface HighRiskVitalSignsCardProps {
 export const HighRiskVitalSignsCard: FC<HighRiskVitalSignsCardProps> = ({
   vitalsReports
 }) => {
+  const { alertDetailsChartFilter } = select((state: RootState) => ({
+    alertDetailsChartFilter: state.filters.alertDetailsChartFilter
+  }));
+
   const [fullChartData, setFullChartData] = useState<
     FullVitalsChartData | undefined
   >(undefined);
@@ -78,7 +84,10 @@ export const HighRiskVitalSignsCard: FC<HighRiskVitalSignsCardProps> = ({
     >
       {fullChartData ? (
         <>
-          <ChartFilterPillList />
+          <ChartFilterPillList
+            chartFilter={alertDetailsChartFilter}
+            setChartFilters={setAlertDetailsChartFilters}
+          />
           <View style={styles.rowContainer}>
             {/* DS-TODO: Physical Graph */}
             {/* <NumberOfStepsChartCard
@@ -86,19 +95,34 @@ export const HighRiskVitalSignsCard: FC<HighRiskVitalSignsCardProps> = ({
               maxHeight={maxGraphHeight}
             /> */}
             {/* Fluid Intake Graph */}
-            <FluidIntakeChartCard data={fullChartData.fluid} />
+            <FluidIntakeChartCard
+              data={fullChartData.fluid}
+              chartFilter={alertDetailsChartFilter}
+            />
           </View>
           <View style={styles.rowContainer}>
             {/* Diastolic Blood Graph */}
-            <DiastolicBPChartCard data={fullChartData.diastolic} />
+            <DiastolicBPChartCard
+              data={fullChartData.diastolic}
+              chartFilter={alertDetailsChartFilter}
+            />
             {/* Systolic Blood Graph */}
-            <SystolicBPChartCard data={fullChartData.systolic} />
+            <SystolicBPChartCard
+              data={fullChartData.systolic}
+              chartFilter={alertDetailsChartFilter}
+            />
           </View>
           <View style={styles.rowContainer}>
             {/* Oxygen Saturation Graph */}
-            <OxygenSaturationChartCard data={fullChartData.oxygenSaturation} />
+            <OxygenSaturationChartCard
+              data={fullChartData.oxygenSaturation}
+              chartFilter={alertDetailsChartFilter}
+            />
             {/* Weight Graph */}
-            <WeightChartCard data={fullChartData.weight} />
+            <WeightChartCard
+              data={fullChartData.weight}
+              chartFilter={alertDetailsChartFilter}
+            />
           </View>
         </>
       ) : (

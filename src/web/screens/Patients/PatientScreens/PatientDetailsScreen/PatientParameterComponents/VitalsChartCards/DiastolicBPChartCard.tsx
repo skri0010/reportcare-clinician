@@ -3,10 +3,13 @@ import { DiastolicBPChart } from "components/VisualizationComponents/VitalsChart
 import { VitalsChartProps } from "components/VisualizationComponents/VitalsCharts/VitalsChartUtilities";
 import { ChartCardWrapper } from "components/VisualizationComponents/ChartCardWrapper";
 
-export const DiastolicBPChartCard: FC<VitalsChartProps> = ({ data }) => {
+export const DiastolicBPChartCard: FC<VitalsChartProps> = ({
+  data,
+  chartFilter
+}) => {
   return (
     <ChartCardWrapper>
-      <DiastolicBPChart data={data} />
+      <DiastolicBPChart data={data} chartFilter={chartFilter} />
     </ChartCardWrapper>
   );
 };

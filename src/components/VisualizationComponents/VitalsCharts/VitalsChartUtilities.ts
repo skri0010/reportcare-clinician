@@ -1,5 +1,5 @@
 import { ReportVitals } from "aws/API";
-import { ChartViewTypes } from "models/ChartViewTypes";
+import { ChartFilter, ChartViewTypes } from "models/ChartViewTypes";
 import { getNonNullItemsFromList } from "util/utilityFunctions";
 
 export interface VitalsData {
@@ -20,6 +20,7 @@ export interface VitalsDataRecord {
 
 export interface VitalsChartProps {
   data: VitalsChartData;
+  chartFilter: ChartFilter;
 }
 
 export interface VitalsChartData {

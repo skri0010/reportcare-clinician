@@ -15,22 +15,23 @@ import { ms, ScaledSheet } from "react-native-size-matters";
 import { View } from "react-native";
 import { H4, H5 } from "components/Text";
 import { RootState, select } from "util/useRedux";
-import { ChartViewTypes } from "models/ChartViewTypes";
+import { ChartFilter, ChartViewTypes } from "models/ChartViewTypes";
 import { BaseLineChartProps } from "components/VisualizationComponents/GeneralLineChartComponent";
 
 interface VitalsLineChartProps extends BaseLineChartProps {
   data: VitalsChartData;
+  chartFilter: ChartFilter;
 }
 
 export const VitalsLineChartComponent: FC<VitalsLineChartProps> = ({
   graphTitle,
   graphSubtitle,
   minDomainY,
-  data
+  data,
+  chartFilter
 }) => {
-  const { colors, chartFilter } = select((state: RootState) => ({
-    colors: state.settings.colors,
-    chartFilter: state.filters.chartFilters
+  const { colors } = select((state: RootState) => ({
+    colors: state.settings.colors
   }));
 
   // Store min max and avg to a form that is accepted by Victory

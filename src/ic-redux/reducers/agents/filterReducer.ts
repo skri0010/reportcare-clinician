@@ -10,7 +10,8 @@ export interface FilterState {
   patientRiskFilters: RiskFilter;
   alertRiskFilters: RiskFilter;
   riskFilters: RiskFilter;
-  chartFilters: ChartFilter;
+  parametersChartFilter: ChartFilter;
+  alertDetailsChartFilter: ChartFilter;
 }
 
 const initialState: FilterState = {
@@ -32,7 +33,13 @@ const initialState: FilterState = {
     [RiskLevel.LOW]: false,
     [RiskLevel.UNASSIGNED]: false
   },
-  chartFilters: {
+  parametersChartFilter: {
+    [ChartViewTypes.ALL]: true,
+    [ChartViewTypes.MIN]: false,
+    [ChartViewTypes.MAX]: false,
+    [ChartViewTypes.AVERAGE]: false
+  },
+  alertDetailsChartFilter: {
     [ChartViewTypes.ALL]: true,
     [ChartViewTypes.MIN]: false,
     [ChartViewTypes.MAX]: false,
@@ -52,8 +59,16 @@ export const filterReducer: Reducer<FilterState, RootAction> = (
       };
     case actionNames.SET_ALERT_RISK_FILTERS:
       return { ...state, alertRiskFilters: action.payload.alertRiskFilters };
-    case actionNames.SET_CHART_FILTERS:
-      return { ...state, chartFilters: action.payload.chartFilters };
+    case actionNames.SET_PARAMETERS_CHART_FILTER:
+      return {
+        ...state,
+        parametersChartFilter: action.payload.parametersChartFilter
+      };
+    case actionNames.SET_ALERT_DETAILS_CHART_FILTER:
+      return {
+        ...state,
+        alertDetailsChartFilter: action.payload.alertDetailsChartFilter
+      };
     default:
       return state;
   }

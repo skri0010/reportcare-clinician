@@ -17,9 +17,16 @@ export const setAlertRiskFilters = createAction(
   })
 )();
 
-export const setChartFilters = createAction(
-  actionNames.SET_CHART_FILTERS,
-  (chartFilters: ChartFilter) => ({
-    chartFilters: chartFilters
+export const setParametersChartFilters = createAction(
+  actionNames.SET_PARAMETERS_CHART_FILTER,
+  (parametersChartFilter: ChartFilter) => ({
+    parametersChartFilter: parametersChartFilter
+  })
+)();
+
+export const setAlertDetailsChartFilters = createAction(
+  actionNames.SET_ALERT_DETAILS_CHART_FILTER,
+  (alertDetailsChartFilter: ChartFilter) => ({
+    alertDetailsChartFilter: alertDetailsChartFilter
   })
 )();

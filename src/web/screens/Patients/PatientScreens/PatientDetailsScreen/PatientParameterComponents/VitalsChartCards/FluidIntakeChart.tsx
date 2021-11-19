@@ -3,10 +3,13 @@ import { VitalsChartProps } from "components/VisualizationComponents/VitalsChart
 import { FluidIntakeChart } from "components/VisualizationComponents/VitalsCharts/FluidIntakeChart";
 import { ChartCardWrapper } from "components/VisualizationComponents/ChartCardWrapper";
 
-export const FluidIntakeChartCard: FC<VitalsChartProps> = ({ data }) => {
+export const FluidIntakeChartCard: FC<VitalsChartProps> = ({
+  data,
+  chartFilter
+}) => {
   return (
     <ChartCardWrapper>
-      <FluidIntakeChart data={data} />
+      <FluidIntakeChart data={data} chartFilter={chartFilter} />
     </ChartCardWrapper>
   );
 };

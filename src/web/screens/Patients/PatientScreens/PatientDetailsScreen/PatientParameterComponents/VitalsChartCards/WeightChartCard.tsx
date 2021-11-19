@@ -4,10 +4,13 @@ import { WeightChart } from "components/VisualizationComponents/VitalsCharts/Wei
 import { VitalsChartProps } from "components/VisualizationComponents/VitalsCharts/VitalsChartUtilities";
 import { ChartCardWrapper } from "components/VisualizationComponents/ChartCardWrapper";
 
-export const WeightChartCard: FC<VitalsChartProps> = ({ data }) => {
+export const WeightChartCard: FC<VitalsChartProps> = ({
+  data,
+  chartFilter
+}) => {
   return (
     <ChartCardWrapper>
-      <WeightChart data={data} />
+      <WeightChart data={data} chartFilter={chartFilter} />
     </ChartCardWrapper>
   );
 };

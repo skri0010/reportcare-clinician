@@ -11,6 +11,8 @@ import { InformationBlock } from "components/InfoComponents/InformationBlock";
 import { ChartFilterPillList } from "components/Buttons/ChartFilterPillList";
 import i18n from "util/language/i18n";
 import { CollapsibleWrapper } from "./CollapsibleWrapper";
+import { setParametersChartFilters } from "ic-redux/actions/agents/filterActionCreator";
+import { RootState, select } from "util/useRedux";
 
 interface VitalsCollapsibleProps {
   fullVitalsChartData: FullVitalsChartData;
@@ -19,24 +21,44 @@ interface VitalsCollapsibleProps {
 export const VitalsCollapsible: FC<VitalsCollapsibleProps> = ({
   fullVitalsChartData
 }) => {
+  const { parametersChartFilter } = select((state: RootState) => ({
+    parametersChartFilter: state.filters.parametersChartFilter
+  }));
+
   return (
     <CollapsibleWrapper headerTitle={i18n.t("Parameter_Graphs.VitalsHeader")}>
       <InformationBlock information={i18n.t("Parameter_Graphs.Information")} />
       {/* Vitals filter pills */}
-      <ChartFilterPillList />
+      <ChartFilterPillList
+        chartFilter={parametersChartFilter}
+        setChartFilters={setParametersChartFilters}
+      />
       <View style={styles.container}>
         {/* Diastolic blood pressure graph */}
-        <DiastolicBPChartCard data={fullVitalsChartData.diastolic} />
+        <DiastolicBPChartCard
+          data={fullVitalsChartData.diastolic}
+          chartFilter={parametersChartFilter}
+        />
         {/* Systolic blood pressure graph */}
-        <SystolicBPChartCard data={fullVitalsChartData.systolic} />
+        <SystolicBPChartCard
+          data={fullVitalsChartData.systolic}
+          chartFilter={parametersChartFilter}
+        />
         {/* Oxygen saturation graph*/}
         <OxygenSaturationChartCard
           data={fullVitalsChartData.oxygenSaturation}
+          chartFilter={parametersChartFilter}
         />
         {/* Weight graph*/}
-        <WeightChartCard data={fullVitalsChartData.weight} />
+        <WeightChartCard
+          data={fullVitalsChartData.weight}
+          chartFilter={parametersChartFilter}
+        />
         {/* Fluid intake graph */}
-        <FluidIntakeChartCard data={fullVitalsChartData.oxygenSaturation} />
+        <FluidIntakeChartCard
+          data={fullVitalsChartData.oxygenSaturation}
+          chartFilter={parametersChartFilter}
+        />
       </View>
     </CollapsibleWrapper>
   );

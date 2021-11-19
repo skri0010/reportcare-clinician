@@ -5,12 +5,16 @@ import { VitalsChartProps } from "components/VisualizationComponents/VitalsChart
 import { VitalsLineChartComponent } from "components/VisualizationComponents/VitalsCharts/VitalsLineChartComponent";
 import { Unit } from "util/const";
 
-export const SystolicBPChart: FC<VitalsChartProps> = ({ data }) => {
+export const SystolicBPChart: FC<VitalsChartProps> = ({
+  data,
+  chartFilter
+}) => {
   return data ? (
     <VitalsLineChartComponent
       graphTitle={i18n.t("Parameter_Graphs.SystolicBP")}
       graphSubtitle={`(${Unit.BLOOD_PRESSURE})`}
       data={data}
+      chartFilter={chartFilter}
     />
   ) : (
     <LoadingIndicator />

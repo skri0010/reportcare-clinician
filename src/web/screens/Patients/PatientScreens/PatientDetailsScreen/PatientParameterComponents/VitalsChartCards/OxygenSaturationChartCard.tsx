@@ -3,10 +3,13 @@ import { OxygenSaturationChart } from "components/VisualizationComponents/Vitals
 import { VitalsChartProps } from "components/VisualizationComponents/VitalsCharts/VitalsChartUtilities";
 import { ChartCardWrapper } from "components/VisualizationComponents/ChartCardWrapper";
 
-export const OxygenSaturationChartCard: FC<VitalsChartProps> = ({ data }) => {
+export const OxygenSaturationChartCard: FC<VitalsChartProps> = ({
+  data,
+  chartFilter
+}) => {
   return (
     <ChartCardWrapper>
-      <OxygenSaturationChart data={data} />
+      <OxygenSaturationChart data={data} chartFilter={chartFilter} />
     </ChartCardWrapper>
   );
 };
