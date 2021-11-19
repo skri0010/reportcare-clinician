@@ -8,7 +8,7 @@ import { Amplify } from "@aws-amplify/core";
 import { Auth } from "@aws-amplify/auth";
 import { LogBox } from "react-native";
 import { AuthState } from "./auth_screens";
-import { ToastProviderComponent } from "components/Indicators/ToastProvider";
+import { ToastProviderComponent } from "components/Indicators2/ToastProvider";
 import { LocalStorage } from "rc_agents/storage";
 import { setClinician } from "ic-redux/actions/agents/clinicianActionCreator";
 

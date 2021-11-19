@@ -10,11 +10,11 @@ import { FloatingBottomButton } from "components/Buttons/FloatingBottomButton";
 import i18n from "util/language/i18n";
 import { ScreenName } from "web/navigation";
 import { FetchTodosMode } from "rc_agents/model";
-import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
+import { LoadingIndicator } from "components/Indicators2/LoadingIndicator";
 import { AgentTrigger } from "rc_agents/trigger";
 import { HomeScreenNavigation } from "web/navigation/types/MainScreenProps";
 import { onDonePress } from "web/screens/Todo/tabs/TodoCurrentTab";
-import { EmptyListIndicator } from "components/Indicators/EmptyListIndicator";
+import { EmptyListIndicator } from "components/Indicators2/EmptyListIndicator";
 
 interface TodosCardProps {
   maxHeight: number;

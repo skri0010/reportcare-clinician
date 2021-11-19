@@ -5,7 +5,7 @@ import { RootState, select, useDispatch } from "util/useRedux";
 import i18n from "util/language/i18n";
 import { LocalTodo } from "rc_agents/model";
 import { useToast } from "react-native-toast-notifications";
-import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
+import { LoadingIndicator } from "components/Indicators2/LoadingIndicator";
 import { AgentTrigger } from "rc_agents/trigger";
 import {
   setProcedureOngoing,

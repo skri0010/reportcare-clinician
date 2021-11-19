@@ -4,7 +4,7 @@ import { RootState, select, useDispatch } from "util/useRedux";
 import { H3, H4, H5 } from "components/Text";
 import { ScaledSheet, ms } from "react-native-size-matters";
 import i18n from "util/language/i18n";
-import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
+import { LoadingIndicator } from "components/Indicators2/LoadingIndicator";
 import { AlertInfo, Role } from "rc_agents/model";
 import { getRiskLevelColor } from "models/RiskLevel";
 import { getLocalDateTime } from "util/utilityFunctions";

@@ -15,7 +15,7 @@ import {
   LocalTodo,
   RetrieveTodoDetailsMethod
 } from "rc_agents/model";
-import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
+import { LoadingIndicator } from "components/Indicators2/LoadingIndicator";
 import { useToast } from "react-native-toast-notifications";
 import { AgentTrigger } from "rc_agents/trigger";
 import { TodosList } from "web/screens/Todo/TodosList";

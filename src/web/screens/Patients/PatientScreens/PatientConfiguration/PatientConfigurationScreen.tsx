@@ -29,7 +29,7 @@ import { getPickerStyles } from "util/getStyles";
 import { Label } from "components/Text/Label";
 import { AuthButton } from "components/Buttons/AuthButton";
 import { triggerStorePatientBaseline } from "rc_agents/triggers";
-import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
+import { LoadingIndicator } from "components/Indicators2/LoadingIndicator";
 import { useToast } from "react-native-toast-notifications";
 import {
   setConfigurationSuccessful,

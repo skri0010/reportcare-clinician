@@ -1,6 +1,6 @@
 import React, { FC, useState } from "react";
 import { FlatList, ScrollView, View } from "react-native";
-import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
+import { LoadingIndicator } from "components/Indicators2/LoadingIndicator";
 import { ItemSeparator } from "components/RowComponents/ItemSeparator";
 import i18n from "util/language/i18n";
 import { RootState, select, store } from "util/useRedux";
@@ -9,7 +9,7 @@ import { ClinicianContactRow } from "components/RowComponents/ClinicianRow/Clini
 import { setClinicianSelected } from "ic-redux/actions/agents/clinicianActionCreator";
 import { ClinicianInfo } from "aws/API";
 import Fuse from "fuse.js";
-import { NoItemsTextIndicator } from "components/Indicators/NoItemsTextIndicator";
+import { NoItemsTextIndicator } from "components/Indicators2/NoItemsTextIndicator";
 import { NoListItemMessage } from "../Shared/NoListItemMessage";
 
 interface CliniciansListScreen {
