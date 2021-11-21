@@ -6,7 +6,6 @@ import {
   OnCreateAlertNotificationSubscription,
   PatientAssignment
 } from "aws/API";
-import { store } from "util/useRedux";
 import { prettify } from "util/utilityFunctions";
 
 export type AlertNotification = {
@@ -101,10 +100,10 @@ interface onUpdatePatientAssignmentResponse extends BaseResponse {
   };
 }
 
-export const subscribePatientAssignment = async (): Promise<void> => {
+export const subscribePatientAssignment = async (
+  clinicianID: string
+): Promise<void> => {
   // Subscribe with clinicianID as owner
-  const clinicianID = store.getState().clinicians.clinician;
-
   if (clinicianID) {
     // Subscribe to created patient assignments
     (

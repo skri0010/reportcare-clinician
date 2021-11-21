@@ -11,10 +11,6 @@ import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import { ToastProviderComponent } from "components/Indicators/ToastProvider";
 import { LoadingIndicator } from "components/Indicators/LoadingIndicator";
 import { AgentIDs } from "rc_agents/clinician_framework";
-import {
-  subscribeAlertNotification,
-  subscribePatientAssignment
-} from "aws/TypedAPI/subscriptions";
 import { PersistGate } from "redux-persist/lib/integration/react";
 import "web/styles.css";
 import { LocalStorage } from "rc_agents/storage";
@@ -81,13 +77,6 @@ const App: FC = () => {
   useEffect(() => {
     // Checks for authentication state
     checkAuthState();
-
-    // Subscribes to AlertNotification table
-    subscribeAlertNotification();
-
-    // Subscribes to PatientAssignment table
-    subscribePatientAssignment();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
