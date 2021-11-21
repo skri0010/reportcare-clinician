@@ -8,7 +8,6 @@ import {
 } from "aws/API";
 import { store } from "util/useRedux";
 import { prettify } from "util/utilityFunctions";
-import { onCreateAlertNotification } from "aws/graphql/subscriptions";
 
 export type AlertNotification = {
   id: string;
@@ -20,7 +19,23 @@ interface onCreateAlertNotificationResponse extends BaseResponse {
   value: { data: OnCreateAlertNotificationSubscription };
 }
 
-export const subscribeAlertNotification = (): void => {
+// Reference: https://docs.amplify.aws/cli/graphql-transformer/auth/#authorizing-subscriptions
+
+// Requested fields should be a subset of CreateAlertNotification response fields
+// Note: We do not include parameters in this subscription
+const onCreateAlertNotification = /* GraphQL */ `
+  subscription OnCreateAlertNotification() {
+    onCreateAlertNotification() {
+      id
+      patientID
+      alertID
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const subscribeAlertNotification = async (): Promise<void> => {
   (
     API.graphql({
       query: onCreateAlertNotification
@@ -38,10 +53,8 @@ export const subscribeAlertNotification = (): void => {
   });
 };
 
-// https://docs.amplify.aws/cli/graphql-transformer/auth/#authorizing-subscriptions
 // Requested fields should be a subset of CreatePatientAssignment response fields
-// Note:  $clinicianID is the chosen owner for owner-based authorization
-
+// Note: $clinicianID is the chosen owner for owner-based authorization
 const onCreatePatientAssignment = /* GraphQL */ `
   subscription onCreatePatientAssignment($clinicianID: String) {
     onCreatePatientAssignment(clinicianID: $clinicianID) {
@@ -58,6 +71,8 @@ const onCreatePatientAssignment = /* GraphQL */ `
   }
 `;
 
+// Requested fields should be a subset of UpdatePatientAssignment response fields
+// Note: $clinicianID is the chosen owner for owner-based authorization
 const onUpdatePatientAssignment = /* GraphQL */ `
   subscription onUpdatePatientAssignment($clinicianID: String) {
     onUpdatePatientAssignment(clinicianID: $clinicianID) {
