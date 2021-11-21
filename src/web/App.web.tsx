@@ -60,7 +60,6 @@ const App: FC = () => {
   const checkAuthState = async () => {
     try {
       await Auth.currentAuthenticatedUser();
-      setAuthState(AuthState.SIGNED_IN);
       // In case local storage has been cleared
       const clinician = await LocalStorage.getClinician();
       if (clinician) {

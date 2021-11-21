@@ -23,8 +23,8 @@ interface onCreateAlertNotificationResponse extends BaseResponse {
 // Requested fields should be a subset of CreateAlertNotification response fields
 // Note: We do not include parameters in this subscription
 const onCreateAlertNotification = /* GraphQL */ `
-  subscription OnCreateAlertNotification() {
-    onCreateAlertNotification() {
+  subscription OnCreateAlertNotification {
+    onCreateAlertNotification {
       id
       patientID
       alertID
