@@ -8,9 +8,13 @@ import { MedInfoCompliants, MedInput } from "rc_agents/model";
 
 interface MedicationRowProps {
   medicationInfo: MedInput;
+  date: Date;
 }
 
-export const MedicationRow: FC<MedicationRowProps> = ({ medicationInfo }) => {
+export const MedicationRow: FC<MedicationRowProps> = ({
+  medicationInfo,
+  date
+}) => {
   const { colors } = select((state: RootState) => ({
     colors: state.settings.colors
   }));
@@ -20,7 +24,7 @@ export const MedicationRow: FC<MedicationRowProps> = ({ medicationInfo }) => {
       const recordObject: MedInfoCompliants = JSON.parse(
         medicationInfo.records
       );
-      const meds = recordObject[new Date().toDateString()] as string[] | null;
+      const meds = recordObject[date.toDateString()] as string[] | null;
       if (meds) {
         if (meds.length === parseFloat(medicationInfo.frequency)) {
           return true;

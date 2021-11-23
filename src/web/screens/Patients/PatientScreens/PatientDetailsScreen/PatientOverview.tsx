@@ -119,6 +119,7 @@ export const PatientOverview: FC<PatientOverviewProps> = ({
             medications={medications}
             maxHeight={cardHeight}
             minHeight={cardHeight}
+            date={currentDate}
           />
 
           {/* Symptoms card */}

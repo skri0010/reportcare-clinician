@@ -11,13 +11,15 @@ interface MedicationTakenProps {
   flex?: number;
   maxHeight: number;
   minHeight: number;
+  date: Date;
 }
 
 export const MedicationTakenCard: FC<MedicationTakenProps> = ({
   medications,
   maxHeight,
   minHeight,
-  flex
+  flex,
+  date
 }) => {
   return (
     <CardWrapper
@@ -32,7 +34,9 @@ export const MedicationTakenCard: FC<MedicationTakenProps> = ({
         showsVerticalScrollIndicator={false}
         data={medications}
         renderItem={({ item }) =>
-          item.active ? <MedicationRow medicationInfo={item} /> : null
+          item.active ? (
+            <MedicationRow medicationInfo={item} date={date} />
+          ) : null
         }
         keyExtractor={(item) => item.name}
       />

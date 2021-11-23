@@ -267,7 +267,8 @@ class RetrievePatientDetails extends Activity {
         frequency: medication.frequency.toString(),
         name: medication.name,
         patientID: medication.patientID,
-        active: medication.active
+        active: medication.active,
+        records: medication.records
       };
     });
 
