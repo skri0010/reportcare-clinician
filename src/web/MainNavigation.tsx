@@ -10,7 +10,13 @@ import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import { Belief } from "agents-framework";
 import { AppAttributes, BeliefKeys } from "rc_agents/clinician_framework";
 import { LocalStorage } from "rc_agents/storage";
-import { RootState, select } from "util/useRedux";
+import { RootState, select, useDispatch } from "util/useRedux";
+import {
+  setColorScheme,
+  setLanguage
+} from "ic-redux/actions/settings/actionCreator";
+import { ColorSchemeName } from "models/ColorScheme";
+import { defaultLanguage } from "util/language";
 
 interface MainNavigationProps {
   setAuthState: (state: string) => void;
@@ -24,6 +30,7 @@ export const MainNavigation: FC<MainNavigationProps> = ({ setAuthState }) => {
 
   const toast = useToast();
   const netInfo = useNetInfo();
+  const dispatch = useDispatch();
 
   // States related to internet connection
   const [successToastShown, setSuccessToast] = useState(false);
@@ -34,6 +41,13 @@ export const MainNavigation: FC<MainNavigationProps> = ({ setAuthState }) => {
   const signOut = async (): Promise<void> => {
     await Auth.signOut().then(async () => {
       await LocalStorage.removeAll();
+
+      // Reset settings to default
+      dispatch(setColorScheme(ColorSchemeName.LIGHT));
+
+      i18n.changeLanguage(defaultLanguage.toString());
+      dispatch(setLanguage(defaultLanguage));
+
       toast.show(i18n.t("Auth_SignOut.SignOutSuccessful"), { type: "success" });
       setAuthState(AuthState.SIGNED_OUT);
     });

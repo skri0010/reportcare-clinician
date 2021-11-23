@@ -95,9 +95,7 @@ class SyncPatientBaselines extends Activity {
 
         // Remove AsyncStorage entry if all configurations and medication configurations are updated
         if (configurationsSuccessful && medConfigurationSuccessful) {
-          await LocalStorage.removeItem(
-            AsyncStorageKeys.PATIENT_CONFIGURATIONS
-          );
+          await LocalStorage.removeItem(AsyncStorageKeys.PATIENT_BASELINES);
           await LocalStorage.removeItem(
             AsyncStorageKeys.MEDICATION_CONFIGURATIONS
           );

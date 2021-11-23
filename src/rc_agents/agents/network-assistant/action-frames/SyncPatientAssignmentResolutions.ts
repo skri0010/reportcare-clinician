@@ -48,8 +48,6 @@ class SyncPatientAssignmentResolutions extends Activity {
       // Get clinicianId from global state
       const clinicianId = store.getState().clinicians.clinician?.clinicianID;
 
-      // eslint-disable-next-line no-console
-      console.log(resolutionList);
       if (resolutionList && clinicianId) {
         Object.keys(resolutionList).forEach(async (key) => {
           const resolution = resolutionList[key];

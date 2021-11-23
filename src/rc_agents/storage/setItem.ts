@@ -250,7 +250,7 @@ export const setPatientBaselines = async (
 
   baselines.forEach((baseline) => {
     if (localData) {
-      // Removes existing patient configuration if any
+      // Removes existing patient baselines if any
       const existIndex = localData.findIndex(
         (p) => p.patientID === baseline.patientID
       );

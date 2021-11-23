@@ -30,7 +30,6 @@ export enum AsyncStorageKeys {
   ALERT_INFOS = "AlertInfos",
   PENDING_PATIENT_ASSIGNMENTS = "PendingPatientAssignments",
   PATIENT_ASSIGNMENTS_RESOLUTIONS = "PatientAssignmentsResolutions",
-  PATIENT_CONFIGURATIONS = "PatientConfigurations",
   MEDICATION_CONFIGURATIONS = "MedicationConfigurations",
   PATIENT_BASELINES = "PatientBaselines",
   TODOS = "Todos",
@@ -62,9 +61,8 @@ export type AsyncStorageType = {
   [AsyncStorageKeys.ALL_PATIENT_DETAILS]: {
     [patientId: string]: PatientDetails | undefined;
   };
-  [AsyncStorageKeys.PATIENT_CONFIGURATIONS]: PatientInfo[];
-  [AsyncStorageKeys.MEDICATION_CONFIGURATIONS]: MedInput[];
   [AsyncStorageKeys.PATIENT_BASELINES]: PatientInfo[];
+  [AsyncStorageKeys.MEDICATION_CONFIGURATIONS]: MedInput[];
   [AsyncStorageKeys.ALERT_INFOS]: ProcessedAlertInfos;
   [AsyncStorageKeys.TODOS]: LocalTodo[];
   [AsyncStorageKeys.TODO_DETAILS]: LocalTodo;

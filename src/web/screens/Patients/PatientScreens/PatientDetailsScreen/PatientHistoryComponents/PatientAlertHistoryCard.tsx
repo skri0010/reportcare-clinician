@@ -51,7 +51,11 @@ export const PatientAlertHistoryCard: FC<PatientAlertHistoryProps> = ({
           keyExtractor={(alert) => alert.id}
         />
       ) : !fetchingPatientAlertHistory ? (
-        <EmptyListIndicator text={i18n.t("Patient_History.NoAlertHistory")} />
+        <EmptyListIndicator
+          text={i18n.t("Patient_History.NoAlertHistory")}
+          textStyle={{ alignSelf: "flex-start" }}
+          containerStyle={{ flex: 1 }}
+        />
       ) : null}
       {fetchingPatientAlertHistory && <LoadingIndicator />}
     </CardWrapper>
