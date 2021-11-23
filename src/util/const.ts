@@ -4,6 +4,8 @@ export const emptyValuePlaceholder = "";
 export type PossibleNumber = number | null | undefined;
 export type PossibleString = string | null | undefined;
 
+export const SYNC_TIMEOUT_DURATION = 5000;
+
 export enum Unit {
   BLOOD_PRESSURE = "mmHg",
   DISTANCE_METRES = "m",

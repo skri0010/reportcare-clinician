@@ -20,6 +20,7 @@ import { agentDTA } from "rc_agents/agents";
 import { agentAPI } from "rc_agents/clinician_framework/ClinicianAgentAPI";
 import { ProcedureConst } from "agents-framework/Enums";
 import { store } from "util/useRedux";
+import { SYNC_TIMEOUT_DURATION } from "util/const";
 
 /**
  * Class to represent the activity for syncing local resolutions of patient assignments.
@@ -49,8 +50,8 @@ class SyncPatientAssignmentResolutions extends Activity {
       const clinicianId = store.getState().clinicians.clinician?.clinicianID;
 
       if (resolutionList && clinicianId) {
-        Object.keys(resolutionList).forEach(async (key) => {
-          const resolution = resolutionList[key];
+        Object.keys(resolutionList).forEach(async (patientID) => {
+          const resolution = resolutionList[patientID];
           if (resolution) {
             try {
               // Resolve (APPROVE or REASSIGN based on assignment)
@@ -60,7 +61,9 @@ class SyncPatientAssignmentResolutions extends Activity {
                 userClinicianID: clinicianId
               });
               if (resolved) {
-                delete resolutionList[key];
+                delete resolutionList[patientID];
+
+                await LocalStorage.flushOnePendingPatientAssignment(patientID);
               }
               // Insert remaining resolutions back into storage
               LocalStorage.setPatientAssignmentResolutions(resolutionList);
@@ -83,24 +86,27 @@ class SyncPatientAssignmentResolutions extends Activity {
       console.log(error);
     }
 
-    // Retrieve Pending Patient Assignment
-    agentDTA.addBelief(
-      new Belief(
-        BeliefKeys.PATIENT,
-        PatientAttributes.RETRIEVE_PENDING_PATIENT_ASSIGNMENTS,
-        true
-      )
-    );
+    // Retrieve pending patient assignments
+    // This timeout is necessary otherwise we may end up with a race condition
+    setTimeout(() => {
+      agentDTA.addBelief(
+        new Belief(
+          BeliefKeys.PATIENT,
+          PatientAttributes.RETRIEVE_PENDING_PATIENT_ASSIGNMENTS,
+          true
+        )
+      );
 
-    agentAPI.addFact(
-      new Belief(
-        BeliefKeys.PROCEDURE,
-        ProcedureAttributes.SRD_I,
-        ProcedureConst.ACTIVE
-      )
-    );
+      agentAPI.addFact(
+        new Belief(
+          BeliefKeys.PROCEDURE,
+          ProcedureAttributes.SRD_I,
+          ProcedureConst.ACTIVE
+        )
+      );
+    }, SYNC_TIMEOUT_DURATION);
 
-    // Retrive Patients By Role
+    // Retrive patients by role
     agentDTA.addBelief(
       new Belief(BeliefKeys.PATIENT, PatientAttributes.RETRIEVE_PATIENTS, true)
     );

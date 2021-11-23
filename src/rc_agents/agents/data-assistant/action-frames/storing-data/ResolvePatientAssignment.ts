@@ -57,9 +57,13 @@ class ResolvePatientAssignment extends Activity {
       // Get clinicianId from global state
       const clinicianId = store.getState().clinicians.clinician?.clinicianID;
 
+      // Get online status
+      const isOnline =
+        agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE];
+
       if (resolution && clinicianId) {
         // Device is online
-        if (agentAPI.getFacts()[BeliefKeys.APP]?.[AppAttributes.ONLINE]) {
+        if (isOnline) {
           // Approve or reassign resolution
           resolvedOnline = await resolvePatientAssignment({
             resolution: resolution,
@@ -84,7 +88,12 @@ class ResolvePatientAssignment extends Activity {
             resolutionList = { [resolution.patientName]: resolution };
           }
           // Store updated resolutions
-          LocalStorage.setPatientAssignmentResolutions(resolutionList);
+          await LocalStorage.setPatientAssignmentResolutions(resolutionList);
+
+          // Remove pending patient assignment from local storage
+          await LocalStorage.flushOnePendingPatientAssignment(
+            resolution.patientID
+          );
 
           // Trigger request to Communicate to NWA
           agentNWA.addBelief(
@@ -96,21 +105,18 @@ class ResolvePatientAssignment extends Activity {
           );
         }
 
+        // Update Beliefs
+        // Retrieve new pending patient assignments (both online and offline)
+        agent.addBelief(
+          new Belief(
+            BeliefKeys.PATIENT,
+            PatientAttributes.RETRIEVE_PENDING_PATIENT_ASSIGNMENTS,
+            true
+          )
+        );
+
         if (resolvedOnline) {
-          // Update Beliefs
-          // Retrieve new pending patient assignments
-          agent.addBelief(
-            new Belief(
-              BeliefKeys.PATIENT,
-              PatientAttributes.RETRIEVE_PENDING_PATIENT_ASSIGNMENTS,
-              true
-            )
-          );
-
           if (resolution.resolution === PatientAssignmentStatus.APPROVED) {
-            // Refresh access token with new patient
-            await Auth.currentAuthenticatedUser({ bypassCache: true });
-
             // Trigger agent (self) to retrieve new patients
             agent.addBelief(
               new Belief(
@@ -166,6 +172,11 @@ export const resolvePatientAssignment: (params: {
       });
       if (result.success) {
         success = true;
+
+        if (resolution.resolution === PatientAssignmentStatus.APPROVED) {
+          // Refresh access token with new patient
+          await Auth.currentAuthenticatedUser({ bypassCache: true });
+        }
       } else {
         throw Error("Failed to resolve PatientAssignment");
       }
