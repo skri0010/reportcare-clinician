@@ -23,8 +23,6 @@ export const validatePassword = (password: string): boolean => {
   return /(?=.*\d)(?=[^a-z]*[a-z])(?=[^A-Z]*[A-Z]).{8,}$/.test(password);
 };
 
-// ((?=.*\d)(?=[^a-z]*[a-z])(?=[^A-Z]*[A-Z])).{8,}
-
 export const validateHospitalName = (hospitalName: PossibleString): boolean => {
   return (
     hospitalName !== Hospital.UNKNOWN &&
