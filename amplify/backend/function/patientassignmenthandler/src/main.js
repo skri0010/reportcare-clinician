@@ -215,6 +215,7 @@ var sharePatientAssignment = function (_a) {
                         })];
                 case 2:
                     getResult = _b.sent();
+                    console.log("Checking if patient assignment already exists before sharing: \n      " + (0, shared_1.prettify)(getResult) + "\n    ");
                     if (!getResult.data.getPatientAssignment) return [3 /*break*/, 5];
                     record = getResult.data.getPatientAssignment;
                     if (!(record.resolution !== types_1.Resolution.APPROVED)) return [3 /*break*/, 4];

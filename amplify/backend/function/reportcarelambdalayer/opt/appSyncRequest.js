@@ -30,10 +30,15 @@ exports.request = (queryDetails, appsyncUrl, apiKey) => {
   }
 
   return new Promise((resolve, reject) => {
-    const httpRequest = https.request({ ...req, host: endpoint }, (result) => {
-      result.on("data", (data) => {
-        resolve(JSON.parse(data.toString()));
-      });
+    const httpRequest = https.request({ ...req, host: endpoint }, (response) => { 
+      // Fix for https's limitation on chunks of data: https://github.com/aws-amplify/amplify-js/issues/7883 
+      let data = ""; 
+      response.on('data', (chunk) => { data += chunk; });
+      response.on('end', () => { 
+        const body = JSON.parse(data); 
+        console.log(body);
+        resolve(body) 
+      }); 
     });
 
     httpRequest.write(req.body);

@@ -196,6 +196,10 @@ export const sharePatientAssignment: (input: {
       patientID: patientID
     });
 
+    console.log(`Checking if patient assignment already exists before sharing: 
+      ${prettify(getResult)}
+    `);
+
     // PatientAssignment record already exists
     if (getResult.data.getPatientAssignment) {
       // Update PatientAssignmentRecord if it is not APPROVED
