@@ -121,7 +121,7 @@
   "Home": {
     "Dashboard": "Dashboard",
     "Welcome": "Welcome Dr. ",
-    "WelcomeMsg": "Check on your patient's health, monitor their vitals and chat with them.",
+    "WelcomeMsg": "Check on your patient's health, monitor their vitals, manage alerts and todos.",
     "RequestsByMaria": "Requests by MARIA",
     "Alerts": "Alerts",
     "Todos": "Todos",
