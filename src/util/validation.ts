@@ -116,7 +116,8 @@ export const validateMedFreq = (frequency: string): boolean => {
 export const notEmptyString = (
   testString: string | number | null | undefined
 ): boolean => {
-  return (testString && testString.toString().length > 0) as boolean;
+  return ((testString || testString === 0) &&
+    testString.toString().length > 0) as boolean;
 };
 
 export const validateInteger = (testString: string): boolean => {
