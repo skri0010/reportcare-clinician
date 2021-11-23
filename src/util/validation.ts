@@ -20,10 +20,10 @@ export const validatePhone = (phone: string): boolean => {
 
 // Checks that password has 8 characters with at least 1 uppercase letter and number
 export const validatePassword = (password: string): boolean => {
-  return /(?=(.*[0-9]))((?=.*[A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z]))^.{8,}$/i.test(
-    password
-  );
+  return /(?=.*\d)(?=[^a-z]*[a-z])(?=[^A-Z]*[A-Z]).{8,}$/.test(password);
 };
+
+// ((?=.*\d)(?=[^a-z]*[a-z])(?=[^A-Z]*[A-Z])).{8,}
 
 export const validateHospitalName = (hospitalName: PossibleString): boolean => {
   return (
