@@ -22,7 +22,8 @@ export const AlertScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
     fetchingAlertInfo,
     alertInfo,
     pendingAlerts,
-    completedAlerts
+    completedAlerts,
+    riskFilters
   } = select((state: RootState) => ({
     colors: state.settings.colors, // Used to detect completion of updateTodo procedure
     procedureOngoing: state.procedures.procedureOngoing,
@@ -31,7 +32,8 @@ export const AlertScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
     fetchingAlertInfo: state.alerts.fetchingAlertInfo,
     alertInfo: state.alerts.alertInfo,
     pendingAlerts: state.alerts.pendingAlerts,
-    completedAlerts: state.alerts.completedAlerts
+    completedAlerts: state.alerts.completedAlerts,
+    riskFilters: state.filters.alertRiskFilters
   }));
 
   // For pointer events
@@ -42,13 +44,16 @@ export const AlertScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
    * Trigger agent to fetch ALL alerts on initial load
    */
   useEffect(() => {
+    // Retrieve locally if there is already data
+    if (pendingAlerts && completedAlerts) {
+      AgentTrigger.triggerRetrieveAlerts(FetchAlertsMode.ALL, true);
+    }
     // fetchingAlertInfo will be true if the screen is navigated to for viewing a real-time alert.
-    // Trigger to fetch all alerts if the screen is navigated for the first time, i.e. pending and/or completed alerts are undefined.
-    if (!fetchingAlertInfo || !pendingAlerts || !completedAlerts) {
+    else if (!fetchingAlertInfo) {
       AgentTrigger.triggerRetrieveAlerts(FetchAlertsMode.ALL);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [riskFilters]);
 
   // Display details screen when alertInfo is retrieved
   useEffect(() => {
