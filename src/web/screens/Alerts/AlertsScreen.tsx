@@ -49,7 +49,7 @@ export const AlertScreen: FC<MainScreenProps[ScreenName.ALERTS]> = () => {
       AgentTrigger.triggerRetrieveAlerts(FetchAlertsMode.ALL, true);
     }
     // fetchingAlertInfo will be true if the screen is navigated to for viewing a real-time alert.
-    else if (!fetchingAlertInfo) {
+    else if (!fetchingAlertInfo || !pendingAlerts || !completedAlerts) {
       AgentTrigger.triggerRetrieveAlerts(FetchAlertsMode.ALL);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

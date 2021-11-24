@@ -21,6 +21,7 @@ import { listPatientInfos } from "aws";
 import { Role } from "rc_agents/model";
 import { store } from "util/useRedux";
 import { setFetchingPatients } from "ic-redux/actions/agents/patientActionCreator";
+import { sortPatientsByRiskLevel } from "util/utilityFunctions";
 
 /**
  * Class to represent an activity for retrieving patients according to role.
@@ -41,7 +42,9 @@ class RetrievePatientsByRole extends Activity {
     store.dispatch(setFetchingPatients(true));
 
     try {
-      const patients = await this.queryPatients();
+      let patients = await this.queryPatients();
+      patients = sortPatientsByRiskLevel(patients);
+
       // Update Facts
       // Set item
       agentAPI.addFact(

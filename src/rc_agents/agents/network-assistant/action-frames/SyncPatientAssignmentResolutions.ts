@@ -50,29 +50,35 @@ class SyncPatientAssignmentResolutions extends Activity {
       const clinicianId = store.getState().clinicians.clinician?.clinicianID;
 
       if (resolutionList && clinicianId) {
-        Object.keys(resolutionList).forEach(async (patientID) => {
-          const resolution = resolutionList[patientID];
-          if (resolution) {
-            try {
-              // Resolve (APPROVE or REASSIGN based on assignment)
-              // This function handles conflicts as well
-              const resolved = await resolvePatientAssignment({
-                resolution: resolution,
-                userClinicianID: clinicianId
-              });
-              if (resolved) {
-                delete resolutionList[patientID];
+        await Promise.all(
+          Object.keys(resolutionList).map(async (patientID) => {
+            const resolution = resolutionList[patientID];
+            if (resolution) {
+              try {
+                // Resolve (APPROVE or REASSIGN based on assignment)
+                // This function handles conflicts as well
+                const resolved = await resolvePatientAssignment({
+                  resolution: resolution,
+                  userClinicianID: clinicianId
+                });
+                if (resolved) {
+                  delete resolutionList[patientID];
 
-                await LocalStorage.flushOnePendingPatientAssignment(patientID);
+                  await LocalStorage.flushOnePendingPatientAssignment(
+                    patientID
+                  );
+                }
+                // Insert remaining resolutions back into storage
+                await LocalStorage.setPatientAssignmentResolutions(
+                  resolutionList
+                );
+              } catch (error) {
+                // eslint-disable-next-line no-console
+                console.log(error);
               }
-              // Insert remaining resolutions back into storage
-              LocalStorage.setPatientAssignmentResolutions(resolutionList);
-            } catch (error) {
-              // eslint-disable-next-line no-console
-              console.log(error);
             }
-          }
-        });
+          })
+        );
 
         // Reset AsyncStorage key if none left
         if (Object.keys(resolutionList).length === 0) {

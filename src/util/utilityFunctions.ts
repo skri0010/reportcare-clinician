@@ -1,4 +1,4 @@
-import { ReportVitals, Alert, ClinicianRecord } from "aws/API";
+import { ReportVitals, Alert, ClinicianRecord, PatientInfo } from "aws/API";
 import { RiskLevel } from "models/RiskLevel";
 import moment from "moment";
 import { AlertInfo, mapColorCodeToRiskLevel } from "rc_agents/model";
@@ -94,17 +94,17 @@ export const sortAlertInfoByDescendingDateTime = (
   });
 };
 
+const riskLevelOrder = {
+  [RiskLevel.HIGH]: 3,
+  [RiskLevel.MEDIUM]: 2,
+  [RiskLevel.LOW]: 1,
+  [RiskLevel.UNASSIGNED]: 0
+};
+
 // Sorts AlertInfo[] in descending risk level followed by date time
 export const sortAlertInfoByDescendingRiskLevelAndDateTime = (
   alerts: AlertInfo[]
 ): AlertInfo[] => {
-  const riskLevelOrder = {
-    [RiskLevel.HIGH]: 3,
-    [RiskLevel.MEDIUM]: 2,
-    [RiskLevel.LOW]: 1,
-    [RiskLevel.UNASSIGNED]: 0
-  };
-
   return alerts.sort((a, b) => {
     if (riskLevelOrder[a.riskLevel] === riskLevelOrder[b.riskLevel]) {
       const date1 = new Date(a.dateTime);
@@ -156,4 +156,16 @@ export const modifyDate: (parameter: {
     returnDate = moment(date).add(ONE, "days").toDate();
   }
   return returnDate;
+};
+
+// Sorts patients in descending risk level
+export const sortPatientsByRiskLevel = (
+  patients: PatientInfo[]
+): PatientInfo[] => {
+  return patients.sort((a, b) => {
+    return (
+      riskLevelOrder[b.riskLevel as RiskLevel] -
+      riskLevelOrder[a.riskLevel as RiskLevel]
+    );
+  });
 };
