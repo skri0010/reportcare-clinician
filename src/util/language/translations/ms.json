@@ -1,6 +1,5 @@
 {
   "welcome": "Selamat Datang",
-
   "Auth_SignIn": {
     "SignIn": "Log Masuk",
     "Username": "Nama Pengguna",
@@ -25,7 +24,7 @@
     "EmailPlaceholder": "Masukkan emel",
     "EmailError": "Emel tidak sah",
     "Phone": "Nombor telefon",
-    "PhonePlaceholder": "Masukkan nombor telefon",
+    "PhonePlaceholder": "Masukkan nombor telefon e.g.+60121231234",
     "PhoneError": "Nombor telefon tidak sah",
     "Role": "Peranan",
     "RolePlaceholder": "-- Pilih peranan --",

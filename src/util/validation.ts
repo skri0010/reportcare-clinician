@@ -17,7 +17,7 @@ export const validateEmail = (email: string): boolean => {
 // Regex for Malaysia phone number pattern
 export const validatePhone = (phone: string): boolean => {
   return (
-    /^(\+?6?01)[0-46-9]-*[0-9]{7,8}$/.test(phone)
+    validateInteger(phone) && /^(\+?6?01)[0-46-9]-*[0-9]{7,8}$/.test(phone)
   );
 };
 

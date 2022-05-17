@@ -24,7 +24,7 @@
     "EmailPlaceholder": "Enter email",
     "EmailError": "Invalid email address",
     "Phone": "Phone Number",
-    "PhonePlaceholder": "Enter phone number",
+    "PhonePlaceholder": "Enter phone number e.g.+60121231234",
     "PhoneError": "Invalid phone number",
     "Role": "Role",
     "RolePlaceholder": "Select a role",
