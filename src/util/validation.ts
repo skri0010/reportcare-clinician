@@ -16,9 +16,7 @@ export const validateEmail = (email: string): boolean => {
 
 // Regex for Malaysia phone number pattern
 export const validatePhone = (phone: string): boolean => {
-  return (
-    validateInteger(phone) && /^(\+?6?01)[0-46-9]-*[0-9]{7,8}$/.test(phone)
-  );
+  return /^(\+?6?01)[0-46-9]-*[0-9]{7,8}$/.test(phone);
 };
 
 // Checks that password has 8 characters with at least 1 uppercase letter and number
