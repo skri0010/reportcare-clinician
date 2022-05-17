@@ -1,0 +1,38 @@
+[
+  {
+    "groupName": "Admin",
+    "precedence": 1
+  },
+  {
+    "groupName": "EPs",
+    "precedence": 2
+  },
+  {
+    "groupName": "HFSpecialists",
+    "precedence": 3
+  },
+  {
+    "groupName": "Known",
+    "precedence": 4
+  },
+  {
+    "groupName": "MedicalOfficers",
+    "precedence": 5
+  },
+  {
+    "groupName": "Nurses",
+    "precedence": 6
+  },
+  {
+    "groupName": "Patients",
+    "precedence": 7
+  },
+  {
+    "groupName": "Pharmacists",
+    "precedence": 8
+  },
+  {
+    "groupName": "Unknown",
+    "precedence": 9
+  }
+]

@@ -118,6 +118,7 @@ type ReportSymptom
   durationInMinutes: Int
   location: String
   severity: Int!
+  doesSymptomPersist: Boolean
   dateTime: AWSDateTime!
   summary: String!
   weather: String
