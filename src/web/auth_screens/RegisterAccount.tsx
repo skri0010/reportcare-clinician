@@ -56,6 +56,7 @@ export const RegisterAccount: FC<
   // Sends remaining details (name, hospitalName and role) to the following ConfirmRegistration page.
   const register = async (): Promise<void> => {
     setRegistering(true);
+    console.log("PHONE", phone);
     await Auth.signUp({
       username: username,
       password: password,
