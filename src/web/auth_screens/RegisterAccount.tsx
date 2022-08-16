@@ -7,7 +7,6 @@ import { Role, Hospital } from "rc_agents/model";
 import { RootState, select } from "util/useRedux";
 import { ScreenWrapper } from "components/Wrappers/ScreenWrapper";
 import {
-  validateEmail,
   validateHospitalName,
   validatePassword,
   validateUsername,
@@ -39,7 +38,6 @@ export const RegisterAccount: FC<
   const [inputValid, setInputValid] = useState(false);
   const [passwordMatch, setPasswordMatch] = useState(true);
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [role, setRole] = useState("");
   const [hospital, setHospital] = useState(Hospital.UNKNOWN);
@@ -61,7 +59,7 @@ export const RegisterAccount: FC<
     await Auth.signUp({
       username: username,
       password: password,
-      attributes: { email: email, "custom:hospital_role": role }
+      attributes: { phone_number: phone, "custom:hospital_role": role }
     })
       .then(async () => {
         setRegistering(false);
@@ -110,7 +108,6 @@ export const RegisterAccount: FC<
   useEffect(() => {
     setInputValid(
       (name &&
-        validateEmail(email) &&
         validateUsername(username) &&
         role &&
         validateHospitalName(hospital) &&
@@ -118,7 +115,7 @@ export const RegisterAccount: FC<
         passwordMatch &&
         validatePhone(phone)) as boolean
     );
-  }, [name, email, username, role, hospital, password, passwordMatch, phone]);
+  }, [name, username, role, hospital, password, passwordMatch, phone]);
 
   // Compares confirmed password with initial password
   useEffect(() => {
@@ -144,16 +141,6 @@ export const RegisterAccount: FC<
             value={name}
             onChange={(text: string) => setName(text.toUpperCase())}
             placeholder={i18n.t("Auth_Registration.NamePlaceholder")}
-          />
-
-          {/* Email */}
-          <TextField
-            label={i18n.t("Auth_Registration.Email")}
-            value={email}
-            onChange={(text) => setEmail(text)}
-            placeholder={i18n.t("Auth_Registration.EmailPlaceholder")}
-            error={email !== "" && !validateEmail(email)}
-            errorMessage={i18n.t("Auth_Registration.EmailError")}
           />
 
           {/* Phone */}

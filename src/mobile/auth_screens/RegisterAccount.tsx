@@ -9,7 +9,6 @@ import { RootState, select } from "util/useRedux";
 import { AuthScreenName, AuthScreensProps } from "mobile/auth_screens";
 import { MobileScreenWrapper } from "mobile/screens/MobileScreenWrapper";
 import {
-  validateEmail,
   validatePassword,
   validateUsername,
   validatePhone
@@ -34,7 +33,6 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
   const [inputValid, setInputValid] = useState(false);
   const [passwordMatch, setPasswordMatch] = useState(true);
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
   const [role, setRole] = useState("");
   const [hospital, setHospital] = useState("");
   const [username, setUsername] = useState("");
@@ -52,7 +50,7 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
     await Auth.signUp({
       username: username,
       password: password,
-      attributes: { email: email, "custom:hospital_role": role }
+      attributes: { phone_number: phone, "custom:hospital_role": role }
     })
       .then(async () => {
         setRegistering(false);
@@ -124,7 +122,6 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
   useEffect(() => {
     setInputValid(
       (name &&
-        validateEmail(email) &&
         validateUsername(username) &&
         role &&
         hospital &&
@@ -132,7 +129,7 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
         passwordMatch &&
         validatePhone(phone)) as boolean
     );
-  }, [name, email, username, role, hospital, password, passwordMatch, phone]);
+  }, [name, username, role, hospital, password, passwordMatch, phone]);
 
   // Compares confirmed password with initial password
   useEffect(() => {
@@ -164,16 +161,14 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
             autoCapitalize="characters"
           />
 
-          {/* Email */}
+          {/* Phone */}
           <TextField
-            label={i18n.t("Auth_Registration.Email")}
-            value={email}
-            onChange={(text) => setEmail(text)}
-            placeholder={i18n.t("Auth_Registration.EmailPlaceholder")}
-            error={email !== "" && !validateEmail(email)}
-            errorMessage={i18n.t("Auth_Registration.EmailError")}
-            textContentType="emailAddress"
-            keyboardType="email-address"
+            label={i18n.t("Auth_Registration.Phone")}
+            value={phone}
+            onChange={(text) => setPhone(text)}
+            placeholder={i18n.t("Auth_Registration.PhonePlaceholder")}
+            error={phone !== "" && !validatePhone(phone)}
+            errorMessage={i18n.t("Auth_Registration.PhoneError")}
           />
 
           {/* Role */}
@@ -190,16 +185,6 @@ export const RegisterAccount: FC<AuthScreensProps[AuthScreenName.REGISTER]> = ({
               {rolePickerItems}
             </Picker>
           </View>
-
-          {/* Phone */}
-          <TextField
-            label={i18n.t("Auth_Registration.Phone")}
-            value={phone}
-            onChange={(text) => setPhone(text)}
-            placeholder={i18n.t("Auth_Registration.PhonePlaceholder")}
-            error={phone !== "" && !validatePhone(phone)}
-            errorMessage={i18n.t("Auth_Registration.PhoneError")}
-          />
 
           {/* Hospital */}
           <Text style={inputLabelStyle}>
