@@ -4,8 +4,8 @@
 const awsmobile = {
     "aws_project_region": "ap-southeast-1",
     "aws_cognito_region": "ap-southeast-1",
-    "aws_user_pools_id": "ap-southeast-1_5up7g2Rbx",
-    "aws_user_pools_web_client_id": "6bg1quoum2b53cneje70ltskij",
+    "aws_user_pools_id": "ap-southeast-1_2TnNM1kiM",
+    "aws_user_pools_web_client_id": "d1gqh5k3abce4a9rm39bn4fu2",
     "oauth": {},
     "aws_cognito_username_attributes": [],
     "aws_cognito_social_providers": [],
@@ -23,10 +23,10 @@ const awsmobile = {
     "aws_cognito_verification_mechanisms": [
         "PHONE_NUMBER"
     ],
-    "aws_appsync_graphqlEndpoint": "https://jezz63wfpbcq3d6besyj5b3dky.appsync-api.ap-southeast-1.amazonaws.com/graphql",
+    "aws_appsync_graphqlEndpoint": "https://7mjvjvqtujcwjgj6hfj2mfnu5q.appsync-api.ap-southeast-1.amazonaws.com/graphql",
     "aws_appsync_region": "ap-southeast-1",
     "aws_appsync_authenticationType": "AMAZON_COGNITO_USER_POOLS",
-    "aws_user_files_s3_bucket": "clinicianrecords24840-prod",
+    "aws_user_files_s3_bucket": "clinicianrecords13656-develop",
     "aws_user_files_s3_bucket_region": "ap-southeast-1",
     "aws_cognito_login_mechanisms": [
         "PREFERRED_USERNAME"
