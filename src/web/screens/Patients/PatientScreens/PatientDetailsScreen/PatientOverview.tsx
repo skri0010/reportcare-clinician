@@ -26,7 +26,7 @@ interface PatientOverviewProps extends PatientDetailsTabProps.OverviewTabProps {
   details: PatientDetails;
   setEditDetails: (state: boolean) => void; // To edit patient's details
 }
-
+//
 // IMPORTANT - Otherwise the cards will not wrap propertly due to lack of min width
 const COLUMN_MIN_WIDTH = DEFAULT_CARD_WRAPPER_MIN_WIDTH + ms(20);
 
